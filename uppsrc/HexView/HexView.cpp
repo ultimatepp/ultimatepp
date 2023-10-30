@@ -66,7 +66,7 @@ void HexViewInfo::Paint(Draw& w)
 	xx += (longmode ? 22 : 12) * fsz.cx;
 	int y = 0;
 	int x = 0;
-	for(int q = 0; q < mode; q++) {
+	for(int q = 0; q < min(mode, 2); q++) {
 		x = xx;
 		if(q < 1)
 			PrintValue(w, x, y, 1, q);
@@ -77,26 +77,18 @@ void HexViewInfo::Paint(Draw& w)
 		x += 32 * fsz.cx;
 		y += fsz.cy;
 	}
-	char sh[80];
+	char sh[200];
 	memset(sh, 0, sizeof(sh));
 	int i;
-	for(i = 0; i < 80; i++) {
+	for(i = 0; i < 200; i++) {
 		if(data[i] < 0)
 			break;
 		sh[i] = data[i];
 	}
-	WString ws = ToUtf32(sh, i);
-	w.DrawText(x, 0, ws, font, Cyan, i);
+	if(mode == 3)
+		w.DrawText(x, 0, ToUtf32(sh, i), font, Cyan, i);
 	if(mode < 2)
 		return;
-	wchar wh[40];
-	memset(wh, 0, sizeof(wh));
-	for(i = 0; i < 40; i++) {
-		if(data[2 * i] < 0 || data[2 * i + 1] < 0)
-			break;
-		wh[i] = MAKEWORD(data[2 * i], data[2 * i + 1]);
-	}
-	w.DrawText(x, fsz.cy, wh, font, Cyan, i);
 	String txt;
 	String ftxt;
 	i = 0;
@@ -128,7 +120,7 @@ void HexViewInfo::Paint(Draw& w)
 void HexViewInfo::SetMode(int _mode)
 {
 	mode = _mode;
-	Height(mode * GetTextSize("X", CourierZ(12)).cy + 3);
+	Height(min(mode, 2) * GetTextSize("X", CourierZ(12)).cy + 3);
 	Show(mode);
 }
 
@@ -155,55 +147,37 @@ void HexView::Paint(Draw& w)
 	}
 	int y = 0;
 	uint64 adr = sc;
+	Buffer<char> hex(2 * columns), text(columns), mark(columns);
+	Buffer<int>  hex_dx(2 * columns), text_dx(columns, fsz.cx);
 	while(y < sz.cy) {
 		char h[17];
 		FormatHex(h, adr + start, IsLongMode() ? 16 : 8);
 		w.DrawText(0, y, h, font);
 		int x = (IsLongMode() ? 17 : 9) * fsz.cx;
 		int tx = x + columns * fcx3;
+		int hexi = 0;
+		int texti = 0;
+		uint64 adr0 = adr;
 		for(int q = columns; q--;) {
 			if(adr >= total)
 				return;
 			if(adr == cursor) {
-				w.DrawRect(x, y, fsz.cx * 2, fsz.cy, LtCyan);
-				w.DrawRect(tx, y, fsz.cx, fsz.cy, LtCyan);
+				w.DrawRect(x + fsz.cx * 3 * int(adr - adr0), y, fsz.cx * 2, fsz.cy, LtCyan);
+				w.DrawRect(tx + fsz.cx * int(adr - adr0), y, fsz.cx, fsz.cy, LtCyan);
 			}
 			int b = Byte(adr++);
-			if(b < 0) {
-				w.DrawText(x, y, "??", font, Brown);
-				w.DrawText(tx, y, "?", font, Brown);
-			}
-			else {
-				h[0] = FormatHexDigit((b & 0xf0) >> 4);
-				h[1] = FormatHexDigit(b & 0x0f);
-				h[2] = '\0';
-				w.DrawText(x, y, h, font, SColorText);
-				Color color = SColorMark;
-				switch(b) {
-				case '\a': *h = 'a'; break;
-				case '\b': *h = 'b'; break;
-				case '\t': *h = 't'; break;
-				case '\f': *h = 'f'; break;
-				case '\r': *h = 'r'; break;
-				case '\n': *h = 'n'; break;
-				case '\v': *h = 'v'; break;
-				case '\0': *h = '0'; break;
-				default:
-					if(b >= 32) {
-						*h = b;
-						color = SColorText;
-					}
-					else {
-						*h = '.';
-						color = SColorDisabled;
-					}
-				}
-				h[1] = '\0';
-				w.DrawText(tx, y, h, charset, font, color);
-			}
-			tx += fsz.cx;
-			x += fcx3;
+			hex[hexi] = b < 0 ? '?' : FormatHexDigit((b & 0xf0) >> 4);
+			hex_dx[hexi++] = fsz.cx;
+			hex[hexi] = b < 0 ? '?' : FormatHexDigit(b & 0x0f);
+			hex_dx[hexi++] = 2 * fsz.cx;
+			text[texti] = b >= 32 ? b : ' ';
+			mark[texti++] = b < 32 ? decode(b, '\a', 'a', '\b', 'b', '\t', 't', '\f', 'f',
+			                                   '\r', 'r', '\n', 'n', '\v', 'v', '\0', '0',
+			                                   '\1', '1', '.') : ' ';
 		}
+		w.DrawText(x, y, hex, font, SColorText(), hexi, hex_dx);
+		w.DrawText(tx, y, text, font, SColorText(), texti, text_dx);
+		w.DrawText(tx, y, mark, font, SColorMark(), texti, text_dx);
 		y += fsz.cy;
 	}
 }
@@ -283,6 +257,8 @@ void HexView::SetCursor(uint64 _cursor)
 {
 	cursor = _cursor;
 	
+	if(cursor > INT64_MAX - INT_MAX)
+		cursor = 0;
 	if(cursor > total)
 		cursor = total - 1;
 	int q = int(sc % columns);
@@ -434,11 +410,13 @@ void HexView::SetInfo(int m)
 void HexView::InfoMenu(Bar& bar)
 {
 	bar.Add("None", THISBACK1(SetInfo, 0))
-	   .Check(info.GetMode() == 0);
+	   .Radio(info.GetMode() == 0);
 	bar.Add("Standard", THISBACK1(SetInfo, 1))
-	   .Check(info.GetMode() == 1);
+	   .Radio(info.GetMode() == 1);
 	bar.Add("Extended", THISBACK1(SetInfo, 2))
-	   .Check(info.GetMode() == 2);
+	   .Radio(info.GetMode() == 2);
+	bar.Add("Full", THISBACK1(SetInfo, 3))
+	   .Radio(info.GetMode() == 3);
 }
 
 void HexView::CharsetMenu(Bar& bar)
