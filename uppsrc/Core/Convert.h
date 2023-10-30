@@ -26,6 +26,8 @@ double        ScanDouble(const char *ptr, const char **endptr);
 double        ScanDouble(const wchar *ptr, const wchar **endptr);
 double        ScanDouble(const char *ptr);
 double        ScanDouble(const wchar *ptr);
+float         ScanFloat(const char *ptr);
+float         ScanFloat(const wchar *ptr);
 
 double        Atof(const char *s);
 

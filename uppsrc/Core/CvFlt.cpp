@@ -670,6 +670,19 @@ double ScanDouble(const wchar *ptr)
 	return ScanDbl<wchar, word>(n, ptr, ',') ? n : Null;
 }
 
+float ScanFloat(const char *ptr)
+{
+	double n;
+	ptr = ScanDbl<char, byte>(n, ptr, ',');
+	return ptr ? n : Null;
+}
+
+float ScanFloat(const wchar *ptr)
+{
+	double n;
+	return ScanDbl<wchar, word>(n, ptr, ',') ? n : Null;
+}
+
 double Atof(const char *s)
 {
 	double n;

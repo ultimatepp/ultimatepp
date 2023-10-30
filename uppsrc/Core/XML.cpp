@@ -688,9 +688,9 @@ double XmlParser::Double(const char *id, double def) const
 
 float XmlParser::Float(const char *id, float def) const
 {
-	if(id == attr1) return (float)ScanDouble(attrval1);
+	if(id == attr1) return ScanFloat(attrval1);
 	int q = attr.Find(id);
-	return q < 0 ? def : (float)ScanDouble(attr[q]);
+	return q < 0 ? def : ScanFloat(attr[q]);
 }
 
 bool  XmlParser::IsText()

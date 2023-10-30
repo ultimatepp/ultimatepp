@@ -1,4 +1,4 @@
-* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\Float.exe 29.10.2023 20:57:55, user: cxl
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\Float.exe 30.10.2023 10:22:39, user: cxl
 
 ===========
 x = 0
@@ -19,7 +19,7 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value="0"/>
 </app>
-(float)ScanDouble(AsString(x)) = 0
+ScanFloat(AsString(x)) = 0
 ===========
 x = 0.23
 IsNull(x) = false
@@ -39,7 +39,7 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value="0.23"/>
 </app>
-(float)ScanDouble(AsString(x)) = 0.23
+ScanFloat(AsString(x)) = 0.23
 ===========
 x = 1
 IsNull(x) = false
@@ -59,7 +59,7 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value="1"/>
 </app>
-(float)ScanDouble(AsString(x)) = 1
+ScanFloat(AsString(x)) = 1
 ===========
 x = 1.23
 IsNull(x) = false
@@ -79,7 +79,7 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value="1.23"/>
 </app>
-(float)ScanDouble(AsString(x)) = 1.23
+ScanFloat(AsString(x)) = 1.23
 ===========
 x = 51.23
 IsNull(x) = false
@@ -99,7 +99,7 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value="51.23"/>
 </app>
-(float)ScanDouble(AsString(x)) = 51.23
+ScanFloat(AsString(x)) = 51.23
 ===========
 x = 
 IsNull(x) = true
@@ -119,4 +119,4 @@ StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
 <app>
 	<x value=""/>
 </app>
-(float)ScanDouble(AsString(x)) = 
+ScanFloat(AsString(x)) = 

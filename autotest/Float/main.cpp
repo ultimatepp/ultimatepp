@@ -40,9 +40,9 @@ CONSOLE_APP_MAIN
 		LoadFromXML(w, StoreAsXML(t));
 		ASSERT(t.x == w.x);
 		
-		DDUMP((float)ScanDouble(AsString(x)));
-		ASSERT(x == (float)ScanDouble(AsString(x)));
-		ASSERT(v == (float)ScanDouble(AsString(x)));
+		DDUMP(ScanFloat(AsString(x)));
+		ASSERT(x == ScanFloat(AsString(x)));
+		ASSERT(v == ScanFloat(AsString(x)));
 	};
 	
 	Test(0);
