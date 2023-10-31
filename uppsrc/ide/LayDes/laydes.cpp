@@ -921,7 +921,6 @@ void LayDes::RightDown(Point p, dword keyflags)
 	if(IsNull(currentlayout) || HasCapture()) return;
 	dragbase = Normalize(p);
 	MenuBar menu;
-	menu.MaxIconSize(Size(64, 64));
 	int h = StdFont().Info().GetHeight();
 	int w = 8 * h / 3;
 	menu.LeftGap(w + 2);
