@@ -674,13 +674,13 @@ float ScanFloat(const char *ptr)
 {
 	double n;
 	ptr = ScanDbl<char, byte>(n, ptr, ',');
-	return ptr ? n : Null;
+	return ptr ? (float)n : Null;
 }
 
 float ScanFloat(const wchar *ptr)
 {
 	double n;
-	return ScanDbl<wchar, word>(n, ptr, ',') ? n : Null;
+	return ScanDbl<wchar, word>(n, ptr, ',') ? (float)n : Null;
 }
 
 double Atof(const char *s)

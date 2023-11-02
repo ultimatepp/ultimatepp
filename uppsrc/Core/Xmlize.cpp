@@ -77,7 +77,7 @@ template<> String XmlAttrStore(const float& var)
 
 template<> void XmlAttrLoad(float& var, const String& text)
 {
-	var = ScanDouble(text);
+	var = ScanFloat(text);
 }
 
 template<> String XmlAttrStore(const dword& var)
