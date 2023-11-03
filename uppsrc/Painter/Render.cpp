@@ -289,6 +289,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					int y = (co ? co->Next() : ii++) + rasterizer.MinY();
 					if(y > rasterizer.MaxY())
 						break;
+					RTIMING("RENDER");
 					solid_filler.t = subpixel_filler.t = span_filler.t = (*ip)[y];
 					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
@@ -323,8 +324,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					CoWork co;
 					co * [&] { fill(&co); };
 				}
-				else
+				else {
+					RTIMING("fill");
 					fill(NULL);
+				}
 				rasterizer.Reset();
 			}
 		}
@@ -335,6 +338,8 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	}
 	return newclip;
 }
+
+int fake_it;
 
 void BufferPainter::FinishPathJob()
 {
@@ -361,7 +366,7 @@ void BufferPainter::FinishPathJob()
 	
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
-
+#if 0
 	fill_job & [=] {
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
@@ -405,12 +410,16 @@ void BufferPainter::FinishPathJob()
 			}
 			else {
 				SolidFiller solid_filler;
+				return;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
 					int jymin = max(j.rasterizer.MinY(), ymin);
 					int jymax = min(j.rasterizer.MaxY(), ymax);
 					for(int y = jymin; y <= jymax; y++)
 						if(j.rasterizer.NotEmpty(y)) {
+						#if 1
+							fake_it++;
+						#else
 							solid_filler.c = j.c;
 							solid_filler.invert = j.attr.invert;
 							solid_filler.t = (*ip)[y];
@@ -426,11 +435,13 @@ void BufferPainter::FinishPathJob()
 							}
 							else
 								j.rasterizer.Render(y, solid_filler, j.evenodd);
+						#endif
 						}
 				}
 			}
 		};
-	
+
+	#if 1
 		int n = maxy - miny;
 		if(n >= 0) {
 			if(n > 6) {
@@ -448,8 +459,9 @@ void BufferPainter::FinishPathJob()
 			else
 				fill(miny, maxy);
 		}
+	#endif
 	};
-
+#endif
 	jobcount = emptycount = 0;
 }
 
