@@ -45,6 +45,7 @@ Pointf BufferPainter::EndPoint(const Pointf& p, bool rel)
 
 template <class T> T& BufferPainter::PathAdd(int type)
 {
+	RTIMING("PathAdd");
 	Vector<byte>& p = path_info->path.Top();
 	int l = p.GetCount();
 	p.SetCount(l + sizeof(T));

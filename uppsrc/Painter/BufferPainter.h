@@ -187,7 +187,7 @@ private:
 		Pointf                             path_min, path_max;
 	};
 	
-	enum { BATCH_SIZE = 128 }; // must be 2^n
+	enum { BATCH_SIZE = 256 }; // must be 2^n
 	
 	Buffer<PathInfo> paths;
 	int              path_index = 0;

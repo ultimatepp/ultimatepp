@@ -95,7 +95,7 @@ private:
 		bool operator<(const Cell& b) const { return x < b.x; }
     };
     
-    enum { SVO_ALLOC = 15 };
+    enum { SVO_ALLOC = 31 };
     
 	struct CellArray {
 		int    count;

@@ -37,7 +37,7 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 	cell.Alloc(sz.cy + 1); // one more for overrun
 
-	STATIC_ASSERT(sizeof(CellArray) == 128);
+//	STATIC_ASSERT(sizeof(CellArray) == 128);
 
 	cliprect = Sizef(sz);
 	Init();
