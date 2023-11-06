@@ -12,8 +12,14 @@ void BufferPainter::ClearPath()
 	path_info->path_min = Pointf(1e200, 1e200);
 	path_info->path_max = -Pointf(1e200, 1e200);
 	path_info->path.SetCount(1);
-	path_info->path.Top().Clear();
-	path_info->path.Top().Reserve(128);
+	
+	Vector<byte>& p = path_info->path.Top();
+	if(path_info->path.Top().GetCount() > 2048) {
+		p.Clear();
+		p.Reserve(1024);
+	}
+	else
+		p.SetCount(0);
 }
 
 void BufferPainter::DoPath0()
@@ -45,7 +51,6 @@ Pointf BufferPainter::EndPoint(const Pointf& p, bool rel)
 
 template <class T> T& BufferPainter::PathAdd(int type)
 {
-	RTIMING("PathAdd");
 	Vector<byte>& p = path_info->path.Top();
 	int l = p.GetCount();
 	p.SetCount(l + sizeof(T));
@@ -61,6 +66,7 @@ void BufferPainter::MoveOp(const Pointf& p, bool rel)
 	PathAdd<LinearData>(MOVE).p = move;
 }
 
+force_inline
 void BufferPainter::DoMove0()
 {
 	if(IsNull(move))
@@ -70,7 +76,6 @@ void BufferPainter::DoMove0()
 void BufferPainter::LineOp(const Pointf& p, bool rel)
 {
 	DoMove0();
-	LinearData h;
 	PathAdd<LinearData>(LINE).p = ccontrol = qcontrol = EndPoint(p, rel);
 }
 

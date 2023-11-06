@@ -67,7 +67,6 @@ void BufferPainter::RenderPathSegments(LinearPathConsumer *g, const Vector<byte>
 	Pointf pos = Pointf(0, 0);
 	const byte *data = path.begin();
 	const byte *end = path.end();
-	RDUMP(end - data);
 	while(data < end) {
 		const LinearData *d = (LinearData *)data;
 		switch(d->type) {
@@ -367,6 +366,7 @@ void BufferPainter::FinishPathJob()
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
 	
+#if 1
 #if 0
 	fill_job & [=] {
 		int miny = ip->GetHeight() - 1;
@@ -533,7 +533,7 @@ void BufferPainter::FinishPathJob()
 				CoWork co;
 				co * [&] {
 					for(;;) {
-						const int N = 1;
+						const int N = 4;
 						int y = N * co.Next() + miny;
 						if(y > maxy)
 							break;
@@ -546,6 +546,7 @@ void BufferPainter::FinishPathJob()
 		}
 	#endif
 	};
+#endif
 #endif
 	jobcount = emptycount = 0;
 }
