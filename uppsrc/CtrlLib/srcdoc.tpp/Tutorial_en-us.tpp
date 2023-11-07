@@ -1741,14 +1741,15 @@ his][*_C+75 );]&]
 example, in a situation where you have a state that is changing 
 over time, A good example of such a state might be a timer or 
 a clock. The clock hands change every second. To refresh the 
-UI at intervals, there is a dedicated Ctrl method called [* SetTimeCallback]. 
-It`'s first argument is a period in milliseconds. The second 
-one is a callback to the function that will be executed after 
-that time. Please keep in mind that the first parameter might 
-be positive. Then the time callback will be executed only once, 
-or if it is negative, it will be executed indefinitely. However, 
-the time loop in this case can be broken by calling [* KillTimeCallback] 
-method.&]
+UI at intervals, there is a dedicated Ctrl method called [*^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Upp`:`:Ctrl`:`:SetTimeCallback`(int`,Function`,int`)^ S
+etTimeCallback]. It`'s first argument is a period in milliseconds. 
+The second one is a callback to the function that will be executed 
+after that time. Please keep in mind that the first parameter 
+might be positive. Then the time callback will be executed only 
+once, or if it is negative, it will be executed indefinitely. 
+However, the time loop in this case can be broken by calling 
+[*^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:KillTimeCallback`(int`)^ KillTim
+eCallback] method.&]
 [s0;l320;~~~32;%- [/C@4 // The OnTimer() function will be executed 
 only once after one second.]&]
 [s0;l320;~~~32;%- [C SetTimeCallback(][C@3 1000][C , ][C@(0.0.255) `[`=`]][C  
