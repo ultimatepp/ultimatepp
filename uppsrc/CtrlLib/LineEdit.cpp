@@ -401,7 +401,8 @@ void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _
 }
 #endif
 
-void   LineEdit::Paint0(Draw& w) {
+void   LineEdit::Paint0(Draw& w)
+{
 	LTIMING("LineEdit::Paint0");
 	GuiLock __;
 	int64 sell, selh;

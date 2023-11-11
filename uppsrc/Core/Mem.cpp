@@ -4,8 +4,9 @@ namespace Upp {
 
 #ifdef CPU_SIMD
 
-void memset8__(void *p, i16x8 data, size_t len)
+void memset8__(void *p, i16x8 data_, size_t len)
 {
+	i16x8 data = data_;
 	ASSERT(len >= 16);
 	byte *t = (byte *)p;
 	auto Set4 = [&](size_t at) { data.Store(t + at); };
