@@ -10,7 +10,16 @@ void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
 void BufferPainter::ClearOp(const RGBA& color)
 {
-	UPP::Fill(~*ip, color, ip->GetLength());
+	Finish();
+	if(co) {
+		CoFor(ip->GetHeight(), [&](int i) {
+			UPP::Fill((*ip)[i], color, ip->GetWidth());
+		});
+	}
+	else
+		UPP::Fill(~*ip, color, ip->GetLength());
+//	memset(~*ip, 255, 4 * ip->GetLength());
+//	UPP::Fill(~*ip, color, ip->GetLength());
 	ip->SetKind(color.a == 255 ? IMAGE_OPAQUE : IMAGE_ALPHA);
 }
 

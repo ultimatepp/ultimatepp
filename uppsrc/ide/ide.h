@@ -654,6 +654,7 @@ public:
 	bool      prefer_clang_format = false;
 	bool      blk0_header = true;
 	bool      win_deactivated = false;
+	bool      block_caret = false;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);

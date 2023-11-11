@@ -36,25 +36,18 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 		branch[i] << [=] { Revs(i); };
 	};
 
-	files_pane.Add(mode[0].TopPos(y, cy).HSizePos());
-	y += lcy;
-	files_pane.Add(dir1.TopPos(y, cy).HSizePos());
-	files_pane << branch[0].HSizePos().TopPos(y, cy);
-	y += lcy;
-	files_pane << r[0].HSizePos().TopPos(y, cy);
-	y += lcy;
-
-	y += lcy / 2;
-
-	files_pane.Add(mode[1].TopPos(y, cy).HSizePos());
-	y += lcy;
-	files_pane.Add(dir2.TopPos(y, cy).HSizePos());
-	files_pane << branch[1].HSizePos().TopPos(y, cy);
-	y += lcy;
-	files_pane << r[1].HSizePos().TopPos(y, cy);
-	y += lcy;
-
-	y += lcy / 2;
+	for(int i = 0; i < 2; i++) {
+		files_pane.Add(mode[i].TopPos(y, cy).HSizePos());
+		y += lcy;
+		files_pane.Add((i ? dir2 : dir1).TopPos(y, cy).HSizePos());
+		files_pane << branch[i].HSizePos(0, Zx(80)).TopPos(y, cy);
+		files_pane << hash[i].RightPos(0, Zx(80) - DPI(2)).TopPos(y, cy);
+		hash[i].SetLabel("Copy hash");
+		hash[i] << [=] { WriteClipboardText(~~r[i]); };
+		y += lcy;
+		files_pane << r[i].HSizePos().TopPos(y, cy);
+		y += lcy + lcy / 2;
+	}
 
 	files_pane.Add(hidden.TopPos(y, bcy).LeftPos(0, bcx));
 	files_pane.Add(split_lines.TopPos(y, bcy).LeftPosZ(52, 100));
@@ -119,6 +112,7 @@ void DirRepoDiffDlg::Mode(int i)
 	bool b = IsNull(dl);
 	(i ? dir2 : dir1).Show(b);
 	branch[i].Show(!b);
+	hash[i].Show(!b);
 	r[i].Show(!b);
 
 	if(!b) {

@@ -4,8 +4,9 @@ namespace Upp {
 
 #ifdef CPU_SIMD
 
-void memset8__(void *p, i16x8 data, size_t len)
+void memset8__(void *p, i16x8 data_, size_t len)
 {
+	i16x8 data = data_;
 	ASSERT(len >= 16);
 	byte *t = (byte *)p;
 	auto Set4 = [&](size_t at) { data.Store(t + at); };
@@ -17,8 +18,9 @@ void memset8__(void *p, i16x8 data, size_t len)
 	t = (byte *)(((uintptr_t)t | 15) + 1);
 	len = e - t;
 	e -= 128;
+#if 0 // streaming does not seem to be benefical anymore
 #ifdef CPU_SSE2
-	if(len >= 1024*1024) { // for really huge data, bypass the cache
+	if(len >= 1024*1024 && 0) { // for really huge data, bypass the cache
 		auto Set4S = [&](int at) { data.Stream(t + at); };
 		while(len >= 64) {
 			Set4S(0*16); Set4S(1*16); Set4S(2*16); Set4S(3*16);
@@ -28,6 +30,7 @@ void memset8__(void *p, i16x8 data, size_t len)
 		_mm_sfence();
 		e = t - 1;
 	}
+#endif
 #endif
 	while(t <= e) {
 		Set4(0*16); Set4(1*16); Set4(2*16); Set4(3*16);
@@ -54,7 +57,7 @@ void memcpy8__(void *p, const void *q, size_t len)
 	byte *t = (byte *)p;
 	const byte *s = (const byte *)q;
 
-	if(len > 4*1024*1024) { // for really huge data, call memcpy to bypass the cache
+	if(len > 4*1024*1024) { // for really huge data, call memcpy to use possible CPU magic
 		memcpy(t, s, len);
 		return;
 	}

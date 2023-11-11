@@ -143,6 +143,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
 	editor.ShowSpaces(show_spaces);
+	editor.BlockCaret(block_caret);
 	editor.ShowLineEndings(show_tabs);
 	editor.WarnWhiteSpace(warnwhitespace);
 	editor.NoParenthesisIndent(no_parenthesis_indent);
@@ -404,6 +405,7 @@ void Ide::SetupFormat() {
 		(edt.wordwrap_comments, wordwrap_comments)
 		(edt.persistent_find_replace, persistent_find_replace)
 		(edt.find_replace_restore_pos, find_replace_restore_pos)
+		(edt.block_caret, block_caret)
 
 		(assist.enabled, LibClangEnabled)
 		(assist.barline, barline)
