@@ -59,6 +59,7 @@ void GlyphPainter::CloseOp()
 		Line(move);
 }
 
+#if 0
 struct GlyphKey {
 	Font   fnt;
 	int    chr;
@@ -80,7 +81,27 @@ struct sMakeGlyph : LRUCache<Value, GlyphKey>::Maker {
 		GlyphPainter gp;
 		gp.move = gp.pos = Null;
 		gp.tolerance = gk.tolerance;
+		RTIMING("PaintCharacter");
 		PaintCharacter(gp, Pointf(0, 0), gk.chr, gk.fnt);
+		int sz = gp.glyph.GetCount() * 4;
+		v = RawPickToValue(pick(gp.glyph));
+		return sz;
+	}
+};
+#endif
+
+struct sMakeGlyph : ValueMaker {
+	Font   fnt;
+	double tolerance;
+	int    chr;
+
+	String   Key() const     { String h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, chr); return h; }
+	int      Make(Value& v) const {
+		GlyphPainter gp;
+		gp.move = gp.pos = Null;
+		gp.tolerance = tolerance;
+		RTIMING("PaintCharacter");
+		PaintCharacter(gp, Pointf(0, 0), chr, fnt);
 		int sz = gp.glyph.GetCount() * 4;
 		v = RawPickToValue(pick(gp.glyph));
 		return sz;
@@ -89,10 +110,13 @@ struct sMakeGlyph : LRUCache<Value, GlyphKey>::Maker {
 
 void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double tolerance)
 {
+	RTIMING("ApproximateChar");
 	PAINTER_TIMING("ApproximateChar");
 	Value v;
 	INTERLOCKED {
+		RTIMING("ApproximateChar::Fetch");
 		PAINTER_TIMING("ApproximateChar::Fetch");
+	#if 0
 		static LRUCache<Value, GlyphKey> cache;
 		cache.Shrink(500000);
 		sMakeGlyph h;
@@ -100,6 +124,12 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		h.gk.chr = ch;
 		h.gk.tolerance = tolerance;
 		v = cache.Get(h);
+	#endif
+		sMakeGlyph m;
+		m.fnt = fnt;
+		m.chr = ch;
+		m.tolerance = tolerance;
+		v = MakeValue(m);
 #ifdef _DEBUG0
 		DLOG("==== ApproximateChar " << ch << " " << (char)ch << " " << fnt << ", tolerance: " << tolerance);
 		DDUMP(ValueTo< Vector<float> >(v));
@@ -111,6 +141,7 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		ASSERT(ValueTo< Vector<float> >(v) == chp.glyph);
 #endif
 	}
+	RTIMING("ApproximateChar2");
 	const Vector<float>& g = ValueTo< Vector<float> >(v);
 	int i = 0;
 	while(i < g.GetCount()) {

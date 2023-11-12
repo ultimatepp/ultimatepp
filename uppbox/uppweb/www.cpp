@@ -180,7 +180,7 @@ Htmls SearchBar(const char *domain)
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
 	      ~HtmlEdit("q", 15).Attr("placeholder", t_("Site search")) +
-	      ~HtmlHidden("domains", domain) +
+//	      ~HtmlHidden("domains", domain) +
 	      ~HtmlHidden("sitesearch", domain)
 	    );
 
@@ -1019,7 +1019,7 @@ CONSOLE_APP_MAIN
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
 		
 		bsearch << BarCaption(t_("Search on this site"));
-		bsearch << SearchBar("www.ultimatepp.org");
+		bsearch << SearchBar("ultimatepp.org");
 
 #if 0	
 		blang << BarCaption(t_("Language"));

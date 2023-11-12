@@ -354,8 +354,7 @@ void BufferPainter::FinishPathJob()
 		return;
 #if 1
 	{
-//		RTIMESTOP("Path");
-//		RTIMING("Path");
+		RTIMING("Path");
 		std::atomic<int> ii(0);
 		CoDo([&] {
 			for(int i = ii++; i < jobcount; i = ii++) {
@@ -475,6 +474,10 @@ void BufferPainter::FinishPathJob()
 			maxy = max(maxy, j.rasterizer.MaxY());
 			j.c = Mul8(j.color, int(256 * j.attr.opacity));
 		}
+		
+		RDUMP(fillcount);
+		RDUMP(miny);
+		RDUMP(maxy);
 
 		auto fill = [&](int ymin, int ymax) {
 			if(subpixel) {

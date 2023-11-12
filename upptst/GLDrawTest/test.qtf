@@ -1,7 +1,7 @@
-[ $$0,0#00000000000000000000000000000000:Default]
 [*C@3+75 $$1,1#36268203433472503231438721581057:code]
 [*/+117 $$2,0#07143242482611002448121871408047:title]
 [@(128.0.255)2 $$3,0#65874547464505293575048467215454:QTF Chr]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*4 QTF]&]
 [s0;= [*8 QTF]&]
@@ -17,16 +17,16 @@ and characters&]
 [s0; &]
 [s0; [*@4 . , ; ! ? % ( ) / < > #]&]
 [s0; &]
-[s0; and bytes [* greater] than 127 are guaranteed to be never used as 
-command characters (not even in future versions of QTF). Other 
+[s0; and bytes [* greater] than 127 are guaranteed to be never used 
+as command characters (not even in future versions of QTF). Other 
 characters should be prefixed with escape character `` (reverse 
 apostrophe). Group of characters can be escaped using byte 1. 
 Example:&]
 [s0; &]
-[s1; `\"`\1a`[x`]`\1`[`* bold`]`\"&]
+[s1; `\`"`\1a`[x`]`\1`[`* bold`]`\`"&]
 [s0; Normal [* Bold] [/ Italic] [*/ Bold Italic] [_ Underline] [- Stroked]&]
-[Rs0; Normal [* Bold] [/ Italic] [*/ Bold Italic] [_ Underline] [- Stroked]&]
-[Cs0; Normal [* Bold] [/ Italic] [*/ Bold Italic] [_ Underline] [- Stroked]&]
+[s0; Normal [* Bold] [/ Italic] [*/ Bold Italic] [_ Underline] [- Stroked]&]
+[s0; Normal [* Bold] [/ Italic] [*/ Bold Italic] [_ Underline] [- Stroked]&]
 [s0; Byte 0 represents the end of input sequence.&]
 [s0; &]
 [s0; Dimension units of QTF are dots `- one dot is defined as 1/600 
@@ -66,3 +66,4 @@ with meaning&]
 :: [s0;%- [1 LtCyan]]
 :: [s0;%- [1 Yellow]]}}&]
 [s0; &]
+[s0; ]]

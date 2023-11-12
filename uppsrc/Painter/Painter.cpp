@@ -203,6 +203,7 @@ Painter& Painter::Character(double x, double y, int ch, Font fnt)
 
 void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)
 {
+	RTIMING("TextOp");
 	if(n == 0) {
 		Move(0, 0);
 		return;
