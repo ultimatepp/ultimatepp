@@ -248,8 +248,7 @@ void Ide::OnlineSearchMenu(Bar& menu)
 
 	menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()), [=] { OnlineSearch(uri); }).Key(AK_GOOGLE);
 	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [=] {
-		OnlineSearch("https://www.google.com/search?q=%s"
-		             "&domains=www.ultimatepp.org&sitesearch=www.ultimatepp.org");
+		OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
 	});
 
 	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)
