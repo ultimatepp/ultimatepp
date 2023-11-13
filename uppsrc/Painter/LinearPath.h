@@ -168,16 +168,16 @@ class LinearInterpolator {
 		int   Get();
 	};
 
-	Xform2D xform;
-	Dda2    ddax, dday;
+	const Xform2D& xform;
+	Dda2           ddax, dday;
 
 	static int Q8(double x) { return int(256 * x + 0.5); }
 	
 public:
-	void   Set(const Xform2D& m)                    { xform = m; }
-
 	void   Begin(int x, int y, int len);
 	Point  Get();
+	
+	LinearInterpolator(const Xform2D& xform) : xform(xform) {}
 };
 
 void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double tolerance);

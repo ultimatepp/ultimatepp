@@ -3,7 +3,7 @@
 namespace Upp {
 
 struct PainterRadialSpan : SpanSource {
-	LinearInterpolator interpolator;
+	Xform2D     im;
 	double      cx, cy, r, fx, fy;
 	int         style;
 	int         alpha;
@@ -22,10 +22,11 @@ struct PainterRadialSpan : SpanSource {
 		C = fx * fx + fy * fy - r * r;
 	}
 
-	void Get(RGBA *_span, int x, int y, unsigned len)
+	void Get(RGBA *_span, int x, int y, unsigned len) const
 	{
 		if(r <= 0)
 			return;
+		LinearInterpolator interpolator(im);
 		interpolator.Begin(x, y, len);
 		RGBA *span = (RGBA *)_span;
 		while(len--) {
@@ -61,7 +62,7 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
 	Image gradient = Gradient(color1, color2, 2048);
 	RenderPath(width, [=](One<SpanSource>& ss) {
 		PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
-		sg.interpolator.Set(Inverse(m));
+		sg.im = Inverse(m);
 		sg.style = style;
 		sg.Set(c.x, c.y, r, f.x, f.y);
 		sg.gradient = gradient[0];

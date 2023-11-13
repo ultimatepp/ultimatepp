@@ -10,7 +10,7 @@ RGBA Mul8(const RGBA& s, int mul)
 }
 
 struct SpanSource {
-	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
+	virtual void Get(RGBA *span, int x, int y, unsigned len) const = 0;
 	virtual ~SpanSource() {}
 };
 

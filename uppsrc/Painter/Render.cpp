@@ -221,6 +221,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		for(int i = 0; i < n; i++)
 			co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
 	}
+
+	One<SpanSource>     rss; // it is now const baby!
+	ss(rss);
 	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
@@ -234,7 +237,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		ClipFiller          clip_filler;
 		NoAAFillerFilter    noaa_filler;
 		MaskFillerFilter    mf;
-		One<SpanSource>     rss;
 
 		if(subpixel) {
 			int ci = CoWork::GetWorkerIndex();
@@ -248,7 +250,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		else
 		if(ss) {
-			ss(rss);
 			RGBA           *lspan;
 			int ci = CoWork::GetWorkerIndex();
 			if(co && ci >= 0)

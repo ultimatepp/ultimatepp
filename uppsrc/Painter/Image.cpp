@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#ifdef CPU_SIMD
+#ifdef CPU_SIMD0
 
 force_inline
 int IntAndFraction(f32x4 x, f32x4& fraction)
@@ -56,6 +56,7 @@ struct PainterImageSpanData {
 		maxy = cy - 1;
 		ax = 6000000 / cx * cx * 2;
 		ay = 6000000 / cy * cy * 2;
+		fixed = hstyle && vstyle;
 	}
 	
 	PainterImageSpanData() {}
@@ -66,9 +67,9 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 	PainterImageSpan(const PainterImageSpanData& f)
 	:	PainterImageSpanData(f) {}
 	
-	const RGBA *Pixel(int x, int y) { return &image[y][x]; }
+	const RGBA *Pixel(int x, int y) const { return &image[y][x]; }
 
-	const RGBA *GetPixel(int x, int y) {
+	const RGBA *GetPixel(int x, int y) const {
 		if(hstyle == FILL_HPAD)
 			x = minmax(x, 0, maxx);
 		else
@@ -89,7 +90,7 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? &image[y][x] : &zero;
 	}
 
-	virtual void Get(RGBA *span, int x, int y, unsigned len)
+	virtual void Get(RGBA *span, int x, int y, unsigned len) const
 	{
 		PAINTER_TIMING("ImageSpan::Get");
 
@@ -110,7 +111,6 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			ii += v1;
 		};
 
-		fixed = hstyle && vstyle;
 		if(hstyle + vstyle == 0 && fast) {
 			while(len--) {
 				GetIXY();
@@ -239,6 +239,7 @@ struct PainterImageSpanData {
 		maxy = cy - 1;
 		ax = 6000000 / cx * cx * 2;
 		ay = 6000000 / cy * cy * 2;
+		fixed = hstyle && vstyle;
 	}
 	
 	PainterImageSpanData() {}
@@ -246,16 +247,11 @@ struct PainterImageSpanData {
 
 
 struct PainterImageSpan : SpanSource, PainterImageSpanData {
-	LinearInterpolator interpolator;
+	PainterImageSpan(const PainterImageSpanData& f) : PainterImageSpanData(f) {}
 	
-	PainterImageSpan(const PainterImageSpanData& f)
-	:	PainterImageSpanData(f) {
-		interpolator.Set(xform);
-	}
-	
-	RGBA Pixel(int x, int y) { return image[y][x]; }
+	RGBA Pixel(int x, int y) const { return image[y][x]; }
 
-	RGBA GetPixel(int x, int y) {
+	RGBA GetPixel(int x, int y) const {
 		if(hstyle == FILL_HPAD)
 			x = minmax(x, 0, maxx);
 		else
@@ -275,11 +271,11 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? image[y][x] : RGBAZero();
 	}
 
-	virtual void Get(RGBA *span, int x, int y, unsigned len)
+	virtual void Get(RGBA *span, int x, int y, unsigned len) const
 	{
 		PAINTER_TIMING("ImageSpan::Get");
+		LinearInterpolator interpolator(xform);
 		interpolator.Begin(x, y, len);
-		fixed = hstyle && vstyle;
 		if(hstyle + vstyle == 0 && fast) {
 			while(len--) {
 				Point l = interpolator.Get() >> 8;
@@ -344,7 +340,7 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
 	PainterImageSpanData f(flags, transsrc * pathattr.mtx, image, co, imagecache);
-	RenderPath(width, [&](One<SpanSource>& s) {
+	RenderPath(width, [=](One<SpanSource>& s) {
 		s.Create<PainterImageSpan>(f);
 	}, RGBAZero());
 }
