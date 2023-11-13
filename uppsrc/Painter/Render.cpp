@@ -18,8 +18,6 @@ void BufferPainter::ClearOp(const RGBA& color)
 	}
 	else
 		UPP::Fill(~*ip, color, ip->GetLength());
-//	memset(~*ip, 255, 4 * ip->GetLength());
-//	UPP::Fill(~*ip, color, ip->GetLength());
 	ip->SetKind(color.a == 255 ? IMAGE_OPAQUE : IMAGE_ALPHA);
 }
 
@@ -439,7 +437,7 @@ void BufferPainter::FinishPathJob()
 				}
 			}
 		};
-	
+
 		int n = maxy - miny;
 		if(n >= 0) {
 			if(n > 6) {
@@ -492,3 +490,69 @@ void BufferPainter::ClipOp()
 }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
