@@ -35,7 +35,12 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 	sz.cx = cx;
 	sz.cy = cy;
 
-	cell.Alloc(sz.cy + 1); // one more for overrun
+	{
+		RTIMING("Alloc");
+		cell.Alloc(sz.cy + 1); // one more for overrun
+	}
+	
+	ONCELOCK { RDUMP(sizeof(CellArray)); }
 
 //	STATIC_ASSERT(sizeof(CellArray) == 128);
 
@@ -46,6 +51,7 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 void Rasterizer::Free()
 {
+	RTIMING("Free");
 	if(cell)
 		for(int i = 0; i <= sz.cy; i++)
 			if(cell[i].alloc != SVO_ALLOC)
@@ -61,8 +67,10 @@ void Rasterizer::Init()
 
 void Rasterizer::Reset()
 {
+	RTIMING("Reset");
 	for(int i = min_y; i <= max_y; i++) {
 		if(cell[i].alloc != SVO_ALLOC) {
+			RTIMING("SVO free");
 			MemoryFree(cell[i].ptr);
 			cell[i].alloc = SVO_ALLOC;
 		}
