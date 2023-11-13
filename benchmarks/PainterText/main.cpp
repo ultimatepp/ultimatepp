@@ -5,7 +5,7 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	ImagePainter iw(4000, 2000);
-//	iw.Co();
+	iw.Co();
 
 	for(int i = 0; i < 1; i++) {
 		{

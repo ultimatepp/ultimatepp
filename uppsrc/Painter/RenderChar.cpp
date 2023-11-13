@@ -95,7 +95,8 @@ struct sMakeGlyph : ValueMaker {
 	double tolerance;
 	int    chr;
 
-	String   Key() const     { String h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, chr); return h; }
+	String   Key() const     { RTIMING("Key"); String h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, chr); return h; }
+//	String   Key() const     { RTIMING("Key"); StringStream h; h % fnt % tolerance %  chr; return h; }
 	int      Make(Value& v) const {
 		GlyphPainter gp;
 		gp.move = gp.pos = Null;
@@ -113,10 +114,15 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 	RTIMING("ApproximateChar");
 	PAINTER_TIMING("ApproximateChar");
 	Value v;
+	sMakeGlyph m;
+	m.fnt = fnt;
+	m.chr = ch;
+	m.tolerance = tolerance;
+	v = MakeValue(m);
+#if 0
 	INTERLOCKED {
 		RTIMING("ApproximateChar::Fetch");
 		PAINTER_TIMING("ApproximateChar::Fetch");
-	#if 0
 		static LRUCache<Value, GlyphKey> cache;
 		cache.Shrink(500000);
 		sMakeGlyph h;
@@ -124,12 +130,6 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		h.gk.chr = ch;
 		h.gk.tolerance = tolerance;
 		v = cache.Get(h);
-	#endif
-		sMakeGlyph m;
-		m.fnt = fnt;
-		m.chr = ch;
-		m.tolerance = tolerance;
-		v = MakeValue(m);
 #ifdef _DEBUG0
 		DLOG("==== ApproximateChar " << ch << " " << (char)ch << " " << fnt << ", tolerance: " << tolerance);
 		DDUMP(ValueTo< Vector<float> >(v));
@@ -141,6 +141,7 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		ASSERT(ValueTo< Vector<float> >(v) == chp.glyph);
 #endif
 	}
+#endif
 	RTIMING("ApproximateChar2");
 	const Vector<float>& g = ValueTo< Vector<float> >(v);
 	int i = 0;

@@ -451,6 +451,7 @@ struct GlyphInfoMaker : ValueMaker {
 
 CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
 {
+	RTIMING("GetGlyphEntry");
 	Mutex::Lock __(sFontLock);
 	GlyphInfoMaker m;
 	m.font = font;
