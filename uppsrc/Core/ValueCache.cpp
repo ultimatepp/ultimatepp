@@ -23,52 +23,67 @@ bool IsValueCacheActive()
 	return !sValueCacheFinished;
 }
 
-int ValueCacheMaxSize = 4000000;
-
-int ValueCacheMaxSizeLimitLow = 1024*1024;
-int ValueCacheMaxSizeLimitHigh = 0;
-double ValueCacheRatio = 0.125;
+bool ValueCacheFixed = false;
+int  ValueCacheMaxSize = 0;
+int  ValueCacheMaxCount = 20000;
 
 void AdjustValueCache()
 {
 	Mutex::Lock __(ValueCacheMutex);
+	if(ValueCacheFixed)
+		return;
 	uint64 total, available;
 	GetSystemMemoryStatus(total, available);
-	if(ValueCacheMaxSizeLimitHigh == 0)
-		ValueCacheMaxSizeLimitHigh = INT_MAX;
-	ValueCacheMaxSize = clamp((int)min((int64)(ValueCacheRatio * available), (int64)2000*1024*1024),
-	                          ValueCacheMaxSizeLimitLow, ValueCacheMaxSizeLimitHigh);
-	LLOG("New MakeValue max size " << ValueCacheMaxSize << " high limit " << ValueCacheMaxSizeLimitHigh);
+	ValueCacheMaxSize = int(available >> 10);
+	if(!ValueCacheMaxSize && available) {
+		ValueCacheMaxSize = 128*1024*1024;
+	}
+	ValueCacheMaxCount = max(ValueCacheMaxSize / 200, 20000);
+	LLOG("New MakeValue max size " << ValueCacheMaxSize << " count " << ValueCacheMaxCount);
 	ShrinkValueCache();
 }
 
 void ShrinkValueCache()
 {
 	Mutex::Lock __(ValueCacheMutex);
-	if(!ValueCacheMaxSizeLimitHigh)
+	if(!ValueCacheMaxSize)
 		AdjustValueCache();
-	TheValueCache().Shrink(ValueCacheMaxSize, 20000);
+	LLOG("MakeValue cache size before shrink: " << TheValueCache().GetSize());
+	TheValueCache().Shrink(ValueCacheMaxSize, ValueCacheMaxCount);
 	LLOG("MakeValue cache size after shrink: " << TheValueCache().GetSize());
 }
 
-void SetupValueCache(int limit_low, int limit_high, double ratio)
+void SetupValueCache(int maxsize, int maxcount)
 {
 	Mutex::Lock __(ValueCacheMutex);
 
-	ValueCacheMaxSizeLimitLow = 1000000;
-	ValueCacheMaxSizeLimitHigh = 256000000;
-	ValueCacheRatio = 0.125;
+	if(maxsize <= 0) {
+		ValueCacheFixed = false;
+		AdjustValueCache();
+	}
+	else {
+		ValueCacheMaxSize = maxsize;
+		ValueCacheMaxCount = maxcount;
+		ValueCacheFixed = true;
+	}
 }
 
-Value MakeValue(ValueMaker& m)
+
+Value MakeValueSz(ValueMaker& m, int& sz)
 {
 	Mutex::Lock __(ValueCacheMutex);
 	LLOG("MakeValue cache size before make: " << TheValueCache().GetSize());
-	Value v = TheValueCache().Get(m, [] { ValueCacheMutex.Leave(); }, [] { ValueCacheMutex.Enter(); });
+	Value v = TheValueCache().Get(m, [] { ValueCacheMutex.Leave(); }, [] { ValueCacheMutex.Enter(); }, sz);
 	LLOG("MakeValue cache size after make: " << TheValueCache().GetSize());
 	ShrinkValueCache();
 	LLOG("-------------");
 	return v;
+}
+
+Value MakeValue(ValueMaker& m)
+{
+	int sz;
+	return MakeValueSz(m, sz);
 }
 
 };

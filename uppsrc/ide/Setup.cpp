@@ -406,6 +406,7 @@ void Ide::SetupFormat() {
 		(edt.persistent_find_replace, persistent_find_replace)
 		(edt.find_replace_restore_pos, find_replace_restore_pos)
 		(edt.block_caret, block_caret)
+		(edt.bar_branch, bar_branch)
 
 		(assist.enabled, LibClangEnabled)
 		(assist.barline, barline)
