@@ -180,7 +180,6 @@ Htmls SearchBar(const char *domain)
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
 	      ~HtmlEdit("q", 15).Attr("placeholder", t_("Site search")) +
-//	      ~HtmlHidden("domains", domain) +
 	      ~HtmlHidden("sitesearch", domain)
 	    );
 
@@ -381,7 +380,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
-			ttxt << "[^ " << link << "^* " << DeQtf(topic.title) << "]::^ "
+			ttxt << "[^" << link << "^* " << DeQtf(topic.title) << "]::^ "
 			     << DeQtf(p.description);
 			next = true;
 		}

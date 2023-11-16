@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 29;
+	int version = 30;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -227,6 +227,8 @@ void Ide::Serialize(Stream& s)
 		s % show_spaces;
 	if(version >= 29)
 		s % block_caret;
+	if(version >= 30)
+		s % bar_branch;
 	if(version >= 7)
 		s % warnwhitespace;
 	s % tabs_icons;

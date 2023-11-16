@@ -214,8 +214,8 @@ public:
 private:
 	struct Item : Moveable<Item> {
 		int    prev, next;
-		int    size; // TODO: size_t?
-		One<T> data; // TODO: Value?
+		int    size;
+		One<T> data;
 		bool   flag;
 	};
 	
@@ -259,8 +259,10 @@ public:
 	template <class P> bool RemoveOne(P predicate);
 
 	template <class B, class A>
-	T&   Get(const Maker& m, B before_make, A after_make);
-	T&   Get(const Maker& m) { return Get(m, []{}, []{}); }
+	T&   Get(const Maker& m, B before_make, A after_make, int& sz);
+	template <class B, class A>
+	T&   Get(const Maker& m, B before_make, A after_make) { int sz; return Get(m, before_make, after_make, sz); }
+	T&   Get(const Maker& m)                              { return Get(m, []{}, []{}); }
 
 	void Clear();
 
