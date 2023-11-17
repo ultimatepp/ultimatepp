@@ -6,8 +6,9 @@ GUI_APP_MAIN
 {
 	ImagePainter iw(4000, 2000);
 	iw.Co();
+	Image m;
 
-	for(int i = 0; i < 1; i++) {
+	for(int i = 0; i < 30; i++) {
 		{
 			RTIMING("Clear");
 			iw.Clear();
@@ -20,6 +21,7 @@ GUI_APP_MAIN
 				            Arial(25));
 			iw.Finish();
 		}
+//		m = iw;
 	}
 	
 	TopWindow win;

@@ -144,7 +144,7 @@ void BufferPainter::SyncCo()
 	}
 }
 
-Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSource>&> ss, const RGBA& color)
+Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss, const RGBA& color)
 {
 	PAINTER_TIMING("RenderPath");
 	Buffer<ClippingLine> newclip;
@@ -197,9 +197,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 				job.color = color;
 				job.preclip = preclip;
 				job.regular = regular;
+				if(jobcount + emptycount >= BATCH_SIZE)
+					FinishPathJob();
 			}
-			if(jobcount + emptycount >= BATCH_SIZE)
-				FinishPathJob();
 			return newclip;
 		}
 	
@@ -220,9 +220,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 			co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
 	}
 
-	One<SpanSource>     rss; // it is now const baby!
-	ss(rss);
-	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
 		int opacity = int(256 * pathattr.opacity);
@@ -258,13 +255,13 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 				lspan = span;
 			}
 			if(subpixel) {
-				subpixel_filler.ss = ~rss;
+				subpixel_filler.ss = ~ss;
 				subpixel_filler.buffer = lspan;
 				subpixel_filler.alpha = opacity;
 				rg = &subpixel_filler;
 			}
 			else {
-				span_filler.ss = ~rss;
+				span_filler.ss = ~ss;
 				span_filler.buffer = lspan;
 				span_filler.alpha = opacity;
 				rg = &span_filler;
@@ -289,7 +286,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		if(width != ONPATH) {
 			if(alt)
-				alt->Fill(width, ~rss, color);
+				alt->Fill(width, ~ss, color);
 			else {
 				PAINTER_TIMING("Fill");
 				int ii = 0;
@@ -327,7 +324,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 			int n = rasterizer.MaxY() - rasterizer.MinY();
 			if(n >= 0) {
 				PAINTER_TIMING("RenderPath2 Fill");
-				RTIMING("DO FILL ST");
 				if(doco && n > 6) {
 					CoWork co;
 					co * [&] { fill(&co); };
@@ -351,9 +347,9 @@ void BufferPainter::FinishPathJob()
 {
 	if(jobcount == 0)
 		return;
-#if 1
 	{
 		RTIMING("Path");
+		RDUMP(jobcount);
 		std::atomic<int> ii(0);
 		CoDo([&] {
 			for(int i = ii++; i < jobcount; i = ii++) {
@@ -367,19 +363,17 @@ void BufferPainter::FinishPathJob()
 			}
 		});
 	}
-#endif
-	FinishFillJob();
+
+	FinishFillJob(); // finish running fill job (if any) so that we can start new one
 	
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
 	
 #if 1
-#if 0
 	fill_job & [=] {
+		RTIMING("Fill");
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
-
-		RTIMING("DO FILL MT");
 
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
@@ -443,11 +437,10 @@ void BufferPainter::FinishPathJob()
 
 		int n = maxy - miny;
 		if(maxy >= miny) {
-			if(maxy - miny > 6) {
-				std::atomic<int> ii;
+			if(maxy - miny > 3) {
+				std::atomic<int> ii(0);
 				CoDo([&] {
 					for(;;) {
-						const int N = 1;
 						int y = ii++ + miny;
 						if(y > maxy)
 							break;
@@ -462,10 +455,9 @@ void BufferPainter::FinishPathJob()
 	};
 #else
 	fill_job & [=] {
+		RDUMP(fillcount);
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
-
-		RTIMING("DO FILL MT");
 
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
@@ -474,10 +466,6 @@ void BufferPainter::FinishPathJob()
 			j.c = Mul8(j.color, int(256 * j.attr.opacity));
 		}
 		
-		RDUMP(fillcount);
-		RDUMP(miny);
-		RDUMP(maxy);
-
 		auto fill = [&](int ymin, int ymax) {
 			if(subpixel) {
 				SubpixelFiller subpixel_filler;
@@ -544,7 +532,7 @@ void BufferPainter::FinishPathJob()
 				CoWork co;
 				co * [&] {
 					for(;;) {
-						const int N = 4;
+						const int N = 1;
 						int y = N * co.Next() + miny;
 						if(y > maxy)
 							break;
@@ -558,7 +546,6 @@ void BufferPainter::FinishPathJob()
 	#endif
 	};
 #endif
-#endif
 	jobcount = emptycount = 0;
 }
 
@@ -570,18 +557,21 @@ void BufferPainter::Finish()
 
 void BufferPainter::FillOp(const RGBA& color)
 {
-	RenderPath(FILL, Null, color);
+	One<SpanSource> none;
+	RenderPath(FILL, none, color);
 }
 
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
-	RenderPath(width, Null, color);
+	One<SpanSource> none;
+	RenderPath(width, none, color);
 }
 
 void BufferPainter::ClipOp()
 {
 	FinishPathJob();
-	Buffer<ClippingLine> newclip = RenderPath(CLIP, Null, RGBAZero());
+	One<SpanSource> none;
+	Buffer<ClippingLine> newclip = RenderPath(CLIP, none, RGBAZero());
 	if(attr.hasclip)
 		clip.Top() = pick(newclip);
 	else {

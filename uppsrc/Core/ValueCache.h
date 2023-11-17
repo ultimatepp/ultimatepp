@@ -89,7 +89,7 @@ Value MakeValueTL(const K& k, const M& m)
 
 		int Make(Value& object) const override {
 			int sz;
-			MakeValue_(key, m, sz);
+			object = MakeValue_(key, m, sz);
 			return sz;
 		}
 		

@@ -6,7 +6,7 @@ struct GlyphPainter : NilPainter, LinearPathConsumer {
 	Vector<float>       glyph;
 	double              tolerance;
 	Pointf              pos, move;
-	
+
 	virtual void LineOp(const Pointf& p, bool);
 	virtual void MoveOp(const Pointf& p, bool);
 	virtual void QuadraticOp(const Pointf& p1, const Pointf& p, bool);
@@ -64,7 +64,7 @@ struct GlyphKey {
 	Font   fnt;
 	int    chr;
 	double tolerance;
-	
+
 	bool operator==(const GlyphKey& b) const {
 		return fnt == b.fnt && chr == b.chr && tolerance == b.tolerance;
 	}
@@ -81,7 +81,6 @@ struct sMakeGlyph : LRUCache<Value, GlyphKey>::Maker {
 		GlyphPainter gp;
 		gp.move = gp.pos = Null;
 		gp.tolerance = gk.tolerance;
-		RTIMING("PaintCharacter");
 		PaintCharacter(gp, Pointf(0, 0), gk.chr, gk.fnt);
 		int sz = gp.glyph.GetCount() * 4;
 		v = RawPickToValue(pick(gp.glyph));
@@ -95,7 +94,7 @@ struct sMakeGlyph : ValueMaker {
 	double tolerance;
 	int    chr;
 
-	String   Key() const     { RTIMING("Key"); String h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, chr); return h; }
+	String   Key() const     { StringBuffer h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, chr); return h; }
 //	String   Key() const     { RTIMING("Key"); StringStream h; h % fnt % tolerance %  chr; return h; }
 	int      Make(Value& v) const {
 		GlyphPainter gp;
@@ -111,17 +110,27 @@ struct sMakeGlyph : ValueMaker {
 
 void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double tolerance)
 {
-	RTIMING("ApproximateChar");
 	PAINTER_TIMING("ApproximateChar");
+	Value v = MakeValueTL([&] { StringBuffer h; RawCat(h, fnt); RawCat(h, tolerance); RawCat(h, ch); return (String)h; },
+	                    [&](Value& v) {
+							GlyphPainter gp;
+							gp.move = gp.pos = Null;
+							gp.tolerance = tolerance;
+							PaintCharacter(gp, Pointf(0, 0), ch, fnt);
+							int sz = gp.glyph.GetCount() * 4;
+							v = RawPickToValue(pick(gp.glyph));
+							return sz;
+	                    });
+#if 0
 	Value v;
 	sMakeGlyph m;
 	m.fnt = fnt;
 	m.chr = ch;
 	m.tolerance = tolerance;
 	v = MakeValue(m);
+#endif
 #if 0
 	INTERLOCKED {
-		RTIMING("ApproximateChar::Fetch");
 		PAINTER_TIMING("ApproximateChar::Fetch");
 		static LRUCache<Value, GlyphKey> cache;
 		cache.Shrink(500000);
@@ -142,7 +151,6 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 #endif
 	}
 #endif
-	RTIMING("ApproximateChar2");
 	const Vector<float>& g = ValueTo< Vector<float> >(v);
 	int i = 0;
 	while(i < g.GetCount()) {

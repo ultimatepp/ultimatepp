@@ -60,13 +60,13 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
                                  const Xform2D& m, int style)
 {
 	Image gradient = Gradient(color1, color2, 2048);
-	RenderPath(width, [=](One<SpanSource>& ss) {
-		PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
-		sg.im = Inverse(m);
-		sg.style = style;
-		sg.Set(c.x, c.y, r, f.x, f.y);
-		sg.gradient = gradient[0];
-	}, RGBAZero());
+	One<SpanSource> ss;
+	PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
+	sg.im = Inverse(m);
+	sg.style = style;
+	sg.Set(c.x, c.y, r, f.x, f.y);
+	sg.gradient = gradient[0];
+	RenderPath(width, ss, RGBAZero());
 }
 
 void BufferPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)

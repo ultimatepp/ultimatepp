@@ -279,8 +279,6 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	int q = CombineHash(font, page) % GLYPHINFOCACHE;
 	
 	if(fnt[q] != font || pg[q] != page) {
-		RTIMING("GetGlyphInfoSys DO");
-		RLOG(font << " " << chr << " " << (char)chr);
 		fnt[q] = font;
 		pg[q] = page;
 		HFONT hfont = GetWin32Font(font, 0);

@@ -274,7 +274,7 @@ private:
 	void             DoPath0();
 	void             DoPath()         { if(IsNull(current)) DoPath0(); }
 	void             ClearPath();
-	Buffer<ClippingLine> RenderPath(double width, Event<One<SpanSource>&> ss, const RGBA& color);
+	Buffer<ClippingLine> RenderPath(double width, One<SpanSource>& ss, const RGBA& color);
 	void             RenderImage(double width, const Image& image, const Xform2D& transsrc,
 	                             dword flags);
 	void             RenderRadial(double width, const Pointf& f, const RGBA& color1,

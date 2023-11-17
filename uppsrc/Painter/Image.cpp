@@ -340,9 +340,9 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
 	PainterImageSpanData f(flags, transsrc * pathattr.mtx, image, co, imagecache);
-	RenderPath(width, [=](One<SpanSource>& s) {
-		s.Create<PainterImageSpan>(f);
-	}, RGBAZero());
+	One<SpanSource> ss;
+	ss.Create<PainterImageSpan>(f);
+	RenderPath(width, ss, RGBAZero());
 }
 
 void BufferPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags)

@@ -142,7 +142,6 @@ void BufferPainter::DivOp()
 
 void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
 {
-	RTIMING("CharacterOp");
 	LLOG("@ CharacterOp " << p << ", " << ch << ", " << fnt);
 #if 0
 	DoMove0();
