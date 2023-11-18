@@ -2,7 +2,7 @@
 
 void DoRect(Painter &sw, double size, bool image)
 {
-	if(size < 10)
+	if(size < 1)
 		return;
 
 	sw.Move(0, 0);
