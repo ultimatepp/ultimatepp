@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-double ipow10_table[601];
-
 unsigned stou(const char *s, void *endptr, unsigned base)
 {
 	ASSERT(base >= 2 && base <= 36);
@@ -196,6 +194,22 @@ Value StrDblValue(const char *s)
 	return (double)Null;
 }
 
+Value StrFltValue(const char *s)
+{
+	if(s && *s) {
+		const char *p;
+		double q = ScanFloat(s, &p);
+		if(!IsNull(q))
+			while(*p) {
+				if((byte)*p > ' ')
+					return ErrorValue(t_("Invalid number !"));
+				p++;
+			}
+		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
+	}
+	return (double)Null;
+}
+
 Value Scan(dword qtype, const String& text, const Value& def, bool *hastime) {
 	Date date;
 	const char *s;
@@ -262,6 +276,8 @@ Value Scan(dword qtype, const String& text, const Value& def, bool *hastime) {
 		return text;
 	case DOUBLE_V:
 		return StrDblValue(text);
+	case FLOAT_V:
+		return StrFltValue(text);
 	default:
 		ASSERT(0);
 		break;
@@ -282,6 +298,8 @@ Value  Convert::Format(const Value& q) const {
 		return IntStr((int)q);
 	case DOUBLE_V:
 		return DblStr((double)q);
+	case FLOAT_V:
+		return AsString((float)q);
 	case DATE_V:
 		return UPP::Format(Date(q));
 	case TIME_V:

@@ -84,7 +84,7 @@ int utoa32(dword value, char *buffer)
 			Do2(buffer + 1, value % 100);
 			return 3;
 		}
-		
+
 		Do4(buffer, value);
 		return 4;
 	}
@@ -105,7 +105,7 @@ int utoa32(dword value, char *buffer)
 			Do4(buffer + 3, value % 10000);
 			return 7;
 		}
-		
+
 		Do8(buffer, value);
 		return 8;
 	}
@@ -471,6 +471,7 @@ void RegisterNullFormatter(const char *id, Formatter f)
 void RegisterNumberFormatter(const char *id, Formatter f)
 {
 	RegisterFormatter(DOUBLE_V, id, f);
+	RegisterFormatter(FLOAT_V, id, f);
 	RegisterFormatter(INT64_V, id, f);
 	RegisterFormatter(INT_V, id, f);
 	RegisterFormatter(BOOL_V, id, f);
@@ -532,7 +533,7 @@ String IntUpperRomanFormatter(const Formatting& f)
 String DoubleFormatter(const Formatting& f)
 {
 	const char *s = f.format;
-	
+
 	bool fillz = false;
 	bool wd = true;
 	bool left = false;
@@ -879,6 +880,7 @@ static void sRegisterFormatters()
 		IntDoubleRegister(INT_V);
 		IntDoubleRegister(INT64_V);
 		IntDoubleRegister(DOUBLE_V);
+		IntDoubleRegister(FLOAT_V);
 
 		RegisterStringFormatter("s", &StringFormatter);
 		RegisterNullFormatter("", &DateFormatter);

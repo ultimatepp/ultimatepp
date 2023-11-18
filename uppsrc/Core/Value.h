@@ -364,7 +364,7 @@ inline bool IsErrorValueTypeNo(int q)    { return (dword)q == ERROR_V; }
 inline bool IsStringValueTypeNo(int q)   { return (dword)q == STRING_V || (dword)q == WSTRING_V; }
 
 inline bool IsIntegerValueTypeNo(int q)  { return (dword)q == INT_V || (dword)q == INT64_V || (dword)q == BOOL_V; }
-inline bool IsFloatValueTypeNo(int q)    { return (dword)q == DOUBLE_V; }
+inline bool IsFloatValueTypeNo(int q)    { return (dword)q == DOUBLE_V || (dword)q == FLOAT_V; }
 
 inline bool IsNumberValueTypeNo(int q)   { return IsIntegerValueTypeNo(q) || IsFloatValueTypeNo(q); }
 inline bool IsDateTimeValueTypeNo(int q) { return (dword)q == DATE_V || (dword)q == TIME_V; }
