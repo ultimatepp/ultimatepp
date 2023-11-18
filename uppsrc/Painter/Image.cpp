@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#ifdef CPU_SIMD0
+#ifdef CPU_SIMD
 
 force_inline
 int IntAndFraction(f32x4 x, f32x4& fraction)
@@ -178,28 +178,6 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
     }
 };
 
-void BufferPainter::RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags)
-{
-	current = Null;
-	if(image.GetWidth() == 0 || image.GetHeight() == 0)
-		return;
-	PainterImageSpanData f(flags, transsrc * pathattr.mtx, image, co, imagecache);
-	RenderPath(width, [&](One<SpanSource>& s) {
-		s.Create<PainterImageSpan>(f);
-	}, RGBAZero());
-}
-
-void BufferPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags)
-{
-	Close();
-	RenderImage(-1, image, transsrc, flags);
-}
-
-void BufferPainter::StrokeOp(double width, const Image& image, const Xform2D& transsrc, dword flags)
-{
-	RenderImage(width, image, transsrc, flags);
-}
-
 #else
 
 struct PainterImageSpanData {
@@ -334,6 +312,8 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
     }
 };
 
+#endif
+
 void BufferPainter::RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags)
 {
 	current = Null;
@@ -355,7 +335,5 @@ void BufferPainter::StrokeOp(double width, const Image& image, const Xform2D& tr
 {
 	RenderImage(width, image, transsrc, flags);
 }
-
-#endif
 
 }

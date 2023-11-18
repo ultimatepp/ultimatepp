@@ -251,6 +251,9 @@ private:
 		double            width;
 		double            opacity;
 		Rasterizer        rasterizer;
+		SpanSource       *ss;
+		One<SpanSource>   sso;
+		int               alpha;
 		RGBA              color;
 		RGBA              c;
 		int               subpath;

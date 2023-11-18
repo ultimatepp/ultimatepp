@@ -471,6 +471,7 @@ void RegisterNullFormatter(const char *id, Formatter f)
 void RegisterNumberFormatter(const char *id, Formatter f)
 {
 	RegisterFormatter(DOUBLE_V, id, f);
+	RegisterFormatter(FLOAT_V, id, f);
 	RegisterFormatter(INT64_V, id, f);
 	RegisterFormatter(INT_V, id, f);
 	RegisterFormatter(BOOL_V, id, f);
@@ -879,6 +880,7 @@ static void sRegisterFormatters()
 		IntDoubleRegister(INT_V);
 		IntDoubleRegister(INT64_V);
 		IntDoubleRegister(DOUBLE_V);
+		IntDoubleRegister(FLOAT_V);
 
 		RegisterStringFormatter("s", &StringFormatter);
 		RegisterNullFormatter("", &DateFormatter);

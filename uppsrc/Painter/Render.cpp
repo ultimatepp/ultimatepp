@@ -185,7 +185,14 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 	}
 
 	if(co) {
-		if(width >= FILL && !ss && !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
+		if(ss && !co_span) {
+			int n = CoWork::GetPoolSize();
+			co_span.Alloc(n);
+			for(int i = 0; i < n; i++)
+				co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
+		}
+
+		if(width >= FILL && /* !ss && */ !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
 			for(int i = 0; i < path_info->path.GetCount(); i++) {
 				while(jobcount >= cojob.GetCount())
 					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), mode == MODE_SUBPIXEL);
@@ -197,9 +204,12 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 				job.color = color;
 				job.preclip = preclip;
 				job.regular = regular;
+				job.ss = ~ss;
 				if(jobcount + emptycount >= BATCH_SIZE)
 					FinishPathJob();
 			}
+			if(ss && jobcount) // store SpanSource ownership in the last possible job
+				cojob[jobcount - 1]asefasd.sso = pick(ss);
 			return newclip;
 		}
 	
@@ -212,13 +222,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 	PathJob j(rasterizer, width, path_info, pathattr, preclip, regular);
 	if(j.preclipped)
 		return newclip;
-
-	if(co && ss && !co_span) {
-		int n = CoWork::GetPoolSize();
-		co_span.Alloc(n);
-		for(int i = 0; i < n; i++)
-			co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
-	}
 
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
@@ -269,7 +272,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 		}
 		else {
 			if(subpixel) {
-				subpixel_filler.ss = NULL;
+				subpixel_filler.ss = nullptr;
 				subpixel_filler.color = Mul8(color, opacity);
 				subpixel_filler.invert = pathattr.invert;
 				rg = &subpixel_filler;
@@ -341,8 +344,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 	return newclip;
 }
 
-int fake_it;
-
 void BufferPainter::FinishPathJob()
 {
 	if(jobcount == 0)
@@ -374,27 +375,46 @@ void BufferPainter::FinishPathJob()
 		RTIMING("Fill");
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
-
+		
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
 			miny = min(miny, j.rasterizer.MinY());
 			maxy = max(maxy, j.rasterizer.MaxY());
-			j.c = Mul8(j.color, int(256 * j.attr.opacity));
+			int alpha = int(256 * j.attr.opacity);
+			if(!j.ss)
+				j.c = Mul8(j.color, alpha);
+			else
+				j.alpha = alpha;
 		}
 
 		auto fill = [&](int y) {
 			if(subpixel) {
 				SubpixelFiller subpixel_filler;
-				subpixel_filler.ss = NULL;
 				int ci = CoWork::GetWorkerIndex();
 				subpixel_filler.sbuffer = ci >= 0 ? co_subpixel[ci] : subpixel;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
 					if(j.rasterizer.NotEmpty(y)) {
 						subpixel_filler.color = j.c;
+						subpixel_filler.ss = j.ss;
 						subpixel_filler.invert = j.attr.invert;
 						subpixel_filler.t = (*ip)[y];
 						subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
+
+						if(j.ss) {
+							RGBA  *lspan;
+							if(ci >= 0)
+								lspan = co_span[ci];
+							else {
+								if(!span)
+									span.Alloc(3 * ip->GetWidth() + 3);
+								lspan = span;
+							}
+							subpixel_filler.buffer = lspan;
+							subpixel_filler.alpha = j.alpha;
+							subpixel_filler.y = y;
+						}
+						
 						if(clip.GetCount()) {
 							if(clip.Top()) {
 								MaskFillerFilter mf;
@@ -412,24 +432,45 @@ void BufferPainter::FinishPathJob()
 			}
 			else {
 				SolidFiller solid_filler;
+				SpanFiller  span_filler;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
 					if(j.rasterizer.NotEmpty(y)) {
-						solid_filler.c = j.c;
-						solid_filler.invert = j.attr.invert;
-						solid_filler.t = (*ip)[y];
+						Rasterizer::Filler *rg;
+						if(j.ss) {
+							RGBA  *lspan;
+							int ci = CoWork::GetWorkerIndex();
+							if(ci >= 0)
+								lspan = co_span[ci];
+							else {
+								if(!span)
+									span.Alloc(ip->GetWidth() + 3);
+								lspan = span;
+							}
+							span_filler.ss = j.ss;
+							span_filler.buffer = lspan;
+							span_filler.alpha = j.alpha;
+							span_filler.y = y;
+							rg = &span_filler;
+						}
+						else {
+							solid_filler.c = j.c;
+							solid_filler.invert = j.attr.invert;
+							solid_filler.t = (*ip)[y];
+							rg = &solid_filler;
+						}
 						if(clip.GetCount()) {
 							if(clip.Top()) {
 								MaskFillerFilter mf;
 								const ClippingLine& s = clip.Top()[y];
 								if(!s.IsEmpty() && !s.IsFull()) {
-									mf.Set(&solid_filler, s);
+									mf.Set(rg, s);
 									j.rasterizer.Render(y, mf, j.evenodd);
 								}
 							}
 						}
 						else
-							j.rasterizer.Render(y, solid_filler, j.evenodd);
+							j.rasterizer.Render(y, *rg, j.evenodd);
 					}
 				}
 			}
@@ -546,6 +587,9 @@ void BufferPainter::FinishPathJob()
 	#endif
 	};
 #endif
+	for(int i = 0; i < fillcount; i++) {
+		cofill[i].sso.Clear();
+	}
 	jobcount = emptycount = 0;
 }
 
