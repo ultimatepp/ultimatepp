@@ -205,6 +205,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 				job.preclip = preclip;
 				job.regular = regular;
 				job.ss = ~ss;
+				LOG("Input");
+				if(job.ss)
+					LOGHEXDUMP(job.ss, 64);
 				if(i + 1 == path_info->path.GetCount()) // last subpath
 					job.sso = pick(ss); // transfer SpanSource ownership to last subpath
 				if(jobcount + emptycount >= BATCH_SIZE)
@@ -447,6 +450,7 @@ void BufferPainter::FinishPathJob()
 							span_filler.buffer = lspan;
 							span_filler.alpha = j.alpha;
 							span_filler.y = y;
+							span_filler.t = (*ip)[y];
 							rg = &span_filler;
 						}
 						else {

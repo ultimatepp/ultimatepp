@@ -207,7 +207,7 @@ App::App() {
 	ctrl.print <<= THISBACK(Print);
 	Reset();
 	LoadFromFile(*this);
-	Title("Painter");
+	Title("Painter 2");
 }
 
 App::~App()

@@ -66,7 +66,7 @@ struct PainterImageSpanData {
 struct PainterImageSpan : SpanSource, PainterImageSpanData {
 	PainterImageSpan(const PainterImageSpanData& f)
 	:	PainterImageSpanData(f) {}
-	
+
 	const RGBA *Pixel(int x, int y) const { return &image[y][x]; }
 
 	const RGBA *GetPixel(int x, int y) const {
