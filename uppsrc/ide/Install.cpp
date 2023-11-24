@@ -92,6 +92,11 @@ bool Install(bool& hasvars)
 		Scan(GetHomeDirFile("upp.src/*"));
 		Scan(GetHomeDirFile("upp/uppsrc"));
 		Scan(GetHomeDirFile("upp/*"));
+		
+		// Uppsrcs within Flatpak sandbox
+		Scan("/app/sources/uppsrc");
+		Scan("/app/sources/*");
+		
 	#ifndef PLATFORM_COCOA // otherwise macos complains about Documents/Music etc...
 		Scan(GetHomeDirFile("*"));
 		for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
