@@ -127,33 +127,31 @@ bool TryLoadLibClang()
 	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
 		return true;
 #endif
-	Vector<String> prefixes = {"/usr", "/run/host"};
-	
-	for (const auto& prefix : prefixes) {
-		// in Mint 21.1, clang installed is 14 but llvm defaults to 15
-		for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
-			int n = Atoi(s);
-			if(n >= 5 && n < 30) { // update in 10 years...
-				if(LoadLibClang(prefix + "/lib/llvm-" + AsString(n) + "/lib"))
-					return true;
-				break;
-			}
-		}
-	
-		String libdir = TrimBoth(Sys("llvm-config --libdir"));
-		int q = FindIndex(CommandLine(), "--clangdir");
-		if(q >= 0 && q + 1 < CommandLine().GetCount()) {
-			libdir = CommandLine()[q + 1];
-			CommandLineRemove(q, 2);
-		}
-		if(LoadLibClang(libdir))
-			return true;
-		if(LoadLibClang(prefix + "/lib"))
-			return true;
-		for(int i = 200; i >= 10; i--)
-			if(LoadLibClang(prefix + "/lib/llvm-" + AsString(i) + "/lib"))
+	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
+	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
+		int n = Atoi(s);
+		if(n >= 5 && n < 30) { // update in 10 years...
+			if(LoadLibClang("/usr/lib/llvm-" + AsString(n) + "/lib"))
 				return true;
+			break;
+		}
 	}
+
+	String libdir = TrimBoth(Sys("llvm-config --libdir"));
+	int q = FindIndex(CommandLine(), "--clangdir");
+	if(q >= 0 && q + 1 < CommandLine().GetCount()) {
+		libdir = CommandLine()[q + 1];
+		CommandLineRemove(q, 2);
+	}
+	if(LoadLibClang(libdir))
+		return true;
+	if(LoadLibClang("/usr/lib"))
+		return true;
+	if(LoadLibClang("/app/lib"))
+		return true;
+	for(int i = 200; i >= 10; i--)
+		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib"))
+			return true;
 	return false;
 }
 #endif
