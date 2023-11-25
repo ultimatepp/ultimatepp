@@ -256,7 +256,6 @@ bool HasGit()
 {
 	String dummy;
 	static bool b = HostSys("git", dummy) >= 0;
-	Cout() << "HasGit() " << b << "\n";
 	return b;
 }
 
