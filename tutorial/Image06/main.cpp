@@ -23,24 +23,19 @@ struct BallMaker : ImageMaker {
 	Color color;
 	int   r;
 
-	virtual String Key() const;
-	virtual Image Make() const;
+	String Key() const override {
+		char h[sizeof(int) + 3];
+		*(int *)h = r;
+		h[sizeof(int)] = color.GetR();
+		h[sizeof(int) + 1] = color.GetG();
+		h[sizeof(int) + 2] = color.GetB();
+		return String(h, sizeof(int) + 3);
+	}
+	
+	Image Make() const override {
+		return CreateBall(r, color);
+	}
 };
-
-String BallMaker::Key() const
-{
-	char h[sizeof(int) + 3];
-	*(int *)h = r;
-	h[sizeof(int)] = color.GetR();
-	h[sizeof(int) + 1] = color.GetG();
-	h[sizeof(int) + 2] = color.GetB();
-	return String(h, sizeof(int) + 3);
-}
-
-Image BallMaker::Make() const
-{
-	return CreateBall(r, color);
-}
 
 Image CreateBallCached(int r, Color color)
 {
@@ -53,7 +48,7 @@ Image CreateBallCached(int r, Color color)
 struct MyApp : public TopWindow {
 	bool cached;
 
-	virtual void Paint(Draw& w) {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White);
 		for(int y = 0; y < 300; y += 30)
 			for(int i = 10; i < 500; i += i / 3) {
@@ -62,7 +57,7 @@ struct MyApp : public TopWindow {
 			}
 	}
 
-	virtual void LeftDown(Point, dword) {
+	void LeftDown(Point, dword) override {
 		cached = true;
 		Title("Now cached - try to resize the window to see the speed");
 	}

@@ -180,7 +180,6 @@ Htmls SearchBar(const char *domain)
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
 	      ~HtmlEdit("q", 15).Attr("placeholder", t_("Site search")) +
-	      ~HtmlHidden("domains", domain) +
 	      ~HtmlHidden("sitesearch", domain)
 	    );
 
@@ -381,7 +380,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
-			ttxt << "[^ " << link << "^* " << DeQtf(topic.title) << "]::^ "
+			ttxt << "[^" << link << "^* " << DeQtf(topic.title) << "]::^ "
 			     << DeQtf(p.description);
 			next = true;
 		}
@@ -910,7 +909,7 @@ CONSOLE_APP_MAIN
 	if (outHtml)
 		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "16847";
+	String release = "17045";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
@@ -1019,7 +1018,7 @@ CONSOLE_APP_MAIN
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
 		
 		bsearch << BarCaption(t_("Search on this site"));
-		bsearch << SearchBar("www.ultimatepp.org");
+		bsearch << SearchBar("ultimatepp.org");
 
 #if 0	
 		blang << BarCaption(t_("Language"));

@@ -258,8 +258,8 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 				auto put_ln = [&]() -> bool {
 					if(view_line_count) {
 						(*view_line_count)++;
-						total += charset == CHARSET_UTF8 && (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount())
-						                                                : ln.GetCount();
+						total += (charset == CHARSET_UTF8 && (b8 & 0x80) ? Utf32Len(~ln, ln.GetCount())
+						                                                 : ln.GetCount()) + 1;
 					}
 					else {
 						Ln& l = ls.Add();
@@ -361,7 +361,7 @@ void TextCtrl::ViewLoading()
 		enum { MAX_LINES = INT_MAX - 512 };
 	#endif
 
-		if(view->IsEof() || viewlines > INT_MAX - 512) {
+		if(view->IsEof() || viewlines > MAX_LINES) {
 			WhenViewMapping(view->GetPos());
 			view_all = true;
 			break;
@@ -445,7 +445,7 @@ const TextCtrl::Ln& TextCtrl::GetLn(int i) const
 			bool b;
 			view_cache[0].line.Clear();
 			view_cache[0].blk = blk;
-			LoadLines(view_cache[0].line, 256, t, *view, charset, 5000, INT_MAX, b);
+			LoadLines(view_cache[0].line, 256, t, *view, charset, 10000, INT_MAX, b);
 		}
 		return view_cache[0].line[i & 255];
 	}
@@ -634,8 +634,7 @@ int   TextCtrl::GetLinePos64(int64& pos) const {
 				if(pos < n)
 					break;
 				pos -= n;
-				blk++;
-				if(blk >= total256.GetCount()) {
+				if(++blk >= total256.GetCount()) {
 					pos = GetLineLength(GetLineCount() - 1);
 					return GetLineCount() - 1;
 				}

@@ -264,6 +264,7 @@ public:
 	               const Value& pane, const Value& iconbar = Null, int iconsz = 0);
 
 	int      GetHeight() const           { return pane.GetPaneSize(true, INT_MAX).cy; }
+	int      GetWidth() const            { return pane.GetPaneSize(true, INT_MAX).cx; }
 
 	BarCtrl& Align(int align);
 	BarCtrl& Top()                       { return Align(BAR_TOP); }
@@ -413,6 +414,7 @@ public:
 	Font     GetFont() const                        { return font; }
 	MenuBar& AreaLook(int q = 1)                    { arealook = q; Refresh(); return *this; }
 	MenuBar& MaxIconSize(Size sz)                   { maxiconsize = sz; return *this; }
+	MenuBar& MaxIconSize(int n)                     { return MaxIconSize(Size(n, n)); }
 	Size     GetMaxIconSize() const                 { return maxiconsize; }
 	MenuBar& NoDarkAdjust(bool b = true)            { nodarkadjust = b; return *this; }
 #ifdef GUI_COCOA

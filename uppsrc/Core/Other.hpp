@@ -178,7 +178,7 @@ void LRUCache<T, K>::ClearCounters()
 
 template <class T, class K>
 template <class B, class A>
-T& LRUCache<T, K>::Get(const Maker& m, B before_make, A after_make)
+T& LRUCache<T, K>::Get(const Maker& m, B before_make, A after_make, int& sz)
 {
 	Key k;
 	k.key = m.Key();
@@ -196,9 +196,11 @@ T& LRUCache<T, K>::Get(const Maker& m, B before_make, A after_make)
 		size += t.size;
 		newsize += t.size;
 		t.flag = flag;
+		sz = t.size;
 	}
 	else {
 		Item& t = data[q];
+		sz = t.size;
 		Unlink(q);
 		if(t.flag != flag) {
 			t.flag = flag;

@@ -13,9 +13,13 @@ struct MyApp : TopWindow {
 		     << WString(0x1F970, 1).ToString()
 		     << " is not that nice?";
 		;
-		w.DrawText(500, 200, text, StdFont());
-		w.DrawText(500, 250, text, StdFont().Italic());
-		w.DrawText(500, 700, 300, text, StdFont());
+		w.DrawText(50, 200, text, StdFont());
+		w.DrawText(50, 250, text, StdFont().Italic());
+		w.DrawText(50, 700, 300, text, StdFont());
+
+		w.DrawText(500, 200, text, StdFont(DPI(20)));
+		w.DrawText(500, 250, text, StdFont(DPI(20)).Italic());
+		w.DrawText(500, 700, 300, text, StdFont(DPI(20)));
 	}
 };
 

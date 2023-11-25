@@ -4,6 +4,7 @@ LRUCache<Value>& TheValueCache();
 
 typedef LRUCache<Value>::Maker ValueMaker;
 
+Value MakeValueSz(ValueMaker& m, int& sz);
 Value MakeValue(ValueMaker& m);
 
 bool IsValueCacheActive();
@@ -11,7 +12,7 @@ bool IsValueCacheActive();
 void AdjustValueCache();
 void ShrinkValueCache();
 
-void SetupValueCache(int limit_low, int limit_high, double ratio);
+void SetupValueCache(int maxsize, int maxcount);
 
 template <class P>
 int ValueCacheRemove(P what)

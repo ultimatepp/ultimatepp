@@ -62,12 +62,22 @@ template<> void   XmlAttrLoad(dword& var, const String& text)
 
 template<> String XmlAttrStore(const double& var)
 {
-	return FormatG(var, 15);
+	return AsString(var);
 }
 
 template<> void XmlAttrLoad(double& var, const String& text)
 {
 	var = ScanDouble(text);
+}
+
+template<> String XmlAttrStore(const float& var)
+{
+	return AsString(var);
+}
+
+template<> void XmlAttrLoad(float& var, const String& text)
+{
+	var = ScanFloat(text);
 }
 
 template<> String XmlAttrStore(const dword& var)
@@ -147,6 +157,7 @@ template<> String XmlAttrStore(const Time& var) {
 VALUE_XMLIZE(int);
 VALUE_XMLIZE(dword);
 VALUE_XMLIZE(double);
+VALUE_XMLIZE(float);
 VALUE_XMLIZE(bool);
 VALUE_XMLIZE(int16);
 VALUE_XMLIZE(int64);
@@ -252,6 +263,11 @@ void StoreJsonValue(XmlIO& xio, const Value& v)
 	if(v.GetType() == BOOL_V) {
 		bool b = v;
 		Xmlize(xio, b);
+	}
+	else
+	if(v.GetType() == FLOAT_V) {
+		float f = v;
+		Xmlize(xio, f);
 	}
 	else
 	if(IsNumber(v)) {

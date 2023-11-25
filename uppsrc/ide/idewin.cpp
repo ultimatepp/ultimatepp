@@ -332,7 +332,7 @@ void Ide::Layout()
 	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
-static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
+void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
 {
 	One<EditorSyntax> es = EditorSyntax::Create(EditorSyntax::GetSyntaxForFilename(GetFileName(path)));
 	es->IgnoreErrors();
@@ -356,7 +356,7 @@ CursorInfoCtrl::CursorInfoCtrl()
 
 Ide::Ide()
 {
-	DiffDlg::WhenHighlight = callback(sHighlightLine);
+	DiffDlg::WhenHighlight = callback(HighlightLine);
 
 	editor.theide = this;
 	editor.WhenSel << [=] {

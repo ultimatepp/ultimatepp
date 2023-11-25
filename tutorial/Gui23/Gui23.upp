@@ -1,11 +1,11 @@
-description "Internationalizing applications (i18n)\377";
+description "Refreshing the UI periodically (time callback)\377";
 
 uses
 	CtrlLib;
 
 file
-	main.cpp,
-	Gui23.t;
+	myapp.lay,
+	main.cpp;
 
 mainconfig
 	"" = "GUI";

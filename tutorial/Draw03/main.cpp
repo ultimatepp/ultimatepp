@@ -5,7 +5,7 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	DropList font_list;
 
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		const String text = "Programming is fun";
 		Font fnt(~font_list, 60);
 		

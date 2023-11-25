@@ -37,8 +37,10 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 			if(!esc) {
 				if(id == "BEGIN")
 					level++;
-				if(id == "END")
+				if(id == "END") {
 					level--;
+					stmt.Cat(';');
+				}
 			}
 		}
 		else

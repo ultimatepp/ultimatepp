@@ -61,7 +61,7 @@ public:
 	XmlIO Add()                                        { XmlIO m(node.Add(), IsLoading(), userdata); return m; }
 	XmlIO Add(const char *id)                          { XmlIO m(node.Add(id), IsLoading(), userdata); return m; }
 	XmlIO GetAdd(const char *id)                       { XmlIO m(node.GetAdd(id), IsLoading(), userdata); return m; }
-	
+
 	void  SetUserData(const Value& v)                  { userdata = v; }
 	Value GetUserData() const                          { return userdata; }
 
@@ -81,6 +81,8 @@ template<> void XmlAttrLoad(dword& var, const String& text);
 template<> String XmlAttrStore(const dword& var);
 template<> void XmlAttrLoad(double& var, const String& text);
 template<> String XmlAttrStore(const double& var);
+template<> void XmlAttrLoad(float& var, const String& text);
+template<> String XmlAttrStore(const float& var);
 template<> void XmlAttrLoad(bool& var, const String& text);
 template<> String XmlAttrStore(const bool& var);
 template <> void XmlAttrLoad(int16& var, const String& text);
@@ -99,6 +101,7 @@ template<> void Xmlize(XmlIO& xml, WString& var);
 template<> void Xmlize(XmlIO& xml, int& var);
 template<> void Xmlize(XmlIO& xml, dword& var);
 template<> void Xmlize(XmlIO& xml, double& var);
+template<> void Xmlize(XmlIO& xml, float& var);
 template<> void Xmlize(XmlIO& xml, bool& var);
 template<> void Xmlize(XmlIO& xml, Date& var);
 template<> void Xmlize(XmlIO& xml, Time& var);

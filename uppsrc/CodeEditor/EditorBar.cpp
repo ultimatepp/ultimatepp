@@ -53,11 +53,13 @@ void EditorBar::sPaintImage(Draw& w, int y, int fy, const Image& img)
 
 void EditorBar::Paint(Draw& w)
 {
-	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
+	Color bg = Nvl(bg_color, GrayColor(IsDarkTheme() ? 70 : 247));
 	Size sz = GetSize();
 	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 	for(int i = 0; i < animate.GetCount(); i++)
 		w.DrawRect(i, 0, 1, sz.cy, animate[i]);
+	w.DrawText(0, sz.cy - Zy(10), 900, text, Arial(DPI(20)).Italic(),
+	           GrayColor(IsDarkTheme() ? 100 : 220));
 	if(!editor) return;
 	for(int pass = 0; pass < 2; pass++) {
 		int fy = editor->GetFontSize().cy;

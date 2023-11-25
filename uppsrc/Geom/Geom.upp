@@ -7,6 +7,7 @@ file
 	Geom.h,
 	fp3.h,
 	fp3.cpp,
+	LineSegmentsDistance.cpp,
 	geometry.h,
 	geometry.cpp,
 	polyalg.cpp,

@@ -22,6 +22,7 @@ LineEdit::LineEdit() {
 	overwrite = false;
 	filter = NULL;
 	showspaces = false;
+	block_caret = false;
 	showlines = false;
 	showreadonly = true;
 	dorectsel = false;
@@ -400,7 +401,8 @@ void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _
 }
 #endif
 
-void   LineEdit::Paint0(Draw& w) {
+void   LineEdit::Paint0(Draw& w)
+{
 	LTIMING("LineEdit::Paint0");
 	GuiLock __;
 	int64 sell, selh;
@@ -810,7 +812,7 @@ Rect LineEdit::GetCaret() const
 	if(overwrite)
 		return RectC(caretpos.x, caretpos.y + fsz.cy - 2, fsz.cx, 2);
 	else
-		return RectC(caretpos.x, caretpos.y, 2, fsz.cy);
+		return RectC(caretpos.x, caretpos.y, block_caret? fsz.cx : 2, fsz.cy);
 }
 
 void LineEdit::PlaceCaret0(Point p) {

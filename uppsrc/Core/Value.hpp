@@ -12,6 +12,7 @@ Value::Value(const Value& v)
 template<>
 inline bool IsPolyEqual(const bool& x, const Value& v) {
 	return v.Is<double>() && int(x) == double(v)
+	    || v.Is<float>() && int(x) == float(v)
 	    || v.Is<int64>() && int(x) == int64(v)
 	    || v.Is<int>() && int(x) == int(v);
 }
@@ -19,6 +20,7 @@ inline bool IsPolyEqual(const bool& x, const Value& v) {
 template<>
 inline bool IsPolyEqual(const int& x, const Value& v) {
 	return v.Is<double>() && x == double(v)
+	    || v.Is<float>() && x == float(v)
 	    || v.Is<int64>() && x == int64(v);
 }
 
@@ -80,6 +82,11 @@ inline int PolyCompare(const double& x, const Value& v) {
 }
 
 template<>
+inline int PolyCompare(const float& x, const Value& v) {
+	return IsNumber(v) ? SgnCompare((double)x, (double)v) : 0;
+}
+
+template<>
 inline int PolyCompare(const Date& x, const Value& v) {
 	return v.Is<Time>() && SgnCompare(ToTime(x), Time(v));
 }
@@ -107,6 +114,13 @@ inline hash_t ValueGetHashValue(const double& x) {
 }
 
 template<>
+inline hash_t ValueGetHashValue(const float& x) {
+	if(x >= (float)INT64_MIN && x <= (float)INT64_MAX && (int64)x == x)
+		return UPP::GetHashValue((int64)x); // we want this to be equal to other number types
+	return UPP::GetHashValue(x);
+}
+
+template<>
 inline hash_t ValueGetHashValue(const Date& x) {
 	return UPP::GetHashValue(ToTime(x));
 }
@@ -125,10 +139,10 @@ public:
 
 	enum VPICK { PICK };
 	enum VDEEP { DEEP };
-	
+
 	const T& Get() const                      { return v; }
 	T&       Get()                            { return v; }
-	
+
 	RawValueRep(const T& v) : v(v)             {}
 	RawValueRep(T&& v, VPICK) : v(pick(v))     {}
 	RawValueRep(const T& v, VDEEP) : v(v, 1)   {}
@@ -274,6 +288,8 @@ int Value::Compare(const Value& v) const
 		return SgnCompare(GetSmallRaw<int>(), v.GetSmallRaw<int>());
 	if(Is(DOUBLE_V) && v.Is(DOUBLE_V))
 		return SgnCompare(GetSmallRaw<double>(), v.GetSmallRaw<double>());
+	if(Is(FLOAT_V) && v.Is(FLOAT_V))
+		return SgnCompare(GetSmallRaw<float>(), v.GetSmallRaw<float>());
 	return Compare2(v);
 }
 

@@ -316,7 +316,6 @@ protected:
 	
 	int GetStyleHeight() const;
 	static Image AlignImage(int align, const Image& img);
-	static Value AlignValue(int align, const Value& v, const Size& isz);
 
 	using Ctrl::GetStdSize;
 	using Ctrl::Close;

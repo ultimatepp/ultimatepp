@@ -4,7 +4,11 @@
 [s0; [* Bold text]&]
 [s0; [*/ Italic]&]
 [s0; [*_ Underline]&]
+[s0; [*     ][*_ Underline with indent]&]
 [s0; &]
+[s0; -|[*_ Underline][*  ]Normal text [* Bold text ][/ Italic ][*/_ ALL]&]
+[s0;*_ &]
+[s0;    [- Strikeout]&]
 [s0; &]
 [s0; Standard paragraph. Lorem ipsum dolor sit amet, consectetuer 
 adipiscing elit. Mauris dictum facilisis augue. Lorem ipsum dolor 

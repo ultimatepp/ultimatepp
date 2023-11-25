@@ -100,6 +100,8 @@ extern Pointf3        RotateY(Pointf3 v, double angle, Pointf3 centre = Pointf3(
 extern Pointf3        RotateZ(Pointf3 v, double angle, Pointf3 centre = Pointf3(0, 0, 0));
 extern Pointf3        Rotate(Pointf3 v, Pointf3 axis, double angle, Pointf3 centre = Pointf3(0, 0, 0));
 
+double LineSegmentsDistance(const Pointf3& P0, const Pointf3& P1, const Pointf3& Q0, const Pointf3& Q1);
+
 class Plane3
 {
 public:

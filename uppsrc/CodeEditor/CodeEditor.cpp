@@ -150,8 +150,6 @@ void CodeEditor::Paint(Draw& w)
 	int h = GetPos(start.y, start.x) - 1;
 	if(l < 0 || l >= h)
 		return;
-	
-	Font font = GetFont();
 
 	Size sz = GetSize();
 
@@ -189,8 +187,6 @@ void CodeEditor::Paint(Draw& w)
 		h.font = GetFont();
 	}
 	
-	bool ldiff = false;
-
 	HighlightOutput hls(hln);
 	GetSyntax(0)->Highlight(r.Begin(), r.End(), hls, this, 0, 0);
 

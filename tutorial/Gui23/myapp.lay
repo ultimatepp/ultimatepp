@@ -1,0 +1,5 @@
+LAYOUT(MyAppLayout, 200, 200)
+	ITEM(Upp::Button, start_stop_btn, SetLabel(t_("Start!")).HSizePosZ(8, 8).BottomPosZ(4, 20))
+	ITEM(RandomRectCtrl, random_rect_ctrl, HSizePosZ(8, 8).VSizePosZ(8, 28))
+END_LAYOUT
+

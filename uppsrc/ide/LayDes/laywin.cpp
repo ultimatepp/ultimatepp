@@ -31,8 +31,6 @@ void LayDes::EditBar(Bar& bar)
 	bar.Add(iscursor, AK_MATRIXDUPLICATE, THISBACK(Matrix));
 	bar.Add(islayout, "Select all", CtrlImg::select_all(), THISBACK(SelectAll))
 	   .Key(K_CTRL_A);
-	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
-	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
 	bar.Separator();
 	bar.Add(islayout && CurrentLayout().IsUndo(), "Undo", CtrlImg::undo(), THISBACK(Undo))
 	   .Key(K_ALT_BACKSPACE)
@@ -45,6 +43,9 @@ void LayDes::EditBar(Bar& bar)
 		.Key(K_CTRL_SUBTRACT);
 	bar.Add(iscursor, AK_SHOWSELECTION, THISBACK1(ShowSelection, true))
 		.Key(K_CTRL_ADD);
+	bar.Separator();
+	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
+	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
 }
 
 void LayDes::MoveBar(Bar& bar)

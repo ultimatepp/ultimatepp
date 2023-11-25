@@ -1,9 +1,5 @@
 #include "ide.h"
 
-#define IMAGECLASS UrepoImg
-#define IMAGEFILE  <ide/urepo.iml>
-#include <Draw/iml.h>
-
 struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
@@ -129,8 +125,13 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 					break;
 				msg << l;
 			}
-			if(commit.GetCount())
-				r.Add(commit, "\1[g [@b \1" + date + "\1] [@r \1" + author + "\1]: [* \1" + Join(Split(msg, CharFilterWhitespace), " "));
+			if(commit.GetCount()) {
+				String h = commit;
+				if(h.GetCount() > 4)
+					h.Trim(6);
+				r.Add(commit, "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
+				              "[* \1" + Join(Split(msg, CharFilterWhitespace), " "));
+			}
 			date = commit = author = Null;
 		}
 		else
@@ -172,7 +173,7 @@ RepoDiff::RepoDiff()
 	pane.Height(EditField::GetStdHeight());
 	r.SetDropLines(32);
 	branch.SetDropLines(32);
-	Icon(UrepoImg::RepoDiff());
+	Icon(IdeImg::SvnDiff());
 	diff.InsertFrameRight(pane);
 	r << [=] { Load(); };
 	branch << [=] { LoadGit(); };

@@ -19,6 +19,7 @@ Ref::Ref(WString& s) { ptr = &s; m = &Single< StdRef<WString> >(); }
 Ref::Ref(int& i)     { ptr = &i; m = &Single< StdRef<int> >(); }
 Ref::Ref(int64& i)   { ptr = &i; m = &Single< StdRef<int64> >(); }
 Ref::Ref(double& d)  { ptr = &d; m = &Single< StdRef<double> >(); }
+Ref::Ref(float& f)   { ptr = &f; m = &Single< StdRef<float> >(); }
 Ref::Ref(bool& b)    { ptr = &b; m = &Single< StdRef<bool> >(); }
 Ref::Ref(Date& d)    { ptr = &d; m = &Single< StdRef<Date> >(); }
 Ref::Ref(Time& t)    { ptr = &t; m = &Single< StdRef<Time> >(); }
@@ -653,4 +654,3 @@ INITBLOCK
 }
 
 }
-

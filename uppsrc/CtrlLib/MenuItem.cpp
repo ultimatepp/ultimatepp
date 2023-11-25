@@ -309,6 +309,7 @@ void MenuItem::Paint(Draw& w)
 		case RADIO1: li = CtrlImg::MenuRadio1(); break;
 		}
 	}
+	li = CachedRescale(li, min(li.GetSize(), maxiconsize));
 	Size isz = li.GetSize();
 	int iy = (sz.cy - isz.cy) / 2;
 	bool chk = false;

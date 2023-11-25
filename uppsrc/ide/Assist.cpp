@@ -278,12 +278,30 @@ void AssistEditor::SyncAssist()
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
+	VectorMap<String, int> found_name; // to accelerate resolving duplicities
+	Index<String> cpp;
 	for(int pass = 0; pass < 2; pass++) {
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
 			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
+			    int q = found_name.Find(m.name);
+			    if(q >= 0) { // resolve duplicities
+					int& ii = found_name[q];
+					if(ii >= 0) { // lazy call to CppText
+						const AssistItem& mm = assist_item[ii];
+						cpp.FindAdd(CppText(mm.name, mm.pretty));
+						ii = -1;
+					}
+					String g = CppText(m.name, m.pretty);
+					if(cpp.Find(g) >= 0)
+						continue;
+					else
+						cpp.Add(g);
+			    }
+				else
+			        found_name.Add(m.name, i);
 				found[i] = true;
 				assist_item_ndx.Add(i);
 			}
@@ -336,11 +354,13 @@ bool AssistEditor::IncludeAssist()
 		return false;
 	}
 	Vector<String> folder, upper_folder, file, upper_file;
+	Index<String> done; // avoid duplicates
 	for(int i = 0; i < include.GetCount(); i++) {
 		FindFile ff(AppendFileName(AppendFileName(include[i], include_path), "*.*"));
 		while(ff) {
 			String fn = ff.GetName();
-			if(!ff.IsHidden()) {
+			if(done.Find(fn) < 0 && !ff.IsHidden()) {
+				done.Add(fn);
 				if(ff.IsFolder()) {
 					folder.Add(fn);
 					upper_folder.Add(ToUpper(fn));
@@ -528,7 +548,7 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 	String name;
 	Point ref_pos;
 	String ref_id = theide->GetRefId(mt.pos, name, ref_pos);
-	if(ref_id.GetCount() == 0)
+	if(ref_id.GetCount() == 0 || IsNull(name))
 		return false;
 
 	int lp = mt.pos;

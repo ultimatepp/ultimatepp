@@ -155,6 +155,8 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
+	menu.Add(AK_COPYRICH, [=] { CopyRich(); })
+	    .Help("Copy selection as syntax highlithed richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
@@ -524,16 +526,16 @@ void Ide::Project(Bar& menu)
 
 void Ide::FilePropertiesMenu0(Bar& menu)
 {
-	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
+	menu.Add(IsActiveFile() && !IsActiveSeparator(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)
 {
 	FilePropertiesMenu0(menu);
-	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
+	bool candiff = IsActiveFile() && !editfile_isfolder && !designer && !IsActiveSeparator();
+	menu.Add(candiff, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
-	bool candiff = IsActiveFile() && !editfile_isfolder && !designer;
 	String path;
 	int i = filelist.GetCursor() + 1;
 	if(i >= 0 && i < fileindex.GetCount() && fileindex[i] < actual.file.GetCount())

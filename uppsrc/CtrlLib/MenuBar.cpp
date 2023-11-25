@@ -38,7 +38,7 @@ CH_STYLE(MenuBar, Style, StyleDefault)
 	topitemtext[0] = menutext = SColorMenuText();
 	topitemtext[1] = topitemtext[2] = itemtext = SColorHighlightText();
 	topbar = SColorFace();
-	maxiconsize = Size(16, 16);
+	maxiconsize = Size(INT_MAX, INT_MAX);
 	arealook = Null;
 	look = SColorFace();
 	separator = breaksep = SeparatorCtrl::StyleDefault();

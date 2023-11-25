@@ -1,0 +1,11 @@
+description "Creating simple REST service\377";
+
+uses
+	Core;
+
+file
+	Network02.cpp;
+
+mainconfig
+	"" = "";
+

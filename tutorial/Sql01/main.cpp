@@ -18,5 +18,5 @@ CONSOLE_APP_MAIN
 	Sql sql(sqlite3);
 	sql.Execute("select date('now')");
 	while(sql.Fetch())
-		Cout() << sql[0];
+		Cout() << sql[0] << '\n';
 }

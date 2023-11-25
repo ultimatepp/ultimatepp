@@ -74,6 +74,11 @@ void Ide::MakeTitle()
 			title << " [Read Only]";
 		if(editor.IsDirty())
 			title << " *";
+		if(!bar_branch)
+			branch = Null;
+		editor.BarColor(findarg(branch, "", "master", "main") >= 0 ? Null :
+		                IsDarkTheme() ? Color(26, 86, 86) : Color(207, 255, 255));
+		editor.BarText(branch);
 	}
 	if(!IsNull(editfile))
 		for(int i = 0; i < 10; i++)
@@ -367,14 +372,19 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 		DeactivationSave(false);
 	}
 	TopWindow::DeactivateBy(new_focus);
+	win_deactivated = !new_focus || dynamic_cast<TopWindow *>(new_focus);
 }
 
 void Ide::Activate()
 {
-	TriggerIndexer();
-	editor.TriggerSyncFile(0);
+	if(win_deactivated) {
+		TriggerIndexer();
+		editor.TriggerSyncFile(0);
+		TriggerIdeBackgroundThread(5000);
+		git_branch_cache.Clear();
+		win_deactivated = false;
+	}
 	TopWindow::Activate();
-	git_branch_cache.Clear();
 	MakeTitle();
 }
 

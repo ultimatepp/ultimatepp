@@ -1,4 +1,4 @@
-Copyright (c) 1998, 2022, The U++ Project
+Copyright (c) 1998, 2023, The U++ Project
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted

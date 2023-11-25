@@ -8,7 +8,7 @@ struct MyAppWindow : TopWindow {
 			Break();
 	}
 
-	virtual void RightDown(Point, dword) override {
+	void RightDown(Point, dword) override {
 		int result = Null;
 		MenuBar menu;
 		for(int i = 0; i < 10; i++)

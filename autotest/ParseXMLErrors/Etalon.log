@@ -1,0 +1,5 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\ParseXMLErrors.exe 03.10.2023 00:45:27, user: cxl
+
+xml =  <b> </b> 
+xml = </b>
+e = Unexpected text

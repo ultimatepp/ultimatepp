@@ -4,12 +4,14 @@ inline const String&  Nvl(const String& a, const String& b)    { return IsNull(a
 inline int            Nvl(int a, int b)                        { return IsNull(a) ? b : a; }
 inline int64          Nvl(int64 a, int64 b)                    { return IsNull(a) ? b : a; }
 inline double         Nvl(double a, double b)                  { return IsNull(a) ? b : a; }
+inline float          Nvl(float a, float b)                    { return IsNull(a) ? b : a; }
 inline Date           Nvl(Date a, Date b)                      { return IsNull(a) ? b : a; }
 inline Time           Nvl(Time a, Time b)                      { return IsNull(a) ? b : a; }
 
 inline int            Nvl(int a)                               { return Nvl(a, 0); }
 inline int64          Nvl(int64 a)                             { return Nvl(a, (int64)0); }
 inline double         Nvl(double a)                            { return Nvl(a, 0.0); }
+inline float          Nvl(float a)                             { return Nvl(a, 0.0f); }
 
 template <class T>
 inline T              Nvl(T a, T b, T c)                       { return Nvl(Nvl(a, b), c); }
@@ -143,6 +145,7 @@ public:
 	Ref(int& i);
 	Ref(int64& i);
 	Ref(double& d);
+	Ref(float& f);
 	Ref(bool& b);
 	Ref(Date& d);
 	Ref(Time& t);
@@ -163,6 +166,7 @@ inline WString& RefWString(Ref f) { return GetRef<WString>(f); }
 inline int&     RefInt(Ref f)     { return GetRef<int>(f); }
 inline int64&   RefInt64(Ref f)   { return GetRef<int64>(f); }
 inline double&  RefDouble(Ref f)  { return GetRef<double>(f); }
+inline float&   RefFloat(Ref f)   { return GetRef<float>(f); }
 inline bool&    RefBool(Ref f)    { return GetRef<bool>(f); }
 inline Date&    RefDate(Ref f)    { return GetRef<Date>(f); }
 inline Time&    RefTime(Ref f)    { return GetRef<Time>(f); }
@@ -218,7 +222,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 	};
 	struct NullData : Data {};
 	Data *data;
-	
+
 	static Vector<Value> VoidData;
 
 	Vector<Value>& Create();
@@ -246,7 +250,7 @@ public:
 
 	ValueArray(const Nuller&)                 { Init0(); }
 	bool IsNullInstance() const               { return IsEmpty(); }
-	
+
 	void Clear();
 	void SetCount(int n);
 	void SetCount(int n, const Value& v);
@@ -267,7 +271,7 @@ public:
 	void Append(const ValueArray& va)         { Insert(GetCount(), va); }
 
 	const Value& operator[](int i) const      { return Get(i); }
-	
+
 	Value& At(int i);
 
 	hash_t   GetHashValue() const             { return data->GetHashValue(); }
@@ -278,7 +282,7 @@ public:
 
 	bool     operator==(const ValueArray& v) const;
 	bool     operator!=(const ValueArray& v) const  { return !operator==(v); }
-	
+
 	int      Compare(const ValueArray& b) const;
 	bool     operator<=(const ValueArray& x) const { return Compare(x) <= 0; }
 	bool     operator>=(const ValueArray& x) const { return Compare(x) >= 0; }
@@ -381,7 +385,7 @@ public:
 	void Add(const char *key, const Value& value)   { Add(Value(key), value); }
 	void Add(int key, const Value& value)           { Add(Value(key), value); }
 	void Add(Id key, const Value& value)            { Add(Value(key.ToString()), value); }
-	
+
 	ValueMap& operator()(const Value& key, const Value& value)  { Add(key, value); return *this; }
 	ValueMap& operator()(const String& key, const Value& value) { Add(Value(key), value); return *this; }
 	ValueMap& operator()(const char *key, const Value& value)   { Add(Value(key), value); return *this; }
@@ -412,7 +416,7 @@ public:
 	ValueArray GetValues() const                    { return data->value; }
 
 	operator ValueArray() const                     { return GetValues(); }
-	
+
 	VectorMap<Value, Value> Pick();
 
 	const Value& operator[](const Value& key) const  { return data->Get(key); }
@@ -428,7 +432,7 @@ public:
 	Value& operator()(const int key)                 { return operator()(Value(key)); }
 	Value& operator()(const Id& key)                 { return operator()(Value(key.ToString())); }
 	Value& At(int i)                                 { return UnShare().At(i); }
-	
+
 	Value GetAndClear(const Value& key);
 
 	hash_t   GetHashValue() const                   { return data->GetHashValue(); }

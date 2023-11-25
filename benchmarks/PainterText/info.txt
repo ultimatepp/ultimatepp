@@ -1,0 +1,7 @@
+TIMING Blend          : 435.99 ms - 435.99 us (436.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+TIMING Stroke         : 236.99 ms - 236.99 us (237.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+TIMING Fill           : 471.99 ms - 471.99 us (472.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+TIMING Rect           : 596.99 ms - 596.99 us (597.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 1000
+TIMING Clear 2        : 704.99 ms - 704.99 us (705.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
+TIMING Clear          : 604.99 ms - 604.99 us (605.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 1000
+

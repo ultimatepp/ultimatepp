@@ -14,7 +14,7 @@ struct sF128 {
 	uint64 l;
 
 	template<class T, class S> static T as(S s) { T t; memcpy(&t, &s, sizeof(S)); return t; }
-	
+
 	void   SetDouble(double h);
 	double MakeDouble() const;
 	void   SetUint64(uint64 h);
@@ -30,7 +30,7 @@ force_inline
 double sF128::MakeDouble() const
 {
 	uint64 u;
-	
+
 	int ex = exponent;
 
 	u = h >> 11;
@@ -42,7 +42,7 @@ double sF128::MakeDouble() const
 			ex++;
 		}
 	}
-	
+
 	ex += 1022;
 	if(ex > 2047)
 		return std::numeric_limits<double>::infinity();
@@ -55,7 +55,7 @@ double sF128::MakeDouble() const
 	}
 	else
 		u = (u & (((uint64)1 << 52) - 1)) | (uint64(ex) << 52);
-	
+
 	return as<double>(u);
 }
 
@@ -147,7 +147,7 @@ static const char s100[] =
 int FormatDoubleDigits(const sF128& w, char *digits, int precision)
 { // produces exactly precision valid numbers of result, returns its E
 	ASSERT(precision > 0 && precision < 19);
-	
+
 	LHITCOUNT("FormatDoubleDigits");
 
 	uint64 u, u1;
@@ -409,6 +409,19 @@ String FormatDoubleN(double x)
 	return String(h, FormatDouble_(h, x, 15, FD_TOLERANCE(6)|FD_MINIMAL_EXP));
 }
 
+String FormatFloat(float x)
+{
+	char h[512];
+	return String(h, FormatDouble_(h, x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL));
+}
+
+String FormatFloatN(float x)
+{
+	char h[512];
+	return String(h, FormatDouble_(h, x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP));
+}
+
+
 char *FormatG(char *t, double x, int precision, dword flags)
 {
 	return FormatDouble_(t, x, precision, flags);
@@ -517,7 +530,7 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp, bool E = true)
 	double sign = ScanSgn__<CHAR, BYTE>(s);
 	if(!IsDigit(*s) && *s != '.' && *s != alt_dp)
 		return NULL;
-	
+
 	int ignored = 0;
 	uint64 digits = 0;
 	auto ReadNumber = [&] {
@@ -655,6 +668,28 @@ double ScanDouble(const wchar *ptr)
 {
 	double n;
 	return ScanDbl<wchar, word>(n, ptr, ',') ? n : Null;
+}
+
+float ScanFloat(const char *ptr, const char **endptr)
+{
+	double n;
+	ptr = ScanDbl<char, byte>(n, ptr, ',');
+	if(ptr && endptr)
+		*endptr = ptr;
+	return ptr ? (float)n : Null;
+}
+
+float ScanFloat(const char *ptr)
+{
+	double n;
+	ptr = ScanDbl<char, byte>(n, ptr, ',');
+	return ptr ? (float)n : Null;
+}
+
+float ScanFloat(const wchar *ptr)
+{
+	double n;
+	return ScanDbl<wchar, word>(n, ptr, ',') ? (float)n : Null;
 }
 
 double Atof(const char *s)

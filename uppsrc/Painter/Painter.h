@@ -183,7 +183,7 @@ protected:
 	void   DrawLineStroke(int width, Color color);
 
 public:
-	void     Clear(const RGBA& color);
+	void     Clear(const RGBA& color = RGBAZero());
 
 	Painter& Move(const Pointf& p, bool rel);
 	Painter& Move(const Pointf& p);

@@ -96,6 +96,7 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 
 struct DirRepoDiffDlg : public DirDiffDlg {
 	DropList mode[2];
+	Button   hash[2];
 	DropList r[2], branch[2];
 	Vector<String> gitd;
 	String         session_id;

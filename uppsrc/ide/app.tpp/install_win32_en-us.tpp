@@ -27,7 +27,7 @@ its directory.&]
 [s5; The archive contains CLANG based Win32 toolchain and also SDL 
 2, OpenSSL, MySql and PostgreSQL client libraries. TheIDE will 
 also setup Microsoft C`+`+ compiler if it finds one.&]
-[s5; U`+`+ minimum requirement is Windows 7 64 with latest patches 
+[s5; U`+`+ minimum requirement is Windows 10 64 with latest patches 
 for theide to run and Windows 7 64 or 32 with latest patches 
 for compiled applications.&]
 [s5; ]]

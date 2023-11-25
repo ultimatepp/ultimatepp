@@ -353,6 +353,7 @@ protected:
 	bool             cutline;
 	bool             overwrite;
 	bool             showspaces;
+	bool             block_caret;
 	bool             showlines;
 	bool             showreadonly;
 	bool             warnwhitespace;
@@ -477,6 +478,7 @@ public:
 	bool      IsShowReadOnly()                { return showreadonly; }
 	LineEdit& ShowCurrentLine(Color color)    { hline = color; Refresh(); return *this; }
 	LineEdit& ShowCurrentColumn(Color color)  { vline = color; Refresh(); return *this; }
+	LineEdit& BlockCaret(bool b)              { block_caret = b; return *this; }
 	
 	LineEdit& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
 

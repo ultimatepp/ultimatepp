@@ -109,7 +109,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	if((GetInfo() & DRAWTEXTLINES) && (font0.IsUnderline() || font0.IsStrikeout())) {
 		int hg = abs(font0.GetCy());
 		if(hg == 0) hg = 10;
-		int thickness = max(hg / 20, 1);
+		int thickness = max(font.IsBold() ? hg / 10 : hg / 20, 1);
 
 		int ascent = font0.GetAscent();
 		Size offset = Point(0, ascent);
@@ -120,27 +120,28 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 
 		x += offset.cx;
 		y += offset.cy;
+		int p;
+		auto DoLine = [&] {
+			if(angle == 0)
+				DrawRect(x, y + p, posx, thickness, ink);
+			else
+				DrawLine(
+					int(x + p * sina),
+					int(y + p * cosa),
+					int(x + posx * cosa + p * sina),
+					int(y - posx * sina + p * cosa),
+					thickness,
+					ink
+				);
+		};
 		if(font0.IsUnderline()) {
-			int p = max(hg / 15, int(font0.Info().GetDescent() > 0));
-			DrawLine(
-				int(x + p * sina),
-				int(y + p * cosa),
-				int(x + posx * cosa + p * sina),
-				int(y - posx * sina + p * cosa),
-				thickness,
-				ink
-			);
+			int descent = font0.GetDescent();
+			p = min(descent - thickness, max(descent > 0 ? descent / 2 : hg / 15, int(descent > 0)));
+			DoLine();
 		}
 		if(font0.IsStrikeout()) {
-			int p = -ascent / 3;
-			DrawLine(
-				int(x + p * sina),
-				int(y + p * cosa),
-				int(x + posx * cosa + p * sina),
-				int(y - posx * sina + p * cosa),
-				thickness,
-				ink
-			);
+			p = -ascent / 3;
+			DoLine();
 		}
 	}
 }

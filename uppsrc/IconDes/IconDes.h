@@ -178,6 +178,7 @@ private:
 	int          paste_mode;
 	bool         show_other = false;
 	bool         show_small = false;
+	bool         show_grid2 = false;
 
 	ScrollBars   sb;
 	Scroller     scroller;

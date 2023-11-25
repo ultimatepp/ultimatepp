@@ -272,6 +272,12 @@ void CoWork::Finish0()
 	}
 }
 
+int CoWork::GetScheduledCount() const
+{
+	Mutex::Lock __(GetPool().lock);
+	return todo;
+}
+
 void CoWork::Cancel()
 {
 	Pool& p = GetPool();

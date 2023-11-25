@@ -53,7 +53,7 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 	int lp = pos;
 	int li = editor.GetLinePos(lp);
 	ref_pos = Null;
-
+	
 	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
 		for(const ReferenceItem& m : editor.references) {
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&

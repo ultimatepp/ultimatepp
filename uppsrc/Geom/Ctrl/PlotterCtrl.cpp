@@ -6,8 +6,8 @@ namespace Upp {
 #define IMAGEFILE  <Geom/Ctrl/PlotterCtrl.iml>
 #include           <Draw/iml.h>
 
-#define LLOG(x) RLOG(x)
-#define LLOGBLOCK(x) RLOGBLOCK(x)
+#define LLOG(x) // RLOG(x)
+#define LLOGBLOCK(x) // RLOGBLOCK(x)
 
 PlotterCtrl::ViewPlot::ViewPlot(PlotterCtrl& ctrl, int extra_gap)
 : viewdraw(&ctrl)

@@ -128,7 +128,6 @@ bool LoadCredentials(Array<Credential>& r)
 bool GetCredentials(const String& url, const String& dir, String& username, String& password)
 {
 	Array<Credential> cr;
-	int best = 0;
 	if(LoadCredentials(cr)) {
 		for(const Credential& c : cr) {
 			if(url.StartsWith(c.url) || dir.StartsWith(c.url)) {

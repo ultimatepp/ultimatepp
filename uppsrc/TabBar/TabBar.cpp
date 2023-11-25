@@ -309,7 +309,7 @@ TabBar::TabBar()
 	allownullcursor = false;
 	icons = true;
 	mintabcount = 1;
-	scrollbar_sz = TB_SBHEIGHT;
+	scrollbar_sz = DPI(TB_SBHEIGHT);
 	allowreorder = true;
 	style = &StyleDefault();
 	
@@ -925,18 +925,6 @@ Image TabBar::AlignImage(int align, const Image& img)
 	}
 }
 
-Value TabBar::AlignValue(int align, const Value &v, const Size &sz)
-{
-	Size isz = sz;
-	if(align == AlignedFrame::LEFT || align == AlignedFrame::RIGHT)
-		Swap(isz.cx, isz.cy);
-
-	ImageDraw w(isz.cx, isz.cy);
-	w.DrawRect(isz, SColorFace());
-	ChPaint(w, isz, v);
-	return AlignImage(align, (Image)w);
-}
-
 void TabBar::TabItem::Clear()
 {
 	text.Clear();
@@ -1044,7 +1032,7 @@ int TabBar::GetTextAngle()
 
 Point TabBar::GetTextPosition(int align, const Rect& r, int cy, int space) const
 {
-	Point 	p;
+	Point p;
 	
 	if(align == LEFT)
 	{
@@ -1093,8 +1081,8 @@ Point TabBar::GetImagePosition(int align, const Rect& r, int cx, int cy, int spa
 
 void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 {
-	int pos_left = TB_MARGIN;
-	int pos_right = (IsVert() ? rn.GetHeight() : rn.GetWidth()) - TB_MARGIN;
+	int pos_left = DPI(TB_MARGIN);
+	int pos_right = (IsVert() ? rn.GetHeight() : rn.GetWidth()) - DPI(TB_MARGIN);
 	
 	for(int i = 0; i < t.itn; i++)
 	{
@@ -1163,10 +1151,6 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	bool ac = (n == active && enable);
 	bool hl = (n == highlight && enable) || (stacking && highlight >= 0 && tabs[highlight].stack == t.stack);
 
-	int ndx = !enable ? CTRL_DISABLED :
-		       ac ? CTRL_PRESSED :
-		       hl ? CTRL_HOT : CTRL_NORMAL;
-
 	int c = align == LEFT ? cnt - n : n;	
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() - lx + s.margin;
@@ -1195,9 +1179,55 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	t.tab_pos = (ac ? ra : rn).TopLeft();
 	t.tab_size = (ac ? ra : rn).GetSize();
 
-	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
+	int ndx = !enable ? CTRL_DISABLED :
+		       ac ? CTRL_PRESSED :
+		       hl ? CTRL_HOT : CTRL_NORMAL;
+
+	struct TabMaker : ImageMaker {
+		int    c;
+		int    cnt;
+		int    ndx;
+		int    align;
+		Size   size;
+		const Style *s;
+		
+		String Key() const override {
+			String h;
+			RawCat(h, c);
+			RawCat(h, cnt);
+			RawCat(h, ndx);
+			RawCat(h, align);
+			RawCat(h, size);
+			RawCat(h, s);
+			return h;
+		}
+
+		Image Make() const override {
+			const Value& sv = (cnt == 1 ? s->both : c == 0 ? s->first : c == cnt - 1 ? s->last : s->normal)[ndx];
+			Size isz = size;
+			if(align == AlignedFrame::LEFT || align == AlignedFrame::RIGHT)
+				Swap(isz.cx, isz.cy);
+		
+			Image h[2];
+			for(int i = 0; i < 2; i++) {
+				ImageDraw w(isz.cx, isz.cy);
+				w.DrawRect(isz, i ? Black() : White());
+				ChPaint(w, isz, sv);
+				h[i] = w;
+			}
+			return AlignImage(align, RecreateAlpha(h[0], h[1]));
+		}
+	};
 	
-	Image img = AlignValue(align, sv, t.tab_size);
+	TabMaker tm;
+	tm.c = c;
+	tm.cnt = cnt;
+	tm.ndx = ndx;
+	tm.align = align;
+	tm.size = t.tab_size;
+	tm.s = style;
+
+	Image img = MakeImage(tm);
 	
 	if(!IsNull(t.col))
 	{
@@ -1330,7 +1360,7 @@ void TabBar::Paint(Draw &w)
 			if (x > sc.GetPos() && x < limt) {
 				// Paint separator
 				ChPaint(w, Rect(Fixed(Point(x - sc.GetPos() + GetStyle().sel.left, 0)), 
-					Fixed(Size(TB_SPACE - GetStyle().sel.left, cy-1))), 
+					Fixed(Size(DPI(TB_SPACE) - GetStyle().sel.left, cy-1))), 
 					st.group_separators[IsVert() ? 1 : 0]);						
 			}
 		}
@@ -1358,7 +1388,7 @@ void TabBar::Paint(Draw &w)
 		Point mouse = GetMousePos() - GetScreenRect().TopLeft();
 		Size isz = dragtab.GetSize();
 		int p = 0;
-		int sep = TB_SBSEPARATOR * sc.IsVisible();
+		int sep = DPI(TB_SBSEPARATOR) * sc.IsVisible();
 		
 		int top = drag == active ? st.sel.bottom : st.sel.top;
 		if (align == BOTTOM || align == RIGHT)
@@ -1446,7 +1476,7 @@ Size TabBar::GetStackedSize(const Tab &t)
 
 Size TabBar::GetStdSize(const Tab &t)
 {
-	return (PaintIcons() && t.HasIcon()) ? (GetStdSize(t.value) + Size(TB_ICON + 2, 0)) : GetStdSize(t.value);
+	return (PaintIcons() && t.HasIcon()) ? (GetStdSize(t.value) + Size(DPI(TB_ICON + 2), 0)) : GetStdSize(t.value);
 }
 
 TabBar& TabBar::Add(const Value &value, Image icon, String group, bool make_active)
@@ -1543,7 +1573,7 @@ int TabBar::GetWidth() const
 
 int TabBar::GetHeight(bool scrollbar) const
 {
-	return TabBar::GetStyleHeight() + TB_SBSEPARATOR * int(scrollbar);
+	return TabBar::GetStyleHeight() + DPI(TB_SBSEPARATOR) * int(scrollbar);
 }
 
 int TabBar::GetStyleHeight() const
@@ -1615,7 +1645,7 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 		// Separators
 		if (groupseps && grouping && !first && t.group != tabs[j].group) {
 			separators.Add(t.pos.x);
-			t.pos.x += TB_SPACE;
+			t.pos.x += DPI(TB_SPACE);
 		}
 		
 		int cx = GetStdSize(t).cx;
@@ -1649,7 +1679,7 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 
 void TabBar::ShowScrollbarFrame(bool b)
 {
-	SetFrameSize((b ? sc.GetFrameSize() : TB_SBSEPARATOR) + GetHeight(b), false);
+	SetFrameSize((b ? sc.GetFrameSize() : DPI(TB_SBSEPARATOR)) + GetHeight(b), false);
 	sc.Show(b);
 	RefreshParentLayout();
 }
@@ -2777,6 +2807,8 @@ TabBar& TabBar::SetStyle(const TabBar::Style& s)	{
 CH_STYLE(TabBar, Style, StyleDefault)
 {
 	Assign(TabCtrl::StyleDefault());
+	Variant3Crosses(); // these actually look most inline with any GUI today (2023)
+#if 0
 #ifdef PLATFORM_WIN32
 	if(IsWinVista())
 		Variant3Crosses();
@@ -2784,6 +2816,7 @@ CH_STYLE(TabBar, Style, StyleDefault)
 		DefaultCrosses();
 #else
 	DefaultCrosses();
+#endif
 #endif
 	DefaultGroupSeparators();
 }

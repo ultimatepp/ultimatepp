@@ -3,6 +3,7 @@ Value  ParseJSON(const char *s);
 
 inline String AsJSON(int i)             { return IsNull(i) ? "null" : AsString(i); }
 inline String AsJSON(double n)          { return IsNull(n) ? "null" : AsString(n); }
+inline String AsJSON(float f)           { return IsNull(f) ? "null" : AsString(f); }
 inline String AsJSON(bool b)            { return b ? "true" : "false"; }
 inline String AsJSON(const String& s)   { return AsCString(s, INT_MAX, NULL, ASCSTRING_JSON); }
 inline String AsJSON(const WString& s)  { return AsCString(s.ToString(), INT_MAX, NULL, ASCSTRING_JSON); }
@@ -26,10 +27,11 @@ public:
 	operator String() const                                     { return ToString(); }
 
 	operator bool() const                                       { return text.GetCount(); }
-	
+
 	Json& operator()(const char *key, const Value& value)       { return CatRaw(key, AsJSON(value)); }
 	Json& operator()(const char *key, int i)                    { return CatRaw(key, AsJSON(i)); }
 	Json& operator()(const char *key, double n)                 { return CatRaw(key, AsJSON(n)); }
+	Json& operator()(const char *key, float f)                  { return CatRaw(key, AsJSON(f)); }
 	Json& operator()(const char *key, bool b)                   { return CatRaw(key, AsJSON(b)); }
 	Json& operator()(const char *key, Date d)                   { return CatRaw(key, AsJSON(d)); }
 	Json& operator()(const char *key, Time t)                   { return CatRaw(key, AsJSON(t)); }
@@ -38,11 +40,12 @@ public:
 	Json& operator()(const char *key, const char *s)            { return CatRaw(key, AsJSON(s)); }
 	Json& operator()(const char *key, const Json& object)       { return CatRaw(key, ~object); }
 	Json& operator()(const char *key, const JsonArray& array);
-		
+
 	Json() {}
 	Json(const char *key, const Value& value)                   { CatRaw(key, AsJSON(value)); }
 	Json(const char *key, int i)                                { CatRaw(key, AsJSON(i)); }
 	Json(const char *key, double n)                             { CatRaw(key, AsJSON(n)); }
+	Json(const char *key, float f)                              { CatRaw(key, AsJSON(f)); }
 	Json(const char *key, bool b)                               { CatRaw(key, AsJSON(b)); }
 	Json(const char *key, Date d)                               { CatRaw(key, AsJSON(d)); }
 	Json(const char *key, Time t)                               { CatRaw(key, AsJSON(t)); }
@@ -62,12 +65,13 @@ public:
 	String ToString() const                                     { return "[" + text + "]"; }
 	String operator~() const                                    { return ToString(); }
 	operator String() const                                     { return ToString(); }
-	
+
 	operator bool() const                                       { return text.GetCount(); }
-	
+
 	JsonArray& operator<<(const Value& value)                   { return CatRaw(AsJSON(value)); }
 	JsonArray& operator<<(int i)                                { return CatRaw(AsJSON(i)); }
 	JsonArray& operator<<(double n)                             { return CatRaw(AsJSON(n)); }
+	JsonArray& operator<<(float f)                              { return CatRaw(AsJSON(f)); }
 	JsonArray& operator<<(bool b)                               { return CatRaw(AsJSON(b)); }
 	JsonArray& operator<<(Date d)                               { return CatRaw(AsJSON(d)); }
 	JsonArray& operator<<(Time t)                               { return CatRaw(AsJSON(t)); }
@@ -76,7 +80,7 @@ public:
 	JsonArray& operator<<(const char *s)                        { return CatRaw(AsJSON(s)); }
 	JsonArray& operator<<(const Json& object)                   { return CatRaw(~object); }
 	JsonArray& operator<<(const JsonArray& array)               { return CatRaw(~array); }
-		
+
 	JsonArray() {}
 };
 
@@ -93,10 +97,10 @@ class JsonIO {
 public:
 	bool IsLoading() const                       { return src; }
 	bool IsStoring() const                       { return !src; }
-	
+
 	const Value& Get() const                     { ASSERT(IsLoading()); return *src; }
 	void         Set(const Value& v)             { ASSERT(IsStoring() && !map); tgt = v; }
-	
+
 	Value        Get(const char *key)            { ASSERT(IsLoading()); return (*src)[key]; }
 	void         Set(const char *key, const Value& v);
 
@@ -117,7 +121,7 @@ public:
 
 	template <class T, class X>
 	JsonIO& Array(const char *key, T& value, X item_jsonize, const char * = NULL);
-	
+
 	JsonIO(const Value& src) : src(&src)         {}
 	JsonIO()                                     { src = NULL; }
 };
@@ -311,6 +315,7 @@ template<> void Jsonize(JsonIO& io, byte& var);
 template<> void Jsonize(JsonIO& io, int16& var);
 template<> void Jsonize(JsonIO& io, int64& var);
 template<> void Jsonize(JsonIO& io, double& var);
+template<> void Jsonize(JsonIO& io, float& var);
 template<> void Jsonize(JsonIO& io, bool& var);
 template<> void Jsonize(JsonIO& io, String& var);
 template<> void Jsonize(JsonIO& io, WString& var);
@@ -464,7 +469,7 @@ struct LambdaIzeVar {
 
 	void Jsonize(JsonIO& io) { ize(io); }
 	void Xmlize(XmlIO& io) { ize(io); }
-	
+
 	LambdaIzeVar(IZE& ize) : ize(ize) {}
 };
 

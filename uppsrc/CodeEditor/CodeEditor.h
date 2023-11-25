@@ -78,6 +78,8 @@ private:
 	int              active_annotation;
 	Vector<Color>    animate;
 	Image            status_image;
+	Color            bg_color = Null;
+	String           text;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
@@ -136,6 +138,9 @@ public:
 	void     SetAnimate(const Vector<Color>& a)   { if(a != animate) { animate = clone(a); Refresh(); } }
 	
 	void     StatusImage(const Image& m);
+	
+	void     Background(Color c)             { if(c != bg_color) { bg_color = c; Refresh(); }}
+	void     Text(const String& s)           { if(s != text)  { text = s; Refresh(); }}
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -542,6 +547,8 @@ public:
 	Size     GetBarSize() const                       { return bar.GetSize(); }
 	void     HideBar()                                { bar.Hide(); }
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
+	void     BarColor(Color c)                        { bar.Background(c); }
+	void     BarText(const String& text)              { bar.Text(text); }
 
 	void     Errors(Vector<Point>&& errs);
 	

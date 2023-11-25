@@ -4,7 +4,7 @@ bool Ide::IsValgrind()
 {
 	static bool is;
 	ONCELOCK {
-		is = system("which valgrind") == 0;
+		is = Sys("which valgrind").GetCount();
 	}
 	return is;
 }

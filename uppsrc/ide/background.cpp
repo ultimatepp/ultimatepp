@@ -33,6 +33,8 @@ void GatherAllFiles(const String& path, Index<String>& filei, VectorMap<String, 
 		}
 }
 
+CoEvent ide_bg_scheduler;
+
 void IdeBackgroundThread()
 {
 	while(!Thread::IsShutdownThreads()) {
@@ -54,7 +56,21 @@ void IdeBackgroundThread()
 			s_allfiles = pick(file);
 			s_allnests = dir.PickKeys();
 		}
-		for(int i = 0; i < 10 && !Thread::IsShutdownThreads(); i++)
-			Sleep(100);
+		
+		ide_bg_scheduler.Wait();
 	}
+}
+
+void StartIdeBackgroundThread()
+{
+	Thread::AtShutdown([] {
+		ide_bg_scheduler.Broadcast();
+	});
+	Thread::StartNice(IdeBackgroundThread);
+}
+
+void TriggerIdeBackgroundThread(int delay)
+{
+	static TimeCallback tm;
+	tm.KillSet(delay, [=] { ide_bg_scheduler.Broadcast(); });
 }

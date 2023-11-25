@@ -355,6 +355,7 @@ struct WorkspaceWork {
 	Package::File& ActiveFile();
 	String         FileName(int i) const;
 	bool           IsSeparator(int i) const;
+	bool           IsActiveSeparator() const;
 
 	void LoadActualPackage();
 	void SaveLoadPackage(bool sel = true);

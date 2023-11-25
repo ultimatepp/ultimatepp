@@ -5,12 +5,12 @@ using namespace Upp;
 struct MyCtrl : public Ctrl {
 	int count = 0;
 
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White());
 		w.DrawText(2, 2, AsString(count));
 	}
 
-	virtual void LeftDown(Point, dword) override {
+	void LeftDown(Point, dword) override {
 		count++;
 		Refresh();
 	}

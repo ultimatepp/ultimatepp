@@ -85,7 +85,9 @@ the modal loop]&]
 and using custom widgets]&]
 [s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#22^ 22. Non`-modal 
 dialogs]&]
-[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#23^ 23. Internationalizing 
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#23^ 23. Refreshing 
+the UI periodically (time callback)]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#24^ 24. Internationalizing 
 applications (i18n)]&]
 [s0; &]
 [s3;:1: 1. First steps&]
@@ -135,13 +137,15 @@ be created.&]
 To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* GUI`_APP`_MAIN] `{&]
-[s7; -|PromptOK(`"Hello world`");&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN `{]&]
+[s0;l320;%- [C+75     PromptOK(][C@3+75 `"Hello world`"][C+75 );]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1068&818
@@ -164,14 +168,16 @@ can also open it using [* Open] or [* OpenMain]). Unlike [* Run], [* Execute]
 also closes the window at the end of modal loop. [* TopWindow] 
 is also closed by destructor.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN `{&]
-[s7; -|[* TopWindow] w;&]
-[s7; -|w.[* Run]();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN `{]&]
+[s0;l320;%- [C+75     ][*_C+75 TopWindow ][C+75 w;]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 Run][C+75 ();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:2692&1419
@@ -186,17 +192,22 @@ also setup the size of [* TopWindow] using [* SetRect] (note that
 unless instructed otherwise, U`+`+ will center the position of 
 window).&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow w;&]
-[s7; -|w.[* Title](`"My application`").[* Zoomable]().[* Sizeable]();&]
-[s7; -|w.[* SetRect](0, 0, 200, 300);&]
-[s7; -|w.Run();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow w;]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 Title][C+75 (][C@3+75 `"My 
+application`"][C+75 )][C@(0.0.255)+75 .][*_C+75 Zoomable][C+75 ()][C@(0.0.255)+75 .][*_C+75 S
+izeable][C+75 ();]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][*_C+75 SetRect][C+75 (][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 200][C+75 , ][C@3+75 300][C+75 );]&]
+[s0;l320;%- [C+75     w][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@image:2321&1125
@@ -207,27 +218,36 @@ window).&]
 [s5; In order to display something inside [* TopWindow] view area, 
 you have to create derived class and override [* Paint] method:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; [* -|virtual void Paint(Draw`& w) override `{]&]
-[s7; [* -|-|w.DrawRect(GetSize(), SWhite());]&]
-[s7; [* -|-|w.DrawText(20, 20, `"Hello world!`", Arial(30), Magenta);]&]
-[s7; [* -|`}]&]
-[s7; -|&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application`").Zoomable().Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.SetRect(0, 0, 200, 100);&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;~~~32~32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;~~~32~32;%- [C+75     ][*_C@(0.0.255)+75 void][*_C+75  Paint(Draw][*_C@(0.0.255)+75 `&
+][*_C+75  w) ][*_C@(0.0.255)+75 override][*_C+75  `{]&]
+[s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawRect(GetSize(),
+ SWhite());]&]
+[s0;l320;~~~32~32;%- [C+75         ][*_C+75 w][*_C@(0.0.255)+75 .][*_C+75 DrawText(][*_C@3+75 2
+0][*_C+75 , ][*_C@3+75 20][*_C+75 , ][*_C@3+75 `"Hello world!`"][*_C+75 , 
+Arial(][*_C@3+75 30][*_C+75 ), Magenta);]&]
+[s0;l320;~~~32~32;%- [C+75     ][*_C+75 `}]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;~~~32~32;%- [C+75         Title(][C@3+75 `"My application`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;~~~32~32;%- [C+75     `}]&]
+[s0;l320;~~~32~32;%- [C+75 `};]&]
+[s0;l320;~~~32~32;C+75%- &]
+[s0;l320;~~~32~32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~32~32;%- [C+75 `{]&]
+[s0;l320;~~~32~32;%- [C+75     MyAppWindow app;]&]
+[s0;l320;~~~32~32;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 400][C+75 , ][C@3+75 100][C+75 );]&]
+[s0;l320;~~~32~32;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1426&573
@@ -244,43 +264,58 @@ KDE.&]
 [s5; &]
 [s3;:5: 5. Reacting to input events&]
 [s5; In order to react to user actions like mouse clicks or keyboard 
-events, you have to override appropriate virtual methods. To 
-issue the repainting of view area, use the [* Refresh] method.&]
+events, you have to override appropriate virtual methods for 
+example [* LeftDown ]and [* MouseMove]. To issue the repainting of 
+view area, use the [* Refresh] method.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Point  p;&]
-[s7; -|String text;&]
-[s7; -|&]
-[s7; [* -|virtual void LeftDown(Point pos, dword flags) override `{]&]
-[s7; [* -|-|p `= pos;]&]
-[s7; [* -|-|Refresh();]&]
-[s7; [* -|`}]&]
-[s7;* &]
-[s7; [* -|virtual void MouseMove(Point pos, dword flags) override `{]&]
-[s7; [* -|-|text `= Format(`"`[%d:%d`]`", pos.x, pos.y);]&]
-[s7; [* -|-|Refresh();]&]
-[s7; [* -|`}]&]
-[s7; &]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SWhite);&]
-[s7; -|-|w.DrawText(p.x, p.y, text, Arial(20), Magenta);&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application`").Zoomable().Sizeable();&]
-[s7; -|-|p.x `= p.y `= 0;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Point  p;]&]
+[s0;l320;%- [C+75     String text;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  LeftDown(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
+[s0;l320;%- [*C+75         ][*_C+75 p ][*_C@(0.0.255)+75 `=][*_C+75  pos;]&]
+[s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
+[s0;l320;%- [*C+75     ][*_C+75 `}]&]
+[s0;l320;*C+75%- &]
+[s0;l320;%- [*C+75     ][*_C@(0.0.255)+75 void][*_C+75  MouseMove(Point 
+pos, ][*_C@(0.128.128)+75 dword][*_C+75  flags) ][*_C@(0.0.255)+75 override][*_C+75  
+`{]&]
+[s0;l320;%- [*C+75         ][*_C+75 text ][*_C@(0.0.255)+75 `=][*_C+75  Format(][*_C@3+75 `"`[][*_C@(0.0.255)+75 %
+d][*_C@3+75 :][*_C@(0.0.255)+75 %d][*_C@3+75 `]`"][*_C+75 , pos][*_C@(0.0.255)+75 .][*_C+75 x,
+ pos][*_C@(0.0.255)+75 .][*_C+75 y);]&]
+[s0;l320;%- [*C+75         ][*_C+75 Refresh();]&]
+[s0;l320;%- [*C+75     ][*_C+75 `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SWhite);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(p][C@(0.0.255)+75 .][C+75 x, 
+p][C@(0.0.255)+75 .][C+75 y, text, Arial(][C@3+75 20][C+75 ), Magenta);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application`"][C+75 )][C@(0.0.255)+75 .][C+75 Zoo
+mable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         p][C@(0.0.255)+75 .][C+75 x ][C@(0.0.255)+75 `=][C+75  
+p][C@(0.0.255)+75 .][C+75 y ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:2612&1625
@@ -296,35 +331,47 @@ as long as there are any top`-level windows opened. Use `"[* delete
 this]`" in overridden [* Close] method to close and deallocate 
 the main window.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Close() override `{&]
-[s7; -|-|[* delete this;]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void LeftDown(Point pos, dword flags) override `{&]
-[s7; [* -|-|(new MyAppWindow)`->OpenMain();]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SWhite());&]
-[s7; -|-|w.DrawText(0, 0, `"Click the view area to open next window!`", 
-Arial(20));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My multiwindowed application`").Zoomable().Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; [* -|(new MyAppWindow)`->OpenMain();]&]
-[s7; [* -|Ctrl`::EventLoop();]&]
-[s7; `}&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Close() ][*C@(0.0.255)+75 override][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*_C@(0.0.255)+75 delete this][*_C+75 ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point pos, 
+][C@(0.128.128)+75 dword][C+75  flags) ][*C@(0.0.255)+75 override][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*_C+75 (][*_C@(0.0.255)+75 new][*_C+75  MyAppWindow)][*_C@(0.0.255)+75 `-
+>][*_C+75 OpenMain();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SWhite());]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , ][C@3+75 `"Click the view area to open next window!`"][C+75 , 
+Arial(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My multiwindowed application`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     ][*_C+75 (][*_C@(0.0.255)+75 new][*_C+75  MyAppWindow)][*_C@(0.0.255)+75 `-
+>][*_C+75 OpenMain();]&]
+[s0;l320;%- [*C+75     ][*_C+75 Ctrl][*_C@(0.0.255)+75 `::][*_C+75 EventLoop();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:2000&1447
@@ -342,39 +389,52 @@ vents] to represent sub`-menus. Menu itself is managed by [* MenuBar].
 rame]. Frames are placed to the window border and reduce its 
 view area.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|void [* Exit]() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void [* SubMenu](Bar`& bar) `{&]
-[s7; -|-|bar.[* Add](`"Exit`", `[`=`] `{ [* Exit](); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void [* MainMenu](Bar`& bar) `{&]
-[s7; -|-|bar.[* Sub](`"Menu`", `[`=`](Bar`& bar) `{ [* SubMenu](bar); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu`").Sizeable();&]
-[s7; -|-|[* AddFrame](menu);&]
-[s7; -|-|menu.[* Set](`[`=`](Bar`& bar) `{ [* MainMenu](bar); `});&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 Exit()][C+75  
+`{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 SubMenu][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][*_C+75 Add][C+75 (][C@3+75 `"Exit`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75  `{ ][*_C+75 Exit][C+75 (); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  ][*_C+75 MainMenu][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][*_C+75 Sub][C+75 (][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+][*_C+75 SubMenu][C+75 (bar); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (menu);]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][*_C+75 Set][C+75 (][C@(0.0.255)+75 `[`=`]][C+75 (
+Bar][C@(0.0.255)+75 `&][C+75  bar) `{ ][*_C+75 MainMenu][C+75 (bar); 
+`});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s7;l0; &]
 [s5; &]
 [s0;= 
 @@rawimage:1434&1333
@@ -387,69 +447,84 @@ view area.&]
 if not always advisable, to `'inline`' the whole menu structure 
 to single MenuBar`::Set call:&]
 [s7; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; [* -|-|menu.Set(`[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|bar.Sub(`"Menu`", `[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|-|bar.Add(`"Exit`", `[`=`] `{]&]
-[s7; [* -|-|-|-|-|if(PromptOKCancel(`"Exit MyApp?`"))]&]
-[s7; [* -|-|-|-|-|-|Break();]&]
-[s7; [* -|-|-|-|`});]&]
-[s7; [* -|-|-|`});]&]
-[s7; [* -|-|`});]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 menu][*_C@(0.0.255)+75 .][*_C+75 Set(][*_C@(0.0.255)+75 `[`=
+`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  bar) `{]&]
+[s0;l320;%- [C+75             ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Sub(][*_C@3+75 `"Menu`"][*_C+75 ,
+ ][*_C@(0.0.255)+75 `[`=`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  
+bar) `{]&]
+[s0;l320;%- [C+75                 ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exi
+t`"][*_C+75 , ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{]&]
+[s0;l320;%- [C+75                     ][*_C@(0.0.255)+75 if][*_C+75 (PromptOKCancel(][*_C@3+75 `"
+Exit MyApp?`"][*_C+75 ))]&]
+[s0;l320;%- [C+75                         ][*_C+75 Break();]&]
+[s0;l320;%- [C+75                 ][*_C+75 `});]&]
+[s0;l320;%- [C+75             ][*_C+75 `});]&]
+[s0;l320;%- [C+75         ][*_C+75 `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s3;:8: 8. Context menu&]
 [s5; Context local menu (usually invoked by right mouse click) is 
 similar to the standard menu bar handling, just instead of adding 
 MenuBar to your application, you [/ execute] the menu event:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void RightDown(Point, dword) override `{&]
-[s7; -|-|[* MenuBar`::Execute(]&]
-[s7; [* -|-|-|`[`=`](Bar`& bar) `{]&]
-[s7; [* -|-|-|-|bar.Add(`"Exit`", `[`=`] `{ Exit(); `});]&]
-[s7; [* -|-|-|`}]&]
-[s7; [* -|-|);]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with local menu`").Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         ][*_C+75 MenuBar][*_C@(0.0.255)+75 `::][*_C+75 Execute(]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 `[`=`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  
+bar) `{]&]
+[s0;l320;%- [C+75                 ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exi
+t`"][*_C+75 , ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{ Exit(); `});]&]
+[s0;l320;%- [C+75             ][*_C+75 `}]&]
+[s0;l320;%- [C+75         ][*_C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with local 
+menu`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
+[s5; &]
 [s0;= 
 @@rawimage:1710&1225
 (iVBORw0KGgoAAAANSUhEUgAAAeQAAAFdCAIAAABdCYkTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAArgSURBVHhe7d0/bxv3AcZxLkUDT9q82ICbKR3iRUuQN+DZGrM1g7cMhtcA3QwhS2LNGWp1EhDA3vUGPGgzoDcgARYg2OqUub/j70ge/0iiziStJ/p88MBgTscjT0W+puUCGfzr/e9mZnbL18T6n0f/NjOzWzuxNjMLmFibmQVMrM3MAibWZmYBE2szs4CJtZlZwMTazCxgYm1mFjCxNjPb0AaDwT/++2zmYFk5WL40c3Bm18T6m6Mftso1dn6YOf71iweDwYP7b6YOrnDD122u/82bJ/d6vVDvJ169hZcdv9vuwfGu/uoy+/wrmNltWIny3/7+1UyvFx6c3zKxfnDv8VQphgeLNeajX542GbXua139up//rjZ5X2a21s2keclSly0V662dB/de/DQ5+Gp7sLO91nz0y9Mmo9Z9ratf9/Pf1Sbvy8zWvXGgly912VKxvv+m/Lr9sD3y0/3mg3Y9Xh4Ptl6NTi4Rf/zk687TH+40n8Abwx+ktFd79eTe8Fj9DeCqg28mD4YHm5er6ot2rz88c6T9x9ETm59dtOoT26++2K4Hu78VlZXLTp02vsjksotea/oWxrv6nQxPuOq+Zq4wesrUK5ZnDX8w1Ri/eue1mv/t2qdM3/LUe5t7FTNb02qmly912ZKx7vSrJKApcnt8+Cm7/Yn2+JyZjS8yfDCoQR+m5OqDMw+aos10sG7+5LmDnTffOdimsNzC6LeiuvFNlQf3Hrd/qig1LA8uf63RLcxfbeop8+/kZvfV+VL3FUfxHb169ynNXbTvfPaWp06bexUzW9PWGOtRo9siT443D0b/2g9PmHr6sCND45MnOZi51MKDkwdN3aYiWHbF9S974vyLdh/XdW52+Om1eVySOvUSl11hwdXGT1n4Tm54X+0J17368LIdM3/UGJ92yXXMbH2rpS6/jh/MnLBwS8e61qot19S/2PUjZ/116rmjDLXPnU1D84lyrpuzBycP5qJ23fUXP3GpWLcXrL/9lMfbD8tFpm/8sissutroKQvfyQ3vqz3nuldfcNmFp11yHTNb02YCvXyvl41183j4ca/943b3eBOy7a1hVuqz6prza+CacDRfHT5rdIVJki47OH5KfdB0vPv7wSXXb9/G9BWaLC68fvfMetm65veezg9AtnaanySUx9OXXXCF+atNP2X+ndzsvtpzLnnFmdeauuzi05pXb99S879ve4KZrWML07xkr28S6/oZc+54WfmQOP7J9Xg1BI1RyuuztnbavwprG3H5wfFTRm+gPG6V0+avX85p3klx6V8wdi+14PF441DOPu6cvPi15q429dW5dzI6obXwvq655mWPJ6911ZusvwcPz1nv/8PHzMq/ZwujXA6WL80cnNk1sV5y9U/0Mwfn123E1QfNzKy7FcS6+QQ3/GP7zPH5ibWZWb99VqxHf2BfNrVibWbWbyv4ZG1mZuueWJuZBUyszcwCJtZmZgETazOzgIm1mVnAxNrMLGBibWYWsDbW/wPgFhNrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECs+/gPI+13BFgzse5DpCrfB9gYse5DpCrfB9gYse5jHKnf3v15N1dvX6xhY8S6D7Guty/WsDFi3YdY19sv34fT09Ozs7Pz8/NPnz5dXFzU48DKiXUfYl1vv3wfjo6Ojo+PT05OSq/FGtZHrPsQ63r75ftwcHBweHhYev3hw4fy4boeB1ZOrPsQ63r75fuwt7dXel0+X5+enoo1rI9Y9/FFY/32+8HE97/OfPXP3/745dHgu6d/zB1f6ertl+/D7u7u/v7+u3fvTk5OPn78WI8DKyfWfXzpWC/Z4uXPvPHq7Zfvw8uXL1+/fi3WsG5i3YdY19sXa9gYse7jNsX6/dNvB4+ev28e//rj4Ntffm5PKL+OPH07Onllq7cv1rAxYt3Hl4712I/P2iPlQf21/mOt+fjB6ldvX6xhY8S6j9v0yXq48pl68peNYg1/QWLdh1jX2xdr2Bix7uOWxboc8WMQ+IsT6z6+dKwnHj1/O/4Lxp+ff9f5C8bm5GdPhyf5C0bIJ9Z9fNFY34rV2xdr2Bix7kOs6+2LNWyMWPch1vX2xRo2Rqz7EOt6+2INGyPWfYh1vX2xho0R6z7Eut6+WMPGiHUf41jfcWINGyPWfYh1JdawMWLdR4kUlVjDZoj1Cpyenh4dHR0cHOzt7e3u7pZ+3R3+s16wGWK9AmdnZ8fHx4eHhyVb+/v75ZPm3eE/mAubIdYrcH5+fnJyUoJVPmC+u2PKLZcbL7dfvgkXFxftdwRYNbFegfKJsqSqfLQ8PT0t2bpTyi2XP1iU2y/fBLGG9RHrFSiRKkqtio93TL3r+h1ovx3AGog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCCDWAAHEGiCAWAMEEGuAAGINEECsAQKINUAAsQYIINYAAcQaIIBYAwQQa4AAYg0QQKwBAog1QACxBggg1gABxBoggFgDBBBrgABiDRBArAECiDVAALEGCNDG2szMbvXe//5/Q2ieZvGUBGAAAAAASUVORK5CYII=)
@@ -460,41 +535,52 @@ MenuBar to your application, you [/ execute] the menu event:&]
 directly to MenuBar. Example also demonstrates how to convert 
 the menu item to some value, by using lambda capture by reference:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|virtual void RightDown(Point, dword) override `{&]
-[s7; -|-|int [* result ]`= Null;&]
-[s7; -|-|[* MenuBar menu];&]
-[s7; -|-|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|-|menu.Add(AsString(i), `[`=, [* `&result]`] `{ [* result ]`= i; 
-`});&]
-[s7; -|-|menu.Separator();&]
-[s7; -|-|menu.Add(`"Exit`", `[`=`] `{ Exit(); `});&]
-[s7; -|-|menu.[* Execute]();&]
-[s7; -|-|if(!IsNull([* result]))&]
-[s7; -|-|-|PromptOK(`"You have selected `" `+ AsString((int)result));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with context menu`").Sizeable();&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  RightDown(Point, ][C@(0.128.128)+75 dword
+][C+75 ) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 int][C+75  ][*_C+75 result][*C+75  
+][C@(0.0.255)+75 `=][C+75  ][C@(0.128.128)+75 Null][C+75 ;]&]
+[s0;l320;%- [C+75         ][*_C+75 MenuBar menu][C+75 ;]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320;%- [C+75             menu][C@(0.0.255)+75 .][C+75 Add(AsString(i), 
+][C@(0.0.255)+75 `[`=][C+75 , ][*_C@(0.0.255)+75 `&][*_C+75 result][C@(0.0.255)+75 `]][C+75  
+`{ ][*_C+75 result][C+75  ][C@(0.0.255)+75 `=][C+75  i; `});]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Separator();]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75  `{ Exit(); `});]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][*_C+75 Execute()][C+75 ;]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 IsNull(][*_C+75 re
+sult][C+75 ))]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"You have selected `"][C+75  
+][C@(0.0.255)+75 `+][C+75  AsString((][*C@(0.0.255)+75 int][C+75 )result));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with context 
+menu`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
 [s5; &]
 [s0;= 
 @@rawimage:1448&1660
@@ -518,42 +604,53 @@ can use image designer, part of TheIDE, to design Image constants&]
 use somewhat obfuscated but thankfully short sequence of preprocessor 
 commands:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define IMAGECLASS TutorialImg]&]
-[s7; [* #define IMAGEFILE <Gui10/images.iml>]&]
-[s7; [* #include <Draw/iml.h>]&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; &]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void SubMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Add(`"Exit`", [* TutorialImg`::Exit()], `[`=`] `{ Exit(); 
-`});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with menu and images`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; -|-|menu.Set(`[`=`](Bar`& bar) `{&]
-[s7; -|-|-|bar.Sub(`"Menu`", `[`=`](Bar`& bar) `{ SubMenu(bar); `});&]
-[s7; -|-|`});&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  IMAGEFILE ][*_C@(0.0.255)+75 <][*_C+75 Gui10
+][*_C@(0.0.255)+75 /][*_C+75 images][*_C@(0.0.255)+75 .][*_C+75 iml][*_C@(0.0.255)+75 >]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 Draw][*_C@(0.0.255)+75 /
+][*_C+75 iml][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+][*_C+75 TutorialImg][*_C@(0.0.255)+75 `::][*_C+75 Exit()][C+75 , ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ Exit(); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with menu and 
+images`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{]&]
+[s0;l320;%- [C+75             bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+SubMenu(bar); `});]&]
+[s0;l320;%- [C+75         `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [+75 `}]&]
 [s5; &]
 [s5; Here [*/ Gui10] is the name of package where .iml file resides.&]
 [s5; Image constants are represented by class methods of class defined 
@@ -591,57 +688,74 @@ or [* AddTool] instead of simple Add. Also, items without Image
 are automatically added to menus only and vice versa, items without 
 text are added to toolbars only.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s0;l321; [C@5;1 #define IMAGECLASS TutorialImg]&]
-[s7; #define IMAGEFILE <Gui11/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar menu;&]
-[s7; [* -|ToolBar tool;]&]
-[s7; &]
-[s7; -|void MenuFn() `{&]
-[s7; -|-|PromptOK(`"Fn activated!`");&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void BarFn() `{&]
-[s7; -|-|PromptOK(`"Fn2 activated!`");&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|void Exit() `{&]
-[s7; -|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|Break();&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void SubBar(Bar`& bar) `{&]
-[s0;l321; [C@5;1 -|-|bar.AddMenu(`"Function`", TutorialImg`::Fn(), `[`=`] 
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE ][C@(0.0.255)+75 <][C+75 Gui11][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar menu;]&]
+[s0;l320;%- [C+75     ][*_C+75 ToolBar tool;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MenuFn() `{]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Fn activated!`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  BarFn() `{]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Fn2 activated!`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Exit() `{]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75             Break();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubBar(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 AddMenu(][C@3+75 `"Function`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Fn(), ][C@(0.0.255)+75 `[`=`]][C+75  
 `{ MenuFn(); `});]&]
-[s7; -|-|[* bar.Add(TutorialImg`::Fn2(), `[`=`] `{ BarFn(); `});]&]
-[s7; [* -|-|bar.Add(`"Exit`", TutorialImg`::Exit(), `[`=`] `{ Exit(); 
+[s0;l320;%- [C+75         ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(TutorialImg][*_C@(0.0.255)+75 `:
+:][*_C+75 Fn2(), ][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{ BarFn(); `});]&]
+[s0;l320;%- [C+75         ][*_C+75 bar][*_C@(0.0.255)+75 .][*_C+75 Add(][*_C@3+75 `"Exit`"][*_C+75 ,
+ TutorialImg][*_C@(0.0.255)+75 `::][*_C+75 Exit(), ][*_C@(0.0.255)+75 `[`=`]][*_C+75  
+`{ Exit(); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MainMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&][C+75  bar) `{ 
+SubBar(bar); `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with bars`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame(tool)][C+75 ;]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{ MainMenu(bar); `});]&]
+[s0;l320;%- [C+75         ][*_C+75 tool][*_C@(0.0.255)+75 .][*_C+75 Set(][*_C@(0.0.255)+75 `[`=
+`]][*_C+75 (Bar][*_C@(0.0.255)+75 `&][*_C+75  bar) `{ SubBar(bar); 
 `});]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void MainMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Sub(`"Menu`", `[`=`] (Bar`& bar) `{ SubBar(bar); `});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with bars`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; [* -|-|AddFrame(tool);]&]
-[s0;l321; -|-|[C@5;1 menu.Set(`[`=`](Bar`& bar) `{ MainMenu(bar); `});]&]
-[s7; -|-|[* tool.Set(`[`=`](Bar`& bar) `{ SubBar(bar); `});]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:1669&879
@@ -663,52 +777,80 @@ the use of THISFN macro, which is an shortcut alternative for
 some lambdas `- in this case [*@5 THISFN(SubBar)] is equivalent 
 to [*@5 `[`=`](Bar`& bar) `{ SubBar(bar); `}].&]
 [s5; &]
-[s0;l321; [C@5+75 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define IMAGECLASS TutorialImg&]
-[s7; #define IMAGEFILE <Gui12/images.iml>&]
-[s7; #include <Draw/iml.h>&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MenuBar   menu;&]
-[s7; -|ToolBar   tool;&]
-[s7; -|StatusBar status;&]
-[s7; -|&]
-[s7; -|[* typedef MyAppWindow CLASSNAME]; // so that we can use THISFN 
-shortcut&]
-[s7; &]
-[s7; -|void SubBar(Bar`& bar) `{&]
-[s7; -|-|bar.AddMenu(`"Function`", TutorialImg`::Fn(), `[`=`] `{&]
-[s7; -|-|-|PromptOK(`"Fn activated!`");&]
-[s7; -|-|`})[* .Help(`"This invokes MenuFn method of tutorial example`");]&]
-[s7; -|-|bar.Add(TutorialImg`::Fn2(), `[`=`] `{&]
-[s7; -|-|-|PromptOK(`"Fn2 activated!`");&]
-[s7; -|-|`})[* .Help(`"This invokes BarFn method of tutorial example`");]&]
-[s7; -|-|bar.Add(`"Exit`", TutorialImg`::Exit(), `[`=`] `{&]
-[s7; -|-|-|if(PromptOKCancel(`"Exit MyApp?`"))&]
-[s7; -|-|-|-|Break();&]
-[s7; -|-|`});&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|void MainMenu(Bar`& bar) `{&]
-[s7; -|-|bar.Sub(`"Menu`", [* THISFN](SubBar));&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with bars`").Sizeable();&]
-[s7; -|-|AddFrame(menu);&]
-[s7; -|-|[* AddFrame(TopSeparatorFrame());]&]
-[s7; -|-|AddFrame(tool);&]
-[s7; -|-|AddFrame(status);&]
-[s7; -|-|[* AddFrame(InsetFrame());]&]
-[s7; -|-|menu.Set([* THISFN](MainMenu));&]
-[s7; -|-|[* menu.WhenHelp `= status;]&]
-[s7; -|-|tool.Set(`[`=`](Bar`& bar) `{ SubBar(bar); `});&]
-[s7; -|-|[* tool.WhenHelp `= status;]&]
-[s7; -|`}&]
-[s7; `};&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGECLASS TutorialImg]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  IMAGEFILE ][C@(0.0.255)+75 <][C+75 Gui12][C@(0.0.255)+75 /
+][C+75 images][C@(0.0.255)+75 .][C+75 iml][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Draw][C@(0.0.255)+75 /][C+75 i
+ml][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MenuBar   menu;]&]
+[s0;l320;%- [C+75     ToolBar   tool;]&]
+[s0;l320;%- [C+75     StatusBar status;]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*_C@(0.0.255)+75 typedef][*_C+75  MyAppWindow ][*_C@(0.128.128)+75 CL
+ASSNAME][*_C+75 ;][C+75  ][/C@4+75 // so that we can use THISFN shortcut]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  SubBar(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 AddMenu(][C@3+75 `"Function`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Fn(), ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][/C@4+75 // AddMenu `- only in menu]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"Fn activated!`"][C+75 );]&]
+[s0;l320;%- [C+75         `})][*_C@(0.0.255)+75 .][*_C+75 Help(][*_C@3+75 `"This 
+invokes MenuFn method of tutorial example`"][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(TutorialImg][C@(0.0.255)+75 `::][C+75 F
+n2(), ][C@(0.0.255)+75 `[`=`]][C+75  `{ ][/C@4+75 // does not have 
+image `- not in toolbar]&]
+[s0;l320;%- [C+75             PromptOK(][C@3+75 `"Fn2 activated!`"][C+75 );]&]
+[s0;l320;%- [C+75         `})][*_C@(0.0.255)+75 .][*_C+75 Help(][*_C@3+75 `"This 
+invokes BarFn method of tutorial example`"][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Add(][C@3+75 `"Exit`"][C+75 , 
+TutorialImg][C@(0.0.255)+75 `::][C+75 Exit(), ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][/C@4+75 // in both toolbar and menu]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 if][C+75 (PromptOKCancel(][C@3+75 `"Exit 
+MyApp?`"][C+75 ))]&]
+[s0;l320;%- [C+75                 Break();]&]
+[s0;l320;%- [C+75         `});]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  MainMenu(Bar][C@(0.0.255)+75 `&][C+75  
+bar) `{]&]
+[s0;l320;%- [C+75         bar][C@(0.0.255)+75 .][C+75 Sub(][C@3+75 `"Menu`"][C+75 , 
+][*_C@(0.128.128)+75 THISFN][C+75 (SubBar));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with bars`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         AddFrame(menu);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (][*_C+75 TopSeparatorFrame());]&]
+[s0;l320;%- [C+75         AddFrame(tool);]&]
+[s0;l320;%- [C+75         AddFrame(status);]&]
+[s0;l320;%- [C+75         ][*_C+75 AddFrame][C+75 (][*_C+75 InsetFrame());]&]
+[s0;l320;%- [C+75         menu][C@(0.0.255)+75 .][C+75 Set(][*_C@(0.128.128)+75 THISFN][C+75 (M
+ainMenu));]&]
+[s0;l320;%- [C+75         ][*_C+75 menu][*_C@(0.0.255)+75 .][*_C+75 WhenHelp 
+][*_C@(0.0.255)+75 `=][*_C+75  status;]&]
+[s0;l320;%- [C+75         tool][C@(0.0.255)+75 .][C+75 Set(][C@(0.0.255)+75 `[`=`]][C+75 (Bar][C@(0.0.255)+75 `&
+][C+75  bar) `{ SubBar(bar); `}); ][/C@4+75 // equivalent to THISFN(SubBar)]&]
+[s0;l320;%- [C+75         ][*_C+75 tool][*_C@(0.0.255)+75 .][*_C+75 WhenHelp 
+][*_C@(0.0.255)+75 `=][*_C+75  status;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:1837&876
@@ -720,24 +862,38 @@ shortcut&]
 as variable somewhere, usually as member variable of your window 
 or dialog class and use [* Add] (or [* operator <<]) to put it to 
 your window.&]
-[s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|[* Button button];&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`");&]
-[s7; -|-|[* Add(button.LeftPos(10, 100).TopPos(10, 30));]&]
-[s7; -|-|[* button.SetLabel(`"Click me!`");]&]
-[s7; [* -|-|button << `[`=`] `{]&]
-[s7; [* -|-|-|PromptOK(`"You have clicked the button!`");]&]
-[s7; [* -|-|`};]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; &]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     ][*_C+75 Button button;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 Add(button][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 10
+][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 60][*_C+75 ));]&]
+[s0;l320;%- [C+75         ][*_C+75 button][*_C@(0.0.255)+75 .][*_C+75 SetLabel(][*_C@3+75 `"Cli
+ck me!`"][*_C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 button ][*_C@(0.0.255)+75 <<][*_C+75  
+][*_C@(0.0.255)+75 `[`=`]][*_C+75  `{]&]
+[s0;l320;%- [C+75             ][*_C+75 PromptOK(][*_C@3+75 `"You have clicked 
+the button!`"][*_C+75 );]&]
+[s0;l320;%- [C+75         ][*_C+75 `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s7;%- `}&]
+[s5; &]
 [s5; Position within parent view is given in logical coordinates 
 (e.g. [* LeftPos] or [* TopPos]) that allow no`-nonsense resizing 
 of dialog. Widget events (like `"button pushed`") are reflected 
@@ -745,19 +901,20 @@ by its callbacks. There exists a `"default`" [* WhenAction] Event
 in each widget that is invoked when user changes a value or a 
 state of widget. You can access it either directly&]
 [s7; &]
-[s7; widget.[* WhenAction] ....&]
+[s7; [@0 widget.][*_@0 WhenAction][*@0  ][@0 ....]&]
 [s7; &]
 [s5; or use operator<< version that adds and action to this widget&]
 [s7; &]
-[s7; widget [* <<] ....&]
+[s7; [@0 widget ][*@0 <<][@0  ....]&]
 [s7; &]
 [s5; Note also that to make the code more clear and less verbose, 
 U`+`+ uses `"method chaining`" technique, where methods (usually 
-those that affect appearance, position or behaviour of widgets 
+those that affect appearance, position or behavior of widgets 
 `- `"modifiers`" in U`+`+ lingo) are designed to return a reference 
 to `*this `- that should explain the line&]
 [s5; &]
-[s7; Add(button.LeftPos(10, 100).TopPos(10, 30));&]
+[s7;%- Add(button[@(0.0.255) .][@0 LeftPos(][@3 10][@0 , ][@3 100][@0 )][@(0.0.255) .][@0 TopPos(][@3 1
+0][@0 , ][@3 30][@0 ));]&]
 [s5; &]
 [s0;= 
 @@rawimage:1724&1324
@@ -772,44 +929,65 @@ and horizontal direction. If only one side is aligned, logical
 coordinate specifies the size. There is also specific kind of 
 logical coordinate the specifies the center position.&]
 [s5; &]
-[s0;l321; [C@5+75 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button lt, rt, lb, rb, lv, ht, hv, cb, rc;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`").Sizeable();&]
-[s7; -|-|`*this&]
-[s7; [* -|-|-|<< lt.SetLabel(`"left`-top`").LeftPos(10, 200).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rt.SetLabel(`"right`-top`").RightPos(10, 200).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< lb.SetLabel(`"left`-bottom`").LeftPos(10, 200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rb.SetLabel(`"right`-bottom`").RightPos(10, 200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< lv.SetLabel(`"left`-vsize`").LeftPos(10, 200).VSizePos(60, 
-60)]&]
-[s7; [* -|-|-|<< ht.SetLabel(`"hsize`-pos`").HSizePos(220, 220).TopPos(10, 
-40)]&]
-[s7; [* -|-|-|<< hv.SetLabel(`"hsize`-vsize`").HSizePos(220, 220).VSizePos(60, 
-60)]&]
-[s7; [* -|-|-|<< cb.SetLabel(`"hcenter`-bottom`").HCenterPos(200).BottomPos(10, 
-40)]&]
-[s7; [* -|-|-|<< rc.SetLabel(`"right`-vcenter`").RightPos(10, 200).VCenterPos(40)]&]
-[s7; -|-|;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button lt, rt, lb, rb, lv, ht, hv, cb, rc;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lt][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-top`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rt][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-top`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  lv][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"left`-vsize`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VSizePos(][*_C@3+75 60][*_C+75 ,
+ ][*_C@3+75 60][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  ht][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hsize`-pos`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HSizePos(][*_C@3+75 2
+20][*_C+75 , ][*_C@3+75 220][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPos(][*_C@3+75 10][*_C+75 ,
+ ][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  hv][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hsize`-vsize`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HSizePos(][*_C@3+75 2
+20][*_C+75 , ][*_C@3+75 220][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VSizePos(][*_C@3+75 60][*_C+75 ,
+ ][*_C@3+75 60][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  cb][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"hcenter`-bottom`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 HCenterPos(][*_C@3+75 2
+00][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 BottomPos(][*_C@3+75 10][*_C+75 , 
+][*_C@3+75 40][*_C+75 )]&]
+[s0;l320;%- [C+75             ][*_C@(0.0.255)+75 <<][*_C+75  rc][*_C@(0.0.255)+75 .][*_C+75 Set
+Label(][*_C@3+75 `"right`-vcenter`"][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 RightPos(][*_C@3+75 1
+0][*_C+75 , ][*_C@3+75 200][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 VCenterPos(][*_C@3+75 40][*_C+75 )
+]&]
+[s0;l320;%- [C+75         ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@rawimage:2000&923
@@ -830,43 +1008,63 @@ in this example start to overlap&]
 &]
 [s5; which is something that is in most cases undesirable. To fix 
 the problem, you can specify the minimal size of window:&]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button lt, rt, lb, rb, lv, ht, hv, cb, rc;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with button`").Sizeable().[* SetMinSize]([* Zsz](600, 
-400));&]
-[s7; -|-|`*this&]
-[s7; -|-|-|<< lt.SetLabel(`"left`-top`").LeftPos(10, 200).TopPos(10, 
-40)&]
-[s7; -|-|-|<< rt.SetLabel(`"right`-top`").RightPos(10, 200).TopPos(10, 
-40)&]
-[s7; -|-|-|<< lb.SetLabel(`"left`-bottom`").LeftPos(10, 200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< rb.SetLabel(`"right`-bottom`").RightPos(10, 200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< lv.SetLabel(`"left`-vsize`").LeftPos(10, 200).VSizePos(60, 
-60)&]
-[s7; -|-|-|<< ht.SetLabel(`"hsize`-pos`").HSizePos(220, 220).TopPos(10, 
-40)&]
-[s7; -|-|-|<< hv.SetLabel(`"hsize`-vsize`").HSizePos(220, 220).VSizePos(60, 
-60)&]
-[s7; -|-|-|<< cb.SetLabel(`"hcenter`-bottom`").HCenterPos(200).BottomPos(10, 
-40)&]
-[s7; -|-|-|<< rc.SetLabel(`"right`-vcenter`").RightPos(10, 200).VCenterPos(40)&]
-[s7; -|-|;&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
+[s5; &]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button lt, rt, lb, rb, lv, ht, hv, cb, rc;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with button`"][C+75 )][C@(0.0.255)+75 .
+][C+75 Sizeable()][C@(0.0.255)+75 .][*_C+75 SetMinSize][C+75 (][*_C+75 Zsz][C+75 (][C@3+75 600][C+75 ,
+ ][C@3+75 400][C+75 ));]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lt][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-top`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rt][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-top`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 BottomPos(][C@3+75 10][C+75 , 
+][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 BottomPos(][C@3+75 10][C+75 , 
+][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  lv][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+left`-vsize`"][C+75 )][C@(0.0.255)+75 .][C+75 LeftPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 VSizePos(][C@3+75 60][C+75 , 
+][C@3+75 60][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  ht][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hsize`-pos`"][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos(][C@3+75 220][C+75 , 
+][C@3+75 220][C+75 )][C@(0.0.255)+75 .][C+75 TopPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  hv][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hsize`-vsize`"][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos(][C@3+75 220][C+75 , 
+][C@3+75 220][C+75 )][C@(0.0.255)+75 .][C+75 VSizePos(][C@3+75 60][C+75 , 
+][C@3+75 60][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  cb][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+hcenter`-bottom`"][C+75 )][C@(0.0.255)+75 .][C+75 HCenterPos(][C@3+75 200][C+75 )][C@(0.0.255)+75 .
+][C+75 BottomPos(][C@3+75 10][C+75 , ][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75             ][C@(0.0.255)+75 <<][C+75  rc][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"
+right`-vcenter`"][C+75 )][C@(0.0.255)+75 .][C+75 RightPos(][C@3+75 10][C+75 , 
+][C@3+75 200][C+75 )][C@(0.0.255)+75 .][C+75 VCenterPos(][C@3+75 40][C+75 )]&]
+[s0;l320;%- [C+75         ;]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; [* Zsz] function converts arguments using font zooming to account 
 for various base GUI font settings.&]
 [s3;:15: 15. Font`-zooming&]
@@ -875,30 +1073,36 @@ to respond to platform setting of GUI font, U`+`+ provides functions
 to zoom coordinates accordingly. Such zooming scale distances 
 by the ratio of current standard GUI font size to design font 
 size (which is based on old Win95 standard font size). Functions 
-Zx and Zy scale the horizontal or vertical distance. Logical 
-coordinate methods that end with Z (like LeftPos[* Z]) are then 
-scaling the values with these functions.&]
+[* Zx] and [* Zy] scale the horizontal or vertical distance. Logical 
+coordinate methods that end with [* Z] (like [* LeftPosZ ]or [* TopPosZ]) 
+are then scaling the values with these functions.&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button button;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title(`"My application with font`-zoomed button`").Sizeable();&]
-[s7; -|-|`*this << button.SetLabel(`"Button`").LeftPos([* Zx](10), [* Zy](64)).[* TopPosZ](10
-, 24);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|app.Run();&]
-[s7; `}&]
-[s7; &]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button button;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][C@3+75 `"My application with font`-zoomed 
+button`"][C+75 )][C@(0.0.255)+75 .][C+75 Sizeable();]&]
+[s0;l320;%- [C+75         ][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this][C+75  
+][C@(0.0.255)+75 <<][C+75  button][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Button`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPos(][*_C+75 Zx][C+75 (][C@3+75 10][C+75 ), 
+][*_C+75 Zy][C+75 (][C@3+75 64][C+75 ))][C@(0.0.255)+75 .][*_C+75 TopPosZ][C+75 (][C@3+75 10][C+75 ,
+ ][C@3+75 24][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1640&509
@@ -924,24 +1128,31 @@ documentation is available [*^topic`:`/`/ide`/app`/LayoutDes`_en`-us^ here].&]
 [s5; A group of layouts is stored in .lay file. Format of .lay files 
 is such that it can be directly included into C`+`+:&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define LAYOUTFILE <Gui16a/dlg.lay>]&]
-[s7; [* #include <CtrlCore/lay.h>]&]
-[s7; &]
-[s7; struct MyAppWindow : public [* WithDlgLayout<TopWindow>] `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|[* CtrlLayout(`*this, `"My dialog`");]&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s0; &]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*_C@(128.0.255)+75 #define][*_C+75  LAYOUTFILE ][*_C@(0.0.255)+75 <][*_C+75 Gui1
+6a][*_C@(0.0.255)+75 /][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 lay][*_C@(0.0.255)+75 >]&]
+[s0;l320;%- [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 CtrlCore][*_C@(0.0.255)+75 /
+][*_C+75 lay][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  ][*_C+75 WithDlgLayout][*_C@(0.0.255)+75 <][*_C+75 TopWindo
+w][*_C@(0.0.255)+75 >][C+75  `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         ][*_C+75 CtrlLayout(][*_C@(0.0.255)+75 `*this][*_C+75 , 
+][*_C@3+75 `"MyDialog`"][*_C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s0;= 
 @@rawimage:1235&551
 (iVBORw0KGgoAAAANSUhEUgAAAOAAAABkCAIAAAAQbqt4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAASiSURBVHhe7Zw/TtxAFIfdRImo6KgogihIQxOJljvQUUTaKyCaVGmh5QJpIqXZggtwBESba+QGybz55/HYu+NFDH5rf59+Wo3fPHul1adnIxaab0+/CVEbEfTL809CFAZBieogKFEdBCWqg6BEdRCUqA6CEtXJBT17vjlsmubqJlZcTm5Pm+b06LFTdPGnBA5u73398fpg2ynDW2R+MVZ8/vUjK5qYotnKilkGBT09OO/YExQs2+Y7e35nQdBFxYj44eOnzNHBYj/Dgh5encZBKMWHy+bqcpNSmW12cF4ed3uyIOjSkuk40k6TYUGPHs2rl+zs+f5IBqqrm3Vz+BCajbjn1yeZoNIvPamFx1cygQU7XNMtK7SnvXIoHtxepxcn+5so5Xg7TTYJKko5XcSVxEI7Tf0d3PVk43BQ0LAVLtJZJG/UK2559iV7F6fmeDtNNgoavMwttAsZrrKwDXErXMFN3E5dtPZ0tqyU7fOAf6/w1vZqnYuTvc6bCuo8e/CupKKYqWaeUN1reoq/QnCub2HfXQRdTpyd5jUusobBbBRU1nbs9S20Al0ehp/0O1uyDrfsUA+Pqk5HW4lbaX/rcVvkFj+PZFKOd3SroDLw/HhL6yZm1MUnUedToO2Jp7inUiFo3XkX8dKRnBseCfghaQYZ1HGko7mgI+PuxVmxRuJYzepkj2IGzaCIpmi2smKW1whqb/H+GbF2ZFS/13sRhdlN0HCzrnvPbR8JBMbnovOaCUrIuwVBieogKFEdBCWqg6BEdRCUqI4X9C+AShAUVIOgoBoEBdUgKKgGQUE1CAqqQVBQDYKCarQL2nz/Q4rxH9Yc2QNB/8FWEHRKELQIgk5JKmjTNH4FCQg6JQhaBEGnBEGLLFzQ9aq5uHvxBxsY02MY2dYBQYsgKIKqBkERVDUImltlSp7VOhQu7tZ3F7bWdr/4SuhD0Cog6Car4pY11i1FylgMJ65XdoWgVUDQnlVWSEvPRXsgA7MdnxYpIWgVELRrlZjnbtlm1Rc0bLdtEQStAoJ2rYoFUTAKGppaL5OiB0GrgKAt1i9x0B6sVskENQe2mozN0ChIFUGrsHBBJwZBiyDolCBoEQSdEgQtgqBTkgoKgyDolCBoEQSdEvPpk2L8hzVHtAsKCwdBQTUICqpBUFANgoJqEBRUg6CgGgQF1RQE/ToO3w3w1pQF9b9Q2wyCQj2qCZp80XmHbym339IHEOoIKnZGz4rSveab9rAQagja/l2Sp1fogqCwkQqCDuhoSk5B62LnXzwkjwLZ3y3JdTzhcnb3zp+B1EugjqC5O9FZq6PblZpbJVK2a+n0XnY6QzXZhxkzxQT1LspBsLYnaPci2zph1lQQtG9oW0ititUh7RAULDUEtfK0eslBUClZD1sb18klCp0wZ+oIahDBPFFVZ1X/Xzz4XjlOtBMvHYNSpmuYLdUEHQarYDfKgo7Bd5dBUNiNgqBvDYLCbryzoAC7gaCgGgQF1SAoqAZBQTUICqpBUFANgoJqEBRUg6CgGgQF1SAoqAZBQTUICqpBUFANgoJqEBRUg6CgGgQF1SAoqAZBQTVeUEKU5un3f/yTFC35jMdxAAAAAElFTkSuQmCC)
@@ -954,38 +1165,57 @@ widgets, including its logical coordinates.&]
 [s5; To understand how layout mechanism works, let`'s examine the 
 content of .lay file:&]
 [s5; &]
-[s7; LAYOUT([* DlgLayout], 208, 64)&]
-[s7; -|ITEM([* Upp`::Label, dv`_`_`_0, SetLabel(t`_(`"Label`")).LeftPosZ(8, 
-36).TopPosZ(8, 19)])&]
-[s7; -|ITEM([* Upp`::EditString, text, LeftPosZ(48, 92).TopPosZ(8, 19)])&]
-[s7; -|ITEM([* Upp`::Option, option, SetLabel(t`_(`"Option`")).LeftPosZ(8, 
-108).TopPosZ(32, 15)])&]
-[s7; END`_LAYOUT&]
+[s0;l320;%- [*C@(0.0.255)+75 LAYOUT][C+75 (][*_C+75 DlgLayout][C+75 , ][C@3+75 208][C+75 , 
+][C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Lab
+el, dv`_`_`_0, SetLabel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Label`"][*_C@(0.128.128)+75 )
+][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 36][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 19][*_C+75 )][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Edi
+tString, text, LeftPosZ(][*_C@3+75 48][*_C+75 , ][*_C@3+75 92][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 19][*_C+75 )][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (][*_C+75 Upp][*_C@(0.0.255)+75 `::][*_C+75 Opt
+ion, option, SetLabel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Option`"][*_C@(0.128.128)+75 )
+][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 108][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 32][*_C+75 , 
+][*_C@3+75 15][*_C+75 )][C+75 )]&]
+[s0;l320;%- [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 LAYOUT]&]
 [s5; &]
 [s5; Header [* CtrlCore/lay.h] includes [* LAYOUTFILE] several times, 
 altering definition of LAYOUT, ITEM and END`_LAYOUT to produce 
 C`+`+ code which simplified form for this example looks like&]
 [s5; &]
-[s7; template <class Base>&]
-[s7; struct With[* DlgLayout] : Base `{&]
-[s7; -|[* Label] [* dv`_`_`_0];&]
-[s7; -|[* EditString] [* text];&]
-[s7; -|[* Option] [* option];&]
-[s7; `};&]
-[s7; &]
-[s7; template <class T>&]
-[s7; CtrlLayout(T`& dlg, const char `*title)&]
-[s7; `{&]
-[s7; -|Size sz `= Ctrl`::LayoutZoom([* 208], [* 64])&]
-[s7; -|dlg.SetMinSize(sz);&]
-[s7; -|dlg.SetRect(sz);&]
-[s7; -|dlg.Title(title);&]
-[s7; -|dlg.[* dv`_`_`_0].[* SetLabel(t`_(`"Label`")).LeftPosZ(8, 36).TopPosZ(8, 
-19)];&]
-[s7; -|dlg.[* text].[* LeftPosZ(48, 92).TopPosZ(8, 19)];&]
-[s7; -|dlg.[* option].[* SetLabel(t`_(`"Option`")).LeftPosZ(8, 108).TopPosZ(32, 
-15)];&]
-[s7; `}&]
+[s7;%- [*@(0.0.255) template][@0  ][@(0.0.255) <][*@(0.0.255) class][@0  Base][@(0.0.255) >]&]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  With][*_C+75 DlgLayout][C+75  
+][C@(0.0.255)+75 :][C+75  Base `{]&]
+[s0;l320;%- [C+75     ][*_C+75 Label dv`_`_`_0;]&]
+[s0;l320;%- [C+75     ][*_C+75 EditString text;]&]
+[s0;l320;%- [C+75     ][*_C+75 Option option;]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 template][C+75  ][C@(0.0.255)+75 <][*C@(0.0.255)+75 class][C+75  
+T][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C+75 CtrlLayout(T][C@(0.0.255)+75 `&][C+75  dlg, ][*C@(0.0.255)+75 const][C+75  
+][*C@(0.0.255)+75 char][C+75  ][C@(0.0.255)+75 `*][C+75 title)]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     Size sz ][C@(0.0.255)+75 `=][C+75  Ctrl][C@(0.0.255)+75 `::][C+75 LayoutZo
+om(][*_C@3+75 208][*_C+75 , ][*_C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 SetMinSize(sz);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 SetRect(sz);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][C+75 Title(title);]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 dv`_`_`_0][*_C@(0.0.255)+75 .][*_C+75 SetLa
+bel(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Label`"][*_C@(0.128.128)+75 )][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 36][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 To
+pPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 19][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 text][*_C@(0.0.255)+75 .][*_C+75 LeftPosZ(][*_C@3+75 4
+8][*_C+75 , ][*_C@3+75 92][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 TopPosZ(][*_C@3+75 8][*_C+75 , 
+][*_C@3+75 19][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75     dlg][C@(0.0.255)+75 .][*_C+75 option][*_C@(0.0.255)+75 .][*_C+75 SetLabel
+(][*_C@(0.128.128)+75 t`_(][*_C@3+75 `"Option`"][*_C@(0.128.128)+75 )][*_C+75 )][*_C@(0.0.255)+75 .
+][*_C+75 LeftPosZ(][*_C@3+75 8][*_C+75 , ][*_C@3+75 108][*_C+75 )][*_C@(0.0.255)+75 .][*_C+75 T
+opPosZ(][*_C@3+75 32][*_C+75 , ][*_C@3+75 15][*_C+75 )][C+75 ;]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; This way, U`+`+ keeps tight coupling between visual design and 
 C`+`+ code.&]
@@ -1008,21 +1238,27 @@ are not forced to use `"using namespace Upp`" in the context
 of using layouts. Below implementation presents how you could 
 avoid such situation:&]
 [s0; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; #define LAYOUTFILE <Gui16b/dlg.lay>&]
-[s7; #include <CtrlCore/lay.h>&]
-[s7; &]
-[s7; struct MyAppWindow : public WithDlgLayout<Upp`::TopWindow> `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|CtrlLayout(`*this, `"MyDialog`");&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  LAYOUTFILE ][C@(0.0.255)+75 <][C+75 Gui16b][C@(0.0.255)+75 /
+][C+75 dlg][C@(0.0.255)+75 .][C+75 lay][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlCore][C@(0.0.255)+75 /
+][C+75 lay][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  WithDlgLayout][C@(0.0.255)+75 <][C+75 Upp][C@(0.0.255)+75 `:
+:][C+75 TopWindow][C@(0.0.255)+75 >][C+75  `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         CtrlLayout(][C@(0.0.255)+75 `*][*C@(0.0.255)+75 this][C+75 , 
+][C@3+75 `"MyDialog`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s3;:17: 17. Value of widget&]
 [s5; Many widgets have some sort of natural value. E.g. the value 
@@ -1033,48 +1269,58 @@ of the option.&]
 of widget via [* GetData] and [* SetData] methods. All types of values 
 are passed using polymorphic Value.&]
 [s5;* &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditString text;&]
-[s7; -|app.Add(text.TopPosZ(0, 20).HSizePos());&]
-[s7; &]
-[s7; -|text.[* SetData](`"Some text`");&]
-[s7; -|app.Run();&]
-[s7; -|PromptOK((String)text.[* GetData]());&]
-[s7; `}&]
-[s7; &]
-[s5; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditString text;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(text][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     text][C@(0.0.255)+75 .][*_C+75 SetData][C+75 (][C@3+75 `"Some 
+text`"][C+75 );]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     PromptOK((String)text][C@(0.0.255)+75 .][*_C+75 GetData][C+75 ());]&]
+[s0;l320;%- [C+75 `}]&]
+[s5;l320; &]
 [s5; Because this feature is used very frequently, U`+`+ provides 
 operator overloads for this interface `- [* operator<<`=] for SetData 
 and [* operator`~] for GetData.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditString text;&]
-[s7; -|app.Add(text.TopPosZ(0, 20).HSizePos());&]
-[s7; &]
-[s7; -|[* text <<`=] `"Some text `- operator version`";&]
-[s7; -|app.Run();&]
-[s7; -|PromptOK((String)[* `~text]);&]
-[s7; `}&]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditString text;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(text][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*_C+75 text ][*_C@(0.0.255)+75 <<`=][C+75  ][C@3+75 `"Some 
+text `- operator version`"][C+75 ;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     PromptOK((String)][*_C@(0.0.255)+75 `~][*_C+75 text][C+75 );]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s3;:18: 18. Accepting and rejecting widgets&]
 [s5; Ctrl interface provides&]
 [s5; &]
-[s7; -|virtual bool   [* Accept]();&]
-[s7; -|virtual void   [* Reject]();&]
+[s7;%- [*@(0.0.255) virtual][@0  ][*@(0.0.255) bool][@0    ][*_@0 Accept][@0 ();]&]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 virtual][C+75  ][*C@(0.0.255)+75 void][C+75  
+  ][*_C+75 Reject][C+75 ();]&]
 [s5; &]
 [s5; methods. [*/ Accepting] is usually a reaction to pressing OK button 
 or similar approve operation and usually involves testing for 
@@ -1092,21 +1338,25 @@ Cancel button is pressed or similar rejecting action. It simply
 cancels all pending operations on widget. Default implementation 
 calls Reject for all children.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(20));&]
-[s7; -|EditDate  date;&]
-[s7; -|app.Add(date.TopPosZ(0, 20).HSizePos());&]
-[s7; -|app.Run();&]
-[s7; -|if(app.[* Accept]())&]
-[s7; -|-|PromptOK(`"Correct date.`&`[`* `" `+ AsString(`~date));&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75     EditDate  date;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (app][C@(0.0.255)+75 .][*_C+75 Accept][C+75 ())]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Correct date.`&`[`* `"][C+75  
+][C@(0.0.255)+75 `+][C+75  AsString(][C@(0.0.255)+75 `~][C+75 date));]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1029&260
@@ -1140,27 +1390,34 @@ interface. Flag is cleared by [* ClearModify] method.&]
 state, implementation of widgets is responsible for correct behaviour 
 with respect to listed flags.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|TopWindow  app;&]
-[s7; -|app.SetRect(0, 0, Zx(200), Zy(60));&]
-[s7; -|EditDate  date1, date2, date3;&]
-[s7; -|date1 <<`= date2 <<`= date3 <<`= GetSysDate();&]
-[s7; -|date1.[* ClearModify]();&]
-[s7; -|app.Add(date1.TopPosZ(0, 20).HSizePos());&]
-[s7; -|date2.[* Disable]();&]
-[s7; -|app.Add(date2.TopPosZ(20, 20).HSizePos());&]
-[s7; -|date3.[* SetReadOnly]();&]
-[s7; -|app.Add(date3.TopPosZ(40, 20).HSizePos());&]
-[s7; -|app.Run();&]
-[s7; -|if(date1.[* IsModified]())&]
-[s7; -|-|PromptOK(`"Date was modified!`");&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     TopWindow  app;]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 SetRect(][C@3+75 0][C+75 , 
+][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), Zy(][C@3+75 60][C+75 ));]&]
+[s0;l320;%- [C+75     EditDate  date1, date2, date3;]&]
+[s0;l320;%- [C+75     date1 ][C@(0.0.255)+75 <<`=][C+75  date2 ][C@(0.0.255)+75 <<`=][C+75  
+date3 ][C@(0.0.255)+75 <<`=][C+75  GetSysDate();]&]
+[s0;l320;%- [C+75     date1][C@(0.0.255)+75 .][*_C+75 ClearModify][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date1][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 0
+][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     date2][C@(0.0.255)+75 .][*_C+75 Disable][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date2][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 2
+0][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     date3][C@(0.0.255)+75 .][*_C+75 SetReadOnly][C+75 ();]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Add(date3][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+0][C+75 , ][C@3+75 20][C+75 )][C@(0.0.255)+75 .][C+75 HSizePos());]&]
+[s0;l320;%- [C+75     app][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 if][C+75 (date1][C@(0.0.255)+75 .][*_C+75 IsModified][C+75 (
+))]&]
+[s0;l320;%- [C+75         PromptOK(][C@3+75 `"Date was modified!`"][C+75 );]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s0;= 
 @@image:1029&460
@@ -1176,48 +1433,61 @@ starts. In order to exit it, e.g. by pressing the button, you
 have to call TopWindow`'s [* Break] method. Argument passed to 
 Break is then returned from Run.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button exit;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(100), Zy(100));&]
-[s7; -|-|Add(exit.SetLabel(`"exit`").LeftPosZ(10, 64).TopPosZ(10, 24));&]
-[s7; -|-|exit << `[`=`] `{ [* Break](999); `};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button exit;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 100][C+75 ), 
+Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;%- [C+75         Add(exit][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"exit`"][C+75 )][C@(0.0.255)+75 .
+][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 1
+0][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;%- [C+75         exit ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][*_C+75 Break][C+75 (][C@3+75 999][C+75 ); `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5; &]
 [s5; As this is very common situation, TopWindow provides another 
 method, [* Breaker], which returns an Event which, when invoked, 
 performs the [* Break].&]
 [s5; &]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button exit;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(100), Zy(100));&]
-[s7; -|-|Add(exit.SetLabel(`"exit`").LeftPosZ(10, 64).TopPosZ(10, 24));&]
-[s7; -|-|exit <<`= [* Breaker](999);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;~~~>32;%- [C+75     Button exit;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;~~~>32;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , 
+Zx(][C@3+75 100][C+75 ), Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;~~~>32;%- [C+75         Add(exit][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"exit`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 10][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;~~~>32;%- [C+75         exit ][C@(0.0.255)+75 <<][C+75  ][*_C+75 Breaker][C+75 (][C@3+75 9
+99][C+75 );]&]
+[s0;l320;~~~>32;%- [C+75     `}]&]
+[s0;l320;~~~>32;%- [C+75 `};]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~>32;%- [C+75 `{]&]
+[s0;l320;~~~>32;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;~~~>32;%- [C+75 `}]&]
 [s5; &]
 [s5; Another common situation is handling OK and Cancel buttons. 
 OK button has to Accept the dialog before breaking the loop (if 
@@ -1226,76 +1496,104 @@ provides [* Acceptor] and [* Rejector] methods providing Callbacks
 that invoke [* Accept] and [* Reject] as needed before calling the 
 [* Break].&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|Button ok, cancel;&]
-[s7; -|EditDate date;&]
-[s7; &]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(200), Zy(90));&]
-[s7; -|-|Add(date.LeftPosZ(10, 80).TopPosZ(10, 20));&]
-[s7; -|-|Add(ok.SetLabel(`"OK`").LeftPosZ(10, 64).TopPosZ(40, 24));&]
-[s7; -|-|Add(cancel.SetLabel(`"Cancel`").LeftPosZ(100, 64).TopPosZ(40, 
-24));&]
-[s7; &]
-[s7; -|-|ok.[* Ok]() << [* Acceptor]([* IDOK]);&]
-[s7; -|-|cancel.[* Cancel]() << [* Rejector]([*@(128.0.255) IDCANCEL]);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|MyAppWindow app;&]
-[s7; -|switch(app.Run()) `{&]
-[s7; -|case [*@(128.0.255) IDOK]:&]
-[s7; -|-|PromptOK(String().Cat() << `"OK: `" << `~app.date);&]
-[s7; -|-|break;&]
-[s7; -|case [*@(128.0.255) IDCANCEL]:&]
-[s7; -|-|Exclamation(`"Canceled`");&]
-[s7; -|`}&]
-[s7; `}&]
-[s7; &]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     Button ok, cancel;]&]
+[s0;l320;%- [C+75     EditDate date;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), 
+Zy(][C@3+75 90][C+75 ));]&]
+[s0;l320;%- [C+75         Add(date][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 10][C+75 , 
+][C@3+75 80][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 10][C+75 , ][C@3+75 20][C+75 ));]&]
+[s0;l320;%- [C+75         Add(ok][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"OK`"][C+75 )][C@(0.0.255)+75 .
+][C+75 LeftPosZ(][C@3+75 10][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+0][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;%- [C+75         Add(cancel][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Cancel`"][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 100][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 40][C+75 , ][C@3+75 24][C+75 ));]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75         ok][C@(0.0.255)+75 .][*_C+75 Ok][C+75 () ][C@(0.0.255)+75 <<][C+75  
+][*_C+75 Acceptor][C+75 (][*_C@(128.0.255)+75 IDOK][C+75 );]&]
+[s0;l320;%- [C+75         cancel][C@(0.0.255)+75 .][*_C+75 Cancel][C+75 () 
+][C@(0.0.255)+75 <<][C+75  ][*_C+75 Rejector][C+75 (][*_C@(128.0.255)+75 IDCANCEL][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MyAppWindow app;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 switch][C+75 (app][C@(0.0.255)+75 .][C+75 Run()) 
+`{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 case][C+75  ][*_C@(128.0.255)+75 IDOK][C@(0.0.255)+75 :]&]
+[s0;l320;%- [C+75         PromptOK(String()][C@(0.0.255)+75 .][C+75 Cat() 
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"OK: `"][C+75  ][C@(0.0.255)+75 <<][C+75  
+][C@(0.0.255)+75 `~][C+75 app][C@(0.0.255)+75 .][C+75 date);]&]
+[s0;l320;%- [C+75         ][*C@(0.0.255)+75 break][C+75 ;]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 case][C+75  ][*_C@(128.0.255)+75 IDCANCEL][C@(0.0.255)+75 :
+]&]
+[s0;l320;%- [C+75         Exclamation(][C@3+75 `"Canceled`"][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; Calls to [* Ok] and [* Cancel] methods of Button here make Button 
 react to Enter and Esc keys and add specific visual appearance.&]
 [s5; To reduce tedious tasks even further, there are [* CtrlLayoutOK], 
 [* CtrlLayoutCancel], [* CtrlLayoutOKCancel ]etc. template functions 
 that both [^topic`:`/`/CtrlCore`/src`/Layout`_en`-us^ setup layout 
 and assign] Acceptors and Rejectors!&]
+[s5; [/ main.cpp:]&]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #define][C+75  LAYOUTFILE ][C@(0.0.255)+75 <][C+75 Gui20
+d][C@(0.0.255)+75 /][C+75 myapp][C@(0.0.255)+75 .][C+75 lay][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlCore][C@(0.0.255)+75 /
+][C+75 lay][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;~~~>32;C+75%- &]
+[s0;l320;~~~>32;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;~~~>32;%- [C+75 `{]&]
+[s0;l320;~~~>32;%- [C+75     WithMyAppLayout][C@(0.0.255)+75 <][C+75 TopWindow][C@(0.0.255)+75 >
+][C+75  app;]&]
+[s0;l320;~~~>32;%- [C+75     ][*_C+75 CtrlLayoutOKCancel][C+75 (app, ][C@3+75 `"MyApp`"][C+75 )
+;]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 switch][C+75 (app][C@(0.0.255)+75 .][C+75 Run())
+ `{]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 case][C+75  IDOK][C@(0.0.255)+75 :]&]
+[s0;l320;~~~>32;%- [C+75         PromptOK(String()][C@(0.0.255)+75 .][C+75 Cat() 
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"OK: `"][C+75  ][C@(0.0.255)+75 <<][C+75  
+][C@(0.0.255)+75 `~][C+75 app][C@(0.0.255)+75 .][C+75 date);]&]
+[s0;l320;~~~>32;%- [C+75         ][*C@(0.0.255)+75 break][C+75 ;]&]
+[s0;l320;~~~>32;%- [C+75     ][*C@(0.0.255)+75 case][C+75  IDCANCEL][C@(0.0.255)+75 :]&]
+[s0;l320;~~~>32;%- [C+75         Exclamation(][C@3+75 `"Canceled`"][C+75 );]&]
+[s0;l320;~~~>32;%- [C+75     `}]&]
+[s0;l320;~~~>32;%- [C+75 `}]&]
+[s5;%- &]
+[s5; [/ myapp.lay:]&]
+[s0;l320;%- [*C@(0.0.255)+75 LAYOUT][C+75 (MyAppLayout, ][C@3+75 148][C+75 , 
+][C@3+75 64][C+75 )]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 EditDate, 
+date, LeftPosZ(][C@3+75 4][C+75 , ][C@3+75 88][C+75 )][C@(0.0.255)+75 .][C+75 TopPosZ(][C@3+75 4
+][C+75 , ][C@3+75 19][C+75 ))]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 Button, 
+][*_C+75 ok][C+75 , SetLabel(][C@(0.128.128)+75 t`_(][C@3+75 `"OK`"][C@(0.128.128)+75 )][C+75 )
+][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 4][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .][C+75 T
+opPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 ITEM][C+75 (Upp][C@(0.0.255)+75 `::][C+75 Button, 
+][*_C+75 cancel][C+75 , SetLabel(][C@(0.128.128)+75 t`_(][C@3+75 `"Cancel`"][C@(0.128.128)+75 )
+][C+75 )][C@(0.0.255)+75 .][C+75 LeftPosZ(][C@3+75 76][C+75 , ][C@3+75 64][C+75 )][C@(0.0.255)+75 .
+][C+75 TopPosZ(][C@3+75 32][C+75 , ][C@3+75 24][C+75 ))]&]
+[s0;l320;%- [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 LAYOUT]&]
 [s5; &]
-[s7; [@(28.127.0) // main.cpp]&]
-[s7; #include <CtrlLib/CtrlLib.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define LAYOUTFILE <Gui20d/myapp.lay>&]
-[s7; #include <CtrlCore/lay.h>&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|WithMyAppLayout<TopWindow> app;&]
-[s7; -|[* CtrlLayoutOKCancel](app, `"MyApp`");&]
-[s7; -|switch(app.Run()) `{&]
-[s7; -|case IDOK:&]
-[s7; -|-|PromptOK(String().Cat() << `"OK: `" << `~app.date);&]
-[s7; -|-|break;&]
-[s7; -|case IDCANCEL:&]
-[s7; -|-|Exclamation(`"Canceled`");&]
-[s7; -|`}&]
-[s7; `}&]
-[s7; &]
-[s7; [@(28.127.0) // myapp.lay]&]
-[s0;l321; [C@5;1 LAYOUT(MyAppLayout, 148, 64)]&]
-[s7; -|ITEM(EditDate, date, LeftPosZ(4, 88).TopPosZ(4, 19))&]
-[s7; -|ITEM(Button, [* ok], SetLabel(t`_(`"OK`")).LeftPosZ(4, 64).TopPosZ(32, 
-24))&]
-[s7; -|ITEM(Button, [* cancel], SetLabel(t`_(`"Cancel`")).LeftPosZ(76, 
-64).TopPosZ(32, 24))&]
-[s7; END`_LAYOUT&]
-[s0; &]
 [s7;@(28.127.0) &]
 [s7; 
 @@rawimage:697&461
@@ -1312,19 +1610,25 @@ All that is to be done is to derive your own class from Ctrl
 Ctrl`'s virtual methods to paint the widgets and do something 
 useful:&]
 [s5; &]
-[s7; struct MyCtrl : public Ctrl `{&]
-[s7; -|int count `= 0;&]
-[s7; -|&]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), White());&]
-[s7; -|-|w.DrawText(2, 2, AsString(count));&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|virtual void LeftDown(Point, dword) override `{&]
-[s7; -|-|count`+`+;&]
-[s7; -|-|Refresh();&]
-[s7; -|`}&]
-[s7; `};&]
+[s7;%- [*@(0.0.255) struct][@0  MyCtrl ][@(0.0.255) :][@0  ][*@(0.0.255) public][@0  
+Ctrl `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 int][C+75  count ][C@(0.0.255)+75 `=][C+75  
+][C@3+75 0][C+75 ;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+White());]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 2][C+75 , 
+][C@3+75 2][C+75 , AsString(count));]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  LeftDown(Point, ][C@(0.128.128)+75 dword][C+75 )
+ ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         count][C@(0.0.255)+75 `+`+][C+75 ;]&]
+[s0;l320;%- [C+75         Refresh();]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
 [s5; &]
 [s5; To put your widget into your layout based dialog, the simple 
 way is to add it as `"User class`". In that case you just fill 
@@ -1342,20 +1646,27 @@ of custom widget (so that the class is defined at that point).&]
 seldom used widgets, you can also teach TheIDE to show something 
 better using .usc script file:&]
 [s5; &]
-[s7; ctrl MyCtrl `{&]
-[s7; -|group `"Example`";&]
-[s7; &]
-[s7; -|GetMinSize() `{ sz `= GetTextSize(`"X`"); sz.cy `+`= 2; return 
-sz; `}&]
-[s7; -|GetStdSize() `{ sz `= GetMinSize(); sz.cx `*`= 7; return sz; 
-`}&]
-[s7; &]
-[s7; -|Paint(w) `{&]
-[s7; -|-|r `= GetRect();&]
-[s7; -|-|w.DrawRect(r, :White);&]
-[s7; -|-|w.DrawText(2, 2, `"0`", StdFont(), :Black);&]
-[s7; -|`}&]
-[s7; `};&]
+[s0;l320;%- [*C@(0.0.255)+75 ctrl][C+75  MyCtrl `{]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 group][C+75  ][C@3+75 `"Example`"][C+75 ;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     ][C@(0.128.128)+75 GetMinSize][C+75 () `{ sz ][C@(0.0.255)+75 `=][C+75  
+][C@(0.128.128)+75 GetTextSize][C+75 (][C@3+75 `"X`"][C+75 ); sz][C@(0.0.255)+75 .][C+75 cy 
+][C@(0.0.255)+75 `+`=][C+75  ][C@3+75 2][C+75 ; ][*C@(0.0.255)+75 return][C+75  
+sz; `}]&]
+[s0;l320;%- [C+75     ][C@(0.128.128)+75 GetStdSize][C+75 () `{ sz ][C@(0.0.255)+75 `=][C+75  
+][C@(0.128.128)+75 GetMinSize][C+75 (); sz][C@(0.0.255)+75 .][C+75 cx 
+][C@(0.0.255)+75 `*`=][C+75  ][C@3+75 7][C+75 ; ][*C@(0.0.255)+75 return][C+75  
+sz; `}]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     Paint(w) `{]&]
+[s0;l320;%- [C+75         r ][C@(0.0.255)+75 `=][C+75  GetRect();]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C@(0.128.128)+75 DrawRect][C+75 (r, 
+][C@(0.0.255)+75 :][C@(0.128.128)+75 White][C+75 );]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C@(0.128.128)+75 DrawText][C+75 (][C@3+75 2][C+75 ,
+ ][C@3+75 2][C+75 , ][C@3+75 `"0`"][C+75 , ][C@(0.128.128)+75 StdFont][C+75 (), 
+][C@(0.0.255)+75 :][C@(0.128.128)+75 Black][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
 [s5; &]
 [s5; [/ Note: This is not the C`+`+, but a piece of script in `"Esc`" 
 scripting language, interpreted by layout designer.]&]
@@ -1372,44 +1683,200 @@ non`-modal dialog as member variable of its owner window. Non`-modal
 dialog is dismissed using the [* Close] method just like any other 
 window.&]
 [s5; &]
-[s0;l321; [C@5+59 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct NonModalDialog : public TopWindow `{&]
-[s7; -|Button b;&]
-[s7; &]
-[s7; -|NonModalDialog() `{&]
-[s7; -|-|SetRect(0, 0, Zx(200), Zy(50));&]
-[s7; -|-|Add(b.SetLabel(`"Close non`-modal dialog`").SizePos());&]
-[s7; -|-|b << `[`=`] `{ [* Close](); `};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; struct MainWindow : public TopWindow `{&]
-[s7; -|[* NonModalDialog dlg;]&]
-[s7; -|Button b;&]
-[s7; &]
-[s7; -|MainWindow() `{&]
-[s7; -|-|SetRect(0, 0, Zx(400), Zy(100));&]
-[s7; -|-|Add(b.SetLabel(`"Open/close non`-modal dialog`").SizePos());&]
-[s7; -|-|b << `[`=`] `{&]
-[s7; -|-|-|if(dlg.IsOpen())&]
-[s7; -|-|-|-|[* dlg.Close();]&]
-[s7; -|-|-|else&]
-[s7; -|-|-|-|[* dlg.Open(this);]&]
-[s7; -|-|`};&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; &]
+[s0;l321;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 CtrlLib][C@(0.0.255)+75 /
+][C+75 CtrlLib][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  NonModalDialog ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     Button b;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     NonModalDialog() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 200][C+75 ), 
+Zy(][C@3+75 50][C+75 ));]&]
+[s0;l320;%- [C+75         Add(b][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Close 
+non`-modal dialog`"][C+75 )][C@(0.0.255)+75 .][C+75 SizePos());]&]
+[s0;l320;%- [C+75         b ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{ ][*_C+75 Close][C+75 (); `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MainWindow ][C@(0.0.255)+75 :][C+75  
+][*C@(0.0.255)+75 public][C+75  TopWindow `{]&]
+[s0;l320;%- [C+75     ][*_C+75 NonModalDialog dlg;]&]
+[s0;l320;%- [C+75     Button b;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75     MainWindow() `{]&]
+[s0;l320;%- [C+75         SetRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , Zx(][C@3+75 400][C+75 ), 
+Zy(][C@3+75 100][C+75 ));]&]
+[s0;l320;%- [C+75         Add(b][C@(0.0.255)+75 .][C+75 SetLabel(][C@3+75 `"Open/close 
+non`-modal dialog`"][C+75 )][C@(0.0.255)+75 .][C+75 SizePos());]&]
+[s0;l320;%- [C+75         b ][C@(0.0.255)+75 <<][C+75  ][C@(0.0.255)+75 `[`=`]][C+75  
+`{]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 if][C+75 (dlg][C@(0.0.255)+75 .][C+75 IsOpen())
+]&]
+[s0;l320;%- [C+75                 ][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 Close();]&]
+[s0;l320;%- [C+75             ][*C@(0.0.255)+75 else]&]
+[s0;l320;%- [C+75                 ][*_C+75 dlg][*_C@(0.0.255)+75 .][*_C+75 Open(][*_C@(0.0.255)+75 t
+his][*_C+75 );]&]
+[s0;l320;%- [C+75         `};]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     MainWindow win;]&]
+[s0;l320;%- [C+75     win][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
 [s5;/ &]
 [s0;= 
 @@image:2084&940
 (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)
 &]
 [s0; &]
-[s3;:23: 23. Internationalizing applications (i18n)&]
+[s3;:23: 23. Refreshing the UI periodically (time callback)&]
+[s5; Sometimes there is a need to refresh the UI periodically. For 
+example, in a situation where you have a state that is changing 
+over time, A good example of such a state might be a timer or 
+a clock. The clock hands change every second. To refresh the 
+UI at intervals, there is a dedicated Ctrl method called [*^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Upp`:`:Ctrl`:`:SetTimeCallback`(int`,Function`,int`)^ S
+etTimeCallback]. It`'s first argument is a period in milliseconds. 
+The second one is a callback to the function that will be executed 
+after that time. Please keep in mind that the first parameter 
+might be positive. Then the time callback will be executed only 
+once, or if it is negative, it will be executed indefinitely. 
+However, the time loop in this case can be broken by calling 
+[*^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:KillTimeCallback`(int`)^ KillTim
+eCallback] method.&]
+[s0;l320;~~~32;%- [/C@4 // The OnTimer() function will be executed 
+only once after one second.]&]
+[s0;l320;~~~32;%- [C SetTimeCallback(][C@3 1000][C , ][C@(0.0.255) `[`=`]][C  
+`{ OnTimer(); `});]&]
+[s0;l320;~~~32;C%- &]
+[s0;l320;~~~32;%- [/C@4 // The OnTimer() function will be executed 
+on every second indefinitely.]&]
+[s0;l320;~~~32;%- [C SetTimeCallback(][C@(0.0.255) `-][C@3 1000][C , ][C@(0.0.255) `[`=`]][C  
+`{ OnTimer(); `});]&]
+[s0;l320;~~~32;C%- &]
+[s0;l320;%- [/C@4 // To destroy an indefinite time callback, call...]&]
+[s0;l320;%- [C KillTimeCallback();]&]
+[s5; In the exemplary code in this tutorial, we will build a simple 
+window with start and stop button that will activate or deactivate 
+rectangle painting in a random place. Also, after that time, 
+the color of the rectangle will be changed to random. This will 
+be achieved with the previously described methods.&]
+[s5; main.cpp&]
+[s0;l320;%- [C@(128.0.255) #include][C  ][C@(0.0.255) <][C CtrlLib][C@(0.0.255) /][C CtrlLib][C@(0.0.255) .
+][C h][C@(0.0.255) >]&]
+[s0;l320;C%- &]
+[s0;l320;%- [*C@(0.0.255) using][C  ][*C@(0.0.255) namespace][C  Upp;]&]
+[s0;l320;C%- &]
+[s0;l320;%- [*C@(0.0.255) struct][C  RandomRectCtrl ][C@(0.0.255) :][C  ][*C@(0.0.255) public][C  
+Ctrl `{]&]
+[s0;l320;%- [C     Rect  rect;]&]
+[s0;l320;%- [C     Color color;]&]
+[s0;l320;%- [C     ]&]
+[s0;l320;%- [C     ][*C@(0.0.255) void][C  Paint(Draw][C@(0.0.255) `&][C  w) 
+][*C@(0.0.255) override][C  `{]&]
+[s0;l320;%- [C         Size sz ][C@(0.0.255) `=][C  GetSize();]&]
+[s0;l320;%- [C         ]&]
+[s0;l320;%- [C         w][C@(0.0.255) .][C DrawRect(sz, White());]&]
+[s0;l320;%- [C         ][*C@(0.0.255) if][C  (][C@(0.0.255) !][C rect][C@(0.0.255) .][C IsEmpty()) 
+`{]&]
+[s0;l320;%- [C             w][C@(0.0.255) .][C DrawRect(rect, color);]&]
+[s0;l320;%- [C         `}]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C     ]&]
+[s0;l320;%- [C     ][*C@(0.0.255) void][C  RandomizeRect() `{]&]
+[s0;l320;%- [C         Size sz ][C@(0.0.255) `=][C  GetSize();]&]
+[s0;l320;%- [C         ]&]
+[s0;l320;%- [C         ][*C@(0.0.255) int][C  length ][C@(0.0.255) `=][C  ][C@3 50][C ;]&]
+[s0;l320;%- [C         ][*C@(0.0.255) int][C  x ][C@(0.0.255) `=][C  Random() 
+][C@(0.0.255) %][C  (sz][C@(0.0.255) .][C cx ][C@(0.0.255) `-][C  length);]&]
+[s0;l320;%- [C         ][*C@(0.0.255) int][C  y ][C@(0.0.255) `=][C  Random() 
+][C@(0.0.255) %][C  (sz][C@(0.0.255) .][C cy ][C@(0.0.255) `-][C  length);]&]
+[s0;l320;%- [C         ]&]
+[s0;l320;%- [C         rect ][C@(0.0.255) `=][C  Rect(x, y, x ][C@(0.0.255) `+][C  
+length, y ][C@(0.0.255) `+][C  length);]&]
+[s0;l320;%- [C         color ][C@(0.0.255) `=][C  Color(Random() ][C@(0.0.255) %][C  
+][C@3 256][C , Random() ][C@(0.0.255) %][C  ][C@3 256][C , Random() ][C@(0.0.255) %][C  
+][C@3 256][C );]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C `};]&]
+[s0;l320;C%- &]
+[s0;l320;%- [C@(128.0.255) #define][C  LAYOUTFILE ][C@(0.0.255) <][C Gui23][C@(0.0.255) /][C myap
+p][C@(0.0.255) .][C lay][C@(0.0.255) >]&]
+[s0;l320;%- [C@(128.0.255) #include][C  ][C@(0.0.255) <][C CtrlCore][C@(0.0.255) /][C lay][C@(0.0.255) .
+][C h][C@(0.0.255) >]&]
+[s0;l320;C%- &]
+[s0;l320;%- [*C@(0.0.255) struct][C  MyAppWindow ][C@(0.0.255) :][C  ][*C@(0.0.255) public][C  
+WithMyAppLayout][C@(0.0.255) <][C TopWindow][C@(0.0.255) >][C  `{]&]
+[s0;l320;%- [C     MyAppWindow() `{]&]
+[s0;l320;%- [C         CtrlLayout(][C@(0.0.255) `*][*C@(0.0.255) this][C , 
+][C@3 `"MyApp`"][C );]&]
+[s0;l320;%- [C         ]&]
+[s0;l320;%- [C         start`_stop`_btn ][C@(0.0.255) <<][C  ][C@(0.0.255) `[`=`]][C  
+`{ OnStartStop(); `};]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C     ]&]
+[s0;l320;%- [C     ][C@(0.0.255) `~][C MyAppWindow() `{]&]
+[s0;l320;%- [C         ][/C@4 // Not needed will be automatically call 
+upon Ctrl destruction.]&]
+[s0;l320;%- [C         ][/C@4 // KillTimeCallback();]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C     ]&]
+[s0;l320;%- [C     ][*C@(0.0.255) void][C  OnStartStop() `{]&]
+[s0;l320;%- [C         ][*C@(0.0.255) if][C  (random`_rect`_ctrl][C@(0.0.255) .][C rect][C@(0.0.255) .
+][C IsEmpty()) `{]&]
+[s0;l320;%- [C             start`_stop`_btn][C@(0.0.255) .][C SetLabel(][C@3 `"Stop!`"][C );]&]
+[s0;l320;%- [C             ]&]
+[s0;l320;%- [C             ][*_C SetTimeCallback(][*_C@(0.0.255) `-][*_C@3 2000][*_C , 
+][*_C@(0.0.255) `[`=`]][*_C  `{ OnTimer(); `});]&]
+[s0;l320;%- [C         `} ][*C@(0.0.255) else][C  `{]&]
+[s0;l320;%- [C             ][*_C KillTimeCallback();]&]
+[s0;l320;%- [C             ]&]
+[s0;l320;%- [C             start`_stop`_btn][C@(0.0.255) .][C SetLabel(][C@3 `"Start!`"][C );]&]
+[s0;l320;%- [C             random`_rect`_ctrl][C@(0.0.255) .][C rect ][C@(0.0.255) `=][C  
+`{`};]&]
+[s0;l320;%- [C             random`_rect`_ctrl][C@(0.0.255) .][C Refresh();]&]
+[s0;l320;%- [C         `}]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C     ]&]
+[s0;l320;%- [C     ][*C@(0.0.255) void][C  OnTimer() `{]&]
+[s0;l320;%- [C         random`_rect`_ctrl][C@(0.0.255) .][C RandomizeRect();]&]
+[s0;l320;%- [C         random`_rect`_ctrl][C@(0.0.255) .][C Refresh();]&]
+[s0;l320;%- [C     `}]&]
+[s0;l320;%- [C `};]&]
+[s0;l320;C%- &]
+[s0;l320;%- [C GUI`_APP`_MAIN]&]
+[s0;l320;%- [C `{]&]
+[s0;l320;%- [C     MyAppWindow()][C@(0.0.255) .][C Run();]&]
+[s0;l320;%- [C `}]&]
+[s0;l320;C0%- &]
+[s5;%- myapp.lay&]
+[s0;l320;%- [*C@(0.0.255) LAYOUT][C (MyAppLayout, ][C@3 200][C , ][C@3 200][C )]&]
+[s0;l320;%- [C     ][*C@(0.0.255) ITEM][C (Upp][C@(0.0.255) `::][C Button, start`_stop`_btn, 
+SetLabel(][C@(0.128.128) t`_(][C@3 `"Start!`"][C@(0.128.128) )][C )][C@(0.0.255) .][C HSizePo
+sZ(][C@3 8][C , ][C@3 8][C )][C@(0.0.255) .][C BottomPosZ(][C@3 4][C , ][C@3 20][C ))]&]
+[s0;l320;%- [C     ][*C@(0.0.255) ITEM][C (RandomRectCtrl, random`_rect`_ctrl, 
+HSizePosZ(][C@3 8][C , ][C@3 8][C )][C@(0.0.255) .][C VSizePosZ(][C@3 8][C , 
+][C@3 28][C ))]&]
+[s0;l320;%- [*C@(0.0.255) END][C@(0.0.255) `_][*C@(0.0.255) LAYOUT]&]
+[s5;%- &]
+[s0;=%- 
+@@rawimage:1220&1529
+(iVBORw0KGgoAAAANSUhEUgAAAPQAAAEyCAYAAADN6f3jAAAA0GVYSWZJSSoACAAAAAoAAAEEAAEAAAD0AAAAAQEEAAEAAAAyAQAAAgEDAAMAAACGAAAAEgEDAAEAAAABAAAAGgEFAAEAAACMAAAAGwEFAAEAAACUAAAAKAEDAAEAAAADAAAAMQECAA0AAACcAAAAMgECABQAAACqAAAAaYcEAAEAAAC+AAAAAAAAAAgACAAIAL0AAAAFAAAAvQAAAAUAAABHSU1QIDIuMTAuMzQAADIwMjM6MTA6MjggMjE6MTg6MTkAAQABoAMAAQAAAAEAAAAAAAAA7kqMyAAAAYRpQ0NQSUNDIHByb2ZpbGUAAHicfZE9SMNAHMVfU0UplQ7tINIhSHWyi4o41ioUoUKoFVp1MLn0C5q0JCkujoJrwcGPxaqDi7OuDq6CIPgB4uripOgiJf4vKbSI8eC4H+/uPe7eAUKryjSzLwFoumVkUkkxl18VB14RQBRhhDAqM7M+J0lpeI6ve/j4ehfnWd7n/hxDasFkgE8kTrC6YRFvEM9sWnXO+8QRVpZV4nPiCYMuSPzIdcXlN84lhwWeGTGymXniCLFY6mGlh1nZ0IiniWOqplO+kHNZ5bzFWas2WOee/IXBgr6yzHWaUaSwiCVIEKGggQqqsBCnVSfFRIb2kx7+EccvkUshVwWMHAuoQYPs+MH/4He3ZnFq0k0KJoH+F9v+GAMGdoF207a/j227fQL4n4ErveuvtYDZT9KbXS12BIS2gYvrrqbsAZc7wPBTXTZkR/LTFIpF4P2MvikPhG+BwJrbW2cfpw9AlrpK3wAHh8B4ibLXPd492Nvbv2c6/f0ApEhyunsAOLoAAA14aVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA0LjQuMC1FeGl2MiI+CiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICB4bWxuczpHSU1QPSJodHRwOi8vd3d3LmdpbXAub3JnL3htcC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgeG1wTU06RG9jdW1lbnRJRD0iZ2ltcDpkb2NpZDpnaW1wOmMwY2YyNmM1LTBjMDktNDIxZS05Y2VlLTdjNDVmNWE4MjkxZCIKICAgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpkZDNmYjM0Zi1iNGUzLTQ0YjktYTcyMi1lOTk4OTYwYjZkNTgiCiAgIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplZjlhYjllNy05NTE5LTRiMTUtODkzMy0zYmQwNDhiYThhYTAiCiAgIGRjOkZvcm1hdD0iaW1hZ2UvcG5nIgogICBHSU1QOkFQST0iMi4wIgogICBHSU1QOlBsYXRmb3JtPSJMaW51eCIKICAgR0lNUDpUaW1lU3RhbXA9IjE2OTg1MjA2OTk2NzY4OTUiCiAgIEdJTVA6VmVyc2lvbj0iMi4xMC4zNCIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIKICAgeG1wOkNyZWF0b3JUb29sPSJHSU1QIDIuMTAiCiAgIHhtcDpNZXRhZGF0YURhdGU9IjIwMjM6MTA6MjhUMjE6MTg6MTkrMDI6MDAiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDIzOjEwOjI4VDIxOjE4OjE5KzAyOjAwIj4KICAgPHhtcE1NOkhpc3Rvcnk+CiAgICA8cmRmOlNlcT4KICAgICA8cmRmOmxpCiAgICAgIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiCiAgICAgIHN0RXZ0OmNoYW5nZWQ9Ii8iCiAgICAgIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6YzRjMzdhMGEtMDA3NS00Y2Y1LWEyMGItN2U2MGVjNGJkYzNiIgogICAgICBzdEV2dDpzb2Z0d2FyZUFnZW50PSJHaW1wIDIuMTAgKExpbnV4KSIKICAgICAgc3RFdnQ6d2hlbj0iMjAyMy0xMC0yOFQyMToxODoxOSswMjowMCIvPgogICAgPC9yZGY6U2VxPgogICA8L3htcE1NOkhpc3Rvcnk+CiAgPC9yZGY6RGVzY3JpcHRpb24+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz6UG3VTAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH5wocExITdcBdOAAAD4lJREFUeNrt3Wl0VGWCh/H/rXurUqnsG7ITAiirEkE2g5EtCzTazoj2DCIo2pwW1JlzHDmOSoKSsVF01NFBbZZuwTnazkw7DRKQrVGaXZIAEQG12SEgJEGWpLY7HwiBQAIhCQjk+Z3Dh9S9uUndm6fet95KBUNSS7fb7Rz3xBMPREdGp1mW2UGSJQDXOr/fH9hRWlK66L333v20rKzMZ7jd7rbP/MvEaa1btQ4bMGhgd9M0EyQ5OFfANS8YCAQOL1m8JH/fvr0npr029Rlz/FNPjUtq2+7mtPS0NIfDES7J4DwB1wXD4XCEt2/fvt3hQ0f2JCa29VhRkVHpg4cM7kzIwPUb9qAhA7vvO7DH6XBaVvuKaTaA65Rpmgkup7ODQ6cXwHjODFzfHJKsi65m+/x+BYLBOszGbZkOh5wWi+XA1WRdLOaj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)
+    
+@@rawimage:1220&1529
+(iVBORw0KGgoAAAANSUhEUgAAAPQAAAEyCAYAAADN6f3jAAAA0GVYSWZJSSoACAAAAAoAAAEEAAEAAAD0AAAAAQEEAAEAAAAyAQAAAgEDAAMAAACGAAAAEgEDAAEAAAABAAAAGgEFAAEAAACMAAAAGwEFAAEAAACUAAAAKAEDAAEAAAADAAAAMQECAA0AAACcAAAAMgECABQAAACqAAAAaYcEAAEAAAC+AAAAAAAAAAgACAAIAL0AAAAFAAAAvQAAAAUAAABHSU1QIDIuMTAuMzQAADIwMjM6MTA6MjggMjE6MTc6MjQAAQABoAMAAQAAAAEAAAAAAAAAVQXTDgAAAYRpQ0NQSUNDIHByb2ZpbGUAAHicfZE9SMNAHMVfU0UplQ7tINIhSHWyi4o41ioUoUKoFVp1MLn0C5q0JCkujoJrwcGPxaqDi7OuDq6CIPgB4uripOgiJf4vKbSI8eC4H+/uPe7eAUKryjSzLwFoumVkUkkxl18VB14RQBRhhDAqM7M+J0lpeI6ve/j4ehfnWd7n/hxDasFkgE8kTrC6YRFvEM9sWnXO+8QRVpZV4nPiCYMuSPzIdcXlN84lhwWeGTGymXniCLFY6mGlh1nZ0IiniWOqplO+kHNZ5bzFWas2WOee/IXBgr6yzHWaUaSwiCVIEKGggQqqsBCnVSfFRIb2kx7+EccvkUshVwWMHAuoQYPs+MH/4He3ZnFq0k0KJoH+F9v+GAMGdoF207a/j227fQL4n4ErveuvtYDZT9KbXS12BIS2gYvrrqbsAZc7wPBTXTZkR/LTFIpF4P2MvikPhG+BwJrbW2cfpw9AlrpK3wAHh8B4ibLXPd492Nvbv2c6/f0ApEhyunsAOLoAAA14aVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA0LjQuMC1FeGl2MiI+CiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICB4bWxuczpHSU1QPSJodHRwOi8vd3d3LmdpbXAub3JnL3htcC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgeG1wTU06RG9jdW1lbnRJRD0iZ2ltcDpkb2NpZDpnaW1wOmEyMTdkNGViLTczZmEtNDNlYi04MTM1LWQxMGQwM2RjZWYwZSIKICAgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpiMmM5NDU5OS1jNTdjLTRmNjgtYmY2OS1mYWM3YzY0OGI2MzQiCiAgIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDphNjIzZmY0ZS1jNzQxLTRiYzMtYTI5OC05OWQ5ZDczNDQyNjMiCiAgIGRjOkZvcm1hdD0iaW1hZ2UvcG5nIgogICBHSU1QOkFQST0iMi4wIgogICBHSU1QOlBsYXRmb3JtPSJMaW51eCIKICAgR0lNUDpUaW1lU3RhbXA9IjE2OTg1MjA2NDQwNDE5NDQiCiAgIEdJTVA6VmVyc2lvbj0iMi4xMC4zNCIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIKICAgeG1wOkNyZWF0b3JUb29sPSJHSU1QIDIuMTAiCiAgIHhtcDpNZXRhZGF0YURhdGU9IjIwMjM6MTA6MjhUMjE6MTc6MjQrMDI6MDAiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDIzOjEwOjI4VDIxOjE3OjI0KzAyOjAwIj4KICAgPHhtcE1NOkhpc3Rvcnk+CiAgICA8cmRmOlNlcT4KICAgICA8cmRmOmxpCiAgICAgIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiCiAgICAgIHN0RXZ0OmNoYW5nZWQ9Ii8iCiAgICAgIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6Y2JiMWIyNjUtMDQxOC00OWJiLTlmODQtMTg5YTczZjNlZjc0IgogICAgICBzdEV2dDpzb2Z0d2FyZUFnZW50PSJHaW1wIDIuMTAgKExpbnV4KSIKICAgICAgc3RFdnQ6d2hlbj0iMjAyMy0xMC0yOFQyMToxNzoyNCswMjowMCIvPgogICAgPC9yZGY6U2VxPgogICA8L3htcE1NOkhpc3Rvcnk+CiAgPC9yZGY6RGVzY3JpcHRpb24+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz6ZWwLlAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH5wocExEYyT/XcwAAEC5JREFUeNrt3Xl4VOWhx/HfOWdmmEwWkpAgIPuiIqCkIJvBCISEgOj11qV9ENG6UMWlvY/CfYqSoNLK0j6uF2xBWsFet2u9ggQIEuNyQUGTACkKSlkCISxZWJPZzv2DEIgkEpKwJPl+nid/ZM7hhHnPfOd958wEDEnt3W63c+LDD98RGRGZ5HBYPSQ5BOBS5/f7A1tLS0pXzJv36rtlZWU+w+12d3niySlzOnboGDpsxPC+lmXFSjIZK+CSFwwEAvtXZazK2b07/+ic2TOfsCY99tjErl26XZGUnJRkmmaYJINxAhoFwzTNsO7du3fbv+/grs6du3gcLSNaJieOTLyakIHGG/aIkcP77i7Y5TSdDkf3imU2gEbKsqxYl9PZw9SJC2C8ZgYaN1OS4yevZvv8fgWCwTqsxm1Zpimng4vlwIXk+KmY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)
+    
+@@rawimage:1220&1529
+(iVBORw0KGgoAAAANSUhEUgAAAPQAAAEyCAYAAADN6f3jAAAA0GVYSWZJSSoACAAAAAoAAAEEAAEAAAD0AAAAAQEEAAEAAAAyAQAAAgEDAAMAAACGAAAAEgEDAAEAAAABAAAAGgEFAAEAAACMAAAAGwEFAAEAAACUAAAAKAEDAAEAAAADAAAAMQECAA0AAACcAAAAMgECABQAAACqAAAAaYcEAAEAAAC+AAAAAAAAAAgACAAIAL0AAAAFAAAAvQAAAAUAAABHSU1QIDIuMTAuMzQAADIwMjM6MTA6MjggMjE6MTY6NDEAAQABoAMAAQAAAAEAAAAAAAAAE8HsAwAAAYRpQ0NQSUNDIHByb2ZpbGUAAHicfZE9SMNAHMVfU0UplQ7tINIhSHWyi4o41ioUoUKoFVp1MLn0C5q0JCkujoJrwcGPxaqDi7OuDq6CIPgB4uripOgiJf4vKbSI8eC4H+/uPe7eAUKryjSzLwFoumVkUkkxl18VB14RQBRhhDAqM7M+J0lpeI6ve/j4ehfnWd7n/hxDasFkgE8kTrC6YRFvEM9sWnXO+8QRVpZV4nPiCYMuSPzIdcXlN84lhwWeGTGymXniCLFY6mGlh1nZ0IiniWOqplO+kHNZ5bzFWas2WOee/IXBgr6yzHWaUaSwiCVIEKGggQqqsBCnVSfFRIb2kx7+EccvkUshVwWMHAuoQYPs+MH/4He3ZnFq0k0KJoH+F9v+GAMGdoF207a/j227fQL4n4ErveuvtYDZT9KbXS12BIS2gYvrrqbsAZc7wPBTXTZkR/LTFIpF4P2MvikPhG+BwJrbW2cfpw9AlrpK3wAHh8B4ibLXPd492Nvbv2c6/f0ApEhyunsAOLoAAA14aVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/Pgo8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA0LjQuMC1FeGl2MiI+CiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIKICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICB4bWxuczpHSU1QPSJodHRwOi8vd3d3LmdpbXAub3JnL3htcC8iCiAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIKICAgeG1wTU06RG9jdW1lbnRJRD0iZ2ltcDpkb2NpZDpnaW1wOjhmOGRiZjJjLTBjMDctNDI1Zi04MDM4LTQyNzJkNjMxZTgzYiIKICAgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplM2MyZDY1Yy1jMDhlLTQ1NDgtYTNhYS0xMTcyNTQwZTMzNWYiCiAgIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo4ZGFjNDg0Ny1lNTJmLTRhZDAtYjM3Mi1kYjlmMjhkN2NiNDMiCiAgIGRjOkZvcm1hdD0iaW1hZ2UvcG5nIgogICBHSU1QOkFQST0iMi4wIgogICBHSU1QOlBsYXRmb3JtPSJMaW51eCIKICAgR0lNUDpUaW1lU3RhbXA9IjE2OTg1MjA2MDE4MzUzMTQiCiAgIEdJTVA6VmVyc2lvbj0iMi4xMC4zNCIKICAgdGlmZjpPcmllbnRhdGlvbj0iMSIKICAgeG1wOkNyZWF0b3JUb29sPSJHSU1QIDIuMTAiCiAgIHhtcDpNZXRhZGF0YURhdGU9IjIwMjM6MTA6MjhUMjE6MTY6NDErMDI6MDAiCiAgIHhtcDpNb2RpZnlEYXRlPSIyMDIzOjEwOjI4VDIxOjE2OjQxKzAyOjAwIj4KICAgPHhtcE1NOkhpc3Rvcnk+CiAgICA8cmRmOlNlcT4KICAgICA8cmRmOmxpCiAgICAgIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiCiAgICAgIHN0RXZ0OmNoYW5nZWQ9Ii8iCiAgICAgIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6NDMyNjk0Y2UtNjRjNy00MTYxLWE0YjEtOTI3ZGE3MGVhMTVlIgogICAgICBzdEV2dDpzb2Z0d2FyZUFnZW50PSJHaW1wIDIuMTAgKExpbnV4KSIKICAgICAgc3RFdnQ6d2hlbj0iMjAyMy0xMC0yOFQyMToxNjo0MSswMjowMCIvPgogICAgPC9yZGY6U2VxPgogICA8L3htcE1NOkhpc3Rvcnk+CiAgPC9yZGY6RGVzY3JpcHRpb24+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz453KQFAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH5wocExApgfrmCAAAEC1JREFUeNrt3XlclXWix/Hv8zznHA+HRUAgNVfUytSS0UQNIxVBNPN2p2XmZWZNi1O2zNxX6X2NJVg6k8vcV+vVZjRn0ua23aZJExXTaLlaWoDKWFKOC4q4Aa5wtuf+IaIkJiJu8Hm/XvzBeR4Pnt/Dh9/v/M5BDUlt3G63c+wjj9wZGRGZ6nBYXSQ5BOBS5/f7A4XlZeVLZ89+9d2Kigqf4Xa7Oz751ISZ7dq2Cx04eFBPy7JiJZmMFXDJCwYCgT3Ls5fn7dhRdHjmjGlPWuMef3xsfMdOV6WmpaaaphkmyWCcgMuCYZpmWOfOnTvt2b1ve4cOHT2O5hHN01KGpFxLyMDlG/bgIYN67ije7jSdDkfnqmU2gMuUZVmxLqezi6ljG2A8ZwYub6Ykx0/uZvv8fgWCwXqsxm1Zpimng81y4EJy/FTM+w8ckm3b9VvUG4aiI8KIGrjA03StAsFgvWOWJNu2q2Z3ABd9hj55mb1/3z6ty8+XaZqK7xSvK9u0lWHUXIYHAgF9X7hJbdq2U2ho6Cn3cS7mz18gSRo9+m6uGFC/oE+IjIpS3jdf69tvv1Xr1q318KOPKTYursY5G9av17ZtW3XV1dc06F9w/vwFemP+/OrPiRqNSWFhobxer7p161br8YKCArlcLnXp0uXcltw1TjJNjbzt33VFXJx27dql7MULZRVvUEjZD3IdKVHJziL9sOlbJSUNOK8xvzF/fvVs3Zht3LhRQ1LTNCkjo9anMveMuVdDUtNUcfRone9z1qxZ+uWoUQoEAlR0CfF6vZqUkanc3LxTjuXm5mlSRqa8Xu+5P4f+sWutAxp1fSs5LEvffJOrr79YKW9oSx3yBvXZimVK7tNNrcK8DfbulB/H3NS0vrK1cvPytb+0tMbteXn5CnGHnPU3zYqVKxUdFa01X62horOYPQsKCs54XkFBgQoLC+v1Nbp166anJ07UlKlTa0Sdm5unKVOn6umJE087e9craMPnVfjahWq+9gNdNWCo+g8YIJ8/oLdWbdbmrUVauSpPHa/uoei2XRU0mynMt1mG7avXgxtz333Kzc07bcz3jB7dZJbcTodD/fr21bJl2TVuX7x4sQYOGlj9+evz5ikjI7PGOXNfn6dnTprdc3I+VedOXTTiluFatPijGufOmDFTb739tsZPmKCR/3ab7n/gAa1etbrOx5vq7Hkus+iPJST0rBH1yTEnJPQ8q/s6Y9Cuoo2KzFmgssTbpVZdlJaeritattSRoxXKWpotr8+n6xMSZFgOeR1Rx74ZK4vr9cB+8/gTypw8ucnHLEl+f0DpQ4dqyZIl1bcdKC9Xbl6+kpL6V982fPhwrVm7tnomt21bK1esUFpqavU5iz76SMOGDdXNycnasKFAe/bsqfG13n3nXY0dO1Yf/P193TtmjJ6bOlUlu3fX+XhjdbrZ81xn0Z+KOnPys8qcPLleMdcpaM/GLyTTUkXbHpJhKCoqWgOSk9WqdWtt2bJFhw4eqPlTzdFCnuAO+Xy+ej2ozIwMOZ3OJh2zJAXtoHr2vF6BQEDr16+XJGUvX64BSf3ldrmrz7siLk4JCQnKzj42k2/YsEEVlV7169tXkrRlyxaV7NqlG/v3lzskRMnJycrKWlLja/Xr30+d4uNlGIYGDBig+Ph4ffXll3U+3pj9ePasLeb6hHd6ts7l1aEzL7kNyfRXyPAelW3bKikp0fZt29Srd2/5vF6tz1+n/LxcBateczblk2UEFAgE6v06ttPprI66KcZ8YuwNDU1LU1bVLL04K0vDhg075bwRw4drSdZSSdLHK1YoJWWwLMuqmp0Xq6y8XHfc9Qv9/PY7tGLlSmUtWVJjcywqMrLG/cXGxmrf/v11Pt7Uoj4fMR+/z8yMDGVmTDrtquCcgz5yVR/ZlkMR+YtVcfigspdkKbFff6Wkpqlb9+6q9FZqaVaWdu8ukSRFejfqsGJlWdZZ/5w5+UFNnTJFHo9H3bt3b9IbM2lpqfr88//Tl19+Jaez9pcvbuhzgyq9lSooKNBnn32uoWnHltsVFZX6+OPl+q8/ztRrs2bptVmzNG/OHDldTn110ubYnr37atxfcfFOtWjRos7Hm1LU4ydM0PgJE85LzMfv83SrggYJuqL9dSq96W5FrM9S5cIXdU3LCHXs0F6maWr4iFvVpk0blZeVKi9noaLLc1QZcOmwo/2xGcIwzulBZWZk6IWXXmzSQcfExKhHj+6aPnOmhg9Lr/Ucy7KUnj5Uf/rzHLVq1VIdOnSo2gzLUfv2HXTttdcqJjam+iNtSKoWfXRic2zVqlX67rtNkqRPcnK0bdt29U1MrPPxphT19GnTNH3atAaLuaCgoNbZ/uSo67LTftyZ31jicOlgr1tUULJfcTtW67aIw/KuL1dlZBtFhITr/qQYlW7foUrjO63Z4FH7xLtkmpZM8+x+geuFl16s9UH9dd48NXXpQ9OUn5+vQYMGnfacYenpWvDm3/TouHE1N8PSh54666emav6CBdUbWykpKZozd442bSpUbGyMMiY9o9jYE79Re6bjTS3qhuRyufTs5MxaN9USEnrq2cmZcrlcDRi0pKMVlcre6VWfvg+rNLSZIn275ak8KktHFN72OuUfilXBpq1ylh7WHT2OKjw8/KwfGOGe0LVrV73xl79Uf56UlKRFSUknZu3YGGUvW1pzJVVRIZfToUEDb66+7eXTrG5iYmO0JGtx9efh4WGaMX36af8+ZzqO+jvTO8DOdvfc8VO7bbZtyzAMOZ1OpaWnyw4EZTscOhgWpSOWQw6nQw6HQz/re7Wu7xOUaZpyu90yDKNqQ8zmil0Afr9f/z1rtlJT0056H33dnWnz8lx+SQcXlvkTV1Fer1der1e2HVRMTKzcISFVqUsyqoK1bVkOh9xut5o1c8m2g9V/TnwjnHdz587VnXfeJYdl6cH7f8WANHHGc1Om7hx19+hWtf1UrqioVKWv8sRtQVs+f0CGcWzmNg1ThmnIkHHKS2fNnM3kdjc75beyAJwfby6YX3zaJbdhGAoJcSskxM1IAZf9khsAQQMgaAAEDeBkDkmKimzOSADM0AAIGgBBAyBogKABEDQAggZA0AAIGiBoAJe8Ov9v7JHNIxgt4CIpKz/ADA2w5AZA0AAIGgBBAyBogKABEDQAggZA0AAIGiBoAAQNgKABEDRA0AAIGgBBAyBoAAQNEDQAggZA0AAIGgBBAwQNgKABEDQAggYIGgBBAyBoAAQNgKABggZA0AAIGgBBAyBogKABEDQAggZA0ABBAyBoAAQNgKABEDRA0AAIGgBBAyBoAAQNEDQAggZA0AAIGiBoAAQNgKABEDQAggYIGgBBAyBoAAQNgKABggZA0AAIGgBBAyBogKABEDQAggZA0ABBAyBoAAQNgKABEDRA0AAIGgBBAyBoAAQNEDQAggZA0AAIGiBoAAQNgKABEDQAggYIGgBBAyBoAAQNgKABggZA0AAIGgBBAwQNgKABEDQAggZA0ABBAyBoAAQNgKABEDRA0AAIGgBBAyBogKABEDQAggZA0AAIGiBoAAQNgKABEDQAggYIGgBBAyBoAAQNgKABggZA0AAIGgBBA02PgyFAY/DZDf9oFI9jwJqRzNAACBogaAAEDYCgARA0QNAACBoAQQMgaAAEDRA0AIIGQNAACBoAQQMEDYCgARA0AIIGCBoAQQMgaAAEDYCgAYIGQNAACBoAQQMgaICgARA0AIIGQNAAQQMgaAAEDYCgARA0QNAACBoAQQMgaAAEDRA0AIIGQNAACBoAQQONiYMhQGMwYM1IBoEZGiBoAAQNgKABEDRA0AAIGgBBAyBoAAQNEDQAggZA0AAIGgBBAwQNgKABEDQAggYIGgBBAyBoAAQNgKABggZA0AAIGgBBAyBogKABEDQAggZA0ABBAyBoAAQNgKABEDTQhDjqemJZ+QFGC2CGBkDQAAgaIGgABA3g0lLnXe5AIKDtRUUqLS1VMBhk5IDzPduapqKjo9XmyitlWVbDBr29qEgOy1K/xD5yOp2MNnCe+Xw+ff/DZu3YUaR27do37JK7rKxMnTvFEzNwgTidTnXuFK/9pWUN/xw6EAgQM3ARog4EAg0fNIDL4Hk3QwAQNACCBkDQAAi6cQmo+NNX9djtQ9S7Z4K63zBIw8Y8p0VFQUm2Dq1fpKXf+xvuy/lWKyO5t+59a49sBv+y4WAILg/Bkr/r6ScXKmriLK1IbyfzwE5tWleiqDhTssv16et/1NLUFKV1bqBLangUGmIqxBMig+FnhkbDsvcVq8S+RsmDOyvC5VJYTAf9bFCiOjr3a+Xzv9bUT/YrZ+qtGpgyQs98fESS5C/+VC8+eruS+9+oPknDNWrS29pwsGq+9efqD8NGa8Y7r+rXtw5Wnz79NXBUpv5309GqoEMU6nHI43Ex+ASNhmZ1GqjU9mv0ytOv65PNB1X9VgMjWgPHP6/7rg7RTRM/1MrlC/XcYI8UKNSc30zUZx2f0ns5X2j1spf18yPzNO7ZbO09vob2b9C7WW6NW5Ctr1Yt0rRe3+r3/zFbed6qGTrUI08I8zNBo+E1667H5s3VuA4FeuX+YUoZPUmvry7R6Z41B75fpsVbe+u+hxIV65RMT7xGPnK7YnM+UE5ZVdGGW/3u/IV6RJiSFa0bHrhbibtztLIwUDVDe+TxEHSjfQ5t22yPXFRhV2vEEzM14tEy/XPhi/rdE/dr50vvaGJvW3bV9Tl+jQJ796o0/ArFuW0dv2xm7BWKC5Zqb2lQdpgtKVSRkc4T19Udq7jQAyotC8hWiDyhoQp1c90JGud5XdVcXUc+qQdXpuhPa7bJ38t97ProRNBGixhFH9ik4iO27PCqWbukWLvMaA2OlGxbsu1D2rv3qGz72LeBfahYxYcj1LW5Idt2qNPNI9Q81uC6N9Yl9/EZgI8L/+HfslrL1n6vnfuPyOc7rOKv39E/1nl0TddWMhSmqObS1o3f6YhtKxi0ZXZK061d8vTX11apxGsreHizPpz1vvYk3aKbIqp+ONsVWvX2m8or9cv279XqP7+pNS1v1s2dTdm+zcpfu055m8oVZPwv6sd5m6Fx8QQPbNR7v39Lz2zbo8N+lyLbXaeUsS/ot8lhMgxbg391j7Im/1aD33fpxv/8H00f1lH3zPyDKp9/Qb8cPF6HFK4uyffo5fFDFH38abHVWgMTKzX7vqHKK66Qp8sQ/W7Gg+rhlFSxR/9ctUpFXQ/JTmzOS1csudGgF6r7GM1+b0xtV0W2LYX3ekivffjQyRdLRkwfPTTzb3qotuto27Jtn8J7PaxpDz926vFmffVM1sfV98WVb4RLbjRGpMoMjUbQsX3KRhoIGpcr63o9tfAjritLbgDM0AAunRnasiz5/X5GDLiA/H5/nf9N7rOaocPDwvSvLVvVoX07ORy8fA1ciJj/tXWrIsIiGj7oyMhIlZWWKTd/3Vn9s6IA6seyLIWFhisqqnnDB92iRQu1aNGCUQYaw3NoAAQNgKABEDTQxDkk6ZVXXilmKIDL3/8Dnki1u0IV6z8AAAAASUVORK5CYII=)
+&]
+[s5; &]
+[s3;:24: 24. Internationalizing applications (i18n)&]
 [s5; As the globalization progress, it becomes important to deliver 
 application on various markets. Often people on these markets 
 use different languages. In this section we will show how to 
@@ -1417,53 +1884,64 @@ create an application that will support multiple locales. For
 this purpose, we will pick up one of the previous example in 
 which simple text is displayed inside the window, and we will 
 add translation support to it:&]
-[s0; &]
-[s7; [@(28.127.0) // main.cpp]&]
-[s0;l321; [C@5;1 #include <CtrlLib/CtrlLib.h>]&]
-[s7; &]
-[s7; [@(28.127.0) // The below include needs to be placed in one of 
-implementation file (.cpp)]&]
-[s7; #define TFILE <Gui23/Gui23.t>&]
-[s7; #include <Core/t.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; struct MyAppWindow : TopWindow `{&]
-[s7; -|MyAppWindow() `{&]
-[s7; -|-|Title([* t`_(`"My application`")]);&]
-[s7; -|-|Zoomable().Sizeable().SetRect(0, 0, 400, 100);&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; -|virtual void Paint(Draw`& w) override `{&]
-[s7; -|-|w.DrawRect(GetSize(), SLtYellow);&]
-[s7; -|-|w.DrawText(20, 20, [* t`_(`"Hello translation engine!`")], Arial(30), 
-Blue);&]
-[s7; -|`}&]
-[s7; `};&]
-[s7; &]
-[s7; GUI`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|[@(28.127.0) // Set system language for whole application]&]
-[s7; -|[* SetLanguage(GetSystemLNG());]&]
-[s7; &]
-[s7; -|[@(28.127.0) // Uncomment to force specific language...]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"en`-us`"); // English `= default]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"cs`-cz`"); // Czech]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"de`-de`"); // German]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"es`-es`"); // Spanish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"fr`-fr`"); // French]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"it`-it`"); // Italian]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"ja`-jp`"); // Japanese]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"pl`-pl`"); // Polish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"pt`-pt`"); // Portuguese]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"ru`-ru`"); // Russian]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"tr`-tr`"); // Turkish]&]
-[s7; [@(28.127.0) -|// SetLanguage(`"zh`-cn`"); // Traditional Chinese]&]
-[s7; &]
-[s7; -|MyAppWindow().Run();&]
-[s7; `}&]
-[s7; &]
-[s0; &]
+[s5; [/ main.cpp:]&]
+[s7;%- [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 CtrlLib][@(0.0.255) /][@0 CtrlLib][@(0.0.255) .
+][@0 h][@(0.0.255) >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [/C@4+75 // The below include needs to be placed in one 
+of implementation file (.cpp)]&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  TFILE ][C@(0.0.255)+75 <][C+75 Gui24][C@(0.0.255)+75 /
+][C+75 Gui24][C@(0.0.255)+75 .][C+75 t][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 t
+][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 struct][C+75  MyAppWindow ][C@(0.0.255)+75 :][C+75  
+TopWindow `{]&]
+[s0;l320;%- [C+75     MyAppWindow() `{]&]
+[s0;l320;%- [C+75         Title(][*_C@(0.128.128)$(255.255.192)+75 t`_(][*_C@3$(255.255.192)+75 `"
+My application`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 );]&]
+[s0;l320;%- [C+75         Zoomable()][C@(0.0.255)+75 .][C+75 Sizeable()][C@(0.0.255)+75 .][C+75 S
+etRect(][C@3+75 0][C+75 , ][C@3+75 0][C+75 , ][C@3+75 550][C+75 , ][C@3+75 100][C+75 );]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][*C@(0.0.255)+75 void][C+75  Paint(Draw][C@(0.0.255)+75 `&][C+75  
+w) ][*C@(0.0.255)+75 override][C+75  `{]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawRect(GetSize(), 
+SLtYellow);]&]
+[s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 20][C+75 , 
+][C@3+75 20][C+75 , ][*_C@(0.128.128)$(255.255.192)+75 t`_(][*_C@3$(255.255.192)+75 `"Hel
+lo translation engine!`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 , 
+Arial(][C@3+75 30][C+75 ), Blue);]&]
+[s0;l320;%- [C+75     `}]&]
+[s0;l320;%- [C+75 `};]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [C+75 GUI`_APP`_MAIN]&]
+[s0;l320;%- [C+75 `{]&]
+[s0;l320;%- [C+75     ][/C@4+75 // Set system language for whole application]&]
+[s0;l320;%- [C+75     ][*_C+75 SetLanguage(GetSystemLNG());]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     ][/C@4+75 // Uncomment to force specific language...]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"en`-us`"); // English 
+`= default]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"cs`-cz`"); // Czech]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"de`-de`"); // German]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"es`-es`"); // Spanish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"fr`-fr`"); // French]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"it`-it`"); // Italian]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"ja`-jp`"); // Japanese]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"pl`-pl`"); // Polish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"pt`-pt`"); // Portuguese]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"ru`-ru`"); // Russian]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"tr`-tr`"); // Turkish]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"zh`-cn`"); // Traditional 
+Chinese]&]
+[s0;l320;%- [C+75     ]&]
+[s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
+[s0;l320;%- [C+75 `}]&]
+[s5; &]
 [s5; As you can see, all strings visible to the user are surrounded 
 by [* t`_] macro. This is the way to inform U`+`+ translation engine 
 that string is translatable. Right now we need to create translation 
@@ -1478,39 +1956,44 @@ our users use.&]
 [s5; The generated file with translated entries is located below. 
 For the purpose of this section we used electronic translator, 
 so for any errors we are sorry.&]
-[s0; &]
-[s7; [@(28.127.0) // Gui23.t]&]
-[s0;l321; [C@5;1 #ifdef `_MSC`_VER]&]
-[s7; #pragma setlocale(`"C`")&]
-[s7; #endif&]
-[s7; // main.cpp&]
-[s7; &]
-[s7; T`_(`"My application`")&]
-[s7; csCZ(`"Moje aplikace`")&]
-[s7; deDE(`"Meine Bewerbung`")&]
-[s7; esES(`"Mi aplicación`")&]
-[s7; frFR(`"Mon application`")&]
-[s7; itIT(`"La mia applicazione`")&]
-[s7; jaJP(`"私のアプリケーション`")&]
-[s7; plPL(`"Moja aplikacja`")&]
-[s7; ptPT(`"Minha aplicação`")&]
-[s7; ruRU(`"Мое приложение`")&]
-[s7; trTR(`"Benim başvurum`")&]
-[s7; zhCN(`"我的應用程序`")&]
-[s7; &]
-[s7; T`_(`"Hello translation engine!`")&]
-[s7; csCZ(`"Ahoj překladač!`")&]
-[s7; deDE(`"Hallo Übersetzungsmaschine!`")&]
-[s7; esES(`"¡Hola motor de traducción!`")&]
-[s7; frFR(`"Bonjour le moteur de traduction!`")&]
-[s7; itIT(`"Ciao motore di traduzione!`")&]
-[s7; jaJP(`"こんにちは翻訳エンジン！`")&]
-[s7; plPL(`"Witaj silniku translacji!`")&]
-[s7; ptPT(`"Olá motor de tradução!`")&]
-[s7; ruRU(`"Привет движок перевода!`")&]
-[s7; trTR(`"Merhaba çeviri motoru!`")&]
-[s7; zhCN(`"您好翻譯引擎！`")&]
-[s0; &]
+[s5; [/ Gui23.t:]&]
+[s7; [@(28.127.0) // Gui24.t]&]
+[s0;l320;%- [C+75 #ifdef `_MSC`_VER]&]
+[s0;l320;%- [C+75 #pragma setlocale(][C@3+75 `"C`"][C+75 )]&]
+[s0;l320;%- [C+75 #endif]&]
+[s0;l320;%- [/C@4+75 // main.cpp]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"My application`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 csCZ][C+75 (][C@3+75 `"Moje aplikace`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 deDE][C+75 (][C@3+75 `"Meine Bewerbung`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 esES][C+75 (][C@3+75 `"Mi aplicación`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 frFR][C+75 (][C@3+75 `"Mon application`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 itIT][C+75 (][C@3+75 `"La mia applicazione`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 jaJP][C+75 (][C@3+75 `"私のアプリケーション`"][C+75 )
+]&]
+[s0;l320;%- [C@(0.128.128)+75 plPL][C+75 (][C@3+75 `"Moja aplikacja`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ptPT][C+75 (][C@3+75 `"Minha aplicação`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Мое приложение`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Benim başvurum`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"我的應用程序`"][C+75 )]&]
+[s0;l320;C+75%- &]
+[s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"Hello 
+translation engine!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 csCZ][C+75 (][C@3+75 `"Ahoj překladači!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 deDE][C+75 (][C@3+75 `"Hallo Übersetzungsmaschine!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 esES][C+75 (][C@3+75 `"¡Hola motor de traducción!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 frFR][C+75 (][C@3+75 `"Bonjour le moteur 
+de traduction!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 itIT][C+75 (][C@3+75 `"Ciao motore di traduzione!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 jaJP][C+75 (][C@3+75 `"こんにちは翻訳エンジン！`"
+][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 plPL][C+75 (][C@3+75 `"Witaj silniku translacji!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ptPT][C+75 (][C@3+75 `"Olá motor de tradução!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Привет движок 
+перевода!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Merhaba çeviri motoru!`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
+[s0;l320; &]
 [s5; Before checking the results of the application, let`'s take 
 a closer look at framework construction used in this example. 
 The first one is [* SetLanguage()] function. It sets which language 
@@ -1531,8 +2014,10 @@ orum].&]
 the following lines of code to be placed [* in one of implementation 
 file] (.cpp):&]
 [s0; &]
-[s7; #define TFILE <Gui23/Gui23.t>&]
-[s7; #include <Core/t.h>&]
+[s0;l320;%- [C@(128.0.255)+75 #define][C+75  TFILE ][C@(0.0.255)+75 <][C+75 Gui23][C@(0.0.255)+75 /
+][C+75 Gui23][C@(0.0.255)+75 .][C+75 t][C@(0.0.255)+75 >]&]
+[s0;l320;%- [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 t
+][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
 [s0; &]
 [s5; The final results from various exemplary languages versions 
 are as follows:&]

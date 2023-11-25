@@ -92,6 +92,7 @@ enum AdditionalKinds {
 Image  CxxIcon(int kind); // TODO: Move here
 int    PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last = false);
 String SignatureQtf(const String& name, const String& pretty, int pari = INT_MAX);
+String CppText(const String& name, const String& pretty);
 
 bool IsStruct(int kind);
 bool IsTemplate(int kind);

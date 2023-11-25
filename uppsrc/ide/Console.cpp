@@ -1,5 +1,31 @@
 #include "ide.h"
 
+#if 0
+
+static double sTimeElapsed() {
+	static int tm0;
+	ONCELOCK { tm0 = msecs(); };
+	int tm = msecs();
+	double r = (tm - tm0) / 1000;
+	tm0 = tm;
+	return r;
+}
+
+static String sCmdLine(const char *cmdline)
+{
+	Vector<String> h = Split(cmdline, '\n');
+	String s = h.GetCount() ? h.Top() : "?";
+	int q = s.ReverseFind('/');
+	if(q >= 0)
+		return s.Mid(q);
+	q = s.GetCount() - 64;
+	return q >= 0 ? s.Mid(q) : s;
+}
+
+#endif
+
+#define LLOG(x) // DLOG(sTimeElapsed() << " s " << x);
+
 class TopTextFrame : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.top++; }
 	virtual void FramePaint(Draw& w, const Rect& r) {
@@ -168,6 +194,7 @@ int Console::Flush()
 		};
 		Read();
 		if(!slot.process->IsRunning()) {
+			LLOG("Waiting for finish " << sCmdLine(slot.cmdline));
 			while(Read());
 			Kill(i);
 			if(slot.exitcode != 0 && verbosebuild)
@@ -226,9 +253,11 @@ int Console::AllocSlot()
 
 bool Console::Run(const char *cmdline, Stream *out, const char *envptr, bool quiet, int slot, String key, int blitz_count)
 {
+	LLOG("About to run " << sCmdLine(cmdline) << " in slot " << slot);
 	try {
 		Wait(slot);
 		One<AProcess> sproc;
+		LLOG("Run " << sCmdLine(cmdline) << " in slot " << slot);
 		return sproc.Create<LocalProcess>().Start(cmdline, envptr) &&
 		       Run(pick(sproc), cmdline, out, quiet, slot, key, blitz_count);
 	}
@@ -313,6 +342,7 @@ bool Console::IsRunning(int slot)
 
 void Console::Wait(int slot)
 {
+	LLOG("Waiting for slot " << slot << " to finish");
 	int ms0 = msecs();
 	while(processes[slot].process) {
 		if(ms0 != msecs()) {
