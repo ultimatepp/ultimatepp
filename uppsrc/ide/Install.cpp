@@ -86,16 +86,16 @@ bool Install(bool& hasvars)
 		Scan(idir + "/uppsrc");
 		Scan(idir + "/*");
 	#endif
+	#ifdef SANDBOX_FLATPAK
+		Scan("/app/sources/uppsrc");
+		Scan("/app/sources/*");
+	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));
 		Scan(GetHomeDirFile("upp.src/*"));
 		Scan(GetHomeDirFile("upp/uppsrc"));
 		Scan(GetHomeDirFile("upp/*"));
-		
-		// Uppsrcs within Flatpak sandbox
-		Scan("/app/sources/uppsrc");
-		Scan("/app/sources/*");
 		
 	#ifndef PLATFORM_COCOA // otherwise macos complains about Documents/Music etc...
 		Scan(GetHomeDirFile("*"));
