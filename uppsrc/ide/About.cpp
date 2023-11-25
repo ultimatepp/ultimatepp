@@ -30,6 +30,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #else
 	h << " (GCC)";
 #endif
+#ifdef SANDBOX_FLATPAK
+	h << " (Flatpak)";
+#endif
 #endif
 
 #if __cplusplus >= 202000

@@ -127,6 +127,10 @@ bool TryLoadLibClang()
 	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
 		return true;
 #endif
+#ifdef SANDBOX_FLATPAK
+	if(LoadLibClang("/app/lib"))
+		return true;
+#endif
 	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
 	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
 		int n = Atoi(s);
@@ -146,8 +150,6 @@ bool TryLoadLibClang()
 	if(LoadLibClang(libdir))
 		return true;
 	if(LoadLibClang("/usr/lib"))
-		return true;
-	if(LoadLibClang("/app/lib"))
 		return true;
 	for(int i = 200; i >= 10; i--)
 		if(LoadLibClang("/usr/lib/llvm-" + AsString(i) + "/lib"))

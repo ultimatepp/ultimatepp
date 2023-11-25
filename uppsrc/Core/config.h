@@ -147,6 +147,10 @@
 	#endif
 #endif
 
+#ifdef flagSandboxFlatpak
+	#define SANDBOX_FLATPAK
+#endif
+
 #ifdef _MSC_VER
 	#define COMPILER_MSC 1
 	#if _MSC_VER <= 1300

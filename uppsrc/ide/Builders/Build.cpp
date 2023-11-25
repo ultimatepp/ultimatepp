@@ -647,7 +647,12 @@ int HostSys(const char *cmd, String& out)
 	mb->CreateHost(host, false, false);
 	LocalProcess p;
 	host.canlog = false;
+	
+#ifdef SANDBOX_FLATPAK
+	if(host.StartProcess(p, String("flatpak-spawn --host ") + cmd))
+#else
 	if(host.StartProcess(p, cmd))
+#endif
 		return p.Finish(out);
 	return Null;
 }
