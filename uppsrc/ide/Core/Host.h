@@ -3,6 +3,7 @@ enum { REMOTE_TIMEOUT = 2000 };
 extern String HostConsole;
 
 void AddHostFlags(Index<String>& cfg);
+const char* WrappHostCmdLine(const char* cmdline);
 
 struct Host {
 	struct FileInfo : Time, Moveable<FileInfo> {

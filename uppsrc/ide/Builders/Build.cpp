@@ -647,7 +647,6 @@ int HostSys(const char *cmd, String& out)
 	mb->CreateHost(host, false, false);
 	LocalProcess p;
 	host.canlog = false;
-	
 	if(host.StartProcess(p, cmd))
 		return p.Finish(out);
 	return Null;
