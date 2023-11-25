@@ -30,9 +30,6 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #else
 	h << " (GCC)";
 #endif
-#ifdef SANDBOX_FLATPAK
-	h << " (Flatpak)";
-#endif
 #endif
 
 #if __cplusplus >= 202000
@@ -55,6 +52,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 
 #ifdef GUI_GTK
 	h << " (Gtk)";
+#endif
+#ifdef SANDBOX_FLATPAK
+	h << " (Flatpak)";
 #endif
 	h << separator;
 #ifdef bmTIME

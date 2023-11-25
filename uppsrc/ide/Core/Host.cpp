@@ -5,6 +5,18 @@
 #define LLOG(x)
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
+namespace {
+	
+const char* WrappCmdLine(const char* cmdline) {
+#ifdef SANDBOX_FLATPAK
+	return String("flatpak-spawn --host ") + cmdline;
+#else
+	return cmdline;
+#endif
+}
+
+}
+
 Host::Host()
 {
 }
@@ -134,7 +146,7 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		if(p.Start(FindCommand(exedirs, cmdline), environment))
+		if(p.Start(FindCommand(exedirs, WrappCmdLine(cmdline)), environment))
 			return true;
 	}
 	catch(...) {
