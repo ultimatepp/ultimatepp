@@ -186,7 +186,9 @@ void CreateBuildMethods()
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
 
+	RLOG(HostSys("clang --version"));
 	if(HostSys("clang --version").GetCount()) {
+		RLOG("CLANG");
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
 			SaveFile(bm, Fix(clang_bm));
