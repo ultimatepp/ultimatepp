@@ -42,7 +42,7 @@ String GetClangInternalIncludes()
 			cpp_version = LibClangCppVersion;
 			String dummy = ConfigFile("dummy.cpp");
 			Upp::SaveFile(dummy, String());
-			String h = Sys(
+			String h = HostSys(
 			#ifdef PLATFORM_WIN32
 					GetExeDirFile("bin/clang/bin/c++") +
 			#else
@@ -53,7 +53,9 @@ String GetClangInternalIncludes()
 			DeleteFile(dummy);
 			h.Replace("\r", "");
 			Vector<String> ln = Split(h, '\n');
+			Cout() << "Clang internal includes " << ln.GetCount() << "\n";
 			for(int i = 0; i < ln.GetCount(); i++) {
+				Cout() << ln << "\n";
 				String dir = TrimBoth(ln[i]);
 				if(DirectoryExists(dir))
 					MergeWith(includes, ";", NormalizePath(dir));
