@@ -56,6 +56,9 @@ String GetClangInternalIncludes()
 			Cout() << "Clang internal includes " << ln.GetCount() << "\n";
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String dir = TrimBoth(ln[i]);
+			#ifdef SANDBOX_FLATPAK
+				dir.Replace("/usr", "/run/host/usr");
+			#endif
 				Cout() << dir << "\n";
 				if(DirectoryExists(dir))
 					MergeWith(includes, ";", NormalizePath(dir));

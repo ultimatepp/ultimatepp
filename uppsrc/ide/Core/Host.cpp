@@ -5,10 +5,10 @@
 #define LLOG(x)
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
-const char* WrappCmdlineForSandbox(const char* cmdline)
+String WrappCmdlineForSandbox(const char* cmdline)
 {
 #ifdef SANDBOX_FLATPAK
-	return String("host-spawn ") + cmdline;
+	return String("host-spawn ") + String(cmdline);
 #else
 	return cmdline;
 #endif
