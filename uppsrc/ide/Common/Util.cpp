@@ -255,7 +255,7 @@ bool HasSvn()
 bool HasGit()
 {
 	String dummy;
-	static bool b = HostSys(WrappHostCmdLine("git"), dummy) >= 0;
+	static bool b = HostSys("git", dummy) >= 0;
 	return b;
 }
 

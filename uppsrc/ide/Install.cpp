@@ -87,8 +87,8 @@ bool Install(bool& hasvars)
 		Scan(idir + "/*");
 	#endif
 	#ifdef SANDBOX_FLATPAK
-		Scan("/app/sources/uppsrc");
-		Scan("/app/sources/*");
+		Scan(GetHomeDirFile("/.local/src/upp/uppsrc"));
+		Scan(GetHomeDirFile("/.local/src/upp/*"));
 	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
@@ -96,7 +96,6 @@ bool Install(bool& hasvars)
 		Scan(GetHomeDirFile("upp.src/*"));
 		Scan(GetHomeDirFile("upp/uppsrc"));
 		Scan(GetHomeDirFile("upp/*"));
-		
 	#ifndef PLATFORM_COCOA // otherwise macos complains about Documents/Music etc...
 		Scan(GetHomeDirFile("*"));
 		for(FindFile ff(GetHomeDirFile("*")); ff; ff.Next())
