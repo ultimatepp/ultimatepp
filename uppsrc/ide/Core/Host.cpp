@@ -377,7 +377,7 @@ void AddHostFlags(Index<String>& cfg)
 const char* WrappHostCmdLine(const char* cmdline)
 {
 #ifdef SANDBOX_FLATPAK
-	return String("flatpak-spawn --host ") + cmdline;
+	return String("host-spawn ") + cmdline;
 #else
 	return cmdline;
 #endif
