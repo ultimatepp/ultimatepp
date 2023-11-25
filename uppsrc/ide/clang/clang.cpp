@@ -55,8 +55,8 @@ String GetClangInternalIncludes()
 			Vector<String> ln = Split(h, '\n');
 			Cout() << "Clang internal includes " << ln.GetCount() << "\n";
 			for(int i = 0; i < ln.GetCount(); i++) {
-				Cout() << ln << "\n";
 				String dir = TrimBoth(ln[i]);
+				Cout() << dir << "\n";
 				if(DirectoryExists(dir))
 					MergeWith(includes, ";", NormalizePath(dir));
 			}

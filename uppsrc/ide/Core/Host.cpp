@@ -4,7 +4,15 @@
 
 #define LLOG(x)
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
-	
+
+const char* WrappCmdlineForSandbox(const char* cmdline)
+{
+#ifdef SANDBOX_FLATPAK
+	return String("host-spawn ") + cmdline;
+#else
+	return cmdline;
+#endif
+}
 
 Host::Host()
 {
@@ -135,7 +143,8 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		if(p.Start(FindCommand(exedirs, String("host-spawn ") + cmdline), environment))
+		Cout() << METHOD_NAME << WrappCmdlineForSandbox(cmdline) << "\n";
+		if(p.Start(FindCommand(exedirs, WrappCmdlineForSandbox(cmdline)), environment))
 			return true;
 	}
 	catch(...) {
