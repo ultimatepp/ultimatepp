@@ -281,7 +281,7 @@ bool Console::Run(One<AProcess> pick_ process, const char *cmdline, Stream *out,
 	Wait(slot);
 	Slot& pslot = processes[slot];
 	pslot.process = pick(process);
-	pslot.cmdline = WrappHostCmdLine(cmdline);
+	pslot.cmdline = cmdline;
 	pslot.outfile = out;
 	pslot.output = Null;
 	pslot.quiet = quiet;
