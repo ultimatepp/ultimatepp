@@ -147,6 +147,8 @@ LINKMODE_LOCK = "0";)";
 
 void CreateBuildMethods()
 {
+	Cout() << "CreateBuildMethods()" << "\n";
+	
 #ifdef PLATFORM_COCOA
 	String bm_path = ConfigFile("CLANG.bm");
 	if(IsNull(LoadFile(bm_path))) {
@@ -185,7 +187,8 @@ void CreateBuildMethods()
 	String bm = ConfigFile("GCC.bm");
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
-
+	
+	Cout() << "Checking clang...\n";
 	if(HostSys("clang --version").GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))

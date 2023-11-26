@@ -58,7 +58,7 @@ void Host::ChDir(const String& path)
 	SetCurrentDirectory(path);
 #endif
 #ifdef PLATFORM_POSIX
-	IGNORE_RESULT( chdir(path) );
+	IGNORE_RESULT(chdir(path));
 #endif
 	if(cmdout)
 		*cmdout << "cd \"" << path << "\"\n";

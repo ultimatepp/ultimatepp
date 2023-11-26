@@ -2,6 +2,7 @@ enum { REMOTE_TIMEOUT = 2000 };
 
 extern String HostConsole;
 
+String WrappCmdlineForSandbox(const char* cmdline);
 void AddHostFlags(Index<String>& cfg);
 
 struct Host {
