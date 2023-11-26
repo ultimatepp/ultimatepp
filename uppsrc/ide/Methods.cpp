@@ -888,13 +888,14 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 			q = cflags.GetCount();
 			cflags.Add(s, HostSys("pkg-config --cflags " + s));
 		}
-		for(String p : Split(cflags[q], CharFilterWhitespace))
+		for(String p : Split(cflags[q], CharFilterWhitespace)) {
 			if(p.TrimStart("-I")) {
 			#ifdef SANDBOX_FLATPAK
 				p.Replace("/usr", "/run/host/usr");
 			#endif
 				MergeWith(include_path, ";", p);
 			}
+		}
 	}
 #endif
 }
