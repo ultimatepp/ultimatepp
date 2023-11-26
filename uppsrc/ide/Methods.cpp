@@ -791,7 +791,6 @@ void ExtractIncludes(Index<String>& r, String h)
 	Vector<String> ln = Split(h, '\n');
 	for(int i = 0; i < ln.GetCount(); i++) {
 		String dir = TrimBoth(ln[i]);
-		Cout() << "ExtractIncludes: " << dir << "\n";
 		if(DirectoryExists(dir))
 			r.FindAdd(NormalizePath(dir));
 	}
@@ -799,17 +798,14 @@ void ExtractIncludes(Index<String>& r, String h)
 
 String Ide::GetIncludePath()
 { // this is 'real' include path defined by current build method, for Alt+J and #include assist
-	Cout() << "Ide::GetIncludePath() - Begin " << include_path << "\n";
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
-	Cout() << "Ide::GetIncludePath() - Second " << include_path << "\n";
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
-		Cout() << "Ide::GetIncludePath() - OnceLock\n";
 		Index<String> r;
 		for(int pass = 0; pass < 2; pass++)
 			ExtractIncludes(r, HostSys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
@@ -879,7 +875,6 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++) {
-			Cout() << "Ide:IncludeAddPkgConfig()" << pkg.include[j].text << ", " << SourcePath(wspc[i], pkg.include[j].text) << "\n";
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
 		}
 		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
@@ -894,8 +889,12 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 			cflags.Add(s, HostSys("pkg-config --cflags " + s));
 		}
 		for(String p : Split(cflags[q], CharFilterWhitespace))
-			if(p.TrimStart("-I"))
+			if(p.TrimStart("-I")) {
+			#ifdef SANDBOX_FLATPAK
+				p.Replace("/usr", "/run/host/usr");
+			#endif
 				MergeWith(include_path, ";", p);
+			}
 	}
 #endif
 }
@@ -942,7 +941,6 @@ String Ide::GetCurrentIncludePath()
 	if(inc1 != inc2)
 		MergeWith(include_path, ";", inc2);
 	
-	Cout() << "Ide::GetCurrentIncludePath() - before " << include_path << "\n";
 	IncludeAddPkgConfig(include_path, clang_method);
 	Cout() << "Ide::GetCurrentIncludePath() - after " << include_path << "\n";
 	

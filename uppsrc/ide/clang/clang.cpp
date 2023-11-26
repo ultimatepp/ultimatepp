@@ -59,7 +59,6 @@ String GetClangInternalIncludes()
 			#ifdef SANDBOX_FLATPAK
 				dir.Replace("/usr", "/run/host/usr");
 			#endif
-				Cout() << dir << "\n";
 				if(DirectoryExists(dir))
 					MergeWith(includes, ";", NormalizePath(dir));
 			}
@@ -101,12 +100,10 @@ bool Clang::Parse(const String& filename_, const String& content,
 		String src = "#include \"" + filename + "\"";
 		filename = CacheFile(GetFileName(filename) + "$" + SHA1String(src) + ".cpp");
 		SaveChangedFile(filename, src);
-		Cout() << "Clang::Parse(): Saving file...\n" << src << "\n\n";
 	}
 	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
-	Cout() << "Clang::Parse(): All includes " << includes_ << "\n";
 	
 	Vector<String> args;
 

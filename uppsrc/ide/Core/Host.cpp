@@ -145,7 +145,6 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		Cout() << METHOD_NAME << SandboxUtils::WrappCmdline(cmdline) << "\n";
 		if(p.Start(FindCommand(exedirs, SandboxUtils::WrappCmdline(cmdline)), environment))
 			return true;
 	}
