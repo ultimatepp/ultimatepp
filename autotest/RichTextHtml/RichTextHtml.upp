@@ -3,6 +3,7 @@ uses
 	RichText;
 
 file
+	Out.html,
 	Test.qtf,
 	RichTextHtml.cpp;
 

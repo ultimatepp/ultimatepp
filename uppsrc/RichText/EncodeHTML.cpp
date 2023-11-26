@@ -17,8 +17,6 @@ String HtmlFontStyle(Font f, Font base)
 		style << (f.IsBold() ? "font-weight:bold;" : "font-weight:normal;");
 	if(f.IsItalic() != base.IsItalic())
 		style << (f.IsItalic() ? "font-style:italic;" : "font-style:normal;");
-	if(f.IsUnderline() != base.IsUnderline())
-		style << (f.IsUnderline() ? "text-decoration:underline;" : "text-decoration:none;");
 	return style;
 }
 
@@ -33,7 +31,6 @@ String HtmlFontStyle(Font f)
 	style << Sprintf("font-size:%dpt;", f.GetHeight() * 72 / 600);
 	style << (f.IsBold() ? "font-weight:bold;" : "font-weight:normal;");
 	style << (f.IsItalic() ? "font-style:italic;" : "font-style:normal;");
-	style << (f.IsUnderline() ? "text-decoration:underline;" : "text-decoration:none;");
 	return style;
 }
 
@@ -259,9 +256,13 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						html << "<sub>";
 						endtag = "</sub>" + endtag;
 					}
+					if(part.format.IsUnderline()) {
+						html << "<u>";
+						endtag = "</u>" + endtag;
+					}
 					if(part.format.IsStrikeout()) {
-						html << "<strike>";
-						endtag = "</strike>" + endtag;
+						html << "<del>";
+						endtag = "</del>" + endtag;
 					}
 					if(part.format.capitals) {
 						html << "<span style=\"font-variant: small-caps;\">";

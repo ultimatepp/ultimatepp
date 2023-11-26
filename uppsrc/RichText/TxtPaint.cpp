@@ -9,12 +9,11 @@ int RichTxt::GetWidth(const RichStyles& st) const
 		if(IsPara(i)) {
 			RichPara p = Get(i, st, true);
 			RichPara::Lines pl = p.FormatLines(INT_MAX);
-			int ccx = 0;
-			Sum(ccx, ~pl.width, ~pl.width + pl.clen);
-			cx = max(cx, ccx);
+			if(pl.GetCount())
+				cx = max(cx, pl[0].xpos + pl[0].cx);
 		}
 		else
-			return GetTable(i).GetWidth(st);
+			cx = max(cx, GetTable(i).GetWidth(st));
 	}
 	return cx;
 }
@@ -162,7 +161,6 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 {
 	PaintInfo pi = _pi;
 	int parti = 0;
-	int pos = 0;
 	RichPara::Number n;
 	while(rc.py < pi.bottom && parti < part.GetCount()) {
 		if(part[parti].Is<RichTable>()) {
@@ -202,7 +200,6 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 		pi.highlightpara -= l;
 		pi.sell -= l;
 		pi.selh -= l;
-		pos += l;
 		++parti;
 	}
 }
@@ -257,7 +254,6 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
 {
 	int parti = 0;
-	int pos = 0;
 	int ti = 0;
 	if(part.GetCount()) {
 		while(parti < part.GetCount()) {
@@ -274,7 +270,6 @@ RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) con
 			}
 			if(IsTable(parti))
 				ti += 1 + GetTable(parti).GetTableCount();
-			pos += GetPartLength(parti) + 1;
 			parti++;
 			rc = next;
 		}

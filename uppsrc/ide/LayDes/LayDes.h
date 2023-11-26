@@ -19,9 +19,6 @@
 #define KEYFILE      <ide/LayDes/laydes.key>
 #include             <CtrlLib/key_header.h>
 
-inline Font LayFont() { return Arial(Zy(11)); }
-inline Font LayFont2() { return Arial(Zy(14)); }
-
 class DiffPacker {
 	String master;
 	int         mapn;
@@ -278,6 +275,7 @@ public:
 	virtual void   LeftDown(Point p, dword keyflags) override;
 	virtual void   LeftRepeat(Point p, dword keyflags) override;
 	virtual void   MouseMove(Point p, dword keyflags) override;
+	virtual void   MouseWheel(Point p, int zdelta, dword keyflags) override;
 	virtual void   LeftUp(Point p, dword keyflags) override;
 	virtual void   RightDown(Point p, dword keyflags) override;
 	virtual void   Layout() override;
@@ -356,12 +354,16 @@ private:
 		friend unsigned GetHashValue(const TempGroup& g) { return 0; }
 		TempGroup(const String& temp, const String& group) : temp(temp), group(group) {}
 	};
-
+	
+	int             Zoom = 0;
+	
 	Rect   CtrlRect(Ctrl::LogPos pos, Size sz);
 	Rect   CtrlRectZ(Ctrl::LogPos pos, Size sz);
 	void   AddHandle(Draw& w, int x, int y);
 	Point  Normalize(Point p);
+	double GetScale();
 	Point  ZPoint(Point p);
+	void   Paint2(Draw& w);
 	int    FindHandle(Point p);
 	int    FindItem(Point p, bool cursor_first = false);
 	void   GetSprings(Rect& l, Rect& t, Rect& r, Rect& b);
@@ -479,6 +481,7 @@ private:
 	
 	void        FindLayout(const String& name, const String& item_name);
 	String      GetLayoutName() const;
+	String      GetItemId() const;
 
 	bool        Load(const char *filename, byte charset);
 
@@ -490,6 +493,9 @@ public:
 	Ctrl&          DesignerCtrl()             { return km; }
 	void           Serialize(Stream& s) override;
 };
+
+inline Font LayFont() { return Arial(Zy(11)); }
+inline Font LayFont2() { return Arial(Zy(14)); }
 
 class LayDesigner : public IdeDesigner {
 	LayDes         designer;
@@ -509,6 +515,7 @@ public:
 
 	void FindLayout(const String& name, const String& item) { designer.FindLayout(name, item); }
 	String GetCurrentLayout() const             { return designer.GetLayoutName(); }
+	String GetCurrentItem() const               { return designer.GetItemId(); }
 
 	LayDesigner()                               { parent.Add(designer.DesignerCtrl().SizePos()); }
 };

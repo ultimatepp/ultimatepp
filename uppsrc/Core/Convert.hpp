@@ -29,9 +29,11 @@ const CHAR *ScanUint0(UINT& result, const CHAR *s, bool& overflow)
 		if(base > 10) {
 			if(c <= '9')
 				return c - '0';
-			if(c <= 'Z')
+			if(c >= 'A' && c <= 'Z')
 				return c - 'A' + 10;
-			return c - 'a' + 10;
+			if(c >= 'a' && c <= 'z')
+				return c - 'a' + 10;
+			return -1;
 		}
 		return c - '0';
 	};

@@ -24,7 +24,7 @@ alueMaker][@(0.0.255) `&]_[*@3 m])&]
 derived from ValueMaker, which is class with two virtual methods:&]
 [s2; &]
 [s2; virtual String [* Key]() const;&]
-[s2; virtual int [* Make](T`& object) const;&]
+[s2; virtual int [* Make](Value`& object) const;&]
 [s2; &]
 [s2; [* Key] should return unique identifier for Value requested with 
 ValueMaker derived class. Note that the type of ValueMaker derived 
@@ -34,7 +34,10 @@ the corresponding Value and returns the approximate memory consumption
 needed to store that Value. [* MakeValue] first checks whether 
 Value corresponding to given ValueMaker and Key are in the cache, 
 if yes then it returns Value from the cache, otherwise calls 
-ValueMaker`::Make to obtain the Value and stores it to the cache.&]
+ValueMaker`::Make to obtain the Value and stores it to the cache. 
+Note that this function allows full reentrancy (from various 
+threads as well as recursive calls (through Make method) in single 
+thread&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:IsValueCacheActive`(`):%- [@(0.0.255) bool]_[* IsValueCacheActive]()&]
@@ -44,26 +47,25 @@ the program exit.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:AdjustValueCache`(`):%- [@(0.0.255) void]_[* AdjustValueCache]()&]
-[s2; Adjusts the size of cache based on system memory available. 
-The process is driven by parameters that can be set by SetupValueCache. 
-Note that CtrlCore (U`+`+ GUI) normally calls this function after 
-processing every GUI event.&]
+[s2; Adjusts cache limits based on system memory available. Maximum 
+cache size is set to available`_memory / 1024, maximum cached 
+values count is set to available`_memory / 1024 / 200. Note that 
+CtrlCore (U`+`+ GUI) normally calls this function after processing 
+every GUI event.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:ShrinkValueCache`(`):%- [@(0.0.255) void]_[* ShrinkValueCache]()&]
 [s2; Maintains the size of cache based on limit computed in the last 
-AdjustValueCache call.&]
+AdjustValueCache call or setup with SetupValueCache.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:SetupValueCache`(int`,int`,double`):%- [@(0.0.255) void]_[* SetupValueCache](
-[@(0.0.255) int]_[*@3 limit`_low], [@(0.0.255) int]_[*@3 limit`_high], 
-[@(0.0.255) double]_[*@3 ratio])&]
-[s2; Setups parameters that govern the cache size. [%-*@3 limit`_low] 
-is low limit `- cache will never be reduced if its consumption 
-is bellow this limit (default is 4MB). [%-*@3 limit`_high] is upper 
-limit `- cache size will never grow beyond this limit (default 
-is 2GB). [%-*@3 ratio] defines how much available system physical 
-memory can be dedicated to the cache, default is 12.5%.&]
+[s5;:Upp`:`:SetupValueCache`(int`,int`):%- [@(0.0.255) void] [* SetupValueCache]([@(0.0.255) i
+nt] [*@3 maxsize], [@(0.0.255) int] [*@3 maxcount])&]
+[s2; Sets cache limits `- [%-*@3 maxsize] in bytes and [%-*@3 maxcount] 
+of cached values. If [%-*@3 maxsize] is zero, calls AdjustValueCache 
+and any further calls to AdjustValueCache adjust it. If [%-*@3 maxsize] 
+is greater than zero, limits are fixed to [%-*@3 maxsize][%-  and 
+][%-*@3 maxcount].&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ValueCacheRemove`(P`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 P]>_[@(0.0.255) i

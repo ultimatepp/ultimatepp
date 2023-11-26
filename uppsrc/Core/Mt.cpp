@@ -147,15 +147,26 @@ bool Thread::Run(Function<void ()> _cb, bool noshutdown)
 	p->cb = _cb;
 	p->noshutdown = noshutdown;
 #ifdef PLATFORM_WIN32
-#ifdef CPU_32 // in 32-bit, reduce stack size to 1MB to fit more threads into address space
-	handle = (HANDLE)_beginthreadex(0, 1024*1024, sThreadRoutine, p, STACK_SIZE_PARAM_IS_A_RESERVATION, ((unsigned int *)(&thread_id)));
+#ifdef CPU_32 // in 32-bit, reduce default stack size to 1MB to fit more threads into address space
+	handle = (HANDLE)_beginthreadex(0, stack_size ? stack_size : 1024*1024, sThreadRoutine, p, STACK_SIZE_PARAM_IS_A_RESERVATION, ((unsigned int *)(&thread_id)));
 #else
-	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
+	handle = (HANDLE)_beginthreadex(0, stack_size, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
 #endif
 #endif
 #ifdef PLATFORM_POSIX
-	if(pthread_create(&handle, 0, sThreadRoutine, p))
+	if(stack_size) {
 		handle = 0;
+		pthread_attr_t attr[1];
+		if(pthread_attr_init(attr) == 0) {
+			pthread_attr_setstacksize(attr, stack_size);
+			if(pthread_create(&handle, attr, sThreadRoutine, p))
+				handle = 0;
+			pthread_attr_destroy(attr);
+		}
+    }
+    else
+		if(pthread_create(&handle, 0, sThreadRoutine, p))
+			handle = 0;
 #endif
 	return handle;
 }
@@ -243,6 +254,43 @@ void Thread::EndShutdownThreads()
 	sShutdown--;
 }
 
+void Thread::DumpDiagnostics()
+{
+#ifdef PLATFORM_LINUX
+	INTERLOCKED {
+		int i;
+		void *stkaddr;
+		pthread_attr_t attr[1];
+		
+		if(pthread_getattr_np(pthread_self(), attr))
+			return;
+		
+		if(pthread_attr_getinheritsched(attr, &i) == 0)
+			RLOG(decode(i, PTHREAD_INHERIT_SCHED, "PTHREAD_INHERIT_SCHED",
+			               PTHREAD_EXPLICIT_SCHED, "PTHREAD_EXPLICIT_SCHED",
+			               "UNKNOWN getinheritsched VALUE"));
+	
+		if(pthread_attr_getschedpolicy(attr, &i) == 0)
+			RLOG(decode(i, SCHED_OTHER, "SCHED_OTHER",
+			               SCHED_FIFO, "SCHED_FIFO",
+			               SCHED_RR, "SCHED_RR",
+			               SCHED_IDLE, "SCHED_IDLE",
+			               SCHED_BATCH, "SCHED_BATCH",
+			               "UNKNOWN schedpolicy"));
+			
+		struct sched_param sp;
+		if(pthread_attr_getschedparam(attr, &sp) == 0)
+			RLOG("Scheduling priority " << sp.sched_priority);
+		
+		size_t v;
+		if(pthread_attr_getguardsize(attr, &v) == 0)
+			RLOG("Guard size " << v);
+			
+		if(pthread_attr_getstack(attr, &stkaddr, &v) == 0)
+			RLOG("Stack size " << v);
+	}
+#endif
+}
 
 // TODO: Document this
 
@@ -389,18 +437,24 @@ bool Thread::Priority(int percent)
 	else
 		policy = SCHED_RR;
 
-	param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percent_min, percent_max)-percent_min)/(percent_max - percent_min);
+	if(percent <= 75)
+		param.sched_priority = 0;
+	else
+		param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percent_min, percent_max)-percent_min)/(percent_max - percent_min);
 	
 	if (pthread_setschedparam(handle, policy, &param)) {
-		// No privileges? Try maximum possible! Do not use EPERM as not all os support this one
-		policy = SCHED_OTHER;
-		percent_max = 125;
-		percent_min = minmax(percent_min, 0, percent_max);
-		param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))
-		                       * (minmax(percent, percent_min, percent_max) - percent_min)
-		                       / max(percent_max - percent_min, 1);
-		if(pthread_setschedparam(handle, policy, &param))
-			return false;
+		if(percent > 75) {
+			// No privileges? Try maximum possible! Do not use EPERM as not all os support this one
+			policy = SCHED_OTHER;
+			percent_max = 125;
+			percent_min = minmax(percent_min, 0, percent_max);
+			param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))
+			                       * (minmax(percent, percent_min, percent_max) - percent_min)
+			                       / max(percent_max - percent_min, 1);
+			if(pthread_setschedparam(handle, policy, &param))
+				return false;
+		}
+		return false;
 	}
 	return true;
 #endif

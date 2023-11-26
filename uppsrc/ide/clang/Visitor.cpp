@@ -8,7 +8,7 @@ class ClangCursorInfo {
 	CXCursor     parent;
 	CXCursorKind parentKind;
 	CXPrintingPolicy pp_id;
-	
+
 
 	bool         hasraw_id = false;
 	String       raw_id;
@@ -16,13 +16,13 @@ class ClangCursorInfo {
 	bool         hasscope = false;
 	String       scope;
 	String       nspace;
-	
+
 	bool         hastype = false;
 	String       type;
-	
+
 	bool         hasname = false;
 	String       name;
-	
+
 	bool         hasid = false;
 	String       id;
 
@@ -106,6 +106,7 @@ String ClangCursorInfo::Id()
 {
 	if(!hasid) {
 		String m;
+		int q = 0;
 		switch(cursorKind) {
 		case CXCursor_StructDecl:
 		case CXCursor_ClassDecl:
@@ -118,26 +119,23 @@ String ClangCursorInfo::Id()
 		case CXCursor_FunctionDecl:
 		case CXCursor_Constructor:
 		case CXCursor_Destructor:
+		case CXCursor_FunctionTemplate:
 		case CXCursor_CXXMethod:
 #ifdef UBUNTU2204_WORKAROUND
-			{
-				String h = RawId();
-				int q = 0;
-				while(findarg(h[q], ':', '*', '&', '(', ')', ' ') >= 0)
-					q++;
-				m = Scope();
-				m.Cat(~h + q, h.GetCount() - q);
-			}
+			m = CleanupId(RawId());
+			while(findarg(m[q], ':', '*', '&', '(', ')', ' ') >= 0)
+				q++;
+			id = Scope();
+			id.Cat(~m + q, m.GetCount() - q);
+			hasid = true;
+			return id;
 #else
 			m = RawId();
-#endif
 			break;
-		case CXCursor_FunctionTemplate:
-			hasid = true;
-			id = Scope() + CleanupId(RawId());
-			return id;
+#endif
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
+		case CXCursor_ParmDecl:
 		case CXCursor_FieldDecl:
 			m << Scope() << Name();
 			break;
@@ -151,7 +149,7 @@ String ClangCursorInfo::Id()
 		case CXCursor_EnumConstantDecl:
 			m << Scope() << Name();
 			break;
-			
+
 /*
 		case CXCursor_ParmDecl:
 		case CXCursor_Namespace:
@@ -170,10 +168,10 @@ String ClangCursorInfo::Id()
 String ClangCursorInfo::Bases()
 {
 	String result;
-	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0)
+	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0) {
 		clang_visitChildren(cursor,
 			[](CXCursor cursor, CXCursor p, CXClientData clientData) -> CXChildVisitResult {
-				if(clang_getCursorKind(cursor) == CXCursor_CXXBaseSpecifier) {
+				if(findarg(clang_getCursorKind(cursor), CXCursor_CXXBaseSpecifier) >= 0) {
 					String& result = *(String *)clientData;
 					MergeWith(result, ";", GetTypeSpelling(cursor));
 				}
@@ -181,6 +179,12 @@ String ClangCursorInfo::Bases()
 			},
 			&result
 		);
+	}
+	if(cursorKind == CXCursor_TypedefDecl) {
+		CXType type = clang_getTypedefDeclUnderlyingType(cursor);
+		ClangCursorInfo cci(clang_getTypeDeclaration(type), pp_id);
+		result = CleanupId(cci.Type());
+	}
 	return result;
 }
 
@@ -215,41 +219,34 @@ SourceLocation ClangVisitor::GetSourceLocation(const CXLocation& p)
 bool ClangVisitor::ProcessNode(CXCursor cursor)
 {
 	CXSourceLocation cxlocation = clang_getCursorLocation(cursor);
-	
+
 	ClangCursorInfo ci(cursor, pp_id);
 
 #ifdef DUMPTREE
 	_DBG_
-	{
-		DLOG("=====================================");
-		DDUMP(ci.Kind());
-		DDUMP(GetCursorKindName((CXCursorKind)ci.Kind()));
-		DDUMP(GetCursorSpelling(cursor));
-		DDUMP(ci.RawId());
-		DDUMP(ci.Type());
-		DDUMP(FetchString(clang_getCursorDisplayName(cursor)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_id)));
-		DDUMP(FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty)));
-		DDUMP(clang_Cursor_isNull(clang_getCursorReferenced(cursor)));
-		DDUMP(clang_Location_isFromMainFile(cxlocation));
-	}
-
+//	if(GetCursorSpelling(cursor).Find("DeleteFile") >= 0)
 	{
 		CXCursor ref = clang_getCursorReferenced(cursor);
-	
-		DDUMP(clang_Cursor_isNull(ref));
-	
-		String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
-		if(rs.GetCount()) {
-			DDUMP(GetCursorKindName(clang_getCursorKind(ref)));
-			DDUMP(FetchString(clang_getCursorPrettyPrinted(ref, pp_pretty)));
-			DDUMP(FetchString(clang_getCursorUSR(ref)));
-			DDUMP(rs);
+		ClangCursorInfo cir(ref, pp_id);
+
+		if(ci.Kind() == CXCursor_TypedefDecl) {
+			CXType type = clang_getTypedefDeclUnderlyingType(cursor);
+			ClangCursorInfo cit(clang_getTypeDeclaration(type), pp_id);
 		}
 	}
+/*
+	{
+		CXCursor ref = clang_getCursorReferenced(cursor);
+
+
+		String rs = FetchString(clang_getCursorPrettyPrinted(ref, pp_id));
+		if(rs.GetCount()) {
+		}
+	}
+*/
 #endif
 
-	
+
 	CXLocation loc = GetLocation(cxlocation);
 
 	SourceLocation sl;
@@ -259,12 +256,12 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		sl = GetSourceLocation(loc);
 		sl_loaded = true;
 	};
-	
+
 	if(findarg(ci.Kind(), CXCursor_CXXMethod, CXCursor_FunctionTemplate) >= 0) {
 		LoadSourceLocation();
 		tfn.GetAdd(sl).cursor = cursor;
 	}
-	
+
 	bool active_file;
 	int q = do_file.Find(loc.file);
 	if(q >= 0)
@@ -302,6 +299,8 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.nspace = ci.Nspace();
 		r.bases = ci.Bases();
 		r.isvirtual = kind == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
+		r.isstatic = clang_Cursor_getStorageClass(cursor) == CX_SC_Static;
+
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
 			if(q >= 0) {
@@ -331,13 +330,16 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 	if(!clang_Cursor_isNull(ref)) {
 		LoadSourceLocation();
 		SourceLocation ref_loc = GetSourceLocation(GetLocation(clang_getCursorLocation(ref)));
-		int q = tfn.Find(ref_loc);
-	
+		int q = -1;
+		if(findarg(ci.Kind(), CXCursor_CXXBaseSpecifier, CXCursor_TemplateRef) < 0) // suppress template untyping for : WithDlgLayout<TopWindow>
+			q = tfn.Find(ref_loc);
+
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
 
 		ReferenceItem rm;
 		rm.pos = sl.pos;
 		rm.id = ref_ci.Id();
+		rm.ref_pos = ref_loc.pos;
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);
@@ -403,7 +405,7 @@ void ClangVisitor::Do(CXTranslationUnit tu)
 	initialized = true;
 	clang_visitChildren(cursor, clang_visitor, this);
 
-	for(CppFileInfo& f : info) { // sort by line because macros are first TODO move it after macros are by HDepend
+	for(CppFileInfo& f : info) { // sort by line because macros are first
 		Sort(f.items, [](const AnnotationItem& a, const AnnotationItem& b) {
 			return CombineCompare(a.pos.y, b.pos.y)(a.pos.x, b.pos.x) < 0;
 		});

@@ -130,8 +130,9 @@ image). If [%-*@3 co] is true, parallel processing is enabled.&]
 [s4; &]
 [s5;:Upp`:`:MinifyCached`(const Upp`:`:Image`&`,int`,int`,bool`): [_^Upp`:`:Image^ Imag
 e]_[* MinifyCached]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
-[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny], [@(0.0.255) bool]_[*@3 co])&]
-[s2;%%  [%-*@3 img] [%-*@3 nx] [%-*@3 ny] [%-*@3 co] .&]
+[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny], [@(0.0.255) bool]_[*@3 co]_`=_[@(0.0.255) f
+alse])&]
+[s2;%% Same as Minify, but cached.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Upscale2x`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* Upscale2x]([@(0.0.255) c

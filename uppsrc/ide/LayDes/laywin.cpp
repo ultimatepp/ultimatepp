@@ -31,8 +31,6 @@ void LayDes::EditBar(Bar& bar)
 	bar.Add(iscursor, AK_MATRIXDUPLICATE, THISBACK(Matrix));
 	bar.Add(islayout, "Select all", CtrlImg::select_all(), THISBACK(SelectAll))
 	   .Key(K_CTRL_A);
-	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
-	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
 	bar.Separator();
 	bar.Add(islayout && CurrentLayout().IsUndo(), "Undo", CtrlImg::undo(), THISBACK(Undo))
 	   .Key(K_ALT_BACKSPACE)
@@ -45,6 +43,9 @@ void LayDes::EditBar(Bar& bar)
 		.Key(K_CTRL_SUBTRACT);
 	bar.Add(iscursor, AK_SHOWSELECTION, THISBACK1(ShowSelection, true))
 		.Key(K_CTRL_ADD);
+	bar.Separator();
+	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
+	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
 }
 
 void LayDes::MoveBar(Bar& bar)
@@ -170,11 +171,18 @@ void LayDes::GotoUsing()
 	if(item.IsCursor()) // TODO not for label
 		TheIde()->FindDesignerItemReferences("With" + CurrentLayout().name + "::" + ~item.Get(1), ~item.Get(1));
 	else
-		TheIde()->FindDesignerItemReferences(CurrentLayout().name + "__layid", "With" + CurrentLayout().name);
+		TheIde()->FindDesignerItemReferences("With" + CurrentLayout().name, CurrentLayout().name);
 }
 
 void LayDes::OptionBar(Bar& bar)
 {
+	bar.Add("Zoom " + AsString(GetScale() * 100) + "%", MakeZoomIcon(GetScale()),
+		[=] {
+	          Zoom = Zoom < 5 ? 5 : Zoom < 10 ? 10 : 0;
+		      Refresh();
+		      SetBar();
+		      SetSb();
+		});
 	bar.Add("Use grid", LayImg::Grid(), THISBACK(ToggleGrid))
 	   .Check(usegrid);
 	bar.Add("Ignore min size", LayImg::MinSize(), THISBACK(ToggleMinSize))
@@ -248,7 +256,7 @@ class CVFrame : public CtrlFrame {
 
 void LayDes::Serialize(Stream& s)
 {
-	int version = 1;
+	int version = 2;
 	s / version;
 	s % setting.gridx % setting.gridy;
 	s % setting.paintgrid % setting.showicons;
@@ -256,6 +264,8 @@ void LayDes::Serialize(Stream& s)
 	if(version >= 1)
 		s % sizespring;
 	s % lsplit % isplit % rsplit;
+	if(version >= 2)
+		s % Zoom;
 	item.SerializeHeader(s);
 	SetBar();
 }

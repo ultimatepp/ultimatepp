@@ -74,11 +74,13 @@ void Ide::File(Bar& menu)
 		    .Help("Close the current file tab");
 		menu.Add(AK_CLOSETABS, THISBACK(ClearTabs))
 		    .Help("Close all file tabs");
+	#ifndef PLATFORM_COCOA
 		if(!designer) {
 			menu.Add("Bookmarks", THISBACK(FileBookmark))
 				.Help("Set one of available bookmarks (1..9, 0) on current file");
 			menu.MenuSeparator();
 		}
+	#endif
 		menu.Add("Show/hide bottom pane", THISBACK(SwapBottom))
 			.Check(IsBottomShown())
 			.Key(K_ESCAPE)
@@ -127,6 +129,12 @@ void Ide::InsertAdvanced(Bar& bar)
 	bar.Add(b, "Advanced", THISBACK(EditSpecial));
 }
 
+void Ide::Reformat(Bar& bar)
+{
+	bool b = !editor.IsReadOnly() && !designer;
+	bar.Sub(b, "Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
+}
+
 void Ide::EditSpecial(Bar& menu)
 {
 	bool b = !editor.IsReadOnly();
@@ -147,14 +155,10 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
+	menu.Add(AK_COPYRICH, [=] { CopyRich(); })
+	    .Help("Copy selection as syntax highlithed richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
-	menu.Add(b, AK_FORMATCODE, THISBACK(FormatCode))
-	    .Help("Reformat code in editor");
-	menu.Add(b, AK_FORMATJSON, THISBACK(FormatJSON))
-	    .Help("Reformat JSON");
-	menu.Add(b, AK_FORMATXML, THISBACK(FormatXML))
-	    .Help("Reformat XML");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
 	    .Help("Convert letters in selection to uppercase");
 	menu.Add(b && editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))
@@ -173,8 +177,6 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Comment code lines");
 	menu.Add(b && editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
-	menu.Add(b, AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
-	    .Help("Reformat multiline comment into paragraph");
 	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
 	menu.MenuSeparator();
 	menu.Add(AK_COPY_POSITION, [=] { CopyPosition(); });
@@ -285,8 +287,27 @@ void Ide::Edit(Bar& menu)
 
 	menu.Add("Find and Replace", THISBACK(SearchMenu));
 
-	if(!designer && menu.IsMenuBar())
+	if(!designer && menu.IsMenuBar()) {
 		InsertAdvanced(menu);
+		Reformat(menu);
+	}
+}
+
+void Ide::ReformatMenu(Bar& menu)
+{
+	bool b = !editor.IsReadOnly();
+	
+	menu.Add(b, AK_REFORMAT_CODE, [=] { ReformatCode(); })
+		.Help("Reformat current file with clang-format");
+	menu.Add(b, AK_REFORMAT_CODE2, [=] { ReformatCodeDlg(); });
+	menu.Separator();
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_JSON, [=] { FormatJSON(); })
+	    .Help("Reformat JSON");
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_XML, [=] { FormatXML(); })
+	    .Help("Reformat XML");
+	menu.Separator();
+	menu.Add(b, AK_REFORMAT_COMMENT, [=] { ReformatComment(); })
+	    .Help("Reformat multiline comment into paragraph");
 }
 
 bool Ide::HasMacros()
@@ -397,13 +418,15 @@ void Ide::Setup(Bar& menu)
 		}
 	});
 
-#ifndef PLATFORM_COCOA
 	const Workspace& wspc = IdeWorkspace();
 	if(wspc[0] == "ide")
 		for(int i = 0; i < wspc.GetCount(); i++)
-			if(wspc[i] == "ide/Core")
+			if(wspc[i] == "ide/Core") {
 				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
-#ifdef PLATFORM_POSIX
+				break;
+			}
+#ifndef PLATFORM_COCOA
+#ifndef PLATFORM_WIN32
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
 #endif
 #endif
@@ -425,13 +448,14 @@ void Ide::SetupMobilePlatforms(Bar& menu)
 
 void Ide::SetupAndroidMobilePlatform(Bar& menu, const AndroidSDK& androidSDK)
 {
-	menu.Add("SDK Manager", THISBACK1(LaunchAndroidSDKManager, androidSDK));
-	menu.Add("AVD Manager", THISBACK1(LaunchAndroidAVDManager, androidSDK));
-	menu.Add("Device monitor", THISBACK1(LauchAndroidDeviceMonitor, androidSDK));
+	menu.Add("SDK Manager", [=] { LaunchAndroidSDKManager(androidSDK); });
+	menu.Add("AVD Manager", [=] { LaunchAndroidAVDManager(androidSDK); });
 }
 
 void Ide::ProjectRepo(Bar& menu)
 {
+	if(menu.IsScanKeys())
+		return; // avoid loading RepoDirs
 	Vector<String> w = RepoDirs(true);
 	for(int i = 0; i < w.GetCount(); i++)
 		menu.Add("Synchronize " + w[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, w[i]));
@@ -460,7 +484,7 @@ void Ide::Project(Bar& menu)
 			menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
 				.Help("Configuring compiler, operating system, output application parameters, custom flags");
 		menu.Separator();
-		menu.Add(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
+		menu.AddMenu(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");
 		menu.AddMenu(AK_TRIMPORT, IdeImg::Language(), THISBACK1(SyncT, 1))
 		    .Help("Import runtime translation file");
@@ -481,6 +505,17 @@ void Ide::Project(Bar& menu)
 				if(FileExists(pp))
 					RunRepoDiff(pp);
 			});
+			pp = GetFileFolder(pp);
+			menu.Add("Invoke gitk at " + pp, [=] {
+				Host h;
+				CreateHost(h, false, false);
+				h.ChDir(pp);
+			#ifdef PLATFORM_WIN32
+				h.Launch("gitk.exe", false);
+			#else
+				h.Launch("gitk", false);
+			#endif
+			});
 			if(menu.IsMenuBar())
 				menu.Add("Repo", THISBACK(ProjectRepo));
 			else
@@ -491,16 +526,16 @@ void Ide::Project(Bar& menu)
 
 void Ide::FilePropertiesMenu0(Bar& menu)
 {
-	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
+	menu.Add(IsActiveFile() && !IsActiveSeparator(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)
 {
 	FilePropertiesMenu0(menu);
-	menu.Add(IsActiveFile() && !designer, AK_SAVEENCODING, THISBACK(ChangeCharset))
+	bool candiff = IsActiveFile() && !editfile_isfolder && !designer && !IsActiveSeparator();
+	menu.Add(candiff, AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
-	bool candiff = IsActiveFile() && !editfile_isfolder && !designer;
 	String path;
 	int i = filelist.GetCursor() + 1;
 	if(i >= 0 && i < fileindex.GetCount() && fileindex[i] < actual.file.GetCount())
@@ -515,11 +550,24 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			bar.AddMenu(candiff && FileExists(path), path,
 			            IdeImg::DiffNext(), [=] { DiffWith(path); })
 			    .Help("Show differences between the current and the next file");
-		for(String p : difflru)
-			if(p != path)
-				bar.AddMenu(candiff && FileExists(p), p,
-				            IdeImg::DiffNext(), [=] { DiffWith(p); })
-				    .Help("Show differences between the current and that file");
+		Vector<String> file;
+		if(bar.IsMenuBar()) {
+			ForAllSourceFiles([&](const VectorMap<String, String>& map) {
+				for(int i = map.Find(GetFileName(editfile)); i >= 0; i = map.FindNext(i))
+					file.Add(map[i]);
+			});
+		}
+		for(int pass = 0; pass < 2; pass++) {
+			bool sep = true;
+			for(String p : pass ? file : difflru)
+				if(!PathIsEqual(p, editfile) && FileExists(p)) {
+					if(sep)
+						bar.Separator();
+					sep = false;
+					bar.AddMenu(p, IdeImg::DiffNext(), [=] { DiffWith(p); })
+					    .Help("Show differences between the current and that file");
+				}
+		}
 	});
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
@@ -616,10 +664,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 void Ide::BuildFileMenu(Bar& menu)
 {
 	bool b = idestate == EDITING && !IdeIsDebugLock();
-	menu.Add(b, "Compile " + GetFileName(editfile), IdeImg::Source(), THISBACK(FileCompile))
+	menu.Add(b, "Compile " + GetFileName(editfile), IdeCommonImg::Source(), THISBACK(FileCompile))
 		.Key(AK_COMPILEFILE)
 		.Help("Compile current file");
-	menu.Add(b, "Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK1(Preprocess, false))
+	menu.AddMenu(b, "Preprocess " + GetFileName(editfile), IdeCommonImg::Header(), THISBACK1(Preprocess, false))
 		.Key(AK_PREPROCESSFILE)
 		.Help("Preprocess current file into temporary file & open in editor");
 	if(findarg(current_builder, "GCC", "CLANG") >= 0)
@@ -748,6 +796,21 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
+void Ide::AssistMenu(Bar& menu)
+{
+	menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
+	menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
+	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
+	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
+	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
+	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
+	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+}
+
 void Ide::BrowseMenu(Bar& menu)
 {
 	if(!IsEditorMode()) {
@@ -758,27 +821,26 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
 				.Enable(!designer)
 				.Help("Go to given line");
-//			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
-			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
-			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
-			menu.Add(!designer, AK_USAGE, [=] { Usage(); });
-			menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
-			menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
-			menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-			menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
-			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+			AssistMenu(menu);
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
 			AssistEdit(menu);
+			Reformat(menu);
 			menu.MenuSeparator();
 		}
 
 		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK1(History, -1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_LEFT)
+		#else
 			.Key(K_ALT_LEFT)
+		#endif
 			.Enable(GetHistory(-1) >= 0);
 		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK1(History, 1))
+		#ifdef PLATFORM_COCOA
+			.Key(K_OPTION|K_RIGHT)
+		#else
 			.Key(K_ALT_RIGHT)
+		#endif
 			.Enable(GetHistory(1) >= 0);
 
 		if(menu.IsMenuBar()) {
@@ -803,8 +865,6 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
 		menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
-		menu.Add(AK_REFORMAT_JSON, [=] { FormatJSON_XML_File(false); });
-		menu.Add(AK_REFORMAT_XML, [=] { FormatJSON_XML_File(true); });
 		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 		menu.AddMenu(AK_PATCH, DiffImg::PatchDiff(), THISBACK(DoPatchDiff));
@@ -812,14 +872,23 @@ void Ide::BrowseMenu(Bar& menu)
 
 	if(AssistDiagnostics) {
 		menu.Separator();
-		menu.Add("Dump and show current index", [=] {
+		menu.Add("Dump and show whole current index", [=] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path);
 			EditFile(path);
 		});
+		menu.Add("Dump and show current file index", [=] {
+			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
+			DumpIndex(path, editfile);
+			EditFile(path);
+		});
 		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });
 		menu.Add("Current file autocomplete errors", [=] { EditFile(CacheFile("autocomplete_errors")); });
-		menu.Add("Current parsed file content", [=] { EditFile(CacheFile("CurrentContext.txt")); });
+		menu.Add("Current parsed file content", [=] {
+			String p = CacheFile("CurrentContext" + AsString(Random()) + AsString(Random()) + ".txt");
+			Upp::SaveFile(p, editor.CurrentContext().content);
+			EditFile(p);
+		});
 	}
 }
 

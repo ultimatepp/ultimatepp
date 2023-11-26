@@ -180,7 +180,6 @@ Htmls SearchBar(const char *domain)
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
 	      ~HtmlEdit("q", 15).Attr("placeholder", t_("Site search")) +
-	      ~HtmlHidden("domains", domain) +
 	      ~HtmlHidden("sitesearch", domain)
 	    );
 
@@ -381,7 +380,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
-			ttxt << "[^ " << link << "^* " << DeQtf(topic.title) << "]::^ "
+			ttxt << "[^" << link << "^* " << DeQtf(topic.title) << "]::^ "
 			     << DeQtf(p.description);
 			next = true;
 		}
@@ -626,18 +625,31 @@ void ExportPage(int i)
 					LoadFile(GetRcFile("adlinks.txt")) +
 					(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
 					                                : "") +
-			       	"<br><br><br>" +
+					"<br><br><br>" +
 //						LoadFile(GetRcFile("referral.txt")) +
 //						LoadFile(GetRcFile("referral2.txt")) +
 //						LoadFile(GetRcFile("donations.txt")) +
 //						"<br><br>" +
 //						amazon[i % amazon.GetCount()] +
-			       	"<br><br><br>" +
+					"<br><br><br>" +
 					~(HtmlLink("https://sourceforge.net/projects/upp/") /
 					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
 					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
-			       	"<br><br>" +
-			       	(links[i] == "index.html" ? lastUpdate : Htmls())
+					"<br><br>" +
+					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
+						~(HtmlLink("https://github.com/ultimatepp") /
+						   HtmlImg(GetImageSrc(WWW::GitHub),
+					           "GitHub Logo").Border(0).Width(125).Height(35)) +
+					"</div>" +
+					"<br>" +
+					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
+					"<div style=\"height:5\"></div>" +
+					   ~(HtmlLink("https://discord.gg/8XzqQzXZzb") /
+					      HtmlImg("https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0b5061df29d55a92d945_full_logo_blurple_RGB.svg",
+					           "Discord Logo").Border(0).Width(125).Height(25)) +
+					"</div>" +
+					"<br>" +
+					(links[i] == "index.html" ? lastUpdate : Htmls())
 				) +
 				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
 				HtmlTCell().Width(-100).BgColor(bg) / (
@@ -718,11 +730,10 @@ struct DownloadItem {
 String Downloads()
 {
 	String r;
-	r << "{{1:2:2:2^@L "
+	r << "{{1:2:2^@L "
 	     "Date:: "
 	     "[^app$ide$install_win32_en-us.html^ U`+`+ for Windows (with CLANG)]:: "
-	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/BSD/Solaris]:: "
-	     "[^app$ide$install_macos_en-us.html^ U`+`+ for MacOS]";
+	     "[^app$ide$install_posix_en-us.html^ U`+`+ for Linux/MacOS/BSD/Solaris]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 
 	SortedArrayMap<Date, Array<DownloadItem>> downs;
@@ -754,12 +765,11 @@ String Downloads()
 	
 	Date d = GetSysDate();
 	
-	for(int i = 0;i < 14; i++, d--) {
+	for(int i = 0; i < 14; i++, d--) {
 		Array<DownloadItem>& a = downs.GetAdd(d);
 		r << "::@W " << FormatDate(d, "YYYY-MM-DD") << ":: "
 		  << FindDown(a, "win") << ":: "
-		  << FindDown(a, "posix") << ":: "
-		  << FindDown(a, "macos");
+		  << FindDown(a, "posix");
 	}
 	r << "}}";
 	
@@ -899,7 +909,7 @@ CONSOLE_APP_MAIN
 	if (outHtml)
 		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "16270";
+	String release = "17045";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
@@ -995,7 +1005,7 @@ CONSOLE_APP_MAIN
 			}
 		}
 		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
-		bi << BarLink(Www("bazaar", lang), t_("Bazaar"));
+		bi << BarLink(Www("UppHub", lang, "topic://ide/app/"), t_("UppHub"));
 		bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
 		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
@@ -1008,7 +1018,7 @@ CONSOLE_APP_MAIN
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
 		
 		bsearch << BarCaption(t_("Search on this site"));
-		bsearch << SearchBar("www.ultimatepp.org");
+		bsearch << SearchBar("ultimatepp.org");
 
 #if 0	
 		blang << BarCaption(t_("Language"));

@@ -57,7 +57,10 @@ void SearchEnginesDefaultSetup()
 	Progress pi("Search engines setup");
 	JsonArray ja;
 	for(int i = 0; i < __countof(defs); i++)
-		ja << Upp::Json("Name", defs[i].a)("URI", defs[i].b)("Icon", Encode64(GetWebsiteIconAsPNG(defs[i].b, pi)));
+		ja << Upp::Json("Name", defs[i].a)
+		               ("URI", defs[i].b)
+		               ("Icon", Encode64(i == 0 ? PNGEncoder().SaveString(IdeImg::Google())
+		                                        : GetWebsiteIconAsPNG(defs[i].b, pi)));
 
 	SaveChangedFile(SearchEnginesFile(), ja);
 }
@@ -245,8 +248,7 @@ void Ide::OnlineSearchMenu(Bar& menu)
 
 	menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()), [=] { OnlineSearch(uri); }).Key(AK_GOOGLE);
 	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [=] {
-		OnlineSearch("https://www.google.com/search?q=%s"
-		             "&domains=www.ultimatepp.org&sitesearch=www.ultimatepp.org");
+		OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
 	});
 
 	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)

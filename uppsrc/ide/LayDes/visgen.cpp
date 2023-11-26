@@ -14,6 +14,41 @@ struct VisGenDlg : public WithVisGenLayout<TopWindow> {
 	VisGenDlg(LayoutData& layout, const Vector<int>& cursor);
 };
 
+
+VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
+:	layout(layout)
+{
+	type <<= 0;
+	CtrlLayoutOKCancel(*this, "Code generator");
+	type <<= THISBACK(Type);
+
+	// needs to be before Refresh to maintain the proper order of action
+	toupper1 << [=] { tolower1 <<= false; initcaps1 <<= false; };
+	tolower1 << [=] { toupper1 <<= false; initcaps1 <<= false; };
+	initcaps1 << [=] { toupper1 <<= false; tolower1 <<= false; };
+
+	toupper2 << [=] { tolower2 <<= false; initcaps2 <<= false; };
+	tolower2 << [=] { toupper2 <<= false; initcaps2 <<= false; };
+	initcaps2 << [=] { toupper2 <<= false; tolower2 <<= false; };
+
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
+		if(dynamic_cast<Option *>(q))
+			*q << [=] { Refresh(); };
+			
+	name << [=] { Refresh(); };
+	
+
+	Refresh();
+	view.Highlight("cpp");
+	view.HideBar();
+	view.SetFont(CourierZ(12));
+	if(cursor.GetCount())
+		sel <<= cursor;
+	else
+		for(int i = 0; i < layout.item.GetCount(); i++)
+			sel.Add(i);
+}
+
 bool VisGenDlg::HasItem(const char *id)
 {
 	for(int i = 0; i < layout.item.GetCount(); i++)
@@ -246,40 +281,6 @@ void VisGenDlg::Type()
 		name <<= "";
 	}
 	Refresh();
-}
-
-VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
-:	layout(layout)
-{
-	type <<= 0;
-	CtrlLayoutOKCancel(*this, "Code generator");
-	type <<= THISBACK(Type);
-
-	// needs to be before Refresh to maintain the proper order of action
-	toupper1 << [=] { tolower1 <<= false; initcaps1 <<= false; };
-	tolower1 << [=] { toupper1 <<= false; initcaps1 <<= false; };
-	initcaps1 << [=] { toupper1 <<= false; tolower1 <<= false; };
-
-	toupper2 << [=] { tolower2 <<= false; initcaps2 <<= false; };
-	tolower2 << [=] { toupper2 <<= false; initcaps2 <<= false; };
-	initcaps2 << [=] { toupper2 <<= false; tolower2 <<= false; };
-
-	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
-		if(dynamic_cast<Option *>(q))
-			*q << [=] { Refresh(); };
-			
-	name << [=] { Refresh(); };
-	
-
-	Refresh();
-	view.Highlight("cpp");
-	view.HideBar();
-	view.SetFont(CourierZ(12));
-	if(cursor.GetCount())
-		sel <<= cursor;
-	else
-		for(int i = 0; i < layout.item.GetCount(); i++)
-			sel.Add(i);
 }
 
 void LayDes::VisGen()

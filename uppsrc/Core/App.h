@@ -1,4 +1,5 @@
 String  GetEnv(const char *id);
+bool    SetEnv(const char *name, const char *value);
 
 String  GetExeFilePath();
 String  GetExeTitle();
@@ -106,3 +107,6 @@ String GetVideoFolder();
 String GetDocumentsFolder();
 String GetTemplatesFolder();
 String GetDownloadFolder();
+String GetProgramDataFolder();
+
+void   InstallCrashHook(void (*h)());

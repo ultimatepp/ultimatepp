@@ -10,7 +10,7 @@ uses
 
 library(WIN32) "usp10 user32 gdi32";
 
-link(OSX !X11) "-framework Foundation -framework Cocoa -framework Carbon";
+link(OSX !X11 !NOMM) "-framework Foundation -framework Cocoa -framework Carbon";
 
 pkg_config(POSIX !OSX) "freetype2 fontconfig";
 
@@ -25,6 +25,7 @@ file
 	FontWin32.cpp,
 	FontFc.cpp,
 	FontCoco.mm,
+	FontCocoNOMM.cpp,
 	Draw.cpp,
 	DrawText.cpp,
 	DrawData.cpp,

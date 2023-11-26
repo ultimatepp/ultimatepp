@@ -38,8 +38,6 @@
 
 #include "version.h"
 
-#include <plugin/astyle/astyle.h>
-
 #include <ide/Builders/Builders.h>
 
 const char *FindTag(const char *txt, const char *tag);
@@ -250,8 +248,9 @@ private:
 		int    y;
 		Image  img;
 		String tip;
+		bool   highlight = false;
 
-		int    GetHeight() const { return img.GetSize().cy + SPACE; }
+		int    GetHeight() const;
 		int    GetRight() const  { return y + GetHeight(); }
 	};
 
@@ -261,12 +260,12 @@ private:
 	int        cursor;
 
 	void Repos();
-	void PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Image& img, Color hl);
+	void PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Tab& t, Color hl);
 	int  GetPos(Point p);
 
 public:
 	void Clear();
-	void Add(const Image& img, const String& tip);
+	void Add(const Image& img, const String& tip, bool highlight = false);
 	void SetCursor(int i);
 	int  GetCursor() const                                       { return cursor; }
 
@@ -357,6 +356,8 @@ struct CursorInfoCtrl : Ctrl {
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
+int ApplyChanges(LineEdit& editor, const String& new_content);
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -401,6 +402,7 @@ public:
 	virtual   bool             IdeConsoleWait();
 	virtual   bool             IdeConsoleWait(int slot);
 	virtual   void             IdeConsoleOnFinish(Event<>  cb);
+	virtual   void             IdeProcessEvents();
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();
@@ -466,6 +468,7 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
+	ParentCtrl       editor_p; // so that we can do curtain over editor
 	FileIn           view_file;
 	AssistEditor     editor2; // no edits happen in editor2, just view
 	FileIn           view_file2;
@@ -477,8 +480,14 @@ public:
 	Splitter    editor_bottom;
 	Console     console;
 
-	ArrayCtrl   ffound[3];
-	int         ffoundi_next = 0;
+	struct FoundList : ArrayCtrl {
+		Button freplace;
+		Image  icon;
+		
+		FoundList();
+	};
+
+	One<FoundList> ffound[16];
 
 	ArrayCtrl   error;
 	int         error_count;
@@ -490,9 +499,9 @@ public:
 	bool        removing_notes;
 
 	IdeCalc     calc;
-	Ptr<Ctrl>   bottomctrl;
+	Ptr<Ctrl>   bottomctrl; // debugger pane
 
-	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BFINDINFILES1, BFINDINFILES2, BFINDINFILES3, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BERRORS, BCALC, BDEBUG, BFINDINFILES1, BFINDINFILES2, BFINDINFILES3 };
 
 	FileOut    stdout_fout;
 
@@ -509,7 +518,7 @@ public:
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
-	String    editfile_includes;
+	bool      replace_in_files = false; // Find in files replace or Replace found items mode - do not update things
 
 	String    editfile2;
 
@@ -531,6 +540,7 @@ public:
 		Point              columnline;
 		LineEdit::UndoData undodata;
 		int64              filehash = 0; // make sure undodata work
+		String             content;
 		LineInfo           lineinfo;
 		LineInfoRem        lineinforem;
 
@@ -639,50 +649,25 @@ public:
 	bool      setmain_newide;
 	bool      gui_font_override = false;
 	Font      gui_font = StdFont();
-	/*
-		astyle code formatter control vars
-		added 2008.01.27 by Massimo Del Fedele
-	*/
-	bool	astyle_BracketIndent;
-	bool	astyle_NamespaceIndent;
-	bool	astyle_BlockIndent;
-	bool	astyle_CaseIndent;
-	bool	astyle_ClassIndent;
-	bool	astyle_LabelIndent;
-	bool	astyle_SwitchIndent;
-	bool	astyle_PreprocessorIndent;
-	int		astyle_MinInStatementIndentLength;
-	int		astyle_MaxInStatementIndentLength;
-	bool	astyle_BreakClosingHeaderBracketsMode;
-	bool	astyle_BreakElseIfsMode;
-	bool	astyle_BreakOneLineBlocksMode;
-	bool	astyle_SingleStatementsMode;
-	bool	astyle_BreakBlocksMode;
-	bool	astyle_BreakClosingHeaderBlocksMode;
-	int		astyle_BracketFormatMode;
-	int		astyle_ParensPaddingMode;
-	bool	astyle_ParensUnPaddingMode;
-	bool	astyle_OperatorPaddingMode;
-	bool	astyle_EmptyLineFill;
-	bool	astyle_TabSpaceConversionMode;
-	WString	astyle_TestBox;
-
-	// Formats a string of code with a given formatter
-	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
+	String    libclang_options;
+	String    libclang_coptions;
+	bool      prefer_clang_format = false;
+	bool      blk0_header = true;
+	bool      win_deactivated = false;
+	bool      block_caret = false;
+	bool      bar_branch = true;
 
 	// Formats editor's code with Ide format parameters
-	void FormatCode();
 	void FormatJSON_XML(bool xml);
 	void FormatJSON();
 	void FormatXML();
-	void FormatJSON_XML_File(bool xml);
 
 	bool      browser_closeesc;
 	bool      bookmark_pos;
 
 	FrameTop<StaticBarArea> bararea;
 	CursorInfoCtrl          display;
-	ImageCtrl               indeximage;
+	ImageCtrl               indeximage, indeximage2;
 
 	byte      hilite_scope;
 	int       hilite_bracket;
@@ -718,8 +703,13 @@ public:
 	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
 	int           animate_indexer = 0, animate_indexer_dir = 0;
 	int           animate_phase = 0;
+	
+	Vector<Ptr<TopWindow>> window;
 
-// ------------------------------------
+	void          NewWindow(TopWindow *win);
+	template<class T, class... Args>
+	T&            CreateNewWindow(Args&&... args)     { T *q = new T(std::forward<Args>(args)...); NewWindow(q); return *q; }
+	void          DeleteWindows();
 
 	Time      config_time;
 	Time      ConfigTime();
@@ -769,6 +759,7 @@ public:
 	void      ChangeFileCharset(const String& name, Package& p, byte charset);
 	void      ChangeCharset();
 	void      FlushFile();
+	void      LoadFileSilent(const String& path); // without changing package/file lists
 	void      EditFile0(const String& path, byte charset, int spellcheck_comments,
 	                    const String& headername = Null, bool reloading = false);
 	void      EditFile(const String& path);
@@ -826,12 +817,11 @@ public:
 		String GetOpposite();
 		void   GoOpposite();
 		void   Print();
+		void   DoDiff(FileDiff *diffdlg);
 		void   Diff();
 		void   DiffWith(const String& path);
 		void   DiffFiles(const char *lname, const String& l, const char *rname, const String& r);
 		String LoadConflictFile(const String& n);
-		void   GotoDiffLeft(int line, DiffDlg *df);
-		void   GotoDiffRight(int line, FileDiff *df);
 
 	void      Edit(Bar& menu);
 		bool  IsDesignerFile(const String& path);
@@ -850,6 +840,7 @@ public:
 		void  ClearEditedAll();
 		void  FindFileAll(const Vector<Tuple<int64, int>>& f);
 		void  InsertColor();
+		void  InsertImage();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const Package& pkg, const String& fn, String classname);
 		void  InsertText(const String& text);
@@ -860,14 +851,23 @@ public:
 		void  InsertMenu(Bar& bar);
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
+		void  Reformat(Bar& bar);
 		void  AssistEdit(Bar& menu);
 		void  EditorMenu(Bar& bar);
 		void  ToggleWordwrap();
 
         void  CopyPosition();
         void  GotoPosition();
+        
+    void      ReformatMenu(Bar& menu);
+	    void  ReformatCodeDlg();
+	    void  ReformatCode();
+	    void  ReformatComment();
+		String FindClangFormatPath(bool local = false);
 
 	void OnlineSearchMenu(Bar& menu);
+
+	String GetFoundText(const ArrayCtrl& list);
 
 	void SearchMenu(Bar& bar);
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
@@ -884,6 +884,7 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		void  CopyRich();
 		void  Duplicate();
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
@@ -895,7 +896,6 @@ public:
 		void  ToComment();
 		void  CommentLines();
 		void  UnComment();
-		void  ReformatComment();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();
@@ -965,8 +965,8 @@ public:
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
-		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 
+	void      AssistMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -975,18 +975,22 @@ public:
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
-		void  NavigatorDlg();
 		void  Cycle(const AnnotationItem& cm, int liney, bool navigate);
 		void  SwapS();
+		void  ResetFileLine();
+		String GetFileLine(const String& path, int linei);
 		void  AddReferenceLine(const String& path, Point pos, const String& name, Index<String>& unique);
+		void  UsageFinish();
+		void  UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
-		void  Usage(const String& id, const String& name);
-//		void  FindId(const String& id); TODO remove
+		void  Usage(const String& id, const String& name, Point ref_pos);
 		bool  OpenLink(const String& s, int pos);
-		String GetRefId(int pos, String& name);
+		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
+		bool  GotoId(const String& ref_id, const String& name, Point ref_pos, int li);
+		void  GotoCodeRef(const String& ref_id);
 		void  GoToLine();
 		void  CtrlClick(int64 pos);
 		void  Qtf();
@@ -996,9 +1000,11 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
+		void  RunRepoDiff(const String& filepath);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);
+		void  NavigatorDlg();
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1057,7 +1063,7 @@ public:
 		void Clear()            { init = false; file.Clear(); wspc_paths.Clear(); }
 	};
 
-	struct ErrorInfo {
+	struct ListLineInfo { // either error or found list (find in files / usage)
 		String file;
 		int    lineno;
 		int    linepos;
@@ -1065,8 +1071,9 @@ public:
 		int    kind;
 		String message;
 		String error_pos;
+		String line;
 
-		ErrorInfo() { lineno = linepos = kind = len = 0; }
+		ListLineInfo() { lineno = linepos = kind = len = 0; }
 	};
 
 	FindLineErrorCache error_cache;
@@ -1077,19 +1084,23 @@ public:
 	void      CopyError(bool all);
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();
-	void      SetFFound(int ii);
+	void      NewFFound();
 	ArrayCtrl& FFound();
-	void      FFoundFinish(bool files = false);
-	void      ShowFound();
-	void      CopyFound(bool all);
-	void      FFoundMenu(Bar& bar);
+	void      FFoundSetIcon(const Image& m);
+	void      FFoundFinish(bool replace = true);
+	void      ShowFound(ArrayCtrl& list);
+	void      CopyFound(ArrayCtrl& list, bool all);
+	void      FFoundMenu(ArrayCtrl& list, Bar& bar);
 	void      SelError();
 	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
+	void      ReplaceFound(ArrayCtrl& list);
 
 	struct FoundDisplay : Display {
+		Size DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
 	};
 
 	struct TopAlignedDisplay : Display {
@@ -1102,10 +1113,10 @@ public:
 	};
 
 	bool      FindLineError(int l);
-	void      GoToError(const ErrorInfo& f);
-	void      GoToError(ArrayCtrl& a);
+	void      GoToError(const ListLineInfo& f, bool error);
+	void      GoToError(ArrayCtrl& a, bool error);
 
-	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f);
+	bool      FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInfo& f);
 	void      FindError();
 
 	void      FindWildcard();
@@ -1131,6 +1142,7 @@ public:
 	void      Periodic();
 	void      SyncClang();
 
+	void      PassEditor(AssistEditor& editor2);
 	void      PassEditor();
 	void      SyncEditorSplit();
 	void      SplitEditor(bool horz);
@@ -1165,6 +1177,9 @@ public:
 	void      ShowTopics();
 	void      ShowTopicsWin();
 
+	const Workspace& AssistWorkspace() const;
+
+	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();
@@ -1245,6 +1260,12 @@ public:
 	~Ide();
 };
 
+void ForAllSourceFiles(Event<const VectorMap<String, String>&> fn);
+void ForAllNests(Event<const Vector<String>&> fn);
+
+void StartIdeBackgroundThread();
+void TriggerIdeBackgroundThread(int delay_ms = 1000);
+
 inline Ide *TheIde()      { return (Ide *)TheIdeContext(); }
 
 inline void ShowConsole() { if(TheIde()) TheIde()->ShowConsole(); }
@@ -1255,6 +1276,8 @@ bool SetupGITMaster();
 
 String UppHub();
 void   UppHubAuto(const String& s);
+
+void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln);
 
 #include "urepo.h"
 

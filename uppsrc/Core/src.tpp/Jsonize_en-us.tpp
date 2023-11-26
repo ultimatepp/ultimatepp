@@ -182,6 +182,9 @@ sonIO][@(0.0.255) `&]_[*@3 io], [_^int16^ int16][@(0.0.255) `&]_[*@3 var])&]
 sonIO][@(0.0.255) `&]_[*@3 io], [_^int64^ int64][@(0.0.255) `&]_[*@3 var])&]
 [s5;:Jsonize`(JsonIO`&`,double`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize](
 [_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [@(0.0.255) double`&]_[*@3 var])&]
+[s5;:Upp`:`:Jsonize`(Upp`:`:JsonIO`&`,float`&`): [@(0.0.255) template]<> 
+[@(0.0.255) void] [* Jsonize](JsonIO[@(0.0.255) `&] io, [@(0.0.255) float`&] 
+var)&]
 [s5;:Jsonize`(JsonIO`&`,bool`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
 sonIO][@(0.0.255) `&]_[*@3 io], [@(0.0.255) bool`&]_[*@3 var])&]
 [s5;:Jsonize`(JsonIO`&`,String`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize](
@@ -208,8 +211,7 @@ data type.&]
 which leads to somewhat unnatural results when key [%-*@4 K] is 
 String or WString. [%-* StringMap ]alternative variant encodes 
 map as JSON object with keys equal to map keys.&]
-[s3;%% &]
-[s3;%% &]
+[s3; &]
 [s4;%% &]
 [s5;:JsonizeBySerialize`(JsonIO`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
 _[@(0.0.255) void]_[* JsonizeBySerialize]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 jio], 

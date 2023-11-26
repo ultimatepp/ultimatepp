@@ -79,7 +79,7 @@ struct alignas(16) DbgBlkHeader {
 
 static const char *DbgFormat(char *b, DbgBlkHeader *p)
 {
-	sprintf(b, "--memory-breakpoint__ %u ", (unsigned int)~(p->serial ^ (uintptr_t)p));
+	snprintf(b, 100, "--memory-breakpoint__ %u ", (unsigned int)~(p->serial ^ (uintptr_t)p));
 	return b;
 }
 
@@ -225,9 +225,11 @@ void MemoryCheckDebug()
 	while(p != &dbg_live);
 }
 
+bool NoMemoryLeaksCheck;
+
 void MemoryDumpLeaks()
 {
-	if(PanicMode)
+	if(PanicMode || NoMemoryLeaksCheck)
 		return;
 #ifdef PLATFORM_MACOS
 	return; // ignore leaks in macos

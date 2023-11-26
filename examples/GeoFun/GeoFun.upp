@@ -8,8 +8,8 @@ uses
 
 file
 	icon.rc,
-	GeoFun.h,
 	app.tpp,
+	GeoFun.h,
 	GeoFun.cpp,
 	GeoFun.lay,
 	GeoFun.iml;

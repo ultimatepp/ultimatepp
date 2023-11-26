@@ -57,7 +57,9 @@ Point LayDes::Normalize(Point p)
 {
 	p += sb;
 	p.Offset(-MARGIN, -MARGIN);
-	return p;
+	Pointf h = p;
+	h /= GetScale();
+	return h;
 }
 
 Point LayDes::ZPoint(Point p)
@@ -80,15 +82,17 @@ void LayDes::SetSb()
 		for(int i = 0; i < l.item.GetCount(); i++)
 			sz = max(sz, (Size)CtrlRect(l.item[i].pos, l.size).BottomRight());
 	}
-	sz += Size(MARGIN, MARGIN);
+	sz += 2 * Size(MARGIN, MARGIN);
 	Size csz, dsz;
 	GetZoomRatio(csz, dsz);
 	if(csz.cx && csz.cy && dsz.cx && dsz.cy) {
 		sz.cx = sz.cx * csz.cx / dsz.cx;
 		sz.cy = sz.cy * csz.cy / dsz.cy;
 	}
-	sb.SetTotal(sz);
+	double scale = GetScale();
+	sb.SetTotal(scale * sz);
 	sb.SetPage(sb.GetReducedViewSize());
+	sb.SetLine(DPI(8));
 }
 
 void LayDes::Scroll()
@@ -220,18 +224,9 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 	passed.Drop();
 }
 
-void LayDes::Paint(Draw& w)
+void LayDes::Paint2(Draw& w)
 {
-	LTIMING("Paint");
-	Size sz = GetSize();
-	w.DrawRect(sz, SColorPaper);
-	if(!IsNull(fileerror))
-		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
-	if(IsNull(currentlayout))
-		return;
-	w.Offset(-sb.Get());
 	LayoutData& l = CurrentLayout();
-	w.Offset(MARGIN, MARGIN);
 	Size lsz = LayoutZoom(l.size);
 	w.DrawRect(0, 0, lsz.cx, lsz.cy, SLtGray);
 	if(setting.paintgrid) {
@@ -285,8 +280,55 @@ void LayDes::Paint(Draw& w)
 	}
 	if(HasCapture() && draghandle == 14)
 		DrawFrame(w, dragrect.Normalized(), LtRed);
-	w.End();
-	w.End();
+}
+
+void LayDes::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	if(keyflags & K_CTRL) {
+        Zoom = clamp(Zoom - sgn(zdelta), 0, 15);
+		Refresh();
+		SetBar();
+		SetSb();
+	}
+	else
+		sb.WheelY(zdelta);
+}
+
+double LayDes::GetScale()
+{
+	return (20 - Zoom) / 20.0;
+}
+
+void LayDes::Paint(Draw& w)
+{
+	LTIMING("Paint");
+	Size sz = GetSize();
+	if(!IsNull(fileerror)) {
+		w.DrawRect(sz, SColorPaper());
+		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
+	}
+	if(IsNull(currentlayout))
+		return;
+
+	if(Zoom) {
+		DrawPainter sw(w, sz);
+		sw.Co();
+		sw.Clear(SColorPaper());
+		sw.Offset(-sb.Get());
+		sw.Offset(MARGIN, MARGIN);
+		sw.Scale(GetScale());
+		Paint2(sw);
+		sw.End();
+		sw.End();
+	}
+	else {
+		w.DrawRect(sz, SColorPaper());
+		w.Offset(-sb.Get());
+		w.Offset(MARGIN, MARGIN);
+		Paint2(w);
+		w.End();
+		w.End();
+	}
 }
 
 void  LayDes::SaveState()
@@ -879,7 +921,6 @@ void LayDes::RightDown(Point p, dword keyflags)
 	if(IsNull(currentlayout) || HasCapture()) return;
 	dragbase = Normalize(p);
 	MenuBar menu;
-	menu.MaxIconSize(Size(64, 64));
 	int h = StdFont().Info().GetHeight();
 	int w = 8 * h / 3;
 	menu.LeftGap(w + 2);

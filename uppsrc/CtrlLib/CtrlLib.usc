@@ -1,4 +1,5 @@
 namespace Upp;
+namespace Upp;
 
 enum_property Frame {
 	"NullFrame()",
@@ -25,6 +26,11 @@ enum_property Align {
 fn IsUHD()
 {
 	return GetTextSize("X", StdFont()).cy > 24;
+}
+
+fn DPI(n)
+{
+	return IsUHD() ? 2 * n : n;
 }
 
 fn DeflateRect(&r)
@@ -323,13 +329,19 @@ ctrl LabelBox {
 	GetStdSize() { return Size(64, 24); }
 
 	>Base;
-	Text SetLabel ? "Box label" ;
+	Text SetLabel ? "Box label";
 	Font SetFont = StdFont();
+	Color SetInk = :SBlack;
+	Align  SetAlign = ALIGN_LEFT;
 
 	Paint(w) {
 		sz = GetSize();
 		ts = GetSmartTextSize(.SetLabel, .SetFont);
 		d = ts.cy / 2;
+		if(.SetAlign == "ALIGN_RIGHT")
+			d = sz.cx - d;
+		if(.SetAlign == "ALIGN_CENTER")
+			d = sz.cx / 2 - d;
 		if(2 * GetSmartTextSize("X").cy > sz.cy) {
 			d = sz.cy / 2;
 			w.DrawSmartText(d, (sz.cy - ts.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
@@ -342,7 +354,7 @@ ctrl LabelBox {
 			d = ts.cy / 2;
 			DrawButtonFrame(w, RectC(0, d, sz.cx, sz.cy - d));
 			w.DrawRect(8, 0, ts.cx + 4, ts.cy, :SLtGray);
-			w.DrawSmartText(10, 0, .SetLabel, .SetFont);
+			w.DrawSmartText(10, 0, .SetLabel, .SetFont, .SetInk);
 		}
 	}
 }
@@ -593,11 +605,11 @@ ctrl Option {
 			d = (textsize.cy - osz) / 2;
 			w.DrawRect(8, 0, osz + textsize.cx + 8, textsize.cy, :SLtGray);
 			DrawOption(w, 10, d, kind);
-			w.DrawSmartText(osz + 14, 0, .SetLabel, .SetFont);
+			w.DrawSmartText(osz + 10 + DPI(4), 0, .SetLabel, .SetFont);
 		}
 		else {
 			DrawOption(w, 0, (sz.cy - osz) / 2, kind);
-			w.DrawSmartText(osz + 4, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
+			w.DrawSmartText(osz + DPI(4), (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
 		}
 	}
 }
@@ -697,14 +709,14 @@ ctrl Switch {
 				if(horz) {
 					if(pass) {
 						DrawOption(w, x, (sz.cy - osz) / 2, 2);
-						w.DrawSmartText(x + osz + 4, (sz.cy - tcy) / 2, cs[i], .SetFont);
+						w.DrawSmartText(x + osz + DPI(4), (sz.cy - tcy) / 2, cs[i], .SetFont);
 					}
-					x += osz + 4 + textsize.cx + tcy / 2;
+					x += osz + DPI(4) + textsize.cx + tcy / 2;
 				}
 				else {
 					if(pass) {
 						DrawOption(w, x, y, 2);
-						w.DrawSmartText(x + osz + 4, y + (osz - tcy) / 2, cs[i], .SetFont);
+						w.DrawSmartText(x + osz + DPI(4), y + (osz - tcy) / 2, cs[i], .SetFont);
 					}
 					y += linecy;
 				}

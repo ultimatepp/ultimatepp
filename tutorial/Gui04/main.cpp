@@ -3,7 +3,7 @@
 using namespace Upp;
 
 struct MyAppWindow : TopWindow {
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), SWhite());
 		w.DrawText(20, 20, "Hello world!", Arial(30), Magenta);
 	}

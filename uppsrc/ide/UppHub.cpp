@@ -131,13 +131,14 @@ UppHubDlg::UppHubDlg()
 	Sizeable().Zoomable();
 	
 	parent.Add(list.SizePos());
-	parent.AddFrame(splitter.Right(info, 560));
+	parent.AddFrame(splitter.Right(info, 500));
 	
 	list.AddKey("NAME");
 	list.AddColumn("Name").Sorting();
+	list.AddColumn("Category").Sorting();
 	list.AddColumn("Description");
 	
-	list.ColumnWidths("109 378");
+	list.ColumnWidths("109 80 338");
 	list.WhenSel = [=] {
 		UppHubNest *n = Current();
 		http.Abort();
@@ -485,7 +486,7 @@ void UppHubDlg::SyncList()
 		   (IsNull(category) || ~category == n.category) &&
 		   (experimental || n.status != "experimental") &&
 		   (broken || n.status != "broken"))
-			list.Add(n.name, AT(n.name), AT(n.description), n.name);
+			list.Add(n.name, AT(n.name), AT(n.category), AT(n.description), n.name);
 	}
 		         
 	list.DoColumnSort();
@@ -531,7 +532,7 @@ void UppHubDlg::Update()
 	for(const UppHubNest& n : upv) {
 		String dir = GetHubDir() + "/" + n.name;
 		if(DirectoryExists(dir))
-			console.Git(dir, "pull --ff-only");
+			console.Git(dir, "pull --rebase");
 	}
 }
 
@@ -547,7 +548,7 @@ void UppHubDlg::Install(const Index<String>& ii_)
 			if(n) {
 				String dir = GetHubDir() + '/' + n->name;
 				if(!DirectoryExists(dir)) {
-					String cmd = "git clone ";
+					String cmd = "git clone --progress ";
 					if(n->branch.GetCount())
 						cmd << "-b " + n->branch << ' ';
 					cmd << n->repo;

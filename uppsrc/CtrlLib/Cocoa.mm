@@ -20,18 +20,13 @@ FileSelNative& FileSelNative::AllFilesType()
 }
 
 bool FileSelNative::Execute0(int open, const char *title)
-{	
+{
 	path.Clear();
 	Ctrl::ReleaseCtrlCapture();
 	if(!title)
 		title = open ? t_("Open") : t_("Save as");
 	CFRef<CFStringRef> mmtitle = CFStringCreateWithCString(NULL, title, kCFStringEncodingUTF8);
 
-	NSWindow *window = nil;
-	Ctrl *win = Ctrl::GetActiveWindow();
-	if(win)
-		window = (NSWindow *)win->GetNSWindow();
-	
 	if(open) {
 		NSOpenPanel *panel = [NSOpenPanel openPanel];
 		[panel setAllowsMultipleSelection: multi ? YES : NO];

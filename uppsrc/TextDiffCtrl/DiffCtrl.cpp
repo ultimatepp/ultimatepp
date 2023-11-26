@@ -9,14 +9,12 @@ namespace Upp {
 TextDiffCtrl::TextDiffCtrl()
 {
 	left.SetLeft();
-	left.Gutter(30);
 	next.SetImage(DiffImg::Next());
 	prev.SetImage(DiffImg::Prev());
 	left.scroll.y.AddFrame(prev);
 	left.scroll.y.AddFrame(next);
 	next << [=] { FindDiff(true); };
 	prev << [=] { FindDiff(false); };
-	right.NoGutter();
 	Horz(left, right);
 	left.WhenScroll = right.ScrollWhen(left);
 	right.WhenScroll = left.ScrollWhen(right);
@@ -175,24 +173,24 @@ bool DiffDlg::Key(dword key, int count)
 	return TopWindow::Key(key, count);
 }
 
-void DiffDlg::Execute(const String& f)
+void DiffDlg::Close()
+{
+	StringStream ss;
+	SerializePlacement(ss);
+	String h = ss;
+	StoreToGlobal(h, "diff");
+	TopWindow::Close();
+}
+
+void DiffDlg::Set(const String& f)
 {
 	editfile = f;
 	l <<= editfile;
 	Title(editfile);
 	String h;
-	{
-		LoadFromGlobal(h, "diff");
-		StringStream ss(h);
-		SerializePlacement(ss);
-	}
-	TopWindow::Execute();
-	{
-		StringStream ss;
-		SerializePlacement(ss);
-		h = ss;
-		StoreToGlobal(h, "diff");
-	}
+	LoadFromGlobal(h, "diff");
+	StringStream ss(h);
+	SerializePlacement(ss);
 }
 
 void DiffDlg::Refresh()
@@ -219,16 +217,15 @@ bool HasCrs(const String& path)
 
 void DiffDlg::Write()
 {
+	revert.Enable();
 	if(diff.right.IsSelection()) {
 		SaveFile(editfile, diff.Merge(true, HasCrs(editfile)));
 		Refresh();
-		revert.Enable();
 		return;
 	}
 	if(PromptYesNo("Do you want to overwrite&[* " + DeQtf(editfile) + "] ?")) {
 		SaveFile(editfile, extfile);
-		Break(IDOK);
-		revert.Enable();
+		Close();
 	}
 }
 
@@ -290,17 +287,13 @@ void FileDiff::Open()
 	}
 	if(IsNull(r))
 		return;
-	backup = LoadFile(editfile);
-	diff.Set(backup, extfile = LoadFile(~~r));
+	Finish();
 }
 
-void FileDiff::Execute(const String& f)
+void FileDiff::Finish()
 {
-	editfile = f;
-	Open();
-	if(IsNull(r))
-		return;
-	DiffDlg::Execute(f);
+	backup = LoadFile(editfile);
+	diff.Set(backup, extfile = LoadFile(~~r));
 }
 
 FileDiff::FileDiff(FileSel& fs_)
@@ -312,10 +305,17 @@ FileDiff::FileDiff(FileSel& fs_)
 	r <<= THISBACK(Open);
 }
 
-void FileDiff::Execute(const String& lpath, const String& rpath)
+void FileDiff::Set(const String& f)
+{
+	editfile = f;
+	Open();
+}
+
+void FileDiff::Set(const String& lpath, const String& rpath)
 {
 	r <<= rpath;
-	Execute(lpath);
+	DiffDlg::Set(lpath);
+	Finish();
 }
 
 FileSel& DiffFs() {

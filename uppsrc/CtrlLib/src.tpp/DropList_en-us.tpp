@@ -192,18 +192,6 @@ in the list. If it is not and list is not empty, DropList is
 assigned [%-*@3 k].&]
 [s3; &]
 [s4; &]
-[s5;:DropList`:`:GetList`(`)const: [@(0.0.255) const]_[_^PopUpTable^ PopUpTable][@(0.0.255) `&
-]_[* GetList]()_[@(0.0.255) const]&]
-[s2;%% Returns the ArrayCtrl derived object representing the dropdown 
-list.  &]
-[s3; &]
-[s4; &]
-[s5;:DropList`:`:ListObject`(`): [_^PopUpTable^ PopUpTable][@(0.0.255) `&]_[* ListObject]()
-&]
-[s2;%% Returns a reference to internal PopUpTable that is used to 
-show items.&]
-[s3; &]
-[s4; &]
 [s5;:DropList`:`:SetDropLines`(int`): [_^DropList^ DropList][@(0.0.255) `&]_[* SetDropLines
 ]([@(0.0.255) int]_[*@3 d])&]
 [s2;%% Sets the number of lines in dropped list.&]

@@ -5,7 +5,7 @@ namespace Upp {
 inline Color HistoryBg() { return Color(255, 255, 0); }
 
 TextCompareCtrl::TextCompareCtrl()
-{
+:	sbi(*this) {
 	letter = Size(1, 1);
 	number_width = 0;
 	number_yshift = 0;
@@ -17,11 +17,7 @@ TextCompareCtrl::TextCompareCtrl()
 	scroll.WhenScroll = THISBACK(SelfScroll);
 	maxwidth = 0;
 	tabsize = 4;
-	gutter_width = 0;
-	gutter_bg = AdjustIfDark(Color(151, 190, 239));
-	gutter_fg = SGreen;
 	cursor = anchor = Null;
-	gutter_capture = false;
 	show_line_number = true;
 	show_white_space = false;
 	show_diff_highlight = true;
@@ -51,20 +47,8 @@ void TextCompareCtrl::DoSelection(int y, bool shift)
 
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 {
-	Size sz = GetSize();
-	if(pt.x > sz.cx - gutter_width || HasCapture() && gutter_capture) {
-		if(!HasCapture())
-			SetCapture();
-		int line = (pt.y * lines.GetCount()) / sz.cy;
-		int page_lines = sz.cy / letter.cy;
-		scroll.SetY(line - page_lines / 2);
-		gutter_capture = true;
-	}
-	else {
-		DoSelection(pt.y, keyflags & K_SHIFT);
-		SetCapture();
-		gutter_capture = false;
-	}
+	DoSelection(pt.y, keyflags & K_SHIFT);
+	SetCapture();
 	SetWantFocus();
 }
 
@@ -78,17 +62,13 @@ void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
-	if(HasCapture()) {
-		if(gutter_capture)
-			LeftDown(pt, flags);
-		else
-			DoSelection(pt.y, true);
-	}
+	if(HasCapture())
+		DoSelection(pt.y, true);
 }
 
 void TextCompareCtrl::LeftRepeat(Point pt, dword keyflags)
 {
-	if(HasCapture() && !gutter_capture)
+	if(HasCapture())
 		DoSelection(pt.y, true);
 }
 
@@ -244,6 +224,31 @@ bool TextCompareCtrl::LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Colo
 	return false;
 }
 
+TextCompareCtrl::ScrollBarItems::ScrollBarItems(TextCompareCtrl& e)
+:	diff(e) {
+	e.scroll.y.Add(SizePos());
+	Transparent();
+	IgnoreMouse();
+}
+
+void TextCompareCtrl::ScrollBarItems::Paint(Draw& w)
+{
+	diff.PaintScrollBarItems(w);
+}
+
+void TextCompareCtrl::PaintScrollBarItems(Draw& w)
+{
+	Rect sr = scroll.y.GetSliderRect();
+	for(int pass = 0; pass < 2; pass++) {
+		Size isz = pass ? DiffImg::dot1().GetSize() : DiffImg::dot().GetSize();
+		for(int i = 0; i < lines.GetCount(); i++)
+			if(lines[i].level > 1)
+				w.DrawImage(sr.CenterPoint().x - isz.cx / 2,
+				            sr.top + scroll.y.GetSliderPos(i) - isz.cy / 2,
+				            pass ? DiffImg::dot1() : DiffImg::dot());
+	}
+}
+
 void TextCompareCtrl::Paint(Draw& draw)
 {
 	Point sc = scroll.Get();
@@ -253,34 +258,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 	int lcnt = lines.GetCount();
 	int first_line = offset.cy / letter.cy;
 	int last_line = min(idivceil(sz.cy + offset.cy, letter.cy), lines.GetCount() - 1);
-
-	if(gutter_width > 0)
-	{
-		int t = 0, b = 0;
-		int gx = sz.cx - gutter_width;
-		for(int i = 0; i < lcnt; i++)
-			if(lines[i].level > 1) {
-				b = idivceil(sz.cy * i, lcnt);
-				if(b >= t) {
-					draw.DrawRect(gx, t, gutter_width, b - t, gutter_bg);
-					draw.DrawRect(gx, b, gutter_width, 1, gutter_fg);
-					t = b + 1;
-				}
-			}
-
-		draw.DrawRect(gx, t, gutter_width, sz.cy - t, gutter_bg);
-
-		int total = letter.cy * lcnt;
-		if(total <= 0)
-			total = 1;
-		int page_height = (sz.cy * sz.cy) / total;
-		int ty = max(0, (sz.cy * offset.cy) / total);
-		int by = min(sz.cy, ty + page_height);
-		draw.DrawRect(gx, ty, gutter_width, 2, Black);
-		draw.DrawRect(gx, by - 2, gutter_width, 2, Black);
-		draw.DrawRect(gx, ty, 2, by - ty, Black);
-		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
-	}
 	
 	WString test = "č"; // read text/paper colors from highlighting scheme using likely non-highlighted text
 	Vector<LineEdit::Highlight> th;
@@ -307,7 +284,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 				draw.DrawText(0, y + number_yshift, FormatInt(l.number_diff), number_font, ink);
 		}
 	}
-	draw.Clip(n_width, 0, sz.cx - gutter_width - n_width, sz.cy);
+	draw.Clip(n_width, 0, sz.cx - n_width, sz.cy);
 
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
@@ -444,7 +421,7 @@ void TextCompareCtrl::Layout()
 {
 	int n_width = show_line_number ? number_width : 0;
 
-	scroll.Set(scroll, (scroll.GetReducedViewSize() - Size(n_width + gutter_width, 0)) / letter, Size(maxwidth, lines.GetCount()));
+	scroll.Set(scroll, (scroll.GetReducedViewSize() - Size(n_width, 0)) / letter, Size(maxwidth, lines.GetCount()));
 	Refresh();
 }
 

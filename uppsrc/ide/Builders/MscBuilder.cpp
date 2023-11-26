@@ -293,7 +293,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Blitz b;
 	if(blitz) {
 		BlitzBuilderComponent bc(this);
-		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".obj", noblitz, package);
+		b = bc.MakeBlitzStep(*this, sfile, soptions, obj, immfile, ".obj", noblitz, package);
 		recompile = b.build;
 	}
 
@@ -346,8 +346,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	int first_ifile = sfile.GetCount();
 	sfile.AppendPick(pick(isfile));
 	soptions.AppendPick(pick(isoptions));
-
-	int ccount = 0;
 
 	for(i = 0; i < sfile.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -408,7 +406,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				DeleteFile(objfile);
 			error |= execerr;
 			PutVerbose("compiled in " + GetPrintTime(time));
-			ccount++;
 		}
 		if(init)
 			linkfile.Add(objfile);

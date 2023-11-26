@@ -1,24 +1,11 @@
 #include "ide.h"
 
-String RepoSys(const char *cmd)
-{
-	Ide *ide = (Ide *)TheIde();
-	if(!ide)
-		return String::GetVoid();
-	Host host;
-	ide->CreateHost(host, false, false);
-	LocalProcess p;
-	String out;
-	host.canlog = false;
-	return host.StartProcess(p, cmd) && p.Finish(out) == 0 ? out : String::GetVoid();
-}
-
 UrepoConsole::UrepoConsole()
 {
 	CtrlLayoutExit(*this, "System Console");
 	list.NoHeader().NoGrid().NoCursor().AddColumn();
 	font = Courier(Ctrl::VertLayoutZoom(12));
-	list.SetLineCy(font.Info().GetHeight());
+	list.SetLineCy(max(font.GetCy(), font().Bold().GetCy(), font().Bold().Italic().GetCy()));
 	exit.Hide();
 	cancel.Hide();
 	cancel << [=] { canceled = true; };

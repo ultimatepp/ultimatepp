@@ -317,6 +317,15 @@ void RichEdit::PasteTool(Bar& bar, dword key)
 	   .Key(key);
 }
 
+void RichEdit::PastePlainTextTool(Bar& bar, dword key)
+{
+	bar.Add(!IsReadOnly() && IsClipboardAvailableText(), t_("Paste without formating"), [=] {
+		useraction = true;
+		PasteText(AsRichText(ReadClipboardUnicodeText(), GetFormatInfo()));
+	})
+	.Key(K_CTRL_V|K_SHIFT);
+}
+
 void RichEdit::ObjectTool(Bar& bar, dword key)
 {
 	for(int i = 0; i < RichObject::GetTypeCount(); i++) {

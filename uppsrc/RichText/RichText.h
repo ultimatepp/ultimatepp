@@ -284,6 +284,7 @@ struct PaintInfo {
 	Color   showcodes;
 	Bits  (*spellingchecker)(const RichPara& para);
 	int     highlightpara;
+	Gate<const String&> WhenHighlight;
 	Color   highlight;
 	bool    darktheme;
 	void   *context;
@@ -522,6 +523,8 @@ String EncodeHtml(const RichText& text, Index<String>& css,
                   const String& path, const String& base = Null, Zoom z = Zoom(8, 40)) {
 	return EncodeHtml(text, css, links, VectorMap<String, String>(), path, base, z);
 }
+
+RichText ParseTrivialHtml(const char *html, Font base_font = Serif(int(15 * 600 / 96.0)));
 
 struct SimplePageDraw : PageDraw {
 	Draw& w;

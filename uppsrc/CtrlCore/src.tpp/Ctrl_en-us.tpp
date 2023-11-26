@@ -2154,32 +2154,6 @@ Event<> object is not destroyed during the call.&]
 after user changes values of Ctrl.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:BackPaint`(int`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* BackPaint]([@(0.0.255) i
-nt]_[*@3 bp]_`=_FULLBACKPAINT)&]
-[s2;b17;a17; Activates back`-paint mode for Ctrl.&]
-[s7;i1120;a17; [%-*C@3 bp]-|Back`-paint mode.&]
-[s7;i1120;a17; [*/ Return value]-|`*this for method chaining.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:TransparentBackPaint`(`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* TransparentBa
-ckPaint]()&]
-[s7;i1120;a17; [*/ Return value]-|BackPaint(TRANSPARENTBACKPAINT).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:NoBackPaint`(`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* NoBackPaint]()&]
-[s7;i1120;a17; [*/ Return value]-|BackPaint(NOBACKPAINT).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:BackPaintHint`(`):%- [_^Ctrl^ Ctrl][@(0.0.255) `&]_[* BackPaintHint]()&]
-[s2; Activates FULLBACKPAINT mode if computer is a `"decent machine`" 
-(simple heurestics to identify fast enough PC with enough memory).&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:GetBackPaint`(`)const:%- [@(0.0.255) int]_[* GetBackPaint]()_[@(0.0.255) const
-]&]
-[s7;i1120;a17; [*/ Return value]-|Current back`-paint mode of Ctrl.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:Transparent`(bool`):%- [_^`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[* Transparent]([@(0.0.255) b
 ool]_[*@3 bp]_`=_[@(0.0.255) true])&]
 [s2;b17;a17; Sets transparency flag of Ctrl. If transparency flag 
@@ -2255,9 +2229,9 @@ d]_()>_[*@3 action])&]
 and Events (former Callbacks)..&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:SetTimeCallback`(int`,Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
-oid]_[* SetTimeCallback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Function]<
-[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
+[s5;:Upp`:`:Ctrl`:`:SetTimeCallback`(int`,Function`,int`):%- [@(0.0.255) void]_[* SetTime
+Callback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Function]<[@(0.0.255) voi
+d]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
 [s2;b17;a17; Puts delayed callback to the timer queue. As an identifier 
 of callback, which is void `* in timer queue, [* this] `+ [* id] 
 is used. When Ctrl is destroyed, all callbacks with [* id] in range 
@@ -2287,9 +2261,9 @@ nt]_[*@3 id]_`=_[@3 0])&]
 [s7;i1120;a17; [%-*C@3 id]-|Id of callback.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:KillSetTimeCallback`(int`,Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
-oid]_[* KillSetTimeCallback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Functi
-on]<[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id])&]
+[s5;:Upp`:`:Ctrl`:`:KillSetTimeCallback`(int`,Function`,int`):%- [@(0.0.255) void]_[* Kil
+lSetTimeCallback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Function]<[@(0.0.255) v
+oid]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id])&]
 [s2; Removes callback with [%-*@3 id] and sets it again.&]
 [s3; &]
 [s4;%- &]
@@ -2301,15 +2275,14 @@ queue.&]
 [s7;i1120;a17; [*/ Return value]-|true when id is found in timer queue.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:PostCallback`(Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) voi
-d]_[* PostCallback]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
-[@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
+[s5;:Upp`:`:Ctrl`:`:PostCallback`(Function`,int`):%- [@(0.0.255) void]_[* PostCallback]([_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
 [s2; Posts callback to be executed immediately (but in the main loop 
 after all current GUI events).&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Ctrl`:`:KillPostCallback`(Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
-oid]_[* KillPostCallback]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
+[s5;:Upp`:`:Ctrl`:`:KillPostCallback`(Function`,int`):%- [@(0.0.255) void]_[* KillPostCal
+lback]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
 [@(0.0.255) int]_[*@3 id])&]
 [s2; Similar to PostCallback, but removes callback(s) with the same 
 id from the queue first.&]

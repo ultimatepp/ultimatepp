@@ -173,6 +173,11 @@ XmlTag& XmlTag::operator()(const char *attr, double q)
 	return operator()(attr, AsString(q));
 }
 
+XmlTag& XmlTag::operator()(const char *attr, float q)
+{
+	return operator()(attr, AsString(q));
+}
+
 force_inline
 String XmlParser::Convert(StringBuffer& b)
 {
@@ -332,10 +337,10 @@ void XmlParser::Next()
 
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
-	
+
 	if(type == XML_TEXT)
 		return;
-	
+
 	term++;
 	LoadMore();
 	if(*term == '!') {
@@ -402,7 +407,7 @@ void XmlParser::Next()
 				int w = tagtext.Find('\"', q);
 				if(w < 0)
 					return;
-				q = CharsetByName(tagtext.Mid(q, w));
+				q = CharsetByName(tagtext.Mid(q, w - q));
 				if(q)
 					scharset = q;
 				return;
@@ -574,8 +579,11 @@ bool  XmlParser::IsEnd()
 
 bool  XmlParser::End()
 {
-	if(IsEof())
+	if(IsEof()) {
+		if(relaxed)
+			return true;
 		throw XmlError("Unexpected end of file");
+	}
 	if(IsEnd()) {
 		LLOG("EndTag " << tagtext);
 		if(!raw) {
@@ -676,6 +684,13 @@ double XmlParser::Double(const char *id, double def) const
 	if(id == attr1) return ScanDouble(attrval1);
 	int q = attr.Find(id);
 	return q < 0 ? def : ScanDouble(attr[q]);
+}
+
+float XmlParser::Float(const char *id, float def) const
+{
+	if(id == attr1) return ScanFloat(attrval1);
+	int q = attr.Find(id);
+	return q < 0 ? def : ScanFloat(attr[q]);
 }
 
 bool  XmlParser::IsText()
@@ -1023,6 +1038,12 @@ XmlNode ParseXML(XmlParser& p, dword style, ParseXmlFilter *filter)
 			XmlNode n = sReadXmlNode(p, filter, style);
 			if(n.GetType() != XML_DOC) // tag was ignored
 				r.Add() = pick(n);
+			else {
+				if(p.IsRelaxed())
+					p.Skip();
+				else
+					throw XmlError("Unexpected text");
+			}
 		}
 	return r;
 }

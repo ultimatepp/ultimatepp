@@ -120,7 +120,7 @@ public:
 	
 	void   SetNull(int ii)                      { SetData(ii, NULL, 0); }
 
-	void   SetString(int ii, const char *s)     { SetData(ii, s, strlen(s)); }
+	void   SetString(int ii, const char *s)     { SetData(ii, s, (int)strlen(s)); }
 	void   SetString(int ii, const String& s)   { SetData(ii, s, s.GetCount()); }
 	String GetString(int ii) const              { String r; GetData(ii, [&](const char *s, int n) { r = String(s, n); }); return r; }
 	
@@ -140,7 +140,7 @@ public:
 
 	Vector<String> Unpack() const;
 	size_t         GetPackedSize() const;
-	String         GetPacked() const           { return String((const char *)ptr, GetPackedSize()); }
+	String         GetPacked() const           { return String((const char *)ptr, (int)GetPackedSize()); }
 
 	PackedData() {}
 	PackedData(const PackedData&) = delete;
@@ -258,7 +258,11 @@ public:
 	template <class P> int  Remove(P predicate);
 	template <class P> bool RemoveOne(P predicate);
 
-	T&   Get(const Maker& m);
+	template <class B, class A>
+	T&   Get(const Maker& m, B before_make, A after_make, int& sz);
+	template <class B, class A>
+	T&   Get(const Maker& m, B before_make, A after_make) { int sz; return Get(m, before_make, after_make, sz); }
+	T&   Get(const Maker& m)                              { return Get(m, []{}, []{}); }
 
 	void Clear();
 

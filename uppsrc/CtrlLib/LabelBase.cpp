@@ -63,7 +63,7 @@ void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font
 		RichText txt = ParseQTF(text + 1, accesskey);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
 		PaintInfo pi;
-		pi.darktheme = Grayscale(SColorPaper()) < 100;
+		pi.darktheme = IsDarkTheme();
 		pi.textcolor = qtf_ink;
 		txt.Paint(draw, x, y, cx, pi);
 		return;
@@ -179,7 +179,7 @@ Color GetLabelTextColor(const Ctrl *ctrl)
 	return SColorLabel();
 }
 
-Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const
+Rect DrawLabel::PaintRect(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const
 {
 	int lspc = this->lspc;
 	int rspc = this->rspc;
@@ -255,12 +255,22 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 			DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
 	}
 
-	return isz;
+	return Rect(p, isz);
+}
+
+Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const
+{
+	return PaintRect(ctrl, w, r, visibleaccesskey).GetSize();
 }
 
 Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey) const
 {
 	return Paint(ctrl, w, RectC(x, y, cx, cy), visibleaccesskey);
+}
+
+Rect DrawLabel::PaintRect(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, bool visibleaccesskey) const
+{
+	return PaintRect(ctrl, w, RectC(x, y, cx, cy), visibleaccesskey);
 }
 
 Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
@@ -271,6 +281,11 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 Size DrawLabel::Paint(Draw& w, int x, int y, int cx, int cy, bool vak) const
 {
 	return Paint(w, RectC(x, y, cx, cy), vak);
+}
+
+Rect DrawLabel::PaintRect(Draw& w, int x, int y, int cx, int cy, bool vak) const
+{
+	return PaintRect(NULL, w, RectC(x, y, cx, cy), vak);
 }
 
 void LabelBase::LabelUpdate() {}

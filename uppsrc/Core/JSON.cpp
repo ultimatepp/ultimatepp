@@ -143,9 +143,11 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 	if(IsNumber(v) && (IsNull(v) || IsNaN((double)v)))
 		return "null";
 	if(v.GetType() == INT_V)
-		return Format("%d", (int)v);
+		return FormatInt((int)v);
 	if(v.GetType() == BOOL_V)
 		return (bool)v ? "true" : "false";
+	if(v.GetType() == FLOAT_V)
+		return FormatG((double)v, 7);
 	if(IsNumber(v))
 		return FormatG((double)v, 15);
 	if(IsString(v))
@@ -187,6 +189,31 @@ template<> void Jsonize(JsonIO& io, double& var)
 			double h = ScanDouble((String)v);
 			if(!IsNull(h)) {
 				var = h;
+				return;
+			}
+		}
+		throw JsonizeError("number expected");
+	}
+	else
+		io.Set(var);
+}
+
+template<> void Jsonize(JsonIO& io, float& var)
+{
+	if(io.IsLoading()) {
+		const Value& v = io.Get();
+		if(IsNull(v)) {
+			var = Null;
+			return;
+		}
+		if(IsNumber(v)) {
+			var = io.Get();
+			return;
+		}
+		if(IsString(v)) {
+			double h = ScanDouble((String)v);
+			if(!IsNull(h)) {
+				var = (float)h;
 				return;
 			}
 		}

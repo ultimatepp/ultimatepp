@@ -409,7 +409,7 @@ String sDib(const Value& image)
 	header.biBitCount = 32;
 	header.biPlanes = 1;
 	header.biCompression = BI_RGB;
-	StringBuffer b(sizeof(header) + 4 * img.GetLength());
+	StringBuffer b(int(sizeof(header) + 4 * img.GetLength()));
 	byte *p = (byte *)~b;
 	memcpy(p, &header, sizeof(header));
 	memcpy(p + sizeof(header), ~img, 4 * img.GetLength());
@@ -506,9 +506,11 @@ Vector<String> GetFiles(PasteClip& clip)
 
 void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
 {
-	WString wfiles;
+	WString wfiles32;
 	for(int i = 0; i < files.GetCount(); i++)
-		wfiles << files[i].ToWString() << (wchar)0;
+		wfiles32 << files[i].ToWString() << (wchar)0;
+	Vector<char16> wfiles = ToUtf16(wfiles32);
+	wfiles.Add(0);
 	sDROPFILES h;
 	h.unicode = true;
 	h.offset = sizeof(h);
@@ -516,7 +518,7 @@ void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
     h.nc = TRUE;
     String data;
 	data.Cat((byte *)&h, sizeof(h));
-	data.Cat((byte *)~wfiles, 2 * (wfiles.GetCount() + 1));
+	data.Cat((byte *)wfiles.begin(), sizeof(char16) * (wfiles.GetCount() + 1));
 	clip.GetAdd("files") = ClipData(data);
 }
 

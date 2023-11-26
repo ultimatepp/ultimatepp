@@ -1,5 +1,6 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	VirtualGui;
 
 file
 	main.cpp;

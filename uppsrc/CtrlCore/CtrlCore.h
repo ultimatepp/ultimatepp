@@ -82,7 +82,7 @@ typedef ImageDraw SystemImageDraw;
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
-enum CtrlCoreFlags {
+enum CtrlCoreFlags : dword {
 	K_DELTA        = 0x200000,
 	K_CHAR_LIM     = 0x200000, // lower that this, key in Key is Unicode codepoint
 
@@ -108,8 +108,8 @@ enum CtrlCoreFlags {
 
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
 
-	K_MOUSE_FORWARD = 0x80000001,
-	K_MOUSE_BACKWARD = 0x80000002
+	K_MOUSE_FORWARD = 0x40000002,
+	K_MOUSE_BACKWARD = 0x40000003
 };
 
 #include "MKeys.h"
@@ -689,7 +689,6 @@ private:
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
-	Ctrl   *FindBestOpaque(const Rect& clip);
 	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
@@ -820,6 +819,8 @@ protected:
 	static void     TimerProc(dword time);
 
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
+
+	Rect StdGetWorkArea() const;
 			
 	enum {
 		ATTR_LAYOUT_ID,
@@ -844,19 +845,19 @@ protected:
 	int    GetIntAttr(int ii, int def = Null) const;
 
 	void   SetInt64Attr(int ii, int64 val);
-	int    GetInt64Attr(int ii, int64 def = Null) const;
+	int64  GetInt64Attr(int ii, int64 def = Null) const;
 	
 	void   SetVoidPtrAttr(int ii, const void *ptr);
 	void  *GetVoidPtrAttr(int ii) const;
 	
 	template <class T>
-	T&    CreateAttr(int ii)      { T *q = new T; SetVoidPtrAttr(ii, q); return *q; }
+	void  DeleteAttr(int ii)      { void *p = GetVoidPtrAttr(ii); if(p) { delete (T *)p; SetVoidPtrAttr(ii, nullptr); }; }
+
+	template <class T>
+	T&    CreateAttr(int ii)      { DeleteAttr<T>(ii); T *q = new T; SetVoidPtrAttr(ii, q); return *q; }
 	
 	template <class T>
 	T     GetAttr(int ii) const   { void *p = GetVoidPtrAttr(ii); return p ? *(T *)p : T(); }
-
-	template <class T>
-	void  DeleteAttr(int ii)      { void *p = GetVoidPtrAttr(ii); if(p) { delete (T *)p; SetVoidPtrAttr(ii, nullptr); }; }
 	
 public:
 	enum StateReason {
@@ -1278,10 +1279,10 @@ public:
 	void    UpdateActionRefresh();
 
 	Ctrl&   BackPaint(int bp = FULLBACKPAINT)  { backpaint = bp; return *this; }
-	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
+	Ctrl&   BackPaintHint()                    { return BackPaint(); }
+/*	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
 	Ctrl&   NoBackPaint()                      { return BackPaint(NOBACKPAINT); }
-	Ctrl&   BackPaintHint();
-	int     GetBackPaint() const               { return backpaint; }
+	int     GetBackPaint() const               { return backpaint; }*/
 	Ctrl&   Transparent(bool bp = true)        { transparent = bp; return *this; }
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }

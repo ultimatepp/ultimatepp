@@ -12,6 +12,8 @@ Image WithResolution(const Image& m, int res);
 Image WithResolution(const Image& m, const Image& res);
 
 void  ScanOpaque(Image& m);
+void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
+                           void (*op)(RGBA *t, const RGBA *s, int n));
 
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Over(Image& dest, const Image& src);
@@ -173,10 +175,7 @@ Image MakeImage(const ImageMaker& m);
 Image MakeImage(const Image& image, Image (*make)(const Image& image));
 
 void  SweepMkImageCache();
-
 void  ClearMakeImageCache();
-void  SetMakeImageCacheSize(int m);
-void  SetMakeImageCacheMax(int m);
 
 Image MakeImagePaintOnly(const ImageMaker& m);
 
@@ -221,7 +220,7 @@ Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
 Image Magnify(const Image& img, int nx, int ny);
 Image Minify(const Image& img, int nx, int ny, bool co = false);
-Image MinifyCached(const Image& img, int nx, int ny, bool co);
+Image MinifyCached(const Image& img, int nx, int ny, bool co = false);
 
 Image Upscale2x(const Image& src);
 Image Downscale2x(const Image& src);

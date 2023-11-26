@@ -1,0 +1,15 @@
+description "Wordprocessor application\377";
+
+uses
+	CtrlLib,
+	RichEdit,
+	PdfDraw,
+	plugin\jpg;
+
+file
+	UWord.cpp,
+	UWord.iml;
+
+mainconfig
+	"" = "GUI NOGTK";
+

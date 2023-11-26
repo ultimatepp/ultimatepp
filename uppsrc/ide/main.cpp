@@ -119,6 +119,24 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 #ifdef DYNAMIC_LIBCLANG
 bool TryLoadLibClang()
 {
+#ifdef PLATFORM_MACOS
+	if(LoadLibClang(TrimBoth(Sys("xcode-select -p")) + "/usr/lib"))
+		return true;
+	if(LoadLibClang("/Library/Developer/CommandLineTools/usr/lib"))
+		return true;
+	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
+		return true;
+#endif
+	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
+	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
+		int n = Atoi(s);
+		if(n >= 5 && n < 30) { // update in 10 years...
+			if(LoadLibClang("/usr/lib/llvm-" + AsString(n) + "/lib"))
+				return true;
+			break;
+		}
+	}
+
 	String libdir = TrimBoth(Sys("llvm-config --libdir"));
 	int q = FindIndex(CommandLine(), "--clangdir");
 	if(q >= 0 && q + 1 < CommandLine().GetCount()) {
@@ -135,6 +153,19 @@ bool TryLoadLibClang()
 	return false;
 }
 #endif
+
+char crash_file[2048];
+
+void OnCrash()
+{ // we deliberately avoid using heap here
+#ifdef PLATFORM_POSIX
+	open(crash_file, O_CREAT|O_RDWR|O_TRUNC, 0644);
+#endif
+}
+
+INITBLOCK { // libclang does not work in Linux unless this is set
+	SetEnv("LC_CTYPE", "en_US.UTF-8");
+}
 
 #ifdef flagMAIN
 GUI_APP_MAIN
@@ -160,6 +191,9 @@ void AppMain___()
 	}
 #endif
 
+	strcpy(crash_file, ToSystemCharset(ConfigFile("ide_crashed")));
+	InstallCrashHook(OnCrash);
+	
 	String preamble_dir = CacheDir() + "/preambles-" + Uuid::Create().ToString();
 	if(!RealizeDirectory(preamble_dir)) // temporary (?)
 		Exclamation("Failed to create preamble dir&\1" + preamble_dir
@@ -364,6 +398,15 @@ void AppMain___()
 	#endif
 			Ini::user_log = true;
 		}
+
+		if(FileExists(crash_file)) {
+			if(LibClangEnabled &&
+			   PromptYesNo("TheIDE has crashed the last time it was run. As the possible "
+			               "cause is libclang incompatibility, do you want to disable Assist features for now?"))
+				LibClangEnabled = false;
+			DeleteFile(crash_file);
+		}
+	
 		
 		if(!clset)
 			ide.LoadLastMain();
@@ -377,6 +420,7 @@ void AppMain___()
 					SyncRefs();
 					ide.TriggerIndexer();
 				}
+				StartIdeBackgroundThread();
 				ide.FileSelected();
 				ide.isscanning--;
 				ide.MakeTitle();
@@ -384,6 +428,7 @@ void AppMain___()
 					ide.Run();
 				ide.SaveConfigOnTime();
 				ide.SaveLastMain();
+				ide.DeleteWindows();
 				ide.Close();
 			}
 		}
@@ -412,8 +457,11 @@ void AppMain___()
 	DeleteFolderDeep(preamble_dir);
 	
 	// delete crashed preamble dirs older than one day
+	// delete leftover dir/commit compare git repos older than one day
 	for(FindFile ff(AppendFileName(CacheDir(), "*.*")); ff; ff.Next())
-		if(ff.IsFolder() && ff.GetName().StartsWith("preambles-") && Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
+		if(ff.IsFolder() &&
+		   (ff.GetName().StartsWith("preambles-") || ff.GetName().StartsWith("git-")) &&
+		   Time(ff.GetLastWriteTime()) < GetSysTime() - 3600 * 12)
 			DeleteFolderDeep(ff.GetPath()); // if still in use, this fails
 }
 

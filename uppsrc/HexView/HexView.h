@@ -86,9 +86,9 @@ public:
 	void   SetStart(uint64 start);
 	void   SetTotal(uint64 _total);
 	void   SetSc(uint64 address);
-	uint64 GetSc() const               { return sc; }
+	int64  GetSc() const               { return sc; }
 	void   SetCursor(uint64 address);
-	uint64 GetCursor() const           { return cursor; }
+	int64  GetCursor() const           { return cursor; }
 
 	void   SerializeSettings(Stream& s);
 

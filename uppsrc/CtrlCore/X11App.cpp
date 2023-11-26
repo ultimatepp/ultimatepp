@@ -539,16 +539,7 @@ void Ctrl::GetWorkArea(Array<Rect>& out)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	
-	static Array<Rect> rc;
-	if (rc.IsEmpty())
-		GetWorkArea(rc);
-	
-	Point pt = GetScreenRect().TopLeft();
-	for (int i = 0; i < rc.GetCount(); i++)
-		if(rc[i].Contains(pt))
-			return rc[i];
-	return GetPrimaryWorkArea();
+	return StdGetWorkArea();
 }
 
 Rect Ctrl::GetVirtualWorkArea()

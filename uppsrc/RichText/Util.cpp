@@ -43,6 +43,7 @@ struct QTFDisplayCls : Display {
 		               Color ink, Color paper, dword style) const;
 	virtual Size GetStdSize(const Value& q) const;
 	virtual Size RatioSize(const Value& q, int cx, int cy) const;
+	virtual bool Vcenter() const { return false; }
 };
 
 Size QTFDisplayCls::GetStdSize(const Value& q) const
@@ -67,9 +68,7 @@ Size QTFDisplayCls::RatioSize(const Value& q, int cx, int cy) const
 
 void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, Color paper, dword style) const
 {
-	String s;
-	s << "[@(" << ink.GetR() << "." << ink.GetG() << "." << ink.GetB() << ") " << v;
-	RichText rtext = ParseQTF(s);
+	RichText rtext = ParseQTF(~v);
 	rtext.ApplyZoom(GetRichTextStdScreenZoom());
 	draw.DrawRect(r, paper);
 	draw.Clipoff(r);
@@ -78,7 +77,13 @@ void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, 
 	pi.zoom = Zoom(1, 1);
 	if(style & (CURSOR|SELECT|READONLY))
 		pi.textcolor = ink;
-	rtext.Paint(draw, 0, 0, r.Width(), pi);
+	pi.darktheme = IsDarkTheme();
+	if(Vcenter()) {
+		int cy = rtext.GetHeight(Zoom(1, 1), r.Width());
+		rtext.Paint(draw, 0, max(0, (r.Height() - cy) / 2), r.Width(), pi);
+	}
+	else
+		rtext.Paint(draw, 0, 0, r.Width(), pi);
 	draw.End();
 }
 
@@ -88,22 +93,8 @@ const Display& QTFDisplay()
 }
 
 struct QTFDisplayCCls : QTFDisplayCls {
-	virtual void Paint(Draw& w, const Rect& r, const Value& q,
-		               Color ink, Color paper, dword style) const;
+	virtual bool Vcenter() const { return true; }
 };
-
-void QTFDisplayCCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, Color paper, dword style) const
-{
-	String s;
-	s << "[@(" << ink.GetR() << "." << ink.GetG() << "." << ink.GetB() << ") " << v;
-	RichText rtext = ParseQTF(s);
-	rtext.ApplyZoom(GetRichTextStdScreenZoom());
-	draw.DrawRect(r, paper);
-	draw.Clipoff(r);
-	int cy = rtext.GetHeight(Zoom(1, 1), r.Width());
-	rtext.Paint(Zoom(1, 1), draw, 0, max(0, (r.Height() - cy) / 2), r.Width());
-	draw.End();
-}
 
 const Display& QTFDisplayVCenter()
 {

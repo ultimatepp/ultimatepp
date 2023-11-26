@@ -591,9 +591,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			v = error;
 			text = style->error;
 		}
-		display->Paint(w, cr, v,
-		               IsShowEnabled() ? text : SColorDisabled,
-		               paper, f ? Display::CURSOR : Display::FOCUS|Display::CURSOR);
+		display->Paint(w, cr, v, IsShowEnabled() ? text : SColorDisabled, paper, f * Display::FOCUS);
 		w.End();
 	}
 	if(!frm && HasFocus())
@@ -613,7 +611,7 @@ void MultiButton::SyncInfo()
 			int cm = DPI(2);
 			r.left -= cm;
 			r.right += cm;
-			info.Set(this, r, value, display, SColorText, style->paper, 0, DPI(2));
+			info.Set(this, r, v, display, SColorText, style->paper, 0, DPI(2));
 			return;
 		}
 	}

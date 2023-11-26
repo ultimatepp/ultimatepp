@@ -117,9 +117,19 @@ items to least recently used. Returns true if item was found
 and removed.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:LRUCache`:`:Get`(const Upp`:`:LRUCache`:`:Maker`&`,B`,A`): [@(0.0.255) temp
+late] <B, A> T[@(0.0.255) `&] [* Get]([@(0.0.255) const] Maker[@(0.0.255) `&] 
+[*@3 m], B [*@3 before`_make], A [*@3 after`_make])&]
+[s2;%% Retrieves data from the cache or creates them if needed. Required 
+data and method to create them is provided by [%-*@3 m]. If data 
+needs to be created, [%-*@3 before`_make] is called before call 
+to Maker`::Make and [%-*@3 after`_make] when it is finished.&]
+[s3; &]
+[s4; &]
 [s5;:LRUCache`:`:Get`(const LRUCache`:`:Maker`&`): [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
 onst]_[_^LRUCache`:`:Maker^ Maker][@(0.0.255) `&]_[*@3 m])&]
-[s2;%% Retrieves data from the cache or creates them if needed [%-*@3 m].&]
+[s2;%% Retrieves data from the cache or creates them if needed. Required 
+data and method to create them is provided by [%-*@3 m].&]
 [s3;%% &]
 [s4; &]
 [s5;:LRUCache`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]

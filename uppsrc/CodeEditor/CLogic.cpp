@@ -129,7 +129,7 @@ void CSyntax::IndentInsert0(CodeEditor& e, int chr, int count, bool reformat)
 	int cl = e.GetCursorLine();
 	WString l = e.GetWLine(cl);
 	if(chr != '{' && chr != '}' || count > 1) {
-		e.InsertChar(chr, 1, true);
+		e.InsertChar(chr, count, true);
 		return;
 	}
 	const wchar *s;
@@ -279,7 +279,7 @@ bool CSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)
 
 bool CSyntax::CanAssist() const
 {
-	return !comment && !string && !linecomment;
+	return !comment && !string && !linecomment && IsNull(raw_string);
 }
 
 Vector<IfState> CSyntax::PickIfStack()
@@ -305,6 +305,13 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text)
 		if(findarg(h[i], ' ', '\t') < 0)
 			return;
 	e.Refresh();
+}
+
+bool CSyntax::GetBlockHeader(Point& blk_start, Point& blk_end)
+{
+	blk_start = this->blk_start;
+	blk_end = this->blk_end;
+	return true;
 }
 
 }

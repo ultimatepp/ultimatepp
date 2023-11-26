@@ -49,6 +49,7 @@ public:
 	bool   IsId() const                       { return iscib(*term); }
 	bool   IsId(const char *s) const          { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && IsId0(s); }
 	String ReadId();
+	String ReadIdh();
 	String ReadIdt();
 	bool   IsInt() const;
 	int    Sgn();
@@ -63,6 +64,7 @@ public:
 	bool   IsDouble() const                   { return IsInt(); }
 	bool   IsDouble2() const;
 	double ReadDouble();
+	double ReadDoubleNoE();
 	bool   IsString() const                   { return IsChar('\"'); };
 	String ReadOneString(bool chkend = true);
 	String ReadString(bool chkend = true);

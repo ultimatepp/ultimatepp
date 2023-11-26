@@ -21,8 +21,6 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 		h << "(64 bit)";
 	else
 		h << "(32 bit)";
-	if(sizeof(wchar) == 4)
-		h << " (wchar32)";
 #ifdef _MSC_VER
 	h << " (MSC)";
 #endif
@@ -44,6 +42,14 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 	h << " (C++11)";
 #endif
 
+#if CPU_ARM
+	h << " (ARM)";
+#endif
+
+#if CPU_SIMD
+	h << " (SIMD)";
+#endif
+
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
@@ -51,6 +57,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #ifdef bmTIME
 	h << "Compiled: " << bmTIME;
 #endif
+
+	h << separator;
+	h << GetExeFilePath();
 
 	return h;
 }
@@ -74,7 +83,6 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Label& v1 = ctrl.Create<Label>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
-	int total = 0;
 
 	Index<String> classes;
 	Index<String> items;

@@ -1,0 +1,27 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\HexAtoi.exe 22.05.2023 09:24:04, user: cxl
+
+s = 1;
+CParser(s).ReadNumber(2) = 1
+CParser(s).ReadNumber(8) = 1
+CParser(s).ReadNumber(10) = 1
+CParser(s).ReadNumber(16) = 1
+s = 9;
+CParser(s).ReadNumber(2) = Error
+CParser(s).ReadNumber(8) = Error
+CParser(s).ReadNumber(10) = 9
+CParser(s).ReadNumber(16) = 9
+s = a;
+CParser(s).ReadNumber(2) = Error
+CParser(s).ReadNumber(8) = Error
+CParser(s).ReadNumber(10) = Error
+CParser(s).ReadNumber(16) = 10
+s = f;
+CParser(s).ReadNumber(2) = Error
+CParser(s).ReadNumber(8) = Error
+CParser(s).ReadNumber(10) = Error
+CParser(s).ReadNumber(16) = 15
+s = a0;
+CParser(s).ReadNumber(2) = Error
+CParser(s).ReadNumber(8) = Error
+CParser(s).ReadNumber(10) = Error
+CParser(s).ReadNumber(16) = 160

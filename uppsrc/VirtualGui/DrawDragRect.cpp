@@ -1,5 +1,7 @@
 #include "Local.h"
 
+#ifdef VIRTUALGUI
+
 NAMESPACE_UPP
 
 struct DrawDragRectInfo {
@@ -90,3 +92,5 @@ void FinishDragRect(Ctrl& q)
 }
 
 END_UPP_NAMESPACE
+
+#endif

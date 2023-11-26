@@ -68,16 +68,8 @@ public:
 
 	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
 	CoWork&  operator&(Function<void ()>&& fn)                { Do(pick(fn)); return *this; }
-	
-	void     Loop(Function<void ()>&& fn);
-	void     Loop(const Function<void ()>& fn)                { Loop(clone(fn)); }
 
-	CoWork&  operator*(const Function<void ()>& fn)           { Loop(fn); return *this; }
-	CoWork&  operator*(Function<void ()>&& fn)                { Loop(pick(fn)); return *this; }
-
-	int      Next()                                           { return ++index - 1; }
-
-	int  GetScheduledCount() const                            { return todo; }
+	int  GetScheduledCount() const;
 
 	static void FinLock();
 	
@@ -97,6 +89,15 @@ public:
 
 	CoWork();
 	~CoWork() noexcept(false);
+
+// deprecated:
+	void     Loop(Function<void ()>&& fn);
+	void     Loop(const Function<void ()>& fn)                { Loop(clone(fn)); }
+
+	CoWork&  operator*(const Function<void ()>& fn)           { Loop(fn); return *this; }
+	CoWork&  operator*(Function<void ()>&& fn)                { Loop(pick(fn)); return *this; }
+	
+	int      Next()                                           { return ++index - 1; }
 };
 
 struct CoWorkNX : CoWork {
@@ -220,7 +221,7 @@ public:
 
 template< class Function, class... Args>
 AsyncWork<
-#ifdef CPP_20
+#ifdef CPP_17
 	std::invoke_result_t<Function, Args...>
 #else
 	typename std::result_of<
@@ -232,7 +233,7 @@ AsyncWork<
 Async(Function&& f, Args&&... args)
 {
 	AsyncWork<
-#ifdef CPP_20
+#ifdef CPP_17
 		std::invoke_result_t<Function, Args...>
 #else
 		typename std::result_of<

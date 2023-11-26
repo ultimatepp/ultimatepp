@@ -194,6 +194,7 @@ int Value::GetOtherInt() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (int)GetSmall<bool>() :
 	       data.IsSpecial(INT64_V) ? (int)GetSmall<int64>() :
+	       data.IsSpecial(FLOAT_V) ? (int)GetSmall<float>() :
 	       (int)GetSmall<double>();
 }
 
@@ -202,6 +203,7 @@ int64 Value::GetOtherInt64() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (int64)GetSmall<bool>() :
 	       data.IsSpecial(INT_V) ? (int64)GetSmall<int>() :
+	       data.IsSpecial(FLOAT_V) ? (int64)GetSmall<float>() :
 	       (int64)GetSmall<double>();
 }
 
@@ -210,7 +212,17 @@ double Value::GetOtherDouble() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(BOOL_V) ? (double)GetSmall<bool>() :
 	       data.IsSpecial(INT_V) ? (double)GetSmall<int>() :
+	       data.IsSpecial(FLOAT_V) ? (double)GetSmall<float>() :
 	       (double)GetSmall<int64>();
+}
+
+float Value::GetOtherFloat() const
+{
+	if(IsNull()) return Null;
+	return data.IsSpecial(BOOL_V) ? (float)GetSmall<bool>() :
+	       data.IsSpecial(INT_V) ? (float)GetSmall<int>() :
+	       data.IsSpecial(DOUBLE_V) ? (float)GetSmall<double>() :
+	       (float)GetSmall<int64>();
 }
 
 bool Value::GetOtherBool() const
@@ -218,6 +230,7 @@ bool Value::GetOtherBool() const
 	if(IsNull()) return Null;
 	return data.IsSpecial(DOUBLE_V) ? (bool)GetSmall<double>() :
 	       data.IsSpecial(INT_V) ? (bool)GetSmall<int>() :
+	       data.IsSpecial(FLOAT_V) ? (float)GetSmall<float>() :
 	       (bool)GetSmall<int64>();
 }
 
@@ -264,6 +277,7 @@ String Value::GetName(dword type)
 SVO_FN(s_String, String);
 SVO_FN(s_int, int);
 SVO_FN(s_double, double);
+SVO_FN(s_float, float);
 SVO_FN(s_int64, int64);
 SVO_FN(s_bool, bool);
 SVO_FN(s_date, Date);
@@ -307,6 +321,7 @@ Value::Sval *Value::svo[256] = {
 	&s_bool, //BOOL_V   = 11;
 
 	NULL, //VALUEMAP_V   = 12;
+	&s_float, //FLOAT_V = 13;
 };
 
 Value::Void *ValueArrayDataCreate()
@@ -329,6 +344,7 @@ void Value::RegisterStd()
 		Value::AddName(STRING_V, "String");
 		Value::AddName(INT_V, "int");
 		Value::AddName(DOUBLE_V, "double");
+		Value::AddName(FLOAT_V, "float");
 		Value::AddName(VOID_V, "void");
 		Value::AddName(DATE_V, "Date");
 		Value::AddName(TIME_V, "Time");
@@ -719,6 +735,7 @@ String Value::GetName() const
 	static Tuple<byte, const char *> tp[] = {
 		{ (byte)INT_V, "int" },
 		{ (byte)DOUBLE_V, "double" },
+		{ (byte)FLOAT_V, "float" },
 		{ (byte)VOIDV, "void" },
 		{ (byte)DATE_V, "Date" },
 		{ (byte)TIME_V, "Time" },

@@ -115,14 +115,15 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase, int& count) {
 
 void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, int count)
 {
-	ErrorInfo f;
+	ListLineInfo f;
 	f.file = fn;
 	f.lineno = ln;
 	f.linepos = pos + 1;
 	f.len = count;
 	f.kind = 0;
+	f.line = line;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
-	            AsString(pos) + "\1" + AsString(count) + "\1" + (line.GetCount() > 300 ? line.Mid(0, 300) : line);
+	            AsString(pos) + "\1" + AsString(count) + "\1" + (line.GetCount() > 5000 ? line.Mid(0, 5000) : line);
 	FFound().Add(fn, ln, f.message, RawToValue(f));
 }
 
@@ -139,9 +140,11 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		bool bw = true;
 		int  count;
 		if(regexp) {
-			if(regexp->Match(line)) {
-				AddFoundFile(fn, ln, line, regexp->GetOffset(), regexp->GetLength());
+			const char *s = line;
+			while(regexp->Match(s)) {
+				AddFoundFile(fn, ln, line, regexp->GetOffset() + int(s - line), regexp->GetLength());
 				sync = true;
+				s += regexp->GetLength();
 			}
 		}
 		else
@@ -150,7 +153,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 					AddFoundFile(fn, ln, line, int(s - line), count);
 					sync = true;
 					infile++;
-					break;
+					s += count;
 				}
 				if(wb) bw = !iscid(*s);
 			}
@@ -195,7 +198,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 void Ide::FindInFiles(bool replace) {
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
-	ff.output <<= ffoundi_next;
 	rf(ff.find, d.find)
 	  (ff.replace, d.replace)
 	  (ff.ignorecase, d.ignorecase)
@@ -227,7 +229,7 @@ void Ide::FindInFiles(bool replace) {
 	if(c == IDOK) {
 		SaveFile();
 
-		SetFFound(~ff.output);
+		NewFFound();
 
 		FFound().HeaderTab(2).SetText("Source line");
 		Renumber();
@@ -290,7 +292,7 @@ void Ide::FindInFiles(bool replace) {
 						break;
 				}
 				else {
-					ErrorInfo f;
+					ListLineInfo f;
 					f.file = files[i];
 					f.lineno = 1;
 					f.linepos = 0;
@@ -305,20 +307,25 @@ void Ide::FindInFiles(bool replace) {
 	}
 }
 
-void Ide::FFoundFinish(bool files)
+void Ide::FFoundSetIcon(const Image& m)
 {
-	int n = FFound().GetCount();
-	FFound().HeaderTab(2).SetText(Format("Source line (%d)", n));
-	if(files)
-		FFound().Add(Null, Null, AsString(n) + " matching file(s) have been found.");
-	else
-		FFound().Add(Null, Null, AsString(n) + " occurrence(s) have been found.");
+	FFound();
+	ffound[0]->icon = m;
+}
+
+void Ide::FFoundFinish(bool replace)
+{
+	ArrayCtrl& ff = FFound();
+	FFound().HeaderTab(2).SetText(Format("Source line (%d)", ff.GetCount()));
+	int ii = btabs.GetCursor();
+	ffound[0]->freplace.Show(ff.GetCount());
+	BTabs(); // to update the found text
+	btabs.SetCursor(ii);
 }
 
 void Ide::FindFileAll(const Vector<Tuple<int64, int>>& f)
 {
-	SetFFound(ffoundi_next);
-	FFound().Clear();
+	NewFFound();
 	for(auto pos : f) {
 		editor.CachePos(pos.a);
 		int linei = editor.GetLinePos64(pos.a);
@@ -474,26 +481,46 @@ bool FindInFilesDlg::Key(dword key, int count)
 	return TopWindow::Key(key, count);
 }
 
-void Ide::SetFFound(int ii)
+void SetupError(ArrayCtrl& error, const char *s);
+
+Ide::FoundList::FoundList()
 {
-	ii = clamp(ii, 0, 2);
-	SetBottom(BFINDINFILES1 + ii);
-	ffoundi_next = (ii + 1) % 3;
+	SetupError(*this, "Source");
+	ColumnWidths("207 41 834");
+	ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
+	ColumnAt(2).SetDisplay(Single<FoundDisplay>());
+	WhenBar = [=](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
+	WhenLeftClick = WhenSel = [=] { TheIde()->ShowFound(*this); };
+	freplace.SetLabel("Replace");
+	HeaderObject() << freplace.RightPosZ(0, 80).VSizePos();
+	freplace.Hide();
+	freplace << [=] { TheIde()->ReplaceFound(*this); };
+	freplace.SetImage(IdeImg::textfield_rename());
+}
+
+void Ide::NewFFound()
+{
+	if(ffound[0] && ffound[0]->GetCount())
+		for(int i = __countof(ffound) - 1; i > 0; i--)
+			ffound[i] = pick(ffound[i - 1]);
+	FFound();
+	SetBottom(BFINDINFILES1);
 }
 	
 ArrayCtrl& Ide::FFound()
 {
-	int i = btabs.GetCursor() - BFINDINFILES1;
-	return i >= 0 && i < 3 ? ffound[i] : ffound[0];
+	if(!ffound[0])
+		ffound[0].Create<FoundList>();
+	return *ffound[0];
 }
 
-void Ide::CopyFound(bool all)
+void Ide::CopyFound(ArrayCtrl& list, bool all)
 {
 	String txt;
-	for(int i = 0; i < FFound().GetCount(); i++) {
+	for(int i = 0; i < list.GetCount(); i++) {
 		if(all)
-			txt << FFound().Get(i, 0) << " (" << FFound().Get(i, 1) << "): ";
-		String h = FFound().Get(i, 2);
+			txt << list.Get(i, 0) << " (" << list.Get(i, 1) << "): ";
+		String h = list.Get(i, 2);
 		if(*h == '\1')
 			h = Split(~h + 1, '\1', false).Top();
 		txt << h << "\r\n";
@@ -501,8 +528,156 @@ void Ide::CopyFound(bool all)
 	WriteClipboardText(txt);
 }
 
-void Ide::FFoundMenu(Bar& bar)
+void Ide::FFoundMenu(ArrayCtrl& list, Bar& bar)
 {
-	bar.Add("Copy text", THISBACK1(CopyFound, false));
-	bar.Add("Copy all", THISBACK1(CopyFound, true));
+	ArrayCtrl *l = &list;
+	bar.Add("Copy text", [=] { CopyFound(*l, false); });
+	bar.Add("Copy all", [=] { CopyFound(*l, true); });
+}
+
+INITBLOCK {
+	RegisterGlobalConfig("Ide::ReplaceFound");
+}
+
+void Ide::ReplaceFound(ArrayCtrl& list)
+{
+	Index<String> ch;
+	for(int i = 0; i < list.GetCount() && ch.GetCount() < 6; i++) {
+		Value v = list.Get(i, "INFO");
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
+			if(*f.message == '\1') {
+				Vector<String> h = Split(~f.message + 1, '\1', false);
+				if(h.GetCount() > 3 && f.linepos > 0)
+					ch.FindAdd(h[3].Mid(f.linepos - 1, f.len));
+			}
+		}
+	}
+
+	WithReplaceResultsLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Replace found items");
+	LoadFromGlobal([&](Stream& s) { dlg.text.SerializeList(s); }, "Ide::ReplaceFound");
+	for(String s : ch)
+		dlg.text.FindAddList(s);
+	if(ch.GetCount())
+		dlg.text <<= ch[0];
+	int c = dlg.Execute();
+	dlg.text.AddHistory();
+	StoreToGlobal([&](Stream& s) { dlg.text.SerializeList(s); }, "Ide::ReplaceFound");
+	if(c != IDOK)
+		return;
+
+	String replace = ~dlg.text;
+
+	replace_in_files = true; // allow .lay etc... to be edited as text, do not update things
+
+	String fn = editfile;
+	AssistEditor curtain; // to prevent editor visual changes while doing the work
+	PassEditor(curtain);
+	FlushFile();
+	editor_p.Add(curtain.SizePos());
+
+	Index<String> errors;
+	// file - line - [origline, [pos, len, listi, replaced]]
+	VectorMap<String, VectorMap<int, Tuple<String, Vector<Tuple<int, int, int>>, bool>>> files;
+	for(int i = 0; i < list.GetCount(); i++) {
+		Value v = list.Get(i, "INFO");
+		bool err = true;
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
+			if(*f.message == '\1') {
+				Vector<String> h = Split(~f.message + 1, '\1', false);
+				if(h.GetCount() > 3) {
+					if(f.linepos > 0) { // some lines are ignored
+						auto& x = files.GetAdd(NormalizePath(f.file)).GetAdd(f.lineno - 1);
+						x.a = h[3];
+						x.b.Add(MakeTuple(f.linepos - 1, f.len, i));
+						x.c = false;
+					}
+					err = false;
+				}
+			}
+		}
+		if(err)
+			errors.FindAdd(~list.Get(i, 0) + " " + ~list.Get(i, 1));
+	}
+	
+	Progress pi;
+	pi.SetTotal(files.GetCount());
+	for(const auto& file : ~files) {
+		pi.SetText(GetFileName(file.key));
+		if(pi.StepCanceled())
+			break;
+		LoadFileSilent(file.key);
+		editor.NextUndo();
+		editor.MoveHome();
+		for(int li = 0; li < file.value.GetCount(); li++) {
+			file.value[li].c = true; // this file was replaced (not canceled)
+			bool err = false;
+			String& orig = file.value[li].a;
+			String replaced = orig;
+			Sort(file.value[li].b, [](const auto& a, const auto& b) { return a.a < b.a; });
+			int pos = 0;
+			for(auto& r : file.value[li].b) {
+				int p = r.a + pos;
+				if(p >= 0 && p + r.b < replaced.GetCount()) {
+					replaced.Remove(p, r.b);
+					replaced.Insert(p, replace);
+					r.a = p;
+					pos += replace.GetCount() - r.b;
+					r.b = replace.GetCount();
+				}
+				else
+					err = true;
+			}
+			int linei = file.value.GetKey(li);
+			if(!err && editor.GetUtf8Line(linei) == orig && !editor.IsReadOnly() && !editor.IsView()) {
+				int pos = editor.GetPos(linei);
+				editor.Remove(pos, editor.GetLineLength(linei));
+				editor.Insert(pos, replaced);
+				
+			}
+			else
+				err = true;
+			if(err) {
+				errors.FindAdd(String() << file.key << " " << linei + 1);
+				for(auto& r : file.value[li].b)
+					r.c = -1; // do not change this line in the results list
+			}
+			else
+				orig = replaced;
+		}
+		editor.MoveEnd();
+	}
+
+	replace_in_files = false;
+
+	EditFile(fn);
+
+	if(errors.GetCount())
+		Exclamation("Some instances could not be replaced:&&\1" + Join(errors.GetKeys(), "\n"));
+
+	for(const auto& file : ~files)
+		for(const auto& line : ~file.value)
+			if(line.value.c) // file was replaced
+				for(const auto& r : line.value.b) {
+					int i = r.c; // source line in the list
+					if(i >= 0 && i < list.GetCount()) {
+						Value v = list.Get(i, "INFO");
+						if(v.Is<ListLineInfo>()) {
+							const ListLineInfo& f0 = ValueTo<ListLineInfo>(v);
+							ListLineInfo f = f0;
+							if(*f.message == '\1') {
+								String l = line.value.a;
+								f.linepos = r.a + 1;
+								f.len = r.b;
+								f.message = "\1" + EditorSyntax::GetSyntaxForFilename(f.file) + "\1" +
+		                                    AsString(r.a) + "\1" + AsString(r.b) + "\1" +
+		                                    (l.GetCount() > 5000 ? l.Mid(0, 5000) : l);
+								list.Set(i, 2, f.message);
+								list.Set(i, 3, RawToValue(f));
+							}
+						}
+					}
+				}
 }

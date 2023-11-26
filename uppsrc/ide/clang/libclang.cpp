@@ -23,6 +23,10 @@ bool LoadLibClang0(const char *dir, const char *file)
 
 bool LoadLibClang(const char *dir)
 {
+#ifdef PLATFORM_MACOS // it does not seem to work for some reason, block it for now
+	if(LoadLibClang0(dir, "libclang.dylib"))
+		return true;
+#endif
 	if(LoadLibClang0(dir, "libclang.so"))
 		return true;
 	for(int i = 0; i < 20; i++)
@@ -121,6 +125,11 @@ unsigned int clang_CXXMethod_isVirtual(CXCursor cursor)
 	return LibClang().clang_CXXMethod_isVirtual(cursor);
 }
 
+unsigned int clang_CXXMethod_isStatic(CXCursor cursor)
+{
+	return LibClang().clang_CXXMethod_isStatic(cursor);
+}
+
 int clang_Cursor_isNull(CXCursor cursor)
 {
 	return LibClang().clang_Cursor_isNull(cursor);
@@ -149,6 +158,16 @@ void clang_PrintingPolicy_dispose(CXPrintingPolicy Policy)
 unsigned int clang_getNumCompletionChunks(CXCompletionString completion_string)
 {
 	return LibClang().clang_getNumCompletionChunks(completion_string);
+}
+
+CXType clang_getTypedefDeclUnderlyingType(CXCursor C)
+{
+	return LibClang().clang_getTypedefDeclUnderlyingType(C);
+}
+
+CXCursor clang_getTypeDeclaration(CXType T)
+{
+	return LibClang().clang_getTypeDeclaration(T);
 }
 
 void clang_disposeTranslationUnit(CXTranslationUnit tu)
@@ -255,6 +274,11 @@ CXDiagnostic clang_getDiagnosticInSet(CXDiagnosticSet diags, unsigned index)
 enum CXDiagnosticSeverity clang_getDiagnosticSeverity(CXDiagnostic d)
 {
 	return LibClang().clang_getDiagnosticSeverity(d);
+}
+
+enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor c)
+{
+	return LibClang().clang_Cursor_getStorageClass(c);
 }
 
 #endif

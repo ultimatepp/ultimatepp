@@ -53,14 +53,17 @@ Tutorial] `- get knowledge about drawing custom content inside
 window or control.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
 Tutorial] `- check out the mechanism behind the image manipulation.&]
+[s3;l160;i150;O0; [*^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us^ Network 
+Tutorial] `- learn how to use U`+`+ core components for network 
+application creation.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
 Tutorial] `- introduction to using databases within U`+`+ framework.&]
 [s0; &]
 [s2; Articles&]
 [s3; The are also set of world class articles created by U`+`+ authors 
 from which you can learn:&]
-[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5268022`/Getting`-Started`-with`-Uplusplus`-2020`-2^ G
-etting Started with U`+`+ 2020.2] `- new getting started article 
+[s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5268022`/Getting`-Started`-with`-Uplusplus`-2022`-2^ G
+etting Started with U`+`+ 2022.2] `- new getting started article 
 related to one of the newest release `- good starting point for 
 everyone who wants to start journey with U`+`+.&]
 [s3;l160;i150;O0; [*^https`:`/`/www`.codeproject`.com`/Articles`/5280535`/Some`-Shocking`-Facts`-You`-Probably`-Didnt`-Want`-to`-Kno^ S

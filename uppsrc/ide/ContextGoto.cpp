@@ -38,28 +38,49 @@ bool Ide::OpenLink(const String& s, int pos)
 	if(link.StartsWith("http://") || link.StartsWith("https://"))
 		LaunchWebBrowser(link);
 	else
-	if(FileExists(link))
+	if(link.Find('*') < 0 && link.Find('?') < 0 && IsFullPath(link) && FileExists(link))
 		EditFile(link);
 	else
 		return false;
 	return true;
 }
 
-String Ide::GetRefId(int pos, String& name)
+String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 {
 	int ci = 0;
 	name = editor.ReadIdBack(pos);
 	String ref_id;
 	int lp = pos;
 	int li = editor.GetLinePos(lp);
+	ref_pos = Null;
+	
 	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
 		for(const ReferenceItem& m : editor.references) {
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
 			   (GetNameFromId(m.id) == name || pass == 1)) {
 				ref_id = m.id;
+				ref_pos = m.ref_pos;
 				ci = m.pos.x;
 			}
 		}
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	if(cm.pos.y == li && cm.pos.x <= lp && cm.pos.x >= ci && cm.name == name) {
+		ref_id = cm.id;
+		ref_pos = cm.pos;
+	}
+
+	if(IsFunction(cm.kind))
+		for(const AnnotationItem& m : editor.locals) {
+			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci && m.name == name) {
+				ref_id = m.id;
+				ref_pos = m.pos;
+				ci = m.pos.x;
+			}
+		}
+
+	if(ref_id.GetCount())
+		editor.FromUtf8x(ref_pos);
+		
 	return ref_id;
 }
 
@@ -131,7 +152,7 @@ void Ide::ContextGoto0(int pos)
 	try {
 		CParser p(l);
 		if(p.Char('#') && p.Id("include")) {
-			String path = Hdepend::FindIncludeFile(p.GetPtr(), GetFileFolder(editfile), SplitDirs(GetIncludePath()));
+			String path = PPInfo().FindIncludeFile(p.GetPtr(), GetFileFolder(editfile), SplitDirs(GetIncludePath()));
 			if(!IsNull(path)) {
 				AddHistory();
 				EditFile(path);
@@ -142,13 +163,17 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	catch(CParser::Error) {}
-	
 	if(!editor.WaitCurrentFile())
 		return;
 
 	String name;
-	String ref_id = GetRefId(pos, name);
-	
+	Point  ref_pos;
+	String ref_id = GetRefId(pos, name, ref_pos);
+	GotoId(ref_id, name, ref_pos, li);
+}
+
+bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li)
+{
 	PutAssist("ref_id: " + ref_id);
 	
 	if(ref_id.GetCount()) {
@@ -157,10 +182,11 @@ void Ide::ContextGoto0(int pos)
 		bool   found_definition = false;
 		String found_name;
 		String found_nest;
+		String found_id;
 		
 		AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 		PutAssist("Context: " + cm.id);
-		if(IsFunction(cm.kind)) { // do local variables
+		if(IsFunction(cm.kind) && li >= 0) { // do local variables
 			for(const AnnotationItem& m : editor.locals) {
 				int ppy = -1;
 				if(m.id == ref_id && m.pos.y >= cm.pos.y && m.pos.y <= li && m.pos.y > ppy) {
@@ -170,7 +196,10 @@ void Ide::ContextGoto0(int pos)
 					found_definition = m.definition;
 					found_name = m.name;
 					found_nest = m.nest;
+					found_id = m.id;
 					PutAssist("Found Local: " + AsString(m.pos));
+					if(ref_pos == m.pos)
+						break;
 				}
 			}
 		}
@@ -187,6 +216,7 @@ void Ide::ContextGoto0(int pos)
 						found_definition = m.definition;
 						found_name = m.name;
 						found_nest = m.nest;
+						found_id = m.id;
 						PutAssist("Found Global: " + found_path);
 					}
 		
@@ -201,24 +231,30 @@ void Ide::ContextGoto0(int pos)
 					cls = cls.Mid(q + 1);
 				if(cls.TrimStart("With")) {
 					l->FindLayout(cls, found_name);
-					return;
+					return true;
 				}
-				else
+				cls = name;
+				if(cls.TrimStart("With")) {
+					l->FindLayout(cls, Null);
+					return true;
+				}
 				if(found_name.TrimStart("SetLayout_")) {
 					l->FindLayout(found_name, Null);
-					return;
+					return true;
 				}
 				DoEditAsText(found_path);
 			}
 			IdeIconDes *k = dynamic_cast<IdeIconDes *>(~designer);
 			if(k) {
 				k->FindId(found_name);
-				return;
+				return true;
 			}
 			GotoPos(found_pos);
 			AddHistory();
+			return true;
 		}
 	}
+	return false;
 }
 
 void Ide::ContextGoto()
@@ -226,51 +262,31 @@ void Ide::ContextGoto()
 	ContextGoto0(editor.GetCursor());
 }
 
+void Ide::GotoCodeRef(const String& ref_id)
+{
+	String id = CleanupTppId(ref_id);
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& m : f.value.items)
+			if(m.id == id) {
+				GotoId(m.id, m.name, m.pos, -1);
+				return;
+			}
+
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& m : f.value.items)
+			if(FindIndex(AnnotationCandidates(m.id), id) >= 0) {
+				GotoId(m.id, m.name, m.pos, -1);
+				return;
+			}
+}
+
+void IdeGotoCodeRef(const String& ref_id)
+{
+	TheIde()->GotoCodeRef(ref_id);
+}
+
 void Ide::CtrlClick(int64 pos)
 {
 	if(pos < INT_MAX)
 		ContextGoto0((int)pos);
-}
-
-void Ide::FindDesignerItemReferences(const String& id, const String& name)
-{
-	String path = NormalizePath(editfile);
-	int q = CodeIndex().Find(path);
-	if(q >= 0) {
-		AnnotationItem cm;
-		for(const AnnotationItem& m : CodeIndex()[q].items)
-			if(m.id.EndsWith(id) &&
-			   (m.id.GetCount() <= id.GetCount() || !iscid(m.id[m.id.GetCount() - id.GetCount() - 1]))) {
-				cm = m;
-				break;
-			}
-		if(cm.id.GetCount()) {
-			Vector<Tuple<String, Point>> set;
-			for(const auto& f : ~CodeIndex()) {
-				if(f.key != path) {
-					for(const AnnotationItem& m : f.value.items)
-						if(FindId(m.type, cm.id) >= 0 || FindId(m.bases, cm.id) >= 0 || FindId(m.pretty, cm.id) >= 0)
-							set.Add({ f.key, m.pos });
-					for(const ReferenceItem& m : f.value.refs)
-						if(FindId(m.id, cm.id) >= 0)
-							set.Add({ f.key, m.pos });
-				}
-			}
-			if(set.GetCount()) {
-				if(set.GetCount() > 1) {
-					SetFFound(ffoundi_next);
-					FFound().Clear();
-					Index<String> unique;
-					for(auto& m : set)
-						AddReferenceLine(m.a, m.b, name, unique);
-					SortByKey(CodeIndex());
-					FFoundFinish();
-				}
-				else
-					GotoPos(set[0].a, set[0].b);
-				return;
-			}
-		}
-	}
-	Exclamation("No usage has been found.");
 }

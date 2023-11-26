@@ -5,7 +5,7 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	Image image;
 
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), Cyan());
 		w.DrawImage(10, 10, image);
 	}

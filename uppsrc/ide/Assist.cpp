@@ -37,7 +37,10 @@ AssistEditor::AssistEditor()
 	int cy = search.GetMinSize().cy;
 	navigatorpane.Add(search.TopPos(0, cy).HSizePos(0, cy + 4));
 	navigatorpane.Add(sortitems.TopPos(0, cy).RightPos(0, cy));
-	navigatorpane.Add(list.VSizePos(cy, 0).HSizePos());
+	navigatorpane.Add(scope_list.VSizePos(cy, 0).HSizePos());
+	
+	scope_list.Vert() << scope << list;
+	scope_list.SetPos(1500);
 
 	navigator = true;
 
@@ -66,11 +69,7 @@ AssistEditor::AssistEditor()
 	NoFindReplace();
 
 	WhenUpdate << [=] {
-		if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
-			annotating = true;
-			annotate_trigger.KillSet(500, [=] { SyncCurrentFile(); });
-			ClearErrors();
-		}
+		TriggerSyncFile(500);
 	};
 }
 
@@ -81,6 +80,17 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	}
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
+
+void AssistEditor::TriggerSyncFile(int delay_ms)
+{
+	if(!theide)
+		return;
+	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
+		annotating = true;
+		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
+		ClearErrors();
+	}
+}
 
 void AssistEditor::ClearErrors()
 {
@@ -268,12 +278,30 @@ void AssistEditor::SyncAssist()
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
+	VectorMap<String, int> found_name; // to accelerate resolving duplicities
+	Index<String> cpp;
 	for(int pass = 0; pass < 2; pass++) {
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
 			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
+			    int q = found_name.Find(m.name);
+			    if(q >= 0) { // resolve duplicities
+					int& ii = found_name[q];
+					if(ii >= 0) { // lazy call to CppText
+						const AssistItem& mm = assist_item[ii];
+						cpp.FindAdd(CppText(mm.name, mm.pretty));
+						ii = -1;
+					}
+					String g = CppText(m.name, m.pretty);
+					if(cpp.Find(g) >= 0)
+						continue;
+					else
+						cpp.Add(g);
+			    }
+				else
+			        found_name.Add(m.name, i);
 				found[i] = true;
 				assist_item_ndx.Add(i);
 			}
@@ -285,6 +313,8 @@ void AssistEditor::SyncAssist()
 
 bool AssistEditor::IncludeAssist()
 {
+	if(!theide)
+		return false;
 	Vector<String> include;
 	String ln = GetUtf8Line(GetCursorLine());
 	CParser p(ln);
@@ -324,11 +354,13 @@ bool AssistEditor::IncludeAssist()
 		return false;
 	}
 	Vector<String> folder, upper_folder, file, upper_file;
+	Index<String> done; // avoid duplicates
 	for(int i = 0; i < include.GetCount(); i++) {
 		FindFile ff(AppendFileName(AppendFileName(include[i], include_path), "*.*"));
 		while(ff) {
 			String fn = ff.GetName();
-			if(!ff.IsHidden()) {
+			if(done.Find(fn) < 0 && !ff.IsHidden()) {
+				done.Add(fn);
 				if(ff.IsFolder()) {
 					folder.Add(fn);
 					upper_folder.Add(ToUpper(fn));
@@ -379,10 +411,12 @@ bool AssistEditor::IncludeAssist()
 CurrentFileContext AssistEditor::CurrentContext(int pos)
 {
 	CurrentFileContext cfx;
+	if(!theide)
+		return cfx;
 	cfx.filename = cfx.real_filename = NormalizePath(theide->editfile);
 	cfx.includes = theide->GetCurrentIncludePath();
 	cfx.defines = theide->GetCurrentDefines();
-	if(!IsView() && GetLength() < 4000000 && cfx.filename != CacheFile("CurrentContext.txt")) {
+	if(!IsView() && GetLength() < 4000000) {
 		cfx.content = Get(0, min(GetLength(), pos));
 		if(!IsSourceFile(cfx.filename)) {
 			if(master_source.GetCount()) {
@@ -396,8 +430,6 @@ CurrentFileContext AssistEditor::CurrentContext(int pos)
 			}
 		}
 	}
-	if(AssistDiagnostics)
-		SaveFile(CacheFile("CurrentContext.txt"), cfx.content);
 	return cfx;
 }
 
@@ -419,16 +451,19 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 	if(!navigator_global)
 		Search();
 	SyncCursor();
+	SyncTip();
 }
 
-bool InFileIncludedFrom(const String& s)
+bool IgnoredError(const String& s)
 {
-	return s.Find("in file included from") >= 0;
+	return s.Find("in file included from") >= 0 || s.Find("to match this '{'") >= 0;
 }
 
 void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 {
-	if(cfx.content.GetCount())
+	if(!theide)
+		return;
+	if(cfx.content.GetCount() && HasLibClang())
 		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
@@ -440,29 +475,33 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	
 				int di = 0;
 				String path = NormalizePath(theide->editfile);
+				if(path.TrimEnd(".icpp"))
+					path << ".cpp";
 				while(di < ds.GetCount() && err.GetCount() < 30) {
 					int k = ds[di].kind;
 					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
-						if(d.pos.y < 0 || InFileIncludedFrom(d.text))
+						if(d.pos.y < 0 || IgnoredError(d.text) || path != d.path)
 							return;
+						Point pos = d.pos;
+						FromUtf8x(pos);
 						bool error = true;
-						if(!IsSourceFile(path) && d.pos.y > GetLineCount() - 10) { // ignore errors after the end of header (e.g. missing })
-							int line = d.pos.y;
+						if(!IsSourceFile(path) && pos.y > GetLineCount() - 10) { // ignore errors after the end of header (e.g. missing })
+							int line = pos.y;
 							error = false;
-							int pos = d.pos.x;
+							int xpos = pos.x;
 							while(line < GetLineCount()) {
 								String l = GetUtf8Line(line++);
 								String s = TrimBoth(l);
-								if(s.GetCount() && pos < l.GetCount() && *s != '#')
+								if(s.GetCount() && xpos < l.GetCount() && *s != '#')
 									error = true;
-								pos = 0;
+								xpos = 0;
 							}
 						}
 						if(!error)
 							return;
 
-						err.Add(d.pos);
+						err.Add(pos);
 
 						if(d.path == path)
 							group_valid = true;
@@ -489,23 +528,102 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	}
 }
 
+void AssistEditor::SetQTF(CodeEditor::MouseTip& mt, const String& qtf)
+{
+	mt.value = qtf;
+	mt.display = &QTFDisplay();
+
+	RichText txt = ParseQTF(qtf);
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	mt.sz.cx = min(mt.sz.cx, txt.GetWidth() + DPI(2));
+	mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+}
+
+bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
+{
+	if(annotating || !theide)
+		return false;
+	if(GetChar(mt.pos) <= 32)
+		return false;
+	String name;
+	Point ref_pos;
+	String ref_id = theide->GetRefId(mt.pos, name, ref_pos);
+	if(ref_id.GetCount() == 0 || IsNull(name))
+		return false;
+
+	int lp = mt.pos;
+	int li = GetLinePos(lp);
+
+	bool found_local = false;
+	AnnotationItem m, m1;
+
+	AnnotationItem cm = FindCurrentAnnotation(); // what function body are we in?
+	if(IsFunction(cm.kind)) { // do local variables
+		for(const AnnotationItem& lm : locals) {
+			int ppy = -1;
+			if(lm.id == ref_id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
+				ppy = lm.pos.y;
+				m = lm;
+				found_local = true;
+				if(ref_pos == lm.pos)
+					break;
+			}
+		}
+	}
+
+	if(!found_local) {
+		for(const auto& f : ~CodeIndex())
+			for(const AnnotationItem& q : f.value.items)
+				if(q.id == ref_id)
+					(q.definition ? m1 : m) = q;
+		
+		if(m.id.GetCount() == 0)
+			m = m1;
+	}
+	
+	if(m.id.GetCount() == 0)
+		return false;
+	
+	String qtf = "[g ";
+	if(m.nest.GetCount())
+		qtf << "[@b* \1" << m.nest << "::\1]&";
+
+	String tl = BestTopic(GetRefLinks(ref_id));
+	if(tl.GetCount()) {
+		RichText txt = GetCodeTopic(tl, ref_id);
+		qtf << AsQTF(txt);
+	}
+	else
+		qtf << SignatureQtf(m.name, m.pretty);
+
+	SetQTF(mt, qtf);
+	mt.background = AdjustIfDark(Color(245, 255, 221));
+
+	return true;
+}
+
 bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 {
+	if(assist.IsOpen() || !theide)
+		return false;
 	int p = mt.pos;
 	int line = GetLinePos(p);
 	Point pos(p, line);
+	ToUtf8x(pos);
 	int di = 0;
 	String path = NormalizePath(theide->editfile);
+	if(path.TrimEnd(".icpp"))
+		path << ".cpp";
 	while(di < errors.GetCount()) {
 		int k = errors[di].kind;
 		int ii0 = di;
 		bool found = false;
 		if(IsWarning(k) || IsError(k)) {
-			if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+			if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 				found = true;
 			di++;
 			while(di < errors.GetCount() && errors[di].detail) {
-				if(errors[di].path == path && errors[di].pos == pos && !InFileIncludedFrom(errors[di].text))
+				if(errors[di].path == path && errors[di].pos == pos && !IgnoredError(errors[di].text))
 					found = true;
 				di++;
 			}
@@ -514,10 +632,12 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 			String qtf = "[g ";
 			for(int i = ii0; i < di; i++) {
 				Diagnostic& d = errors[i];
+				if(d.pos.y < 0 || IgnoredError(d.text))
+					continue;
 				if(i > ii0)
 					qtf << "&";
 				qtf << "[";
-				if(d.path == path && d.pos == pos && !InFileIncludedFrom(d.text))
+				if(d.path == path && d.pos == pos)
 					qtf << "*";
 				qtf << " ";
 				qtf << "[@B \1" << GetFileName(d.path) << "\1] " << d.pos.y << ": ";
@@ -528,13 +648,9 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 				qtf << "\1" << d.text << "\1";
 				qtf << "]";
 			}
-			mt.value = qtf;
-			mt.display = &QTFDisplay();
-
-			RichText txt = ParseQTF(qtf);
-			txt.ApplyZoom(GetRichTextStdScreenZoom());
-			mt.sz.cx = min(4 * GetWorkArea().GetWidth() / 5, txt.GetWidth()) + DPI(2);
-			mt.sz.cy = txt.GetHeight(Upp::Zoom(1, 1), mt.sz.cx) + DPI(2);
+			
+			SetQTF(mt, qtf);
+			mt.background = AdjustIfDark(Color(255, 234, 207));
 			return true;
 		}
 	}
@@ -544,7 +660,6 @@ bool AssistEditor::AssistTip(CodeEditor::MouseTip& mt)
 void AssistEditor::SyncCurrentFile()
 {
 	if(is_source_file) {
-		int line_delta;
 		CurrentFileContext cfx = CurrentContext();
 		SyncCurrentFile(cfx);
 	}
@@ -577,11 +692,32 @@ void AssistEditor::NewFile(bool reloading)
 	}
 }
 
+int  AssistEditor::ToUtf8x(int line, int pos)
+{ // libclang treats utf-8 bytes as whole characters
+	if(line < GetLineCount() && GetLineLength(line) < 1000) {
+		WString w = GetWLine(line);
+		if(pos <= w.GetCount())
+	        return w.Mid(0, pos).ToString().GetCount();
+	}
+	return pos;
+}
+
+int AssistEditor::FromUtf8x(int line, int pos)
+{ // libclang treats utf-8 bytes as whole characters
+	if(line < GetLineCount() && GetLineLength(line) < 1000) {
+		const String& h = GetUtf8Line(line);
+		if(pos <= h.GetCount())
+			for(const char ch : h)
+				if((byte)ch >= 128)
+					return h.Mid(0, pos).ToWString().GetCount();
+	}
+	return pos;
+}
+
 void AssistEditor::Assist(bool macros)
 {
 	LTIMING("Assist");
 	CloseAssist();
-	int q = GetCursor32();
 	assist_type.Clear();
 	assist_item.Clear();
 	include_assist = false;
@@ -595,8 +731,8 @@ void AssistEditor::Assist(bool macros)
 
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
-	if(cfx.content.GetCount())
-		StartAutoComplete(cfx, line + cfx.line_delta + 1, pos + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+	if(cfx.content.GetCount() && HasLibClang())
+		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;
 			for(const AutoCompleteItem& m : items) {
@@ -610,12 +746,13 @@ void AssistEditor::Assist(bool macros)
 				assist_type.Add("<macros>");
 			if(has_globals)
 				assist_type.Add(Null);
-			for(const AutoCompleteItem& m : items) {
-				AssistItem& f = assist_item.Add();
-				(AutoCompleteItem&)f = m;
-				f.uname = ToUpper(f.name);
-				f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
-			}
+			for(const AutoCompleteItem& m : items)
+				if(!m.name.StartsWith("dv___")) {
+					AssistItem& f = assist_item.Add();
+					(AutoCompleteItem&)f = m;
+					f.uname = ToUpper(f.name);
+					f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
+				}
 			PopUpAssist();
 		});
 }
@@ -640,6 +777,8 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		return;
 		
 	if(assist_item.GetCount() == 0) {
+		if(no_empty_autocomplete)
+			return;
 		AssistItem& m = assist_item.Add();
 		m.kind = KIND_ERROR;
 		m.pretty = "No relevant autocomplete info found";
@@ -859,7 +998,7 @@ void AssistEditor::AssistInsert()
 				ch++;
 			Remove(cl, ch - cl);
 			SetCursor(cl);
-			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
+			Paste(ToUnicode(txt, CHARSET_WIN1250));
 			if(param_count > 0) {
 				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
@@ -887,6 +1026,21 @@ bool isaid(int c)
 
 bool AssistEditor::Key(dword key, int count)
 {
+	CloseTip();
+#ifdef _DEBUG
+	if(key == K_F12) {
+		DLOG("==================");
+		PPInfo ppi;
+		VectorMap<String, Time> result;
+		ArrayMap<String, Index<String>> define_includes;
+		String includes = theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes();
+		ppi.SetIncludes(includes);
+		ppi.GatherDependencies(theide->editfile, result, define_includes);
+		DDUMP(includes);
+		DDUMPM(result);
+		DDUMPM(define_includes);
+	}
+#endif
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
@@ -941,9 +1095,23 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist) {
 		if(InCode()) {
-			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
-			   key == ':' && Ch(GetCursor32() - 2) == ':')
+			if(key == '>' && Ch(GetCursor32() - 2) == '-' || key == ':' && Ch(GetCursor32() - 2) == ':')
 				Assist(false);
+			else
+			if(key == '.')  {
+				String id;
+				int pos = GetCursor() - 2;
+				int n = 50;
+				while(pos >= 0 && n-- >= 0) {
+					int c = GetChar(pos);
+					if(c > ' ') {
+						if(iscib(*ReadIdBack(pos)) || c == ')' || c == ']') // where we can realistically expect autocomplete...
+							Assist(false);
+						break;
+					}
+					pos--;
+				}
+			}
 		}
 		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
 			Assist(false);
@@ -966,6 +1134,11 @@ void AssistEditor::LeftDown(Point p, dword keyflags)
 {
 	CloseAssist();
 	CodeEditor::LeftDown(p, keyflags);
+}
+
+void AssistEditor::ChildLostFocus()
+{
+	search.AddHistory();
 }
 
 void AssistEditor::LostFocus()
@@ -1025,7 +1198,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 7;
+	int version = 10;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1046,4 +1219,20 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	
 	if(version >= 7)
 		s % show_errors % show_errors_status;
+
+	if(version >= 8)
+		s % no_empty_autocomplete;
+	
+	if(version >= 9)
+		s % ms_cache;
+	
+	if(version >= 10)
+		s % scope_list;
+}
+
+void AssistEditor::SerializeNavigatorWorkspace(Stream& s)
+{
+	int version = 0;
+	s / version;
+	search.SerializeList(s);
 }

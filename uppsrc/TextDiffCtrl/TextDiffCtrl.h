@@ -73,21 +73,29 @@ private:
 	Font           font;
 	Font           number_font;
 	Color          number_bg;
-	Color          gutter_fg;
-	Color          gutter_bg;
 	Size           letter;
 	int            tabsize;
 	int            number_width;
 	int            number_yshift;
-	int            gutter_width;
 	int            cursor;
 	int            anchor;
-	bool           gutter_capture;
 	bool           show_line_number;
 	bool           show_white_space;
 	bool           show_diff_highlight;
 	bool           change_paper_color;
 	bool           left = false;
+	
+	struct ScrollBarItems : Ctrl {
+		TextCompareCtrl& diff;
+	
+		void Paint(Draw& w);
+		
+		ScrollBarItems(TextCompareCtrl& e);
+	};
+	
+	ScrollBarItems sbi;
+	
+	void PaintScrollBarItems(Draw& w);
 
 	typedef TextCompareCtrl CLASSNAME;
 	
@@ -114,9 +122,6 @@ public:
 	void           AutoHideSb(bool ssb=true){ scroll.AutoHide(ssb); }
 	void           ShowSb(bool ssb)         { scroll.ShowY(ssb); }
 	void           HideSb()                 { ShowSb(false); }
-
-	void           Gutter(int size)         { gutter_width = size; Refresh(); }
-	void           NoGutter()               { gutter_width = 0; Refresh(); }
 
 	void           TabSize(int t);
 	int            GetTabSize() const { return tabsize; }
@@ -188,14 +193,15 @@ struct TextDiffCtrl : public Splitter {
 	int  GetSc() const                                     { return left.GetSb(); }
 	void Sc(int sc)                                        { left.SetSb(sc); }
 
-	Callback1<int> WhenLeftLine;
-	Callback1<int> WhenRightLine;
+	Event<int> WhenLeftLine;
+	Event<int> WhenRightLine;
 
 	TextDiffCtrl();
 };
 
 struct DiffDlg : public TopWindow {
 	bool Key(dword key, int count) override;
+	void Close() override;
 
 	TextDiffCtrl         diff;
 	FrameTop<StaticRect> p;
@@ -211,7 +217,7 @@ struct DiffDlg : public TopWindow {
 
 	void Refresh();
 	void Write();
-	void Execute(const String& f);
+	void Set(const String& f);
 
 	static Event<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 
@@ -226,7 +232,8 @@ struct FileDiff : DiffDlg {
 	FrameTop<DataPusher> r;
 
 	virtual void Open();
-	void Execute(const String& f);
+
+	void Finish();
 
 	typedef FileDiff CLASSNAME;
 
@@ -236,7 +243,8 @@ struct FileDiff : DiffDlg {
 
 	FileSel& fs;
 
-	void Execute(const String& lpath, const String& rpath);
+	void Set(const String& f); // second one gets selected with fs
+	void Set(const String& lpath, const String& rpath);
 };
 
 class DirDiffDlg : public TopWindow {
@@ -267,6 +275,12 @@ protected:
 	Button                     copyleft, copyright;
 	Button                     revertleft, revertright;
 	Button                     removeleft, removeright;
+	
+	bool                       editable_left = true;
+	bool                       editable_right = true;
+	
+	int                        lmid = 0; // for git support
+	int                        rmid = 0; // for git support
 	
 	VectorMap<String, String>  backup;
 	
@@ -303,6 +317,8 @@ public:
 
 	String GetLeftFile() const                  { return ~lfile; }
 	String GetRightFile() const                 { return ~rfile; }
+	int    GetLMid() const                      { return lmid; }
+	int    GetRMid() const                      { return rmid; }
 
 	DirDiffDlg();
 };

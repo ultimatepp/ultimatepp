@@ -53,7 +53,8 @@ void GccBuilder::CocoaAppBundle()
 			PNGEncoder().SaveFile(AppendFileName(icons, fn), Rescale(img, n, n));
 		}
 
-		Execute(String() << "iconutil --convert icns --output " << icns << " " << icons);
+		String exec = String() << "iconutil --convert icns --output \"" << icns << "\" \"" << icons << "\"";
+		Execute(exec);
 	}
 
 	if(IsNull(Info_plist)) {

@@ -252,6 +252,7 @@ private:
 	bool  focussetcursor:1;
 	bool  allsorting:1;
 	bool  spanwidecells:1;
+	bool  accept_edits:1;
 
 	mutable bool  selectiondirty:1;
 
@@ -719,6 +720,8 @@ public:
 	ArrayCtrl& NoCursorOverride()                             { return CursorOverride(Null); }
 	
 	ArrayCtrl& SpanWideCells(bool b = true)                   { spanwidecells = b; Refresh(); return *this; }
+	
+	ArrayCtrl& AcceptEdits(bool b = true)                     { accept_edits = b; return *this; }
 
 	void Reset();
 

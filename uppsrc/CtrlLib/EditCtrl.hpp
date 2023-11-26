@@ -29,7 +29,7 @@ void WithSpin<DataType, Base, IncType>::Init()
 template <class DataType, class Base, class IncType>
 WithSpin<DataType, Base, IncType>& WithSpin<DataType, Base, IncType>::OnSides(bool b)
 {
-	SetStyle(b ? SpinButtons::StyleOnSides() : SpinButtons::StyleDefault());
+	SetSpinStyle(b ? SpinButtons::StyleOnSides() : SpinButtons::StyleDefault());
 	Base::RefreshLayout();
 	return *this;
 }

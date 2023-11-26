@@ -47,7 +47,7 @@ bool IsBasicType(const String& id)
 
 bool IsIgnored(const String& id)
 {
-	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "template", "enum" };
+	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "final", "template", "enum" };
 	return kt.Find(id) >= 0;
 }
 
@@ -81,7 +81,6 @@ String CleanupId(const char *s)
 				return memcmp(s, "operator", 8) == 0;
 			};
 
-			const char *b = s;
 			String id;
 			while(iscid(*s) || *s == ':') {
 				id.Cat(*s++);
@@ -94,8 +93,6 @@ String CleanupId(const char *s)
 							break;
 					}
 					SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
-					b = s;
-					
 				}
 			}
 			if(id == s_attribute) {
@@ -119,7 +116,7 @@ String CleanupId(const char *s)
 				const char *s = ~id + id.GetCount() - 8;
 				operator_def = IsOperator(s) && !iscid(s[-1]);
 			}
-			if(function && (IsBasicType(id) || !IsCppKeyword(id))) // TODO optimize this (IsCppKeywordNoType)
+			if(function && (IsBasicType(id) || !IsCppKeyword(id)))
 				was_param_type = true;
 			mm.Cat(id);
 			was_id = true;
@@ -134,6 +131,9 @@ String CleanupId(const char *s)
 		if(*s == '<' && !operator_def) { // remove template stuff e.g. Buffer<T>(Vector<T>) -> Buffer(Vector);
 			SkipT();
 		}
+		else
+		if(*s == '-' && s[1] == '>') // ignore return value in -> notation (auto Foo() -> double)
+			return TrimRight(mm);
 		else {
 			was_id = was_space = false;
 			if(*s == '~' && !operator_def) // prevent culling of 'return value' in destructor
@@ -158,7 +158,9 @@ String CleanupId(const char *s)
 				mm.Cat(*s++);
 		}
 	}
-	return mm;
+	String m = mm;
+	m.TrimEnd("=0");
+	return m;
 }
 
 String CleanupPretty(const String& signature)
@@ -168,16 +170,23 @@ String CleanupPretty(const String& signature)
 	const char *s = signature;
 	int plvl = 0;
 	while(*s && *s != '{')
-		if(memcmp(s, " = {", 4) == 0)
+		if(s[0] == ' ' && s[1] == '=' && s[2] == ' ' && s[3] == '{')
 			break;
+		else
+		if(s[0] == '(' && s[1] == 'u' && s[2] == 'n' && s[3] == 'n' && s[4] == 'a' &&
+		   s[5] == 'm' && s[6] == 'e' && s[7] == 'd' && s[8] == ')') { // remove (unnamed)
+			s += 9;
+			while(*s == ' ')
+				s++;
+		}
 		else
 		if(iscib(*s)) {
 			const char *b = s;
 			while(iscid(*s))
 				s++;
-			int len = s - b;
+			int len = int(s - b);
 			if(len == 5 && (memcmp(b, "class", 5) == 0 || memcmp(b, "union", 5) == 0) ||
-			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0) ||
+			   len == 6 && (memcmp(b, "struct", 6) == 0 || memcmp(b, "extern", 6) == 0 || memcmp(b, "inline", 6) == 0) ||
 			   len == 7 && (memcmp(b, "virtual", 7) == 0) ||
 			   len == 8 && (memcmp(b, "override", 8) == 0 || memcmp(b, "noexcept", 8) == 0)) {
 			   while(*s == ' ')
@@ -226,6 +235,9 @@ String CleanupPretty(const String& signature)
 				s++;
 			result.Cat(' ');
 		}
+		else
+		if(s[0] == '-' && s[1] == '>')
+			break;
 		else
 		if(*s == '=' && plvl == 0)
 			break;
@@ -320,8 +332,8 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				s++;
 		}
 		else
-		if(sOperatorTab[*s]) {
-			while(sOperatorTab[s[n]])
+		if(sOperatorTab[(byte)*s]) {
+			while(sOperatorTab[(byte)s[n]])
 				n++;
 			p.type = ITEM_CPP;
 		}
@@ -447,7 +459,7 @@ String GetNameFromId(const String& id)
 	return name;
 }
 
-String MakeDefinition(const AnnotationItem& m)
+String MakeDefinition(const AnnotationItem& m, const String& klass)
 {
 	String result;
 	String pretty = m.pretty;
@@ -456,7 +468,12 @@ String MakeDefinition(const AnnotationItem& m)
 	if(q < 0)
 		result << pretty;
 	else
-		result << pretty.Mid(0, q) << GetClass(m) << pretty.Mid(q);
+		result << pretty.Mid(0, q) << klass << pretty.Mid(q);
 	result << "\n{\n}\n\n";
 	return result;
+}
+
+String MakeDefinition(const AnnotationItem& m)
+{
+	return MakeDefinition(m, GetClass(m));
 }

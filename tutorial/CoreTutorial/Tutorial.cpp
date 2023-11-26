@@ -4,8 +4,8 @@ using namespace Upp;
 
 String out;
 
-int    major = 0;
-int    minor = 0;
+int    ch_major = 0;
+int    ch_minor = 0;
 String qtf =
 "[ $$0,0#00000000000000000000000000000000:Default]"
 "[a83;*R6 $$1,3#31310162474203024125188417583966:caption]"
@@ -22,11 +22,11 @@ String toc;
 
 void Section(const String& title)
 {
-	String lbl = AsString(++major);
+	String lbl = AsString(++ch_major);
 	String text = String().Cat() << lbl << "." << ' ' + TrimBoth(title);
 	lbl = "Chapter_" + lbl;
 	qtf << "[s6;:" << lbl << ": " << text << "&]";
-	minor = 0;
+	ch_minor = 0;
 	toc << "&[A3^#" << lbl << "^ " << text << "]&";
 }
 
@@ -43,9 +43,9 @@ void FlushDoc(String& docblock)
 	String style = "[s3;";
 	String lbl;
 	if(docblock.StartsWith(".")) {
-		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(1));
-		style = minor == 1 ? "[s2;" : "[s2;H4";
-		lbl = "Section_" + AsString(major) + "_" + AsString(minor);
+		docblock = AsString(ch_major) + "." + AsString(++ch_minor) + ' ' + TrimBoth(docblock.Mid(1));
+		style = ch_minor == 1 ? "[s2;" : "[s2;H4";
+		lbl = "Section_" + AsString(ch_major) + "_" + AsString(ch_minor);
 		style << ":" <<  lbl << ":";
 		title = true;
 	}

@@ -11,7 +11,7 @@ String ViewFileHash(const String& path)
 	FindFile ff(path);
 	if(ff) {
 		Sha1Stream sha;
-		sha << path << ';' << Time(ff.GetLastWriteTime()) << ';' << ff.GetLength();
+		sha << path << ',' << Time(ff.GetLastWriteTime()) << ',' << ff.GetLength();
 		return AppendFileName(ViewCache(), sha.FinishString());
 	}
 	return Null;
@@ -74,6 +74,7 @@ void Ide::SetupEditor(int f, String hl, String path)
 
 	editor.WordwrapComments(wordwrap_comments);
 	editor.WordWrap(wordwrap);
+	editor.Blk0Header(blk0_header);
 }
 
 void Ide::SetupEditor()
@@ -342,6 +343,8 @@ void Ide::SaveFile0(bool always)
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
 		TriggerIndexer();
+		if(IsNull(tm))
+			TriggerIdeBackgroundThread(2000);
 		return;
 	}
 
@@ -359,7 +362,8 @@ void Ide::SaveFile0(bool always)
 	if(!editor.IsDirty() && !always)
 		return;
 	TouchFile(editfile);
-	if(!FileExists(editfile))
+	bool file_exists = FileExists(editfile);
+	if(!file_exists)
 		InvalidateIncludes();
 	int auto_retry = 10; // file can be open by indexer
 	for(;;) {
@@ -390,9 +394,10 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 
-	if(editor.IsDirty())
-		TriggerIndexer();
+	if(!file_exists)
+		TriggerIdeBackgroundThread(2000);
 
+	TriggerIndexer();
 	editor.ClearDirty();
 
 	if(ToLower(GetFileExt(editfile)) == ".usc")
@@ -416,6 +421,7 @@ void Ide::FlushFile() {
 		FileData& fd = Filedata(editfile);
 		fd.undodata = editor.PickUndoData();
 		fd.filehash = EditorHash();
+		fd.content = editor.GetLength() < 1000000 ? FastCompress(editor.Get()) : String();
 	}
 	CancelCurrentFile();
 	CancelAutoComplete();
@@ -465,6 +471,26 @@ bool Ide::FileRemove()
 	return true;
 }
 
+void Ide::LoadFileSilent(const String& path)
+{ // used with find in files replaces and replace found items
+	byte charset = 0;
+
+	const Workspace& wspc = IdeWorkspace();
+	for(int i = 0; i < wspc.GetCount() && !charset; i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		for(int i = 0; i < pk.file.GetCount() && !charset; i++) {
+			if(PathIsEqual(SourcePath(n, pk.file[i]), path)) {
+				charset = pk.file[i].charset;
+				if(!charset)
+					charset = pk.charset;
+			}
+		}
+	}
+
+	EditFile0(path, charset ? charset : default_charset, false, Null, false);
+}
+
 void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername, bool reloading)
 {
 	animate_current_file = animate_current_file_dir = animate_autocomplete = animate_autocomplete_dir = 0;
@@ -484,7 +510,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
 	bool candesigner = !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
-	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile);
+	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile) && !replace_in_files;
 	
 	if(candesigner) {
 		for(int i = 0; i < GetIdeModuleCount() && !designer; i++)
@@ -512,20 +538,21 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		return;
 	}
 
-	tabs.SetAddFile(editfile);
-	tabs.SetSplitColor(editfile2, Yellow);
+	if(!replace_in_files) {
+		tabs.SetAddFile(editfile);
+		tabs.SetSplitColor(editfile2, SYellow());
+	}
 	editor.Enable();
 	editpane.Add(editorsplit);
 	editor.HiliteScope(hilite_scope);
 	editor.OverWriteMode(false);
-	ActiveFocus(editor);
+	if(!replace_in_files)
+		ActiveFocus(editor);
 	FileData& fd = Filedata(editfile);
 	FindFile ff(editfile);
 	bool tfile = GetFileExt(editfile) == ".t";
 	if(ff) {
 		edittime = ff.GetLastWriteTime();
-		if(edittime != fd.filetime || IsNull(fd.filetime))
-			fd.undodata.Clear();
 		view_file.SetBufferSize(256*1024);
 		view_file.Open(editfile);
 		if(view_file) {
@@ -584,9 +611,16 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
 		editor.SetEditPosSbOnly(fd.editpos);
 		if(!editor.IsView()) {
-			if(EditorHash() != fd.filehash)
-				fd.undodata.Clear();
-			editor.SetPickUndoData(pick(fd.undodata));
+			if(edittime != fd.filetime || IsNull(fd.filetime) || EditorHash() != fd.filehash) { // is undo valid (file is the same as when undo was stored)?
+				if(fd.content.GetCount() && fd.undodata.undo.GetCount()) { // undo is not valid, but restore content for valid undo and apply the changed file
+					String new_content = editor.Get();
+					editor.Set(FastDecompress(fd.content));
+					editor.SetPickUndoData(pick(fd.undodata)); // valid for fd.content
+					ApplyChanges(editor, new_content);
+				}
+			}
+			else
+				editor.SetPickUndoData(pick(fd.undodata));
 			editor.SetLineInfo(fd.lineinfo);
 			editor.SetLineInfoRem(pick(fd.lineinforem));
 		}
@@ -617,15 +651,16 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		}
 		editor.SetCharset(tfile ? CHARSET_UTF8 : charset);
 	}
-	editor.SetFocus();
-	MakeTitle();
-	SetBar();
-	editor.SyncNavigatorShow();
-	editor.CheckEdited(true);
-	editor.SyncNavigator();
-	editor.NewFile(reloading);
-	editfile_repo = GetRepoKind(editfile);
-	editfile_includes = IncludesMD5();
+	if(!replace_in_files) {
+		editor.SetFocus();
+		MakeTitle();
+		SetBar();
+		editor.SyncNavigatorShow();
+		editor.CheckEdited(true);
+		editor.SyncNavigator();
+		editor.NewFile(reloading);
+		editfile_repo = GetRepoKind(editfile);
+	}
 }
 
 String Ide::IncludesMD5()
@@ -671,6 +706,24 @@ void Ide::DoEditAsText(const String& path)
 	editashex.RemoveKey(editfile);
 }
 
+String GetLayItemId(const String& l)
+{
+	try {
+		CParser p(l); // ITEM(Upp::ArrayCtrl, list, LeftPosZ(8, 296).TopPosZ(8, 448))
+		if(p.Id("ITEM") || p.Id("UNTYPED")) {
+			p.Char('(');
+			if(p.IsId()) p.ReadId();
+			p.Char2(':', ':');
+			if(p.IsId()) p.ReadId();
+			p.Char(',');
+			if(p.IsId())
+				return p.ReadId();
+		}
+	}
+	catch(CParser::Error) {}
+	return Null;
+}
+
 void Ide::EditAsText()
 {
 	String path = editfile;
@@ -678,9 +731,11 @@ void Ide::EditAsText()
 		return;
 //	if(!FileExists(path))
 //		return;
-	String layout;
-	if(auto *l = dynamic_cast<LayDesigner *>(~designer))
+	String layout, item;
+	if(auto *l = dynamic_cast<LayDesigner *>(~designer)) {
 		layout = l->GetCurrentLayout();
+		item = l->GetCurrentItem();
+	}
 	DoEditAsText(path);
 	byte cs = editor.GetCharset();
 	int sc = editor.GetSpellcheckComments();
@@ -689,8 +744,14 @@ void Ide::EditAsText()
 	if(layout.GetCount()) {
 		layout = "LAYOUT(" + layout + ",";
 		for(int i = 0; i < editor.GetLineCount(); i++)
-			if(editor.GetUtf8Line(i).StartsWith(layout)) {
+			if(TrimBoth(editor.GetUtf8Line(i)).StartsWith(layout)) {
 				editor.GotoLine(i);
+				if(item.GetCount())
+					for(int j = i + 1; j < editor.GetLineCount(); j++)
+						if(GetLayItemId(editor.GetUtf8Line(j)) == item) {
+							editor.GotoLine(j);
+							break;
+						}
 				break;
 			}
 	}
@@ -699,14 +760,37 @@ void Ide::EditAsText()
 void Ide::EditUsingDesigner()
 {
 	String path = editfile;
-	if (editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
+	if(editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
 		return;
 	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
 	int sc = editor.GetSpellcheckComments();
+	String layout, item;
+	if(ToLower(GetFileExt(editfile)) == ".lay") {
+		int i = editor.GetLine(editor.GetCursor());
+		item = GetLayItemId(editor.GetUtf8Line(i));
+		for(; i >= 0; i--) {
+			String l = editor.GetUtf8Line(i);
+			try {
+				CParser p(l);
+				if(p.Id("LAYOUT")) {
+					p.Char('(');
+					layout = p.ReadId();
+					break;
+				}
+			}
+			catch(CParser::Error) {}
+		}
+		
+	}
 	FlushFile();
 	EditFile0(path, cs, sc);
+	if(layout.GetCount()) {
+		auto *l = dynamic_cast<LayDesigner *>(~designer);
+		if(l)
+			l->FindLayout(layout, item);
+	}
 }
 
 void Ide::AddEditFile(const String& path)
@@ -782,7 +866,15 @@ void Ide::CheckFileUpdate()
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
 
-	ReloadFile();
+	if(!editor.IsView() && !editor.IsReadOnly() && editor.GetUndoCount() &&
+	   max((int64)editor.GetLength(), ff.GetLength()) < 30*1024*1024) {
+	    int c = editor.GetCursor();
+	    ApplyChanges(editor, LoadFile(editfile));
+		editor.SetCursor(c);
+		editor.ClearDirty(); // as it is "loaded"
+	}
+	else
+		ReloadFile();
 }
 
 typedef Index<dword> HashBase;
@@ -933,12 +1025,10 @@ void Ide::GoOpposite()
 		EditFile(fn);
 }
 
-void Ide::PassEditor()
+void Ide::PassEditor(AssistEditor& editor2)
 {
-	editorsplit.NoZoom();
-	SyncEditorSplit();
 	SetupEditor();
-	editfile2 = editfile;
+	String editfile2 = editfile;
 	editor2.SetFont(editor.GetFont());
 	editor2.Highlight(editor.GetHighlight());
 	editor2.LoadHlStyles(editor.StoreHlStyles());
@@ -957,6 +1047,14 @@ void Ide::PassEditor()
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
 	editor2.SpellcheckComments(editor.GetSpellcheckComments());
+}
+
+void Ide::PassEditor()
+{
+	editorsplit.NoZoom();
+	SyncEditorSplit();
+	editfile2 = editfile;
+	PassEditor(editor2);
 }
 
 void Ide::ClearEditedFile()
@@ -986,11 +1084,11 @@ void Ide::SplitEditor(bool horz)
 		CloseSplit();
 
 	if(horz)
-		editorsplit.Horz(editor2, editor);
+		editorsplit.Horz(editor2, editor_p);
 	else
-		editorsplit.Vert(editor2, editor);
+		editorsplit.Vert(editor2, editor_p);
 	
-	tabs.SetSplitColor(editfile, Yellow);
+	tabs.SetSplitColor(editfile, SYellow());
 	PassEditor();
 }
 
@@ -998,16 +1096,16 @@ void Ide::SwapEditors()
 {
 	String f = editfile2;
 	CodeEditor::EditPos p = editor2.GetEditPos();
-	if(editorsplit.GetFirstChild() == &editor)
+	if(editorsplit.GetFirstChild() == &editor_p)
 		if(editorsplit.IsVert())
-			editorsplit.Vert(editor2, editor);
+			editorsplit.Vert(editor2, editor_p);
 		else
-			editorsplit.Horz(editor2, editor);
+			editorsplit.Horz(editor2, editor_p);
 	else
 		if(editorsplit.IsVert())
-			editorsplit.Vert(editor, editor2);
+			editorsplit.Vert(editor_p, editor2);
 		else
-			editorsplit.Horz(editor, editor2);
+			editorsplit.Horz(editor_p, editor2);
 	PassEditor();
 	EditFile(f);
 	editor.SetEditPos(p);
@@ -1015,7 +1113,7 @@ void Ide::SwapEditors()
 
 void Ide::CloseSplit()
 {
-	editorsplit.Vert(editor, editor2);
+	editorsplit.Vert(editor_p, editor2);
 	editorsplit.Zoom(0);
 	view_file2.Close();
 	editfile2.Clear();

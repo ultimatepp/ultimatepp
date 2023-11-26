@@ -41,6 +41,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("js", "JavaScript");
 	Type("py", "Python");
 	type.AddSeparator();
+	Type("clang-format", "ClangFormat configuration file");
 	Type("", "Other");
 	
 	name << [=] {
@@ -52,7 +53,6 @@ NewPackageFileWindow::NewPackageFileWindow()
 		Sync();
 	};
 	name <<= ".cpp";
-	
 	type <<= "cpp";
 	
 	type << [=] {
@@ -75,8 +75,12 @@ String NewPackageFileWindow::GetError()
 	String p = AppendFileName(folder, n);
 	if(FileExists(p))
 		return String().Cat() << "File&[* \1" << p << "\1]&already exists!";
-	if(*n == '.')
-		return "Invalid filename!";
+	if(*n == '.') {
+		Index<String> exceptions = {".clang-format"};
+		if(exceptions.Find(n) == -1) {
+			return "Invalid filename!";
+		}
+	}
 	return Null;
 }
 

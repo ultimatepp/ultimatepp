@@ -3,12 +3,14 @@
 bool LibClangEnabled = true;
 bool AssistDiagnostics;
 bool AutoIndexer;
+bool RelaxedIndexerDependencies = true;
 int  IndexerThreads;
 int  ParsedFiles;
+int  LibClangCppVersion = 17;
 
 void ClangConfigSerialize(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s % version
 	  % LibClangEnabled
 	  % AssistDiagnostics
@@ -16,6 +18,9 @@ void ClangConfigSerialize(Stream& s)
 	  % IndexerThreads
 	  % ParsedFiles
 	;
+	
+	if(version >= 1)
+		s % LibClangCppVersion;
 }
 
 void ClangConfigSetDefaults()
@@ -33,6 +38,8 @@ void ClangConfigSetDefaults()
 #else
 	AutoIndexer = CPU_Cores() >= 4;
 #endif
+
+	LibClangCppVersion = 17;
 }
 
 INITBLOCK {
@@ -49,7 +56,7 @@ void PutAssist(const char *s)
 bool IsCppSourceFile(const String& path)
 {
 	String ext = ToLower(GetFileExt(path));
-	return findarg(ext, ".cpp", ".cc", ".cxx") >= 0;
+	return findarg(ext, ".cpp", ".cc", ".cxx", ".icpp") >= 0;
 }
 
 bool IsSourceFile(const String& path)

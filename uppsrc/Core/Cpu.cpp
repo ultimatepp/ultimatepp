@@ -7,9 +7,19 @@
 #ifdef PLATFORM_FREEBSD
 #include <sys/vmmeter.h>
 #endif
+
 #ifdef PLATFORM_MACOS
 #include <mach/mach.h>
 #include <mach/vm_statistics.h>
+#endif
+
+#ifdef PLATFORM_POSIX
+#ifdef PLATFORM_BSD
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#else
+#include <sys/sysinfo.h>
+#endif
 #endif
 
 namespace Upp {
@@ -63,14 +73,16 @@ bool CpuSSE3()       { sCheckCPU(); return sHasSSE3; }
 bool CpuAVX()        { sCheckCPU(); return sHasAVX; }
 bool CpuHypervisor() { sCheckCPU(); return sHypervisor; }
 
-#ifdef PLATFORM_POSIX
-#ifdef PLATFORM_BSD
-#include <sys/param.h>
-#include <sys/sysctl.h>
+#endif
+
+#ifdef PLATFORM_ANDROID
+#include <cpu-features.h>
+int CPU_Cores()
+{
+	return android_getCpuCount();
+}
+
 #else
-#include <sys/sysinfo.h>
-#endif
-#endif
 
 int CPU_Cores()
 {
@@ -107,31 +119,6 @@ int CPU_Cores()
 	}
 	return n;
 }
-#else
-
-#ifdef PLATFORM_LINUX
-	#ifdef PLATFORM_ANDROID
-	#include <cpu-features.h>
-	
-	int CPU_Cores()
-	{
-		return android_getCpuCount();
-	}
-	
-	#else
-	#include <sys/sysinfo.h>
-
-	int CPU_Cores()
-	{
-		return minmax(get_nprocs(), 1, 256);
-	}
-	#endif
-#else
-int CPU_Cores()
-{
-	return 1;
-}
-#endif
 
 #endif
 

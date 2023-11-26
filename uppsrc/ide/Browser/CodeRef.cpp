@@ -15,10 +15,11 @@ static const char styles[] =
 	"[0 $$7,0#" ENDSTYLE ":end]"
 ;
 
+void IdeGotoCodeRef(const String& ref_id);
+
 void TopicEditor::JumpToDefinition()
 {
-	//TODO
-//	PostCallback(callback1(IdeGotoCodeRef, editor.GetFormatInfo().label));
+	PostCallback([=] { IdeGotoCodeRef(editor.GetFormatInfo().label); });
 }
 
 void TopicEditor::Label(String& label)
@@ -160,10 +161,6 @@ String NaturalDeQtf(const char *s) {
 	return String(r);
 }
 
-static int sSplitT(int c) {
-	return c == ';' || c == '<' || c == '>' || c == ',';
-}
-
 String TopicEditor::GetLang() const
 {
 	int q = topicpath.ReverseFind('@');
@@ -179,16 +176,6 @@ String DecoratedItem(const String& name, const String& pretty)
 {
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParsePretty(name, pretty);
-/* TODO
-	if(pari < 0) {
-		if(m.virt)
-			qtf << "[@B virtual] ";
-		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
-			qtf << "[@B static] ";
-	}
-*/
-//	Vector<String> qt = Split(m.qptype, sSplitT, false);
-//	Vector<String> tt = Split(m.qtype, sSplitT, false);
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
@@ -283,36 +270,6 @@ void TopicEditor::InsertNew(const AnnotationItem& m)
 	editor.PrevPara();
 	editor.PrevPara();
 }
-
-/* TODO: remove
-	void GoTo(const String& topic, const String& link, const String& create, bool before);
-
-void TopicEditor::GoTo(const String& _topic, const String& link, const String& create, bool before)
-{
-	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
-		editor.Select(editor.GetLength(), 0);
-		for(String cr : AnnotationCandidates(link))
-			if(editor.GotoLabel([&](const WString& id) { return cr == CleanupTppId(id.ToString()); }))
-				break;
-		if(!IsNull(create)) {
-			if(!before)
-				for(int pass = 0; pass < 2; pass++)
-					for(;;) {
-						int c = editor.GetCursor();
-						RichText::FormatInfo f = editor.GetFormatInfo();
-						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && pass)
-							break;
-						editor.NextPara();
-						if(editor.GetCursor() == c)
-							break;
-					}
-			InsertNew(create);
-		}
-	}
-}
-*/
-
-
 
 void TopicEditor::GoTo(const String& _topic, const String& link, const AnnotationItem& create, bool before)
 {

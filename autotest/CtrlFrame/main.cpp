@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-GUI_APP_MAIN
+CONSOLE_APP_MAIN
 {
 	NullFrameClass fr[50];
 	for(int q = 0; q < 10000; q++) {

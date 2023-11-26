@@ -19,10 +19,10 @@ private:
 	Rect          margin;
 	Color         background;
 	Color         textcolor;
+	Color         highlight_color = SYellow();
 	Zoom          zoom;
 	int           cx;
 	ScrollBar     sb;
-	Scroller      scroller;
 	RichText      text;
 	bool          sizetracking;
 	bool          vcenter;
@@ -32,6 +32,8 @@ private:
 	int           cursor, anchor;
 	bool          lazy;
 	bool          shrink_oversized_objects;
+	bool          icursor = true;
+	bool          copy_with_tabs = false;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -54,7 +56,9 @@ protected:
 public:
 	Event<const String&> WhenLink;
 	Event<int>           WhenMouseMove;
+	Gate<int, dword>     WhenMouseWheel;
 	Event<>              WhenLeftClick;
+	Gate<const String&>  WhenHighlight;
 
 	void            Clear();
 	void            Pick(RichText&& t);
@@ -62,6 +66,8 @@ public:
 	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1));
 	const RichText& Get() const                               { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const      { return AsQTF(text, cs); }
+	
+	int             GetCursor() const                         { return cursor; }
 
 	int             GetWidth() const                          { return text.GetWidth(); }
 	int             GetHeight(int cx) const                   { return text.GetHeight(Zoom(1, 1), cx); }
@@ -75,8 +81,8 @@ public:
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;
 
-	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false);
-	bool            GotoLabel(const String& lbl, bool highlight = false);
+	bool            GotoLabel(Gate<const WString&> match, bool dohighlight = false, bool match_last = false);
+	bool            GotoLabel(const String& lbl, bool highlight = false, bool match_last = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
 	
 	int             GetLength() const                         { return text.GetLength(); }
@@ -96,6 +102,7 @@ public:
 	RichTextView&   SetZoom(Zoom z);
 	RichTextView&   Background(Color _color);
 	RichTextView&   TextColor(Color _color);
+	RichTextView&   Highlight(Color _color);
 	RichTextView&   VCenter(bool b = true);
 	RichTextView&   NoVCenter()                               { return VCenter(false); }
 	RichTextView&   Margins(const Rect& m);
@@ -110,6 +117,9 @@ public:
 	RichTextView&   NoLazy()                                  { return Lazy(false); }
 	RichTextView&   ShrinkOversizedObjects(bool b = true)     { shrink_oversized_objects = b; Refresh(); return *this; }
 	RichTextView&   NoShrinkOversizedObjects()                { return ShrinkOversizedObjects(false); }
+	RichTextView&   ICursor(bool b = true)                    { icursor = b; return *this; }
+	RichTextView&   NoICursor()                               { return ICursor(false); }
+	RichTextView&   CopyWithTabs(bool b = true)               { copy_with_tabs = b; return *this; }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 
@@ -156,6 +166,23 @@ int Prompt(const char *title, const Image& icon, const char *qtf,
 		   int cx = 0);
 
 enum { BEEP_NONE, BEEP_INFORMATION, BEEP_EXCLAMATION, BEEP_QUESTION, BEEP_ERROR };
+
+int Prompt(Event<const String&> WhenLink, int beep,
+           const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
+           const char *button1, const char *button2, const char *button3,
+		   int cx,
+		   Image im1, Image im2, Image im3);
+
+int Prompt(Event<const String&> WhenLink, int beep,
+           const char *title, const Image& icon, const char *qtf, bool okcancel,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
+int Prompt(int beep, const char *title, const Image& icon, const char *qtf, bool okcancel,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
+int Prompt(int beep, const char *title, const Image& icon, const char *qtf,
+           const char *button1, const char *button2 = NULL, const char *button3 = NULL,
+		   int cx = 0);
 
 int PromptOpt(const char *opt_id, int beep, Event<const String&> WhenLink,
               const char *title, const Image& icon, const char *qtf, bool okcancel,
@@ -280,7 +307,7 @@ void RedirectPrompts(RedirectPromptFn r);
 
 class HelpWindow : public TopWindow {
 public:
-	virtual bool Key(dword key, int);
+	bool Key(dword key, int) override;
 
 private:
 	RichTextView   view;
@@ -300,6 +327,7 @@ private:
 	String         topic;
 	String         label;
 	String         current_link;
+	int            doing_goto = 0;
 
 	bool GoTo0(const String& link);
 	void Back();
@@ -325,7 +353,7 @@ public:
 	bool GoTo(const String& link);
 
 	void SetBar();
-	void Serialize(Stream& s);
+	void Serialize(Stream& s) override;
 
 	void ClearTree();
 	int  AddTree(int parent, const Image& img, const String& topic, const String& title);

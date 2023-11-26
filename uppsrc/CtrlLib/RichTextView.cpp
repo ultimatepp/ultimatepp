@@ -53,10 +53,11 @@ void  RichTextView::Paint(Draw& w)
 	}
 	pi.indexentry = Null;
 	pi.highlightpara = highlight;
+	pi.WhenHighlight = WhenHighlight;
+	pi.highlight = highlight_color;
 	pi.zoom = GetZoom();
 	pi.textcolor = textcolor;
 	int q = sb * pi.zoom;
-	scroller.Set(q);
 	w.Offset(0, -q);
 	SimplePageDraw pw(w);
 	pi.top = PageY(0, sb);
@@ -64,7 +65,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.usecache = true;
 	pi.sizetracking = sizetracking;
 	pi.shrink_oversized_objects = shrink_oversized_objects;
-	pi.darktheme = Grayscale(SColorPaper()) < 100;
+	pi.darktheme = IsDarkTheme();
 	Rect pg = GetPage();
 	pg.top = TopY();
 	text.Paint(pw, pg, pi);
@@ -89,7 +90,8 @@ bool  RichTextView::Key(dword key, int count)
 
 void  RichTextView::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	sb.Wheel(zdelta);
+	if(!WhenMouseWheel(zdelta, keyflags))
+		sb.Wheel(zdelta);
 }
 
 Image RichTextView::CursorImage(Point p, dword keyflags)
@@ -97,7 +99,7 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 	int pos = GetPointPos(p);
 	if(WhenLink && pos >= 0 && !IsNull(GetLink(pos, p)))
 		return Image::Hand();
-	if(HasCapture())
+	if(HasCapture() && icursor)
 		return Image::IBeam();
 	return Image::Arrow();
 }
@@ -105,9 +107,9 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 WString RichTextView::GetSelText() const
 {
 	if(anchor == cursor)
-		return text.GetPlainText();
+		return text.GetPlainText(true, copy_with_tabs);
 	else {
-		WString h = text.GetPlainText(false).Mid(sell, selh - sell);
+		WString h = text.GetPlainText(false, copy_with_tabs).Mid(sell, selh - sell);
 		WString r;
 		for(const wchar *s = ~h; s < h.End(); s++) {
 			if(*s == '\n')
@@ -233,8 +235,8 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 		RefreshSel();
 		SetFocus();
 		SetCapture();
+		WhenLeftClick();
 	}
-	WhenLeftClick();
 }
 
 void RichTextView::LeftDouble(Point p, dword keyflags)
@@ -314,29 +316,31 @@ void  RichTextView::SetData(const Value& v)
 
 void  RichTextView::Scroll()
 {
-	scroller.Scroll(*this, Rect(GetSize()).Deflated(margin), sb * GetZoom());
+	Refresh();
 }
 
-bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight)
+bool RichTextView::GotoLabel(Gate<const WString&> match, bool dohighlight, bool find_last)
 {
 	Vector<RichValPos> f = text.GetValPos(GetPage(), RichText::LABELS);
 	highlight = Null;
-	for(int i = 0; i < f.GetCount(); i++) {
+	bool ret = false;
+	for(int i = 0; i < f.GetCount(); i++)
 		if(match(f[i].data)) {
 			sb = f[i].py.y;
 			if(dohighlight)
 				highlight = f[i].pos;
 			Refresh();
-			return true;
+			if(!find_last)
+				return true;
+			ret = true;
 		}
-	}
-	return false;
+	return ret;
 }
 
-bool RichTextView::GotoLabel(const String& lbl, bool dohighlight)
+bool RichTextView::GotoLabel(const String& lbl, bool dohighlight, bool find_last)
 {
 	WString lw = lbl.ToWString();
-	return GotoLabel([&](const WString& data) { return data == lw; }, dohighlight);
+	return GotoLabel([&](const WString& data) { return data == lw; }, dohighlight, find_last);
 }
 
 void  RichTextView::Clear()
@@ -399,6 +403,13 @@ RichTextView& RichTextView::Background(Color c)
 RichTextView& RichTextView::TextColor(Color _color)
 {
 	textcolor = _color;
+	Refresh();
+	return *this;
+}
+
+RichTextView& RichTextView::Highlight(Color _color)
+{
+	highlight_color = _color;
 	Refresh();
 	return *this;
 }

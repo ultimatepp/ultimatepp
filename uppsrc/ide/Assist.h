@@ -26,7 +26,13 @@ struct Navigator {
 		NavigatorDisplay(const Vector<const NavItem *>& item) : item(item) {}
 	};
 
-	Ide             *theide;
+	struct ScopeDisplay : Display {
+		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+		virtual Size GetStdSize(const Value& q) const;
+	};
+
+	Ide             *theide = nullptr;
 
 	Array<NavItem>                             nitem;
 	Vector<const NavItem *>                    litem;
@@ -40,11 +46,13 @@ struct Navigator {
 	bool             sorting;
 	bool             dlgmode;
 
-	ArrayCtrl         list;
-	EditString        search;
+	ArrayCtrl                   scope;
+	ArrayCtrl                   list;
+	WithDropChoice<EditString>  search;
 
 	void TriggerSearch();
 	void Search();
+	void SetList();
 	void NaviSort();
 
 	void           Navigate();
@@ -60,6 +68,7 @@ struct Navigator {
 struct AssistEditor : CodeEditor, Navigator {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
+	virtual void ChildLostFocus();
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
@@ -77,6 +86,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	};
 	bool           navigator;
 	SplitterFrame  navigatorframe;
+	Splitter       scope_list;
 	StaticRect     navigatorpane;
 
 	Splitter       popup;
@@ -138,11 +148,21 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool      navigator_right = false;
 	bool      show_errors = true;
 	bool      show_errors_status = true;
+	bool      no_empty_autocomplete = false;
 
-	PPInfo    ppi;
-	String    master_source;
+	PPInfo             ppi;
+	String             master_source;
+	Vector<String>     master_chain; // current include -> source file
 
 	Vector<Diagnostic> errors;
+
+	VectorMap<String, MasterSourceCacheRecord> ms_cache;
+
+	int                ToUtf8x(int line, int pos);
+	int                FromUtf8x(int line, int pos);
+	
+	void               ToUtf8x(Point& p)                   { p.x = ToUtf8x(p.y, p.x); }
+	void               FromUtf8x(Point& p)                 { p.x = FromUtf8x(p.y, p.x); }
 
 	CurrentFileContext CurrentContext(int pos = INT_MAX);
 	void               SetAnnotations(const CppFileInfo& f);
@@ -153,6 +173,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool               DoIncludeTrick(Index<String>& visited, int level, StringBuffer& out, String path, const String& target_path, int& line_delta);
 	void               MakeIncludeTrick(CurrentFileContext& cfx);
 	void               ClearErrors();
+	void               TriggerSyncFile(int delay_ms);
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
@@ -169,6 +190,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           StartParamInfo(const AssistItem& m, int pos);
 
 	bool           AssistTip(CodeEditor::MouseTip& mt);
+	bool           DelayedTip(CodeEditor::MouseTip& mt);
+	void           SetQTF(CodeEditor::MouseTip& mt, const String& qtf);
 
 	void           Complete();
 	void           Abbr();
@@ -177,7 +200,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	AnnotationItem FindCurrentAnnotation();
 
 	void           DCopy();
-	String         FindCurrentNest();
+	String         FindCurrentNest(String *local_bases = nullptr);
 	void           Virtuals();
 	void           Events();
 
@@ -193,7 +216,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	AnnotationItem GetCodeAnnotation(const String& id);
 
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
+	String         BestTopic(const Vector<String>& tl);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
+	RichText       GetCodeTopic(const String& tl, const String& coderef);
 	void           SyncAnnotationPopup();
 	void           EditAnnotation(bool fastedit);
 	void           OpenTopic(String topic, String create, bool before);
@@ -206,6 +231,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
+	void           SerializeNavigatorWorkspace(Stream& s);
 	void           SyncNavigatorPlacement();
 
 	Event<int>     WhenFontScroll;

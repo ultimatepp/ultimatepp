@@ -45,12 +45,11 @@ even if there is shortage of worker threads.&]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Upp`:`:CoWork`:`:TrySchedule`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) stati
-c bool]_[* TrySchedule]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])
-&]
-[s5;:Upp`:`:CoWork`:`:TrySchedule`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) s
-tatic] [@(0.0.255) bool]_[* TrySchedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<
-[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:TrySchedule`(Function`&`&`): [@(0.0.255) static 
+bool]_[* TrySchedule]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:TrySchedule`(const Function`&`): [@(0.0.255) static] 
+[@(0.0.255) bool]_[* TrySchedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
 [s2;%% This is a low`-level function that attempts to schedule [%-*@3 fn] 
 to be executed by worker thread. Returns true if [%-*@3 fn] was 
 scheduled, false if not (in case there is no slot left in scheduling 
@@ -58,55 +57,35 @@ stacks). Note that this function only schedules the function,
 the exact time of execution is unknown.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:Schedule`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) static 
+[s5;:Upp`:`:CoWork`:`:Schedule`(Function`&`&`): [@(0.0.255) static 
 void]_[* Schedule]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:Schedule`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) stat
-ic] [@(0.0.255) void]_[* Schedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
+[s5;:Upp`:`:CoWork`:`:Schedule`(const Function`&`): [@(0.0.255) static] 
+[@(0.0.255) void]_[* Schedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
 oid]_()>`&_[*@3 fn])&]
 [s2;%% Similar to TrySchedule, but always schedules [%-*@3 fn] `- even 
 if it has to wait for slot to become available.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:Do`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* Do]([_^Upp`:`:Function^ F
-unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:Do`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) void]_[* Do](
-[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
-oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
-oid]_()>`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:operator`&`(Upp`:`:Function`<void`(`)`>`&`&`): [_^Upp`:`:CoWork^ C
-oWork][@(0.0.255) `&]_[* operator`&]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
-`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Do`(Function`&`&`): [@(0.0.255) void]_[* Do]([_^Upp`:`:Function^ Func
+tion]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Do`(const Function`&`): [@(0.0.255) void]_[* Do]([@(0.0.255) const]_[_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(const Function`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
+]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
+_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(Function`&`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
+]_[* operator`&]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
 [s2;%% Schedules [%-*@3 fn] to be executed. All changes to data done 
 before Do are visible in the scheduled code. The order of execution 
 or whether the code is execute in another or calling thread is 
 not specified. In certain situations (no scheduling slot available), 
 Do can perform scheduled job immediately in calling thread.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:Loop`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* Loop](
-[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:Loop`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) void]_[* L
-oop]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:operator`*`(const Upp`:`:Function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
-oWork][@(0.0.255) `&]_[* operator`*]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
-oid]_()>`&_[*@3 fn])&]
-[s5;:Upp`:`:CoWork`:`:operator`*`(Upp`:`:Function`<void`(`)`>`&`&`): [_^Upp`:`:CoWork^ C
-oWork][@(0.0.255) `&]_[* operator`*]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
-`&_[*@3 fn])&]
-[s2;%% Schedules [%-*@3 fn] to be run on all worker threads and on 
-calling thread. After the first thread returns from [%-*@3 fn], 
-all other scheduled [%-*@3 fn] jobs that has not started yet are 
-unscheduled. Waits for all started jobs to finish. The function 
-also sets internal index counter to zero in CoWork before starting 
-any worker thread. Worker thread should acquire job quantum in 
-internal loop `- internal CoWork index can be used for this purpose.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:CoWork`:`:Next`(`): [@(0.0.255) int]_[* Next]()&]
-[s2;%% Atomically increments internal index counter and returns its 
-previous value (thus the first value returned is 0). Supposed 
-to be used with Loop.&]
+[s5;:Upp`:`:CoWork`:`:GetScheduledCount`(`)const: [@(0.0.255) int] 
+[* GetScheduledCount]() [@(0.0.255) const]&]
+[s2;%% Returns a number of remaining unfinished jobs scheduled by 
+Do in this CoWork.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
@@ -182,7 +161,32 @@ is using calling thread to perform jobs).&]
 nt]_[*@3 n])&]
 [s2;%% Adjusts the thread pool size (default pool size is CPU`_Cores() 
 `+ 2).&]
-[s0; &]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:Loop`(Function`&`&`): [@(0.0.255) void]_[* Loop]([_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Loop`(const Function`&`): [@(0.0.255) void]_[* Loop]([@(0.0.255) cons
+t]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`*`(const Function`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
+]_[* operator`*]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
+_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`*`(Function`&`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
+]_[* operator`*]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s2;%% Schedules [%-*@3 fn] to be run on all worker threads and on 
+calling thread. After the first thread returns from [%-*@3 fn], 
+all other scheduled [%-*@3 fn] jobs that has not started yet are 
+unscheduled. Waits for all started jobs to finish. The function 
+also sets internal index counter to zero in CoWork before starting 
+any worker thread. Worker thread should acquire job quantum in 
+internal loop `- internal CoWork index can be used for this purpose. 
+[/ Deprecated `- use CoDo instead.]&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:Next`(`): [@(0.0.255) int]_[* Next]()&]
+[s2;%% Atomically increments internal index counter and returns its 
+previous value (thus the first value returned is 0). Supposed 
+to be used with Loop. [/ Deprecated `- use std`::atomic<int> variable 
+with CoDo instead.]&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkNX]]}}&]
 [s0; &]
@@ -196,21 +200,26 @@ depend on destructor to call it).&]
 [s3; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Loop parallelisation functions]]}}&]
 [s3; &]
-[s5;:Upp`:`:CoDo`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo]([_^Upp`:`:Function^ F
-unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
-[s2;%% Creates CoWork and calls Loop([%-*@3 fn]). This is the most 
-effective way to parallelise iteration.&]
+[s5;:Upp`:`:CoDo`(Function`&`&`): [@(0.0.255) void]_[* CoDo]([_^Upp`:`:Function^ Function]<
+[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s2;%% Schedules [%-*@3 fn] to be run on all worker threads and on 
+calling thread. After the first thread returns from [%-*@3 fn], 
+all other scheduled [%-*@3 fn] jobs that has not started yet are 
+unscheduled. Waits for all started jobs to finish. Worker thread 
+should acquire job quantum in internal loop `- usually std`::atomic 
+is used for this purpose. This is the most effective and flexible 
+way to parallelise iteration.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoDo`_ST`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo`_ST]([_^Upp`:`:Function^ F
-unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoDo`_ST`(Function`&`&`): [@(0.0.255) void]_[* CoDo`_ST]([_^Upp`:`:Function^ Fu
+nction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
 [s2;%% This function simply calls [%-*@3 fn]. It is diagnostics tool 
 `- it allows to change CoDo parallel iteration into serial one 
 by adding `"`_ST`" text.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoDo`(bool`,Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* CoDo]([@(0.0.255) b
-ool]_[*@3 co], [_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoDo`(bool`,Function`&`&`): [@(0.0.255) void]_[* CoDo]([@(0.0.255) bool]_[*@3 co],
+ [_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
 [s2;%% If [%-*@3 co] is true, calls CoDo([%-*@3 fn]), otherwise CoDo`_ST([%-*@3 fn]). 
 This allows to parametrize algorithms with respect to parallelization.&]
 [s3;%% &]

@@ -15,28 +15,32 @@ void HelpWindow::FinishText(RichText& text)
 
 bool HelpWindow::GoTo0(const String& link)
 {
-	if(IsNull(link) || current_link == link)
+	if(IsNull(link) || doing_goto)
 		return true;
-	Topic t = AcquireTopic(link);
-	SetBar();
-	if(!IsNull(t.text)) {
+	bool lnk = false;
+	if(current_link != link) {
+		Topic t = AcquireTopic(link);
+		SetBar();
+		if(IsNull(t.text))
+			return false;
 		label = t.label;
 		topic = t.link;
+		doing_goto++; // suppress recursive GoTo
 		if(~tree != topic)
 			tree.FindSetCursor(topic);
+		doing_goto--;
 		Title(ToUtf32(t.title));
 		RichText txt = ParseQTF(t.text);
 		FinishText(txt);
 		view.Pick(pick(txt), zoom);
 		current_link = link;
-		if(WhenMatchLabel) {
-			WString lw = label.ToWString();
-			return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true);
-		}
-		else
-			return view.GotoLabel(label, true);
+		lnk = true;
 	}
-	return false;
+	if(WhenMatchLabel) {
+		WString lw = label.ToWString();
+		return view.GotoLabel([=](const WString& data) { return WhenMatchLabel(data, lw); }, true, true) || lnk;
+	}
+	return view.GotoLabel(label, true, true) || lnk;
 }
 
 HelpWindow::Pos HelpWindow::GetPos()
@@ -49,13 +53,14 @@ HelpWindow::Pos HelpWindow::GetPos()
 
 bool HelpWindow::GoTo(const String& link)
 {
-	if(IsNull(link) || current_link == link)
+	if(IsNull(link) || doing_goto)
 		return false;
 	Pos p = GetPos();
 	if(GoTo0(link)) {
-		if(!IsNull(p.link))
+		if(!IsNull(p.link) && p.link != link) {
 			back.Add(p);
-		forward.Clear();
+			forward.Clear();
+		}
 		SetBar();
 		return true;
 	}
@@ -69,7 +74,8 @@ bool HelpWindow::GoTo(const String& link)
 void HelpWindow::Back()
 {
 	Pos p = GetPos();
-	if(back.GetCount() && GoTo0(back.Top().link)) {
+	if(back.GetCount()) {
+		GoTo0(back.Top().link);
 		if(back.GetCount()) {
 			view.SetSb(back.Top().scy);
 			back.Drop();
@@ -83,7 +89,8 @@ void HelpWindow::Back()
 void HelpWindow::Forward()
 {
 	Pos p = GetPos();
-	if(forward.GetCount() && GoTo0(forward.Top().link)) {
+	if(forward.GetCount()) {
+		GoTo0(forward.Top().link);
 		if(forward.GetCount()) {
 			view.SetSb(forward.Top().scy);
 			forward.Drop();
@@ -100,6 +107,7 @@ void HelpWindow::SetZoom()
 	current_link = Null;
 	GoTo0(topic);
 	Refresh();
+	SetBar();
 }
 
 void HelpWindow::FontSize()
@@ -128,7 +136,7 @@ void HelpWindow::Tools(Bar& bar)
 	bar.Add(forward.GetCount(), t_("Go Forward"), CtrlImg::go_forward(), THISBACK(Forward))
 	   .Key(K_ALT_RIGHT);
 	bar.Gap();
-	bar.Add(t_("Font size"), CtrlImg::font_size(), THISBACK(FontSize));
+	bar.Add(t_("Font size"), MakeZoomIcon(zoom.m / 160.0), THISBACK(FontSize));
 	bar.Gap();
 #ifndef PLATFORM_PDA
 	bar.Add(t_("Print"), CtrlImg::print(), THISBACK(Print));
@@ -329,6 +337,14 @@ HelpWindow::HelpWindow()
 	SetBar();
 	tree.BackPaint();
 	view.BackPaintHint();
+	view.WhenMouseWheel = [=] (int zdelta, dword keyflags) {
+		if(keyflags & K_CTRL) {
+			zoom.m = clamp((zoom.m / 5 + sgn(zdelta)) * 5, 60, 600);
+			SetZoom();
+			return true;
+		}
+		return false;
+	};
 }
 
 }

@@ -1,6 +1,6 @@
 #include "ide.h"
 
-bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f)
+bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInfo& f)
 {
 	if(!cache.init) {
 		VectorMap<String, String> bm = GetMethodVars(method);
@@ -184,7 +184,7 @@ bool Ide::Next(ArrayCtrl& a, int d)
 			c += d;
 			if(c >= 0 && c < a.GetCount()) {
 				Value v = a.Get(c, "INFO");
-				if(v.Is<ErrorInfo>() && !IsNull(v.To<ErrorInfo>().file)) {
+				if(v.Is<ListLineInfo>() && !IsNull(v.To<ListLineInfo>().file)) {
 					a.SetCursor(c);
 					return true;
 				}
@@ -238,7 +238,7 @@ void Ide::SetErrorEditor()
 	Vector<String> errorfiles;
 	FindLineErrorCache cache;
 	for(int i = 0; i < console.GetLineCount(); i++) {
-		ErrorInfo f;
+		ListLineInfo f;
 		if(FindLineError(console.GetUtf8Line(i), cache, f)) {
 			String file = NormalizePath(f.file);
 		#ifdef PLATFORM_WIN32
@@ -253,15 +253,35 @@ void Ide::SetErrorEditor()
 	SetErrorFiles(errorfiles);
 }
 
-void Ide::GoToError(const ErrorInfo& f)
+void Ide::GoToError(const ListLineInfo& f, bool error)
 {
 	if(IsNull(f.file))
 		return;
 	String file = NormalizePath(f.file);
 	DoEditAsText(file);
+	if(designer)
+		FlushFile();
 	EditFile(file);
 	int lp = max(f.linepos - 1, 0);
-	int pos = editor.GetPos(editor.GetLineNo(f.lineno - 1), lp);
+	int l = f.lineno - 1;
+	int pos;
+	if(error)
+		l = editor.GetLineNo(l);
+	else {
+		String ln = TrimLeft(f.line);
+		if(ln.GetCount() && l >= 0 && l < editor.GetLineCount())
+			for(int i = 0; i < 200; i++) {
+				if(l - i >= 0 && TrimLeft(editor.GetUtf8Line(l - i)) == ln) {
+					l = l - i;
+					break;
+				}
+				if(l + i < editor.GetLineCount() && TrimLeft(editor.GetUtf8Line(l + i)) == ln) {
+					l = l + i;
+					break;
+				}
+			}
+	}
+	pos = editor.GetPos(l, lp);
 	editor.SetCursor(pos);
 	if(*f.message == '\1') {
 		Vector<String> h = Split(~f.message + 1, '\1', false);
@@ -273,18 +293,18 @@ void Ide::GoToError(const ErrorInfo& f)
 	Sync();
 }
 
-void Ide::GoToError(ArrayCtrl& a)
+void Ide::GoToError(ArrayCtrl& a, bool error)
 {
 	Value v = a.Get("INFO");
-	if(v.Is<ErrorInfo>())
-		GoToError(ValueTo<ErrorInfo>(v));
+	if(v.Is<ListLineInfo>())
+		GoToError(ValueTo<ListLineInfo>(v), error);
 }
 
 bool Ide::FindLineError(int l) {
-	ErrorInfo f;
+	ListLineInfo f;
 	FindLineErrorCache cache;
 	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
-		GoToError(f);
+		GoToError(f, true);
 		console.SetSelection(console.GetPos64(l), console.GetPos64(l + 1));
 		if(btabs.GetCursor() != BCONSOLE && !BottomIsFindInFiles())
 			ShowConsole();
@@ -318,7 +338,7 @@ void Ide::PutLinkingEnd(bool ok)
 		error.Add(Null, Null, AttrText("Linking has failed").Bold()
 			                  .NormalPaper(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color));
 		for(int i = 0; i < linking_line.GetCount(); i++) {
-			ErrorInfo f;
+			ListLineInfo f;
 			if(!FindLineError(linking_line[i], error_cache, f)) {
 				f.file = Null;
 				f.lineno = Null;
@@ -468,7 +488,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		linking_line.Add(line);
 		return;
 	}
-	ErrorInfo f;
+	ListLineInfo f;
 	if(FindLineError(line, error_cache, f)) {
 		if(assist)
 			f.kind = 1;
@@ -497,7 +517,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 	}
 	else {
 		int q = line.FindAfter(" from "); // GCC style "included from"
-		ErrorInfo fi;
+		ListLineInfo fi;
 		if(q >= 0 && FindLineError(line.Mid(q), error_cache, fi)) {
 			fi.message = line;
 			prenotes.Add(RawToValue(fi));
@@ -518,7 +538,7 @@ void Ide::ConsoleLine(const String& line, bool assist)
 				iserrorpos = false;
 		int i = n.GetCount() - 1;
 		if(iserrorpos && i >= 0) {
-			ErrorInfo f0 = ValueTo<ErrorInfo>(n[i]);
+			ListLineInfo f0 = ValueTo<ListLineInfo>(n[i]);
 			f0.error_pos = f.message;
 			n.Set(i, RawToValue(f0));
 		}
@@ -563,10 +583,10 @@ void Ide::ConsoleRunEnd()
 	prenotes.Clear();
 }
 
-void Ide::ShowFound()
+void Ide::ShowFound(ArrayCtrl& list)
 {
-	if(FFound().IsCursor())
-		GoToError(FFound());
+	if(list.IsCursor())
+		GoToError(list, false);
 }
 
 String Ide::GetErrorsText(bool all, bool src)
@@ -607,7 +627,7 @@ void Ide::SelError()
 		return;
 	if(error.IsCursor()) {
 		Value v = error.Get("NOTES");
-		if(v != "0") {
+		if(v != "0") { // "0" - expanded note
 			int sc = error.GetScroll();
 			removing_notes = true;
 			for(int i = error.GetCount() - 1; i >= 0; i--)
@@ -619,85 +639,112 @@ void Ide::SelError()
 			ValueArray n = v;
 			int ii = error.GetCursor();
 			for(int i = 0; i < n.GetCount(); i++) {
-				const ErrorInfo& f = ValueTo<ErrorInfo>(n[i]);
-				error.Insert(++ii);
-				error.Set(ii, 0, f.file);
-				error.Set(ii, 1, f.lineno);
-				int linecy;
-				if(f.error_pos.GetCount()) {
-					error.Set(ii, 2, FormatErrorLineEP(f.message, f.error_pos, linecy));
-					error.SetDisplay(ii, 2, Single<ElepDisplay>());
+				const ListLineInfo& f = ValueTo<ListLineInfo>(n[i]);
+				bool ok = true;
+				for(const char *s = f.message; *s; s++)
+					if((byte)*s >= 128) { // clang UTF-8 is messy, just ignore those notes
+						ok = false;
+						break;
+					}
+				if(ok) {
+					error.Insert(++ii);
+					error.Set(ii, 0, f.file);
+					error.Set(ii, 1, f.lineno);
+					int linecy;
+					if(f.error_pos.GetCount()) {
+						error.Set(ii, 2, FormatErrorLineEP(f.message, f.error_pos, linecy));
+						error.SetDisplay(ii, 2, Single<ElepDisplay>());
+					}
+					else
+						error.Set(ii, 2, FormatErrorLine(f.message, linecy));
+					error.Set(ii, "INFO", n[i]);
+					error.Set(ii, "NOTES", "0");
+					error.SetLineCy(ii, linecy);
 				}
-				else
-					error.Set(ii, 2, FormatErrorLine(f.message, linecy));
-				error.Set(ii, "INFO", n[i]);
-				error.Set(ii, "NOTES", "0");
-				error.SetLineCy(ii, linecy);
 			}
 		}
-		GoToError(error);
+		GoToError(error, true);
 	}
 }
 
 void Ide::ShowError()
 {
 	if(error.IsCursor())
-		GoToError(error);
+		GoToError(error, true);
+}
+
+Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const
+{
+	Vector<String> h = Split(s + 1, '\1', false);
+	if(h.GetCount() < 4)
+		return Size(1, 1);
+	One<EditorSyntax> es = EditorSyntax::Create(h[0]);
+	es->IgnoreErrors();
+	String txt = h[3];
+	if(txt.GetCount() > 500)
+		txt.Trim(500);
+	WString ln = txt.ToWString();
+	Vector<LineEdit::Highlight> hln;
+	hln.SetCount(ln.GetCount() + 1);
+	for(int i = 0; i < ln.GetCount(); i++) {
+		LineEdit::Highlight& h = hln[i];
+		h.paper = paper;
+		h.ink = SColorText();
+		h.chr = ln[i];
+		h.font = StdFont();
+	}
+	HighlightOutput hl(hln);
+	es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
+	int fcy = GetStdFontCy();
+	int y = r.top + (r.GetHeight() - fcy) / 2;
+	w.DrawRect(r, paper);
+	int sl = Utf32Len(txt, atoi(h[1]));
+	int sh = Utf32Len(txt + sl, atoi(h[2])) + sl;
+	int x;
+	for(int text = 0; text < 2; text++) { // first pass draws background
+		x = r.left;
+		for(int i = 0; i < hln.GetCount(); i++) {
+			Font fnt = StdFont();
+			int a = fnt.GetAscent();
+			LineEdit::Highlight& h = hln[i];
+			fnt.Bold(h.font.IsBold());
+			fnt.Italic(h.font.IsItalic());
+			fnt.Underline(h.font.IsUnderline());
+			a -= fnt.GetAscent();
+			int cw = fnt[h.chr];
+			if(h.chr == '\t')
+				cw = 4 * fnt[' '];
+			Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
+			Color hink = h.ink;
+			if(IsDarkMismatch()) {
+				hpaper = paper;
+				hink = ink;
+			}
+			if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
+				w.DrawRect(x, y, cw, fcy, hpaper);
+			if(h.chr != '\t' && text)
+				w.DrawText(x, y + a, &h.chr, fnt, hink, 1);
+			x += cw;
+		}
+	}
+	return Size(x, fcy);
+}
+
+Size Ide::FoundDisplay::GetStdSize(const Value& q) const
+{
+	String s = q;
+	if(*s == '\1') {
+		NilDraw nil;
+		return DrawHl(nil, s, RectC(0, 0, INT_MAX, INT_MAX), Black(), White(), 0);
+	}
+	return StdDisplay().GetStdSize(q);
 }
 
 void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	String s = q;
-	if(*s == '\1') {
-		Vector<String> h = Split(~s + 1, '\1', false);
-		if(h.GetCount() < 4)
-			return;
-		One<EditorSyntax> es = EditorSyntax::Create(h[0]);
-		es->IgnoreErrors();
-		WString ln = h[3].ToWString();
-		Vector<LineEdit::Highlight> hln;
-		hln.SetCount(ln.GetCount() + 1);
-		for(int i = 0; i < ln.GetCount(); i++) {
-			LineEdit::Highlight& h = hln[i];
-			h.paper = paper;
-			h.ink = SColorText();
-			h.chr = ln[i];
-			h.font = StdFont();
-		}
-		HighlightOutput hl(hln);
-		es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
-		int fcy = GetStdFontCy();
-		int y = r.top + (r.GetHeight() - fcy) / 2;
-		w.DrawRect(r, paper);
-		int sl = Utf32Len(~h[3], atoi(h[1]));
-		int sh = Utf32Len(~h[3] + sl, atoi(h[2])) + sl;
-		for(int text = 0; text < 2; text++) {
-			int x = r.left;
-			for(int i = 0; i < hln.GetCount(); i++) {
-				Font fnt = StdFont();
-				int a = fnt.GetAscent();
-				LineEdit::Highlight& h = hln[i];
-				fnt.Bold(h.font.IsBold());
-				fnt.Italic(h.font.IsItalic());
-				fnt.Underline(h.font.IsUnderline());
-				a -= fnt.GetAscent();
-				int cw = fnt[h.chr];
-				if(h.chr == '\t')
-					cw = 4 * fnt[' '];
-				Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
-				Color hink = h.ink;
-				if(IsDarkMismatch()) {
-					hpaper = paper;
-					hink = ink;
-				}
-				if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
-					w.DrawRect(x, y, cw, fcy, hpaper);
-				if(h.chr != '\t' && text)
-					w.DrawText(x, y + a, &h.chr, fnt, hink, 1);
-				x += cw;
-			}
-		}
-	}
+	if(*s == '\1')
+		DrawHl(w, s, r, ink, paper, style);
 	else
 		StdDisplay().Paint(w, r, q, ink, paper, style);
 }

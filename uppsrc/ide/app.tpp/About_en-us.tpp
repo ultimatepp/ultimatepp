@@ -1,7 +1,7 @@
-topic "Copyright © 1999-2022 U++ team";
+topic "Copyright © 1999-2023 U++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*+117 Copyright © 1998, 2022 U`+`+ team]&]
+[s0; [*+117 Copyright © 1998, 2023 U`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Iñaki Zabala,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
 ][*+117 Massimo Del Fedele, İsmail Yılmaz, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
@@ -22,7 +22,7 @@ De prins, Jeff Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.
 akub Pawlewicz][* , Navin Vidhani, Steffen Brummer, Luis Rodriguez, 
 Rakibul Islam, Nahar Pengatteeri, Ralph Klautke, Victor Picheev, 
 Navadvipa Chandra das, Radek Malčic, Amrein`-Marie Christophe, 
-Abdelghani Omari, Clément Hamon]&]
+Abdelghani Omari, Clément Hamon, Tomas Lindquist]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 

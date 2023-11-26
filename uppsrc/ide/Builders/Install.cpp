@@ -7,10 +7,10 @@
 const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
-COMMON_OPTIONS = "-mmacosx-version-min=10.13";
+COMMON_OPTIONS = "$COMMON$";
 COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
-COMMON_LINK = "";
+COMMON_LINK = "$COMMON$";
 COMMON_FLAGS = "";
 DEBUG_INFO = "2";
 DEBUG_BLITZ = "1";
@@ -27,8 +27,8 @@ DEBUGGER = "gdb";
 ALLOW_PRECOMPILED_HEADERS = "0";
 DISABLE_BLITZ = "0";
 PATH = "";
-INCLUDE = "/opt/local/include;/usr/include";
-LIB = "/opt/local/lib;/usr/lib";
+INCLUDE = "$INCLUDE$";
+LIB = "$LIB$";
 LINKMODE_LOCK = "0";)";
 
 #elif PLATFORM_SOLARIS
@@ -148,16 +148,36 @@ LINKMODE_LOCK = "0";)";
 void CreateBuildMethods()
 {
 #ifdef PLATFORM_COCOA
-	String bm = ConfigFile("CLANG.bm");
-	if(IsNull(LoadFile(bm)))
-		SaveFile(bm, clang_bm);
+	String bm_path = ConfigFile("CLANG.bm");
+	if(IsNull(LoadFile(bm_path))) {
+		String bm = clang_bm;
+		
+		auto Path = [&](const char *var, const char *path) {
+			String h;
+			for(String s : Split(path, ';'))
+				if(DirectoryExists(s))
+					MergeWith(h, ";", s);
+			bm.Replace(var, h);
+		};
+		
+		Path("$INCLUDE$", "/opt/local/include;/usr/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
+		Path("$LIB$", "/opt/local/lib;/usr/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
+		
+		String common;
+	#ifdef CPU_ARM
+		common = "-arch arm64";
+	#endif
+		bm.Replace("$COMMON$", common);
+
+		SaveFile(bm_path, bm);
+	}
 #else
 	bool openbsd = ToLower(Sys("uname")).Find("openbsd") >= 0;
 	auto Fix = [=](const char *s) {
 		String r = s;
 		if(openbsd) {
-			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/include\";");
-			r.Replace("LIB = \"\";", "LIB = \"/usr/local/lib\";");
+			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/opt/openssl/include\";");
+			r.Replace("LIB = \"\";", "LIB = \"/usr/local/opt/openssl/lib\";");
 		}
 		return r;
 	};

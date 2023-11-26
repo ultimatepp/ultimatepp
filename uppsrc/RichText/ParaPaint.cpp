@@ -180,13 +180,13 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		pw.tracer->Paragraph(rc.page, h, *this);
 	}
 	
-	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
+	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len || pi.WhenHighlight(format.label);
 	int hy = rc.py.y - format.before - format.ruler;
 	int phy = rc.py.page;
 	if(format.ruler && hy >= 0 && hy + format.ruler < rc.page.bottom)
 		DrawRuler(pw.Page(phy), z * rc.page.left + z * format.lm, z * hy,
 		                        z * rc.page.right - z * rc.page.left - z * format.rm - z * format.lm,
-			                    max(1, z * format.ruler), format.rulerink, format.rulerstyle);
+			                    max(1, z * format.ruler), pi.ResolveInk(format.rulerink), format.rulerstyle);
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= rc.py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : rc.page.top);
@@ -194,7 +194,6 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 			pi.DrawSelection(pw.Page(p), z * rc.page.left, top, z * rc.page.right - z * rc.page.left, bottom - top);
 		}
 	opy = rc.py;
-	int oi = 0;
 	int x = 0;
 	int y0 = 0;
 	int lineascent = 0;
@@ -318,20 +317,25 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				r.bottom = z * r.bottom;
 				Rect r1 = r;
 				r1.Deflate(max(1, q));
+				Color bullet_ink = format.ink;
+				if(format.bullet) {
+					if(part.GetCount())
+						bullet_ink = part[0].format.ink;
+				}
 				switch(format.bullet) {
 				case BULLET_BOX:
-					draw.DrawRect(r, pi.ResolveInk(format.ink));
+					draw.DrawRect(r, pi.ResolveInk(bullet_ink));
 					break;
 				case BULLET_BOXWHITE:
-					draw.DrawRect(r, pi.ResolveInk(format.ink));
+					draw.DrawRect(r, pi.ResolveInk(bullet_ink));
 					draw.DrawRect(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUNDWHITE:
-					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
+					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
 					draw.DrawEllipse(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUND:
-					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
+					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
 					break;
 				default:
 					String s = n.AsText(format);
@@ -375,8 +379,6 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 		}
 		else
 			while(i < ilim) {
-				if(hg->object)
-					oi++;
 				i++;
 				hg++;
 			}
@@ -592,7 +594,7 @@ void  RichPara::GatherIndexes(Vector<RichValPos>& info, RichContext rc, int pos)
 
 void FontHeightRound(Font& fnt, Zoom z)
 {
-	fnt.Height((fnt.GetHeight() * z.m + (z.d >> 1)) / z.d);
+	fnt.Height(max((fnt.GetHeight() * z.m + (z.d >> 1)) / z.d, 1)); // do not allow to fall to zero (that is default font height)
 }
 
 void operator*=(RichPara::Format& format, Zoom z)

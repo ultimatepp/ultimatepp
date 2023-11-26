@@ -1403,7 +1403,8 @@ bool ArrayCtrl::AcceptRow(bool endedit) {
 }
 
 bool ArrayCtrl::Accept() {
-	return IsCursor() ? AcceptRow() : true;
+	return IsCursor() ? AcceptRow() :
+	       accept_edits ? Ctrl::Accept() : true;
 }
 
 bool ArrayCtrl::KillCursor0() {
@@ -2798,6 +2799,7 @@ void ArrayCtrl::Reset() {
 	min_visible_line = 0;
 	max_visible_line = INT_MAX;
 	ctrl_low = ctrl_high = 0;
+	accept_edits = false;
 }
 
 void ArrayCtrl::CancelMode()

@@ -9,6 +9,7 @@ public:
 		ATTR_ALIGN,
 		ATTR_IMAGE,
 		ATTR_IMAGE_SPC,
+		ATTR_VALIGN,
 		ATTR_LAST,
 	};
 
@@ -26,10 +27,19 @@ public:
 	StaticText& AlignLeft()                             { return SetAlign(ALIGN_LEFT); }
 	StaticText& AlignCenter()                           { return SetAlign(ALIGN_CENTER); }
 	StaticText& AlignRight()                            { return SetAlign(ALIGN_RIGHT); }
+	StaticText& SetVAlign(int align);
+	StaticText& AlignTop()                              { return SetVAlign(ALIGN_TOP); }
+	StaticText& AlignVCenter()                          { return SetVAlign(ALIGN_CENTER); }
+	StaticText& AlignBottom()                           { return SetVAlign(ALIGN_BOTTOM); }
 	StaticText& SetImage(const Image& img, int spc = 0);
 	StaticText& SetText(const char *text);
 	
 	String      GetText() const                         { return text; }
+	Font        GetFont() const                         { return Nvl(GetFontAttr(ATTR_FONT), StdFont()); }
+	Color       GetInk() const                          { return Nvl(GetColorAttr(ATTR_INK), SColorText()); }
+	int         GetAlign() const                        { return Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT); }
+	int         GetVAlign() const                       { return Nvl(GetIntAttr(ATTR_VALIGN), ALIGN_CENTER); }
+	Image       GetImage() const                        { return GetAttr<Image>(ATTR_IMAGE); }
 
 	StaticText& operator=(const char *s)                { SetText(s); return *this; }
 
@@ -125,7 +135,7 @@ protected:
 	Image   img;
 
 public:
-	ImageCtrl&   SetImage(const Image& _img)          { img = _img; Refresh(); return *this; }
+	ImageCtrl&   SetImage(const Image& _img);
 
 	ImageCtrl()                                       { Transparent(); NoWantFocus(); }
 };

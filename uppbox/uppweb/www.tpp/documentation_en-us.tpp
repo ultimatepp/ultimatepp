@@ -51,9 +51,8 @@ Assemblies and Nests]&]
 Packages and Assemblies]&]
 [s0;l160; [^topic`:`/`/ide`/app`/CommandLineArugments`_en`-us^ Command 
 line arguments]&]
+[s0;l160; [^topic`:`/`/ide`/app`/CodeFormatting`_en`-us^ Code Formatting]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
-[s0;l160; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
-`- parser directives]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Blitz`_en`-us^ BLITZ]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
@@ -102,6 +101,9 @@ with TheIDE] `- the introduction to the concepts of TheIDE.&]
 control.&]
 [s0;l160; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image Tutorial] 
 `- check out the mechanism behind the image manipulation.&]
+[s0;l160; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us^ Network 
+Tutorial] `- learn how to use U`+`+ core components for network 
+application creation.&]
 [s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial] 
 `- introduction to using databases within U`+`+ framework.&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]

@@ -18,6 +18,7 @@ file
 	Tunnel.cpp,
 	"Core MT examples" readonly separator,
 	SFtpMT.cpp,
+	SFtpMT2.cpp,
 	ExecMT.cpp,
 	"Misc. examples" readonly separator,
 	PickSemantics.cpp,

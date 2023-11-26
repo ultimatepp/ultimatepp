@@ -4,10 +4,13 @@
 
 void Ide::GotoPos(Point pos)
 {
+	int sc = editor.GetScrollPos().y;
 	editor.SetCursor(editor.GetPos64(pos.y, pos.x));
-	editor.TopCursor(4);
+	if(sc != editor.GetScrollPos().y)
+		editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
+	editor.SyncCursor();
 }
 
 void Ide::GotoPos(String path, int line)
@@ -180,11 +183,14 @@ void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileSta
 void ShowQTF(const String& qtf, const char *title)
 {
 	RichText txt = ParseQTF(qtf);
-	ClearClipboard();
-	AppendClipboard(ParseQTF(qtf));
 
 	WithStatLayout<TopWindow> dlg;
 	CtrlLayoutOK(dlg, title);
+	dlg.copy << [=] {
+		ClearClipboard();
+		AppendClipboard(ParseQTF(qtf));
+		PromptOK("The whole content of the text view has been successfully copied to cliboard!");
+	};
 	dlg.stat = qtf;
 	dlg.Sizeable().Zoomable();
 	dlg.Run();
@@ -383,11 +389,6 @@ void Ide::UnComment()
 	AlterText(sUncomment);
 }
 
-void Ide::ReformatComment()
-{
-	editor.ReformatComment();
-}
-
 void Ide::Times()
 {
 	WithStatisticsLayout<TopWindow> statdlg;
@@ -448,6 +449,7 @@ void Ide::SyncRepoDir(const String& working)
 
 void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 {
+	if(df->GetLMid()) return;
 	EditFile(df->GetLeftFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
@@ -455,6 +457,7 @@ void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 
 void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 {
+	if(df->GetRMid()) return;
 	EditFile(df->GetRightFile());
 	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
@@ -463,40 +466,31 @@ void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 void Ide::DoDirDiff()
 {
 	Index<String> dir;
-	Vector<String> d = GetUppDirs();
-	for(int i = 0; i < d.GetCount(); i++)
-		dir.FindAdd(d[i]);
-	FindFile ff(ConfigFile("*.bm"));
-	while(ff) {
-		VectorMap<String, String> var;
-		LoadVarFile(ff.GetPath(), var);
-		Vector<String> p = Split(var.Get("UPP", String()), ';');
-		for(int i = 0; i < p.GetCount(); i++)
-			dir.FindAdd(p[i]);
-		ff.Next();
-	}
+
 	String n = GetFileFolder(editfile);
 	if(n.GetCount())
 		dir.FindAdd(n);
-	SortIndex(dir);
-	
-	static DirDiffDlg dlg;
+	for(String d : GetUppDirs())
+		dir.FindAdd(d);
+
+	ForAllNests([&](const Vector<String>& nests) {
+		for(String d : nests) {
+			dir.FindAdd(d);
+		}
+	});
+
+	DirRepoDiffDlg& dlg = CreateNewWindow<DirRepoDiffDlg>();
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	dlg.diff.WhenRightLine = THISBACK1(GotoDirDiffRight, &dlg);
-	for(int i = 0; i < dir.GetCount(); i++) {
-		dlg.Dir1AddList(dir[i]);
-		dlg.Dir2AddList(dir[i]);
+	for(String d : dir) {
+		dlg.Dir1AddList(d);
+		dlg.Dir2AddList(d);
 	}
-	if(d.GetCount())
-		dlg.Dir1(d[0]);
-	if(!dlg.IsOpen()) {
-		dlg.SetFont(veditorfont);
-		dlg.Maximize();
-		dlg.Title("Compare directories");
-		dlg.OpenMain();
-	}
-	else
-		dlg.SetFocus();
+	if(dir.GetCount() > 1)
+		dlg.Dir1(dir[1]);
+	dlg.SetFont(veditorfont);
+	dlg.Maximize();
+	dlg.OpenMain();
 }
 
 void Ide::DoPatchDiff()
@@ -568,23 +562,66 @@ void Ide::RemoveDs()
 	editor.GotoLine(l);
 }
 
+void Ide::CopyRich()
+{
+	String qtf = "[C0 ";
+	for(WString l0 : Split(editor.GetSelectionW(), '\n', false)) {
+		WString ln;
+		int tabsize = editor.GetTabSize();
+		for(wchar c : l0)
+			if(c == '\t')
+				ln.Cat(' ', tabsize - ln.GetLength() % tabsize);
+			else
+			if(c >= ' ')
+				ln.Cat(c);
+
+		if(ln.GetCount() > 20000)
+			ln.Trim(20000);
+
+		Vector<LineEdit::Highlight> hln;
+		hln.SetCount(ln.GetCount() + 1);
+		for(int i = 0; i < hln.GetCount(); i++) {
+			LineEdit::Highlight& h = hln[i];
+			h.paper = White();
+			h.ink = editor.GetColor(TextCtrl::INK_NORMAL);
+			h.chr = ln[i];
+			h.font = StdFont();
+		}
+
+		HighlightLine(editfile, hln, ln);
+
+		int ii = 0;
+		while(ii < hln.GetCount() - 1) {
+			Color ink = hln[ii].ink;
+			Font font = hln[ii].font;
+
+			int n = 1;
+			while(ii + n < hln.GetCount() - 1 && hln[ii + n].ink == hln[ii].ink && hln[ii + n].font == font)
+				n++;
+			
+			qtf << "[@(" << ink.GetR() << "." << ink.GetG() << "." << ink.GetB() << ")";
+			if(font.IsBold())
+				qtf << "*";
+			if(font.IsItalic())
+				qtf << "/";
+			if(font.IsUnderline())
+				qtf << "_";
+			qtf << " \1" << ln.Mid(ii, n).ToString() << "\1]";
+			ii += n;
+		}
+		qtf << "&\n";
+	}
+	
+	ClearClipboard();
+	AppendClipboard(ParseQTF(qtf));
+}
+
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 {
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.GetLauchSDKManagerCmd()));
+	PromptOK("SDK managment is not yet implemented in TheIDE. Use Android Studio for this purpose instead.");
 }
 
 void Ide::LaunchAndroidAVDManager(const AndroidSDK& androidSDK)
 {
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.GetLauchAVDManagerCmd()));
-}
-
-void Ide::LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK)
-{
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	IGNORE_RESULT(host.Execute(androidSDK.MonitorPath()));
+	PromptOK("AVD managment is not yet implemented in TheIDE. Use Android Studio for this purpose instead.");
 }

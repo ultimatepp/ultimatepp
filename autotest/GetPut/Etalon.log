@@ -1,0 +1,13 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\GetPut.exe 02.08.2023 11:27:37, user: cxl
+
+data = {0: zero, 1: one}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = one
+data = {0: zero, UNLINKED 1: one}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = ONE
+data = {0: zero, 1: I}
+data.Get("0", "ZERO") = zero
+data.Get("1", "ONE") = I
+vm = {getadd: 1, getput: 2}
+vm = {getput2: 3, getput: 2}

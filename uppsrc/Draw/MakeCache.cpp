@@ -60,16 +60,6 @@ void SysImageReleased(const Image& img)
 	}
 }
 
-void SetMakeImageCacheMax(int m)
-{
-	SetupValueCache(m, 0, 0.125);
-}
-
-void  SetMakeImageCacheSize(int m)
-{
-	SetMakeImageCacheMax(m);
-}
-
 void SweepMkImageCache()
 {
 	AdjustValueCache();

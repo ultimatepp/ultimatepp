@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-double ipow10_table[601];
-
 unsigned stou(const char *s, void *endptr, unsigned base)
 {
 	ASSERT(base >= 2 && base <= 36);
@@ -133,6 +131,13 @@ int ScanInt(const char *ptr)
 	return ScanInt<char, byte, uint32, int, 10>(x, ptr, overflow) && !overflow ? x : Null;
 }
 
+int Atoi(const char *ptr)
+{
+	int x;
+	bool overflow = false;
+	return ScanInt<char, byte, uint32, int, 10>(x, ptr, overflow) && !overflow ? x : 0;
+}
+
 int64 ScanInt64(const char *ptr, const char **endptr)
 {
 	int64 x;
@@ -148,6 +153,13 @@ int64 ScanInt64(const char *ptr)
 	int64 x;
 	bool overflow = false;
 	return ScanInt<char, byte, uint64, int64, 10>(x, ptr, overflow) && !overflow ? x : Null;
+}
+
+int64 Atoi64(const char *ptr)
+{
+	int64 x;
+	bool overflow = false;
+	return ScanInt<char, byte, uint64, int64, 10>(x, ptr, overflow) && !overflow ? x : 0;
 }
 
 Value StrIntValue(const char *s)
@@ -171,6 +183,22 @@ Value StrDblValue(const char *s)
 	if(s && *s) {
 		const char *p;
 		double q = ScanDouble(s, &p);
+		if(!IsNull(q))
+			while(*p) {
+				if((byte)*p > ' ')
+					return ErrorValue(t_("Invalid number !"));
+				p++;
+			}
+		return IsNull(q) ? ErrorValue(t_("Invalid number !")) : Value(q);
+	}
+	return (double)Null;
+}
+
+Value StrFltValue(const char *s)
+{
+	if(s && *s) {
+		const char *p;
+		double q = ScanFloat(s, &p);
 		if(!IsNull(q))
 			while(*p) {
 				if((byte)*p > ' ')
@@ -248,6 +276,8 @@ Value Scan(dword qtype, const String& text, const Value& def, bool *hastime) {
 		return text;
 	case DOUBLE_V:
 		return StrDblValue(text);
+	case FLOAT_V:
+		return StrFltValue(text);
 	default:
 		ASSERT(0);
 		break;
@@ -268,6 +298,8 @@ Value  Convert::Format(const Value& q) const {
 		return IntStr((int)q);
 	case DOUBLE_V:
 		return DblStr((double)q);
+	case FLOAT_V:
+		return AsString((float)q);
 	case DATE_V:
 		return UPP::Format(Date(q));
 	case TIME_V:

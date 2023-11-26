@@ -7,7 +7,8 @@ namespace Upp {
 String AsString(const f32x4& x)
 {
 	float *f = (float *)&x;
-	return Format("%g %g %g %g", f[3], f[2], f[1], f[0]);
+	return String() << FormatFloat(f[3]) << ' ' << FormatFloat(f[2]) << ' '
+	                << FormatFloat(f[1]) << ' ' << FormatFloat(f[0]);
 }
 
 String AsString(const i32x4& x)

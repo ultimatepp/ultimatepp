@@ -143,7 +143,7 @@ bool TextComparator::Find(int start1, int end1, int start2, int end2, int& best_
 	int last = max(best_count - chunk + 1, 0);
 	const Index<dword> *hp1 = &hash1[lvl];
 	const Index<dword> *hp2 = &hash2[lvl];
-	const unsigned *h1 = hp1->begin() + start1;
+	const dword *h1 = hp1->begin() + start1;
 
 	int i = hp2->Find(*h1);
 	while(i >= 0)

@@ -243,6 +243,7 @@ void Ide::InsertMenu(Bar& bar)
 	if(bar.IsScanKeys())
 		return;
 	bar.Add("Insert color..", THISBACK(InsertColor));
+	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	int pi = GetPackageIndex();
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= 0 && pi < wspc.GetCount()) {
@@ -276,6 +277,24 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
 	bar.Add("Insert file as..", THISBACK(InsertFileBase64));
+	bar.Add(IdeKeys::AK_INSERTDATE, [=] {
+		Date d = GetSysDate();
+		InsertText(Format("%d-%02d-%02d", d.year, d.month, d.day));
+	});
+	bar.Add(IdeKeys::AK_INSERTTIME, [=] {
+		Time d = GetSysTime();
+		InsertText(Format("%d-%02d-%02d %02d:%02d:%02d", d.year, d.month, d.day, d.hour, d.minute, d.second));
+	});
+	bar.Add(IdeKeys::AK_INSERTGUID, [=] {
+		Uuid uuid;
+		uuid.New();
+		InsertText(Format(uuid));
+	});
+	bar.Add(IdeKeys::AK_INSERTGUID2, [=] {
+		Uuid uuid;
+		uuid.New();
+		InsertText(FormatWithDashes(uuid));
+	});
 }
 
 void Ide::InsertInclude(Bar& bar)
@@ -299,30 +318,25 @@ void Ide::InsertInclude(Bar& bar)
 
 void Ide::ToggleWordwrap()
 {
-	RLOG("===========");
-	RDUMPHEX((int)*(byte *)&wordwrap);
-	RDUMP(wordwrap);
 	wordwrap = !wordwrap;
-	RDUMPHEX((int)*(byte *)&wordwrap);
-	RDUMP(wordwrap);
 	SetupEditor();
-	RDUMP(wordwrap);
-	RLOG(".........");
 }
 
 void Ide::EditorMenu(Bar& bar)
 {
+	bar.Sub("Assist", [=](Bar& bar) { AssistMenu(bar); });
 	InsertAdvanced(bar);
+	Reformat(bar);
 	bar.MenuSeparator();
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
             "Compare with clipboard..", [=]() {
-        DiffDlg dlg;
+        DiffDlg& dlg = CreateNewWindow<DiffDlg>();
         dlg.diff.left.RemoveFrame(dlg.p);
         dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
                                                                : editor.Get());
 		dlg.Title("Compare with clipboard");
-        dlg.Run();
+        dlg.OpenMain();
     });
 	bar.MenuSeparator();
 	editor.StdBar(bar);

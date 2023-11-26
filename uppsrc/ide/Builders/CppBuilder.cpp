@@ -360,9 +360,11 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 						}
 					}
 				}
+				else
 				if(p.Id("exclude")) {
 					ExtExclude(p, packageFolder, out, flags);
 				}
+				else
 				if(p.Id("include_path")) {
 					bool apply = CheckImportCondition(p, flags);
 					Vector<String> e = ReadPatterns(p);
@@ -376,10 +378,12 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 						}
 					}
 				}
+				else
 				if(p.Id("exclude_path")) {
 					ExtExclude(p, packageFolder, include_path, flags);
 				}
-				if(p.Id("includes")) {
+				else {
+					p.PassId("includes");
 					bool apply = CheckImportCondition(p, flags);
 					Vector<String> e = ReadPatterns(p);
 					if(apply) {
@@ -392,7 +396,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				}
 			}
 		}
-		catch(CParser::Error) {
+		catch(CParser::Error e) {
 			PutConsole("Invalid .ext file");
 			error = true;
 			return Vector<String>();
@@ -495,9 +499,15 @@ Vector<String> RepoInfo(const String& package)
 		}
 	}
 	if(repo == GIT_DIR) {
-		String v = Sys("git rev-list --count HEAD");
+		String h = GetCurrentDirectory();
+		SetCurrentDirectory(d);
+		String v = HostSys("git rev-list --count HEAD");
 		if(IsDigit(*v))
 			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
+		v = HostSys("git rev-parse HEAD");
+		if(v.GetCount())
+			info.Add("#define bmGIT_HASH " + AsCString(TrimBoth(v)));
+		SetCurrentDirectory(h);
 	}
 	return info;
 }
@@ -551,10 +561,15 @@ String SourceToObjName(const String& package, const String& srcfile_)
 {
 	String srcfile = srcfile_;
 	srcfile.TrimEnd(".cpp");
-	int q = GetFileFolder(PackagePath(package)).GetCount() + 1;
-	if(q >= srcfile.GetCount())
-		return GetFileTitle(srcfile);
 	String r;
+	int q = 0;
+	if(srcfile.TrimStart(".."))
+		r << "__";
+	else {
+		q = GetFileFolder(PackagePath(package)).GetCount() + 1;
+		if(q >= srcfile.GetCount())
+			return GetFileTitle(srcfile);
+	}
 	for(const char *s = ~srcfile + q; *s; s++)
 		r.Cat(findarg(*s, '/', '\\') >= 0 ? '_' : *s);
 	return r;

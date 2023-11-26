@@ -17,6 +17,11 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
 	menu.Add(b, "Delete package..", [=] { DeletePackage(); });
 	menu.Add(b, "Change description..", [=] { ChangeDescription(); });
+	if(b) {
+		menu.Separator();
+		String dir = GetFileFolder(PackagePath(GetCurrentName()));
+		menu.Add(b, "Terminal at " + dir, [=] { TheIde()->LaunchTerminal(dir); });
+	}
 }
 
 bool RenamePackageFs(const String& upp, const String& npf, const String& nupp, bool copy)
@@ -440,7 +445,7 @@ void SelectPackageDlg::OnNew() {
 	StoreToGlobal(dlg, "NewPackage");
 }
 
-Vector<String> SelectPackageDlg::GetSvnDirs()
+Vector<String> SelectPackageDlg::GetRepoDirs()
 {
 	Vector<String> r;
 	Vector<String> dirs = SplitDirs(GetVar("UPP"));
@@ -452,15 +457,15 @@ Vector<String> SelectPackageDlg::GetSvnDirs()
 	return r;
 }
 
-void SelectPackageDlg::SyncSvnDir(const String& dir)
+void SelectPackageDlg::SyncRepoDir(const String& dir)
 {
 	RepoSyncDirs(Vector<String>() << dir);
 	Load();
 }
 
-void SelectPackageDlg::SyncSvnDirs()
+void SelectPackageDlg::SyncRepoDirs()
 {
-	RepoSyncDirs(GetSvnDirs());
+	RepoSyncDirs(GetRepoDirs());
 	Load();
 }
 
@@ -477,7 +482,14 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 		.Key(K_CTRL_ENTER);
 	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
-	Vector<String> d = GetSvnDirs();
+	bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
+	Vector<String> dirs = SplitDirs(GetVar("UPP"));
+	if(dirs.GetCount()) {
+		bar.Separator();
+		for(String s : dirs)
+			bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
+	}
+	Vector<String> d = GetRepoDirs();
 	if(HasGit()) {
 		bar.Separator();
 		bar.Add("Clone U++ GitHub sources..", [=] {
@@ -489,8 +501,8 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	if(d.GetCount()) {
 		bar.Separator();
 		for(int i = 0; i < d.GetCount(); i++)
-			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
-		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
+			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
+		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
 	}
 }
 
@@ -532,6 +544,53 @@ void SelectPackageDlg::OnBaseRemove()
 		else
 			SyncBase(next);
 	}
+}
+
+void SelectPackageDlg::RemoveInvalid()
+{
+	String vars = base.GetKey();
+	WithRemoveInvalidAssembliesLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Remove assemblies");
+	dlg.list.AddColumn("Remove")
+	        .Ctrls([=](int, One<Ctrl> &c) { c.Create<Option>().NoWantFocus(); });
+	dlg.list.AddColumn("Assembly");
+	dlg.list.AddColumn("Error", 7);
+	dlg.list.ColumnWidths("53 125 499");
+	Vector<String> oks;
+	for(int i = 0; i < base.GetCount(); i++) {
+		String vars = base.Get(i, 0);
+		VectorMap<String, String> var;
+		LoadVarFile(VarFilePath(vars), var);
+		Vector<String> dirs = Split(var.Get("UPP", ""), ';');
+		String missing;
+		for(String d : dirs)
+			if(!DirectoryExists(d)) {
+				MergeWith(missing, ", ", d);
+				break;
+			}
+		if(dirs.GetCount() == 0)
+			missing = "Empty";
+		if(missing.GetCount())
+			dlg.list.Add(true, vars, missing);
+		else
+			oks.Add(vars);
+	}
+	for(String s : oks)
+		dlg.list.Add(false, s);
+again:
+	if(dlg.Run() != IDOK)
+		return;
+	int n = 0;
+	for(int i = 0; i < dlg.list.GetCount(); i++)
+		if((bool)dlg.list.Get(i, 0))
+			n++;
+	if(n)
+		if(!PromptYesNo("Remove " + AsString(n) + " assemblies?"))
+			goto again;
+		for(int i = 0; i < dlg.list.GetCount(); i++)
+			if((bool)dlg.list.Get(i, 0))
+				DeleteFile(VarFilePath(~dlg.list.Get(i, 1)));
+	SyncBase(vars);
 }
 
 int DirSep(int c)
@@ -734,7 +793,7 @@ void SelectPackageDlg::Load(const String& find)
 						if(IsNull(tm)) // package icon does not exist
 							d.icon = Null;
 						else
-						if(tm != d.itm) { // chached package icon outdated
+						if(tm != d.itm || d.icon.GetSize().cx != DPI(16)) { // chached package icon outdated
 							d.icon = StreamRaster::LoadFileAny(icon_path);
 							d.itm = tm;
 						}
@@ -795,6 +854,7 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	LoadFromGlobal(dlg, c);
 	dlg.SyncBrief();
 	dlg.SyncFilter();
+	dlg.CenterScreen();
 	String b = dlg.Run(nest, startwith);
 	StoreToGlobal(dlg, c);
 	return b;

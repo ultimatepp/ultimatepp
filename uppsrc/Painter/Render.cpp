@@ -10,7 +10,14 @@ void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
 void BufferPainter::ClearOp(const RGBA& color)
 {
-	UPP::Fill(~*ip, color, ip->GetLength());
+	Finish();
+	if(co) {
+		CoFor(ip->GetHeight(), [&](int i) {
+			UPP::Fill((*ip)[i], color, ip->GetWidth());
+		});
+	}
+	else
+		UPP::Fill(~*ip, color, ip->GetLength());
 	ip->SetKind(color.a == 255 ? IMAGE_OPAQUE : IMAGE_ALPHA);
 }
 
@@ -293,7 +300,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
 					Rasterizer::Filler *rf = rg;
-					if(clip.GetCount()) {
+					if(clip.GetCount() && clip.Top()) {
 						const ClippingLine& s = clip.Top()[y];
 						if(s.IsEmpty()) goto empty;
 						if(!s.IsFull()) {
@@ -389,11 +396,13 @@ void BufferPainter::FinishPathJob()
 							subpixel_filler.t = (*ip)[y];
 							subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 							if(clip.GetCount()) {
-								MaskFillerFilter mf;
-								const ClippingLine& s = clip.Top()[y];
-								if(!s.IsEmpty() && !s.IsFull()) {
-									mf.Set(&subpixel_filler, s);
-									j.rasterizer.Render(y, mf, j.evenodd);
+								if(clip.Top()) {
+									MaskFillerFilter mf;
+									const ClippingLine& s = clip.Top()[y];
+									if(!s.IsEmpty() && !s.IsFull()) {
+										mf.Set(&subpixel_filler, s);
+										j.rasterizer.Render(y, mf, j.evenodd);
+									}
 								}
 							}
 							else
@@ -413,11 +422,13 @@ void BufferPainter::FinishPathJob()
 							solid_filler.invert = j.attr.invert;
 							solid_filler.t = (*ip)[y];
 							if(clip.GetCount()) {
-								MaskFillerFilter mf;
-								const ClippingLine& s = clip.Top()[y];
-								if(!s.IsEmpty() && !s.IsFull()) {
-									mf.Set(&solid_filler, s);
-									j.rasterizer.Render(y, mf, j.evenodd);
+								if(clip.Top()) {
+									MaskFillerFilter mf;
+									const ClippingLine& s = clip.Top()[y];
+									if(!s.IsEmpty() && !s.IsFull()) {
+										mf.Set(&solid_filler, s);
+										j.rasterizer.Render(y, mf, j.evenodd);
+									}
 								}
 							}
 							else
@@ -426,7 +437,7 @@ void BufferPainter::FinishPathJob()
 				}
 			}
 		};
-	
+
 		int n = maxy - miny;
 		if(n >= 0) {
 			if(n > 6) {

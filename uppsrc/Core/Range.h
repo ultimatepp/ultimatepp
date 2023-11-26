@@ -60,6 +60,12 @@ auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, c
 	return SubRange(c.begin() + pos, count);
 }
 
+template <class C>
+auto SubRangeFrom(C&& c, int pos) -> decltype(SubRange(c.begin() + pos, c.GetCount() - pos))
+{
+	return SubRange(c.begin() + pos, c.GetCount() - pos);
+}
+
 template <class C> using SubRangeOf = decltype(SubRange(((C *)0)->begin(), ((C *)0)->end()));
 
 template <class T>

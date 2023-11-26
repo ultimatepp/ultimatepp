@@ -298,7 +298,7 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 		NULL, NULL, hInstance, NULL);
 	SetTimer(utilityHWND, 1, 10, NULL);
 	ILOG("Windows");
-	Windows(); //?? TRC: what's the use of this?
+	Windows();
 
 	ReSkin();
 

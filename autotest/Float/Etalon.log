@@ -1,0 +1,122 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\Float.exe 30.10.2023 10:22:39, user: cxl
+
+===========
+x = 0
+IsNull(x) = false
+v = 0
+IsNumber(v) = true
+(int)v = 0
+(int64)v = 0
+(bool)v = false
+(double)v = 0
+v == x = true
+v == 1 = false
+v > Value(1) = false
+AsJSON(v) = 0
+StoreAsJson(t) = {"x":0}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value="0"/>
+</app>
+ScanFloat(AsString(x)) = 0
+===========
+x = 0.23
+IsNull(x) = false
+v = 0.23
+IsNumber(v) = true
+(int)v = 0
+(int64)v = 0
+(bool)v = true
+(double)v = 0.230000004172325
+v == x = true
+v == 1 = false
+v > Value(1) = false
+AsJSON(v) = 0.23
+StoreAsJson(t) = {"x":0.23}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value="0.23"/>
+</app>
+ScanFloat(AsString(x)) = 0.23
+===========
+x = 1
+IsNull(x) = false
+v = 1
+IsNumber(v) = true
+(int)v = 1
+(int64)v = 1
+(bool)v = true
+(double)v = 1
+v == x = true
+v == 1 = true
+v > Value(1) = false
+AsJSON(v) = 1
+StoreAsJson(t) = {"x":1}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value="1"/>
+</app>
+ScanFloat(AsString(x)) = 1
+===========
+x = 1.23
+IsNull(x) = false
+v = 1.23
+IsNumber(v) = true
+(int)v = 1
+(int64)v = 1
+(bool)v = true
+(double)v = 1.23000001907349
+v == x = true
+v == 1 = false
+v > Value(1) = true
+AsJSON(v) = 1.23
+StoreAsJson(t) = {"x":1.23}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value="1.23"/>
+</app>
+ScanFloat(AsString(x)) = 1.23
+===========
+x = 51.23
+IsNull(x) = false
+v = 51.23
+IsNumber(v) = true
+(int)v = 51
+(int64)v = 51
+(bool)v = true
+(double)v = 51.2299995422363
+v == x = true
+v == 1 = false
+v > Value(1) = true
+AsJSON(v) = 51.23
+StoreAsJson(t) = {"x":51.23}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value="51.23"/>
+</app>
+ScanFloat(AsString(x)) = 51.23
+===========
+x = 
+IsNull(x) = true
+v = 
+IsNumber(v) = true
+(int)v = 
+(int64)v = 
+(bool)v = false
+(double)v = 
+v == x = true
+v == 1 = false
+v > Value(1) = false
+AsJSON(v) = null
+StoreAsJson(t) = {"x":null}
+StoreAsXML(t) = <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE app>
+<app>
+	<x value=""/>
+</app>
+ScanFloat(AsString(x)) = 

@@ -21,57 +21,65 @@ topic "SQL Tutorial";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [2 $$0,0#00000000000000000000000000000000:Default]
-[{_}%EN-US 
-[s2; SQL Tutorial&]
-[s3; Table of contents&]
-[s0; &]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#1^ 1. SqlSession, 
+[{_} 
+[s2;%% SQL Tutorial&]
+[s3;%% Table of contents&]
+[s0;%% &]
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#1^ 1. SqlSession, 
 Sql, opening database connection]&]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#2^ 2. Using global 
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#2^ 2. Using global 
 main database, executing statements with parameters, getting 
 resultset info]&]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#3^ 3. Using SqlExp]&]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#4^ 4. Schema file]&]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#5^ 5. Using schema 
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#3^ 3. Using SqlExp]&]
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#4^ 4. Schema file]&]
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#5^ 5. Using schema 
 file to define SqlId constants]&]
-[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#6^ 6. Using structures 
+[s0;%% [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#6^ 6. Using structures 
 defined by schema files]&]
-[s0; &]
-[s3;:1: 1. SqlSession, Sql, opening database connection&]
-[s5; SqlSession derived objects represent database connection. Each 
-SQL database (Sqlite3, Microsoft SQL, Oracle, MySQL, PostgreSQL) 
+[s0;%% &]
+[s3;:1:%% 1. SqlSession, Sql, opening database connection&]
+[s5;%% SqlSession derived objects represent database connection. 
+Each SQL database (Sqlite3, Microsoft SQL, Oracle, MySQL, PostgreSQL) 
 has its own session class derived from SqlSession. Sql class 
 is used to issue SQL statements and retrieve results:&]
-[s7; &]
-[s7; #include <Core/Core.h>&]
-[s7; #include <plugin/sqlite3/Sqlite3.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|[* Sqlite3Session ]sqlite3;&]
-[s7; -|if(!sqlite3.[* Open](ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.[* SetTrace();]&]
-[s7; #endif&]
-[s7; &]
-[s7; -|[* Sql] sql(sqlite3);&]
-[s7; -|sql.[* Execute](`"select date(`'now`')`");&]
-[s7; -|while(sql.[* Fetch]())&]
-[s7; -|-|Cout() << [* sql`[0`] ]<< `'`\n`' << ;&]
-[s7; `}&]
-[s7; &]
-[s5; In this tutorial, we are using Sqlite3 database. The connection 
+[s5;%% &]
+[s7;l320; [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 Core][@(0.0.255) /][@0 Core][@(0.0.255) .][@0 h
+][@(0.0.255) >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /][C+75 s
+qlite3][C@(0.0.255)+75 /][C+75 Sqlite3][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     ][*_C+75 Sqlite3Session][C+75  sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][*_C+75 Open][C+75 (ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][*_C+75 SetTrace][C+75 ();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*_C+75 Sql][C+75  sql(sqlite3);]&]
+[s0;l320; [C+75     sql][C@(0.0.255)+75 .][*_C+75 Execute][C+75 (][C@3+75 `"select 
+date(`'now`')`"][C+75 );]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][*_C+75 Fetch][C+75 ())]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][*_C+75 sql][*_C@(0.0.255)+75 `[][*_C@3+75 0
+][*_C@(0.0.255)+75 `]][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `'][C@(0.0.255)+75 `\n][C@3+75 `'
+][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;%% &]
+[s5;%% In this tutorial, we are using Sqlite3 database. The connection 
 method varies with database; in this case it is done using [* Open 
 ]statement.&]
-[s5; [* SetTrace ]is useful in debug mode `- all issued SQL statements 
+[s5;%% [* SetTrace ]is useful in debug mode `- all issued SQL statements 
 and SQL errors are logged in standard U`+`+ log.&]
-[s5; Each [* Sql] instance has to be associated to some SqlSession 
+[s5;%% Each [* Sql] instance has to be associated to some SqlSession 
 `- it is passed as constructor parameter (parameter`-less Sql 
 constructor uses global session, more on that in section 2.). 
 To execute SQL statements, use [* Execute]. If executed statement 
@@ -79,56 +87,75 @@ is Select, it may return a result set, which is retrieved using
 [* Fetch]. Columns of result set are then accessed by Sql`::operator`[`] 
 using index of column (starts with 0). Values are returned as 
 Value type.&]
-[s5; &]
-[s3;:2: 2. Using global main database, executing statements with 
+[s5;%% &]
+[s3;:2:%% 2. Using global main database, executing statements with 
 parameters, getting resultset info&]
-[s5; Most applications need to work with just single database backend, 
+[s5;%% Most applications need to work with just single database backend, 
 therefore repeating SqlSession parameter in all Sql declarations 
 would be tedious.&]
-[s5; To this end U`+`+ supports concept of `"main database`" which 
+[s5;%% To this end U`+`+ supports concept of `"main database`" which 
 is represented by [* SQL] variable. [* SQL] is of Sql type. When 
 any other Sql variable is created with default constructor (no 
 session parameter provided), it uses the same session as the 
 one the SQL is bound to. To assign session to global SQL, use 
 operator`=:&]
-[s7; #include <Core/Core.h>&]
-[s7; #include <plugin/sqlite3/Sqlite3.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|Sqlite3Session sqlite3;&]
-[s7; -|if(!sqlite3.Open(ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.SetTrace();&]
-[s7; #endif&]
-[s7; &]
-[s7; -|[* SQL `= ]sqlite3;&]
-[s7; -|&]
-[s7; -|[* SQL.]Execute(`"drop table TEST`");&]
-[s7; -|SQL.ClearError();&]
-[s7; -|SQL.Execute(`"create table TEST (A INTEGER, B TEXT)`");&]
-[s7; &]
-[s7; -|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|SQL.[* Execute](`"insert into TEST(A, B) values ([* ?], [* ?])`", 
-i, AsString(3 `* i));&]
-[s7; &]
-[s7; -|Sql sql;&]
-[s7; -|sql.Execute(`"select `* from TEST`");&]
-[s7; -|for(int i `= 0; i < sql.[* GetColumns](); i`+`+)&]
-[s7; -|-|Cout() << sql.[* GetColumnInfo](i).[* name ]<< `'`\n`';&]
-[s7; -|while(sql.Fetch())&]
-[s7; -|-|Cout() << sql`[0`] << `" `\`'`" << sql`[1`] << `"`\`'`\n`";&]
-[s7; `}&]
-[s7; &]
-[s5; As global [* SQL] is regular Sql variable too, it can be used 
+[s5; &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 C
+ore][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /][C+75 s
+qlite3][C@(0.0.255)+75 /][C+75 Sqlite3][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     Sqlite3Session sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][C+75 Open(ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][C+75 SetTrace();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*_C+75 SQL][C+75  ][C@(0.0.255)+75 `=][C+75  sqlite3;]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C+75     ][*_C+75 SQL][C@(0.0.255)+75 .][C+75 Execute(][C@3+75 `"drop 
+table TEST`"][C+75 );]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 ClearError();]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 Execute(][C@3+75 `"create 
+table TEST (A INTEGER, B TEXT)`"][C+75 );]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320; [C+75         SQL][C@(0.0.255)+75 .][*_C+75 Execute][C+75 (][C@3+75 `"insert 
+into TEST(A, B) values (?, ?)`"][C+75 , i, AsString(][C@3+75 3][C+75  
+][C@(0.0.255)+75 `*][C+75  i));]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     Sql sql;]&]
+[s0;l320; [C+75     sql][C@(0.0.255)+75 .][C+75 Execute(][C@3+75 `"select 
+`* from TEST`"][C+75 );]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+sql][C@(0.0.255)+75 .][*_C+75 GetColumns][C+75 (); i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 .][*_C+75 GetColu
+mnInfo(i)][*_C@(0.0.255)+75 .][*_C+75 name][C+75  ][C@(0.0.255)+75 <<][C+75  
+][C@3+75 `'][C@(0.0.255)+75 `\n][C@3+75 `'][C+75 ;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][C+75 Fetch())]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C@3+75 0][C@(0.0.255)+75 `]
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `" ][C@(0.0.255)+75 `\`'][C@3+75 `"][C+75  
+][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C@3+75 1][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"][C@(0.0.255)+75 `\`'`\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;l320;%% &]
+[s5;%% As global [* SQL] is regular Sql variable too, it can be used 
 to issue SQL statements.&]
-[s5; [/ Warning: While it is possible to issue ][*/ select][/  statements 
+[s5;%% [/ Warning: While it is possible to issue ][*/ select][/  statements 
 through ][*/ SQL][/ , based on experience this is not recommended 
 `- way too often result set of ][*/ select][/  is canceled by issuing 
 some other command, e.g. in routine called as part of Fetch loop. 
@@ -136,246 +163,313 @@ One exception to this rule is using SQL`::operator% to fetch single
 value like ][*C@5+75 String txt `= SQL % Select(TEXT).From(DOCTEMPLATE).Where(ID 
 `=`= id); ][/ (see further tutorial topics for detailed explanation 
 of this code).]&]
-[s5; To get information about result set columns, you can use [* GetColumns 
+[s5;%% To get information about result set columns, you can use [* GetColumns 
 ]to retrieve the number of columns and [* GetColumnInfo] to retrieve 
 information about columns `- returns [* SqlColumnInfo] reference 
 with information like name or type of column.&]
-[s5; &]
-[s3;:3: 3. Using SqlExp&]
-[s5; U`+`+ contains an unique feature, `"SqlExp`". This is a mechanism 
+[s5;%% &]
+[s3;:3:%% 3. Using SqlExp&]
+[s5;%% U`+`+ contains an unique feature, `"SqlExp`". This is a mechanism 
 where you construct SQL statements as C`+`+ expressions (using 
 heavily overloaded operators).&]
-[s5; There are three advantages to this approach:&]
-[s5;l160;i150;O0; SQL statements are at least partially checked at 
-compile time&]
-[s5;l160;i150;O0; As such statements are yet to be interpreted, it 
-is possible to hide some differences between DB engines&]
-[s5;l160;i150;O0; It is much easier to create complex dynamic SQL 
+[s5;%% There are three advantages to this approach:&]
+[s5;l160;i150;O0;%% SQL statements are at least partially checked 
+at compile time&]
+[s5;l160;i150;O0;%% As such statements are yet to be interpreted, 
+it is possible to hide some differences between DB engines&]
+[s5;l160;i150;O0;%% It is much easier to create complex dynamic SQL 
 statements&]
-[s5; Database entity identifiers (like table or column names) can 
+[s5;%% Database entity identifiers (like table or column names) can 
 be defined as [* SqlId] type. For the complete lest of supported 
 SQL statements, see [^topic`:`/`/Sql`/src`/SqlExp`$en`-us^ SqlExp 
 in examples].&]
-[s7; #include <Core/Core.h>&]
-[s7; #include <plugin/sqlite3/Sqlite3.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|Sqlite3Session sqlite3;&]
-[s7; -|if(!sqlite3.Open(ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.SetTrace();&]
-[s7; #endif&]
-[s7; &]
-[s7; -|SQL `= sqlite3;&]
-[s7; -|&]
-[s7; -|SQL.Execute(`"drop table TEST`");&]
-[s7; -|SQL.ClearError();&]
-[s7; -|SQL.Execute(`"create table TEST (A INTEGER, B TEXT)`");&]
-[s7; &]
-[s7; -|[* SqlId] A(`"A`"), B(`"B`"), TEST(`"TEST`");&]
-[s7; &]
-[s7; -|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|SQL [* `* Insert(TEST)(A, ]i[* )(B, ]AsString(3 `* i)[* );]&]
-[s7; &]
-[s7; -|Sql sql;&]
-[s7; -|sql [* `* Select(A, B).From(TEST);]&]
-[s7; -|while(sql.Fetch())&]
-[s7; -|-|Cout() << [* sql`[A`]] << `" `\`'`" << [* sql`[B`]] << `"`\`'`\n`";&]
-[s7; `}&]
-[s7; &]
-[s5; SqlId identifiers can be also used as parameter of Sql`::operator`[`] 
+[s5;%% &]
+[s7;l320; [@(128.0.255) #include][@0  ][@(0.0.255) <][@0 Core][@(0.0.255) /][@0 Core][@(0.0.255) .][@0 h
+][@(0.0.255) >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /][C+75 s
+qlite3][C@(0.0.255)+75 /][C+75 Sqlite3][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     Sqlite3Session sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][C+75 Open(ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][C+75 SetTrace();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SQL ][C@(0.0.255)+75 `=][C+75  sqlite3;]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 Execute(][C@3+75 `"drop table 
+TEST`"][C+75 );]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 ClearError();]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 Execute(][C@3+75 `"create 
+table TEST (A INTEGER, B TEXT)`"][C+75 );]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*_C+75 SqlId][C+75  A(][C@3+75 `"A`"][C+75 ), B(][C@3+75 `"B`"][C+75 ), 
+TEST(][C@3+75 `"TEST`"][C+75 );]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320; [C+75         SQL ][*_C@(0.0.255)+75 `*][*_C+75  Insert(TEST)(A, 
+i)(B, AsString(][*_C@3+75 3][*_C+75  ][*_C@(0.0.255)+75 `*][*_C+75  i))][C+75 ;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     Sql sql;]&]
+[s0;l320; [C+75     sql ][*_C@(0.0.255)+75 `*][*_C+75  Select(A, B)][*_C@(0.0.255)+75 .][*_C+75 F
+rom(TEST)][C+75 ;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][C+75 Fetch())]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][*_C+75 sql][*_C@(0.0.255)+75 `[][*_C+75 A
+][*_C@(0.0.255)+75 `]][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `" ][C@(0.0.255)+75 `\`'][C@3+75 `"
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][*_C+75 sql][*_C@(0.0.255)+75 `[][*_C+75 B][*_C@(0.0.255)+75 `]
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"][C@(0.0.255)+75 `\`'`\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;l320; &]
+[s5;%% SqlId identifiers can be also used as parameter of Sql`::operator`[`] 
 to retrieve particular columns of result`-set.&]
-[s5; &]
-[s3;:4: 4. Schema file&]
-[s5; Schema files can be used to describe the database schema. Such 
-schema files can be used to upload the schema to the database, 
+[s5;%% &]
+[s3;:4:%% 4. Schema file&]
+[s5;%% Schema files can be used to describe the database schema. 
+Such schema files can be used to upload the schema to the database, 
 to defined SqlId constants and also to work with database records 
 as C`+`+ structures.&]
-[s5; Following example demonstrates using schema file to create database 
-schema in SQL database server.&]
-[s5; MyApp.sch:&]
-[s7; &]
-[s7; [* TABLE(TEST)]&]
-[s7; [* -|INT        (A)]&]
-[s7; [* -|STRING     (B, 200)]&]
-[s7; [* END`_TABLE]&]
-[s7; &]
-[s5; MyApp.h&]
-[s7; #ifndef `_MyApp`_h`_&]
-[s7; #define `_MyApp`_h`_&]
-[s7; &]
-[s7; #include <Core/Core.h>&]
-[s7; #include <plugin/sqlite3/Sqlite3.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; [* #define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>]&]
-[s7; [* #define MODEL <Sql04/MyApp.sch>]&]
-[s7; [* #include `"Sql/sch`_header.h`"]&]
-[s7; &]
-[s7; #endif&]
-[s7;* &]
-[s5; main.cpp&]
-[s7; #include `"MyApp.h`"&]
-[s7; &]
-[s7; [* #include <Sql/sch`_schema.h>]&]
-[s7; [* #include <Sql/sch`_source.h>]&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|Sqlite3Session sqlite3;&]
-[s7; -|if(!sqlite3.Open(ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.SetTrace();&]
-[s7; #endif&]
-[s7; &]
-[s7; -|SQL `= sqlite3;&]
-[s7; &]
-[s7; [* -|SqlSchema sch(SQLITE3);]&]
-[s7; [* -|All`_Tables(sch);]&]
-[s7; [* -|SqlPerformScript(sch.Upgrade());]&]
-[s7; [* -|SqlPerformScript(sch.Attributes());]&]
-[s7; [* -|SQL.ClearError();]&]
-[s7; &]
-[s7; -|SqlId A(`"A`"), B(`"B`"), TEST(`"TEST`");&]
-[s7; &]
-[s7; -|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|SQL `* Insert(TEST)(A, i)(B, AsString(3 `* i));&]
-[s7; &]
-[s7; -|Sql sql;&]
-[s7; -|sql `* Select(A, B).From(TEST);&]
-[s7; -|while(sql.Fetch())&]
-[s7; -|-|Cout() << sql`[A`] << `" `\`'`" << sql`[B`] << `"`\`'`\n`";&]
-[s7; `}&]
-[s7;* &]
-[s5; &]
-[s3;:5: 5. Using schema file to define SqlId constants&]
-[s5; As names of columns are present in the database schema, it is 
-natural to recycle them to create SqlId constants.&]
-[s5; However, due to C`+`+ one definition rule (.sch files are interpreted 
-as C`+`+ sources, using changing set of macros), you have to 
-mark identifiers using underscore:&]
-[s5; MyApp.sch:&]
-[s7; [* TABLE`_](TEST)&]
-[s7; -|[* INT`_]        (A)&]
-[s7; -|[* STRING`_]     (B, 200)&]
-[s7; END`_TABLE&]
-[s7; &]
-[s7; TABLE`_(TEST2)&]
-[s7; -|[* INT]        (A)&]
-[s7; -|[* STRING]     (B, 200)&]
-[s7; END`_TABLE&]
-[s5; &]
-[s5; MyApp.h:&]
-[s7; #ifndef `_MyApp`_h`_&]
-[s7; #define `_MyApp`_h`_&]
-[s7; &]
-[s7; #include <Core/Core.h>&]
-[s7; #include <plugin/sqlite3/Sqlite3.h>&]
-[s7; &]
-[s7; using namespace Upp;&]
-[s7; &]
-[s7; #define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>&]
-[s7; #define MODEL <Sql05/MyApp.sch>&]
-[s7; #include `"Sql/sch`_header.h`"&]
-[s7; &]
-[s7; #endif&]
-[s7; &]
-[s5; main.cpp:&]
-[s7; #include `"MyApp.h`"&]
-[s7; &]
-[s7; #include <Sql/sch`_schema.h>&]
-[s7; #include <Sql/sch`_source.h>&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|Sqlite3Session sqlite3;&]
-[s7; -|if(!sqlite3.Open(ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.SetTrace();&]
-[s7; #endif&]
-[s7; &]
-[s7; -|SQL `= sqlite3;&]
-[s7; &]
-[s7; -|SqlSchema sch(SQLITE3);&]
-[s7; -|All`_Tables(sch);&]
-[s7; -|SqlPerformScript(sch.Upgrade());&]
-[s7; -|SqlPerformScript(sch.Attributes());&]
-[s7; -|SQL.ClearError();&]
-[s7; &]
-[s7; -|for(int i `= 0; i < 10; i`+`+)&]
-[s7; -|-|SQL `* Insert(TEST)(A, i)(B, AsString(3 `* i));&]
-[s7; &]
-[s7; -|Sql sql;&]
-[s7; -|sql `* Select(A, B).From(TEST);&]
-[s7; -|while(sql.Fetch())&]
-[s7; -|-|Cout() << sql`[A`] << `" `\`'`" << sql`[B`] << `"`\`'`\n`";&]
-[s7; `}&]
-[s7; &]
-[s5; &]
-[s3;:6: 6. Using structures defined by schema files&]
-[s5; Schema files also define structures that can be used to fetch, 
+[s5;%% Following example demonstrates using schema file to create 
+database schema in SQL database server.&]
+[s5;%% [/ MyApp.sch:]&]
+[s5;%% &]
+[s0;l320; [*C@(0.0.255)+75 TABLE][C+75 (TEST)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 INT][C+75         (A)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 STRING][C+75      (B, ][C@3+75 200][C+75 )]&]
+[s0;l320; [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 TABLE]&]
+[s5;%% &]
+[s5;%% [/ MyApp.h:]&]
+[s5;/%% &]
+[s0;l320; [C@(128.0.255)+75 #ifndef][C+75  `_MyApp`_h`_]&]
+[s0;l320; [C@(128.0.255)+75 #define][C+75  `_MyApp`_h`_]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 C
+ore][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /][C+75 s
+qlite3][C@(0.0.255)+75 /][C+75 Sqlite3][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75 &]
+[s0;l320; [*_C@(128.0.255)+75 #define][*_C+75  SCHEMADIALECT ][*_C@(0.0.255)+75 <][*_C+75 plu
+gin][*_C@(0.0.255)+75 /][*_C+75 sqlite3][*_C@(0.0.255)+75 /][*_C+75 Sqlite3Schema][*_C@(0.0.255)+75 .
+][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320; [*_C@(128.0.255)+75 #define][*_C+75  MODEL ][*_C@(0.0.255)+75 <][*_C+75 Sql04][*_C@(0.0.255)+75 /
+][*_C+75 MyApp][*_C@(0.0.255)+75 .][*_C+75 sch][*_C@(0.0.255)+75 >]&]
+[s0;l320; [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@3+75 `"Sql/sch`_header.h`"]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s5;%% &]
+[s5;%% [/ main.cpp:]&]
+[s5;/%% &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@3+75 `"MyApp.h`"]&]
+[s0;l320;C+75 &]
+[s0;l320; [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 Sql][*_C@(0.0.255)+75 /
+][*_C+75 sch`_schema][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320; [*_C@(128.0.255)+75 #include][*_C+75  ][*_C@(0.0.255)+75 <][*_C+75 Sql][*_C@(0.0.255)+75 /
+][*_C+75 sch`_source][*_C@(0.0.255)+75 .][*_C+75 h][*_C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     Sqlite3Session sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][C+75 Open(ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][C+75 SetTrace();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SQL ][C@(0.0.255)+75 `=][C+75  sqlite3;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*_C+75 SqlSchema sch(SQLITE3);]&]
+[s0;l320; [C+75     ][*_C+75 All`_Tables(sch);]&]
+[s0;l320; [C+75     ][*_C+75 SqlPerformScript(sch][*_C@(0.0.255)+75 .][*_C+75 Upgrade());]&]
+[s0;l320; [C+75     ][*_C+75 SqlPerformScript(sch][*_C@(0.0.255)+75 .][*_C+75 Attributes());]&]
+[s0;l320; [C+75     ][*_C+75 SQL][*_C@(0.0.255)+75 .][*_C+75 ClearError();]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SqlId A(][C@3+75 `"A`"][C+75 ), B(][C@3+75 `"B`"][C+75 ), 
+TEST(][C@3+75 `"TEST`"][C+75 );]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320; [C+75         SQL ][C@(0.0.255)+75 `*][C+75  Insert(TEST)(A, 
+i)(B, AsString(][C@3+75 3][C+75  ][C@(0.0.255)+75 `*][C+75  i));]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     Sql sql;]&]
+[s0;l320; [C+75     sql ][C@(0.0.255)+75 `*][C+75  Select(A, B)][C@(0.0.255)+75 .][C+75 From(TE
+ST);]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][C+75 Fetch())]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C+75 A][C@(0.0.255)+75 `]
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `" ][C@(0.0.255)+75 `\`'][C@3+75 `"][C+75  
+][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C+75 B][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"][C@(0.0.255)+75 `\`'`\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;%% &]
+[s3;:5:%% 5. Using schema file to define SqlId constants&]
+[s5;%% As names of columns are present in the database schema, it 
+is natural to recycle them to create SqlId constants.&]
+[s5;%% However, due to C`+`+ one definition rule (.sch files are 
+interpreted as C`+`+ sources, using changing set of macros), 
+you have to mark identifiers using underscore:&]
+[s5;%% [/ MyApp.sch:]&]
+[s5;/%% &]
+[s0;l320; [*C@(0.0.255)+75 TABLE][C@(0.0.255)+75 `_][C+75 (TEST)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 INT][C@(0.0.255)+75 `_][C+75       
+  (A)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 STRING][C@(0.0.255)+75 `_][C+75    
+  (B, ][C@3+75 200][C+75 )]&]
+[s0;l320; [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 TABLE]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 TABLE][C@(0.0.255)+75 `_][C+75 (TEST2)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 INT][C+75         (A)]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 STRING][C+75      (B, ][C@3+75 200][C+75 )]&]
+[s0;l320; [*C@(0.0.255)+75 END][C@(0.0.255)+75 `_][*C@(0.0.255)+75 TABLE]&]
+[s5;%% &]
+[s5;%% MyApp.h:&]
+[s5;%% &]
+[s0;l320; [C@(128.0.255)+75 #ifndef][C+75  `_MyApp`_h`_]&]
+[s0;l320; [C@(128.0.255)+75 #define][C+75  `_MyApp`_h`_]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Core][C@(0.0.255)+75 /][C+75 C
+ore][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /][C+75 s
+qlite3][C@(0.0.255)+75 /][C+75 Sqlite3][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [*C@(0.0.255)+75 using][C+75  ][*C@(0.0.255)+75 namespace][C+75  
+Upp;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #define][C+75  SCHEMADIALECT ][C@(0.0.255)+75 <][C+75 plugin][C@(0.0.255)+75 /
+][C+75 sqlite3][C@(0.0.255)+75 /][C+75 Sqlite3Schema][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >
+]&]
+[s0;l320; [C@(128.0.255)+75 #define][C+75  MODEL ][C@(0.0.255)+75 <][C+75 Sql05][C@(0.0.255)+75 /
+][C+75 MyApp][C@(0.0.255)+75 .][C+75 sch][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@3+75 `"Sql/sch`_header.h`"]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s5;%% &]
+[s5;%% main.cpp:&]
+[s5;%% &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@3+75 `"MyApp.h`"]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Sql][C@(0.0.255)+75 /][C+75 s
+ch`_schema][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Sql][C@(0.0.255)+75 /][C+75 s
+ch`_source][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     Sqlite3Session sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][C+75 Open(ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][C+75 SetTrace();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SQL ][C@(0.0.255)+75 `=][C+75  sqlite3;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SqlSchema sch(SQLITE3);]&]
+[s0;l320; [C+75     All`_Tables(sch);]&]
+[s0;l320; [C+75     SqlPerformScript(sch][C@(0.0.255)+75 .][C+75 Upgrade());]&]
+[s0;l320; [C+75     SqlPerformScript(sch][C@(0.0.255)+75 .][C+75 Attributes());]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 ClearError();]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 )]&]
+[s0;l320; [C+75         SQL ][C@(0.0.255)+75 `*][C+75  Insert(TEST)(A, 
+i)(B, AsString(][C@3+75 3][C+75  ][C@(0.0.255)+75 `*][C+75  i));]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     Sql sql;]&]
+[s0;l320; [C+75     sql ][C@(0.0.255)+75 `*][C+75  Select(A, B)][C@(0.0.255)+75 .][C+75 From(TE
+ST);]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][C+75 Fetch())]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C+75 A][C@(0.0.255)+75 `]
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `" ][C@(0.0.255)+75 `\`'][C@3+75 `"][C+75  
+][C@(0.0.255)+75 <<][C+75  sql][C@(0.0.255)+75 `[][C+75 B][C@(0.0.255)+75 `]][C+75  
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"][C@(0.0.255)+75 `\`'`\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;%% &]
+[s3;:6:%% 6. Using structures defined by schema files&]
+[s5;%% Schema files also define structures that can be used to fetch, 
 insert or update database records. Names of such structures are 
 identical to the names of tables, with [* S`_] prefix:&]
-[s7; #include `"MyApp.h`"&]
-[s7; &]
-[s7; #include <Sql/sch`_schema.h>&]
-[s7; #include <Sql/sch`_source.h>&]
-[s7; &]
-[s7; CONSOLE`_APP`_MAIN&]
-[s7; `{&]
-[s7; -|Sqlite3Session sqlite3;&]
-[s7; -|if(!sqlite3.Open(ConfigFile(`"simple.db`"))) `{&]
-[s7; -|-|Cout() << `"Can`'t create or open database file`\n`";&]
-[s7; -|-|return;&]
-[s7; -|`}&]
-[s7; -|&]
-[s7; #ifdef `_DEBUG&]
-[s7; -|sqlite3.SetTrace();&]
-[s7; #endif&]
-[s7; &]
-[s7; -|SQL `= sqlite3;&]
-[s7; &]
-[s7; -|SqlSchema sch(SQLITE3);&]
-[s7; -|All`_Tables(sch);&]
-[s7; -|SqlPerformScript(sch.Upgrade());&]
-[s7; -|SqlPerformScript(sch.Attributes());&]
-[s7; -|SQL.ClearError();&]
-[s7; &]
-[s7; -|[* S`_TEST] x;&]
-[s7; -|for(int i `= 0; i < 10; i`+`+) `{&]
-[s7; -|-|[* x.A `= i;]&]
-[s7; -|-|[* x.B `= AsString(3 `* i);]&]
-[s7; -|-|[* SQL `* Insert(x);]&]
-[s7; -|`}&]
-[s7; &]
-[s7; -|Sql sql;&]
-[s7; -|sql `* Select([* x]).From(TEST);&]
-[s7; -|while(sql.Fetch([* x]))&]
-[s7; -|-|Cout() << [* x.A] << `" `\`'`" << [* x.B] << `"`\`'`\n`";&]
-[s7; `}&]
-[s5; &]
-[s3; Recommended tutorials:&]
-[s5; If you want to learn more, we have several tutorials that you 
-can find useful:&]
-[s5;l160;i150;O0;~~~0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`_en`-us^ Skylark] 
-`- now you know everything about databases `- why not to use 
-your knowledge to become web development star?&]
-[s5;l160;i150;O0;~~~0; [^topic`:`/`/Core`/srcdoc`/Tutorial`_en`-us^ U`+`+ 
+[s5;%% &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@3+75 `"MyApp.h`"]&]
+[s0;l320;C+75 &]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Sql][C@(0.0.255)+75 /][C+75 s
+ch`_schema][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320; [C@(128.0.255)+75 #include][C+75  ][C@(0.0.255)+75 <][C+75 Sql][C@(0.0.255)+75 /][C+75 s
+ch`_source][C@(0.0.255)+75 .][C+75 h][C@(0.0.255)+75 >]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75 CONSOLE`_APP`_MAIN]&]
+[s0;l320; [C+75 `{]&]
+[s0;l320; [C+75     Sqlite3Session sqlite3;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 if][C+75 (][C@(0.0.255)+75 !][C+75 sqlite3][C@(0.0.255)+75 .
+][C+75 Open(ConfigFile(][C@3+75 `"simple.db`"][C+75 ))) `{]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"Can`'t 
+create or open database file][C@(0.0.255)+75 `\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75         ][*_C@(128.0.255)+75 return][C+75 ;]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320; [C+75     ]&]
+[s0;l320; [C@(128.0.255)+75 #ifdef][C+75  `_DEBUG]&]
+[s0;l320; [C+75     sqlite3][C@(0.0.255)+75 .][C+75 SetTrace();]&]
+[s0;l320; [C@(128.0.255)+75 #endif]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SQL ][C@(0.0.255)+75 `=][C+75  sqlite3;]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     SqlSchema sch(SQLITE3);]&]
+[s0;l320; [C+75     All`_Tables(sch);]&]
+[s0;l320; [C+75     SqlPerformScript(sch][C@(0.0.255)+75 .][C+75 Upgrade());]&]
+[s0;l320; [C+75     SqlPerformScript(sch][C@(0.0.255)+75 .][C+75 Attributes());]&]
+[s0;l320; [C+75     SQL][C@(0.0.255)+75 .][C+75 ClearError();]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     ][*_C+75 S`_TEST x;]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 for][C+75 (][*C@(0.0.255)+75 int][C+75  
+i ][C@(0.0.255)+75 `=][C+75  ][C@3+75 0][C+75 ; i ][C@(0.0.255)+75 <][C+75  
+][C@3+75 10][C+75 ; i][C@(0.0.255)+75 `+`+][C+75 ) `{]&]
+[s0;l320; [C+75         ][*_C+75 x][*_C@(0.0.255)+75 .][*_C+75 A ][*_C@(0.0.255)+75 `=][*_C+75  
+i;]&]
+[s0;l320; [C+75         ][*_C+75 x][*_C@(0.0.255)+75 .][*_C+75 B ][*_C@(0.0.255)+75 `=][*_C+75  
+AsString(][*_C@3+75 3][*_C+75  ][*_C@(0.0.255)+75 `*][*_C+75  i);]&]
+[s0;l320; [C+75         ][*_C+75 SQL ][*_C@(0.0.255)+75 `*][*_C+75  Insert(x);]&]
+[s0;l320; [C+75     `}]&]
+[s0;l320;C+75 &]
+[s0;l320; [C+75     Sql sql;]&]
+[s0;l320; [C+75     sql ][C@(0.0.255)+75 `*][C+75  Select(][*_C+75 x][C+75 )][C@(0.0.255)+75 .][C+75 F
+rom(TEST);]&]
+[s0;l320; [C+75     ][*C@(0.0.255)+75 while][C+75 (sql][C@(0.0.255)+75 .][C+75 Fetch(][*_C+75 x][C+75 )
+)]&]
+[s0;l320; [C+75         Cout() ][C@(0.0.255)+75 <<][C+75  ][*_C+75 x][*_C@(0.0.255)+75 .][*_C+75 A
+][C+75  ][C@(0.0.255)+75 <<][C+75  ][C@3+75 `" ][C@(0.0.255)+75 `\`'][C@3+75 `"][C+75  
+][C@(0.0.255)+75 <<][C+75  ][*_C+75 x][*_C@(0.0.255)+75 .][*_C+75 B][C+75  
+][C@(0.0.255)+75 <<][C+75  ][C@3+75 `"][C@(0.0.255)+75 `\`'`\n][C@3+75 `"][C+75 ;]&]
+[s0;l320; [C+75 `}]&]
+[s5;l320;%% &]
+[s3;%% Recommended tutorials:&]
+[s5;%% If you want to learn more, we have several tutorials that 
+you can find useful:&]
+[s5;l160;i150;O0;~~~0;%% [^topic`:`/`/Core`/srcdoc`/Tutorial`_en`-us^ U`+`+ 
 Core value types] `- still not very confident with U`+`+. In 
 this tutorial you will learn basics.]]

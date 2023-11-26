@@ -1,4 +1,0 @@
-template<typename _Alloc2, typename _Tp2>
-static constexpr true_type
-void
-_S_chk(typename _Alloc2::template rebind<_Tp2>::other*);

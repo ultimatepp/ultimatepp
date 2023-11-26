@@ -3,118 +3,115 @@
 
 #include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
-#include <plugin/jpg/jpg.h>
 #include <Report/Report.h>
 #include <RichText/RichText.h>
+#include <plugin/jpg/jpg.h>
 
-using namespace Upp;
-
+namespace Upp {
 
 #define IMAGECLASS GFImg
 #define IMAGEFILE <GeoFun/GeoFun.iml>
 #include <Draw/iml_header.h>
 
-#define LAYOUTFILE <GeoFun/GeoFun.lay>
-#include <CtrlCore/lay.h>
-
-
 #define TOPICFILE <GeoFun/app.tpp/all.i>
 #include <Core/topic_group.h>
 
-bool cfgAvailable ;
+#define LAYOUTFILE <GeoFun/GeoFun.lay>
+#include <CtrlCore/lay.h>
+
+bool cfgAvailable;
 
 class DrawCanvas : public ParentCtrl {
-		typedef DrawCanvas CLASSNAME ;
+	typedef DrawCanvas CLASSNAME;
 
-	public:
-		virtual void   Paint ( Draw& drw );
-		DrawCanvas();
-		template<class T>
-		void DoPaint0 ( T& sw, int idraw = 0 );
-		void DoPaint ( Painter& sw );
+public:
+	virtual void Paint(Draw& drw);
+	DrawCanvas();
+	template <class T>
+	void DoPaint0(T& sw, int idraw = 0);
+	void DoPaint(Painter& sw);
 
 	struct ColorPolygon : Moveable<ColorPolygon> {
-			Vector<Pointf> point;
-			Vector<Pointf> CenR;
-			Color          lcolor;
-			Color fcolorM1, fcolorM2;
-			int			   penwidth;
-			bool		   filled ;
-		};
+		Vector<Pointf> point;
+		Vector<Pointf> CenR;
+		Color lcolor;
+		Color fcolorM1, fcolorM2;
+		int penwidth;
+		bool filled;
+	};
 
-		Vector<ColorPolygon> data;
+	Vector<ColorPolygon> data;
 
-		Color fcolorB1, fcolorB2;
-		bool ShowGradient, ColorFill, Zoomed, ShowAnimation;
+	Color fcolorB1, fcolorB2;
+	bool ShowGradient, ColorFill, Zoomed, ShowAnimation;
 
-		double Radius1, BaseR, RollR;
-		int ShowTo, AnimSpeed ;
+	double Radius1, BaseR, RollR;
+	int ShowTo, AnimSpeed;
 };
-
 
 class GeoFun : public WithGeoFunLayout<TopWindow> {
-	public:
-		typedef GeoFun CLASSNAME;
-		GeoFun();
+public:
+	typedef GeoFun CLASSNAME;
+	GeoFun();
 
-		double ArmLen;
+	double ArmLen;
 
-		DrawCanvas dc1;
+	DrawCanvas dc1;
 
-		WithInputLayout<ParentCtrl> InputPane ;
+	WithInputLayout<ParentCtrl> InputPane;
 
-		Splitter sp1;
-		QtfRichObject qtfim;
-		
-		TimeCallback Animate;
+	Splitter sp1;
+	QtfRichObject qtfim;
 
-		int ValP, ValQ, PenW, CurvT, GradientY;
-		Color PenC, M1C, M2C, B1C, B2C;
+	TimeCallback Animate;
 
-		bool First ;
-		bool EpiCyclo , HypoCyclo, EpiTroch, HypoTroch, AnimMn;
+	int ValP, ValQ, PenW, CurvT, GradientY;
+	Color PenC, M1C, M2C, B1C, B2C;
 
-// Functions
-		void About();
+	bool First;
+	bool EpiCyclo, HypoCyclo, EpiTroch, HypoTroch, AnimMn;
 
-		void Exit();
+	// Functions
+	void About();
 
-		void FirstDraw();
+	void Exit();
 
-		Image GetImage();
+	void FirstDraw();
 
-		void Help();
+	Image GetImage();
 
-		virtual void Layout();
+	void Help();
 
-		void OptionColorFill();
-		void OptionGradient();
-		void OptionZoom();
+	virtual void Layout();
 
-		void PrepareData();
+	void OptionColorFill();
+	void OptionGradient();
+	void OptionZoom();
 
-		void Print();
+	void PrepareData();
 
-		void SaveToImageFile ( String fileName );
-		void SaveToAutoCadScript ( String fileName );
-		void SaveToSVG ( String fileName );
-		void SetAnimation();
-		void SetAnimationSpeed();
-		void SetCurveType ( int CrvType );
-		
-		void SetCurveTypeMenu ( int CrvType );
-		void Serialize ( Stream& s );
-		void ShowAnimated();
+	void Print();
 
+	void SaveToImageFile(String fileName);
+	void SaveToAutoCadScript(String fileName);
+	void SaveToSVG(String fileName);
+	void SetAnimation();
+	void SetAnimationSpeed();
+	void SetCurveType(int CrvType);
 
-// Menu Functions
-		void MainMenu ( Bar& menu );
+	void SetCurveTypeMenu(int CrvType);
+	void Serialize(Stream& s);
+	void ShowAnimated();
 
-		void CurvesMenu ( Bar& bar );
-		void FileMenu ( Bar& bar );
-		void HelpMenu ( Bar& bar );
-		void SettingsMenu ( Bar& bar );
+	// Menu Functions
+	void MainMenu(Bar& menu);
 
+	void CurvesMenu(Bar& bar);
+	void FileMenu(Bar& bar);
+	void HelpMenu(Bar& bar);
+	void SettingsMenu(Bar& bar);
 };
+
+} // namespace Upp
 
 #endif

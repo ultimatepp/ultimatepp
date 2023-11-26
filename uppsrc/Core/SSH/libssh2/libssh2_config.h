@@ -46,6 +46,15 @@
 #define PACKAGE_URL       "https://github.com/ultimatepp/ultimatepp"
 #define PACKAGE_VERSION   "2022.2 (libssh2 v.1.10.0)"
 
+/*
+   OpenSSL version 3.0 deprecated a bunch of api calls.
+   Until libssh2 adopts the new API calls, we will simply
+   suppress the deprecation warnings by compiling the library
+   in compatibility mode.
+*/
+
+#define OPENSSL_API_COMPAT 0x10100000L
+
 /* Headers */
 #define HAVE_INTTYPES_H
 #define HAVE_STDLIB_H

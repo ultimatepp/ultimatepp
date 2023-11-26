@@ -10,8 +10,10 @@
 extern bool LibClangEnabled;
 extern bool AssistDiagnostics;
 extern bool AutoIndexer;
+extern bool RelaxedIndexerDependencies; // basically: Do not rescan all .cpps on .h change
 extern int  IndexerThreads;
 extern int  ParsedFiles;
+extern int  LibClangCppVersion;
 
 void ClangConfigSerialize(Stream& s);
 void ClangConfigSetDefaults();
@@ -89,7 +91,8 @@ enum AdditionalKinds {
 
 Image  CxxIcon(int kind); // TODO: Move here
 int    PaintCpp(Draw& w, const Rect& r, int kind, const String& name, const String& pretty, Color ink, bool focuscursor, bool retval_last = false);
-String SignatureQtf(const String& name, const String& pretty, int pari);
+String SignatureQtf(const String& name, const String& pretty, int pari = INT_MAX);
+String CppText(const String& name, const String& pretty);
 
 bool IsStruct(int kind);
 bool IsTemplate(int kind);
@@ -145,17 +148,20 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	int    kind = Null;
 	bool   definition = false;
 	bool   isvirtual = false;
+	bool   isstatic = false;
 	
 	void Serialize(Stream& s);
 };
 
 String GetClass(const AnnotationItem& m);
 String GetNameFromId(const String& id);
+String MakeDefinition(const AnnotationItem& m, const String& klass);
 String MakeDefinition(const AnnotationItem& m);
 
 struct ReferenceItem : Moveable<ReferenceItem> {
 	String id;
 	Point  pos;
+	Point  ref_pos;
 	
 	bool operator==(const ReferenceItem& b) const { return id == b.id && pos == b.pos; }
 	hash_t GetHashValue() const                   { return CombineHash(id, pos); }
@@ -184,6 +190,7 @@ enum { PARSE_FILE = 0x80000000 };
 struct Clang {
 	CXIndex           index = nullptr;
 	CXTranslationUnit tu = nullptr;
+	String            iquote;
 
 	void Dispose();
 	bool Parse(const String& filename, const String& content,
@@ -267,6 +274,17 @@ void CancelAutoComplete();
 
 String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header_file);
 
+struct MasterSourceCacheRecord : Moveable<MasterSourceCacheRecord> {
+	String master;
+	VectorMap<String, Time> chain;
+	
+	bool CheckTimes(PPInfo& ppi) const;
+	void Serialize(Stream& s);
+};
+
+const VectorMap<String, Time>& FindMasterSourceCached(PPInfo& ppi, const Workspace& wspc, const String& header_file,
+                                                      VectorMap<String, MasterSourceCacheRecord>& cache);
+
 struct FileAnnotation0 {
 	String defines = "<not_loaded>";
 	String includes;
@@ -293,21 +311,28 @@ class Indexer {
 	static CoEvent            event, scheduler;
 	static Mutex              mutex;
 	static Vector<Job>        jobs;
-	static int                jobi;
-	static int                jobs_done;
+	static std::atomic<int>   jobi;
+	static std::atomic<int>   jobs_done;
+	static std::atomic<int>   jobs_count; // way to get jobs.GetCount without mutex
 	static std::atomic<int>   running_indexers;
 	static bool               running_scheduler;
 	static String             main, includes, defines;
+	static bool               relaxed;
 	
 	static void IndexerThread();
 	static void SchedulerThread();
+	static void BuildingPause();
 
 public:
-	static void Start(const String& main, const String& includes, const String& defines);
-	static bool IsRunning();
+	static void   Start(const String& main, const String& includes, const String& defines);
+	static bool   IsRunning();
+	static int    GetJobsCount()       { return jobs_count; }
+	static bool   IsSchedulerRunning() { return running_scheduler; }
 	static double Progress();
 };
 
-void DumpIndex(const char *file);
+void DumpIndex(const char *file, const String& what = Null);
+
+void CurrentFileDeleteCache();
 
 #endif

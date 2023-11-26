@@ -96,7 +96,7 @@ CONSOLE_APP_MAIN
 	
 	DeleteFolderDeep(release);
 	RealizeDirectory(release);
-
+	
 	String uppsrc = upp_src + "/uppsrc";
 	String dstsrc = release + "/uppsrc";
 
@@ -106,6 +106,7 @@ CONSOLE_APP_MAIN
 
 	SaveFile(dstsrc + "/guiplatform.h", "");
 	SaveFile(dstsrc + "/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
+	SaveFile(release + "/uppsrc/.clang-format", LoadFile(upp_src + "/.clang-format"));
 	SaveFile(dstsrc + "/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 
 	RealizeDirectory(release + "/.config");
@@ -129,10 +130,10 @@ CONSOLE_APP_MAIN
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC32 " OPTS  + release + "/umks32");
 #endif
 
-	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC -rvsM");
-	FixMakefile(release + "/umkMakefile", release + "/Makefile");
+	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc umk GCC +NOMM -rvsM");
+	FixMakefile(release + "/umkMakefile.in", release + "/Makefile");
 	Syx(GetHomeDirFile("bin/umk") + " ./uppsrc ide GCC -rvsM theide");
-	FixMakefile(release + "/Makefile", release + "/Makefile");
+	FixMakefile(release + "/Makefile.in", release + "/Makefile");
 
 	SaveFile(release + "/license.chk", "1");
 	

@@ -70,6 +70,9 @@ har]_`*[*@3 val])&]
 ator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 attr], [@(0.0.255) int]_[*@3 q])&]
 [s5;:XmlTag`:`:operator`(`)`(const char`*`,double`): [_^XmlTag^ XmlTag][@(0.0.255) `&]_[* o
 perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 attr], [@(0.0.255) double]_[*@3 q])&]
+[s5;:Upp`:`:XmlTag`:`:operator`(`)`(const char`*`,float`): XmlTag[@(0.0.255) `&] 
+operator()([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*]attr, 
+[@(0.0.255) float] q)&]
 [s2;%% These methods add XML tag attributes.&]
 [s3;%% &]
 [s0;%% &]

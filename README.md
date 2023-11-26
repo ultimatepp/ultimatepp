@@ -3,8 +3,13 @@
 ![alt text](uppbox/uppweb/Resources/Images/Logo.png?raw=true "U++ Logo")
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/ultimatepp/ultimatepp/tree/master.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/ultimatepp/ultimatepp/tree/master)
+[![U++ Discord](https://img.shields.io/discord/1046445457951424612)](https://discord.gg/8XzqQzXZzb)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/ultimatepp/ultimatepp)
+[![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, etc.), and an integrated development environment.
+## Introduction
+
+U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), and an integrated development environment.
 
 Rapid development is achieved by the [smart and aggressive use of C++](https://www.ultimatepp.org/www$uppweb$overview$en-us.html) rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.
 
@@ -22,7 +27,7 @@ U++ supports following platforms on the production level: **Windows**, **macOS**
 You can use both, or you can use whichever you need.
 
 ## License
-U++ uses BSD license.
+U++ uses the BSD-2 Clause license. The license applies to all source code in this repository except for the situation when the directory contains the "Copying" file. In this case, the license contained in this file is valid for source codes within the directory in which it is present. Moreover, the new license stored in the "Copying" file applies to source files in child directories.
 
 ## Download
 
@@ -53,7 +58,7 @@ public:
         Title("My application").Zoomable().Sizeable().SetRect(0, 0, 320, 200);
     }
 
-    virtual void Paint(Upp::Draw& w) override
+    void Paint(Upp::Draw& w) override
     {
         w.DrawRect(GetSize(), Upp::SWhite);
         w.DrawText(10, 10, "Hello, world!", Upp::Arial(30), Upp::Magenta);
@@ -80,11 +85,37 @@ See here: [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html).
 
 If you would like to see more screenshots, click [here](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
+## Tutorials
+
+We prepared several tutorials that will allow you to learn most of the aspects of our integrated development environment, TheIDE and the U++ framework.
+
+TheIDE:
+- [**Getting started with TheIDE**](https://www.ultimatepp.org/app$ide$GettingStarted$en-us.html) - the introduction to the concepts of TheIDE.
+- [TheIDE beginner guide](https://www.ultimatepp.org/app$ide$Guide_en-us.html) - continuation provides information how to solve common problems.
+
+U++ framework:
+- [**Core Tutorial**](https://www.ultimatepp.org/srcdoc$Core$Tutorial$en-us.html) - the introduction to the foundations behind the framework.
+- [**GUI Tutorial**](https://www.ultimatepp.org/srcdoc$CtrlLib$Tutorial$en-us.html) - learn how to build graphical user interfaces with the U++.
+- [Draw Tutorial](https://www.ultimatepp.org/srcdoc$Draw$DrawTutorial$en-us.html) - get knowledge about drawing custom content inside window or control.
+- [Image Tutorial](https://www.ultimatepp.org/srcdoc$Draw$ImgTutorial$en-us.html) - check out the mechanism behind the image manipulation.
+- [Network Tutorial](https://www.ultimatepp.org/srcdoc$Core$NetworkTutorial_en-us.html) - learn how to use U++ core components for network application creation.
+- [Sql Tutorial](https://www.ultimatepp.org/srcdoc$Sql$tutorial$en-us.html) - introduction to using databases within U++ framework
+
+If the above list is not enough, please visit a dedicated [website](https://www.ultimatepp.org/www$uppweb$Tutorials$en-us.html) where we have collected links to most of the learning resources.
+
+# Extensibility
+
+The functionality of the U++ framework can be easily extended by third-party packages. We introduced the concept of a global registry of repositories that can be downloaded and directly used in the project. To learn more about this technology, please visit [UppHub](https://github.com/ultimatepp/UppHub) repository.
+
+UppHub conceptually is very similar to the package manager concept known from other technologies, and in big generalization, it can be called like that.
+
 # Repository
 
 ## Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
+* **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
+* **tutorial** - exemplary code from our tutorials
 * **uppsrc** - main sources of the framework

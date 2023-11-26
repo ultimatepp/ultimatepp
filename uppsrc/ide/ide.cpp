@@ -1,10 +1,48 @@
 #include "ide.h"
 
+VectorMap<String, String> git_branch_cache;
+
+String GetGitBranch(const String& dir)
+{
+	int q = git_branch_cache.Find(dir);
+	String branch;
+	if(q < 0) {
+		String git_dir = dir;
+		if(GetRepo(git_dir) == GIT_DIR) {
+			q = git_branch_cache.Find(git_dir);
+			if(q < 0) {
+				q = git_branch_cache.GetCount();
+				branch = GitCmd(git_dir, "branch --show");
+				int j = branch.Find('\n');
+				if(j >= 0)
+					branch.Trim(j);
+				git_branch_cache.Add(git_dir, branch);
+			}
+			branch = git_branch_cache[q];
+		}
+		q = git_branch_cache.Find(dir);
+		if(q < 0) {
+			q = git_branch_cache.GetCount();
+			git_branch_cache.Add(dir, branch);
+		}
+	}
+	return git_branch_cache[q];
+}
+
 void Ide::MakeTitle()
 {
+	if(replace_in_files) return;
+
 	String title;
-	if(!main.IsEmpty())
-		title << main;
+	title << Nvl(main, "TheIDE");
+
+	Vector<String> dirs = GetUppDirs();
+	if(dirs.GetCount()) {
+		String branch = GetGitBranch(dirs[0]);
+		if(branch.GetCount())
+			title << " [ " << branch << " ] ";
+	}
+
 	if(!mainconfigname.IsEmpty() &&  mainconfigname == mainconfigparam)
 		title << " - " << mainconfigname;
 	else
@@ -12,9 +50,6 @@ void Ide::MakeTitle()
 		title << " - " << mainconfigname;
 		title << " ( " << mainconfigparam << " )";
 	}
-	if(!title.IsEmpty())
-		title << " - ";
-	title << "TheIDE";
 	if(designer) {
 		title << " - " << designer->GetFileName();
 		int cs = designer->GetCharset();
@@ -24,6 +59,9 @@ void Ide::MakeTitle()
 	else
 	if(!editfile.IsEmpty()) {
 		title << " - " << editfile;
+		String branch = GetGitBranch(GetFileFolder(editfile));
+		if(branch.GetCount())
+			title << " [ " << branch << " ] ";
 		int chrset = editor.GetCharset();
 		title << " " << IdeCharsetName(chrset)
 		      << " " << (findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? "LF" : "CRLF");
@@ -36,14 +74,21 @@ void Ide::MakeTitle()
 			title << " [Read Only]";
 		if(editor.IsDirty())
 			title << " *";
+		if(!bar_branch)
+			branch = Null;
+		editor.BarColor(findarg(branch, "", "master", "main") >= 0 ? Null :
+		                IsDarkTheme() ? Color(26, 86, 86) : Color(207, 255, 255));
+		editor.BarText(branch);
 	}
 	if(!IsNull(editfile))
 		for(int i = 0; i < 10; i++)
 			if(NormalizePath(editfile) == NormalizePath(bookmark[i].file))
 				title << Format(" <%d>", i);
+	
 	title << " { " << GetAssemblyId() << " }";
 	if(isscanning)
 		title << " (scanning files)";
+	
 	Title(title.ToWString());
 }
 
@@ -127,7 +172,6 @@ void Ide::SetMain(const String& package)
 	SyncBuildMode();
 	SetHdependDirs();
 	SetBar();
-	HideBottom();
 	SyncUsc();
 	if(IsNull(e))
 		e = GetFirstFile();
@@ -175,8 +219,10 @@ void Ide::NewMainPackage()
 		CreateHost(h, false, false);
 		h.Launch(GetExeFilePath() + " --nosplash");
 	}
-	else
+	else {
 		OpenMainPackage();
+		StopBuild();
+	}
 }
 
 void Ide::PackageCursor()
@@ -216,31 +262,6 @@ void Ide::SaveWorkspace()
 	if(console.console) return;
 	if(main.IsEmpty()) return;
 	StoreToFile(THISBACK(SerializeWorkspace), WorkspaceFile());
-}
-
-void Ide::SyncMainConfigList()
-{
-	mainconfiglist.Clear();
-	const Workspace& wspc = IdeWorkspace();
-	if(wspc.GetCount() <= 0) return;
-	const Array<Package::Config>& f = wspc.GetPackage(0).config;
-	for(int i = 0; i < f.GetCount(); i++)
-		mainconfiglist.Add(f[i].param, Nvl(f[i].name, f[i].param));
-	SetMainConfigList();
-}
-
-void Ide::SetMainConfigList()
-{
-	mainconfiglist <<= mainconfigparam;
-	mainconfigname = mainconfiglist.GetValue();
-	mainconfiglist.Tip("Main configuration: " + mainconfigparam);
-}
-
-void Ide::OnMainConfigList()
-{
-	mainconfigparam = ~mainconfiglist;
-	SetMainConfigList();
-	MakeTitle();
 }
 
 void Ide::UscFile(const String& file)
@@ -351,13 +372,20 @@ void Ide::DeactivateBy(Ctrl *new_focus)
 		DeactivationSave(false);
 	}
 	TopWindow::DeactivateBy(new_focus);
+	win_deactivated = !new_focus || dynamic_cast<TopWindow *>(new_focus);
 }
 
 void Ide::Activate()
 {
-	TriggerIndexer();
-	editor.SyncCurrentFile();
+	if(win_deactivated) {
+		TriggerIndexer();
+		editor.TriggerSyncFile(0);
+		TriggerIdeBackgroundThread(5000);
+		git_branch_cache.Clear();
+		win_deactivated = false;
+	}
 	TopWindow::Activate();
+	MakeTitle();
 }
 
 bool Ide::Key(dword key, int count)
@@ -423,6 +451,7 @@ bool Ide::Key(dword key, int count)
 	case K_MOUSE_FORWARD:
 		History(1);
 		return true;
+	#ifndef PLATFORM_COCOA
 	default:
 		if(key >= K_SHIFT_CTRL_0 && key <= K_SHIFT_CTRL_9) {
 			Bookmark& b = bookmark[key - K_SHIFT_CTRL_0];
@@ -435,6 +464,7 @@ bool Ide::Key(dword key, int count)
 			GotoBookmark(bookmark[key - K_CTRL_0]);
 			return true;
 		}
+	#endif
 	}
 	return false;
 }
@@ -519,6 +549,8 @@ void Ide::BookKey(int key)
 
 void Ide::DoDisplay()
 {
+	if(replace_in_files)
+		return;
 	Point p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
@@ -648,7 +680,7 @@ struct IndexerProgress : ImageMaker {
 		ImagePainter iw(sz);
 		iw.Clear(RGBAZero());
 		iw.Move(sz.cx / 2, sz.cy / 2).Arc(sz.cx / 2, sz.cy / 2, sz.cx / 2, -M_PI/2, pos * M_2PI).Line(sz.cx / 2, sz.cy / 2).Fill(SGray());
-		iw.DrawImage(0, 0, IdeImg::Indexer());
+	//	iw.DrawImage(0, 0, IdeImg::Indexer());
 		return iw;
 	}
 };
@@ -656,8 +688,7 @@ struct IndexerProgress : ImageMaker {
 void Ide::SyncClang()
 {
 	Vector<Color> a;
-	Color display_ink = Null;
-	int phase = msecs() / 30; // TODO: Use phase
+	int phase = msecs() / 30;
 	auto AnimColor = [](int animator) {
 		return Blend(IsDarkTheme() ? GrayColor(70) : SColorLtFace(), Color(198, 170, 0), animator);
 	};
@@ -669,13 +700,14 @@ void Ide::SyncClang()
 			animator -= 3;
 		return AnimColor(animator);
 	};
-	Color bg = Animate(animate_current_file, animate_current_file_dir, editor.annotating || IsCurrentFileParsing());
+	Color bg = Animate(animate_current_file, animate_current_file_dir,
+	                   (editor.annotating || IsCurrentFileParsing()) && HasLibClang());
 	int cx = editor.GetBarSize().cx;
 	if(!IsNull(bg)) {
 		for(int i = 0; i < cx; i++)
 			a.Add(i > cx - DPI(6) ? bg : Null);
 	}
-	if(IsAutocompleteParsing())
+	if(IsAutocompleteParsing() && HasLibClang())
 		a.At((phase % DPI(6)) + cx - DPI(6)) = SGray();
 	editor.AnimateBar(pick(a));
 	editor.search.SetBackground(Animate(animate_indexer, animate_indexer_dir, Indexer::IsRunning()));
@@ -683,9 +715,29 @@ void Ide::SyncClang()
 		IndexerProgress mi;
 		mi.pos = Indexer::Progress();
 		indeximage.SetImage(MakeImage(mi));
+		
+		static Image waitani[64];
+		ONCELOCK {
+			int sz = DPI(16);
+			for(int ani = 0; ani < 64; ani++) {
+				ImagePainter sw(sz, sz);
+				sw.Clear(RGBAZero());
+				Pointf prev = Null;
+				for(int i = 0; i <= 128; i++) {
+					Pointf next = (sz / 2 - 1) * Polar((i + ani * 4) * M_2PI / 256) + Pointf(sz / 2, sz / 2);
+					if(!IsNull(prev))
+						sw.Move(prev).Line(next).Stroke(DPI(i) / 128.0, Blend(SLtGray, SLtRed, 2 * i));
+					prev = next;
+				}
+				waitani[ani] = sw.GetResult();
+			}
+		}
+		indeximage2.SetImage(waitani[(msecs() / 20) & 63]);
 	}
-	else
+	else {
 		indeximage.SetImage(Null);
+		indeximage2.SetImage(Null);
+	}
 	animate_phase = phase;
 }
 
@@ -704,6 +756,27 @@ const Workspace& Ide::IdeWorkspace() const
 				break;
 			}
 	}
+	return wspc;
+}
+
+const Workspace& Ide::AssistWorkspace() const
+{
+	static Workspace wspc;
+	static String _main;
+	bool update = false;
+	if(main != _main || wspc.GetCount() == 0) {
+		update = true;
+		_main = main;
+	}
+	else {
+		for(int i = 0; i < wspc.GetCount(); i++)
+			if(wspc.GetPackage(i).time != FileGetTime(PackagePath(wspc[i]))) {
+				update = true;
+				break;
+			}
+	}
+	if(update)
+		wspc.Scan(main, SplitFlags(mainconfigparam, false));
 	return wspc;
 }
 
@@ -730,41 +803,46 @@ int Ide::GetPackageIndex()
 	return -1;
 }
 
-void Ide::GotoDiffLeft(int line, DiffDlg *df)
+void Ide::DoDiff(FileDiff *df)
 {
-	EditFile(df->editfile);
-	editor.SetCursor(editor.GetPos64(line));
-	editor.SetFocus();
-}
-
-void Ide::GotoDiffRight(int line, FileDiff *df)
-{
-	EditFile(df->GetExtPath());
-	editor.SetCursor(editor.GetPos64(line));
-	editor.SetFocus();
+	auto Do = [=](const String& file, int line) {
+		EditFile(file);
+		editor.SetCursor(editor.GetPos64(line));
+		editor.SetFocus();
+	};
+	df->diff.WhenLeftLine = [=](int line) { Do(df->editfile, line); };
+	df->diff.WhenRightLine = [=](int line) { Do(df->GetExtPath(), line); };
+	df->OpenMain();
 }
 
 void Ide::Diff()
 {
 	if(IsNull(editfile))
 		return;
-	FileDiff diffdlg(AnySourceFs());
-	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
-	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
-	diffdlg.Execute(editfile);
+	FileDiff& diffdlg = CreateNewWindow<FileDiff>(AnySourceFs());
+	diffdlg.Set(editfile);
 	String s = diffdlg.GetExtPath();
 	if(FileExists(s))
 		LruAdd(difflru, s);
+	DoDiff(&diffdlg);
 }
 
 void Ide::DiffWith(const String& path)
 {
-	if(IsNull(editfile) || IsNull(path) || max(GetFileLength(editfile), GetFileLength(path)) > 100*1024*1024)
+#ifdef CPU_64
+	int64 maxsize = 2000*1024*1024;
+#else
+	int64 maxsize = 100*1024*1024;
+#endif
+	if(IsNull(editfile) || IsNull(path))
 		return;
-	FileDiff diffdlg(AnySourceFs());
-	diffdlg.diff.WhenLeftLine = THISBACK1(GotoDiffLeft, &diffdlg);
-	diffdlg.diff.WhenRightLine = THISBACK1(GotoDiffRight, &diffdlg);
-	diffdlg.Execute(editfile, path);
+	if(max(GetFileLength(editfile), GetFileLength(path)) > maxsize) {
+		Exclamation("Too big to compare");
+		return;
+	}
+	FileDiff& diffdlg = CreateNewWindow<FileDiff>(AnySourceFs());
+	diffdlg.Set(editfile, path);
+	DoDiff(&diffdlg);
 }
 
 struct ConflictDiff : TopWindow {
@@ -817,5 +895,5 @@ void Ide::TriggerIndexer0()
 void Ide::TriggerIndexer()
 {
 	if(AutoIndexer)
-		Indexer::Start(main, GetCurrentIncludePath(), GetCurrentDefines());
+		TriggerIndexer0();
 }

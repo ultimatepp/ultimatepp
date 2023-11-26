@@ -32,6 +32,14 @@ Time Builder::GetFileTime(const String& path) const
 	return GetFileInfo(path);
 }
 
+VectorMap<String, String> Builder::cmdx_cache;
+
+Time Builder::HdependFileTime(const String& path)
+{
+	return onefile.GetCount() ? path == onefile ? GetSysTime() : Time::Low()
+	                          : HdependGetFileTime(path);
+}
+
 String Builder::CmdX(const char *s)
 { // expand ` character delimited sections by executing them as commands
 	String r, cmd;
@@ -39,7 +47,15 @@ String Builder::CmdX(const char *s)
 	for(; *s; s++)
 		if(*s == '`') {
 			if(cmdf) {
-				r << Sys(cmd);
+				int q = cmdx_cache.Find(cmd);
+				if(q >= 0)
+					r << cmdx_cache[q];
+				else {
+					String h = Sys(cmd);
+					r << h;
+					cmdx_cache.Add(cmd, h);
+					IdeProcessEvents();
+				}
 				cmd.Clear();
 			}
 			cmdf = !cmdf;
@@ -47,7 +63,12 @@ String Builder::CmdX(const char *s)
 		else
 			(cmdf ? cmd : r).Cat(*s);
 	int q = r.Find(' ');
-	if(r.GetCount() > 8000 && q >= 0) {
+#ifdef PLATFORM_BSD
+	const int limit = 1000000;
+#else
+	const int limit = 8000;
+#endif
+	if(r.GetCount() > limit && q >= 0) {
 		String rn = CatAnyPath(outdir, AsString(tmpfilei.GetAdd(outdir, 0)++) + ".cmd");
 		PutVerbose("Generating response file: " << rn);
 		PutVerbose(r);

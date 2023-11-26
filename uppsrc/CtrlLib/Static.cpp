@@ -28,6 +28,13 @@ StaticText& StaticText::SetAlign(int align)
 	return *this;
 }
 
+StaticText& StaticText::SetVAlign(int align)
+{
+	SetIntAttr(ATTR_VALIGN, align);
+	Refresh();
+	return *this;
+}
+
 StaticText& StaticText::SetImage(const Image& img, int spc)
 {
 	CreateAttr<Image>(ATTR_IMAGE) = img;
@@ -47,10 +54,11 @@ StaticText& StaticText::SetText(const char *s)
 void StaticText::MakeDrawLabel(DrawLabel& l) const
 {
 	l.text = text;
-	l.font = Nvl(GetFontAttr(ATTR_FONT), StdFont());
-	l.ink = Nvl(GetColorAttr(ATTR_INK), SColorText());
-	l.align = Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT);
-	l.limg = GetAttr<Image>(ATTR_IMAGE);
+	l.font = GetFont();
+	l.ink = GetInk();
+	l.align = GetAlign();
+	l.valign = GetVAlign();
+	l.limg = GetImage();
 	l.lspc = Nvl(GetIntAttr(ATTR_IMAGE_SPC), 0);
 	l.disabled = !IsShowEnabled();
 	l.accesskey = accesskey;
@@ -255,9 +263,9 @@ void LabelBox::Paint(Draw& w)
 	int ty = sz.cy < 2 * Draw::GetStdFontCy() ? (sz.cy - lsz.cy) / 2 : 0;
 	DrawLabel l;
 	MakeDrawLabel(l);
-	Size ts = l.Paint(this, w, d + DPI(2), ty, sz.cx, lsz.cy);
+	Rect tr = l.PaintRect(this, w, d + DPI(2), ty, sz.cx - 2 * (d + DPI(2)), lsz.cy);
 	w.Begin();
-	w.ExcludeClip(d, ty, ts.cx + DPI(4), ts.cy);
+	w.ExcludeClip(tr.left - DPI(2), ty, tr.GetWidth() + DPI(4), tr.GetHeight());
 	PaintLabelBox(w, sz, color, d);
 	w.End();
 }
@@ -323,6 +331,14 @@ Size ImageCtrl::GetMinSize() const
 	return img.GetSize();
 }
 
+ImageCtrl& ImageCtrl::SetImage(const Image& _img)
+{
+	if(img.IsSame(_img))
+		return *this;
+	img = _img;
+	Refresh();
+	return *this;
+}
 
 DrawingCtrl& DrawingCtrl::Background(Color color)
 {

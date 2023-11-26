@@ -691,6 +691,7 @@ void  Option::PerformAction() {
 
 Option& Option::Set(int b)
 {
+	b = IsNull(b) ? Null : (int)(bool)b;
 	if(b != option) {
 		option = b;
 		Update();

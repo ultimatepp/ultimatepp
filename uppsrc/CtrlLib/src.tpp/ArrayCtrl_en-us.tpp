@@ -1073,6 +1073,12 @@ width is extended to span over the next cell (just like in common
 spreadsheet applications). ArrayCtrl header must no be in Moving 
 mode for correct operation. Returns `*this.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:AcceptEdits`(bool`):%- ArrayCtrl[@(0.0.255) `&] 
+[* AcceptEdits]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s2; ArrayCtrl normally does not Accept (check) controlled widgets 
+(e.g. editors). This mode activates such behaviour.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^String^ String]_[* RowFormat]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s])&]
@@ -2564,7 +2570,9 @@ controls whether header is exported.&]
 [s5;:ArrayCtrl`:`:WhenSel: [_^Callback^ Callback]_[* WhenSel]&]
 [s2; Called whenever cursor or selection changes. This probably the 
 most common ArrayCtrl callback. We recommend to start with this 
-one first and use others only if necessary.&]
+one first and use others only if necessary. Note that WhenSel 
+can be invoked several times per single input event, that is 
+a feature, not a bug.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenLeftClick: [_^Callback^ Callback]_[* WhenLeftClick]&]

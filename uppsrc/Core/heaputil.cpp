@@ -13,7 +13,7 @@ namespace Upp {
 void OutOfMemoryPanic(size_t size)
 {
 	char h[200];
-	sprintf(h, "Out of memory!\nU++ allocated memory: %d KB", MemoryUsedKb());
+	snprintf(h, 200, "Out of memory!\nU++ allocated memory: %d KB", MemoryUsedKb());
 	Panic(h);
 }
 

@@ -94,7 +94,7 @@ Vector<Rect> Intersection(const Vector<Rect>& b, const Rect& a)
 	return Intersect(b, a, dummy);
 }
 
-void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r)
+void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r, double ctolerance)
 {
 	Vector<Rect> inv;
 	Rect r = _r;
@@ -102,7 +102,7 @@ void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r)
 	for(int i = 0; i < invalid.GetCount(); i++) {
 		const Rect& ir = invalid[i];
 		Rect ur = r | ir;
-		if(ur.Width() * ur.Height() < 2 * (ir.Width() * ir.Height() + ra))
+		if(ur.Width() * ur.Height() < ctolerance * (ir.Width() * ir.Height() + ra))
 			r = ur;
 		else
 		if(!r.Contains(ir))

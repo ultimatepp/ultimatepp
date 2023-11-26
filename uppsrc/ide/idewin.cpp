@@ -135,6 +135,11 @@ void Ide::IdeConsoleOnFinish(Event<>  cb)
 	console.OnFinish(cb);
 }
 
+void Ide::IdeProcessEvents()
+{
+	Ctrl::ProcessEvents();
+}
+
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
 	right.Add(ctrl.SizePos());
@@ -327,7 +332,7 @@ void Ide::Layout()
 	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
-static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
+void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
 {
 	One<EditorSyntax> es = EditorSyntax::Create(EditorSyntax::GetSyntaxForFilename(GetFileName(path)));
 	es->IgnoreErrors();
@@ -351,7 +356,7 @@ CursorInfoCtrl::CursorInfoCtrl()
 
 Ide::Ide()
 {
-	DiffDlg::WhenHighlight = callback(sHighlightLine);
+	DiffDlg::WhenHighlight = callback(HighlightLine);
 
 	editor.theide = this;
 	editor.WhenSel << [=] {
@@ -388,7 +393,8 @@ Ide::Ide()
 	toolbar_in_row = false;
 	WhenClose = THISBACK(Exit);
 
-	editorsplit.Vert(editor, editor2);
+	editor_p.Add(editor.SizePos());
+	editorsplit.Vert(editor_p, editor2);
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
 	
@@ -401,15 +407,6 @@ Ide::Ide()
 	error.AddIndex("NOTES");
 	error.ColumnWidths("207 41 834");
 	error.WhenBar = THISBACK(ErrorMenu);
-
-	for(int i = 0; i < 3; i++) {
-		SetupError(ffound[i], "Source");
-		ffound[i].ColumnWidths("207 41 834");
-		ffound[i].ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
-		ffound[i].ColumnAt(2).SetDisplay(Single<FoundDisplay>());
-		ffound[i].WhenBar = THISBACK(FFoundMenu);
-		ffound[i].WhenSel = ffound[i].WhenLeftClick = THISBACK(ShowFound);
-	}
 
 	error.WhenSel = THISBACK(SelError);
 	error.WhenLeftClick = THISBACK(ShowError);
@@ -426,8 +423,6 @@ Ide::Ide()
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
 	bottom.Add(error.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
-	for(int i = 0; i < 3; i++)
-		bottom.Add(ffound[i].SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
 	
@@ -444,9 +439,14 @@ Ide::Ide()
 	editor.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
+	tabs.WhenClose = [=](Value file) { // remove file from Ctrl+Tab logic
+		int q = FindIndex(tablru, ~file);
+		if(q >= 0)
+			tablru.Remove(q);
+	};
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
 //	editor2.SetFrame(NullFrame());
-	editor2.theide = this;
+//	editor2.theide = this;
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);
@@ -516,33 +516,6 @@ Ide::Ide()
 #else
 	setmain_newide = false;
 #endif
-	/*
-		astyle code formatter control vars
-		added 2008.01.27 by Massimo Del Fedele
-	*/
-	astyle_BracketIndent = false;
-	astyle_NamespaceIndent = true;
-	astyle_BlockIndent = false;
-	astyle_CaseIndent = true;
-	astyle_ClassIndent = true;
-	astyle_LabelIndent = true;
-	astyle_SwitchIndent = true;
-	astyle_PreprocessorIndent = false;
-	astyle_MinInStatementIndentLength = 2;
-	astyle_MaxInStatementIndentLength = 20;
-	astyle_BreakClosingHeaderBracketsMode = true;
-	astyle_BreakElseIfsMode = true;
-	astyle_BreakOneLineBlocksMode = true;
-	astyle_SingleStatementsMode = true;
-	astyle_BreakBlocksMode = true;
-	astyle_BreakClosingHeaderBlocksMode = true;
-	astyle_BracketFormatMode = astyle::BREAK_MODE;
-	astyle_ParensPaddingMode = astyle::PAD_BOTH;
-	astyle_ParensUnPaddingMode = true;
-	astyle_OperatorPaddingMode = true;
-	astyle_EmptyLineFill = false;
-	astyle_TabSpaceConversionMode = false;
-	astyle_TestBox = "#include <stdio.h>\n#ifndef __abcd_h\n#include <abcd.h>\n#endif\n\nvoid test(int a, int b)\n{\n  /* this is a switch */\n  switch(a)\n\n  {\n    case 1:\n      b = 2;\n      break;\n    case 2:\n      b = 4;\n      break;\n    default:\n    break;\n  }\n\n  /* this are more statements on one line */\n  a = 2*a;b=-5;a=2*(b+2)*(a+3)/4;\n\n  /* single line blocks */\n  {int z;z = 2*a+b;}\n\n  /* loop */\n  for(int i = 0;i< 10;i++) { a = b+2*i;}\n\n}\n";
 	
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
@@ -563,7 +536,11 @@ Ide::Ide()
 
 	use_target = true;
 
+#ifdef PLATFORM_COCOA
+	runmode = RUN_CONSOLE;
+#else
 	runmode = RUN_WINDOW;
+#endif
 	runexternal = false;
 	consolemode = 0;
 	console_utf8 = false;
@@ -630,8 +607,12 @@ Ide::Ide()
 	HideBottom();
 	SetupBars();
 	SetBar();
+	
+	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";
+	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
 	editor.search.Add(indeximage.RightPos(DPI(1), DPI(16)).VSizePos());
+	editor.search.Add(indeximage2.RightPos(DPI(1), DPI(16)).VSizePos());
 
 #ifdef PLATFORM_COCOA
 	WhenDockMenu = [=](Bar& bar) {
@@ -647,6 +628,41 @@ Ide::Ide()
 Ide::~Ide()
 {
 	SetTheIde(NULL);
+}
+
+void Ide::DeleteWindows()
+{
+	for(Ptr<TopWindow> w : window)
+		if(w)
+			delete w;
+}
+
+void Ide::NewWindow(TopWindow *win)
+{
+	window.RemoveIf([&](int i) { return !window[i]; });
+	window.Add(win);
+}
+
+String LibClangCommandLine()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	return q ? ((Ide *)q)->libclang_options : String();
+}
+
+String LibClangCommandLineC()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	return q ? ((Ide *)q)->libclang_coptions : String();
+}
+
+void IdeShowConsole()
+{
+	GuiLock __;
+	IdeContext *q = TheIdeContext();
+	if(q)
+		((Ide *)q)->ShowConsole();
 }
 
 void Ide::Paint(Draw&) {}

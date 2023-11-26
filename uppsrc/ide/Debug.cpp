@@ -149,7 +149,6 @@ void Ide::ExecuteBinary()
 	int exitcode;
 	switch(runmode) {
 	case RUN_WINDOW:
-		HideBottom();
 		h.Launch(cmdline, ShouldHaveConsole());
 		break;
 	case RUN_CONSOLE:
@@ -160,7 +159,6 @@ void Ide::ExecuteBinary()
 		PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
 		break;
 	case RUN_FILE: {
-			HideBottom();
 			String fn;
 			if(IsNull(stdout_file))
 				fn = ForceExt(target, ".ol");
@@ -196,10 +194,13 @@ void Ide::LaunchTerminal(const char *dir)
 	;
 	h.Launch("/usr/bin/open " + script);
 #else
+	ResolveHostConsole();
 	String c = HostConsole;
-	int q = c.Find(' ');
+	int q = c.ReverseFind(' ');
 	if(q >= 0)
 		c.Trim(q);
+	if(c.Find("io.elementary.terminal") >= 0) // elementary seems to ignore current dir
+		c <<  " -w \"" << dir << "\"";
 	h.Launch(Nvl(c, "/usr/bin/xterm"), false);
 #endif
 }
@@ -336,7 +337,6 @@ void Ide::BuildAndDebug(bool runto)
 	Host host;
 	CreateHostRunDir(host);
 	host.ChDir(Nvl(rundir, GetFileFolder(target)));
-	HideBottom();
 	editor.Disable();
 
 	bool console = ShouldHaveConsole();

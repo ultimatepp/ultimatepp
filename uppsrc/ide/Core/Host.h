@@ -14,8 +14,6 @@ struct Host {
 
 	String        *cmdout;
 	
-	String         onefile; // support for Ctrl+F7 - build single file
-	
 	bool           canlog = true; // it does PutVerbose for commands
 
 	void    DoDir(const String& s);
@@ -45,11 +43,13 @@ struct Host {
 	void                  AddFlags(Index<String>& cfg);
 	
 	const Vector<String>& GetExecutablesDirs() const;
+	void AddExecutable(const String& dir, const String& exe);
 	
 private:
 	bool HasPlatformFlag(const Index<String>& cfg);
 };
 
 #ifdef PLATFORM_POSIX
-void RemoveConsoleScripts();
+void   RemoveConsoleScripts();
+String ResolveHostConsole();
 #endif

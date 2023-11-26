@@ -9,6 +9,7 @@ struct MyApp : TopWindow {
 		DrawPainter iw(w, GetSize());
 		iw.Clear(SWhite());
 		iw.DrawText(Zx(100), Zx(100), "Hello world!", (Font)~dl);
+		iw.Text(Zx(100), Zx(200), "Hello world again!", (Font)~dl).Fill(Black());
 	}
 	
 	MyApp() {

@@ -1,5 +1,9 @@
 #include "umake.h"
 
+#ifndef bmYEAR
+#include <build_info.h>
+#endif
+
 bool SilentMode;
 
 String GetUmkFile(const char *fn)
@@ -57,6 +61,29 @@ String GetAndroidSDKPath()
 
 #ifdef flagMAIN
 
+String GenerateVersionNumber()
+{
+#ifdef bmGIT_REVCOUNT
+	return AsString(atoi(bmGIT_REVCOUNT) + 2270);
+#endif
+	return "";
+}
+
+void SetupUmkUppHub()
+{
+	String cfgdir = GetFileFolder(GetFileFolder(ConfigFile("x")));
+	for(const char *q : { "umk", "theide", "ide" }) {
+		String dir = cfgdir + "/" + q + "/UppHub";
+		if(DirectoryExists(dir)) {
+			for(FindFile ff(dir + "/*"); ff; ff.Next())
+				if(ff.IsFolder() && *ff.GetName() != '.') {
+					OverrideHubDir(dir);
+					return;
+				}
+		}
+	}
+}
+
 CONSOLE_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
@@ -85,6 +112,7 @@ CONSOLE_APP_MAIN
 	bool deletedir = true;
 	int  exporting = 0;
 	bool run = false;
+	bool auto_hub = false;
 	String mkf;
 
 	Vector<String> param, runargs;
@@ -109,6 +137,7 @@ CONSOLE_APP_MAIN
 				case 'k': deletedir = false; break;
 				case 'u': ide.use_target = true; break;
 				case 'j': ccfile = true; break;
+				case 'h': auto_hub = true; break;
 				case 'M': {
 					makefile = true;
 					if(s[1] == '=') {
@@ -157,6 +186,11 @@ CONSOLE_APP_MAIN
 			param.Add(a);
 	}
 
+	if(auto_hub)
+		DeleteFolderDeep(GetHubDir());
+	else
+		SetupUmkUppHub();
+
 	if(param.GetCount() >= 2) {
 		String v = GetUmkFile(param[0] + ".var");
 		if(IsNull(v)) {
@@ -184,14 +218,20 @@ CONSOLE_APP_MAIN
 			PutVerbose("Assembly: " + GetVar("UPP"));
 		}
 		PutVerbose("Output directory: " + GetVar("OUTPUT"));
-		v = SourcePath(param[1], GetFileTitle(param[1]) + ".upp");
+		ide.main = param[1];
+		v = SourcePath(ide.main, GetFileTitle(ide.main) + ".upp");
 		PutVerbose("Main package: " + v);
 		if(!FileExists(v)) {
-			Puts("Package does not exist\n");
+			Puts("Package " + ide.main + " does not exist\n");
 			SetExitCode(2);
 			return;
 		}
-		ide.main = param[1];
+		if(auto_hub) {
+			if(!UppHubAuto(ide.main)) {
+				SetExitCode(6);
+				return;
+			}
+		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();
 		if(!wspc.GetCount()) {
@@ -278,11 +318,14 @@ CONSOLE_APP_MAIN
 		else
 			SetExitCode(1);
 	}
-	else
-		Puts("Usage: [-options] umk assembly main_package [build_method] [+flags] [output]\n\n"
-		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
-		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
-		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");
+	else {
+		String version = GenerateVersionNumber();
+		Puts("umk (U++MaKe) " + version + "\n\n"
+		     "Usage: umk assembly main_package [build_method] [-options] [+flags] [output]\n"
+		     "Examples: umk examples Bombs CLANG -ab +GUI,SHARED ~/bombs\n"
+		     "          umk ~/upp.src/examples,~/upp.src/uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
+		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details.\n");
+	}
 }
 
 #endif

@@ -60,7 +60,7 @@ class ImageBuffer : NoCopy {
 	void         Set(Image& img);
 	void         DeepCopy(const ImageBuffer& img);
 
-	RGBA*        Line(int i) const      { ASSERT(i >= 0 && i < size.cy); return (RGBA *)~pixels + i * size.cx; }
+	RGBA*        Line(int i) const      { ASSERT(i >= 0 && i < size.cy); return (RGBA *)~pixels + i * (size_t)size.cx; }
 	friend void  DropPixels___(ImageBuffer& b) { b.pixels.Clear(); }
 	void         InitAttrs();
 
@@ -273,6 +273,8 @@ enum {
 	IML_IMAGE_FLAG_UHD          = 0x8,
 	IML_IMAGE_FLAG_DARK         = 0x10,
 };
+
+Image MakeImlImage(const String& id, Function<ImageIml (int, const String&)> GetRaw, dword global_flags);
 
 class Iml {
 	struct IImage : Moveable<IImage> {

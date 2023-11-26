@@ -5,6 +5,8 @@
 
 extern bool SilentMode;
 
+bool UppHubAuto(const String& main);
+
 class Console {
 public:
 	virtual void Append(const String& s);
@@ -91,7 +93,6 @@ struct Ide : public IdeContext, public MakeBuild {
 	Workspace wspc;
 	Console   console;
 	String    onefile;
-	String    mainconfigpatam;
 	bool      verbose;
 	String    main;
 	int       build_time;
@@ -117,6 +118,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual bool             IdeConsoleWait();
 	virtual bool             IdeConsoleWait(int slot);
 	virtual void             IdeConsoleOnFinish(Event<> cb);
+	virtual void             IdeProcessEvents() {}
 
 	virtual bool      IdeIsDebug() const ;
 	virtual void      IdeEndDebug();

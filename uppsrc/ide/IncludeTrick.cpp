@@ -6,12 +6,15 @@
 
 void AssistEditor::SyncMaster()
 {
+	if(!theide)
+		return;
 	master_source.Clear();
 	String editfile = NormalizePath(theide->editfile);
 	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
 		ppi.Dirty();
 		ppi.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
-		master_source = FindMasterSource(ppi, GetIdeWorkspace(), editfile);
+		master_chain = clone(FindMasterSourceCached(ppi, GetIdeWorkspace(), editfile, ms_cache).GetKeys());
+		master_source = master_chain.GetCount() ? master_chain.Top() : String();
 	}
 
 	if(AssistDiagnostics) {
@@ -34,16 +37,17 @@ bool AssistEditor::DoIncludeTrick(Index<String>& visited, int level, StringBuffe
 	FileIn in(path);
 	while(!in.IsEof()) {
 		String l = in.GetLine();
-		String tl = TrimLeft(l);
-		if(!comment && tl.TrimStart("#include") && (*tl == ' ' || *tl == '\t')) {
-			tl = TrimBoth(tl);
+		CParser p(l);
+		if(!comment && p.Char('#') && p.Id("include")) {
+			String tl = TrimBoth(p.GetPtr());
 			String ipath = ppi.FindIncludeFile(tl, filedir);
 			if(ipath.GetCount()) {
 				if(NormalizePath(ipath) == NormalizePath(target_path))
 					return true;
 				int q = out.GetCount();
 				int qq = line_delta;
-				if(FindIndex(HdependGetDependencies(ipath), target_path) >= 0 && visited.Find(ipath) < 0 && level < 10
+				if(level < master_chain.GetCount() - 1 && master_chain[master_chain.GetCount() - 2 - level] == ipath &&
+				   visited.Find(ipath) < 0 && level < 10
 				   && DoIncludeTrick(visited, level + 1, out, ipath, target_path, line_delta))
 					return true;
 				out.SetCount(q);

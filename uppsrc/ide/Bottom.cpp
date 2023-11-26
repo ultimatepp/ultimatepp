@@ -25,32 +25,34 @@ void RightTabs::Repos()
 	RefreshParentLayout();
 }
 
-void RightTabs::Add(const Image& img, const String& tip)
+void RightTabs::Add(const Image& img, const String& tip, bool highlight)
 {
 	Tab& t = tab.Add();
 	t.img = img;
 	t.tip = tip;
-	cx = max(cx, img.GetSize().cx + 7);
+	t.highlight = highlight;
+	cx = max(cx, DPI(1) + max(img.GetWidth(), DPI(16)) + DPI(80) + DPI(2));
 	Repos();
 }
 
-void RightTabs::PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Image& img, Color hl)
+int RightTabs::Tab::GetHeight() const
+{
+	return max(img.GetSize().cy, StdFont().GetCy()) + SPACE;
+}
+
+void RightTabs::PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, const Tab& t, Color hl)
 {
 	Color fc = FieldFrameColor();
 	w.DrawRect(x, y + 1, cx - 1, cy - 2, paper);
 	w.DrawRect(x, y, cx - 1, 1, fc);
 	w.DrawRect(x + cx - 1, y + 1, 1, cy - 2, fc);
 	w.DrawRect(x, y + cy - 1, cx - 1, 1, fc);
-	Size isz = img.GetSize();
-	int ix = (cx - isz.cx) / 2 + x;
-	int iy = (cy - isz.cx) / 2 + y;
-	if(!IsNull(hl)) {
-		w.DrawImage(ix - 1, iy - 1, img, hl);
-		w.DrawImage(ix - 1, iy + 1, img, hl);
-		w.DrawImage(ix + 1, iy - 1, img, hl);
-		w.DrawImage(ix + 1, iy + 1, img, hl);
-	}
-	w.DrawImage(ix, iy, img);
+	w.Clip(x, y, cx - 1, cy);
+	Size isz = t.img.GetSize();
+	int icx = max(DPI(16), isz.cx);
+	w.DrawImage(x + DPI(1) + (icx - isz.cx) / 2, (cy - isz.cy) / 2 + y, t.img);
+	w.DrawText(x + icx + DPI(3), (cy - StdFont().GetCy()) / 2 + y, t.tip, StdFont(), t.highlight ? SLtBlue() : SColorText());
+	w.End();
 }
 
 void RightTabs::Paint(Draw& w)
@@ -58,15 +60,16 @@ void RightTabs::Paint(Draw& w)
 	Size sz = GetSize();
 	w.DrawRect(sz, Blend(SColorFace, SColorPaper));
 	Color hc = Blend(Yellow, LtRed, 100);
-	Color inactive = Blend(SColorPaper, SColorShadow);
 	for(int i = 0; i < tab.GetCount(); i++) {
 		Tab& t = tab[i];
 		if(i != cursor)
-			PaintTab(w, 0, t.y + 2, cx - 1, t.GetHeight() - 1, inactive, t.img, i == hl ? hc : Null);
+			PaintTab(w, 0, t.y + 2, cx - 1, t.GetHeight() - 1,
+			         i == hl ? Blend(SColorFace(), SColorPaper()) : SColorFace(),
+			         t, i == hl ? hc : Null);
 	}
-	if(cursor >= 0) {
+	if(cursor >= 0 && cursor < tab.GetCount()) {
 		Tab& t = tab[cursor];
-		PaintTab(w, 0, t.y, cx, t.GetHeight() + 3, SColorPaper, t.img, cursor == hl ? hc : Null);
+		PaintTab(w, 0, t.y, cx, t.GetHeight() + 3, SColorPaper(), t, cursor == hl ? hc : Null);
 	}
 }
 
@@ -102,7 +105,6 @@ void RightTabs::MouseMove(Point p, dword)
 	if(c != hl) {
 		hl = c;
 		Refresh();
-		Tip(c >= 0 ? tab[c].tip : "");
 	}
 }
 
@@ -125,7 +127,7 @@ void RightTabs::FramePaint(Draw& w, const Rect& rr)
 	r.right -= cx;
 	DrawFrame(w, r, FieldFrameColor());
 	DrawFrame(w, r.Deflated(1), SColorPaper);
-	if(cursor >= 0) {
+	if(cursor >= 0 && cursor < tab.GetCount()) {
 		Tab& t = tab[cursor];
 		w.DrawRect(r.right - 1, t.y + 1, 1, t.GetHeight() + 1, SColorFace);
 	}
@@ -146,18 +148,38 @@ void RightTabs::FrameAddSize(Size& sz)
 	sz.cx += cx + 2;
 }
 
+String Ide::GetFoundText(const ArrayCtrl& list)
+{
+	for(int i = 0; i < list.GetCount(); i++) {
+		Value v = list.Get(i, "INFO");
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
+			if(*f.message == '\1') {
+				Vector<String> h = Split(~f.message + 1, '\1', false);
+				if(h.GetCount() > 3)
+					if(f.linepos > 0) // some lines are ignored
+						return h[3].Mid(f.linepos - 1, f.len);
+			}
+		}
+	}
+	return Null;
+}
+
 void Ide::BTabs()
 {
 	btabs.Clear();
 	btabs.Add(IdeImg::close, "Close (Esc)");
 	btabs.Add(IdeImg::console, "Console");
 	btabs.Add(IdeImg::errors, "Errors");
-	btabs.Add(IdeImg::ff1, "Find in files 1");
-	btabs.Add(IdeImg::ff2, "Find in files 2");
-	btabs.Add(IdeImg::ff3, "Find in files 3");
 	btabs.Add(IdeImg::calc, "Calculator");
 	if(bottomctrl)
 		btabs.Add(IdeImg::debug, "Debug");
+	for(int i = 0; i < __countof(ffound); i++) {
+		if(!ffound[i])
+			break;
+		String h = GetFoundText(*ffound[i]);
+		btabs.Add(Nvl(ffound[i]->icon, IdeImg::query()), Nvl(h, "Empty"), h.GetCount());
+	}
 }
 
 void Ide::SyncBottom()
@@ -171,25 +193,28 @@ void Ide::SyncBottom()
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
 	error.Show(q == BERRORS);
-	for(int i = 0; i < 3; i++) {
-		bool b = q == BFINDINFILES1 + i;
-		ffound[i].Show(b);
-		if(b)
-			ffoundi_next = i;
-	}
 	calc.Show(q == BCALC);
-	if(bottomctrl)
-		bottomctrl->Show(q == BDEBUG);
 	calc.LoadHlStyles(editor.StoreHlStyles());
 	calc.SetFont(editorfont);
 	SetBar();
 	if(q == BCALC)
 		ActiveFocus(calc);
+	if(bottomctrl)
+		bottomctrl->Show(q == BDEBUG);
+	else
+		q++; // no debug
+	for(int i = 0; i < __countof(ffound); i++) {
+		if(!ffound[i])
+			break;
+		if(ffound[i]->GetParent() != &bottom)
+			bottom << (*ffound[i]).SizePos();
+		ffound[i]->Show(q == BFINDINFILES1 + i);
+	}
 }
 
 void Ide::SetBottom(int i)
 {
-	btabs.SetCursor(i);
+	btabs.SetCursor(i - (!bottomctrl && i >= BFINDINFILES1));
 	SyncBottom();
 }
 

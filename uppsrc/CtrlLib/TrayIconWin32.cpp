@@ -90,7 +90,7 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 {
 	nid.uFlags = 0x10;
 	Wcpy(nid.szInfo, text, 256);
-	Wcpy(nid.szInfoTitle, text, 64);
+	Wcpy(nid.szInfoTitle, title, 64);
 	nid.dwInfoFlags = type;
 	nid.uTimeout = minmax(timeout, 10, 30) * 1000;
 	Shell_NotifyIconW(NIM_MODIFY, &nid);

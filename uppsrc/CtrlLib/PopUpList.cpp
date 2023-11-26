@@ -68,7 +68,7 @@ void PopUpList::SetLineCy(int ii, int cy)
 {
 	ASSERT(cy >= 0 && cy < 32000);
 	word& x = lineinfo.At(ii, 0x7fff);
-	x = x & 0x8000 | cy;
+	x = (x & 0x8000) | cy;
 	if(popup)
 		popup->ac.SetLineCy(ii, cy);
 }
@@ -156,7 +156,16 @@ int PopUpList::GetCursor() const
 
 bool PopUpList::Key(int c)
 {
-	// TODO!
+	int q = GetCursor();
+	q = q >= 0 ? q + 1 : 0;
+	c = ToUpperAscii(c);
+	for(int i = 0; i < GetCount(); i++) {
+		int ii = (q + i) % GetCount();
+		if(ToUpperAscii(*StdFormat(items[ii]).ToWString()) == c) {
+			SetCursor(ii);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -169,7 +178,12 @@ void PopUpList::DoClose() {
 	if(!inpopup && popup) {
 		popup->closing = true; // prevent infinite recursion
 		cursor = popup->ac.GetCursor();
-		popup.Clear();
+		if(permanent) {
+			popup->Close();
+			popup->closing = false;
+		}
+		else
+			popup.Clear();
 	}
 }
 
@@ -209,7 +223,7 @@ bool PopUpList::PopupArrayCtrl::Key(dword key, int n)
 		}
 		break;
 	}
-	return ArrayCtrl::Key(key, n);
+	return list->Key(key) || ArrayCtrl::Key(key, n);
 }
 
 PopUpList::Popup::Popup(PopUpList *list)
@@ -217,7 +231,7 @@ PopUpList::Popup::Popup(PopUpList *list)
 {
 	ac.list = list;
 	ac.SetFrame(DropFrame());
-	auto& col = ac.AddColumn();
+	auto& col = ac.AddColumn().Accel();
 	if(list->convert)
 		col.SetConvert(*list->convert);
 	col.SetDisplay(*list->display);
@@ -226,7 +240,7 @@ PopUpList::Popup::Popup(PopUpList *list)
 	ac.MouseMoveCursor();
 	ac.NoGrid();
 	ac.AutoHideSb();
-	ac.SetLineCy(Draw::GetStdFontCy());
+	ac.SetLineCy(list->GetLineCy());
 	for(int i = 0; i < list->items.GetCount(); i++) {
 		Value v = list->items[i];
 		word w = i < list->lineinfo.GetCount() ? list->lineinfo[i] : 0x7fff;
@@ -242,12 +256,21 @@ PopUpList::Popup::Popup(PopUpList *list)
 	ac.CenterCursor();
 }
 
+ArrayCtrl& PopUpList::Permanent()
+{
+	if(!popup)
+		popup.Create(this);
+	permanent = true;
+	return popup->ac;
+}
+
 void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	if(inpopup)
 		return;
-	inpopup++;
 	DoClose();
-	popup.Create(this);
+	inpopup++;
+	if(!popup)
+		popup.Create(this);
 	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
 	Rect rt = RectC(x, bottom, width, h);
 	Rect area = Ctrl::GetWorkArea(Point(x, top));
@@ -311,6 +334,7 @@ void PopUpList::DoCancel()
 PopUpList::PopUpList() {
 	droplines = 16;
 	inpopup = 0;
+	permanent = false;
 	linecy = Draw::GetStdFontCy();
 	display = &StdDisplay();
 	convert = NULL;

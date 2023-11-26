@@ -197,6 +197,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           OnBaseAdd();
 	void           OnBaseEdit();
 	void           OnBaseRemove();
+	void           RemoveInvalid();
 
 	void           OnOK();
 	void           OnCancel();
@@ -218,9 +219,9 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           SyncList(const String& find);
 	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
 	
-	Vector<String> GetSvnDirs();
-	void           SyncSvnDir(const String& dir);
-	void           SyncSvnDirs();
+	Vector<String> GetRepoDirs();
+	void           SyncRepoDir(const String& dir);
+	void           SyncRepoDirs();
 
 	void           DuplicatePackage();
 	void           RenamePackage(bool duplicate);
@@ -354,6 +355,7 @@ struct WorkspaceWork {
 	Package::File& ActiveFile();
 	String         FileName(int i) const;
 	bool           IsSeparator(int i) const;
+	bool           IsActiveSeparator() const;
 
 	void LoadActualPackage();
 	void SaveLoadPackage(bool sel = true);
@@ -436,6 +438,8 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	void Serialize(Stream& s);
 	void SaveOptions();
 	void SaveOptionsLoad();
+	
+	void MergeNests();
 
 	void Empty();
 	void FileEmpty();

@@ -30,7 +30,8 @@ public class <:PACKAGE:> extends Activity
 @@AndroidManifest.xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.upp.<:PACKAGE:>"><:?permissionInternet:>
+          package="org.upp.<:PACKAGE:>">
+	<uses-sdk android:minSdkVersion="21" /><:?permissionInternet:>
 	<uses-permission android:name="android.permission.INTERNET" /><:.:>
 	<application>
 		<activity android:name=".<:PACKAGE:>"

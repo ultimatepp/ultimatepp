@@ -37,12 +37,12 @@ void AndroidSDK::DeducePlatform()
 
 void AndroidSDK::DeduceBuildToolsRelease()
 {
-	buildToolsRelease = FindDefaultBuildToolsRelease();
+	build_tools_release = FindDefaultBuildToolsRelease();
 }
 
 bool AndroidSDK::Validate() const
 {
-	if(!DirectoryExists(path) || !FileExists(AndroidPath())) return false;
+	if(IsNull(path) || !DirectoryExists(path) || !FileExists(AndroidPath())) return false;
 	
 	return true;
 }
@@ -224,7 +224,7 @@ String AndroidSDK::PlatformsDir() const
 
 String AndroidSDK::ConcreteBuildToolsDir() const
 {
-	return BuildToolsDir() + DIR_SEPS + buildToolsRelease;
+	return BuildToolsDir() + DIR_SEPS + build_tools_release;
 }
 
 String AndroidSDK::ConcretePlatformDir() const
@@ -243,5 +243,10 @@ String AndroidSDK::ToolsDir() const
 }
 
 // ---------------------------------------------------------------
+
+bool AndroidSDK::HasD8() const
+{
+	return FileExists(D8Path());
+}
 
 }

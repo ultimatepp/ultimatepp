@@ -78,6 +78,8 @@ private:
 	int              active_annotation;
 	Vector<Color>    animate;
 	Image            status_image;
+	Color            bg_color = Null;
+	String           text;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
@@ -136,6 +138,9 @@ public:
 	void     SetAnimate(const Vector<Color>& a)   { if(a != animate) { animate = clone(a); Refresh(); } }
 	
 	void     StatusImage(const Image& m);
+	
+	void     Background(Color c)             { if(c != bg_color) { bg_color = c; Refresh(); }}
+	void     Text(const String& s)           { if(s != text)  { text = s; Refresh(); }}
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -193,6 +198,17 @@ public:
 	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
 	virtual void  Layout();
+	virtual void  Paint(Draw& w);
+
+public:
+	struct MouseTip {
+		int            pos;
+		Value          value;
+		const Display *display;
+		Size           sz;
+		bool           delayed = false;
+		Color          background;
+	};
 
 protected:
 	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int64 pos);
@@ -210,6 +226,8 @@ protected:
 	virtual void NewScrollPos();
 
 	virtual String  GetPasteText();
+	
+	TimeCallback delayed, closetip;
 
 	EditorBar   bar;
 	Vector<int> line2;
@@ -242,6 +260,7 @@ protected:
 	bool    do_ff_restore_pos;
 	bool    withfindreplace;
 	bool    wordwrap;
+	bool    blk0_header;
 
 	int     ff_start_pos;
 
@@ -281,6 +300,7 @@ protected:
 	
 	struct Tip : Ctrl {
 		Value v;
+		Color background;
 		const Display *d;
 		
 		virtual void Paint(Draw& w);
@@ -288,12 +308,14 @@ protected:
 		Tip();
 	};
 	
+	bool  delayed_tip = false;
+	Point delayed_pos = Null;
 	Tip   tip;
 	int   tippos = Null;
 	
 	int   replacei;
 	
-	bool          search_canceled;
+	bool          search_canceled = false;
 	int           search_time0;
 	One<Progress> search_progress;
 	
@@ -332,6 +354,7 @@ protected:
 	void   NotFound();
 	void   NoFindError();
 	void   CheckSyntaxRefresh(int64 pos, const WString& text);
+	void   RefreshBlkHeader();
 
 	void   SetFound(int fi, int type, const WString& text);
 
@@ -364,17 +387,11 @@ protected:
 	bool   SearchProgress(int line);
 	bool   SearchCanceled();
 	void   EndSearchProgress();
+	bool   SyncCloseTip();
 
 	String GetRefreshInfo(int pos);
 
 public:
-	struct MouseTip {
-		int            pos;
-		Value          value;
-		const Display *display;
-		Size           sz;
-	};
-
 	Event<>            WhenSelection;
 	Gate<MouseTip&>    WhenTip;
 	Event<>            WhenLeftDown;
@@ -391,6 +408,8 @@ public:
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
+
+	virtual bool DelayedTip(MouseTip& tip);
 
 	static dword find_next_key;
 	static dword find_prev_key;
@@ -512,6 +531,7 @@ public:
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
 	void     BarLine(bool b)                          { barline = b; }
 	void     WordWrap(bool b)                         { wordwrap = b; }
+	void     Blk0Header(bool b)                       { blk0_header = b; Refresh(); }
 	
 	void     PersistentFindReplace(bool b = true)     { persistent_find_replace = b; }
 	bool     IsPersistentFindReplace() const          { return persistent_find_replace; }
@@ -527,10 +547,9 @@ public:
 	Size     GetBarSize() const                       { return bar.GetSize(); }
 	void     HideBar()                                { bar.Hide(); }
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
+	void     BarColor(Color c)                        { bar.Background(c); }
+	void     BarText(const String& text)              { bar.Text(text); }
 
-	void     SyncTip();
-	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
-	
 	void     Errors(Vector<Point>&& errs);
 	
 	void     Illuminate(const WString& text);
@@ -555,6 +574,9 @@ public:
 	
 	FindReplaceData GetFindReplaceData();
 	void            SetFindReplaceData(const FindReplaceData& d);
+
+	void     SyncTip();
+	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 
 	typedef CodeEditor CLASSNAME;
 

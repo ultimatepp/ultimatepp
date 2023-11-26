@@ -27,10 +27,10 @@ bool IsUpperString(const char *q)
 Color CSyntax::BlockColor(int level)
 {
 	if(hilite_scope == 1)
-		return  GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
+		return GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
 	if(hilite_scope == 2) {
 		int q = level % 5;
-		return  GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
+		return GetHlStyle(q ? PAPER_BLOCK1 + q - 1 : PAPER_NORMAL).color;
 	}
 	return GetHlStyle(PAPER_NORMAL).color;
 }
@@ -54,15 +54,20 @@ void CSyntax::Bracket(int64 pos, HighlightOutput& hls, CodeEditor *editor) // TO
 const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool octal, bool css)
 {
 	int c = octal ? HighlightSetup::INK_CONST_OCT : HighlightSetup::INK_CONST_INT;
+	auto SkipDigits = [&] {
+		while(IsDigit(*p) || *p == '\'')
+			if(*p++ == '\'')
+				ts = false;
+	};
 	const wchar *t = p;
-	while(IsDigit(*p)) p++;
+	SkipDigits();
 	int fixdigits = int(p - t);
 	bool u = false;
 	if(*p == '.') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
 	}
-	while(IsDigit(*p)) p++;
+	SkipDigits();
 	if(*p == 'e' || *p == 'E') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
@@ -166,10 +171,13 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	LTIMING("HighlightLine");
 	if(highlight < 0 || highlight >= keyword.GetCount())
 		return;
-	CSyntax next;
-	next.Set(Get());
-	next.ScanSyntax(ltext, e, line + 1, tabsize);
-	bool macro = next.macro != MACRO_OFF;
+	bool macro;
+	{
+		CSyntax next;
+		next.Set(Get());
+		next.ScanSyntax(ltext, e, line + 1, tabsize);
+		macro = next.macro != MACRO_OFF;
+	}
 	
 	int linelen = int(e - ltext);
 	const wchar *p = ltext;
@@ -301,14 +309,14 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		if((*p == '\"' || *p == '\'') || linecont && string)
 			p = hls.CString(p);
 		else
-		if(*p == '(') {
+		if(*p == '(' && !ignore_errors) {
 			brk.Add(')');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(pl++, 0) % 4]);
 			p++;
 		}
 		else
-		if(*p == '{') {
+		if(*p == '{' && !ignore_errors) {
 			brk.Add(was_namespace ? 0 : '}');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(cl, 0) % 4]);
@@ -323,21 +331,21 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 		else
-		if(*p == '[') {
+		if(*p == '[' && !ignore_errors) {
 			brk.Add(']');
 			Bracket(int(p - ltext) + pos, hls, editor);
 			hls.Put(hl_style[INK_PAR0 + max(bl++, 0) % 4]);
 			p++;
 		}
 		else
-		if(*p == ')' || *p == '}' || *p == ']') {
+		if((*p == ')' || *p == '}' || *p == ']') && !ignore_errors) {
 			int bc = brk.GetCount() ? brk.Pop() : 0;
 			if(*p == '}' && hilite_scope && block_level > 0 && bc)
 				hls.SetPaper(hls.pos, linelen + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - ltext) + pos, hls, editor);
 			int& l = *p == ')' ? pl : *p == '}' ? cl : bl;
 			if(bc && (bc != *p || l <= 0) || bc == 0 && *p != '}') {
-				hls.Put(p == ltext || ignore_errors ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
+				hls.Put(p == ltext ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				brk.Clear();
 				cl = bl = pl = 0;
 			}
@@ -384,9 +392,9 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			String iid = id;
 			if(highlight == HIGHLIGHT_SQL)
 				iid = ToUpper(iid);
-			int uq = kw_upp.Find(iid);
-			int nq = -1;
-			hls.Put(int(q - p), !include && (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
+			int uq = highlight == 0 ? kw_upp.Find(iid) : -1;
+			int nq = keyword[highlight].Find(iid);
+			hls.Put(int(q - p), !include && nq >= 0 ? hl_style[nq >= breakers[highlight] ? INK_BREAK_KEYWORD : INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :

@@ -53,7 +53,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	Rect r = GetRect();
 
 	gtk_window_set_default_size (gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
-
+	
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 
