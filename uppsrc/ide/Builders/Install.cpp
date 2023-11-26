@@ -189,6 +189,7 @@ void CreateBuildMethods()
 		SaveFile(bm, Fix(gcc_bm));
 	
 	Cout() << "Checking clang...\n";
+	Cout() << HostSys("clang --version") << "\n\n";
 	if(HostSys("clang --version").GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
