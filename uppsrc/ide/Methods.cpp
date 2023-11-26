@@ -791,6 +791,7 @@ void ExtractIncludes(Index<String>& r, String h)
 	Vector<String> ln = Split(h, '\n');
 	for(int i = 0; i < ln.GetCount(); i++) {
 		String dir = TrimBoth(ln[i]);
+		Cout() << "ExtractIncludes: " << dir << "\n";
 		if(DirectoryExists(dir))
 			r.FindAdd(NormalizePath(dir));
 	}
@@ -808,7 +809,7 @@ String Ide::GetIncludePath()
 	ONCELOCK {
 		Index<String> r;
 		for(int pass = 0; pass < 2; pass++)
-			ExtractIncludes(r, Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
+			ExtractIncludes(r, HostSys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
 		r.FindAdd("/usr/include_path");
 		r.FindAdd("/usr/local/include_path");
 		sys_includes = Join(r.GetKeys(), ";");

@@ -147,8 +147,6 @@ LINKMODE_LOCK = "0";)";
 
 void CreateBuildMethods()
 {
-	Cout() << "CreateBuildMethods()" << "\n";
-	
 #ifdef PLATFORM_COCOA
 	String bm_path = ConfigFile("CLANG.bm");
 	if(IsNull(LoadFile(bm_path))) {
