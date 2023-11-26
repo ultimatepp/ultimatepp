@@ -101,11 +101,14 @@ bool Clang::Parse(const String& filename_, const String& content,
 		String src = "#include \"" + filename + "\"";
 		filename = CacheFile(GetFileName(filename) + "$" + SHA1String(src) + ".cpp");
 		SaveChangedFile(filename, src);
+		Cout() << "Clang::Parse(): Saving file...\n" << src << "\n\n";
 	}
 	
+	Cout() << "Clang::Parse(): Includes " << includes_ << "\n";
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
-
+	Cout() << "Clang::Parse(): All includes " << includes_ << "\n";
+	
 	Vector<String> args;
 
 	INTERLOCKED // as there is just single static 'use'
@@ -159,8 +162,9 @@ bool Clang::Parse(const String& filename_, const String& content,
 	                                options & PARSE_FILE ? 0 : (filename2.GetCount() ? 2 : 1),
 	                                options);
 
-	if(!tu)
+	if(!tu) {
 		PutAssist("Failed commandline: " + cmdline0);
+	}
 	// Diagnostics(tu, VppLog());_DBG_
 	
 	return tu;
