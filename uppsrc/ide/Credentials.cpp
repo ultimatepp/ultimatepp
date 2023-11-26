@@ -135,6 +135,7 @@ bool GetCredentials(const String& url, const String& dir, String& username, Stri
 				password = c.password;
 			}
 		}
+		return true;
 	}
 	return false;
 }
