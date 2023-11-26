@@ -8,6 +8,10 @@ uses
 	ide/Java,
 	ide/Android;
 
+uses(!NOSO OSX) plugin/png;
+
+uses(!NOSO OSX) Draw;
+
 file
 	Builders.h options(BUILDER_OPTION) PCH,
 	CppBuilder.cpp,
