@@ -942,8 +942,10 @@ String Ide::GetCurrentIncludePath()
 	if(inc1 != inc2)
 		MergeWith(include_path, ";", inc2);
 	
+	Cout() << "Ide::GetCurrentIncludePath() - before " << include_path << "\n";
 	IncludeAddPkgConfig(include_path, clang_method);
-
+	Cout() << "Ide::GetCurrentIncludePath() - after " << include_path << "\n";
+	
 	String main_conf;
 	const Workspace& wspc = AssistWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {

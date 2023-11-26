@@ -104,7 +104,6 @@ bool Clang::Parse(const String& filename_, const String& content,
 		Cout() << "Clang::Parse(): Saving file...\n" << src << "\n\n";
 	}
 	
-	Cout() << "Clang::Parse(): Includes " << includes_ << "\n";
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
 	Cout() << "Clang::Parse(): All includes " << includes_ << "\n";
