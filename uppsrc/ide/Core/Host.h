@@ -6,6 +6,15 @@ String WrappCmdlineForSandbox(const char* cmdline);
 void AddHostFlags(Index<String>& cfg);
 
 struct Host {
+	class SandboxUtils {
+	public:
+		static const char* WRAPP_PREFIX;
+		static String WrappCmdline(const char* cmdline);
+		
+	private:
+		SandboxUtils() = delete;
+	};
+	
 	struct FileInfo : Time, Moveable<FileInfo> {
 		int length;
 	};
@@ -19,8 +28,6 @@ struct Host {
 
 	void    DoDir(const String& s);
 
-	Host();
-	
 	void                  Log(const String& s) { if(canlog) PutVerbose(s); }
 	
 	String                GetEnvironment();

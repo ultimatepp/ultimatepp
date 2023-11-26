@@ -205,7 +205,7 @@ void MakeBuild::SaveCCJ(const String& fn, bool exporting)
 	for(const String& s: pkg_config) {
 		String str;
 		String out;
-		str << "host-spawn pkg-config --cflags " << s;
+		str << "pkg-config --cflags " << s;
 		if (Sys(str, out) < 0)
 			continue;
 		out.TrimEnd("\n");
