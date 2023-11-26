@@ -12,6 +12,7 @@ void AssistEditor::SyncMaster()
 	String editfile = NormalizePath(theide->editfile);
 	if(editfile.GetCount() && IsCHeaderFile(editfile)) {
 		ppi.Dirty();
+		Cout() << "AssistEditor: " << theide->GetCurrentIncludePath() << "\n";
 		ppi.SetIncludes(theide->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 		master_chain = clone(FindMasterSourceCached(ppi, GetIdeWorkspace(), editfile, ms_cache).GetKeys());
 		master_source = master_chain.GetCount() ? master_chain.Top() : String();

@@ -599,9 +599,10 @@ bool Gdb::Create(Host& host, const String& exefile, const String& cmdline, bool 
 
 #ifdef PLATFORM_POSIX
 #ifndef PLATFORM_MACOS
-	IGNORE_RESULT(system("setxkbmap -option grab:break_actions")); // to be able to recover capture in breakpoint
+	IGNORE_RESULT(HostSys("setxkbmap -option grab:break_actions")); // to be able to recover capture in breakpoint
 	String xdotool_chk = ConfigFile("xdotool_chk");
-	if(!FileExists(xdotool_chk) && system("xdotool key XF86Ungrab")) {
+	String out;
+	if(!FileExists(xdotool_chk) && HostSys("xdotool key XF86Ungrab", out)) {
 		Exclamation("[* xdotool] utility is not installed or does not work properly.&"
 		            "Debugger will be unable to ungrab debugee's mouse capture - "
 		            "mouse might become unusable when debugee stops.");
