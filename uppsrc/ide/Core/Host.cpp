@@ -206,14 +206,25 @@ String ResolveHostConsole()
 		"/usr/local/bin/xterm -e",
 	};
 	#else
-	static const char *term[] = {
-		"/usr/bin/mate-terminal -x",
-		"/usr/bin/gnome-terminal --window -x",
-		"/usr/bin/konsole -e",
-		"/usr/bin/lxterminal -e",
-		"/usr/bin/io.elementary.terminal -n -x",
-		"/usr/bin/xterm -e",
-	};
+		#ifdef SANDBOX_FLATPAK
+		static const char *term[] = {
+			"/run/host/bin/mate-terminal -x",
+			"/run/host/bin/gnome-terminal --window -x",
+			"/run/host/bin/konsole -e",
+			"/run/host/bin/lxterminal -e",
+			"/run/host/bin/io.elementary.terminal -n -x",
+			"/run/host/bin/xterm -e",
+		};
+		#else
+		static const char *term[] = {
+			"/usr/bin/mate-terminal -x",
+			"/usr/bin/gnome-terminal --window -x",
+			"/usr/bin/konsole -e",
+			"/usr/bin/lxterminal -e",
+			"/usr/bin/io.elementary.terminal -n -x",
+			"/usr/bin/xterm -e",
+		};
+		#endif
 	#endif
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one

@@ -148,7 +148,7 @@
 #endif
 
 #ifdef flagSandboxFlatpak
-	#define SANDBOX_FLATPAK
+	#define SANDBOX_FLATPAK 1
 #endif
 
 #ifdef _MSC_VER

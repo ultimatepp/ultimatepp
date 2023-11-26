@@ -885,7 +885,7 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 		int q = cflags.Find(s);
 		if(q < 0) {
 			q = cflags.GetCount();
-			cflags.Add(s, Sys("pkg-config --cflags " + s));
+			cflags.Add(s, HostSys("pkg-config --cflags " + s));
 		}
 		for(String p : Split(cflags[q], CharFilterWhitespace))
 			if(p.TrimStart("-I"))
