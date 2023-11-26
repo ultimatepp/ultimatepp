@@ -878,8 +878,10 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 	String main_conf;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.include.GetCount(); j++)
+		for(int j = 0; j < pkg.include.GetCount(); j++) {
+			Cout() << "Ide:IncludeAddPkgConfig()" << pkg.include[j].text << ", " << SourcePath(wspc[i], pkg.include[j].text) << "\n";
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
+		}
 		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
