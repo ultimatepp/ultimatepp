@@ -799,14 +799,17 @@ void ExtractIncludes(Index<String>& r, String h)
 
 String Ide::GetIncludePath()
 { // this is 'real' include path defined by current build method, for Alt+J and #include assist
+	Cout() << "Ide::GetIncludePath() - Begin " << include_path << "\n";
 	if(include_path.GetCount())
 		return include_path;
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+	Cout() << "Ide::GetIncludePath() - Second " << include_path << "\n";
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
+		Cout() << "Ide::GetIncludePath() - OnceLock\n";
 		Index<String> r;
 		for(int pass = 0; pass < 2; pass++)
 			ExtractIncludes(r, HostSys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
