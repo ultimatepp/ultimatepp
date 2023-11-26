@@ -188,9 +188,8 @@ void CreateBuildMethods()
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
 	
-	Cout() << "Checking clang...\n";
-	Cout() << HostSys("clang --version") << "\n\n";
-	if(HostSys("clang --version").GetCount()) {
+	const auto clang_cmd = String(Host::SandboxUtils::WRAPP_PREFIX) + "clang --version";
+	if(Sys(clang_cmd).GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
 			SaveFile(bm, Fix(clang_bm));

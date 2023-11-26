@@ -14,7 +14,7 @@ const char* Host::SandboxUtils::WRAPP_PREFIX = "";
 String Host::SandboxUtils::WrappCmdline(const char* cmdline)
 {
 #ifdef SANDBOX_FLATPAK
-	return String(WRAPP_PREFIX) + String(cmdline);
+	return String(WRAPP_PREFIX) + cmdline;
 #else
 	return cmdline;
 #endif
