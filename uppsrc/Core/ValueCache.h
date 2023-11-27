@@ -97,7 +97,7 @@ Value MakeValueTL(const K& k, const M& m)
 	};
 	Maker maker(key, m);
 	if(IsMainThread()) {
-		static LRUCache<Value> cache; // this basically to avoid problem with leaks detection
+		static LRUCache<Value> cache; // this is basically to avoid problem with leaks detection
 		Value v = cache.Get(maker);
 		cache.Shrink(128 * 1024, 1000);
 		return v;

@@ -12,7 +12,7 @@ void BufferPainter::ClearPath()
 	path_info->path_min = Pointf(1e200, 1e200);
 	path_info->path_max = -Pointf(1e200, 1e200);
 	path_info->path.SetCount(1);
-	
+
 	Vector<byte>& p = path_info->path.Top();
 	if(path_info->path.Top().GetCount() > 2048) {
 		p.Clear();

@@ -181,3 +181,5 @@ public:
 };
 
 void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double tolerance);
+
+#include "Interpolator.hpp"

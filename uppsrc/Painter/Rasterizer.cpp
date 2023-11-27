@@ -46,7 +46,7 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 void Rasterizer::Free()
 {
-	if(cell)
+	if(cell) {
 		for(int i = min_y; i <= max_y; i++) {
 			if(cell[i].alloc != SVO_ALLOC) {
 				MemoryFree(cell[i].ptr);
@@ -54,6 +54,12 @@ void Rasterizer::Free()
 			}
 			cell[i].count = 0;
 		}
+		if(cell[sz.cy].alloc != SVO_ALLOC) { // check overrun
+			MemoryFree(cell[sz.cy].ptr);
+			cell[sz.cy].alloc = SVO_ALLOC;
+		}
+		cell[sz.cy].count = 0;
+	}
 }
 
 void Rasterizer::Init()

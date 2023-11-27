@@ -322,5 +322,3 @@ public:
 
 	~BufferPainter()                                            { Finish(); }
 };
-
-#include "Interpolator.hpp"

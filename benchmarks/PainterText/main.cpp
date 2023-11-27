@@ -8,12 +8,12 @@ GUI_APP_MAIN
 	iw.Co();
 	Image m;
 
-	for(int i = 0; i < 30; i++) {
+	for(int i = 0; i < 20; i++) {
 		{
 			RTIMING("Clear");
 			iw.Clear();
 		}
-		{
+		if(1) {
 			RTIMING("Text");
 			for(int y = 0; y < 2000; y += 30)
 				iw.DrawText(0, y,
@@ -23,7 +23,7 @@ GUI_APP_MAIN
 		}
 //		m = iw;
 	}
-	
+
 	TopWindow win;
 	ImageCtrl h;
 	h.SetImage(iw);

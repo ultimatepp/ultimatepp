@@ -2,23 +2,6 @@
 
 namespace Upp {
 
-#ifdef CPU_SIMD
-
-force_inline
-int IntAndFraction(f32x4 x, f32x4& fraction)
-{
-	x = x + f32all(8000); // Truncate truncates toward 0, need to fix negatives
-	i32x4 m = Truncate(x);
-	fraction = x - ToFloat(m);
-	return (int)m - 8000;
-}
-
-force_inline
-int Int(f32x4 x)
-{
-	return (int)Truncate(x + f32all(8000)) - 8000;
-}
-
 struct PainterImageSpanData {
 	int         ax, ay, cx, cy, maxx, maxy;
 	byte        style;
@@ -62,6 +45,23 @@ struct PainterImageSpanData {
 	PainterImageSpanData() {}
 };
 
+
+#ifdef CPU_SIMD
+
+force_inline
+int IntAndFraction(f32x4 x, f32x4& fraction)
+{
+	x = x + f32all(8000); // Truncate truncates toward 0, need to fix negatives
+	i32x4 m = Truncate(x);
+	fraction = x - ToFloat(m);
+	return (int)m - 8000;
+}
+
+force_inline
+int Int(f32x4 x)
+{
+	return (int)Truncate(x + f32all(8000)) - 8000;
+}
 
 struct PainterImageSpan : SpanSource, PainterImageSpanData {
 	PainterImageSpan(const PainterImageSpanData& f)
@@ -179,50 +179,6 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 };
 
 #else
-
-struct PainterImageSpanData {
-	int         ax, ay, cx, cy, maxx, maxy;
-	byte        style;
-	byte        hstyle, vstyle;
-	bool        fast;
-	bool        fixed;
-	Image       image;
-	Xform2D     xform;
-
-	PainterImageSpanData(dword flags, const Xform2D& m, const Image& img, bool co, bool imagecache) {
-		style = byte(flags & 15);
-		hstyle = byte(flags & 3);
-		vstyle = byte(flags & 12);
-		fast = flags & FILL_FAST;
-		image = img;
-		int nx = 1;
-		int ny = 1;
-		if(!fast) {
-			Pointf sc = m.GetScaleXY();
-			if(sc.x >= 0.01 && sc.y >= 0.01) {
-				nx = (int)max(1.0, 1.0 / sc.x);
-				ny = (int)max(1.0, 1.0 / sc.y);
-			}
-		}
-		if(nx == 1 && ny == 1)
-			xform = Inverse(m);
-		else {
-			if(!fast)
-				image = (imagecache ? MinifyCached : Minify)(image, nx, ny, co);
-			xform = Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny);
-		}
-		cx = image.GetWidth();
-		cy = image.GetHeight();
-		maxx = cx - 1;
-		maxy = cy - 1;
-		ax = 6000000 / cx * cx * 2;
-		ay = 6000000 / cy * cy * 2;
-		fixed = hstyle && vstyle;
-	}
-	
-	PainterImageSpanData() {}
-};
-
 
 struct PainterImageSpan : SpanSource, PainterImageSpanData {
 	PainterImageSpan(const PainterImageSpanData& f) : PainterImageSpanData(f) {}
