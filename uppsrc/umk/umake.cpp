@@ -272,7 +272,7 @@ CONSOLE_APP_MAIN
 			PutVerbose("Target override: " << ide.debug.target);
 		}
 
-		ide.method = m;
+		ide.method = bp;
 
 		if(ccfile) {
 			ide.SaveCCJ(GetFileDirectory(PackagePath(ide.main)) + "compile_commands.json", false);
