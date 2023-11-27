@@ -181,7 +181,7 @@ bool UppHubAuto(const String& main)
 				if(missing.Find(p) >= 0)
 					found.FindAdd(n.name);
 
-		if(found.GetCount() == missing.GetCount() && missing != pmissing) {
+		if(found.GetCount() == missing.GetCount() || missing != pmissing) {
 			dlg.Install(found);
 			pmissing = clone(missing);
 			continue;
