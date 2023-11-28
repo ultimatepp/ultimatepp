@@ -59,6 +59,21 @@ template <class T> T& BufferPainter::PathAdd(int type)
 	return *e;
 }
 
+void BufferPainter::ClearOp(const RGBA& color)
+{
+	Finish();
+	if(co) { // schedule for late clear during rendering
+		if(!co_clear)
+			co_clear.Alloc(ip->GetHeight());
+		memset(~co_clear, 1, ip->GetHeight());
+		co_clear_color = color;
+	}
+	else
+		UPP::Fill(~*ip, color, ip->GetLength());
+	if(color.a == 255)
+		ip->SetKind(IMAGE_OPAQUE);
+}
+
 void BufferPainter::MoveOp(const Pointf& p, bool rel)
 {
 	LLOG("@ MoveOp " << p << ", " << rel);

@@ -100,11 +100,11 @@ void App::Paint(Draw& w)
 	ImageBuffer ib(sz);
 	{
 		BufferPainter sw(ib, ctrl.quality);
+		sw.Co(ctrl.mt);
 		if(ctrl.transparent)
 			sw.Clear(RGBAZero());
 		else
 			sw.Clear(White());
-		sw.Co(ctrl.mt);
 		sw.PreClip(ctrl.preclip);
 		DoPaint(sw);
 	}

@@ -8,19 +8,6 @@ namespace Upp {
 
 void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
-void BufferPainter::ClearOp(const RGBA& color)
-{
-	Finish();
-	if(co) {
-		CoFor(ip->GetHeight(), [&](int i) {
-			UPP::Fill((*ip)[i], color, ip->GetWidth());
-		});
-	}
-	else
-		UPP::Fill(~*ip, color, ip->GetLength());
-	ip->SetKind(color.a == 255 ? IMAGE_OPAQUE : IMAGE_ALPHA);
-}
-
 BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const PathInfo *path_info,
                                 const SimpleAttr& attr, const Rectf& preclip, bool isregular)
 :	trans(attr.mtx)
@@ -384,6 +371,11 @@ void BufferPainter::FinishPathJob()
 		}
 
 		auto fill = [&](int y) {
+			if(co_clear && co_clear[y]) {
+				UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+				co_clear[y] = false;
+			}
+			
 			if(subpixel) {
 				SubpixelFiller subpixel_filler;
 				int ci = CoWork::GetWorkerIndex();
@@ -500,6 +492,13 @@ void BufferPainter::Finish()
 {
 	FinishPathJob();
 	FinishFillJob();
+	if(co_clear)
+		CoFor(ip->GetHeight(), [&](int y) {
+			if(co_clear[y]) {
+				UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+				co_clear[y] = false;
+			}
+		});
 }
 
 void BufferPainter::FillOp(const RGBA& color)

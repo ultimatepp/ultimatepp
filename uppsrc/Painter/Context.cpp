@@ -149,6 +149,7 @@ void BufferPainter::ClearStopsOp()
 void BufferPainter::Create(ImageBuffer& ib, int mode_)
 {
 	ip = &ib;
+	ip->SetKind(IMAGE_ALPHA);
 
 	if(mode_ != mode || (Size)size != ib.GetSize()) {
 		mode = mode_;
@@ -169,6 +170,8 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 		co_subpixel.Clear();
 		co_span.Clear();
 		span.Clear();
+		
+		co_clear.Clear();
 	}
 
 	SyncCo();

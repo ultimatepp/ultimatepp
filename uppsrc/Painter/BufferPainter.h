@@ -105,7 +105,7 @@ protected:
 
 private:
 	enum {
-		MOVE, LINE, QUADRATIC, CUBIC, CHAR
+		MOVE, LINE, QUADRATIC, CUBIC, CHAR, CLEAR
 	};
 	struct LinearData {
 		int    type;
@@ -156,7 +156,7 @@ private:
 		bool                            mask;
 		bool                            onpath;
 	};
-	
+
 	PainterTarget             *alt = NULL;
 	double                     alt_tolerance = Null;
 	ImageBuffer                dummy;
@@ -167,15 +167,18 @@ private:
 	int                        render_cx;
 	int                        dopreclip = 0;
 	Sizef                      size = Sizef(0, 0); // = ib.GetSize()
+	
+	Buffer<byte>                 co_clear; // do lazy Clear
+	RGBA                         co_clear_color;
 
-	Attr                       attr;
-	Array<Attr>                attrstack;
+	Attr                         attr;
+	Array<Attr>                  attrstack;
 	Vector<Buffer<ClippingLine>> clip;
-	Array< ImageBuffer >       mask;
-	Vector<Vector<PathLine>>   onpathstack;
-	Vector<double>             pathlenstack;
-	int                        mtx_serial = 0;
-	ArrayMap<String, DashInfo> dashes;
+	Array<ImageBuffer>           mask;
+	Vector<Vector<PathLine>>     onpathstack;
+	Vector<double>               pathlenstack;
+	int                          mtx_serial = 0;
+	ArrayMap<String, DashInfo>   dashes;
 	
 	Rectf                      preclip;
 	int                        preclip_mtx_serial = -1;
