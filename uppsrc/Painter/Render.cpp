@@ -493,7 +493,7 @@ void BufferPainter::Finish()
 	FinishPathJob();
 	FinishFillJob();
 	if(co_clear)
-		CoFor(ip->GetHeight(), [&](int y) {
+		CoFor(ip->GetHeight(), [&](int y) { // clear remaning lines that were not painted yet
 			if(co_clear[y]) {
 				UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
 				co_clear[y] = false;
