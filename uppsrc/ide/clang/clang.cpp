@@ -53,7 +53,6 @@ String GetClangInternalIncludes()
 			DeleteFile(dummy);
 			h.Replace("\r", "");
 			Vector<String> ln = Split(h, '\n');
-			Cout() << "Clang internal includes " << ln.GetCount() << "\n";
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String dir = TrimBoth(ln[i]);
 			#ifdef SANDBOX_FLATPAK

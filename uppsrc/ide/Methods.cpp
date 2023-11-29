@@ -943,7 +943,6 @@ String Ide::GetCurrentIncludePath()
 		MergeWith(include_path, ";", inc2);
 	
 	IncludeAddPkgConfig(include_path, clang_method);
-	Cout() << "Ide::GetCurrentIncludePath() - after " << include_path << "\n";
 	
 	String main_conf;
 	const Workspace& wspc = AssistWorkspace();
