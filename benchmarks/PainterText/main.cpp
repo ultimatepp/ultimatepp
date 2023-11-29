@@ -6,13 +6,14 @@ GUI_APP_MAIN
 {
 	ImagePainter iw(4000, 2000);
 	iw.Co();
+	Image m;
 
-	for(int i = 0; i < 10; i++) {
+	for(int i = 0; i < 20; i++) {
 		{
 			RTIMING("Clear");
 			iw.Clear();
 		}
-		{
+		if(1) {
 			RTIMING("Text");
 			for(int y = 0; y < 2000; y += 30)
 				iw.DrawText(0, y,
@@ -20,8 +21,9 @@ GUI_APP_MAIN
 				            Arial(25));
 			iw.Finish();
 		}
+//		m = iw;
 	}
-	
+
 	TopWindow win;
 	ImageCtrl h;
 	h.SetImage(iw);
