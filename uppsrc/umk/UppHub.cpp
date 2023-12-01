@@ -48,8 +48,6 @@ Value UppHubDlg::LoadJson(const String& url)
 #endif
 	}
 	
-	LOG(s);
-	
 	Value v = ParseJSON(s);
 	if(v.IsError()) {
 		s.Replace("&quot;", "\"");
