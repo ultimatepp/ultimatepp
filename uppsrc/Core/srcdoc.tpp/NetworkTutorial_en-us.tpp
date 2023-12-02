@@ -39,7 +39,7 @@ is not yet available.&]
 [s0;%% &]
 [s0;%% [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#1^ 1. Obtaining 
 data from REST API via HTTP Request]&]
-[s0; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#2^ 2 Building 
+[s0; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#2^ 2. Building 
 RESTful server]&]
 [s0;^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#1`_2^%% &]
 [s3;:1:%% 1. Obtaining data from REST API via HTTP Request&]
@@ -156,7 +156,7 @@ pRequest][*_C@(0.0.255) `::][*_C METHOD`_GET)][C@(0.0.255) .][C Execute();]&]
 [s0;l320; [*C@(0.0.255) auto][C  content ][C@(0.0.255) `=][C  http][C@(0.0.255) .][*_C GET()][C@(0.0.255) .
 ][C Execute();]&]
 [s5; &]
-[s3;:2: 2 Building RESTful server&]
+[s3;:2: 2. Building RESTful server&]
 [s5; Now, it`'s time to build our own RESTful server, and don`'t 
 look at others. In this tutorial, we will build a simple service 
 with one node [* /countries] that will return predefined countries. 
