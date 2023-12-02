@@ -113,6 +113,7 @@ CONSOLE_APP_MAIN
 	int  exporting = 0;
 	bool run = false;
 	bool auto_hub = false;
+	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
 
 	Vector<String> param, runargs;
@@ -205,6 +206,9 @@ CONSOLE_APP_MAIN
 			SetVar("UPP", x, false);
 			PutVerbose("Inline assembly: " + x);
 			String outdir = GetDefaultUppOut();
+			if (flatpak_build) {
+				outdir = GetExeFolder() + DIR_SEPS + ".cache" + DIR_SEPS + "upp.out";
+			}
 			RealizeDirectory(outdir);
 			SetVar("OUTPUT", outdir, false);
 		}
@@ -272,7 +276,7 @@ CONSOLE_APP_MAIN
 			PutVerbose("Target override: " << ide.debug.target);
 		}
 
-		ide.method = m;
+		ide.method = bp;
 
 		if(ccfile) {
 			ide.SaveCCJ(GetFileDirectory(PackagePath(ide.main)) + "compile_commands.json", false);
