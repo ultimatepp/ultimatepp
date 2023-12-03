@@ -193,13 +193,26 @@ enum {
 	FILTER_NEAREST = 0,
 	FILTER_BILINEAR = 1,
 	FILTER_BSPLINE = 2,
-	FILTER_COSTELLO = 3,
+	FILTER_COSTELLO = 3, // (name misspelled)
+	FILTER_COSTELLA = 3,
 	FILTER_BICUBIC_MITCHELL = 4,
 	FILTER_BICUBIC_CATMULLROM = 5,
 	FILTER_LANCZOS2 = 6,
 	FILTER_LANCZOS3 = 7,
 	FILTER_LANCZOS4 = 8,
 	FILTER_LANCZOS5 = 9,
+};
+
+struct ImageFilterKernel {
+	int        a;
+	int        n;
+	int        shift;
+	const int *kernel;
+	int        kernel_size;
+
+	int Get(int x) { return kernel[clamp(x + (a << shift), 0, kernel_size)]; }
+	
+	ImageFilterKernel(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
 };
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress = Null, bool co = false);

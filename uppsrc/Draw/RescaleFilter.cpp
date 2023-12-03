@@ -4,37 +4,24 @@ namespace Upp {
 
 #define LDUMP(x) // DUMP(x)
 
-static const int *sGetKernel(double (*kfn)(double x), int a, int shift)
+ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, int tgt_sz)
 {
+	this->a = a;
+	n = min(max(src_sz / tgt_sz, 1) * a, 31);
+	shift = 8 - n / 8;
+	kernel_size = (2 * n) << shift;
 	INTERLOCKED {
 		static VectorMap<Tuple3<uintptr_t, int, int>, Buffer<int> > kache;
 		Tuple3<uintptr_t, int, int> key = MakeTuple((uintptr_t)kfn, a, shift);
 		Buffer<int> *k = kache.FindPtr(key);
 		if(k)
-			return *k;
+			kernel = *k;
 		Buffer<int>& ktab = kache.GetAdd(key);
 		ktab.Alloc(((2 * a) << shift) + 1);
 		for(int i = 0; i < ((2 * a) << shift) + 1; i++)
 			ktab[i] = int((1 << shift) * (*kfn)((double)i / (1 << shift) - a));
-		return ktab;
+		kernel = ktab;
 	}
-	return NULL;
-}
-
-force_inline
-int sGetk(const int *kernel, int x, int a, int shift)
-{
-	x += a << shift;
-	ASSERT(x >= 0 && x < ((2 * a) << shift) + 1);
-	x = minmax(x, 0, (2 * a) << shift);
-	return kernel[x];
-}
-
-static int sGeta(int a, int src, int tgt, int& shift)
-{
-	int n = min(max(src / tgt, 1) * a, 31);
-	shift = 8 - n / 8;
-	return n;
 }
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
@@ -47,58 +34,54 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	if(isz.cx <= 0 || isz.cy <= 0 || sz.cx <= 0 || sz.cy <= 0)
 		return Image();
 
-	int shiftx, shifty;
-	int ax = sGeta(a, isz.cx, sz.cx, shiftx);
-	int ay = sGeta(a, isz.cy, sz.cy, shifty);
-
-	int shift = min(shiftx, shifty);
+	ImageFilterKernel kx(kfn, a, isz.cx, sz.cx);
+	ImageFilterKernel ky(kfn, a, isz.cy, sz.cy);
 	
-	const int *kernel = sGetKernel(kfn, a, shift);
-
-	Buffer<int> px(sz.cx * 2 * ax * 2 * ay * 2);
+	Buffer<int> px(sz.cx * 2 * kx.n * 2 * ky.n * 2);
 	int *xd = px;
-	Size cr = (Size(1 << shift, 1 << shift) - (isz << shift) / sz) >> 1;
+	Size cr = (Size(1 << kx.shift, 1 << ky.shift) -
+	           Size(isz.cx << kx.shift, isz.cy << ky.shift) / sz) >> 1;
 	for(int x = 0; x < sz.cx; x++) {
-		int dx = ((x * isz.cx) << shift) / sz.cx - cr.cx;
-		int sx = dx >> shift;
-		dx -= sx << shift;
+		int dx = ((x * isz.cx) << kx.shift) / sz.cx - cr.cx;
+		int sx = dx >> kx.shift;
+		dx -= sx << kx.shift;
 		if(dx < 0)
 			dx = 0;
-		for(int yy = -ay + 1; yy <= ay; yy++)
-			for(int xx = -ax + 1; xx <= ax; xx++) {
+		for(int yy = -ky.n + 1; yy <= ky.n; yy++)
+			for(int xx = -kx.n + 1; xx <= kx.n; xx++) {
 				*xd++ = clamp(sx + xx, 0, isz.cx - 1) + sr.left;
-				*xd++ = sGetk(kernel, ((xx << shift) - dx) * a / ax, a, shift);
+				*xd++ = kx.Get(((xx << kx.shift) - dx) * a / kx.n);
 			}
 	}
 
 	ImageBuffer ib(sz);
 	std::atomic<int> yy(0);
 	CoDo(co, [&] {
-		Buffer<int> py(2 * ay * 2);
+		Buffer<int> py(2 * ky.n * 2);
 		for(int y = yy++; y < sz.cy; y = yy++) {
 			if(progress(y, sz.cy))
 				break;
-			int dy = ((y * isz.cy) << shift) / sz.cy - cr.cy;
-			int sy = dy >> shift;
-			dy -= sy << shift;
+			int dy = ((y * isz.cy) << ky.shift) / sz.cy - cr.cy;
+			int sy = dy >> ky.shift;
+			dy -= sy << ky.shift;
 			if(dy < 0)
 				dy = 0;
 			int *xd = px;
 			int *yd = py;
-			for(int yy = -ay + 1; yy <= ay; yy++) {
-				*yd++ = sGetk(kernel, ((yy << shift) - dy) * a / ay, a, shift);
+			for(int yy = -ky.n + 1; yy <= ky.n; yy++) {
+				*yd++ = ky.Get(((yy << ky.shift) - dy) * a / ky.n);
 				*yd++ = clamp(sy + yy, 0, isz.cy - 1) + sr.top;
 			}
 			RGBA *t = ib[y];
-	#ifdef CPU_SIMD
+	#ifdef CPU_SIMD0
 			for(int x = 0; x < sz.cx; x++) {
 				f32x4 rgbaf = 0;
 				f32x4 w = 0;
 				yd = py;
-				for(int yy = 2 * ay; yy-- > 0;) {
+				for(int yy = 2 * ky.n; yy-- > 0;) {
 					int ky = *yd++;
 					const RGBA *l = img[*yd++];
-					for(int xx = 2 * ax; xx-- > 0;) {
+					for(int xx = 2 * kx.n; xx-- > 0;) {
 						f32x4 s = LoadRGBAF(&l[*xd++]);
 						f32x4 weight = f32all(float(ky * *xd++));
 						rgbaf += weight * s;
@@ -116,10 +99,10 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 				int w = 0;
 				yd = py;
 				int hasalpha = 0;
-				for(int yy = 2 * ay; yy-- > 0;) {
+				for(int yy = 2 * ky.n; yy-- > 0;) {
 					int ky = *yd++;
 					const RGBA *l = img[*yd++];
-					for(int xx = 2 * ax; xx-- > 0;) {
+					for(int xx = 2 * kx.n; xx-- > 0;) {
 						const RGBA& s = l[*xd++];
 						int weight = ky * *xd++;
 						red   += weight * s.r;
