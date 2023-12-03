@@ -204,13 +204,14 @@ enum {
 };
 
 struct ImageFilterKernel {
-	int        ashift;
+	int        a;
 	int        n;
 	int        shift;
+	int        ashift;
 	const int *kernel;
 	int        kernel_size;
 
-	int Get(int x) { return kernel[clamp(x + ashift, 0, kernel_size)]; }
+	int Get(int x, int dx) { return kernel[clamp(((x << shift) - dx) * a / n + ashift, 0, kernel_size)]; }
 	
 	ImageFilterKernel(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
 };

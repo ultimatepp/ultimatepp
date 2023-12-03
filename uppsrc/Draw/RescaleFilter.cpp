@@ -6,6 +6,7 @@ namespace Upp {
 
 ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, int tgt_sz)
 {
+	this->a = a;
 	n = min(max(src_sz / tgt_sz, 1) * a, 31);
 	shift = 8 - n / 8;
 	kernel_size = (2 * n) << shift;
@@ -50,7 +51,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 		for(int yy = -ky.n + 1; yy <= ky.n; yy++)
 			for(int xx = -kx.n + 1; xx <= kx.n; xx++) {
 				*xd++ = clamp(sx + xx, 0, isz.cx - 1) + sr.left;
-				*xd++ = kx.Get(((xx << kx.shift) - dx) * a / kx.n);
+				*xd++ = kx.Get(xx, dx);
 			}
 	}
 
@@ -69,11 +70,11 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 			int *xd = px;
 			int *yd = py;
 			for(int yy = -ky.n + 1; yy <= ky.n; yy++) {
-				*yd++ = ky.Get(((yy << ky.shift) - dy) * a / ky.n);
+				*yd++ = ky.Get(yy, dy);
 				*yd++ = clamp(sy + yy, 0, isz.cy - 1) + sr.top;
 			}
 			RGBA *t = ib[y];
-	#ifdef CPU_SIMD0
+	#ifdef CPU_SIMD
 			for(int x = 0; x < sz.cx; x++) {
 				f32x4 rgbaf = 0;
 				f32x4 w = 0;
