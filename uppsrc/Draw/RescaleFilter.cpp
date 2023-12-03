@@ -6,10 +6,10 @@ namespace Upp {
 
 ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, int tgt_sz)
 {
-	this->a = a;
 	n = min(max(src_sz / tgt_sz, 1) * a, 31);
 	shift = 8 - n / 8;
 	kernel_size = (2 * n) << shift;
+	ashift = a << shift;
 	INTERLOCKED {
 		static VectorMap<Tuple3<uintptr_t, int, int>, Buffer<int> > kache;
 		Tuple3<uintptr_t, int, int> key = MakeTuple((uintptr_t)kfn, a, shift);
