@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-constexpr int port = 4000;
+constexpr int port = 8080;
 
 void ProcessHttpRequest(TcpSocket& client)
 {

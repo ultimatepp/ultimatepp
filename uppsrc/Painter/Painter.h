@@ -13,16 +13,6 @@ namespace Upp {
 
 INITIALIZE(PaintPainting)
 
-enum XformClass { // classification of Xform (simpler forms can be optimized)
-	XFORM_REGULAR = 32, // same scale in X and Y, does not skew line width
-
-	XFORM_IDENTITY = 0|XFORM_REGULAR, // not transformation
-	XFORM_TRANSLATION = 1|XFORM_REGULAR,
-	XFORM_REGULAR_SCALE = 2|XFORM_REGULAR, // just scale, same in X and Y
-	XFORM_SCALE = 2, // just scale, but X scale != Y scale
-	XFORM_ANY = 0,
-};
-
 struct Xform2D {
 	Pointf x, y, t;
 	
@@ -32,8 +22,6 @@ struct Xform2D {
 	Pointf GetScaleXY() const;
 	double GetScale() const;
 	bool   IsRegular() const;
-	
-	byte   GetClass() const;
 	
 	static Xform2D Identity();
 	static Xform2D Translation(double x, double y);

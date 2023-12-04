@@ -39,7 +39,7 @@ is not yet available.&]
 [s0;%% &]
 [s0;%% [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#1^ 1. Obtaining 
 data from REST API via HTTP Request]&]
-[s0; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#2^ 2 Building 
+[s0; [^topic`:`/`/Core`/srcdoc`/NetworkTutorial`_en`-us`#2^ 2. Building 
 RESTful server]&]
 [s0;^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`_en`-us`#1`_2^%% &]
 [s3;:1:%% 1. Obtaining data from REST API via HTTP Request&]
@@ -156,7 +156,7 @@ pRequest][*_C@(0.0.255) `::][*_C METHOD`_GET)][C@(0.0.255) .][C Execute();]&]
 [s0;l320; [*C@(0.0.255) auto][C  content ][C@(0.0.255) `=][C  http][C@(0.0.255) .][*_C GET()][C@(0.0.255) .
 ][C Execute();]&]
 [s5; &]
-[s3;:2: 2 Building RESTful server&]
+[s3;:2: 2. Building RESTful server&]
 [s5; Now, it`'s time to build our own RESTful server, and don`'t 
 look at others. In this tutorial, we will build a simple service 
 with one node [* /countries] that will return predefined countries. 
@@ -165,7 +165,7 @@ port that is not yet taken. To do it, let`'s create a [*^topic`:`/`/Core`/src`/T
 cpSocket] instance and then call the [*^topic`:`/`/Core`/src`/TcpSocket`_en`-us`#TcpSocket`:`:Listen`(int`,int`,bool`,bool`,void`*`)^ L
 isten] method. This method, in its simplest form, requires providing 
 a port as an argument. The safe value in this case for development 
-purposes is 4000. Please keep in mind that the default port for 
+purposes is 8080. Please keep in mind that the default port for 
 [* HTTP is 80] and for [* HTTPS is 443]. In the production enviromenet, 
 these ports must be used. However, in some operating systems, 
 these ports may be blocked by default, and to unlock them, some 
@@ -208,7 +208,7 @@ directly back to the client.&]
 [s0;l320; [*C@(0.0.255) using][C  ][*C@(0.0.255) namespace][C  Upp;]&]
 [s0;l320;C &]
 [s0;l320; [*C@(0.0.255) constexpr][C  ][*C@(0.0.255) int][C  SERVER`_PORT 
-][C@(0.0.255) `=][C  ][C@3 4000][C ;]&]
+][C@(0.0.255) `=][C  ][C@3 8080][C ;]&]
 [s0;l320;C &]
 [s0;l320; [*C@(0.0.255) void][C  ProcessHttpRequest(TcpSocket][C@(0.0.255) `&][C  
 client)]&]
@@ -283,24 +283,25 @@ server][C@(0.0.255) .][C GetErrorDesc()]&]
 application can be used. This application is bundled with most 
 Linux distributions, and it can be easily downloaded for Windows. 
 The command that should be run in the terminal is as follows:&]
-[s0;l320;~~~32; [C$2 curl `-v http://127.0.0.1:4000/countries]&]
+[s0;l320;~~~32; [C$2 curl `-v http://127.0.0.1:8080/countries]&]
 [s5; The output of the command should be:&]
-[s0;l320; [C$2 `* __Trying 127.0.0.1:4000...]&]
-[s0;l320; [C `* Connected to 127.0.0.1 (127.0.0.1) port 4000]&]
-[s0;l320; [C > GET /countries HTTP/1.1]&]
-[s0;l320; [C > Host: 127.0.0.1:4000]&]
-[s0;l320; [C > User`-Agent: curl/8.4.0]&]
-[s0;l320; [C > Accept: `*/`*]&]
-[s0;l320; [C > _]&]
-[s0;l320; [C < HTTP/1.1 200 OK]&]
-[s0;l320; [C < Date: Sun, 22 Oct 2023 17:35:13 `+0200]&]
-[s0;l320; [C < Server: U`+`+ based server]&]
-[s0;l320; [C < Connection: close]&]
-[s0;l320; [C < Content`-Length: 48]&]
-[s0;l320; [C < Content`-Type: application/json]&]
-[s0;l320; [C < _]&]
-[s0;l320; [C `* Closing connection]&]
-[s0;l320; [C `[`"Czech Republic`",`"Indonesia`",`"Brazil`",`"France`"`]]&]
+[s0;l320;~~~288; [C$2+93 `* __Trying 127.0.0.1:8080...]&]
+[s0;l320;~~~288; [C+93 `* Connected to 127.0.0.1 (127.0.0.1) port 8080]&]
+[s0;l320;~~~288; [C+93 > GET /countries HTTP/1.1]&]
+[s0;l320;~~~288; [C+93 > Host: 127.0.0.1:8080]&]
+[s0;l320;~~~288; [C+93 > User`-Agent: curl/8.4.0]&]
+[s0;l320;~~~288; [C+93 > Accept: `*/`*]&]
+[s0;l320;~~~288; [C+93 > _]&]
+[s0;l320;~~~288; [C+93 < HTTP/1.1 200 OK]&]
+[s0;l320;~~~288; [C+93 < Date: Sun, 3 Dec 2023 12:19:02 `+0100]&]
+[s0;l320;~~~288; [C+93 < Server: U`+`+ based server]&]
+[s0;l320;~~~288; [C+93 < Connection: close]&]
+[s0;l320;~~~288; [C+93 < Content`-Length: 48]&]
+[s0;l320;~~~288; [C+93 < Content`-Type: application/json]&]
+[s0;l320;~~~288; [C+93 < _]&]
+[s0;l320;~~~288; [C+93 `* Closing connection]&]
+[s0;l320;~~~288; [C+93 `[`"Czech Republic`",`"Indonesia`",`"Brazil`",`"France`"`]]&]
+[s0;l320;~~~288;C &]
 [s5; As you can see in the above output, we received our desirable 
 response. The [* `-v] parameter stands for verbose mode, and it 
 is supposed to show additional information. It is very helpful 

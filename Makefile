@@ -3,7 +3,7 @@ UPPDIR2 = /home/cxl/.config/u++/umk/UppHub/gdal/
 UPPDIR3 = /home/cxl/.config/u++/umk/UppHub/eigen/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) -I$(UPPDIR2) -I$(UPPDIR3) `pkg-config --cflags freetype2` `pkg-config --cflags fontconfig` `pkg-config --cflags x11` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags libpng` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` -I./ -I$(UPPOUT)
+CINC   =  -I$(UPPDIR1) -I$(UPPDIR2) -I$(UPPDIR3) `pkg-config --cflags freetype2` `pkg-config --cflags fontconfig` `pkg-config --cflags x11` `pkg-config --cflags xcb` `pkg-config --cflags expat` `pkg-config --cflags xinerama` `pkg-config --cflags xrender` `pkg-config --cflags xft` `pkg-config --cflags xdmcp` `pkg-config --cflags xext` `pkg-config --cflags gtk+-3.0` `pkg-config --cflags libnotify` `pkg-config --cflags libpng` -I./ -I$(UPPOUT)
 Macro  =  -DflagGUI -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
@@ -79,8 +79,6 @@ OutDir_Painter = $(UPPOUT)Painter/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Painter = $(Macro)
 OutDir_Draw = $(UPPOUT)Draw/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_Draw = $(Macro)
-OutDir_plugin_png = $(UPPOUT)plugin/png/GCC-Gcc-Gui-Linux-Posix-Shared/
-Macro_plugin_png = $(Macro)
 OutDir_PdfDraw = $(UPPOUT)PdfDraw/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_PdfDraw = $(Macro)
 OutDir_plugin_pcre = $(UPPOUT)plugin/pcre/GCC-Gcc-Gui-Linux-Posix-Shared/
@@ -91,6 +89,8 @@ OutDir_plugin_bmp = $(UPPOUT)plugin/bmp/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_plugin_bmp = $(Macro)
 OutDir_RichText = $(UPPOUT)RichText/GCC-Gcc-Gui-Linux-Posix-Shared/
 Macro_RichText = $(Macro)
+OutDir_plugin_png = $(UPPOUT)plugin/png/GCC-Gcc-Gui-Linux-Posix-Shared/
+Macro_plugin_png = $(Macro)
 
 OutDir = $(OutDir_ide)
 OutFile = ./ide
@@ -139,12 +139,12 @@ prepare: \
 	$(OutDir_plugin_jpg) \
 	$(OutDir_Painter) \
 	$(OutDir_Draw) \
-	$(OutDir_plugin_png) \
 	$(OutDir_PdfDraw) \
 	$(OutDir_plugin_pcre) \
 	$(OutDir_CtrlCore) \
 	$(OutDir_plugin_bmp) \
-	$(OutDir_RichText)
+	$(OutDir_RichText) \
+	$(OutDir_plugin_png)
 
 $(OutFile): build_info  \
 	$(OutDir_ide)BaseDlg.o \
@@ -257,15 +257,15 @@ $(OutFile): build_info  \
 	$(OutDir_Painter)PainterInit.o \
 	$(OutDir_Painter)Painter.a \
 	$(OutDir_Draw)Draw.a \
-	$(OutDir_plugin_png)pngreg.o \
-	$(OutDir_plugin_png)png.a \
 	$(OutDir_PdfDraw)PdfInit.o \
 	$(OutDir_PdfDraw)PdfDraw.a \
 	$(OutDir_plugin_pcre)pcre.a \
 	$(OutDir_CtrlCore)CtrlCore.a \
 	$(OutDir_plugin_bmp)BmpReg.o \
 	$(OutDir_plugin_bmp)bmp.a \
-	$(OutDir_RichText)RichText.a
+	$(OutDir_RichText)RichText.a \
+	$(OutDir_plugin_png)pngreg.o \
+	$(OutDir_plugin_png)png.a
 	$(LINKER) -o "$(OutFile)" -Wl,-s $(LIBPATH) -Wl,-O,2 $(LDFLAGS) -Wl,--start-group  \
 		$(OutDir_ide)BaseDlg.o \
 		$(OutDir_ide)SelectPkg.o \
@@ -377,8 +377,6 @@ $(OutFile): build_info  \
 		$(OutDir_Painter)PainterInit.o \
 			$(OutDir_Painter)Painter.a \
 			$(OutDir_Draw)Draw.a \
-		$(OutDir_plugin_png)pngreg.o \
-			$(OutDir_plugin_png)png.a \
 		$(OutDir_PdfDraw)PdfInit.o \
 			$(OutDir_PdfDraw)PdfDraw.a \
 			$(OutDir_plugin_pcre)pcre.a \
@@ -386,12 +384,13 @@ $(OutFile): build_info  \
 		$(OutDir_plugin_bmp)BmpReg.o \
 			$(OutDir_plugin_bmp)bmp.a \
 			$(OutDir_RichText)RichText.a \
+		$(OutDir_plugin_png)pngreg.o \
+			$(OutDir_plugin_png)png.a \
 			`pkg-config --libs freetype2` \
 			`pkg-config --libs fontconfig` \
 			`pkg-config --libs x11` \
 			`pkg-config --libs xcb` \
 			`pkg-config --libs expat` \
-			`pkg-config --libs libpng` \
 			`pkg-config --libs xinerama` \
 			`pkg-config --libs xrender` \
 			`pkg-config --libs xft` \
@@ -399,6 +398,7 @@ $(OutFile): build_info  \
 			`pkg-config --libs xext` \
 			`pkg-config --libs gtk+-3.0` \
 			`pkg-config --libs libnotify` \
+			`pkg-config --libs libpng` \
 			-lbz2 \
 			-lcrypto \
 			-lssl \
@@ -72570,216 +72570,6 @@ $(OutDir_Draw)Draw.a: \
 		$(OutDir_Draw)Cham.o \
 		$(OutDir_Draw)SColors.o
 
-$(OutDir_plugin_png):
-	mkdir -p $(OutDir_plugin_png)
-
-$(OutDir_plugin_png)pnglib.o: $(UPPDIR1)plugin/png/pnglib.c \
-	$(UPPDIR1)plugin/png/pnglib.c
-	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pnglib.c -o $(OutDir_plugin_png)pnglib.o
-
-$(OutDir_plugin_png)pngupp.o: $(UPPDIR1)plugin/png/pngupp.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/DrawImg.iml \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SIMD.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/png/pngupp.cpp \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pngupp.cpp -o $(OutDir_plugin_png)pngupp.o
-
-$(OutDir_plugin_png)pngreg.o: $(UPPDIR1)plugin/png/pngreg.icpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/DrawImg.iml \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SIMD.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)plugin/png/pngreg.icpp \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pngreg.icpp -o $(OutDir_plugin_png)pngreg.o
-
-$(OutDir_plugin_png)png.a: \
-	$(OutDir_plugin_png)pnglib.o \
-	$(OutDir_plugin_png)pngupp.o
-	$(AR) $(OutDir_plugin_png)png.a \
-		$(OutDir_plugin_png)pnglib.o \
-		$(OutDir_plugin_png)pngupp.o
-
 $(OutDir_PdfDraw):
 	mkdir -p $(OutDir_PdfDraw)
 
@@ -84652,6 +84442,216 @@ $(OutDir_RichText)RichText.a: \
 		$(OutDir_RichText)EncodeHTML.o \
 		$(OutDir_RichText)ParseHTML.o \
 		$(OutDir_RichText)Util.o
+
+$(OutDir_plugin_png):
+	mkdir -p $(OutDir_plugin_png)
+
+$(OutDir_plugin_png)pnglib.o: $(UPPDIR1)plugin/png/pnglib.c \
+	$(UPPDIR1)plugin/png/pnglib.c
+	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pnglib.c -o $(OutDir_plugin_png)pnglib.o
+
+$(OutDir_plugin_png)pngupp.o: $(UPPDIR1)plugin/png/pngupp.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Convert.hpp \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Other.hpp \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/DrawImg.iml \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/png/pngupp.cpp \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pngupp.cpp -o $(OutDir_plugin_png)pngupp.o
+
+$(OutDir_plugin_png)pngreg.o: $(UPPDIR1)plugin/png/pngreg.icpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Convert.hpp \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Other.hpp \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/DrawImg.iml \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/png/pngreg.icpp \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_plugin_png)  $(UPPDIR1)plugin/png/pngreg.icpp -o $(OutDir_plugin_png)pngreg.o
+
+$(OutDir_plugin_png)png.a: \
+	$(OutDir_plugin_png)pnglib.o \
+	$(OutDir_plugin_png)pngupp.o
+	$(AR) $(OutDir_plugin_png)png.a \
+		$(OutDir_plugin_png)pnglib.o \
+		$(OutDir_plugin_png)pngupp.o
 
 .PHONY: clean
 clean:
