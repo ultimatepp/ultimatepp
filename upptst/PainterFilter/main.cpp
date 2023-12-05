@@ -17,7 +17,10 @@ struct MyApp : TopWindow {
 	
 	virtual void Paint(Draw& w)
 	{
-		w.DrawImage(0, 0, CachedRescale(TestImg::test(), GetSize(), (int)~method));
+		Size sz = GetSize();
+		DrawPainter p(w, sz);
+		p.Co();
+		p.Rectangle(0, 0, sz.cx, sz.cy).Fill(TestImg::test(), 0, 0, sz.cx, 0);
 	}
 	
 	void Sync()
@@ -27,7 +30,7 @@ struct MyApp : TopWindow {
 
 	MyApp() {
 		Sizeable().Zoomable();
-		SetRect(0, 0, 200, 200);
+		SetRect(0, 0, 4 * 180, 4 * 180);
 		method.Add(Null, "Rylek");
 		method.Add(FILTER_NEAREST, "Nearest");
 		method.Add(FILTER_BILINEAR, "Bilinear");

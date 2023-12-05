@@ -63,6 +63,8 @@ int Int(f32x4 x)
 	return (int)Truncate(x + f32all(8000)) - 8000;
 }
 
+#endif
+
 struct PainterImageSpan : SpanSource, PainterImageSpanData {
 	PainterImageSpan(const PainterImageSpanData& f)
 	:	PainterImageSpanData(f) {}
@@ -90,6 +92,7 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? &image[y][x] : &zero;
 	}
 
+#ifdef CPU_SIMD
 	virtual void Get(RGBA *span, int x, int y, unsigned len) const
 	{
 		PAINTER_TIMING("ImageSpan::Get");
@@ -176,35 +179,7 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			++span;
 		}
     }
-};
-
 #else
-
-struct PainterImageSpan : SpanSource, PainterImageSpanData {
-	PainterImageSpan(const PainterImageSpanData& f) : PainterImageSpanData(f) {}
-	
-	RGBA Pixel(int x, int y) const { return image[y][x]; }
-
-	RGBA GetPixel(int x, int y) const {
-		if(hstyle == FILL_HPAD)
-			x = minmax(x, 0, maxx);
-		else
-		if(hstyle == FILL_HREFLECT)
-			x = (x + ax) / cx & 1 ? (ax - x - 1) % cx : (x + ax) % cx;
-		else
-		if(hstyle == FILL_HREPEAT)
-			x = (x + ax) % cx;
-		if(vstyle == FILL_VPAD)
-			y = minmax(y, 0, maxy);
-		else
-		if(vstyle == FILL_VREFLECT)
-			y = (y + ay) / cy & 1 ? (ay - y - 1) % cy : (y + ay) % cy;
-		else
-		if(vstyle == FILL_VREPEAT)
-			y = (y + ay) % cy;
-		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? image[y][x] : RGBAZero();
-	}
-
 	virtual void Get(RGBA *span, int x, int y, unsigned len) const
 	{
 		PAINTER_TIMING("ImageSpan::Get");
@@ -266,9 +241,8 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			++span;
 		}
     }
-};
-
 #endif
+};
 
 void BufferPainter::RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags)
 {

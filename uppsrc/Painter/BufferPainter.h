@@ -94,6 +94,7 @@ protected:
 	virtual void   DashOp(const String& dash, double start);
 	virtual void   DashOp(const Vector<double>& dash, double start);
 	virtual void   InvertOp(bool invert);
+	virtual void   ImageFilterOp(int filter);
 
 	virtual void   TransformOp(const Xform2D& m);
 
@@ -155,6 +156,7 @@ private:
 		bool                            hasclip;
 		bool                            mask;
 		bool                            onpath;
+		int                             filter = FILTER_BILINEAR;
 	};
 
 	PainterTarget             *alt = NULL;

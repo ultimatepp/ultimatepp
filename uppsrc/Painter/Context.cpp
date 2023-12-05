@@ -79,6 +79,13 @@ void BufferPainter::InvertOp(bool invert)
 		attr.invert = invert;
 }
 
+void BufferPainter::ImageFilterOp(int filter)
+{
+	pathattr.filter = filter;
+	if(IsNull(current))
+		attr.invert = filter;
+}
+
 Vector<double> StringToDash(const String& dash, double& start);
 
 void BufferPainter::DashOp(const String& dash, double start)
