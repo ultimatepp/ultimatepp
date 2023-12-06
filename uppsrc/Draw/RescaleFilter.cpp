@@ -4,11 +4,108 @@ namespace Upp {
 
 #define LDUMP(x) // DUMP(x)
 
-ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, int tgt_sz)
+static double sNearest(double x)
+{
+	return (double)(x >= -0.5 && x <= 0.5);
+}
+
+
+static double sBiCubic_(double x, double B, double C)
+{
+	x = fabs(x);
+	double x2 = x * x;
+	double x3 = x * x * x;
+	return
+		1 / 6.0 * (x < 1 ? (12 - 9*B - 6*C) * x3 + (-18 + 12*B + 6*C) * x2 + (6 - 2*B) :
+		           x < 2 ? (-B - 6*C) * x3 + (6*B + 30*C) * x2 + (-12*B - 48*C) *x + (8*B + 24*C) :
+	               0);
+}
+
+static double sBspline(double x)
+{
+	return sBiCubic_(x, 1, 0);
+}
+
+static double sMitchell(double x)
+{
+	return sBiCubic_(x, 1 / 3.0, 1 / 3.0);
+}
+
+static double sCatmullRom(double x)
+{
+	return sBiCubic_(x, 0, 1 / 2);
+}
+
+static double sLinear(double x)
+{
+	x = fabs(x);
+	if(x > 1)
+		return 0;
+	return 1 - fabs(x);
+}
+
+static double sLanczos(double x, int a)
+{
+	x = fabs(x);
+	if(x < 1e-200)
+		return 1;
+	if(x >= a)
+		return 0;
+	return a * sin(M_PI * x) * sin(M_PI * x / a) / (M_PI * M_PI * x * x);
+}
+
+static double sLanczos2(double x)
+{
+	return sLanczos(x, 2);
+}
+
+static double sLanczos3(double x)
+{
+	return sLanczos(x, 3);
+}
+
+static double sLanczos4(double x)
+{
+	return sLanczos(x, 4);
+}
+
+static double sLanczos5(double x)
+{
+	return sLanczos(x, 5);
+}
+
+static double sCostello(double x)
+{
+	x = fabs(x);
+	return x < 0.5 ? 0.75 - x * x :
+	       x < 1.5 ? 0.5 * (x - 1.5) * (x - 1.5) :
+	       0;
+}
+
+Tuple2<double (*)(double), int> GetImageFilterFunction(int filter)
+{
+	static Tuple2<double (*)(double), int> tab[] = {
+		{ sNearest, 1 },
+		{ sLinear, 1 },
+		{ sBspline, 2 },
+		{ sCostello, 2 },
+		{ sMitchell, 2 },
+		{ sCatmullRom, 2 },
+		{ sLanczos2, 2 },
+		{ sLanczos3, 3 },
+		{ sLanczos4, 4 },
+		{ sLanczos5, 5 },
+	};
+	ASSERT(filter >= FILTER_NEAREST && filter <= FILTER_LANCZOS5);
+	return tab[clamp(filter, 0, __countof(tab))];
+}
+
+void ImageFilterKernel::Init(double (*kfn)(double), int a, int src_sz, int tgt_sz)
 {
 	this->a = a;
 	n = min(max(src_sz / tgt_sz, 1) * a, 31);
 	shift = 8 - n / 8;
+	mul = 1 << shift;
 	kernel_size = (2 * n) << shift;
 	ashift = a << shift;
 	INTERLOCKED {
@@ -23,6 +120,17 @@ ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, i
 			ktab[i] = int((1 << shift) * (*kfn)((double)i / (1 << shift) - a));
 		kernel = ktab;
 	}
+}
+
+ImageFilterKernel::ImageFilterKernel(double (*kfn)(double), int a, int src_sz, int tgt_sz)
+{
+	Init(kfn, a, src_sz, tgt_sz);
+}
+
+void ImageFilterKernel::Init(int filter, int src_sz, int tgt_sz)
+{
+	auto t = GetImageFilterFunction(filter);
+	Init(t.a, t.b, src_sz, tgt_sz);
 }
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
@@ -152,102 +260,12 @@ Image RescaleFilter(const Image& img, int cx, int cy,
 	return RescaleFilter(img, Size(cx, cy), img.GetSize(), kfn, a, progress, co);
 }
 
-static double sNearest(double x)
-{
-	return (double)(x >= -0.5 && x <= 0.5);
-}
-
-
-static double sBiCubic_(double x, double B, double C)
-{
-	x = fabs(x);
-	double x2 = x * x;
-	double x3 = x * x * x;
-	return
-		1 / 6.0 * (x < 1 ? (12 - 9*B - 6*C) * x3 + (-18 + 12*B + 6*C) * x2 + (6 - 2*B) :
-		           x < 2 ? (-B - 6*C) * x3 + (6*B + 30*C) * x2 + (-12*B - 48*C) *x + (8*B + 24*C) :
-	               0);
-}
-
-static double sBspline(double x)
-{
-	return sBiCubic_(x, 1, 0);
-}
-
-static double sMitchell(double x)
-{
-	return sBiCubic_(x, 1 / 3.0, 1 / 3.0);
-}
-
-static double sCatmullRom(double x)
-{
-	return sBiCubic_(x, 0, 1 / 2);
-}
-
-static double sLinear(double x)
-{
-	x = fabs(x);
-	if(x > 1)
-		return 0;
-	return 1 - fabs(x);
-}
-
-static double sLanczos(double x, int a)
-{
-	x = fabs(x);
-	if(x < 1e-200)
-		return 1;
-	if(x >= a)
-		return 0;
-	return a * sin(M_PI * x) * sin(M_PI * x / a) / (M_PI * M_PI * x * x);
-}
-
-static double sLanczos2(double x)
-{
-	return sLanczos(x, 2);
-}
-
-static double sLanczos3(double x)
-{
-	return sLanczos(x, 3);
-}
-
-static double sLanczos4(double x)
-{
-	return sLanczos(x, 4);
-}
-
-static double sLanczos5(double x)
-{
-	return sLanczos(x, 5);
-}
-
-static double sCostello(double x)
-{
-	x = fabs(x);
-	return x < 0.5 ? 0.75 - x * x :
-	       x < 1.5 ? 0.5 * (x - 1.5) * (x - 1.5) :
-	       0;
-}
-
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress, bool co)
 {
 	if(IsNull(filter))
 		return Rescale(img, sz, sr);
-	static Tuple2<double (*)(double), int> tab[] = {
-		{ sNearest, 1 },
-		{ sLinear, 1 },
-		{ sBspline, 2 },
-		{ sCostello, 2 },
-		{ sMitchell, 2 },
-		{ sCatmullRom, 2 },
-		{ sLanczos2, 2 },
-		{ sLanczos3, 3 },
-		{ sLanczos4, 4 },
-		{ sLanczos5, 5 },
-	};
-	ASSERT(filter >= FILTER_NEAREST && filter <= FILTER_LANCZOS5);
-	return RescaleFilter(img, sz, sr, tab[filter].a, tab[filter].b, progress, co);
+	auto t = GetImageFilterFunction(filter);
+	return RescaleFilter(img, sz, sr, t.a, t.b, progress, co);
 }
 
 Image RescaleFilter(const Image& img, Size sz, int filter, Gate<int, int> progress)
@@ -274,7 +292,6 @@ Image CoRescaleFilter(const Image& img, int cx, int cy, int filter, Gate<int, in
 {
 	return CoRescaleFilter(img, Size(cx, cy), filter, progress);
 }
-
 
 // Obsolete functions
 

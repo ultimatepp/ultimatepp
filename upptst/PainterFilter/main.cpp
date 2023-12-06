@@ -15,12 +15,21 @@ struct MyApp : TopWindow {
 
 	DropList method;
 	
-	virtual void Paint(Draw& w)
+	int rotate = 10;
+
+	void LeftDown(Point p, dword keyflags) override
+	{
+		rotate = p.y;
+		Refresh();
+	}
+
+	void Paint(Draw& w) override
 	{
 		Size sz = GetSize();
 		DrawPainter p(w, sz);
+		p.Clear(White());
 		p.Co();
-		p.Rectangle(0, 0, sz.cx, sz.cy).Fill(TestImg::test(), 0, 0, sz.cx, 0);
+		p.Rectangle(0, 0, sz.cx, sz.cy).ImageFilter(~method).Fill(TestImg::test(), 10, 10, sz.cx, rotate);
 	}
 	
 	void Sync()
@@ -30,8 +39,7 @@ struct MyApp : TopWindow {
 
 	MyApp() {
 		Sizeable().Zoomable();
-		SetRect(0, 0, 4 * 180, 4 * 180);
-		method.Add(Null, "Rylek");
+		SetRect(0, 0, 20 + 4 * 180, 20 + 4 * 180);
 		method.Add(FILTER_NEAREST, "Nearest");
 		method.Add(FILTER_BILINEAR, "Bilinear");
 		method.Add(FILTER_BSPLINE, "Bspline");

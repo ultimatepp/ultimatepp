@@ -2,7 +2,27 @@
 
 namespace Upp {
 
-struct PainterImageSpanData {
+#ifdef CPU_SIMD
+
+force_inline
+int IntAndFraction(f32x4 x, f32x4& fraction)
+{
+	const int ishift = 1000000;
+	x = x + f32all(ishift); // Truncate truncates toward 0, need to fix negatives
+	i32x4 m = Truncate(x);
+	fraction = x - ToFloat(m);
+	return (int)m - ishift;
+}
+
+force_inline
+int Int(f32x4 x)
+{
+	return (int)Truncate(x + f32all(8000)) - 8000;
+}
+
+#endif
+
+struct PainterImageSpan : SpanSource {
 	int         ax, ay, cx, cy, maxx, maxy;
 	byte        style;
 	byte        hstyle, vstyle;
@@ -10,8 +30,10 @@ struct PainterImageSpanData {
 	bool        fixed;
 	Image       image;
 	Xform2D     xform;
+	bool        dofilter = false;
+	ImageFilterKernel kx, ky;
 
-	PainterImageSpanData(dword flags, const Xform2D& m, const Image& img, bool co, bool imagecache) {
+	PainterImageSpan(dword flags, const Xform2D& m, const Image& img, bool co, bool imagecache, int filter) {
 		style = byte(flags & 15);
 		hstyle = byte(flags & 3);
 		vstyle = byte(flags & 12);
@@ -25,8 +47,14 @@ struct PainterImageSpanData {
 				nx = (int)max(1.0, 1.0 / sc.x);
 				ny = (int)max(1.0, 1.0 / sc.y);
 			}
+
+			if(filter != FILTER_BILINEAR) {
+				kx.Init(filter, nx, 1);
+				ky.Init(filter, ny, 1);
+				dofilter = true;
+			}
 		}
-		if(nx == 1 && ny == 1)
+		if(nx == 1 && ny == 1 || dofilter)
 			xform = Inverse(m);
 		else {
 			if(!fast)
@@ -41,33 +69,6 @@ struct PainterImageSpanData {
 		ay = 6000000 / cy * cy * 2;
 		fixed = hstyle && vstyle;
 	}
-	
-	PainterImageSpanData() {}
-};
-
-
-#ifdef CPU_SIMD
-
-force_inline
-int IntAndFraction(f32x4 x, f32x4& fraction)
-{
-	x = x + f32all(8000); // Truncate truncates toward 0, need to fix negatives
-	i32x4 m = Truncate(x);
-	fraction = x - ToFloat(m);
-	return (int)m - 8000;
-}
-
-force_inline
-int Int(f32x4 x)
-{
-	return (int)Truncate(x + f32all(8000)) - 8000;
-}
-
-#endif
-
-struct PainterImageSpan : SpanSource, PainterImageSpanData {
-	PainterImageSpan(const PainterImageSpanData& f)
-	:	PainterImageSpanData(f) {}
 
 	const RGBA *Pixel(int x, int y) const { return &image[y][x]; }
 
@@ -92,14 +93,47 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? &image[y][x] : &zero;
 	}
 
-#ifdef CPU_SIMD
+	virtual void GetFilter(RGBA *span, int x, int y, unsigned len) const
+	{
+		Pointf p0 = xform.Transform(Pointf(x, y));
+		Pointf dd = xform.Transform(Pointf(x + 1, y)) - p0;
+
+		int ii = 0;
+		while(len--) {
+			const int ishift = 1000000; // to avoid problems with negatives
+			Pointf p = (p0 + ii++ * dd) + Pointf(ishift, ishift);
+			Point l = p;
+			Pointf h = p - Pointf(l);
+			l -= Point(ishift, ishift);
+			int mx = int(kx.mul * h.x);
+			int my = int(ky.mul * h.y);
+
+			f32x4 rgbaf = 0;
+			f32x4 w = 0;
+			for(int yy = -ky.n + 1; yy <= ky.n; yy++) {
+				int wy = ky.Get(yy, my);
+				for(int xx = -kx.n + 1; xx <= kx.n; xx++) {
+					f32x4 s = LoadRGBAF(GetPixel(l.x + xx, l.y + yy));
+					f32x4 weight = f32all(wy * kx.Get(xx, mx));
+					rgbaf += weight * s;
+					w += weight;
+				}
+			}
+			StoreRGBAF(span++, ClampRGBAF(rgbaf / w));
+		}
+	}
+
 	virtual void Get(RGBA *span, int x, int y, unsigned len) const
 	{
 		PAINTER_TIMING("ImageSpan::Get");
 
+		if(dofilter)
+			return GetFilter(span, x, y, len);
+
 		Pointf p0 = xform.Transform(Pointf(x, y));
 		Pointf dd = xform.Transform(Pointf(x + 1, y)) - p0;
 		
+#ifdef CPU_SIMD
 		f32x4 x0 = f32all(p0.x);
 		f32x4 y0 = f32all(p0.y);
 		f32x4 dx = f32all(dd.x);
@@ -178,30 +212,29 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			}
 			++span;
 		}
-    }
 #else
-	virtual void Get(RGBA *span, int x, int y, unsigned len) const
-	{
-		PAINTER_TIMING("ImageSpan::Get");
-		LinearInterpolator interpolator(xform);
-		interpolator.Begin(x, y, len);
+		int ii = 0;
 		if(hstyle + vstyle == 0 && fast) {
 			while(len--) {
-				Point l = interpolator.Get() >> 8;
+				Pointf p = p0 + ii++ * dd;
+				Point l = p;
 				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy)
-					*span = Pixel(l.x, l.y);
+					*span = *Pixel(l.x, l.y);
 				else
 				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
 					*span = RGBAZero();
 				else
-					*span = GetPixel(l.x, l.y);
+					*span = *GetPixel(l.x, l.y);
 				++span;
 			}
 			return;
 		}
 		while(len--) {
-			Point h = interpolator.Get();
-			Point l = h >> 8;
+			const int ishift = 1000000; // to avoid problems with negatives
+			Pointf p = (p0 + ii++ * dd) + Pointf(ishift, ishift);
+			Point l = p;
+			Point h = Pointf(256 * (p - Pointf(l)));
+			l -= Point(ishift, ishift);
 			if(hstyle == FILL_HREPEAT)
 				l.x = (l.x + ax) % cx;
 			if(vstyle == FILL_VREPEAT)
@@ -211,27 +244,25 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			else
 			if(fast) {
 				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy)
-					*span = Pixel(l.x, l.y);
+					*span = *Pixel(l.x, l.y);
 				else
-					*span = GetPixel(l.x, l.y);
+					*span = *GetPixel(l.x, l.y);
 			}
 			else {
 				RGBAV v;
 				v.Set(0);
-				h.x &= 255;
-				h.y &= 255;
 				Point u = -h + 256;
 				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy) {
-					v.Put(u.x * u.y, Pixel(l.x, l.y));
-					v.Put(h.x * u.y, Pixel(l.x + 1, l.y));
-					v.Put(u.x * h.y, Pixel(l.x, l.y + 1));
-					v.Put(h.x * h.y, Pixel(l.x + 1, l.y + 1));
+					v.Put(u.x * u.y, *Pixel(l.x, l.y));
+					v.Put(h.x * u.y, *Pixel(l.x + 1, l.y));
+					v.Put(u.x * h.y, *Pixel(l.x, l.y + 1));
+					v.Put(h.x * h.y, *Pixel(l.x + 1, l.y + 1));
 				}
 				else {
-					v.Put(u.x * u.y, GetPixel(l.x, l.y));
-					v.Put(h.x * u.y, GetPixel(l.x + 1, l.y));
-					v.Put(u.x * h.y, GetPixel(l.x, l.y + 1));
-					v.Put(h.x * h.y, GetPixel(l.x + 1, l.y + 1));
+					v.Put(u.x * u.y, *GetPixel(l.x, l.y));
+					v.Put(h.x * u.y, *GetPixel(l.x + 1, l.y));
+					v.Put(u.x * h.y, *GetPixel(l.x, l.y + 1));
+					v.Put(h.x * h.y, *GetPixel(l.x + 1, l.y + 1));
 				}
 				span->r = byte(v.r >> 16);
 				span->g = byte(v.g >> 16);
@@ -240,8 +271,8 @@ struct PainterImageSpan : SpanSource, PainterImageSpanData {
 			}
 			++span;
 		}
-    }
 #endif
+    }
 };
 
 void BufferPainter::RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags)
@@ -249,9 +280,8 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	current = Null;
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
-	PainterImageSpanData f(flags, transsrc * pathattr.mtx, image, co, imagecache);
 	One<SpanSource> ss;
-	ss.Create<PainterImageSpan>(f);
+	ss.Create<PainterImageSpan>(flags, transsrc * pathattr.mtx, image, co, imagecache, pathattr.filter);
 	RenderPath(width, ss, RGBAZero());
 }
 

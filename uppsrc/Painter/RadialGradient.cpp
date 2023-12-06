@@ -26,15 +26,15 @@ struct PainterRadialSpan : SpanSource {
 	{
 		if(r <= 0)
 			return;
-		LinearInterpolator interpolator(im);
-		interpolator.Begin(x, y, len);
+		Pointf p0 = im.Transform(Pointf(x, y));
+		Pointf dd = im.Transform(Pointf(x + 1, y)) - p0;
 		RGBA *span = (RGBA *)_span;
+		int ii = 0;
 		while(len--) {
-			Point p = interpolator.Get();
+			Pointf p = p0 + dd * ii++;
+			double dx = p.x - cx - fx;
+			double dy =  p.y - cy - fy;
 			int h;
-			const double q256 = 1 / 256.0;
-			double dx = q256 * p.x - cx - fx;
-			double dy = q256 * p.y - cy - fy;
 			if(dx == 0 && dy == 0)
 				h = 0;
 			else {

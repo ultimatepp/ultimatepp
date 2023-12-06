@@ -203,16 +203,23 @@ enum {
 	FILTER_LANCZOS5 = 9,
 };
 
+Tuple2<double (*)(double), int> GetImageFilterFunction(int filter);
+
 struct ImageFilterKernel {
 	int        a;
 	int        n;
 	int        shift;
 	int        ashift;
-	const int *kernel;
 	int        kernel_size;
+	const int *kernel;
+	double     mul;
 
-	int Get(int x, int dx) { return kernel[clamp(((x << shift) - dx) * a / n + ashift, 0, kernel_size)]; }
+	int Get(int x, int dx) const { return kernel[clamp(((x << shift) - dx) * a / n + ashift, 0, kernel_size)]; }
+
+	void Init(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
+	void Init(int filter, int src_sz, int tgt_sz);
 	
+	ImageFilterKernel() {}
 	ImageFilterKernel(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
 };
 
