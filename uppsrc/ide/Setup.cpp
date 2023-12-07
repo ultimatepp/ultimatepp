@@ -287,7 +287,6 @@ void Ide::SetupFormat() {
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
 	WebSearchTab web_search;
-
 	edt.lineends
 		.Add(LF, "LF")
 		.Add(CRLF, "CRLF")
