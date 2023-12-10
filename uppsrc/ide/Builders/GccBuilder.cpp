@@ -11,6 +11,12 @@ String GccBuilder::CompilerName() const
 	return "c++";
 }
 
+bool GccBuilder::IsCompilerPresent() const
+{
+	String output;
+	return HostSys(CompilerName() + " --version", output) == 0;
+}
+
 String GccBuilder::CmdLine(const String& package, const Package& pkg)
 {
 	String cc = CompilerName();
@@ -49,6 +55,15 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		else
 			target = target + ".app/Contents/MacOS/" + GetFileName(target);
 		RealizePath(target);
+	}
+
+	if(!IsCompilerPresent()) {
+		PutConsole(
+			Format("Error: Failed to find the '%s' compiler executable! Make sure the compiler "
+		           "is installed and is present in the executables path.",
+		           CompilerName()));
+		IdeConsoleEndGroup();
+		return false;
 	}
 
 	SaveBuildInfo(package);

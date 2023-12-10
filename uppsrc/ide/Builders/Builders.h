@@ -77,6 +77,7 @@ struct GccBuilder : CppBuilder {
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	String CompilerName() const;
+	bool   IsCompilerPresent() const;
 	String CmdLine(const String& package, const Package& pkg);
 	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 	void   CocoaAppBundle();
