@@ -5,16 +5,16 @@
 #define LLOG(x)
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
-#ifdef SANDBOX_FLATPAK
-const char* Host::SandboxUtils::WRAPP_PREFIX = "host-spawn ";
+#ifdef FLATPAK
+const char* Host::CMDLINE_PREFIX = "host-spawn ";
 #else
-const char* Host::SandboxUtils::WRAPP_PREFIX = "";
+const char* Host::CMDLINE_PREFIX = "";
 #endif
 
-String Host::SandboxUtils::WrappCmdline(const char* cmdline)
+String Host::AddCmdlinePrefix(const char* cmdline)
 {
-#ifdef SANDBOX_FLATPAK
-	return String(WRAPP_PREFIX) + cmdline;
+#ifdef FLATPAK
+	return String(CMDLINE_PREFIX) + cmdline;
 #else
 	return cmdline;
 #endif
@@ -145,7 +145,7 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		if(p.Start(FindCommand(exedirs, SandboxUtils::WrappCmdline(cmdline)), environment))
+		if(p.Start(FindCommand(exedirs, AddCmdlinePrefix(cmdline)), environment))
 			return true;
 	}
 	catch(...) {
@@ -207,7 +207,7 @@ String ResolveHostConsole()
 		"/usr/local/bin/xterm -e",
 	};
 	#else
-		#ifdef SANDBOX_FLATPAK
+		#ifdef FLATPAK
 		static const char *term[] = {
 			"/run/host/bin/mate-terminal -x",
 			"/run/host/bin/gnome-terminal --window -x",

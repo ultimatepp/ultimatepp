@@ -86,7 +86,7 @@ bool Install(bool& hasvars)
 		Scan(idir + "/uppsrc");
 		Scan(idir + "/*");
 	#endif
-	#ifdef SANDBOX_FLATPAK
+	#ifdef FLATPAK
 		Scan(GetHomeDirFile("/.local/src/upp/uppsrc"));
 		Scan(GetHomeDirFile("/.local/src/upp/*"));
 	#endif

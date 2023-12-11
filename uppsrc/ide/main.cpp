@@ -127,7 +127,7 @@ bool TryLoadLibClang()
 	if(LoadLibClang("/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"))
 		return true;
 #endif
-#ifdef SANDBOX_FLATPAK
+#ifdef FLATPAK
 	if(LoadLibClang("/app/lib"))
 		return true;
 #endif

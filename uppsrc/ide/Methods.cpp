@@ -890,7 +890,7 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 		}
 		for(String p : Split(cflags[q], CharFilterWhitespace)) {
 			if(p.TrimStart("-I")) {
-			#ifdef SANDBOX_FLATPAK
+			#ifdef FLATPAK
 				p.Replace("/usr", "/run/host/usr");
 			#endif
 				MergeWith(include_path, ";", p);

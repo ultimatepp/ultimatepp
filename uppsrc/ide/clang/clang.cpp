@@ -55,7 +55,7 @@ String GetClangInternalIncludes()
 			Vector<String> ln = Split(h, '\n');
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String dir = TrimBoth(ln[i]);
-			#ifdef SANDBOX_FLATPAK
+			#ifdef FLATPAK
 				dir.Replace("/usr", "/run/host/usr");
 			#endif
 				if(DirectoryExists(dir))
@@ -157,9 +157,8 @@ bool Clang::Parse(const String& filename_, const String& content,
 	                                options & PARSE_FILE ? 0 : (filename2.GetCount() ? 2 : 1),
 	                                options);
 
-	if(!tu) {
+	if(!tu)
 		PutAssist("Failed commandline: " + cmdline0);
-	}
 	// Diagnostics(tu, VppLog());_DBG_
 	
 	return tu;

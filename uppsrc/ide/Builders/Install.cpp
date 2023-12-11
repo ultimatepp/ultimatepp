@@ -186,7 +186,7 @@ void CreateBuildMethods()
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
 	
-	const auto cmd = String(Host::SandboxUtils::WRAPP_PREFIX) + "clang --version";
+	const auto cmd = String(Host::CMDLINE_PREFIX) + "clang --version";
 	if(Sys(cmd).GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))

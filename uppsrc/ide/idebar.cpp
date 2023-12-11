@@ -430,7 +430,7 @@ void Ide::Setup(Bar& menu)
 	}
 #endif
 
-#if !defined(PLATFORM_COCOA) && !defined(PLATFORM_WIN32) && !defined(SANDBOX_FLATPAK)
+#if !defined(PLATFORM_COCOA) && !defined(PLATFORM_WIN32) && !defined(FLATPAK)
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
 #endif
 

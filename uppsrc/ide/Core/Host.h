@@ -2,30 +2,27 @@ enum { REMOTE_TIMEOUT = 2000 };
 
 extern String HostConsole;
 
-String WrappCmdlineForSandbox(const char* cmdline);
 void AddHostFlags(Index<String>& cfg);
 
-struct Host {
-	class SandboxUtils {
-	public:
-		static const char* WRAPP_PREFIX;
-		static String WrappCmdline(const char* cmdline);
-		
-	private:
-		SandboxUtils() = delete;
-	};
-	
+class Host {
+public:
 	struct FileInfo : Time, Moveable<FileInfo> {
 		int length;
 	};
-
+	
+public:
+	static const char* CMDLINE_PREFIX;
+	
 	Vector<String> exedirs;
 	String         environment;
 
 	String        *cmdout;
 	
 	bool           canlog = true; // it does PutVerbose for commands
-
+	
+public:
+	static String AddCmdlinePrefix(const char* cmdline);
+	
 	void    DoDir(const String& s);
 
 	void                  Log(const String& s) { if(canlog) PutVerbose(s); }
