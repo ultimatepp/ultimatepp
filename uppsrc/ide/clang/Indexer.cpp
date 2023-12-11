@@ -11,7 +11,7 @@ String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header
 	LTIMING("FindMasterSource");
 	String header_file = NormalizePath(header_file_);
 
-	for(int pass = 0; pass < 3; pass++) {
+	for(int speculative = 0; speculative < 2; speculative++) {
 		VectorMap<String, Time> deps;
 		ArrayMap<String, Index<String>> dics;
 		for(int i : wspc.use_order) {
@@ -20,12 +20,8 @@ String FindMasterSource(PPInfo& ppi, const Workspace& wspc, const String& header
 			for(int i = 0; i < pk.file.GetCount(); i++) {
 				String path = SourcePath(pk_name, pk.file[i]);
 				if(!pk.file[i].separator && ppi.FileExists(path) && !PathIsEqual(header_file, path) &&
-				   IsCppSourceFile(path) &&
-				   (pass == 2 || // last chance speculative run, any folder
-				    pass == 0 && GetFileFolder(path) == GetFileFolder(header_file) || // prefer source from the same folder first
-				    pass == 1 && GetFileFolder(path) != GetFileFolder(header_file)) &&
-				   GetFileLength(path) < 4000000) {
-					ppi.GatherDependencies(path, deps, dics, pass > 1);
+				   IsCppSourceFile(path) && GetFileLength(path) < 4000000) {
+					ppi.GatherDependencies(path, deps, dics, speculative);
 					if(deps.Find(header_file) >= 0)
 						return path;
 				}
@@ -54,7 +50,7 @@ const VectorMap<String, Time>& FindMasterSourceCached(PPInfo& ppi, const Workspa
                                                       VectorMap<String, MasterSourceCacheRecord>& cache)
 {
 	String header_file = NormalizePath(header_file_);
-
+	
 	if(cache.GetCount() > 2000) // 2000 cached headers is enough for everybody, right?
 		cache.Clear();
 
