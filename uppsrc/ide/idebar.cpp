@@ -849,6 +849,7 @@ void Ide::BrowseMenu(Bar& menu)
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
 			menu.Add("Reindex all source files", [=] {
+				editor.ms_cache.Clear();
 				PPInfo::RescanAll();
 				for(FileAnnotation& m : CodeIndex())
 					m.time = Null;

@@ -71,7 +71,8 @@ void PPInfo::PPFile::Parse(Stream& in)
 	LTIMING("PPInfo::Parse");
 
 	flags.Clear();
-	defines.Clear();
+	defines[0].Clear();
+	defines[1].Clear();
 	includes[0].Clear();
 	includes[1].Clear();
 	define_includes[0].Clear();
@@ -144,7 +145,9 @@ void PPInfo::PPFile::Parse(Stream& in)
 						id << ")";
 					}
 					p.Spaces();
-					defines.Add(id, p.GetPtr());
+					String h = p.GetPtr();
+					defines[!!speculative].Add(id, h);
+					all_defines.Add(id, h);
 				}
 				else
 				if(p.Id("ifndef") && p.IsId()) {
@@ -200,7 +203,9 @@ void PPInfo::PPFile::Serialize(Stream& s)
 {
 	s % time
 	  % flags
-	  % defines
+	  % defines[0]
+	  % defines[1]
+	  % all_defines
 	  % includes[0]
 	  % includes[1]
 	  % define_includes[0]
@@ -316,9 +321,8 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 		tm = GetFileTime(path);
 		if(tm != f.time || scan_serial != f.scan_serial) {
 			String cache_path = CacheFile(GetFileTitle(path) + "$" + SHA1String(path) + ".ppi");
-			if(IsNull(f.time)) {
+			if(IsNull(f.time))
 				LoadFromFile(f, cache_path);
-			}
 			if(tm != f.time || scan_serial) {
 				int retry = 0;
 			again:
@@ -352,8 +356,8 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	String dir = GetFileFolder(path);
 	Index<String>& dics = define_includes.GetAdd(path);
 	for(int i = 0; i <= (int)speculative; i++) {
-		for(const String& i : f.define_includes[i])
-			dics.FindAdd(i);
+		for(const String& inc : f.define_includes[i])
+			dics.FindAdd(inc);
 	}
 	
 	Time ftm = GetFileTime(path);
@@ -391,11 +395,12 @@ Time PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 		}
 		for(int i = 0; i < dics.GetCount(); i++) { // cannot use range for as dics can change
 			String id = dics[i];
-			for(int q = f.defines.Find(id); q >= 0; q = f.defines.FindNext(q)) {
-				DoInclude(f.defines[q]);
-				if(found)
-					goto done;
-			}
+			for(int j = 0; j <= (int)speculative; j++) // defines can be speculative too (CtrlCore.h, Turtle.h issue)
+				for(int q = f.defines[j].Find(id); q >= 0; q = f.defines[j].FindNext(q)) {
+					DoInclude(f.defines[j][q]);
+					if(found)
+						goto done;
+				}
 		}
 	}
 
