@@ -6,7 +6,7 @@
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
 #ifdef FLATPAK
-const char* Host::CMDLINE_PREFIX = "host-spawn ";
+const char* Host::CMDLINE_PREFIX = "host-spawn --no-pty ";
 #else
 const char* Host::CMDLINE_PREFIX = "";
 #endif
