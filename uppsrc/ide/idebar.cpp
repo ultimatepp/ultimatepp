@@ -423,7 +423,7 @@ void Ide::Setup(Bar& menu)
 	if(wspc[0] == "ide") {
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			if(wspc[i] == "ide/Core") {
-					menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
+				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
 				break;
 			}
 		}
