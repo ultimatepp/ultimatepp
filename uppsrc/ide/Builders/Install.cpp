@@ -172,7 +172,7 @@ void CreateBuildMethods()
 		SaveFile(bm_path, bm);
 	}
 #else
-	bool openbsd = ToLower(Sys(Host::AddCmdlinePrefix("uname"))).Find("openbsd") >= 0;
+	bool openbsd = ToLower(Sys(Host::CMDLINE_PREFIX + "uname")).Find("openbsd") >= 0;
 	auto Fix = [=](const char *s) {
 		String r = s;
 		if(openbsd) {
@@ -186,7 +186,7 @@ void CreateBuildMethods()
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
 	
-	if(Sys(Host::AddCmdlinePrefix("clang --version")).GetCount()) {
+	if(Sys(Host::CMDLINE_PREFIX + "clang --version").GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
 			SaveFile(bm, Fix(clang_bm));

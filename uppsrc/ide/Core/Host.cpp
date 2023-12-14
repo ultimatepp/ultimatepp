@@ -6,19 +6,10 @@
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
 #ifdef FLATPAK
-const char* Host::CMDLINE_PREFIX = "host-spawn --no-pty ";
+const String Host::CMDLINE_PREFIX = "host-spawn --no-pty ";
 #else
-const char* Host::CMDLINE_PREFIX = "";
+const String Host::CMDLINE_PREFIX = "";
 #endif
-
-String Host::AddCmdlinePrefix(const char* cmdline)
-{
-#ifdef FLATPAK
-	return String(CMDLINE_PREFIX) + cmdline;
-#else
-	return cmdline;
-#endif
-}
 
 String Host::GetEnvironment()
 {
@@ -145,7 +136,7 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		if(p.Start(FindCommand(exedirs, AddCmdlinePrefix(cmdline)), environment))
+		if(p.Start(FindCommand(exedirs, CMDLINE_PREFIX + cmdline), environment))
 			return true;
 	}
 	catch(...) {

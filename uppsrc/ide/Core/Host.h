@@ -11,7 +11,7 @@ public:
 	};
 	
 public:
-	static const char* CMDLINE_PREFIX;
+	static const String CMDLINE_PREFIX;
 	
 	Vector<String> exedirs;
 	String         environment;
@@ -21,8 +21,6 @@ public:
 	bool           canlog = true; // it does PutVerbose for commands
 	
 public:
-	static String AddCmdlinePrefix(const char* cmdline);
-	
 	void    DoDir(const String& s);
 
 	void                  Log(const String& s) { if(canlog) PutVerbose(s); }

@@ -227,7 +227,7 @@ int Console::Execute(const char *command, Stream *out, const char *envptr, bool 
 		One<AProcess> p;
 		if(p.Create<LocalProcess>()
 		       .ConvertCharset(!noconvert)
-		       .Start(Host::AddCmdlinePrefix(command), envptr))
+		       .Start(Host::CMDLINE_PREFIX + command, envptr))
 			return Execute(pick(p), command, out, q);
 	}
 	catch(Exc e) {
@@ -260,7 +260,7 @@ bool Console::Run(const char *cmdline, Stream *out, const char *envptr, bool qui
 		Wait(slot);
 		One<AProcess> sproc;
 		LLOG("Run " << sCmdLine(cmdline) << " in slot " << slot);
-		return sproc.Create<LocalProcess>().Start(Host::AddCmdlinePrefix(cmdline),
+		return sproc.Create<LocalProcess>().Start(Host::CMDLINE_PREFIX + cmdline,
 		                                          envptr) &&
 		       Run(pick(sproc), cmdline, out, quiet, slot, key, blitz_count);
 	}
@@ -284,7 +284,7 @@ bool Console::Run(One<AProcess> pick_ process, const char *cmdline, Stream *out,
 	Wait(slot);
 	Slot& pslot = processes[slot];
 	pslot.process = pick(process);
-	pslot.cmdline = Host::AddCmdlinePrefix(cmdline);
+	pslot.cmdline = Host::CMDLINE_PREFIX + cmdline;
 	pslot.outfile = out;
 	pslot.output = Null;
 	pslot.quiet = quiet;
