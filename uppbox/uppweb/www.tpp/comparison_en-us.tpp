@@ -31,7 +31,7 @@ vs Qt]&]
 [s21;l160;i150;O0; [^topic`:`/`/uppweb`/www`/vsswing`$en`-us^ Comparison 
 vs Java/Swing]&]
 [s21;l160;i150;O0; [^topic`:`/`/uppweb`/www`/vswx`$en`-us^ Comparison 
-vs wxWidget][^topic`:`/`/uppweb2`/www`/vsstd`$en`-us^ s]&]
+vs wxWidget]&]
 [s21; To demonstrate how not using standard C`+`+ library affects 
 application performance, we have provided following comparison:&]
 [s21;l160;i150;O0; [^topic`:`/`/uppweb`/www`/vsstd`$en`-us^ U`+`+ Core 
