@@ -10,9 +10,7 @@ topic "Current Topics";
 [s3; Introduction&]
 [s4; Ultimate`+`+ project is in continuous improvement both from 
 core developers and community. The interest areas cover bug fixes 
-and new developments. In addition to [^topic`:`/`/uppweb`/www`/gsoc`$en`-us^ our 
-Google Summer of Code page], here we show some of the areas we 
-are interested in.&]
+and new developments. &]
 [s4; This list is a work`-in`-progress. You can follow discussions 
 in [^http`:`/`/www`.ultimatepp`.org`/forums`/^ Forum].&]
 [s3; New developments&]
@@ -50,7 +48,7 @@ orum ]mainly in this [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=ms
 hread].&]
 [s5; Web development&]
 [s4; In recent years, we created several useful web developments 
-tools. Our jewel in the crown is [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Sk
+tools. Our jewel in the crown is [^topic`:`/`/srcdoc`/Skylark`/Tutorial`$en`-us^ Sk
 ylark] that allows to development web application. On the other 
 hand we have got Turtle. It is tiny HTML5/JS client that allows 
 to run U`+`+ GUI application directly in the web browser.&]
