@@ -344,18 +344,21 @@ String][@(0.0.255) `&]_[*@3 text])&]
 [s4; &]
 [s5;:TextCtrl`:`:Insert`(int`,const WString`&`): [@(0.0.255) int]_[* Insert]([@(0.0.255) in
 t]_[*@3 pos], [@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[*@3 txt])&]
-[s2;%% Inserts [%-*@3 txt] at [%-*@3 pos].&]
+[s2;%% Inserts [%-*@3 txt] at [%-*@3 pos]. Returns a number of characters 
+inserted.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:Insert`(int`,const String`&`,byte`): [@(0.0.255) int]_[* Insert]([@(0.0.255) i
 nt]_[*@3 pos], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 txt], 
 [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
-[s2;%% Inserts [%-*@3 txt] encoded with [%-*@3 charset ]at [%-*@3 pos].&]
+[s2;%% Inserts [%-*@3 txt] encoded with [%-*@3 charset ]at [%-*@3 pos]. 
+Returns a number of characters inserted.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:Insert`(int`,const char`*`): [@(0.0.255) int]_[* Insert]([@(0.0.255) int]_
 [*@3 pos], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 txt])&]
-[s2;%% Inserts [%-*@3 txt] at [%-*@3 pos] using default charset.&]
+[s2;%% Inserts [%-*@3 txt] at [%-*@3 pos] using default charset. Returns 
+a number of characters inserted.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:Remove`(int`,int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 pos],

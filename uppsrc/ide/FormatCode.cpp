@@ -152,8 +152,6 @@ int ApplyChanges(LineEdit& editor, const String& new_content)
 				nu = false;
 			}
 			int n = ts.start1 - editor.GetLineCount() + 1;
-			if(n > 0)
-				editor.Insert(editor.GetLength(), String('\n', n));
 			int tpos = editor.GetPos(ts.start1 + lined);
 			int tsz = editor.GetPos(ts.start1 + ts.count1 + lined) - tpos;
 			String rtext;
@@ -163,10 +161,10 @@ int ApplyChanges(LineEdit& editor, const String& new_content)
 				rtext.TrimLast();
 				tsz--;
 			}
-			if(n > 0 && rtext.GetCount()) // inserting at the end of text
+			if(n > 0 && rtext.GetCount() && (byte)*rtext.Last() < 32) // inserting at the end of text
 				rtext.TrimLast();
 			editor.Remove(tpos, tsz);
-			cursor = editor.Insert(tpos, rtext);
+			cursor = editor.Insert(tpos, rtext) + tpos;
 			lined += ts.count2 - ts.count1;
 		}
 	}
