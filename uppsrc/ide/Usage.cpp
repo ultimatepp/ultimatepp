@@ -127,15 +127,13 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	bool local = false;
 	AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
 	if(IsFunction(cm.kind)) { // do local variables
-		for(const AnnotationItem& lm : editor.locals) {
-			int ppy = -1;
-			if(lm.id == id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && lm.pos.y > ppy) {
+		for(const AnnotationItem& lm : editor.locals)
+			if(lm.id == id && lm.pos.y >= cm.pos.y && lm.pos.y <= li) {
 				if(ref_pos == lm.pos) {
 					local = true;
 					break;
 				}
 			}
-		}
 	}
 	
 	NewFFound();

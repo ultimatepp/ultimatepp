@@ -33,8 +33,6 @@ that you have created inside this directory, e.g. in MyApps folder.&]
 [s3; U`+`+ Library&]
 [s23; Is there a complete list of U`+`+ widgets?&]
 [s22; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ Yes.]&]
-[s23; Can I create OCX Control using U`+`+?&]
-[s22; [^topic`:`/`/Ole`/srcdoc`/ocx`$en`-us^ Yes you can.]&]
 [s23; When compiling using Visual C`+`+ 2021 compiler, I am getting 
 errors like:&]
 [s0;l128; [/C1 F:`\upp`\uppsrc`\CtrlLib/CtrlLib.t : warning C4819: The 

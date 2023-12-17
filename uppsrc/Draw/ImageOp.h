@@ -175,7 +175,9 @@ Image MakeImage(const ImageMaker& m);
 Image MakeImage(const Image& image, Image (*make)(const Image& image));
 
 void  SweepMkImageCache();
-void  ClearMakeImageCache();
+
+void SetMakeImageCacheMax(int m); // obsolete
+void SetMakeImageCacheSize(int m); // obsolete
 
 Image MakeImagePaintOnly(const ImageMaker& m);
 

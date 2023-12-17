@@ -333,13 +333,22 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		int q = -1;
 		if(findarg(ci.Kind(), CXCursor_CXXBaseSpecifier, CXCursor_TemplateRef) < 0) // suppress template untyping for : WithDlgLayout<TopWindow>
 			q = tfn.Find(ref_loc);
-
 		ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
 
 		ReferenceItem rm;
 		rm.pos = sl.pos;
 		rm.id = ref_ci.Id();
 		rm.ref_pos = ref_loc.pos;
+	#if 0
+		DLOG("=======");
+		DDUMP(sl.pos);
+		DDUMP(ref_loc.pos);
+		DDUMP(ref_loc.path);
+		DDUMP(rm.id);
+		DDUMP(ref_ci.Name());
+		DDUMP(ref_ci.Kind());
+		DDUMP(ref_ci.RawId());
+	#endif
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
 			rd.Add(rm);

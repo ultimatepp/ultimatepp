@@ -66,7 +66,7 @@ text. To make it easier for people reviewing the patch, you should
 also write in which files the changed code resides. If there 
 are more files affected, the best is to simply post all changed 
 files in .zip as attachment.&]
-[s5; You can generate `*.diff or `*.patch file by only using SVN. 
+[s5; You can generate `*.diff or `*.patch file by only using Git. 
 Please notice, that firstly you need to checkout repository. 
-More information about whole process you can find in following 
-[^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ article].]]
+More information about whole process you can find in
+[^https`:`/`/`github`.com`/ultimatepp`/ultimatepp`/^2 GitHub]].]]

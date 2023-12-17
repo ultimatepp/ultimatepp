@@ -55,14 +55,14 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 	ref_pos = Null;
 	
 	for(int pass = 0; pass < 2 && IsNull(ref_id); pass++)
-		for(const ReferenceItem& m : editor.references) {
+		for(const ReferenceItem& m : editor.references)
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci &&
 			   (GetNameFromId(m.id) == name || pass == 1)) {
 				ref_id = m.id;
 				ref_pos = m.ref_pos;
 				ci = m.pos.x;
 			}
-		}
+
 	AnnotationItem cm = editor.FindCurrentAnnotation();
 	if(cm.pos.y == li && cm.pos.x <= lp && cm.pos.x >= ci && cm.name == name) {
 		ref_id = cm.id;
@@ -70,13 +70,12 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 	}
 
 	if(IsFunction(cm.kind))
-		for(const AnnotationItem& m : editor.locals) {
+		for(const AnnotationItem& m : editor.locals)
 			if(m.pos.y == li && m.pos.x <= lp && m.pos.x >= ci && m.name == name) {
 				ref_id = m.id;
 				ref_pos = m.pos;
 				ci = m.pos.x;
 			}
-		}
 
 	if(ref_id.GetCount())
 		editor.FromUtf8x(ref_pos);

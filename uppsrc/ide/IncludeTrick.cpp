@@ -19,6 +19,7 @@ void AssistEditor::SyncMaster()
 
 	if(AssistDiagnostics) {
 		PutConsole("Master source " << editfile << " -> " << master_source);
+		PutConsole("Master chain " << AsString(master_chain));
 		ppi.WhenBlitzBlock = [=](const String& inc, const String& path) {
 			PutConsole(String() << inc << " blocks BLITZ of " << path);
 		};

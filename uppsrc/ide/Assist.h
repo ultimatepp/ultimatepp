@@ -197,7 +197,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Abbr();
 
 	Point          GetCurrentPos() const;
-	AnnotationItem FindCurrentAnnotation();
+	AnnotationItem FindCurrentAnnotation(bool allow_define = false);
 
 	void           DCopy();
 	String         FindCurrentNest(String *local_bases = nullptr);
