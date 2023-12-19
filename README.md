@@ -42,9 +42,9 @@ Other downloads:
 
 More information about the framework, can be found on the official [site](https://www.ultimatepp.org). Don't forget to check our rich [documentation](https://www.ultimatepp.org/www$uppweb$documentation$en-us.html).
 
-## Examples
+### Examples
 
-### GUI
+#### GUI
 
 Below is the code of trivial GUI application that displays "Hello World" string inside window:
 
@@ -71,7 +71,7 @@ GUI_APP_MAIN
 }
 ```
 
-### TheIDE
+#### TheIDE
 
 Standard part of U++ framework is integrated development environment, TheIDE.
 
@@ -79,13 +79,13 @@ Standard part of U++ framework is integrated development environment, TheIDE.
   <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" width="80%" height="80%">
 </p>
 
-### Additional examples
+#### Additional examples
 
 See here: [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html). Moreover, exactly the same examples can be found in the **examples** and **references** directories located in this repository.
 
 If you would like to see more screenshots, click [here](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
-## Tutorials
+### Tutorials
 
 We prepared several tutorials that will allow you to learn most of the aspects of our integrated development environment, TheIDE and the U++ framework.
 
@@ -103,20 +103,20 @@ U++ framework:
 
 If the above list is not enough, please visit a dedicated [website](https://www.ultimatepp.org/www$uppweb$Tutorials$en-us.html) where we have collected links to most of the learning resources.
 
-## Books
+### Books
 
 If you are looking for books about the U++ framework, here is a list of books we recommend:
 - [**Getting started with the U++ Framework**](https://www.amazon.com/dp/B0CQHX84VZ/) - the book written by Frederik Dumarey and reviewed by the main authors of U++. It is an excellent starting point for anyone new to the framework. Also, if you are an experienced U++ developer, you will find much valuable content, including a deep dive into Skylark and Turtle.
 
-# Extensibility
+## Extensibility
 
 The functionality of the U++ framework can be easily extended by third-party packages. We introduced the concept of a global registry of repositories that can be downloaded and directly used in the project. To learn more about this technology, please visit [UppHub](https://github.com/ultimatepp/UppHub) repository.
 
 UppHub conceptually is very similar to the package manager concept known from other technologies, and in big generalization, it can be called like that.
 
-# Repository
+## Repository
 
-## Repository layout
+### Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
 * **autotest** - unit and integration tests for our framework
