@@ -248,7 +248,7 @@ bool CopyFolder(const char *dst, const char *src, Progress *pi)
 bool HasSvn()
 {
 	String dummy;
-	static bool b = Sys("svn", dummy) >= 0;
+	static bool b = HostSys("svn", dummy) >= 0;
 	return b;
 }
 
