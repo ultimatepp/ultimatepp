@@ -636,6 +636,10 @@ void ExportPage(int i)
 					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
 					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
 					"<br><br>" +
+					~(HtmlLink("https://flathub.org/en/apps/org.ultimatepp.TheIDE") /
+					   HtmlImg(GetImageSrc(WWW::Flathub),
+					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
+					"<br><br>" +
 					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
 						~(HtmlLink("https://github.com/ultimatepp") /
 						   HtmlImg(GetImageSrc(WWW::GitHub),
