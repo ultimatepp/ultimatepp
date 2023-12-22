@@ -8,6 +8,7 @@ file
 	Examples.h,
 	main.cpp,
 	Image.cpp,
+	ImageFilter.cpp,
 	Lion.cpp,
 	Pythagoras.cpp,
 	Spiral.cpp,

@@ -33,11 +33,33 @@ struct PainterImageSpan : SpanSource {
 	bool        dofilter = false;
 	ImageFilterKernel kx, ky;
 
+	struct RGBAF {
+		double r, g, b, a;
+	
+		void Put(double weight, const RGBA& src) {
+			r += weight * src.r;
+			g += weight * src.g;
+			b += weight * src.b;
+			a += weight * src.a;
+		}
+		RGBA Get(double div) const {
+			RGBA c;
+			c.r = Saturate255(int(r / div));
+			c.g = Saturate255(int(g / div));
+			c.b = Saturate255(int(b / div));
+			c.a = Saturate255(int(a / div));
+			return c;
+		}
+		
+		RGBAF() { r = g = b = a = 0; }
+	};
+	
+
 	PainterImageSpan(dword flags, const Xform2D& m, const Image& img, bool co, bool imagecache, int filter) {
 		style = byte(flags & 15);
 		hstyle = byte(flags & 3);
 		vstyle = byte(flags & 12);
-		fast = flags & FILL_FAST;
+		fast = (flags & FILL_FAST) || filter == FILTER_NEAREST;
 		image = img;
 		int nx = 1;
 		int ny = 1;
@@ -52,6 +74,7 @@ struct PainterImageSpan : SpanSource {
 				kx.Init(filter, nx, 1);
 				ky.Init(filter, ny, 1);
 				dofilter = true;
+				fast = false;
 			}
 		}
 		if(nx == 1 && ny == 1 || dofilter)
@@ -93,11 +116,8 @@ struct PainterImageSpan : SpanSource {
 		return fixed || (x >= 0 && x < cx && y >= 0 && y < cy) ? &image[y][x] : &zero;
 	}
 
-	virtual void GetFilter(RGBA *span, int x, int y, unsigned len) const
+	void GetFilter(RGBA *span, Pointf p0, Pointf dd, unsigned len) const
 	{
-		Pointf p0 = xform.Transform(Pointf(x, y));
-		Pointf dd = xform.Transform(Pointf(x + 1, y)) - p0;
-
 		int ii = 0;
 		while(len--) {
 			const int ishift = 1000000; // to avoid problems with negatives
@@ -107,7 +127,8 @@ struct PainterImageSpan : SpanSource {
 			l -= Point(ishift, ishift);
 			int mx = int(kx.mul * h.x);
 			int my = int(ky.mul * h.y);
-
+		
+		#ifdef CPU_SIMD
 			f32x4 rgbaf = 0;
 			f32x4 w = 0;
 			for(int yy = -ky.n + 1; yy <= ky.n; yy++) {
@@ -120,6 +141,19 @@ struct PainterImageSpan : SpanSource {
 				}
 			}
 			StoreRGBAF(span++, ClampRGBAF(rgbaf / w));
+		#else
+			RGBAF  rgbaf;
+			double w = 0;
+			for(int yy = -ky.n + 1; yy <= ky.n; yy++) {
+				int wy = ky.Get(yy, my);
+				for(int xx = -kx.n + 1; xx <= kx.n; xx++) {
+					double weight = wy * kx.Get(xx, mx);
+					rgbaf.Put(weight, *GetPixel(l.x + xx, l.y + yy));
+					w += weight;
+				}
+			}
+			*span++ = rgbaf.Get(w);
+		#endif
 		}
 	}
 
@@ -127,12 +161,19 @@ struct PainterImageSpan : SpanSource {
 	{
 		PAINTER_TIMING("ImageSpan::Get");
 
-		if(dofilter)
-			return GetFilter(span, x, y, len);
+		Pointf p0, dd;
+		if(fast) {
+			p0 = xform.Transform(Pointf(x, y));
+			dd = xform.Transform(Pointf(x + 1, y)) - p0;
+		}
+		else {
+			p0 = xform.Transform(Pointf(x, y) + Pointf(0.5, 0.5)) - Pointf(0.5, 0.5);
+			dd = xform.Transform(Pointf(x + 1, y) + Pointf(0.5, 0.5))  - Pointf(0.5, 0.5) - p0;
+		}
 
-		Pointf p0 = xform.Transform(Pointf(x, y));
-		Pointf dd = xform.Transform(Pointf(x + 1, y)) - p0;
-		
+		if(dofilter)
+			return GetFilter(span, p0, dd, len);
+
 #ifdef CPU_SIMD
 		f32x4 x0 = f32all(p0.x);
 		f32x4 y0 = f32all(p0.y);
@@ -199,15 +240,15 @@ struct PainterImageSpan : SpanSource {
 				p11 = p11 * fy;
 				p10 = p10 * fx;
 				p11 = p11 * fx;
-				
+
 				fx = v1 - fx;
 				fy = v1 - fy;
-				
+
 				p00 = p00 * fy;
 				p10 = p10 * fy;
 				p00 = p00 * fx;
 				p01 = p01 * fx;
-			
+
 				StoreRGBAF(span, p00 + p01 + p10 + p11);
 			}
 			++span;
