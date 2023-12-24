@@ -284,6 +284,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 					int y = (co ? co->Next() : ii++) + rasterizer.MinY();
 					if(y > rasterizer.MaxY())
 						break;
+					if(!doclip && co_clear && co_clear[y]) {
+						UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+						co_clear[y] = false;
+					}
 					solid_filler.t = subpixel_filler.t = span_filler.t = (*ip)[y];
 					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
