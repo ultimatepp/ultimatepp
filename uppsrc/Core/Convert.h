@@ -85,7 +85,7 @@ public:
 	int         GetMin() const                    { return (int)minval; }
 	int         GetMax() const                    { return (int)maxval; }
 	bool        IsNotNull() const                 { return notnull; }
-	
+
 	static int  GetDefaultMin()                   { return -INT_MAX; }
 	static int  GetDefaultMax()                   { return INT_MAX; }
 
@@ -163,7 +163,7 @@ public:
 protected:
 	Date minval, maxval, defaultval;
 	bool notnull;
-	
+
 	static Date& default_min();
 	static Date& default_max();
 
@@ -339,7 +339,7 @@ struct LambdaConvertClass : Convert {
 	virtual Value Format(const Value& q) const { return format(q); }
 	virtual Value Scan(const Value& text) const { return scan(text); }
 	virtual int Filter(int chr) const { return filter(chr); }
-	
+
 	LambdaConvertClass(F format, S scan, R filter) : format(format), scan(scan), filter(filter) {}
 };
 
