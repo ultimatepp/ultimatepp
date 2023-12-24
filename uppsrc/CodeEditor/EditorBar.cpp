@@ -58,8 +58,7 @@ void EditorBar::Paint(Draw& w)
 	w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 	for(int i = 0; i < animate.GetCount(); i++)
 		w.DrawRect(i, 0, 1, sz.cy, animate[i]);
-	w.DrawText(0, sz.cy - Zy(10), 900, text, Arial(DPI(20)).Italic(),
-	           GrayColor(IsDarkTheme() ? 100 : 220));
+	w.DrawText(0, sz.cy - Zy(10), 900, text, Arial(DPI(20)).Italic(), text_color);
 	if(!editor) return;
 	for(int pass = 0; pass < 2; pass++) {
 		int fy = editor->GetFontSize().cy;

@@ -443,7 +443,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 		while(IsWaitingEvent()) {
 			LTIMING("XNextEvent");
 			XNextEvent(Xdisplay, &event);
-			DDUMP(event.type);
+			LDUMP(event.type);
 			ProcessEvent(&event);
 		}
 		TimerAndPaint();
@@ -930,18 +930,18 @@ Window Ctrl::GetXServerFocusWindow()
 	GuiLock __;
 	Window w;
 	int    dummy;
-	DLOG("XGetInputFocus");
+	LLOG("XGetInputFocus");
 	XGetInputFocus(Xdisplay, &w, &dummy);
 	return w;
 }
 
 void Ctrl::FocusSync()
 {
-	DLOG("FocusSync");
+	LLOG("FocusSync");
 	GuiLock __;
 	Window fw = GetXServerFocusWindow();
 	if(fw != focusWindow) {
-		DLOG("FocusSync to " << FormatIntHex(fw));
+		LLOG("FocusSync to " << FormatIntHex(fw));
 		if(fw) {
 			int q = Xwindow().Find(fw);
 			if(q >= 0) {

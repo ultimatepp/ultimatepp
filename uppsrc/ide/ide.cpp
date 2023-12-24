@@ -76,9 +76,16 @@ void Ide::MakeTitle()
 			title << " *";
 		if(!bar_branch)
 			branch = Null;
-		editor.BarColor(findarg(branch, "", "master", "main") >= 0 ? Null :
-		                IsDarkTheme() ? Color(26, 86, 86) : Color(207, 255, 255));
-		editor.BarText(branch);
+		if(findarg(branch, "", "master", "main") >= 0)
+			editor.BarText(branch, GrayColor(IsDarkTheme() ? 100 : 220));
+		else {
+			dword h = GetHashValue(branch);
+			int r = h & 31; h >>= 5;
+			int g = h & 15; h >>= 4;
+			int b = h & 63;
+			editor.BarText(branch, IsDarkTheme() ? Color(150 + r, 150 + g, 150 + b) : Color(200 - r, 200 - g, 200 - b));
+		}
+
 	}
 	if(!IsNull(editfile))
 		for(int i = 0; i < 10; i++)

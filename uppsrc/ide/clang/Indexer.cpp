@@ -150,8 +150,10 @@ void DumpIndex(const char *file, const String& what_file)
 	for(const auto& m : ~x)
 		if(IsNull(what_file) || m.key == what_file) {
 			out << m.key << "\n";
+			out << "\t=== Globals:\n";
 			for(const auto& n : m.value.items)
 				out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
+			out << "\t=== References:\n";
 			for(const auto& n : m.value.refs)
 				out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
 		}

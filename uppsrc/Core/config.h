@@ -147,6 +147,10 @@
 	#endif
 #endif
 
+#ifdef flagFlatpak
+	#define FLATPAK 1
+#endif
+
 #ifdef _MSC_VER
 	#define COMPILER_MSC 1
 	#if _MSC_VER <= 1300

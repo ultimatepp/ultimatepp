@@ -150,7 +150,7 @@ manufacture [^ https`:`/`/sqlite`.org`/^ site].&]
 [s22;:2`_2`_6: 2.2.6 Web development&]
 [s5; U`+`+ allows creating web application that works directly in 
 your web browser. Currently, we support two following technologies&]
-[s5;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark] 
+[s5;l160;i150;O0; [*^topic`:`/`/srcdoc`/Skylark`/Tutorial`$en`-us^ Skylark] 
 `- web development framework dedicated C`+`+ language. It mainly 
 based on U`+`+ core libraries such as Core. It allows creating 
 web application that based on page generation concept. It means 

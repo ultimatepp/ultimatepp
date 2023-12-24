@@ -281,7 +281,7 @@ void Pdb::DataMenu(ArrayCtrl& array, Bar& bar)
 	WatchMenu(bar, exp);
 	MemMenu(array, bar, exp);
 	bar.Separator();
-	CopyMenu(autos, bar);
+	CopyMenu(array, bar);
 }
 
 void Pdb::AddWatch(const String& s)
@@ -318,7 +318,7 @@ void Pdb::WatchesMenu(Bar& bar)
 		exp = "(" + exp + ")";
 	MemMenu(watches, bar, exp);
 	bar.Separator();
-	CopyMenu(autos, bar);
+	CopyMenu(watches, bar);
 	bar.Separator();
 	bar.Add(AK_ADDWATCH, [=] { AddWatch(); });
 	bool b = watches.IsCursor();

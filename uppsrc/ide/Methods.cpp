@@ -808,7 +808,7 @@ String Ide::GetIncludePath()
 	ONCELOCK {
 		Index<String> r;
 		for(int pass = 0; pass < 2; pass++)
-			ExtractIncludes(r, Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
+			ExtractIncludes(r, HostSys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
 		r.FindAdd("/usr/include_path");
 		r.FindAdd("/usr/local/include_path");
 		sys_includes = Join(r.GetKeys(), ";");
@@ -874,8 +874,9 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 	String main_conf;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.include.GetCount(); j++)
+		for(int j = 0; j < pkg.include.GetCount(); j++) {
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
+		}
 		for(String h : Split(Gather(pkg.pkg_config, cfg.GetKeys()), ' '))
 			pkg_config.FindAdd(h);
 	}
@@ -885,11 +886,16 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 		int q = cflags.Find(s);
 		if(q < 0) {
 			q = cflags.GetCount();
-			cflags.Add(s, Sys("pkg-config --cflags " + s));
+			cflags.Add(s, HostSys("pkg-config --cflags " + s));
 		}
-		for(String p : Split(cflags[q], CharFilterWhitespace))
-			if(p.TrimStart("-I"))
+		for(String p : Split(cflags[q], CharFilterWhitespace)) {
+			if(p.TrimStart("-I")) {
+			#ifdef FLATPAK
+				p.Replace("/usr", "/run/host/usr");
+			#endif
 				MergeWith(include_path, ";", p);
+			}
+		}
 	}
 #endif
 }
@@ -937,7 +943,7 @@ String Ide::GetCurrentIncludePath()
 		MergeWith(include_path, ";", inc2);
 	
 	IncludeAddPkgConfig(include_path, clang_method);
-
+	
 	String main_conf;
 	const Workspace& wspc = AssistWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {

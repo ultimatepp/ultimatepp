@@ -418,17 +418,20 @@ void Ide::Setup(Bar& menu)
 		}
 	});
 
+#ifndef PLATFORM_FLATPAK
 	const Workspace& wspc = IdeWorkspace();
-	if(wspc[0] == "ide")
-		for(int i = 0; i < wspc.GetCount(); i++)
+	if(wspc[0] == "ide") {
+		for(int i = 0; i < wspc.GetCount(); i++) {
 			if(wspc[i] == "ide/Core") {
 				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
 				break;
 			}
-#ifndef PLATFORM_COCOA
-#ifndef PLATFORM_WIN32
-	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
+		}
+	}
 #endif
+
+#if !defined(PLATFORM_COCOA) && !defined(PLATFORM_WIN32) && !defined(FLATPAK)
+	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
 #endif
 
 	if(menu.IsMenuBar())
@@ -846,6 +849,7 @@ void Ide::BrowseMenu(Bar& menu)
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
 			menu.Add("Reindex all source files", [=] {
+				editor.ms_cache.Clear();
 				PPInfo::RescanAll();
 				for(FileAnnotation& m : CodeIndex())
 					m.time = Null;

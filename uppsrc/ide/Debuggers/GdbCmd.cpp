@@ -161,7 +161,7 @@ String Gdb::Cmd(const char *command, bool start)
 	PutVerbose(result);
 	PutVerbose("===================");
 #ifdef PLATFORM_POSIX
-	system("xdotool key XF86Ungrab"); // force X11 to relese the mouse capture
+	HostSys("xdotool key XF86Ungrab"); // force X11 to relese the mouse capture
 #endif
 	return result;
 }
