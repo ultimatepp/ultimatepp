@@ -47,12 +47,14 @@ void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
 	sw.EvenOdd(true);
 }
 
+Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, Pointf p3, const Sizef& sz)
+{
+	return Xform2D::Map(Pointf(0, 0), Pointf(sz.cx, 0), Pointf(sz.cx, sz.cy), p1, p2, p3);
+}
+
 Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, const Sizef& sz)
 {
-	Xform2D m = Xform2D::Scale(Distance(p1, p2) / sz.cx);
-	m = m * Xform2D::Rotation(Bearing(p2 - p1));
-	m = m * Xform2D::Translation(p1.x, p1.y);
-	return m;
+	return GetLineSzXform(p1, p2, Pointf(p2.x, p2.y + Distance(p1, p2) / sz.cx * sz.cy), sz);
 }
 
 Painter& Painter::Fill(const Image& image, Pointf p1, Pointf p2, dword flags)
@@ -344,6 +346,7 @@ void NilPainter::LineJoinOp(int linejoin) {}
 void NilPainter::MiterLimitOp(double l) {}
 void NilPainter::EvenOddOp(bool evenodd) {}
 void NilPainter::InvertOp(bool invert) {}
+void NilPainter::ImageFilterOp(int filter) {}
 void NilPainter::DashOp(const Vector<double>& dash, double start) {}
 void NilPainter::TransformOp(const Xform2D& m) {}
 void NilPainter::BeginOp() {}

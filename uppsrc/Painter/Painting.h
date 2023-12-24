@@ -57,6 +57,8 @@ enum {
 
 	PAINTING_FILL_RADIAL_X,
 	PAINTING_STROKE_RADIAL_X,
+	
+	PAINTING_IMAGE_FILTER,
 };
 
 class PaintingPainter : public Painter {
@@ -131,6 +133,7 @@ protected:
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
 	virtual void   InvertOp(bool invert);
+	virtual void   ImageFilterOp(int filter);
 
 	virtual void   TransformOp(const Xform2D& m);
 

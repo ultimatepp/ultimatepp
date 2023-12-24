@@ -275,6 +275,12 @@ void PaintingPainter::InvertOp(bool invert)
 	Put(invert);
 }
 
+void PaintingPainter::ImageFilterOp(int filter)
+{
+	Put(PAINTING_IMAGE_FILTER);
+	Put(filter);
+}
+
 void PaintingPainter::DashOp(const Vector<double>& dash, double start)
 {
 	Put(PAINTING_DASH);

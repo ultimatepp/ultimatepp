@@ -1,7 +1,36 @@
-TIMING Blend          : 435.99 ms - 435.99 us (436.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
-TIMING Stroke         : 236.99 ms - 236.99 us (237.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
-TIMING Fill           : 471.99 ms - 471.99 us (472.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
-TIMING Rect           : 596.99 ms - 596.99 us (597.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 1000
-TIMING Clear 2        : 704.99 ms - 704.99 us (705.00 ms / 1000 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1000
-TIMING Clear          : 604.99 ms - 604.99 us (605.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 1000
+TIMING DO FILL ST     :  9.89 ms - 749.50 ns (10.00 ms / 13199 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13199
+TIMING ApproximateChar2:  8.89 ms - 677.21 ns ( 9.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING PaintCharacter :  2.00 ms - 57.13 us ( 2.00 ms / 35 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 35
+TIMING ApproximateChar::Fetch:  4.89 ms - 372.62 ns ( 5.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING ApproximateChar: 13.89 ms -  1.06 us (14.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING CharacterOp    : 893.19 us - 68.02 ns ( 1.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING TextOp         : 999.46 us - 14.92 us ( 1.00 ms / 67 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 67
+TIMING Text           : 25.00 ms - 25.00 ms (25.00 ms / 1 ), min: 25.00 ms, max: 25.00 ms, nesting: 0 - 1
+TIMING Clear          :  3.00 ms -  3.00 ms ( 3.00 ms / 1 ), min:  3.00 ms, max:  3.00 ms, nesting: 0 - 1
 
+TIMING DO FILL MT     : 11.00 ms - 323.52 us (11.00 ms / 34 ), min:  0.00 ns, max:  2.00 ms, nesting: 0 - 34
+TIMING ApproximateChar2: 18.92 ms -  1.44 us (19.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING PaintCharacter :  3.00 ms - 85.71 us ( 3.00 ms / 35 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 35
+TIMING ApproximateChar::Fetch:  9.92 ms - 755.08 ns (10.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING ApproximateChar: 579.92 ms - 44.16 us (580.00 ms / 13132 ), min:  0.00 ns, max:  3.00 ms, nesting: 0 - 13132
+TIMING Path           : 20.00 ms - 588.23 us (20.00 ms / 34 ), min:  0.00 ns, max:  3.00 ms, nesting: 0 - 34
+TIMING CharacterOp    :  0.00 ns -  0.00 ns ( 0.00 ns / 13132 ), min:  0.00 ns, max:  0.00 ns, nesting: 0 - 13132
+TIMING TextOp         : 999.57 us - 14.92 us ( 1.00 ms / 67 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 67
+TIMING Text           : 55.00 ms - 55.00 ms (55.00 ms / 1 ), min: 55.00 ms, max: 55.00 ms, nesting: 0 - 1
+TIMING Clear          : 999.99 us - 999.99 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 0 - 1
+
+TIMING DO FILL MT     :  6.00 ms - 176.46 us ( 6.00 ms / 34 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 34
+TIMING ApproximateChar2: 24.89 ms -  1.90 us (25.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING PaintCharacter : 205.00 ms -  2.36 ms (205.00 ms / 87 ), min:  0.00 ns, max:  8.00 ms, nesting: 0 - 87
+TIMING Key            :  2.89 ms - 220.45 ns ( 3.00 ms / 13132 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13132
+TIMING ApproximateChar: 725.89 ms - 55.28 us (726.00 ms / 13132 ), min:  0.00 ns, max:  8.00 ms, nesting: 0 - 13132
+TIMING Path           : 24.00 ms - 705.87 us (24.00 ms / 34 ), min:  0.00 ns, max:  8.00 ms, nesting: 0 - 34
+TIMING CharacterOp    :  0.00 ns -  0.00 ns ( 0.00 ns / 13132 ), min:  0.00 ns, max:  0.00 ns, nesting: 0 - 13132
+TIMING TextOp         :  3.00 ms - 44.77 us ( 3.00 ms / 67 ), min:  0.00 ns, max:  3.00 ms, nesting: 0 - 67
+TIMING Text           : 63.00 ms - 63.00 ms (63.00 ms / 1 ), min: 63.00 ms, max: 63.00 ms, nesting: 0 - 1
+TIMING Clear          :  2.00 ms -  2.00 ms ( 2.00 ms / 1 ), min:  2.00 ms, max:  2.00 ms, nesting: 0 - 1
+TIMING Reset          :  4.89 ms - 349.45 ns ( 5.00 ms / 13988 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 13988
+TIMING Alloc          : 31.99 ms - 40.55 us (32.00 ms / 789 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 789
+TIMING Free           :  6.99 ms -  4.43 us ( 7.00 ms / 1578 ), min:  0.00 ns, max:  1.00 ms, nesting: 0 - 1578
+TIMING GetGlyphInfoSys DO: 11.00 ms -  3.67 ms (11.00 ms / 3 ), min:  3.00 ms, max:  5.00 ms, nesting: 0 - 3
+TIMING GetGlyphEntry  : 164.00 ms - 970.41 us (164.00 ms / 169 ), min:  0.00 ns, max:  7.00 ms, nesting: 0 - 169

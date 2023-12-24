@@ -4,8 +4,9 @@ namespace Upp {
 
 void BufferPainter::BeginOnPathOp(double q, bool abs)
 {
+	One<SpanSource> none;
 	if(onpath.GetCount() == 0)
-		RenderPath(ONPATH, Null, RGBAZero());
+		RenderPath(ONPATH, none, RGBAZero());
 	Begin();
 	if(pathlen > 0) {
 		if(!abs)

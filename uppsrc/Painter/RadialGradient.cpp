@@ -3,7 +3,7 @@
 namespace Upp {
 
 struct PainterRadialSpan : SpanSource {
-	LinearInterpolator interpolator;
+	Xform2D     im;
 	double      cx, cy, r, fx, fy;
 	int         style;
 	int         alpha;
@@ -22,18 +22,19 @@ struct PainterRadialSpan : SpanSource {
 		C = fx * fx + fy * fy - r * r;
 	}
 
-	void Get(RGBA *_span, int x, int y, unsigned len)
+	void Get(RGBA *_span, int x, int y, unsigned len) const
 	{
 		if(r <= 0)
 			return;
-		interpolator.Begin(x, y, len);
+		Pointf p0 = im.Transform(Pointf(x, y));
+		Pointf dd = im.Transform(Pointf(x + 1, y)) - p0;
 		RGBA *span = (RGBA *)_span;
+		int ii = 0;
 		while(len--) {
-			Point p = interpolator.Get();
+			Pointf p = p0 + dd * ii++;
+			double dx = p.x - cx - fx;
+			double dy =  p.y - cy - fy;
 			int h;
-			const double q256 = 1 / 256.0;
-			double dx = q256 * p.x - cx - fx;
-			double dy = q256 * p.y - cy - fy;
 			if(dx == 0 && dy == 0)
 				h = 0;
 			else {
@@ -59,13 +60,13 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
                                  const Xform2D& m, int style)
 {
 	Image gradient = Gradient(color1, color2, 2048);
-	RenderPath(width, [=](One<SpanSource>& ss) {
-		PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
-		sg.interpolator.Set(Inverse(m));
-		sg.style = style;
-		sg.Set(c.x, c.y, r, f.x, f.y);
-		sg.gradient = gradient[0];
-	}, RGBAZero());
+	One<SpanSource> ss;
+	PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
+	sg.im = Inverse(m);
+	sg.style = style;
+	sg.Set(c.x, c.y, r, f.x, f.y);
+	sg.gradient = gradient[0];
+	RenderPath(width, ss, RGBAZero());
 }
 
 void BufferPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)

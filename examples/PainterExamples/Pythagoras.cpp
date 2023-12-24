@@ -13,6 +13,9 @@ void DoRect(Painter &sw, double size, bool image)
 		sw.Fill(TestImg::test(), 0, 0, size, 0);
 	else
 		sw.Fill(Blue());
+
+	sw.Begin();
+	sw.Opacity(0.9);
 	
 	sw.Begin();
 	sw.Translate(0, size);
@@ -24,6 +27,8 @@ void DoRect(Painter &sw, double size, bool image)
 	sw.Translate(size / 2, 1.5 * size);
 	sw.Rotate(-M_PI/4.0);
 	DoRect(sw, size / M_SQRT2, image);
+	sw.End();
+	
 	sw.End();
 }
 

@@ -146,10 +146,9 @@ Finish should be called separately before destructor.&]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:GetWorkerIndex`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetWorker
 Index]()&]
-[s2;%% Returns the index of worker `- index is >`= 0 and < GetPoolSize(). 
-This is useful if there is a need for per`-thread resources. 
-`-1 means that thread is now worker (this can happen when Finish 
-is using calling thread to perform jobs).&]
+[s2;%% Returns the index of current worker thread `- index is >`= 
+0 and < GetPoolSize(). This is useful if there is a need for 
+per`-thread resources. `-1 means that thread is not worker.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:GetPoolSize`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetPoolSize](
