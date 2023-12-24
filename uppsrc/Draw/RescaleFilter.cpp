@@ -74,7 +74,7 @@ static double sLanczos5(double x)
 	return sLanczos(x, 5);
 }
 
-static double sCostello(double x)
+static double sCostella(double x)
 {
 	x = fabs(x);
 	return x < 0.5 ? 0.75 - x * x :
@@ -88,7 +88,7 @@ Tuple2<double (*)(double), int> GetImageFilterFunction(int filter)
 		{ sNearest, 1 },
 		{ sLinear, 1 },
 		{ sBspline, 2 },
-		{ sCostello, 2 },
+		{ sCostella, 2 },
 		{ sMitchell, 2 },
 		{ sCatmullRom, 2 },
 		{ sLanczos2, 2 },
