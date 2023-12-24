@@ -62,7 +62,7 @@ template <class T> T& BufferPainter::PathAdd(int type)
 void BufferPainter::ClearOp(const RGBA& color)
 {
 	Finish();
-	if(co) { // schedule for late clear during rendering
+	if(co && mode != MODE_NOAA) { // schedule for late clear during rendering
 		if(!co_clear)
 			co_clear.Alloc(ip->GetHeight());
 		memset(~co_clear, 1, ip->GetHeight());

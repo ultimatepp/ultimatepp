@@ -49,15 +49,6 @@ void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
 
 Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, Pointf p3, const Sizef& sz)
 {
-	DDUMP(p1);
-	DDUMP(p2);
-	DDUMP(p3);
-#if 0
-	Xform2D m = Xform2D::Scale(Distance(p1, p2) / sz.cx);
-	m = m * Xform2D::Rotation(Bearing(p2 - p1));
-	m = m * Xform2D::Translation(p1.x, p1.y);
-	return m;
-#endif
 	return Xform2D::Map(Pointf(0, 0), Pointf(sz.cx, 0), Pointf(sz.cx, sz.cy), p1, p2, p3);
 }
 

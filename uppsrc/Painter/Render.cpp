@@ -179,7 +179,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 				co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
 		}
 
-		if(width >= FILL && /* !ss && */ !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
+		if(width >= FILL && !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
 			for(int i = 0; i < path_info->path.GetCount(); i++) {
 				while(jobcount >= cojob.GetCount())
 					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), mode == MODE_SUBPIXEL);
