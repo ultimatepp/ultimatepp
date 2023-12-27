@@ -64,7 +64,7 @@ String MakeKey_(const K& k, const M& m)
 	RawCat(key, StaticTypeNo<K>());
 	RawCat(key, StaticTypeNo<M>());
 	key.Cat(k());
-	return key;
+	return String(key);
 }
 
 template <class K, class M>

@@ -319,9 +319,9 @@ public:
 	Painter& LineCap(int linecap);
 	Painter& LineJoin(int linejoin);
 	Painter& MiterLimit(double l);
-	Painter& EvenOdd(bool evenodd = true);
 	Painter& Dash(const Vector<double>& dash, double start);
 	Painter& Dash(const char *dash, double start = 0);
+	Painter& EvenOdd(bool evenodd = true);
 	Painter& Invert(bool b = true);
 	Painter& ImageFilter(int filter);
 
