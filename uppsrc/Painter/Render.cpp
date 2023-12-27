@@ -427,7 +427,6 @@ void BufferPainter::FinishPathJob()
 			else {
 				SolidFiller solid_filler;
 				SpanFiller  span_filler;
-//				int y = ymin;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
 					if(y >= j.rasterizer.MinY() && y <= j.rasterizer.MaxY()) {
