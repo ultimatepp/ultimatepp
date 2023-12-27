@@ -337,6 +337,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 
 void BufferPainter::FinishPathJob()
 {
+	PAINTER_TIMING("FinishPathJob");
 	if(jobcount == 0)
 		return;
 	{
@@ -360,6 +361,7 @@ void BufferPainter::FinishPathJob()
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
 	
 	fill_job & [=] {
+		PAINTER_TIMING("CO FILL JOB");
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
 		
@@ -380,13 +382,13 @@ void BufferPainter::FinishPathJob()
 				co_clear[y] = false;
 			}
 			
+			int ci = CoWork::GetWorkerIndex();
 			if(subpixel) {
 				SubpixelFiller subpixel_filler;
-				int ci = CoWork::GetWorkerIndex();
 				subpixel_filler.sbuffer = ci >= 0 ? co_subpixel[ci] : subpixel;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
-					if(j.rasterizer.NotEmpty(y)) {
+					if(y >= j.rasterizer.MinY() && y <= j.rasterizer.MaxY()) {
 						subpixel_filler.color = j.c;
 						subpixel_filler.ss = j.ss;
 						subpixel_filler.invert = j.attr.invert;
@@ -425,22 +427,20 @@ void BufferPainter::FinishPathJob()
 			else {
 				SolidFiller solid_filler;
 				SpanFiller  span_filler;
+//				int y = ymin;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
-					if(j.rasterizer.NotEmpty(y)) {
+					if(y >= j.rasterizer.MinY() && y <= j.rasterizer.MaxY()) {
 						Rasterizer::Filler *rg;
 						if(j.ss) {
-							RGBA  *lspan;
-							int ci = CoWork::GetWorkerIndex();
 							if(ci >= 0)
-								lspan = co_span[ci];
+								span_filler.buffer = co_span[ci];
 							else {
 								if(!span)
 									span.Alloc(ip->GetWidth() + 3);
-								lspan = span;
+								span_filler.buffer = span;
 							}
 							span_filler.ss = j.ss;
-							span_filler.buffer = lspan;
 							span_filler.alpha = j.alpha;
 							span_filler.y = y;
 							span_filler.t = (*ip)[y];
@@ -470,8 +470,8 @@ void BufferPainter::FinishPathJob()
 		};
 
 		int n = maxy - miny;
-		if(maxy >= miny) {
-			if(maxy - miny > 3) {
+		if(n >= 0) {
+			if(n > 6) {
 				std::atomic<int> ii(0);
 				CoDo([&] {
 					for(;;) {
@@ -494,6 +494,7 @@ void BufferPainter::FinishPathJob()
 
 void BufferPainter::Finish()
 {
+	PAINTER_TIMING("Finish");
 	FinishPathJob();
 	FinishFillJob();
 	if(co_clear)
@@ -507,12 +508,14 @@ void BufferPainter::Finish()
 
 void BufferPainter::FillOp(const RGBA& color)
 {
+	PAINTER_TIMING("FillOp");
 	One<SpanSource> none;
 	RenderPath(FILL, none, color);
 }
 
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
+	PAINTER_TIMING("StrokeOp");
 	One<SpanSource> none;
 	RenderPath(width, none, color);
 }

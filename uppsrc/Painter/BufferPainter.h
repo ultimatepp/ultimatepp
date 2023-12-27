@@ -106,7 +106,7 @@ protected:
 
 private:
 	enum {
-		MOVE, LINE, QUADRATIC, CUBIC, CHAR, CLEAR
+		MOVE, LINE, QUADRATIC, CUBIC, CHAR
 	};
 	struct LinearData {
 		int    type;
@@ -192,7 +192,7 @@ private:
 		Pointf                             path_min, path_max;
 	};
 	
-	enum { BATCH_SIZE = 256 }; // must be 2^n
+	enum { BATCH_SIZE = 128 }; // must be 2^n
 	
 	Buffer<PathInfo> paths;
 	int              path_index = 0;

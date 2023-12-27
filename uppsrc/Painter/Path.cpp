@@ -16,7 +16,7 @@ void BufferPainter::ClearPath()
 	Vector<byte>& p = path_info->path.Top();
 	if(path_info->path.Top().GetCount() > 2048) {
 		p.Clear();
-		p.Reserve(1024);
+		p.Reserve(128);
 	}
 	else
 		p.SetCount(0);
