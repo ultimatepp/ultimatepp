@@ -521,17 +521,83 @@ ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) co
 RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
 [*@3 color2], [@(0.0.255) const] Xform2D[@(0.0.255) `&] [*@3 transsrc], 
 dword [*@3 flags] [@(0.0.255) `=] [@3 0])&]
-[s2;%% Fills/strokes path with linear gradient. Gradient is specified 
+[s2;%% Fills or strokes path with linear gradient. Gradient is specified 
 by two points ([%-*@3 p1] / [%-*@3 x1] [%-*@3 y1], [%-*@3 p2] / [%-*@3 x2] 
 [%-*@3 y2]) and two colors [%-*@3 color1] [%-*@3 color2]. Additional 
 colors to be used in between can be specified with [* ColorStop] 
 method. [%-*@3 style] specifies the color of gradient outside of 
 area, with options GRADIENT`_PAD, GRADIENT`_REPEAT, GRADIENT`_REFLECT 
-(with meaning similar to image filling options). Variant [%-*@3 transsrc] 
-specifies mapping using transformation matrix, with source gradient 
-being line `[0,0`]`-`[1,0`].&]
-[s2;%% &]
-[s0; &]
+(with meaning similar to image filling options). Variant with 
+[%-*@3 transsrc] specifies mapping using transformation matrix, 
+with source gradient being line `[0,0`]`-`[1,0`].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:Fill`(const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,const Upp`:`:Pointf`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Fill]([@(0.0.255) const] Pointf[@(0.0.255) `&] 
+[*@3 f], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) const] 
+Pointf[@(0.0.255) `&] [*@3 c], [@(0.0.255) double] [*@3 r], [@(0.0.255) const] 
+RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) int] style [@(0.0.255) `=] 
+[*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Fill`(double`,double`,const Upp`:`:RGBA`&`,double`,double`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Fill]([@(0.0.255) double] [*@3 fx], [@(0.0.255) double] 
+[*@3 fy], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) double] 
+[*@3 cx], [@(0.0.255) double] [*@3 cy], [@(0.0.255) double] [*@3 r], [@(0.0.255) const] 
+RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) int] style [@(0.0.255) `=] 
+[*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Fill`(const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Fill]([@(0.0.255) const] Pointf[@(0.0.255) `&] 
+[*@3 c], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) double] 
+[*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) int] 
+style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Fill`(double`,double`,const Upp`:`:RGBA`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Fill]([@(0.0.255) double] [*@3 x], [@(0.0.255) double] 
+[*@3 y], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) double] 
+[*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) int] 
+style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Fill`(const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,const Upp`:`:RGBA`&`,const Upp`:`:Xform2D`&`,int`): P
+ainter[@(0.0.255) `&] [* Fill]([@(0.0.255) const] Pointf[@(0.0.255) `&] 
+[*@3 f], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color1], [@(0.0.255) const] 
+RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) const] Xform2D[@(0.0.255) `&] 
+[*@3 transsrc], [@(0.0.255) int] style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Stroke`(double`,const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,const Upp`:`:Pointf`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) const] 
+Pointf[@(0.0.255) `&] [*@3 f], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color1], [@(0.0.255) const] Pointf[@(0.0.255) `&] [*@3 c], [@(0.0.255) double] 
+[*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) int] 
+style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Stroke`(double`,double`,double`,const Upp`:`:RGBA`&`,double`,double`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) double] 
+[*@3 fx], [@(0.0.255) double] [*@3 fy], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color1], [@(0.0.255) double] [*@3 x], [@(0.0.255) double] [*@3 y], 
+[@(0.0.255) double] [*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color2], 
+[@(0.0.255) int] style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Stroke`(double`,const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) const] 
+Pointf[@(0.0.255) `&] [*@3 c], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color1], [@(0.0.255) double] [*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color2], [@(0.0.255) int] style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Stroke`(double`,double`,double`,const Upp`:`:RGBA`&`,double`,const Upp`:`:RGBA`&`,int`): P
+ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) double] 
+[*@3 x], [@(0.0.255) double] [*@3 y], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color1], [@(0.0.255) double] [*@3 r], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color2], [@(0.0.255) int] style [@(0.0.255) `=] [*@3 GRADIENT`_PAD])&]
+[s5;:Upp`:`:Painter`:`:Stroke`(double`,const Upp`:`:Pointf`&`,const Upp`:`:RGBA`&`,const Upp`:`:RGBA`&`,const Upp`:`:Xform2D`&`,int`): P
+ainter[@(0.0.255) `&] [* Stroke]([@(0.0.255) double] [*@3 width], [@(0.0.255) const] 
+Pointf[@(0.0.255) `&] [*@3 f], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
+[*@3 color1], [@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color2], [@(0.0.255) const] 
+Xform2D[@(0.0.255) `&] [*@3 transsrc], [@(0.0.255) int] style [@(0.0.255) `=] 
+[*@3 GRADIENT`_PAD])&]
+[s2;%% Fills or strokes path with radial gradient. Gradient start 
+at focus point [%-*@3 f] / [%-*@3 fx] [%-*@3 fy] with [%-*@3 color1] 
+and ends at circle with center point [%-*@3 c] / [%-*@3 x] [%-*@3 y] 
+and radius [%-*@3 r] with [%-*@3 color2]. If focus point is not present, 
+it is the same as the center of circle. [%-*@3 style] specifies 
+the color of gradient outside of area, with options GRADIENT`_PAD, 
+GRADIENT`_REPEAT, GRADIENT`_REFLECT (with meaning similar to 
+image filling options). Variant with [%-*@3 transsrc] specifies 
+mapping using transformation matrix, with source gradient being 
+circle with center at `[0,0`] and radius 1.&]
+[s3;%% &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Painter context and attributes]]}}&]
 [s3; &]

@@ -283,7 +283,7 @@ public:
 	Painter& Stroke(double width, const Pointf& f, const RGBA& color1,
 	                const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double fx, double fy, const RGBA& color1,
-	                double cx, double cy, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	                double x, double y, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, const Pointf& c, const RGBA& color1,
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double x, double y, const RGBA& color1,
