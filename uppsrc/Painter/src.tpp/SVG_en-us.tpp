@@ -11,13 +11,14 @@ topic "SVG support";
 ool]_[* RenderSVG]([_^Painter^ Painter][@(0.0.255) `&]_[*@3 p], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 svg], [_^Callback2^ Callback2]<[_^String^ String], [_^String^ String][@(0.0.255) `&
 ]>`&_[*@3 resloader])&]
+[s1;%- &]
 [s2;:RenderSVG`(Painter`&`,const char`*`): [@(0.0.255) bool]_[* RenderSVG]([_^Painter^ Pain
 ter][@(0.0.255) `&]_[*@3 p], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg])&]
 [s3; Renders [*@3 svg ]to Painter [*@3 p]. Use [*@3 resloader] to provide 
 resources like images, first String of callback is resource name 
 (filename), the data is to be returned in second parameter. Return 
 empty String if resource not found..&]
-[s4; &]
+[s4;%- &]
 [s1; &]
 [s2;:GetSVGDimensions`(const char`*`,Sizef`&`,Rectf`&`): [@(0.0.255) void]_[* GetSVGDimen
 sions]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg], [_^Sizef^ Sizef][@(0.0.255) `&]_[*@3 s
