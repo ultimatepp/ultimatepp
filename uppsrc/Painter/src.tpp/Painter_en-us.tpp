@@ -19,31 +19,6 @@ clipping and alpha masking.&]
 [s0; &]
 [s0; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Other operations]]}}&]
-[s4;H0; &]
-[s5;:Upp`:`:Painter`:`:Clear`(const Upp`:`:RGBA`&`): [@(0.0.255) void] 
-[* Clear]([@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color ][@(0.0.255) `=] 
-RGBAZero())&]
-[s2;%% Sets all values in the target canvas to color. This is usually 
-the first operation performed. Default RGBAZero() values sets 
-canvas to be initially completely transparent.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:Painter`:`:Paint`(const Upp`:`:Painting`&`): [@(0.0.255) void] 
-[* Paint]([@(0.0.255) const] Painting[@(0.0.255) `&] [*@3 p])&]
-[s2;%% Replays all painting commands contained Painting object (which 
-can be created using PaintingPainter class)&]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Painter context and attributes]]}}&]
-[s0; &]
-[s0; &]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;*%% ]}}&]
-[s0; &]
-[s0; &]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Path stroking and filling]]}}&]
-[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Path definition methods]]}}&]
 [s3; &]
 [s5;:Upp`:`:Painter`:`:Move`(const Upp`:`:Pointf`&`,bool`): Painter[@(0.0.255) `&] 
@@ -600,7 +575,25 @@ circle with center at `[0,0`] and radius 1.&]
 [s3;%% &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Painter context and attributes]]}}&]
+[s9;%% Painter has notion of two types of context: normal and path 
+specific. Any context changes that are done without any path 
+operations performed after latest path realization operation 
+(Fill, Stroke, Clip) are global `- valid until the context is 
+restored to previous state with End (or painting ends). Context 
+changes that are done after path was created are path specific 
+`- valid only for given path.&]
+[s9;%% &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:Begin`(`): [@(0.0.255) void] [* Begin]()&]
+[s2;%% Stores current context on the stack. This includes clipping 
+regions and alpha masking.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:End`(`): [@(0.0.255) void] [* End]()&]
+[s2;%% Pops and restores the context from the stack, unless the corresponding 
+Begin was actually BeginMask.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:Painter`:`:ColorStop`(double`,const Upp`:`:RGBA`&`): Painter[@(0.0.255) `&] 
 [* ColorStop]([@(0.0.255) double] [*@3 pos], [@(0.0.255) const] RGBA[@(0.0.255) `&] 
 [*@3 color])&]
@@ -723,4 +716,50 @@ Cannot be used as path specific attribute change.&]
 ] [*@3 scale])&]
 [s2;%% Same as Scale( [%-*@3 scale], [%-*@3 scale]).&]
 [s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Other operations]]}}&]
+[s4;H0; &]
+[s5;:Upp`:`:Painter`:`:Clear`(const Upp`:`:RGBA`&`): [@(0.0.255) void] 
+[* Clear]([@(0.0.255) const] RGBA[@(0.0.255) `&] [*@3 color ][@(0.0.255) `=] 
+RGBAZero())&]
+[s2;%% Sets all values in the target canvas to color. This is usually 
+the first operation performed. Default RGBAZero() values sets 
+canvas to be initially completely transparent.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:Paint`(const Upp`:`:Painting`&`): [@(0.0.255) void] 
+[* Paint]([@(0.0.255) const] Painting[@(0.0.255) `&] [*@3 p])&]
+[s2;%% Replays all painting commands contained Painting object (which 
+can be created using PaintingPainter class)&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:Clip`(`): Painter[@(0.0.255) `&] [* Clip]()&]
+[s2;%% Converts current path into clipping region and combines it 
+with existing clipping region. This new clipping region is then 
+valid until next End command. .&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:BeginOnPath`(double`,bool`): [@(0.0.255) void] 
+[* BeginOnPath]([@(0.0.255) double] [*@3 q], [@(0.0.255) bool] [*@3 absolute] 
+[@(0.0.255) `=] [@(0.0.255) false])&]
+[s2;%% Does takes current path, does Begin operation, then sets the 
+current transformation so that it lies on current path at length 
+[%-*@3 q] (if [%-*@3 absolute][%-  ]is true, it is length of path, 
+ratio of length of path otherwise (0 is the start of path, 1 
+end of path) and is rotated in the direction of the path. The 
+path is extrapolated on either side by line with the last path 
+direction to cover positions outside the path. This transformation 
+is valid till the End command.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:BeginMask`(`): [@(0.0.255) void] [* BeginMask]()&]
+[s2;%% Starts alpha mask definition. Anything drawn since BeginMask 
+till End command is not really drawn to the canvas and only alpha 
+value are stored as mask that is, after the End command, combined 
+with current alpha mask and used for alpha masking.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Painter`:`:EndPath`(`): [@(0.0.255) void] [* EndPath]()&]
+[s2;%% Simply cancels the last path without drawing anything. This 
+is occasionally useful with complex drawing code.&]
 [s3;%% ]]
