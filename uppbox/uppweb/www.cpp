@@ -221,16 +221,16 @@ String GetText(const char *s)
 String ChangeTopicLanguage(const String &topic, int lang) {
 	int pos = topic.ReverseFind('$');
 	if (pos < 0)
-		return "";			
-	String langtxt = ToLower(LNGAsText(lang));		
-	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount()); 
+		return "";
+	String langtxt = ToLower(LNGAsText(lang));
+	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount());
 }
 
 String GetTopicLanguage(const String &topic) {
 	int pos = topic.ReverseFind('$');
 	if (pos < 0)
-		return "";			
-	return topic.Mid(pos+1, 5); 
+		return "";
+	return topic.Mid(pos+1, 5);
 }
 
 String FormatDateRFC822(const Time& t) {
@@ -408,7 +408,7 @@ private:
 class PackageDocsGenerator final {
 public:
 	PackageDocsGenerator()
-		: m_hnumber("3.3.")
+		: m_hnumber("4.")
 	{}
 	
 	const Vector<String>& GetHeaders() { return m_headers; }
@@ -425,7 +425,7 @@ public:
 		p.Load(AppendFileName(uppsrc, AppendFileName(folder, GetFileName(folder) + ".upp")));
 		if(srcdoc.GetLength() || src.GetLength()) {
 			bool first = m_hnumber.IsFirst();
-			String ref = ":3`_3`_" + IntStr(m_hnumber.GetNumber()) + ":";
+			String ref = ":4`_" + IntStr(m_hnumber.GetNumber()) + ":";
 			m_headers.Add(m_hnumber.GenNext() + " " + folder);
 
 			qtf << (first ? "" : "[s0; &&]\n") << "[s19;" << ref << " " << m_headers.Top() << " 📦&]";
@@ -1019,6 +1019,9 @@ CONSOLE_APP_MAIN
 				PackageDocsGenerator dgen;
 				
 				dgen.Generate(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
+				dgen.Generate(x, qtf, "Core/POP3", lang, 2, String("/") + FormatInt(di) + "/[Core/POP3]");
+				dgen.Generate(x, qtf, "Core/SMTP", lang, 2, String("/") + FormatInt(di) + "/[Core/SMTP]");
+				dgen.Generate(x, qtf, "Core/SSH", lang, 2, String("/") + FormatInt(di) + "/[Core/SSH]");
 				dgen.Generate(x, qtf, "Draw", lang, 2, String("/") + FormatInt(di) + "/[Draw]");
 				dgen.Generate(x, qtf, "CtrlCore", lang, 2, String("/") + FormatInt(di) + "/[CtrlCore]");
 				dgen.Generate(x, qtf, "CtrlLib", lang, 2, String("/") + FormatInt(di) + "/[CtrlLib]");
@@ -1049,11 +1052,11 @@ CONSOLE_APP_MAIN
 				const auto& headers = dgen.GetHeaders();
 				for (int i = 0; i < headers.GetCount(); i++) {
 					toc_qtf
-						<< "[s0;l224; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_3`_"
+						<< "[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#4`_"
 						<< IntStr(i + 1) << "^ " << headers[i] << "]&]";
 				}
 
-				tt[di].text.Replace("[s0;l224; <#packages`_toc#>&]", toc_qtf);
+				tt[di].text.Replace("[s0;l128; <#packages`_toc#>&]", toc_qtf);
 			}
 		}
 		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));

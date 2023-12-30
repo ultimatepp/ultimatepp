@@ -35,14 +35,14 @@ U`+`+ community is ready to provide excellent support on the
 and Configuration]&]
 [s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#2^ 2. TheIDE 
 Documentation]&]
-[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3^ 3. U`+`+ Documentation]&]
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3^ 3. U`+`+ Essentials]&]
 [s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_1^ 3.1 
 Overview]&]
 [s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_2^ 3.2 
 Tutorials]&]
-[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_3^ 3.3. 
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_3^ 3.3. U`+`+ 
 Packages]&]
-[s0;l224; <#packages`_toc#>&]
+[s0;l128; <#packages`_toc#>&]
 [s0; &]
 [s3;:1: 1. Installation and Configuration&]
 [s5; &]
@@ -61,6 +61,7 @@ and development cycle guide]&]
 [s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide]&]
+[s0;l160;^topic`:`/`/ide`/app`/Guide`_en`-us^ &]
 [s0;l160; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
 [s0;l160; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
@@ -100,7 +101,7 @@ a Cross Development Tool]&]
 [s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
 Android builder]&]
 [s5; &]
-[s3;:3: 3. U`+`+ Framework Documentation&]
+[s3;:3: 3. U`+`+ Essentials&]
 [s19;:3`_1: 3.1 Overview&]
 [s0;3 &]
 [s0;l160; [^topic`:`/`/uppweb`/www`/overview`$en`-us^ Overview]&]
@@ -115,12 +116,7 @@ U`+`+  packages]&]
 UHD displays and Dark theme]&]
 [s0;^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ &]
 [s19;:3`_2: 3.2 Tutorials&]
-[s0; &]
-[s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
-with TheIDE] `- the introduction to the concepts of TheIDE.&]
-[s0;l160; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide] 
-`- continuation provides information how to solve common problems.&]
-[s0;l160; &]
+[s0;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l160; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core Tutorial] 
 `- the introduction to the foundations behind the framework.&]
 [s0;l160; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI Tutorial] 
@@ -136,5 +132,5 @@ application creation.&]
 [s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial] 
 `- introduction to using databases within U`+`+ framework.&]
 [s0; &]
-[s19;:3`_3: 3.3 Packages&]
+[s3; 4 U`+`+ Packages&]
 [s5; <#packages#>]]
