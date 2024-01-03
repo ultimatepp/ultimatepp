@@ -18,7 +18,6 @@ filling and stroking with raster images, linear or radial gradients,
 clipping and alpha masking.&]
 [s0; &]
 [s0; &]
-[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Path definition methods]]}}&]
 [s3; &]
 [s5;:Upp`:`:Painter`:`:Move`(const Upp`:`:Pointf`&`,bool`): Painter[@(0.0.255) `&] 
@@ -762,4 +761,16 @@ with current alpha mask and used for alpha masking.&]
 [s5;:Upp`:`:Painter`:`:EndPath`(`): [@(0.0.255) void] [* EndPath]()&]
 [s2;%% Simply cancels the last path without drawing anything. This 
 is occasionally useful with complex drawing code.&]
-[s3;%% ]]
+[s3;%% &]
+[s3;%% &]
+[s3;%% &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 NilPainter]]}}&]
+[s0;%% &]
+[s1;:Upp`:`:NilPainter: [*3 NilPainter][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
+Painter]&]
+[s2;%% NilPainter is special variant of Painter that simply ignores 
+all invoked operation. It is useful in more complex code where 
+e.g. the same routine is first used with NilPainter for calculating 
+dimension of display output and then in second pass for actual 
+painting.]]

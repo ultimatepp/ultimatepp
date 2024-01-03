@@ -314,9 +314,8 @@ public:
 	
 	BufferPainter&     Co(bool b = true)                       { Finish(); co = b; SyncCo(); return *this; }
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; preclip_mtx_serial = -1; return *this; }
-	BufferPainter&     PreClipDashed()                         { dopreclip = 2; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     ImageCache(bool b = true)               { imagecache = b; return *this; }
-	BufferPainter&     NoImageCache(bool b = true)             { return ImageCache(false); }
+	BufferPainter&     NoImageCache()                          { return ImageCache(false); }
 	
 	void               Create(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 	void               Finish();
