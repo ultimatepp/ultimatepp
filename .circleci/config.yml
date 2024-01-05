@@ -21,9 +21,9 @@ jobs:
     steps:
       - checkout
       - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      - run: brew install openssl clang-format
+      - run: brew install openssl
       - run: ./configure
-      - run: ./cofnigure_makefile
+      - run: ./configure_makefile
       - run: make -f Makefile -j ${NUMBER_OF_CPUS}
       - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
 
