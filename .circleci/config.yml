@@ -11,8 +11,9 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
+      - run: ./configure
       - run: make -f Makefile -j ${NUMBER_OF_CPUS}
-      - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
+      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
   build-mac:
     macos:
       xcode: 15.1.0
@@ -23,7 +24,6 @@ jobs:
       - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       - run: brew install openssl
       - run: ./configure
-      - run: ./configure_makefile
       - run: make -f Makefile -j ${NUMBER_OF_CPUS}
       - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
 
