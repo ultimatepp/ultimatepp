@@ -1,27 +1,23 @@
 version: 2.1
 
-workflows:
-  linux:
-    jobs:
-      build:
-        docker:
-          - image: cimg/base:2023.12
-        resource_class: large
-        environment:
-          NUMBER_OF_CPUS: 4
-        steps:
-          - checkout
-          - run: sudo apt-get update
-          - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
-          - run: make -f Makefile -j ${NUMBER_OF_CPUS}
-          - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
-  macos:
-    jobs:
-      build:
-        macos:
-          xcode: 15.1.0
-        resource_class: large
-        environment:
-          NUMBER_OF_CPUS: 4
-        steps:
-          - checkout
+jobs:
+  build-linux:
+    docker:
+      - image: cimg/base:2023.12
+    resource_class: large
+    environment:
+      NUMBER_OF_CPUS: 4
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
+      - run: make -f Makefile -j ${NUMBER_OF_CPUS}
+      - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
+  build-mac:
+    macos:
+      xcode: 15.1.0
+      resource_class: large
+      environment:
+        NUMBER_OF_CPUS: 4
+      steps:
+        - checkout
