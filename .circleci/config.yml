@@ -23,7 +23,7 @@ jobs:
       - checkout
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
-      - run: umk ./uppsrc ide CLANG -brs ./theide
+      - run: ./umk ./uppsrc ide CLANG -brs ./theide
 
 workflows:
   build-linux:
@@ -33,4 +33,3 @@ workflows:
   build-mac:
     jobs:
       - build-mac
-  
