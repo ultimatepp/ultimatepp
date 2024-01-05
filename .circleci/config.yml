@@ -21,3 +21,12 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
+
+workflows:
+  build-linux:
+    jobs:
+      - build-linux
+  
+  build-mac:
+    jobs:
+      - build-mac
