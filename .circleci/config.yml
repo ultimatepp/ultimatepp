@@ -23,7 +23,8 @@ jobs:
       - checkout
       - run: brew install openssl
       - run: brew list openssl
-      - run: ls -l /opt/homebrew
+      - run: ls -l /usr/local/
+      - run: ls -l /usr/local/lib
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
       - run: ./umk ./uppsrc ide CLANG -brs ./theide
