@@ -59,7 +59,7 @@ fi
 
 if [[ "$uname" == 'Darwin' ]]; then
 	echo Configuring $1 for MacOS
-	sed -i.bak 's/-DflagPOSIX -DflagLINUX/-DflagPOSIX -DflagOSX -DflagNOMM/' $1
+	sed -i.bak 's/-DflagPOSIX -DflagLINUX/-DflagPOSIX -DflagOSX/' $1
 	sed -i.bak 's/-Wl,--gc-sections $(LINKOPTIONS)/$(LINKOPTIONS)/' $1
 	sed -i.bak 's/\`pkg-config --cflags .*\`/ /' $1
 	sed -i.bak 's/\`pkg-config --libs .*\`/ /' $1
