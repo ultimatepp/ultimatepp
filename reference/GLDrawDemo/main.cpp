@@ -7,7 +7,7 @@ using namespace Upp;
 struct OpenGLExample : GLCtrl {
 	Point point;
 
-	virtual void GLPaint() {
+	void GLPaint() override {
 		Size sz = GetSize();
 	
 		GLDraw w;
@@ -31,7 +31,7 @@ struct OpenGLExample : GLCtrl {
 			w.DrawText(sz.cx - sz.cx / 3, sz.cy - sz.cy / 3, angle * 10, "x   Text with angle " + AsString(angle));
 	}
 
-	virtual void MouseMove(Point p, dword) {
+	void MouseMove(Point p, dword) override {
 		point = p;
 		Refresh();
 	}
