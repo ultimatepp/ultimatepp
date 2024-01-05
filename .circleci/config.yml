@@ -21,11 +21,9 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      - run: brew install openssl
       - run: ./configure
       - run: make -f Makefile -j ${NUMBER_OF_CPUS}
-      - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
+      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
 
 workflows:
   build-linux:
