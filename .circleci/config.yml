@@ -16,8 +16,8 @@ jobs:
   build-mac:
     macos:
       xcode: 15.1.0
-      resource_class: large
-      environment:
-        NUMBER_OF_CPUS: 4
-      steps:
-        - checkout
+    resource_class: large
+    environment:
+      NUMBER_OF_CPUS: 4
+    steps:
+      - checkout
