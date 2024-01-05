@@ -12,5 +12,8 @@ file
 	GLCtrl.h,
 	Win32GLCtrl.cpp,
 	XGLCtrl.cpp,
-	GLCtrl.cpp;
+	GLCtrl.cpp,
+	Info readonly separator,
+	src.tpp,
+	Copying;
 
