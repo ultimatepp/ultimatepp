@@ -73,7 +73,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 
 	if(main) {
 		makefile.config << "CXX = c++\n"
-			"LINKER = $(CXX)\n";
+						<< "LINKER = $(CXX)\n"
+						<< "UNAME = $(shell uname)\n";
 		String flags;
 		if(HasFlag("DEBUG"))
 			flags << " -D_DEBUG " << debug_options;
@@ -160,16 +161,26 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			String fn = SourcePath(package, pkg[i]);
 			String ext = ToLower(GetFileExt(fn));
 			bool isc = ext == ".c";
+			bool isobjectivec = ext == ".m";
 			bool isrc = (ext == ".rc" && HasFlag("WIN32"));
 			bool iscpp = (ext == ".cpp" || ext == ".cc" || ext == ".cxx");
+			bool isobjectivecpp = ext == ".mm";
 			bool isicpp = (ext == ".icpp");
+			
 			if(ext == ".brc") {
 				isc = true;
 				fn << "c";
 			}
-			if(isc || isrc || iscpp || isicpp) {
+			if(isc || isobjectivec || isrc || iscpp || isobjectivecpp || isicpp) {
+				String conditional_tab = "";
+				if (isobjectivec || isobjectivecpp) {
+					makefile.rules << "ifeq ($(UNAME),Darwin)\n";
+					conditional_tab = "\t";
+				}
+				
 				String outfile;
-				outfile << makefile.outdir << AdjustMakePath(GetFileTitle(fn)) << (isrc ? "_rc" : "") << objext;
+				outfile << conditional_tab << makefile.outdir
+						<< AdjustMakePath(GetFileTitle(fn)) << (isrc ? "_rc" : "") << objext;
 				String srcfile = GetMakePath(MakeSourcePath(src, fn, false, exporting));
 				makefile.rules << outfile << ": " << srcfile;
 				Vector<String> dep = HdependGetDependencies(fn, false);
@@ -177,11 +188,24 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 				for(int d = 0; d < dep.GetCount(); d++) {
 					String dfn = MakeSourcePath(src, dep[d], true, exporting);
 					if(!IsNull(dfn))
-						makefile.rules << " \\\n\t" << GetMakePath(dfn);
+						makefile.rules << " \\\n\t" << conditional_tab << GetMakePath(dfn);
 				}
-				makefile.rules << "\n"
-					"\t$(CXX) -c " << (isc ? "-x c $(CFLAGS)" : "-x c++ $(CXXFLAGS)") << " $(CINC) $(" << macros << ") "
-						<< gop << " " << srcfile << " -o " << outfile << "\n\n";
+				makefile.rules << "\n" << conditional_tab << "\t$(CXX) -c ";
+				
+				if (isc) {
+					makefile.rules << "-x c";
+				} else if (isobjectivec) {
+					makefile.rules << "-x objective-c";
+				} else if (isobjectivecpp) {
+					makefile.rules << "-x objective-c++";
+				} else {
+					makefile.rules << "-x c++";
+				}
+				
+				makefile.rules << " " << (isc || isobjectivec ? "$(CFLAGS) " : " $(CXXFLAGS) ")
+						<< " $(CINC) $(" << macros << ") "
+						<< gop << " " << srcfile << " -o " << outfile << "\n";
+				makefile.rules << (isobjectivec || isobjectivecpp ? "endif\n\n" : "\n");
 				if(!libout || isicpp) {
 					makefile.linkdep << " \\\n\t" << outfile;
 					makefile.linkfiles << " \\\n\t\t" << outfile;
