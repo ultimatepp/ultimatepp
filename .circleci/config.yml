@@ -22,8 +22,8 @@ jobs:
     steps:
       - checkout
       - run: brew install openssl
-      - run: ls -l /opt/homebrew/lib
-      - run: ls -l /opt/homebrew/Cellar
+      - run: brew list openssl
+      - run: ls -l /opt/homebrew
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
       - run: ./umk ./uppsrc ide CLANG -brs ./theide
