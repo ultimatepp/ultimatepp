@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-linux:
     docker:
-      - image: cimg/base:2023.12
+      - image: cimg/base:2024.01
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
