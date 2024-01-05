@@ -5,5 +5,6 @@
 
 uname=`uname`
 if [[ "$uname" == 'Darwin' ]]; then
+	sed -i.bak 's/-DflagOSX/-DflagOSX -DflagNOMM/' Makefile
 	sed -i.bak 's/-DflagOSX/-DflagOSX -DflagNOMM/' umkMakefile
 fi

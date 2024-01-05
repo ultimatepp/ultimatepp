@@ -17,6 +17,7 @@ jobs:
   build-mac:
     macos:
       xcode: 15.1.0
+    resource_class: macos.m1.medium.gen1
     environment:
       NUMBER_OF_CPUS: 4
     steps:
