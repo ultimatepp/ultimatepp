@@ -100,7 +100,7 @@
 #include <X11/Xmd.h>
 
 #ifndef GLEW_INCLUDE
-#  include <GL/glew.h>
+#  include "glew.h"
 #else
 #  include GLEW_INCLUDE
 #endif
