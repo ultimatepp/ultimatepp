@@ -160,8 +160,8 @@ void CreateBuildMethods()
 			bm.Replace(var, h);
 		};
 		
-		Path("$INCLUDE$", "/opt/local/include;/usr/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
-		Path("$LIB$", "/opt/local/lib;/usr/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
+		Path("$INCLUDE$", "/opt/local/include;/usr/include;/usr/local/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
+		Path("$LIB$", "/opt/local/lib;/usr/lib;/usr/local/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
 		
 		String common;
 	#ifdef CPU_ARM
