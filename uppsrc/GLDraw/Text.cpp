@@ -27,7 +27,7 @@ struct sGlyphTextureMaker : LRUCache<GLTexture>::Maker {
 	Color  color;
 
 	virtual String Key() const {
-		StringBuffer h;
+		String h;
 		RawCat(h, chr);
 		RawCat(h, font);
 		RawCat(h, angle);

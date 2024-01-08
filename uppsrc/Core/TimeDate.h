@@ -80,6 +80,16 @@ void   SetDateFormat(const char *fmt);
 void   SetDateScan(const char *scan);
 void   SetDateFilter(const char *seps);
 
+#ifdef PLATFORM_WIN32 // resolve nameclash with win32 API
+	#ifdef GetDateFormatA
+		#undef GetDateFormatA
+	#endif
+
+	#ifdef GetDateFormatW
+		#undef GetDateFormatW
+	#endif
+#endif
+
 String GetDateFormat();
 
 const char *StrToDate(const char *fmt, Date& d, const char *s, Date def = Null);

@@ -78,6 +78,16 @@ void SetDateFormat(const char *fmt)
 		strncpy(s_date_format_main, fmt, 63);
 }
 
+#ifdef PLATFORM_WIN32 // resolve nameclash with win32 API
+	#ifdef GetDateFormatA
+		#undef GetDateFormatA
+	#endif
+
+	#ifdef GetDateFormatW
+		#undef GetDateFormatW
+	#endif
+#endif
+
 String GetDateFormat()
 {
 	return *s_date_format_thread ? s_date_format_thread : s_date_format_main;
