@@ -38,7 +38,7 @@
 
 #if defined(GLEW_OSMESA)
 #  define GLAPI extern
-#  include "osmesa.h"
+#  include <GL/osmesa.h>
 #elif defined(GLEW_EGL)
 #  include "eglew.h"
 #elif defined(_WIN32)

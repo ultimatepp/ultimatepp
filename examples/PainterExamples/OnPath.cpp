@@ -44,7 +44,8 @@ void TextOnPath(Painter& sw)
 		sw.BeginOnPath(pos + w / 2, true);
 		sw.Character(-w / 2, -fi.GetAscent(), *s++, fnt)
 		  .Fill(0, -fi.GetAscent(), Yellow(), 0, fi.GetDescent(), Blue())
-		  .Stroke(1, Black());
+		  .Stroke(1, Black())
+		;
 		sw.End();
 		pos += w;
 	}

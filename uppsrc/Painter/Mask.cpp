@@ -4,11 +4,12 @@ namespace Upp {
 
 void BufferPainter::BeginMaskOp()
 {
+	Finish();
 	attr.mask = true;
 	Size sz = ip->GetSize();
 	mask.Add() = *ip;
 	ip->Create(sz);
-	Clear(RGBAZero());
+	UPP::Fill(~*ip, RGBAZero(), ip->GetLength());
 	Begin();
 }
 

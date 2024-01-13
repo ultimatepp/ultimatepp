@@ -10,7 +10,7 @@ RGBA Mul8(const RGBA& s, int mul)
 }
 
 struct SpanSource {
-	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
+	virtual void Get(RGBA *span, int x, int y, unsigned len) const = 0;
 	virtual ~SpanSource() {}
 };
 
@@ -94,6 +94,7 @@ protected:
 	virtual void   DashOp(const String& dash, double start);
 	virtual void   DashOp(const Vector<double>& dash, double start);
 	virtual void   InvertOp(bool invert);
+	virtual void   ImageFilterOp(int filter);
 
 	virtual void   TransformOp(const Xform2D& m);
 
@@ -155,8 +156,9 @@ private:
 		bool                            hasclip;
 		bool                            mask;
 		bool                            onpath;
+		int                             filter = FILTER_BILINEAR;
 	};
-	
+
 	PainterTarget             *alt = NULL;
 	double                     alt_tolerance = Null;
 	ImageBuffer                dummy;
@@ -167,15 +169,18 @@ private:
 	int                        render_cx;
 	int                        dopreclip = 0;
 	Sizef                      size = Sizef(0, 0); // = ib.GetSize()
+	
+	Buffer<byte>                 co_clear; // do lazy Clear
+	RGBA                         co_clear_color;
 
-	Attr                       attr;
-	Array<Attr>                attrstack;
+	Attr                         attr;
+	Array<Attr>                  attrstack;
 	Vector<Buffer<ClippingLine>> clip;
-	Array< ImageBuffer >       mask;
-	Vector<Vector<PathLine>>   onpathstack;
-	Vector<double>             pathlenstack;
-	int                        mtx_serial = 0;
-	ArrayMap<String, DashInfo> dashes;
+	Array<ImageBuffer>           mask;
+	Vector<Vector<PathLine>>     onpathstack;
+	Vector<double>               pathlenstack;
+	int                          mtx_serial = 0;
+	ArrayMap<String, DashInfo>   dashes;
 	
 	Rectf                      preclip;
 	int                        preclip_mtx_serial = -1;
@@ -187,7 +192,7 @@ private:
 		Pointf                             path_min, path_max;
 	};
 	
-	enum { BATCH_SIZE = 128 }; // must be 2^n
+	enum { BATCH_SIZE = 256 }; // must be 2^n
 	
 	Buffer<PathInfo> paths;
 	int              path_index = 0;
@@ -251,6 +256,9 @@ private:
 		double            width;
 		double            opacity;
 		Rasterizer        rasterizer;
+		SpanSource       *ss;
+		One<SpanSource>   sso;
+		int               alpha;
 		RGBA              color;
 		RGBA              c;
 		int               subpath;
@@ -274,7 +282,7 @@ private:
 	void             DoPath0();
 	void             DoPath()         { if(IsNull(current)) DoPath0(); }
 	void             ClearPath();
-	Buffer<ClippingLine> RenderPath(double width, Event<One<SpanSource>&> ss, const RGBA& color);
+	Buffer<ClippingLine> RenderPath(double width, One<SpanSource>& ss, const RGBA& color);
 	void             RenderImage(double width, const Image& image, const Xform2D& transsrc,
 	                             dword flags);
 	void             RenderRadial(double width, const Pointf& f, const RGBA& color1,
@@ -306,9 +314,8 @@ public:
 	
 	BufferPainter&     Co(bool b = true)                       { Finish(); co = b; SyncCo(); return *this; }
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; preclip_mtx_serial = -1; return *this; }
-	BufferPainter&     PreClipDashed()                         { dopreclip = 2; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     ImageCache(bool b = true)               { imagecache = b; return *this; }
-	BufferPainter&     NoImageCache(bool b = true)             { return ImageCache(false); }
+	BufferPainter&     NoImageCache()                          { return ImageCache(false); }
 	
 	void               Create(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 	void               Finish();
@@ -319,5 +326,3 @@ public:
 
 	~BufferPainter()                                            { Finish(); }
 };
-
-#include "Interpolator.hpp"

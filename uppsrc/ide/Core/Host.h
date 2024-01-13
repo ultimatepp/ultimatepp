@@ -4,22 +4,25 @@ extern String HostConsole;
 
 void AddHostFlags(Index<String>& cfg);
 
-struct Host {
+class Host {
+public:
 	struct FileInfo : Time, Moveable<FileInfo> {
 		int length;
 	};
-
+	
+public:
+	static const String CMDLINE_PREFIX;
+	
 	Vector<String> exedirs;
 	String         environment;
 
 	String        *cmdout;
 	
 	bool           canlog = true; // it does PutVerbose for commands
-
+	
+public:
 	void    DoDir(const String& s);
 
-	Host();
-	
 	void                  Log(const String& s) { if(canlog) PutVerbose(s); }
 	
 	String                GetEnvironment();

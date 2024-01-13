@@ -12,8 +12,14 @@ void BufferPainter::ClearPath()
 	path_info->path_min = Pointf(1e200, 1e200);
 	path_info->path_max = -Pointf(1e200, 1e200);
 	path_info->path.SetCount(1);
-	path_info->path.Top().Clear();
-	path_info->path.Top().Reserve(128);
+
+	Vector<byte>& p = path_info->path.Top();
+	if(path_info->path.Top().GetCount() > 2048) {
+		p.Clear();
+		p.Reserve(128);
+	}
+	else
+		p.SetCount(0);
 }
 
 void BufferPainter::DoPath0()
@@ -53,6 +59,21 @@ template <class T> T& BufferPainter::PathAdd(int type)
 	return *e;
 }
 
+void BufferPainter::ClearOp(const RGBA& color)
+{
+	Finish();
+	if(co && mode != MODE_NOAA) { // schedule for late clear during rendering
+		if(!co_clear)
+			co_clear.Alloc(ip->GetHeight());
+		memset(~co_clear, 1, ip->GetHeight());
+		co_clear_color = color;
+	}
+	else
+		UPP::Fill(~*ip, color, ip->GetLength());
+	if(color.a == 255)
+		ip->SetKind(IMAGE_OPAQUE);
+}
+
 void BufferPainter::MoveOp(const Pointf& p, bool rel)
 {
 	LLOG("@ MoveOp " << p << ", " << rel);
@@ -60,6 +81,7 @@ void BufferPainter::MoveOp(const Pointf& p, bool rel)
 	PathAdd<LinearData>(MOVE).p = move;
 }
 
+force_inline
 void BufferPainter::DoMove0()
 {
 	if(IsNull(move))
@@ -69,7 +91,6 @@ void BufferPainter::DoMove0()
 void BufferPainter::LineOp(const Pointf& p, bool rel)
 {
 	DoMove0();
-	LinearData h;
 	PathAdd<LinearData>(LINE).p = ccontrol = qcontrol = EndPoint(p, rel);
 }
 

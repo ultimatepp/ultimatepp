@@ -15,7 +15,6 @@ file
 	PaintPainting.cpp,
 	PainterInit.icpp,
 	LinearPath.h,
-	Interpolator.hpp,
 	Xform2D.cpp,
 	Approximate.cpp,
 	Stroker.cpp,

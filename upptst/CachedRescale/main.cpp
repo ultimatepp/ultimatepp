@@ -31,7 +31,7 @@ struct MyApp : TopWindow {
 	{
 		Refresh();
 	}
-	                   
+
 	MyApp() {
 		Sizeable().Zoomable();
 		SetRect(0, 0, 200, 200);
@@ -39,7 +39,7 @@ struct MyApp : TopWindow {
 		method.Add(FILTER_NEAREST, "Nearest");
 		method.Add(FILTER_BILINEAR, "Bilinear");
 		method.Add(FILTER_BSPLINE, "Bspline");
-		method.Add(FILTER_COSTELLO, "Costello");
+		method.Add(FILTER_COSTELLO, "Costella");
 		method.Add(FILTER_BICUBIC_MITCHELL, "Bicubic Mitchell");
 		method.Add(FILTER_BICUBIC_CATMULLROM, "Bicubic Catmull Rom");
 		method.Add(FILTER_LANCZOS2, "Lanczos 2");
@@ -49,7 +49,10 @@ struct MyApp : TopWindow {
 		method.Add(-1, "Painter");
 		method <<= THISBACK(Sync);
 		Add(method.TopPos(0, STDSIZE).RightPos(0, 200));
-		method <<= FILTER_NEAREST;
+		method <<= FILTER_LANCZOS3;
+		
+		Size sz = TestImg::test().GetSize();
+		SetRect(0, 0, sz.cx * 4, sz.cy * 4);
 	}
 };
 

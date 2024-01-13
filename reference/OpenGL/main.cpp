@@ -6,7 +6,7 @@ using namespace Upp;
 struct OpenGLExample : GLCtrl {
 	Point point;
 
-	virtual void GLPaint() {
+	void GLPaint() override {
 		StdView();
 
 		double t = 13 * point.x;
@@ -56,11 +56,7 @@ struct OpenGLExample : GLCtrl {
 		glEnd();
 	}
 	
-	virtual void GLResize(int w, int h) {
-		glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	}
-
-	virtual void LeftDown(Point, dword)
+	void LeftDown(Point, dword) override
 	{ // Demonstrates how to create a screenshot of opengl widget
 		ExecuteGL([&] {
 			Size sz=GetSize();
@@ -88,7 +84,7 @@ struct OpenGLExample : GLCtrl {
 		});
 	}
 
-	virtual void MouseMove(Point p, dword) {
+	void MouseMove(Point p, dword) override {
 		point = p;
 		Refresh();
 	}
@@ -100,6 +96,7 @@ GUI_APP_MAIN
 	TopWindow win;
 	OpenGLExample gl;
 	gl.SetFrame(InsetFrame());
+	win.Title("OpenGL Reference");
 	win.Add(gl.HSizePos(10, 10).VSizePos(10, 10));
 	win.Sizeable().Zoomable();
 	win.Open();

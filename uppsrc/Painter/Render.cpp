@@ -8,19 +8,6 @@ namespace Upp {
 
 void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
-void BufferPainter::ClearOp(const RGBA& color)
-{
-	Finish();
-	if(co) {
-		CoFor(ip->GetHeight(), [&](int i) {
-			UPP::Fill((*ip)[i], color, ip->GetWidth());
-		});
-	}
-	else
-		UPP::Fill(~*ip, color, ip->GetLength());
-	ip->SetKind(color.a == 255 ? IMAGE_OPAQUE : IMAGE_ALPHA);
-}
-
 BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const PathInfo *path_info,
                                 const SimpleAttr& attr, const Rectf& preclip, bool isregular)
 :	trans(attr.mtx)
@@ -144,7 +131,7 @@ void BufferPainter::SyncCo()
 	}
 }
 
-Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSource>&> ss, const RGBA& color)
+Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss, const RGBA& color)
 {
 	PAINTER_TIMING("RenderPath");
 	Buffer<ClippingLine> newclip;
@@ -185,7 +172,14 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	}
 
 	if(co) {
-		if(width >= FILL && !ss && !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
+		if(ss && !co_span) {
+			int n = CoWork::GetPoolSize();
+			co_span.Alloc(n);
+			for(int i = 0; i < n; i++)
+				co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
+		}
+
+		if(width >= FILL && !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
 			for(int i = 0; i < path_info->path.GetCount(); i++) {
 				while(jobcount >= cojob.GetCount())
 					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), mode == MODE_SUBPIXEL);
@@ -197,9 +191,12 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 				job.color = color;
 				job.preclip = preclip;
 				job.regular = regular;
+				job.ss = ~ss;
+				if(i + 1 == path_info->path.GetCount()) // last subpath
+					job.sso = pick(ss); // transfer SpanSource ownership to last subpath
+				if(jobcount + emptycount >= BATCH_SIZE)
+					FinishPathJob();
 			}
-			if(jobcount + emptycount >= BATCH_SIZE)
-				FinishPathJob();
 			return newclip;
 		}
 	
@@ -213,13 +210,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	if(j.preclipped)
 		return newclip;
 
-	if(co && ss && !co_span) {
-		int n = CoWork::GetPoolSize();
-		co_span.Alloc(n);
-		for(int i = 0; i < n; i++)
-			co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
-	}
-	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
 		int opacity = int(256 * pathattr.opacity);
@@ -232,7 +222,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		ClipFiller          clip_filler;
 		NoAAFillerFilter    noaa_filler;
 		MaskFillerFilter    mf;
-		One<SpanSource>     rss;
 
 		if(subpixel) {
 			int ci = CoWork::GetWorkerIndex();
@@ -246,7 +235,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		else
 		if(ss) {
-			ss(rss);
 			RGBA           *lspan;
 			int ci = CoWork::GetWorkerIndex();
 			if(co && ci >= 0)
@@ -257,13 +245,13 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 				lspan = span;
 			}
 			if(subpixel) {
-				subpixel_filler.ss = ~rss;
+				subpixel_filler.ss = ~ss;
 				subpixel_filler.buffer = lspan;
 				subpixel_filler.alpha = opacity;
 				rg = &subpixel_filler;
 			}
 			else {
-				span_filler.ss = ~rss;
+				span_filler.ss = ~ss;
 				span_filler.buffer = lspan;
 				span_filler.alpha = opacity;
 				rg = &span_filler;
@@ -271,7 +259,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		else {
 			if(subpixel) {
-				subpixel_filler.ss = NULL;
+				subpixel_filler.ss = nullptr;
 				subpixel_filler.color = Mul8(color, opacity);
 				subpixel_filler.invert = pathattr.invert;
 				rg = &subpixel_filler;
@@ -288,7 +276,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		if(width != ONPATH) {
 			if(alt)
-				alt->Fill(width, ~rss, color);
+				alt->Fill(width, ~ss, color);
 			else {
 				PAINTER_TIMING("Fill");
 				int ii = 0;
@@ -296,6 +284,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					int y = (co ? co->Next() : ii++) + rasterizer.MinY();
 					if(y > rasterizer.MaxY())
 						break;
+					if(!doclip && co_clear && co_clear[y]) {
+						UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+						co_clear[y] = false;
+					}
 					solid_filler.t = subpixel_filler.t = span_filler.t = (*ip)[y];
 					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
@@ -345,95 +337,133 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 
 void BufferPainter::FinishPathJob()
 {
+	PAINTER_TIMING("FinishPathJob");
 	if(jobcount == 0)
 		return;
-
-	CoWork co;
-	co * [&] {
-		for(;;) {
-			int i = co.Next();
-			if(i >= jobcount)
-				break;
-			CoJob& b = cojob[i];
-			b.rasterizer.Reset();
-			PathJob j(b.rasterizer, b.width, b.path_info, b.attr, b.preclip, b.regular);
-			if(!j.preclipped) {
-				b.evenodd = j.evenodd;
-				BufferPainter::RenderPathSegments(j.g, b.path_info->path[b.subpath], j.regular ? &b.attr : NULL, j.tolerance);
+	{
+		std::atomic<int> ii(0);
+		CoDo([&] {
+			for(int i = ii++; i < jobcount; i = ii++) {
+				CoJob& b = cojob[i];
+				b.rasterizer.Reset();
+				PathJob j(b.rasterizer, b.width, b.path_info, b.attr, b.preclip, b.regular);
+				if(!j.preclipped) {
+					b.evenodd = j.evenodd;
+					BufferPainter::RenderPathSegments(j.g, b.path_info->path[b.subpath], j.regular ? &b.attr : NULL, j.tolerance);
+				}
 			}
-		}
-	};
+		});
+	}
 
-	FinishFillJob();
+	FinishFillJob(); // finish running fill job (if any) so that we can start new one
 	
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
-
+	
 	fill_job & [=] {
+		PAINTER_TIMING("CO FILL JOB");
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
-
+		
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
 			miny = min(miny, j.rasterizer.MinY());
 			maxy = max(maxy, j.rasterizer.MaxY());
-			j.c = Mul8(j.color, int(256 * j.attr.opacity));
+			int alpha = int(256 * j.attr.opacity);
+			if(!j.ss)
+				j.c = Mul8(j.color, alpha);
+			else
+				j.alpha = alpha;
 		}
-		auto fill = [&](int ymin, int ymax) {
+
+		auto fill = [&](int y) {
+			if(co_clear && co_clear[y]) {
+				UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+				co_clear[y] = false;
+			}
+			
+			int ci = CoWork::GetWorkerIndex();
 			if(subpixel) {
 				SubpixelFiller subpixel_filler;
-				subpixel_filler.ss = NULL;
-				int ci = CoWork::GetWorkerIndex();
 				subpixel_filler.sbuffer = ci >= 0 ? co_subpixel[ci] : subpixel;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
-					int jymin = max(j.rasterizer.MinY(), ymin);
-					int jymax = min(j.rasterizer.MaxY(), ymax);
-					for(int y = jymin; y <= jymax; y++)
-						if(j.rasterizer.NotEmpty(y)) {
-							subpixel_filler.color = j.c;
-							subpixel_filler.invert = j.attr.invert;
-							subpixel_filler.t = (*ip)[y];
-							subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
-							if(clip.GetCount()) {
-								if(clip.Top()) {
-									MaskFillerFilter mf;
-									const ClippingLine& s = clip.Top()[y];
-									if(!s.IsEmpty() && !s.IsFull()) {
-										mf.Set(&subpixel_filler, s);
-										j.rasterizer.Render(y, mf, j.evenodd);
-									}
+					if(y >= j.rasterizer.MinY() && y <= j.rasterizer.MaxY()) {
+						subpixel_filler.color = j.c;
+						subpixel_filler.ss = j.ss;
+						subpixel_filler.invert = j.attr.invert;
+						subpixel_filler.t = (*ip)[y];
+						subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
+
+						if(j.ss) {
+							RGBA  *lspan;
+							if(ci >= 0)
+								lspan = co_span[ci];
+							else {
+								if(!span)
+									span.Alloc(3 * ip->GetWidth() + 3);
+								lspan = span;
+							}
+							subpixel_filler.buffer = lspan;
+							subpixel_filler.alpha = j.alpha;
+							subpixel_filler.y = y;
+						}
+						
+						if(clip.GetCount()) {
+							if(clip.Top()) {
+								MaskFillerFilter mf;
+								const ClippingLine& s = clip.Top()[y];
+								if(!s.IsEmpty() && !s.IsFull()) {
+									mf.Set(&subpixel_filler, s);
+									j.rasterizer.Render(y, mf, j.evenodd);
 								}
 							}
-							else
-								j.rasterizer.Render(y, subpixel_filler, j.evenodd);
 						}
+						else
+							j.rasterizer.Render(y, subpixel_filler, j.evenodd);
+					}
 				}
 			}
 			else {
 				SolidFiller solid_filler;
+				SpanFiller  span_filler;
 				for(int i = 0; i < fillcount; i++) {
 					CoJob& j = cofill[i];
-					int jymin = max(j.rasterizer.MinY(), ymin);
-					int jymax = min(j.rasterizer.MaxY(), ymax);
-					for(int y = jymin; y <= jymax; y++)
-						if(j.rasterizer.NotEmpty(y)) {
+					if(y >= j.rasterizer.MinY() && y <= j.rasterizer.MaxY()) {
+						Rasterizer::Filler *rg;
+						if(j.ss) {
+							if(ci >= 0)
+								span_filler.buffer = co_span[ci];
+							else {
+								if(!span)
+									span.Alloc(ip->GetWidth() + 3);
+								span_filler.buffer = span;
+							}
+							span_filler.ss = j.ss;
+							span_filler.alpha = j.alpha;
+							span_filler.y = y;
+							span_filler.t = (*ip)[y];
+							rg = &span_filler;
+						}
+						else {
 							solid_filler.c = j.c;
 							solid_filler.invert = j.attr.invert;
 							solid_filler.t = (*ip)[y];
-							if(clip.GetCount()) {
-								if(clip.Top()) {
-									MaskFillerFilter mf;
-									const ClippingLine& s = clip.Top()[y];
-									if(!s.IsEmpty() && !s.IsFull()) {
-										mf.Set(&solid_filler, s);
-										j.rasterizer.Render(y, mf, j.evenodd);
-									}
+							rg = &solid_filler;
+						}
+						if(clip.GetCount()) {
+							if(clip.Top()) {
+								MaskFillerFilter mf;
+								const ClippingLine& s = clip.Top()[y];
+								if(!s.IsEmpty() && !s.IsFull()) {
+									mf.Set(rg, s);
+									j.rasterizer.Render(y, mf, j.evenodd);
 								}
 							}
-							else
-								j.rasterizer.Render(y, solid_filler, j.evenodd);
 						}
+						else
+							j.rasterizer.Render(y, *rg, j.evenodd);
+					}
 				}
 			}
 		};
@@ -441,45 +471,59 @@ void BufferPainter::FinishPathJob()
 		int n = maxy - miny;
 		if(n >= 0) {
 			if(n > 6) {
-				CoWork co;
-				co * [&] {
+				std::atomic<int> ii(0);
+				CoDo([&] {
 					for(;;) {
-						const int N = 4;
-						int y = N * co.Next() + miny;
+						int y = ii++ + miny;
 						if(y > maxy)
 							break;
-						fill(y, min(y + N - 1, maxy));
+						fill(y);
 					}
-				};
+				});
 			}
 			else
-				fill(miny, maxy);
+				for(int y = miny; y <= maxy; y++)
+					fill(y);
 		}
+		for(int i = 0; i < fillcount; i++) // we can release SpanSources now
+			cofill[i].sso.Clear();
 	};
-
 	jobcount = emptycount = 0;
 }
 
 void BufferPainter::Finish()
 {
+	PAINTER_TIMING("Finish");
 	FinishPathJob();
 	FinishFillJob();
+	if(co_clear)
+		CoFor(ip->GetHeight(), [&](int y) { // clear remaning lines that were not painted yet
+			if(co_clear[y]) {
+				UPP::Fill((*ip)[y], co_clear_color, ip->GetWidth());
+				co_clear[y] = false;
+			}
+		});
 }
 
 void BufferPainter::FillOp(const RGBA& color)
 {
-	RenderPath(FILL, Null, color);
+	PAINTER_TIMING("FillOp");
+	One<SpanSource> none;
+	RenderPath(FILL, none, color);
 }
 
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
-	RenderPath(width, Null, color);
+	PAINTER_TIMING("StrokeOp");
+	One<SpanSource> none;
+	RenderPath(width, none, color);
 }
 
 void BufferPainter::ClipOp()
 {
 	FinishPathJob();
-	Buffer<ClippingLine> newclip = RenderPath(CLIP, Null, RGBAZero());
+	One<SpanSource> none;
+	Buffer<ClippingLine> newclip = RenderPath(CLIP, none, RGBAZero());
 	if(attr.hasclip)
 		clip.Top() = pick(newclip);
 	else {

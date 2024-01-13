@@ -21,10 +21,10 @@ topic "TheIde help index";
 [{_}%EN-US 
 [s0;= [*/R6 TheIDE help]&]
 [s0; &]
-[s0;l224;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide]&]
+[s0;l224;^topic`:`/`/ide`/app`/Guide`_en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
 [s0;l224; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 

@@ -59,6 +59,7 @@ fi
 
 if [[ "$uname" == 'Darwin' ]]; then
 	echo Configuring $1 for MacOS
+	sed -i.bak 's/-DflagPOSIX -DflagLINUX/-DflagPOSIX -DflagBSD -DflagOSX/' $1
 	sed -i.bak 's/-Wl,--gc-sections $(LINKOPTIONS)/$(LINKOPTIONS)/' $1
 	sed -i.bak 's/\`pkg-config --cflags .*\`/ /' $1
 	sed -i.bak 's/\`pkg-config --libs .*\`/ /' $1
@@ -67,6 +68,5 @@ if [[ "$uname" == 'Darwin' ]]; then
 	sed -i.bak 's/-Wl,-s/ /' $1
 	sed -i.bak 's/-Wl,--start-group/ /' $1
 	sed -i.bak 's/-Wl,--end-group/ /' $1
-	sed -i.bak 's/-DflagLINUX/-DflagBSD -DflagOSX/' umkMakefile
 	sed -i.bak 's/$(LIBPATH) -Wl,-O,2 $(LDFLAGS)/$(LIBPATH) $(LDFLAGS)/' $1
 fi

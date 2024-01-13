@@ -8,9 +8,9 @@ uses
 	ide/Java,
 	ide/Android;
 
-uses(!NOSO OSX) plugin/png;
+uses(!NOSO) plugin/png;
 
-uses(!NOSO OSX) Draw;
+uses(!NOSO) Draw;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,

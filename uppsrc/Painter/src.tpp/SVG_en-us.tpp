@@ -7,17 +7,16 @@ topic "SVG support";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@(229)4 SVG support]]}}&]
 [s4; &]
-[s2;:RenderSVG`(Painter`&`,const char`*`,Callback2`<String`,String`&`>`&`): [@(0.0.255) b
-ool]_[* RenderSVG]([_^Painter^ Painter][@(0.0.255) `&]_[*@3 p], [@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 svg], [_^Callback2^ Callback2]<[_^String^ String], [_^String^ String][@(0.0.255) `&
-]>`&_[*@3 resloader])&]
+[s2;:Upp`:`:RenderSVG`(Upp`:`:Painter`&`,const char`*`,Event`):%- [@(0.0.255) bool] 
+[* RenderSVG](Painter[@(0.0.255) `&] [*@3 p], [@(0.0.255) const] [@(0.0.255) char] 
+[@(0.0.255) `*][*@3 svg], Event<String, String[@(0.0.255) `&]> [*@3 resloader])&]
 [s2;:RenderSVG`(Painter`&`,const char`*`): [@(0.0.255) bool]_[* RenderSVG]([_^Painter^ Pain
 ter][@(0.0.255) `&]_[*@3 p], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg])&]
 [s3; Renders [*@3 svg ]to Painter [*@3 p]. Use [*@3 resloader] to provide 
 resources like images, first String of callback is resource name 
 (filename), the data is to be returned in second parameter. Return 
 empty String if resource not found..&]
-[s4; &]
+[s4;%- &]
 [s1; &]
 [s2;:GetSVGDimensions`(const char`*`,Sizef`&`,Rectf`&`): [@(0.0.255) void]_[* GetSVGDimen
 sions]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg], [_^Sizef^ Sizef][@(0.0.255) `&]_[*@3 s
@@ -35,11 +34,10 @@ hBoundingBox]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path])&]
 [s3; Returns the bounding box of [%-*@3 SVG] path stored in path element 
 format.&]
 [s4; &]
-[s1; &]
-[s2;:RenderSVGImage`(Size`,const char`*`,Callback2`<String`,String`&`>`&`): [_^Image^ I
-mage]_[* RenderSVGImage]([_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s
-vg], [_^Callback2^ Callback2]<[_^String^ String], [_^String^ String][@(0.0.255) `&]>`&_[*@3 r
-esloader])&]
+[s1;%- &]
+[s2;:Upp`:`:RenderSVGImage`(Upp`:`:Size`,const char`*`,Event`):%- Image 
+[* RenderSVGImage](Size [*@3 sz], [@(0.0.255) const] [@(0.0.255) char] 
+[@(0.0.255) `*][*@3 svg], Event<String, String[@(0.0.255) `&]> [*@3 resloader])&]
 [s2;:RenderSVGImage`(Size`,const char`*`): [_^Image^ Image]_[* RenderSVGImage]([_^Size^ Siz
 e]_[*@3 sz], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 svg])&]
 [s3; Renders SVG into Image. This function basically ignores dimensions 

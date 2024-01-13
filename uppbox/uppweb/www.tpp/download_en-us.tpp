@@ -34,8 +34,15 @@ guide]&]
 &]
 [s3; Stable releases&]
 [s4; Stable releases are published at Sourceforge.net. You can download 
-them at [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/^ https://sourceforge.n
-et/projects/upp/files/]. &]
+them at&]
+[s4;l160; [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/^ https://sourceforge.net
+/projects/upp/files/]. &]
+[s3; Flathub&]
+[s4; There is a dedicated Flatpak for TheIDE that is bundled with 
+the U`+`+ framework. The dedicated Flathub page with the installation 
+instruction is&]
+[s4;l160; [^https`:`/`/flathub`.org`/apps`/org`.ultimatepp`.TheIDE^ https://flathub.org/
+apps/org.ultimatepp.TheIDE]&]
 [s3; Price&]
 [s4; You do not have to pay anything for U`+`+, even if you are going 
 to use it for development of commercial applications. However, 

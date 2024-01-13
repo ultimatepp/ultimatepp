@@ -185,6 +185,13 @@ inline Painter& Painter::Invert(bool b)
 	return *this;
 }
 
+inline
+Painter& Painter::ImageFilter(int filter)
+{
+	ImageFilterOp(filter);
+	return *this;
+}
+
 inline Painter& Painter::Dash(const Vector<double>& dash, double start)
 {
 	if(dash.GetCount() & 1) {

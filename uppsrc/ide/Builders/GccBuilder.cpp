@@ -16,7 +16,7 @@ String GccBuilder::CmdLine(const String& package, const Package& pkg)
 	String cc = CompilerName();
 	cc << " -c";
 	for(String s : pkg_config)
-		cc << " `pkg-config --cflags " << s << "`";
+		cc << " `" << Host::CMDLINE_PREFIX << "pkg-config --cflags " << s << "`";
 	cc << ' ' << IncludesDefinesTargetTime(package, pkg);
 	return cc;
 }
@@ -558,7 +558,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
 			for(String s : pkg_config)
-				lnk << " `pkg-config --libs " << s << "`";
+				lnk << " `" << Host::CMDLINE_PREFIX << "pkg-config --libs " << s << "`";
 			for(int pass = 0; pass < 2; pass++) {
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];

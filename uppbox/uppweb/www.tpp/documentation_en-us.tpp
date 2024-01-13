@@ -1,7 +1,7 @@
 topic "Documentation";
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*2 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -17,6 +17,7 @@ topic "Documentation";
 [l321;*C$7;2 $$16,16#03451589433145915344929335295360:result]
 [l321;b83;a83;*C$7;2 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
+[b83;*+109 $$19,19#78EB85B566C7E078B53494D0FD53D992:subtitle]
 [a8;2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Documentation&]
@@ -28,23 +29,39 @@ white stains. Enjoy your reading!&]
 [s5; If you find that something is missing and you have questions. 
 U`+`+ community is ready to provide excellent support on the 
 [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
-[s3; [4 Installation and Configuration]&]
+[s3; Table of Contents&]
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#1^ 1. Installation 
+and Configuration]&]
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#2^ 2. TheIDE 
+Documentation]&]
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3^ 3. U`+`+ Essentials]&]
+[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_1^ 3.1 
+Overview]&]
+[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_2^ 3.2 
+Tutorials]&]
+[s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#3`_3^ 3.3. U`+`+ 
+Packages]&]
+[s0;l128; <#packages`_toc#>&]
+[s0; &]
+[s3;:1: 1. Installation and Configuration&]
 [s5; &]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`_win32`_en`-us^3 Win32 Installation 
+[s0;l128; [*^topic`:`/`/ide`/app`/install`_win32`_en`-us^3 Win32 Installation 
 guide]&]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`_posix`_en`-us^3 POSIX Installation 
+[s0;l128; [*^topic`:`/`/ide`/app`/install`_posix`_en`-us^3 POSIX Installation 
 guide]&]
-[s0;l160; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^3 macOS Installation 
+[s0;l128; [*^topic`:`/`/ide`/app`/install`_macos`_en`-us^3 macOS Installation 
 guide]&]
-[s0;l160;*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 &]
-[s0;l160; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
+[s0;l128;*^topic`:`/`/ide`/app`/install`_mac`_en`-us^3 &]
+[s0;l128; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
 and development cycle guide]&]
 [s5;^topic`:`/`/uppweb`/www`/community`$en`-us^ &]
-[s3; [4 TheIDE Documentation]&]
+[s3;:2: 2. TheIDE Documentation&]
 [s5;^topic`:`/`/ide`/app`/HelpPage`$en`-us^ &]
 [s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide]&]
+[s0;l160;^topic`:`/`/ide`/app`/Guide`_en`-us^ &]
 [s0;l160; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
 [s0;l160; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
@@ -84,14 +101,22 @@ a Cross Development Tool]&]
 [s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
 Android builder]&]
 [s5; &]
-[s0; [*4 U`+`+ Overview]&]
+[s3;:3: 3. U`+`+ Essentials&]
+[s19;:3`_1: 3.1 Overview&]
 [s0;3 &]
 [s0;l160; [^topic`:`/`/uppweb`/www`/overview`$en`-us^ Overview]&]
-[s0;l160;^topic`:`/`/uppweb`/www`/overview`$en`-us^ &]
-[s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
-with TheIDE] `- the introduction to the concepts of TheIDE.&]
-[s0;l160; [^topic`:`/`/ide`/app`/Guide`_en`-us^ TheIDE beginner guide] 
-`- continuation provides information how to solve common problems.&]
+[s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
+[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
+U`+`+  packages]&]
+[s0;l160; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]
+[s0;l160;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
+[s0;l160; [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Coding style]&]
+[s0;l160;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
+[s0;l160; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us^ Supporting 
+UHD displays and Dark theme]&]
+[s0;^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ &]
+[s19;:3`_2: 3.2 Tutorials&]
+[s0;^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ &]
 [s0;l160; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core Tutorial] 
 `- the introduction to the foundations behind the framework.&]
 [s0;l160; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI Tutorial] 
@@ -106,14 +131,6 @@ Tutorial] `- learn how to use U`+`+ core components for network
 application creation.&]
 [s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial] 
 `- introduction to using databases within U`+`+ framework.&]
-[s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
-[s0;l160; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us^ Supporting 
-UHD displays and Dark theme]&]
-[s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
-[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
-U`+`+  packages]&]
-[s0;l160; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]
-[s0;l160;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
-[s0;l160; [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Coding style]&]
-[s5; &]
-[s0; [*4 Packages]]]
+[s0; &]
+[s3; 4 U`+`+ Packages&]
+[s5; <#packages#>]]

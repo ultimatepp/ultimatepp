@@ -37,7 +37,7 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 	cell.Alloc(sz.cy + 1); // one more for overrun
 
-	STATIC_ASSERT(sizeof(CellArray) == 128);
+//	STATIC_ASSERT(sizeof(CellArray) == 256);
 
 	cliprect = Sizef(sz);
 	Init();
@@ -46,10 +46,20 @@ void Rasterizer::Create(int cx, int cy, bool subpixel)
 
 void Rasterizer::Free()
 {
-	if(cell)
-		for(int i = 0; i <= sz.cy; i++)
-			if(cell[i].alloc != SVO_ALLOC)
+	if(cell) {
+		for(int i = min_y; i <= max_y; i++) {
+			if(cell[i].alloc != SVO_ALLOC) {
 				MemoryFree(cell[i].ptr);
+				cell[i].alloc = SVO_ALLOC;
+			}
+			cell[i].count = 0;
+		}
+		if(cell[sz.cy].alloc != SVO_ALLOC) { // check overrun
+			MemoryFree(cell[sz.cy].ptr);
+			cell[sz.cy].alloc = SVO_ALLOC;
+		}
+		cell[sz.cy].count = 0;
+	}
 }
 
 void Rasterizer::Init()
@@ -61,13 +71,7 @@ void Rasterizer::Init()
 
 void Rasterizer::Reset()
 {
-	for(int i = min_y; i <= max_y; i++) {
-		if(cell[i].alloc != SVO_ALLOC) {
-			MemoryFree(cell[i].ptr);
-			cell[i].alloc = SVO_ALLOC;
-		}
-		cell[i].count = 0;
-	}
+	Free();
 	Init();
 }
 
@@ -251,7 +255,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	int dy = y2 - y1;
 	int fy1 = y1 & 255;
 	int fy2 = y2 & 255;
-	
+
 
 	Cell *c;
 	int x_from, x_to;

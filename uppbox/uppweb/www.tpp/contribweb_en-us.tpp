@@ -1,58 +1,38 @@
 topic "How to contribute. Web page";
+[a83;*R6 $$1,2#31310162474203024125188417583966:caption]
+[b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
+[H4;b83;*4 $$3,2#07864147445237544204411237157677:title]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*R6 How to contribute. Web page]&]
-[s0; &]
-[s0; [2 Thanks to your help U`+`+ web page is getting better, more 
-complete and translated.]&]
-[s0;2 &]
-[s0; [2 Here we show you the ways you can help.]&]
-[s0;2 &]
-[s0;%ES-ES &]
-[s0; [*+117 Basic help]&]
-[s0;2 &]
-[s0; [2 If you are new in U`+`+ and do not know how to use ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T
-`+`+][2  you still can help.]&]
-[s0;2 &]
-[s0; [2 Post your translations, fixes and patches or propose new pages 
-in U`+`+ ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 . 
-Be sure they will be acknowledged and somebody will upload them 
-for you.]&]
-[s0;2 &]
-[s0;2 &]
-[s0; [*+117 Advanced help]&]
-[s0;2 &]
-[s0; [2 These are the steps to upload your changes.]&]
-[s0;2 &]
-[s0;2 &]
-[s0; [*2 Access to U`+`+ GIT version control system]&]
-[s0;2 &]
-[s0; [2 To begin you will need the latest sources from [^https`:`/`/`github`.com`/ultimatepp`/ultimatepp`/^2 GitHub]][2 .]&]
-[s0;2 &]
-[s0;*2 &]
-[s0;i150;O0; [2 Open the packages where you want to enter the changes:]&]
-[s0;l160;i150;O0; [2 uppbox/uppweb]&]
-[s0;l160;i150;O0; [2 uppsrc/Core]&]
-[s0;l160;i150;O0; [2 ...]&]
-[s0;2 &]
-[s0;i150;O0; [2 Edit .tpp files using ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T`+`+]&]
-[s0;2 &]
-[s0;i150;O0; [2 Finally make a PR with your changes to U`+`+]&]
-[s0;2%- &]
-[s0;2 &]
-[s0; [2 Please do not modify contents made by other directly. It is 
-better first to recommend the changes and ask for permission.]&]
-[s0;2 &]
-[s0; [2 After that the day after you will see the web page updated. 
+[s1; How to contribute `- web page&]
+[s2; Thanks to your help U`+`+ web page is getting better, more complete 
+and translated. Here we show you the ways how you can help.&]
+[s3; Basic help&]
+[s2; If you are new in U`+`+ and do not know how to use [^topic`:`/`/ide`/app`/Topic`$en`-us^ T
+`+`+] you still can help.&]
+[s2; Post your translations, fixes and patches or propose new pages 
+in U`+`+ [^http`:`/`/www`.ultimatepp`.org`/forums`/^ Forum]. Be 
+sure they will be acknowledged and somebody will upload them 
+for you.&]
+[s3; Advanced help&]
+[s2; These are the steps to upload your changes.&]
+[s2; [* Access to U`+`+ GIT version control system]&]
+[s2; To begin you will need the latest sources from [^https`:`/`/github`.com`/ultimatepp`/ultimatepp`/^ G
+itHub].&]
+[s2;l128;i150;O0; Open the packages where you want to enter the changes:&]
+[s2;l256;i150;O0; uppbox/uppweb&]
+[s2;l256;i150;O0; uppsrc/Core&]
+[s2;l256;i150;O0; ...&]
+[s2;l128;i150;O0; Edit .tpp files using [^topic`:`/`/ide`/app`/Topic`$en`-us^ T`+`+]&]
+[s2;l128;i150;O0; Finally make a PR with your changes to U`+`+&]
+[s2; Please do not modify contents made by other directly. It is 
+better first to recommend the changes and ask for permission.&]
+[s2; After that the day after you will see the web page updated. 
 The secret of this is that U`+`+ hosting system will compile 
 and run uppweb package converting this index package and your 
-T`+`+ help system into .html web pages.]&]
-[s0;2 &]
-[s0;2 &]
-[s0; [*2 If nothing works]&]
-[s0;2 &]
-[s0; [2 If nothing works or you do not feel comfortable in doing this 
-you can send a post to ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2  
-asking for help or just send ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^2 m
-e][2  a post. I will do it for you.]&]
-[s0; ]]
+T`+`+ help system into .html web pages.&]
+[s2; [* If nothing works]&]
+[s2; If nothing works or you do not feel comfortable in doing this 
+you can send a post to [^http`:`/`/www`.ultimatepp`.org`/forums`/^ Forum] 
+asking for help or just send [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^ m
+e] a post. I will do it for you.]]

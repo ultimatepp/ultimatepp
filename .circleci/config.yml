@@ -1,9 +1,9 @@
 version: 2.1
 
 jobs:
-  build:
+  build-linux:
     docker:
-      - image: cimg/base:2023.12
+      - image: cimg/base:2024.01
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
@@ -11,5 +11,25 @@ jobs:
       - checkout
       - run: sudo apt-get update
       - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool
+      - run: ./configure
       - run: make -f Makefile -j ${NUMBER_OF_CPUS}
-      - run: make -f umkMakefile.in -j ${NUMBER_OF_CPUS}
+      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
+  build-mac:
+    macos:
+      xcode: 15.1.0
+    environment:
+      NUMBER_OF_CPUS: 4
+    steps:
+      - checkout
+      - run: ./configure
+      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
+      - run: ./umk ./uppsrc ide CLANG -brs ./theide
+
+workflows:
+  build-linux:
+    jobs:
+      - build-linux
+  
+  build-mac:
+    jobs:
+      - build-mac

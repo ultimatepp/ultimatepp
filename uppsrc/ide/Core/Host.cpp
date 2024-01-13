@@ -5,9 +5,11 @@
 #define LLOG(x)
 #define METHOD_NAME "Host::" << UPP_FUNCTION_NAME << "(): "
 
-Host::Host()
-{
-}
+#ifdef FLATPAK
+const String Host::CMDLINE_PREFIX = "host-spawn --no-pty ";
+#else
+const String Host::CMDLINE_PREFIX = "";
+#endif
 
 String Host::GetEnvironment()
 {
@@ -49,7 +51,7 @@ void Host::ChDir(const String& path)
 	SetCurrentDirectory(path);
 #endif
 #ifdef PLATFORM_POSIX
-	IGNORE_RESULT( chdir(path) );
+	IGNORE_RESULT(chdir(path));
 #endif
 	if(cmdout)
 		*cmdout << "cd \"" << path << "\"\n";
@@ -134,7 +136,7 @@ bool Host::StartProcess(LocalProcess& p, const char *cmdline)
 	try {
 		if(canlog) Log(cmdline);
 		p.NoConvertCharset();
-		if(p.Start(FindCommand(exedirs, cmdline), environment))
+		if(p.Start(FindCommand(exedirs, CMDLINE_PREFIX + cmdline), environment))
 			return true;
 	}
 	catch(...) {
@@ -196,14 +198,25 @@ String ResolveHostConsole()
 		"/usr/local/bin/xterm -e",
 	};
 	#else
-	static const char *term[] = {
-		"/usr/bin/mate-terminal -x",
-		"/usr/bin/gnome-terminal --window -x",
-		"/usr/bin/konsole -e",
-		"/usr/bin/lxterminal -e",
-		"/usr/bin/io.elementary.terminal -n -x",
-		"/usr/bin/xterm -e",
-	};
+		#ifdef FLATPAK
+		static const char *term[] = {
+			"/run/host/bin/mate-terminal -x",
+			"/run/host/bin/gnome-terminal --window -x",
+			"/run/host/bin/konsole -e",
+			"/run/host/bin/lxterminal -e",
+			"/run/host/bin/io.elementary.terminal -n -x",
+			"/run/host/bin/xterm -e",
+		};
+		#else
+		static const char *term[] = {
+			"/usr/bin/mate-terminal -x",
+			"/usr/bin/gnome-terminal --window -x",
+			"/usr/bin/konsole -e",
+			"/usr/bin/lxterminal -e",
+			"/usr/bin/io.elementary.terminal -n -x",
+			"/usr/bin/xterm -e",
+		};
+		#endif
 	#endif
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one

@@ -57,12 +57,36 @@ void ImageRepeat(Painter& sw)
 	  .Stroke(2, Black());
 }
 
+void ImageFillFlags(Painter& sw)
+{
+	sw.Begin();
+	for(int i = 0; i < 5; i++) {
+		sw.DrawText(10, 20, get_i(i, "0", "FILL_PAD", "FILL_REPEAT", "FILL_REFLECT", "FILL_HPAD|FILL_VREFLECT"), Arial(28));
+		sw.Rectangle(10, 60, 290, 200)
+		  .Fill(TestImg::test(), 90, 90, 200, 90, get_i(i, 0, FILL_PAD, FILL_REPEAT, FILL_REFLECT, FILL_HPAD|FILL_VREFLECT))
+		  .Stroke(1, Black());
+		sw.Translate(300, 0);
+	}
+	sw.End();
+	sw.Translate(0, 400);
+	for(int i = 0; i < 2; i++) {
+		sw.DrawText(10, 20, i ? "FILL_FAST" : "0"), Arial(28);
+		sw.Rectangle(10, 60, 500, 500)
+		  .Fill(TestImg::test(), 10, 60, 500, 60, i ? FILL_FAST : 0);
+		sw.Translate(600, 0);
+	}
+}
+
 INITBLOCK {
+	/*
 	RegisterExample("Image fill exact", ImageExact);
 	RegisterExample("Image fill exact fast", ImageExactFast);
 	RegisterExample("Image fill reflect", ImageReflect);
 	RegisterExample("Image fill pad", ImagePad);
 	RegisterExample("Image fill pad fast", ImagePadFast);
 	RegisterExample("Image fill repeat", ImageRepeat);
+	RegisterExample("Image fill", ImageRepeat);
 	RegisterExample("Image vpad&hreflect", ImageVPadHReflect);
+	*/
+	RegisterExample("Image fill flags", ImageFillFlags);
 }

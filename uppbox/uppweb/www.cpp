@@ -221,16 +221,16 @@ String GetText(const char *s)
 String ChangeTopicLanguage(const String &topic, int lang) {
 	int pos = topic.ReverseFind('$');
 	if (pos < 0)
-		return "";			
-	String langtxt = ToLower(LNGAsText(lang));		
-	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount()); 
+		return "";
+	String langtxt = ToLower(LNGAsText(lang));
+	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount());
 }
 
 String GetTopicLanguage(const String &topic) {
 	int pos = topic.ReverseFind('$');
 	if (pos < 0)
-		return "";			
-	return topic.Mid(pos+1, 5); 
+		return "";
+	return topic.Mid(pos+1, 5);
 }
 
 String FormatDateRFC822(const Time& t) {
@@ -389,29 +389,64 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 	return ttxt;
 }
 
-void SrcDocs(Index<String> &x, String& qtf, const char *folder, int lang, int level, String parent)
-{
-	if(x.Find(folder) >= 0)
-		return;
-	x.Add(folder);
-	String srcdoc = FolderLinks(folder, "srcdoc", lang, level, parent);
-	String src = FolderLinks(folder, "src", lang, level, parent);
-	Package p;
-	p.Load(AppendFileName(uppsrc, AppendFileName(folder, GetFileName(folder) + ".upp")));
-	if(srcdoc.GetLength() || src.GetLength()) {
-		qtf << "&&&[*4@b " << folder << "]&";
-		if(!IsNull(p.description))
-			qtf << "[2 " << p.description << "]&";
-		if(srcdoc.GetCount()) {
-			qtf << "&[3/* " + Format(t_("Using %s"), folder) << "]&";
-			qtf << srcdoc;
-		}
-		if(src.GetCount()) {
-			qtf << "&[3/* " << Format(t_("%s reference"), folder) << "]&";
-			qtf << src;
+class HeaderNumber {
+public:
+	HeaderNumber(const String& prefix = {})
+		: m_prefix(prefix)
+	{
+	}
+	
+	bool IsFirst() const  { return m_number == 1; }
+	int GetNumber() const { return m_number; }
+	String GenNext()      { return m_prefix + IntStr(m_number++); }
+
+private:
+	String m_prefix;
+	int m_number = 1;
+};
+
+class PackageDocsGenerator final {
+public:
+	PackageDocsGenerator()
+		: m_hnumber("4.")
+	{}
+	
+	const Vector<String>& GetHeaders() { return m_headers; }
+	
+	void Generate(Index<String>& x, String& qtf, const char* folder, int lang, int level,
+	              String parent)
+	{
+		if(x.Find(folder) >= 0)
+			return;
+		x.Add(folder);
+		String srcdoc = FolderLinks(folder, "srcdoc", lang, level, parent);
+		String src = FolderLinks(folder, "src", lang, level, parent);
+		Package p;
+		p.Load(AppendFileName(uppsrc, AppendFileName(folder, GetFileName(folder) + ".upp")));
+		if(srcdoc.GetLength() || src.GetLength()) {
+			bool first = m_hnumber.IsFirst();
+			String ref = ":4`_" + IntStr(m_hnumber.GetNumber()) + ":";
+			m_headers.Add(m_hnumber.GenNext() + " " + folder);
+
+			qtf << (first ? "" : "[s0; &&]\n") << "[s19;" << ref << " " << m_headers.Top() << " 📦&]";
+			if(!IsNull(p.description))
+				qtf << "[2 " << p.description << "&]";
+			if(srcdoc.GetCount()) {
+				qtf << "&[3/* " + Format(t_("Using %s"), folder) << "&]";
+				qtf << srcdoc;
+			}
+			if(src.GetCount()) {
+				qtf << "&[3/* " << Format(t_("%s reference"), folder) << "&]";
+				qtf << src;
+			}
+			qtf << "\n";
 		}
 	}
-}
+	
+private:
+	HeaderNumber m_hnumber;
+	Vector<String> m_headers;
+};
 
 int CharFilterLbl(int c)
 {
@@ -561,13 +596,13 @@ void ExportPage(int i)
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = tt[i];
-		
+
 	Array<String> htmlrep;
 	int posB = 0;
 	while (true) {
 		posB = page.Find("[IHTMLTEXT", posB);
 		if (posB < 0)
-			break; 
+			break;
 		int posBB = posB + (int)strlen("[IHTMLTEXT");
 		int pos0 = page.ReverseFind("[", posB-1);
 		int posE = page.Find(";2", posBB);
@@ -580,7 +615,7 @@ void ExportPage(int i)
 	}
 	
 	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
-	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
+	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml)
 		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
 	
 	Color paper = SWhite;
@@ -634,6 +669,10 @@ void ExportPage(int i)
 					"<br><br><br>" +
 					~(HtmlLink("https://sourceforge.net/projects/upp/") /
 					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
+					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
+					"<br><br>" +
+					~(HtmlLink("https://flathub.org/en/apps/org.ultimatepp.TheIDE") /
+					   HtmlImg(GetImageSrc(WWW::Flathub),
 					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
 					"<br><br>" +
 					"<div style=\"background-color:#ffffff;width:125;height:35\">" +
@@ -941,6 +980,7 @@ CONSOLE_APP_MAIN
 	bar.SetCount(languages.GetCount());
 
 	int currentLang = GetCurrentLanguage();
+	int di;
 	for (int i = 0; i < languages.GetCount(); ++i) {
 		Cout() << "Language " << LNGAsText(languages[i]);
 		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
@@ -976,14 +1016,18 @@ CONSOLE_APP_MAIN
 				Index<String> x;
 				x.Clear();
 				String qtf;
-				SrcDocs(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
-				SrcDocs(x, qtf, "Draw", lang, 2, String("/") + FormatInt(di) + "/[Draw]");
-				SrcDocs(x, qtf, "CtrlCore", lang, 2, String("/") + FormatInt(di) + "/[CtrlCore]");
-				SrcDocs(x, qtf, "CtrlLib", lang, 2, String("/") + FormatInt(di) + "/[CtrlLib]");
-				SrcDocs(x, qtf, "RichText", lang, 2, String("/") + FormatInt(di) + "/[RichText]");
-				SrcDocs(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
-				SrcDocs(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
-				SrcDocs(x, qtf, "Skylark", lang, 2, String("/") + FormatInt(di) + "/[Skylark]");
+				PackageDocsGenerator dgen;
+				
+				dgen.Generate(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
+				dgen.Generate(x, qtf, "Core/POP3", lang, 2, String("/") + FormatInt(di) + "/[Core/POP3]");
+				dgen.Generate(x, qtf, "Core/SMTP", lang, 2, String("/") + FormatInt(di) + "/[Core/SMTP]");
+				dgen.Generate(x, qtf, "Core/SSH", lang, 2, String("/") + FormatInt(di) + "/[Core/SSH]");
+				dgen.Generate(x, qtf, "Draw", lang, 2, String("/") + FormatInt(di) + "/[Draw]");
+				dgen.Generate(x, qtf, "CtrlCore", lang, 2, String("/") + FormatInt(di) + "/[CtrlCore]");
+				dgen.Generate(x, qtf, "CtrlLib", lang, 2, String("/") + FormatInt(di) + "/[CtrlLib]");
+				dgen.Generate(x, qtf, "RichText", lang, 2, String("/") + FormatInt(di) + "/[RichText]");
+				dgen.Generate(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
+				dgen.Generate(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
 				String d = AppendFileName(uppsrc, "*.*");
 				String p;
 				for(int pass = 0; pass < 2; pass++) {
@@ -996,12 +1040,23 @@ CONSOLE_APP_MAIN
 						ff.Next();
 					}
 					Sort(folders);
-					for (int ifold = 0; ifold < folders.GetCount(); ++ifold)
-						SrcDocs(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
+					for (int ifold = 0; ifold < folders.GetCount(); ++ifold) {
+						dgen.Generate(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
+					}
 					d = AppendFileName(uppsrc, "plugin/*.*");
 					p = "plugin/";
 				}
-				tt[di].text << qtf;
+				tt[di].text.Replace("[s5; <#packages#>]", qtf);
+				
+				String toc_qtf;
+				const auto& headers = dgen.GetHeaders();
+				for (int i = 0; i < headers.GetCount(); i++) {
+					toc_qtf
+						<< "[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#4`_"
+						<< IntStr(i + 1) << "^ " << headers[i] << "]&]";
+				}
+
+				tt[di].text.Replace("[s0;l128; <#packages`_toc#>&]", toc_qtf);
 			}
 		}
 		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
@@ -1055,7 +1110,7 @@ CONSOLE_APP_MAIN
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
-
+	
 	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
 		if (tt[i].title == "Svn releases")
@@ -1103,7 +1158,7 @@ CONSOLE_APP_MAIN
 		}
 		labels.Add(l, lbl);
 	}
-
+	
 	Date d = GetSysDate();
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
 	                   (String().Cat() << "Last update " << GetSysDate());
@@ -1181,7 +1236,7 @@ CONSOLE_APP_MAIN
 			}
 		}
 		int id = ScanInt(sid);
-		if (IsNull(id)) 
+		if (IsNull(id))
 			fullTitle << "/" << sid;
 		else {
 			if (id < 0 || id >= tt.GetCount()) {
@@ -1215,8 +1270,8 @@ CONSOLE_APP_MAIN
 	if (outPdf) {
 		Cout() << "\nCreating pdf (" << tt.GetCount() << " items)\n";
 		PdfDraw pdf;
-		//for(int i = 0; i < tt.GetCount(); i++) 
-		for(int i = 0; i < ttPdfId.GetCount(); i++) 	
+		//for(int i = 0; i < tt.GetCount(); i++)
+		for(int i = 0; i < ttPdfId.GetCount(); i++)
 			QtfAsPdf(pdf, tt[ttPdfId[i]]);
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}

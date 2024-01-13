@@ -154,6 +154,7 @@ protected:
 	virtual void   DashOp(const Vector<double>& dash, double start = 0) = 0;
 	virtual void   DashOp(const String& dash, double start = 0);
 	virtual void   InvertOp(bool invert) = 0;
+	virtual void   ImageFilterOp(int filter) = 0;
 
 	virtual void   TransformOp(const Xform2D& m) = 0;
 
@@ -282,7 +283,7 @@ public:
 	Painter& Stroke(double width, const Pointf& f, const RGBA& color1,
 	                const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double fx, double fy, const RGBA& color1,
-	                double cx, double cy, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	                double x, double y, double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, const Pointf& c, const RGBA& color1,
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double x, double y, const RGBA& color1,
@@ -318,10 +319,11 @@ public:
 	Painter& LineCap(int linecap);
 	Painter& LineJoin(int linejoin);
 	Painter& MiterLimit(double l);
-	Painter& EvenOdd(bool evenodd = true);
 	Painter& Dash(const Vector<double>& dash, double start);
 	Painter& Dash(const char *dash, double start = 0);
+	Painter& EvenOdd(bool evenodd = true);
 	Painter& Invert(bool b = true);
+	Painter& ImageFilter(int filter);
 
 	Painter& Transform(const Xform2D& m);
 	Painter& Translate(double x, double y);
@@ -438,6 +440,7 @@ protected:
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
 	virtual void   InvertOp(bool invert);
+	virtual void   ImageFilterOp(int filter);
 
 	virtual void   TransformOp(const Xform2D& m);
 

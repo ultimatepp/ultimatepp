@@ -160,24 +160,4 @@ public:
 	~Rasterizer()                             { Free(); }
 };
 
-class LinearInterpolator {
-	struct Dda2 {
-		int count, lift, rem, mod, p;
-		
-		void  Set(int a, int b, int len);
-		int   Get();
-	};
-
-	Xform2D xform;
-	Dda2    ddax, dday;
-
-	static int Q8(double x) { return int(256 * x + 0.5); }
-	
-public:
-	void   Set(const Xform2D& m)                    { xform = m; }
-
-	void   Begin(int x, int y, int len);
-	Point  Get();
-};
-
 void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double tolerance);

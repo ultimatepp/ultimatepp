@@ -99,7 +99,11 @@
 #include <X11/Xutil.h>
 #include <X11/Xmd.h>
 
-#include "glew.h"
+#ifndef GLEW_INCLUDE
+#  include "glew.h"
+#else
+#  include GLEW_INCLUDE
+#endif
 
 #ifdef __cplusplus
 extern "C" {

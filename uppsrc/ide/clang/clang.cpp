@@ -42,7 +42,7 @@ String GetClangInternalIncludes()
 			cpp_version = LibClangCppVersion;
 			String dummy = ConfigFile("dummy.cpp");
 			Upp::SaveFile(dummy, String());
-			String h = Sys(
+			String h = HostSys(
 			#ifdef PLATFORM_WIN32
 					GetExeDirFile("bin/clang/bin/c++") +
 			#else
@@ -55,6 +55,9 @@ String GetClangInternalIncludes()
 			Vector<String> ln = Split(h, '\n');
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String dir = TrimBoth(ln[i]);
+			#ifdef FLATPAK
+				dir.Replace("/usr", "/run/host/usr");
+			#endif
 				if(DirectoryExists(dir))
 					MergeWith(includes, ";", NormalizePath(dir));
 			}
@@ -100,7 +103,7 @@ bool Clang::Parse(const String& filename_, const String& content,
 	
 	String includes = includes_;
 	MergeWith(includes, ";", GetClangInternalIncludes());
-
+	
 	Vector<String> args;
 
 	INTERLOCKED // as there is just single static 'use'

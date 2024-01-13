@@ -245,6 +245,9 @@ void Painter::Paint(const Painting& pic)
 		case PAINTING_INVERT:
 			InvertOp(ss.Get());
 			break;
+		case PAINTING_IMAGE_FILTER:
+			ImageFilterOp(ss.Get());
+			break;
 		case PAINTING_DASH:
 			{
 				n = ss.Get32();

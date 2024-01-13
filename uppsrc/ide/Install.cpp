@@ -86,6 +86,10 @@ bool Install(bool& hasvars)
 		Scan(idir + "/uppsrc");
 		Scan(idir + "/*");
 	#endif
+	#ifdef FLATPAK
+		Scan(GetHomeDirFile("/.local/src/upp/uppsrc"));
+		Scan(GetHomeDirFile("/.local/src/upp/*"));
+	#endif
 		Scan(GetExeFolder() + "/uppsrc");
 		Scan(GetExeFolder() + "/*");
 		Scan(GetHomeDirFile("upp.src/uppsrc"));

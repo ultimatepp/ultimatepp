@@ -160,8 +160,8 @@ void CreateBuildMethods()
 			bm.Replace(var, h);
 		};
 		
-		Path("$INCLUDE$", "/opt/local/include;/usr/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
-		Path("$LIB$", "/opt/local/lib;/usr/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
+		Path("$INCLUDE$", "/opt/local/include;/usr/include;/usr/local/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
+		Path("$LIB$", "/opt/local/lib;/usr/lib;/usr/local/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
 		
 		String common;
 	#ifdef CPU_ARM
@@ -172,7 +172,7 @@ void CreateBuildMethods()
 		SaveFile(bm_path, bm);
 	}
 #else
-	bool openbsd = ToLower(Sys("uname")).Find("openbsd") >= 0;
+	bool openbsd = ToLower(Sys(Host::CMDLINE_PREFIX + "uname")).Find("openbsd") >= 0;
 	auto Fix = [=](const char *s) {
 		String r = s;
 		if(openbsd) {
@@ -185,8 +185,8 @@ void CreateBuildMethods()
 	String bm = ConfigFile("GCC.bm");
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, Fix(gcc_bm));
-
-	if(Sys("clang --version").GetCount()) {
+	
+	if(Sys(Host::CMDLINE_PREFIX + "clang --version").GetCount()) {
 		String bm = ConfigFile("CLANG.bm");
 		if(IsNull(LoadFile(bm)))
 			SaveFile(bm, Fix(clang_bm));

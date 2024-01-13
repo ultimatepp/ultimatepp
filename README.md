@@ -85,7 +85,9 @@ See here: [examples](https://www.ultimatepp.org/www$uppweb$examples$en-us.html).
 
 If you would like to see more screenshots, click [here](https://www.ultimatepp.org/www$uppweb$ss$en-us.html).
 
-## Tutorials
+## Learning materials
+
+### Tutorials
 
 We prepared several tutorials that will allow you to learn most of the aspects of our integrated development environment, TheIDE and the U++ framework.
 
@@ -103,15 +105,20 @@ U++ framework:
 
 If the above list is not enough, please visit a dedicated [website](https://www.ultimatepp.org/www$uppweb$Tutorials$en-us.html) where we have collected links to most of the learning resources.
 
-# Extensibility
+### Books
+
+If you are looking for books about the U++ framework, here is a list of books we recommend:
+- [**Getting started with the U++ Framework**](https://www.amazon.com/dp/B0CQHX84VZ/) - the book written by Frederik Dumarey and reviewed by the main authors of U++. It is an excellent starting point for anyone new to the framework. Also, if you are an experienced U++ developer, you will find much valuable content, including a deep dive into Skylark and Turtle.
+
+## Extensibility
 
 The functionality of the U++ framework can be easily extended by third-party packages. We introduced the concept of a global registry of repositories that can be downloaded and directly used in the project. To learn more about this technology, please visit [UppHub](https://github.com/ultimatepp/UppHub) repository.
 
 UppHub conceptually is very similar to the package manager concept known from other technologies, and in big generalization, it can be called like that.
 
-# Repository
+## Repository
 
-## Repository layout
+### Repository layout
 
 The U++ repository is divided into several directories. The most important ones are:
 * **autotest** - unit and integration tests for our framework
