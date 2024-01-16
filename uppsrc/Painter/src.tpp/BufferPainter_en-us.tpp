@@ -10,7 +10,7 @@ topic "";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 Title]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 BufferPainter]]}}&]
 [s1;*3 &]
 [s1;:Upp`:`:BufferPainter: [*3 BufferPainter][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
 Painter]&]
@@ -87,5 +87,49 @@ Experimental.&]
 [s5;:Upp`:`:BufferPainter`:`:BufferPainter`(`): [* BufferPainter]()&]
 [s2;%% Default constructor. You are supposed to call Create to assign 
 an ImageBuffer.&]
+[s3; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 ImagePainter]]}}&]
+[s3;%% &]
+[s1;:Upp`:`:ImagePainter: [*3 ImagePainter][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
+BufferPainter]&]
+[s2;%% Convenience class that extends BufferPainter to easily create 
+Image output.&]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
+[s3;%% &]
+[s5;:Upp`:`:ImagePainter`:`:ImagePainter`(Upp`:`:Size`,int`): [* ImagePainter](Size 
+[*@3 sz], [@(0.0.255) int] mode [@(0.0.255) `=] [*@3 MODE`_ANTIALIASED])&]
+[s5;:Upp`:`:ImagePainter`:`:ImagePainter`(int`,int`,int`): [* ImagePainter]([@(0.0.255) i
+nt] [*@3 cx], [@(0.0.255) int] [*@3 cy], [@(0.0.255) int] mode [@(0.0.255) `=] 
+[*@3 MODE`_ANTIALIASED])&]
+[s2;%% Creates Painter witch canvas of given size.&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[s3; &]
+[s5;:Upp`:`:ImagePainter`:`:GetResult`(`): Image [* GetResult]()&]
+[s5;:Upp`:`:ImagePainter`:`:operator Upp`:`:Image`(`): [@(0.0.255) operator] 
+[* Image]()&]
+[s2;%% Finishes painting operations and returns resulting Image.&]
+[s3; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 ImagePainter]]}}&]
+[s0; &]
+[s1;:Upp`:`:DrawPainter: [*3 DrawPainter][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
+ImagePainter]&]
+[s2;%% Convenience method that simplifies using Painter in Ctrl`::Draw. 
+DrawPainter destructor writes resulting Image to the Draw surface.&]
+[s3; &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
+[s3; &]
+[s5;:Upp`:`:DrawPainter`:`:DrawPainter`(Upp`:`:Draw`&`,Upp`:`:Size`,int`): [* DrawPaint
+er](Draw[@(0.0.255) `&] [*@3 w], Size [*@3 sz], [@(0.0.255) int] mode 
+[@(0.0.255) `=] [*@3 MODE`_ANTIALIASED])&]
+[s5;:Upp`:`:DrawPainter`:`:DrawPainter`(Upp`:`:Draw`&`,int`,int`,int`): [* DrawPainter](
+Draw[@(0.0.255) `&] [*@3 w], [@(0.0.255) int] [*@3 cx], [@(0.0.255) int] 
+[*@3 cy], [@(0.0.255) int] mode [@(0.0.255) `=] [*@3 MODE`_ANTIALIASED])&]
+[s2;%% Creates Painter object for current Draw, size should be in 
+most cases be equal to Ctrl`::Draw Size parameter.&]
 [s3; &]
 [s0;%% ]]

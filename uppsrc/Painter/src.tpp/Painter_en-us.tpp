@@ -12,7 +12,7 @@ topic "";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Painter]]}}&]
 [s0; &]
-[s0; Painter is abstract class that represents `"SVG level`" rendering 
+[s0; Painter is an abstract class that represents `"SVG level`" rendering 
 engine, supporting cubic and quadratic Bezier paths, affine transformations, 
 filling and stroking with raster images, linear or radial gradients, 
 clipping and alpha masking.&]
