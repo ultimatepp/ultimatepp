@@ -124,8 +124,18 @@ String ClangCursorInfo::Id()
 #ifdef UBUNTU2204_WORKAROUND
 			s = RawId();
 			m = CleanupId(s);
-			if(s.StartsWith("template ")) // template method already seems to contain the scope
-				return m;
+			if(s.StartsWith("template ")) { // template method already seems to contain the scope, sometimes
+				int q = s.Find("::");
+				if(q >= 0 && q < s.Find('(')) { // Do we contain partial scope?
+					String ns = Nspace();
+					if(ns.GetCount())
+						id = Nspace() + "::" + m;
+					else
+						id = m;
+					hasid = true;
+					return id;
+				}
+			}
 			while(findarg(m[q], ':', '*', '&', '(', ')', ' ') >= 0)
 				q++;
 			id = Scope();
