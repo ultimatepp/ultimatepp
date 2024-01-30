@@ -1335,19 +1335,26 @@ void CodeEditor::ScrollBarItems::Paint(Draw& w)
 		if(!IsNull(y)) {
 			Image m = x.Get<Image>();
 			Size isz = m.GetSize();
-			w.DrawImage(sr.CenterPoint().x - isz.cx / 2, sr.top + y - isz.cy / 2, m, x.Get<Color>());
+			if(y + isz.cy >= sr.top && y < sr.bottom)
+				w.DrawImage(sr.CenterPoint().x - isz.cx / 2, sr.top + y - isz.cy / 2, m, x.Get<Color>());
 		}
 	}
 	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
+	if(editor.bar.li.GetCount() > 12000) // otherwise it gets too slow
+		return;
+	// TODO: for sr.Height to 30000 range, do something smarter perhaps
 	for(int i = 0; i < editor.bar.li.GetCount(); i++) {
 		int edit = editor.bar.li[i].edited;
 		if(edit) {
-			int age = (int)(log((double)(editor.GetUndoCount() + 1 - edit)) * 30);
 			int y = sb.GetSliderPos(i);
-			if(!IsNull(y))
-				w.DrawRect(sr.left + DPI(2), sr.top + y, DPI(2),
-				           max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4)),
+			if(y > sr.bottom)
+				break;
+			int h = max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4));
+			if(!IsNull(y) && y + h >= sr.top) {
+				int age = (int)(log((double)(editor.GetUndoCount() + 1 - edit)) * 30);
+				w.DrawRect(sr.left + DPI(2), sr.top + y, DPI(2), h,
 				           Blend(SLtBlue(), bg, min(220, age)));
+			}
 		}
 	}
 }
