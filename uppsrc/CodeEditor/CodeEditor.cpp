@@ -1340,20 +1340,23 @@ void CodeEditor::ScrollBarItems::Paint(Draw& w)
 		}
 	}
 	Color bg = IsDarkTheme() ? GrayColor(70) : SColorLtFace();
-	if(editor.bar.li.GetCount() > 12000) // otherwise it gets too slow
+
+	if(editor.bar.li.GetCount() > 200000) // otherwise it gets too slow
 		return;
-	// TODO: for sr.Height to 30000 range, do something smarter perhaps
+
+	int py = -1; // accelerate long files
+	int h = max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4));
 	for(int i = 0; i < editor.bar.li.GetCount(); i++) {
 		int edit = editor.bar.li[i].edited;
 		if(edit) {
 			int y = sb.GetSliderPos(i);
 			if(y > sr.bottom)
 				break;
-			int h = max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4));
-			if(!IsNull(y) && y + h >= sr.top) {
+			if(!IsNull(y) && y + h >= sr.top && y != py) {
 				int age = (int)(log((double)(editor.GetUndoCount() + 1 - edit)) * 30);
 				w.DrawRect(sr.left + DPI(2), sr.top + y, DPI(2), h,
 				           Blend(SLtBlue(), bg, min(220, age)));
+				py = y;
 			}
 		}
 	}
