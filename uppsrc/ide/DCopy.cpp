@@ -54,9 +54,8 @@ void AssistEditor::DCopy()
 						result << '\t';
 					result << m.pretty << ";\n";
 				}
-				else {
+				else
 					result << MakeDefinition(m);
-				}
 			}
 			if(m.kind == CXCursor_VarDecl) {
 				if(cls.GetCount()) { // class variable
