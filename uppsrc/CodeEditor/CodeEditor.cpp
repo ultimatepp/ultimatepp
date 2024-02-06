@@ -1345,7 +1345,7 @@ void CodeEditor::ScrollBarItems::Paint(Draw& w)
 		return;
 
 	int py = -1; // accelerate long files
-	int h = max(sr.GetHeight() / sb.GetTotal() + DPI(1), DPI(4));
+	int h = max(sr.GetHeight() / max(sb.GetTotal(), 1) + DPI(1), DPI(4));
 	for(int i = 0; i < editor.bar.li.GetCount(); i++) {
 		int edit = editor.bar.li[i].edited;
 		if(edit) {
