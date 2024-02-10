@@ -49,8 +49,9 @@ dword GetKeyStateSafe(dword what) {
 }
 
 static bool pendown = false;
+static bool horwheel = false;
 
-bool GetShift()       { return !!(GetKeyStateSafe(VK_SHIFT) & 0x8000); }
+bool GetShift()       { return horwheel || !!(GetKeyStateSafe(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyStateSafe(VK_CONTROL) & 0x8000); }
 bool GetAlt()         { return !!(GetKeyStateSafe(VK_MENU) & 0x8000); }
 bool GetCapsLock()    { return !!(GetKeyStateSafe(VK_CAPITAL) & 1); }
@@ -91,8 +92,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 	cancel_preedit = DoCancelPreedit; // We really need this just once, but whatever..
 
-	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
-	
+	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF80) == 0xFF515700; // https://learn.microsoft.com/en-us/windows/win32/tablet/system-events-and-mouse-messages?redirectedfrom=MSDN
+
 	POINT p;
 	if(::GetCursorPos(&p))
 		CurrentMousePos = p;
@@ -340,6 +341,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
+	case 0x020E: //#define WM_MOUSEHWHEEL                  0x020E
 		if(ignoreclick) {
 			EndIgnore();
 			return 0L;
@@ -347,7 +349,9 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		if(_this) {
 			Point p(0, 0);
 			::ClientToScreen(hwnd, p);
+			if(message == 0x020E) horwheel = true;
 			DoMouse(MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+			horwheel = false;
 			CurrentMousePos = Point((dword)lParam);
 		}
 		if(_this) PostInput();
