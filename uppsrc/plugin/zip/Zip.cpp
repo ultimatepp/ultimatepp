@@ -127,49 +127,22 @@ void Zip::PutCompressed(const void *ptr, int size)
 void Zip::WriteFile(const void *ptr, int size, const char *path, Gate<int, int> progress, Time tm, bool deflate)
 {
 	ASSERT(!IsFileOpened());
-//	if(!deflate) {
-		BeginFile(path, tm, deflate);
-		int done = 0;
-		while(done < size) {
-			if(progress(done, size))
-				return;
-			int chunk = min(size - done, 65536);
-			Put((byte *)ptr + done, chunk);
-			if(zip->IsError()) {
-				WhenError();
-				return;
-			}
-			done += chunk;
+
+	BeginFile(path, tm, deflate);
+	int done = 0;
+	while(done < size) {
+		if(progress(done, size))
+			return;
+		int chunk = min(size - done, 65536);
+		Put((byte *)ptr + done, chunk);
+		if(zip->IsError()) {
+			WhenError();
+			return;
 		}
-		EndFile();
-		return;
-/*	}
-	// following code could be implemented using BeginFile/Put/EndFile, but be conservative, keep proven code
-	File& f = file.Add();
-	StringStream ss;
-	MemReadStream ms(ptr, size);
-
-	f.usize = size;
-	zPress(ss, ms, size, AsGate64(progress), false, true, &f.crc, false);
-
-	String data = ss.GetResult();
-	const void *r = ~data;
-	f.csize = data.GetLength();
-
-	f.version = 45;
-	f.gpflag = 0;
-	if(data.GetLength() >= size) {
-		r = ptr;
-		f.csize = size;
-		f.method = 0;
+		done += chunk;
 	}
-	else
-		f.method = 8;
-	FileHeader(path, tm);
-	zip->Put64(r, f.csize);
-	done += f.csize;
-	if (zip->IsError()) WhenError();
-*/	
+	EndFile();
+	return;
 }
 
 void Zip::WriteFile(const String& s, const char *path, Gate<int, int> progress, Time tm, bool deflate)
