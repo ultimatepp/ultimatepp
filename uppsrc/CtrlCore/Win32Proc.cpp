@@ -91,7 +91,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 	cancel_preedit = DoCancelPreedit; // We really need this just once, but whatever..
 
-	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
+	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF80) == 0xFF515700; // https://learn.microsoft.com/en-us/windows/win32/tablet/system-events-and-mouse-messages?redirectedfrom=MSDN
 	
 	POINT p;
 	if(::GetCursorPos(&p))
