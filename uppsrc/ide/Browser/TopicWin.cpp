@@ -113,6 +113,22 @@ void TopicEditor::ExportPdf()
 	SaveFile(~fs, pdf.Finish());
 }
 
+static void UpdateTopicLinks(String &text, const String &ext){
+	int at=0;
+	while((at = text.Find(String("^topic`:"), at)) > 0){
+		int len = text.Find(String("^"), at+1) - at;;
+		String link = text.Mid(at, len);
+		String topic = GetFileTitle(link);
+		if(!topic.IsEmpty()){
+			if(topic.Find("#")>=0) topic.Replace("#", ext + "#");
+			else topic.Cat(ext);
+			String target = String("^") + topic;
+			text.Replace(link, target);
+		}
+		at++;
+	}
+}
+
 void TopicEditor::ExportGroupPdf()
 {
 	String dir = SelectDirectory();
@@ -123,6 +139,8 @@ void TopicEditor::ExportGroupPdf()
 	while(ff) {
 		Topic t = ReadTopic(LoadFile(AppendFileName(grouppath, ff.GetName())));
 		if(!t.text.IsVoid()) {
+			UpdateTopicLinks(t.text, ".pdf");
+			
 			Size page = Size(3968, 6074);
 			PdfDraw pdf(page + 400);
 			::Print(pdf, ParseQTF(t.text), page);
@@ -157,6 +175,8 @@ void TopicEditor::ExportGroupHTML()
 	while(ff) {
 		Topic t = ReadTopic(LoadFile(AppendFileName(grouppath, ff.GetName())));
 		if(!t.text.IsVoid()) {
+			UpdateTopicLinks(t.text, ".html");
+			
 			Index<String> css;
 			String html = EncodeHtml(ParseQTF(t.text), css,
 			                         VectorMap<String, String>(), VectorMap<String, String>(),
