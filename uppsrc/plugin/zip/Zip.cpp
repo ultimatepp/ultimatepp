@@ -31,15 +31,16 @@ void Zip::FileHeader(const char *path, Time tm)
 	ASSERT((f.gpflag & 0x8) == 0 || f.usize == 0);
 	zip->Put32le((dword)(f.zip64 ? 0xffffffff : f.usize));
 	zip->Put16le((word)strlen(f.path));
-	zip->Put16le(f.zip64 ? 20 : 0); // ZIP64 extra field length
+	zip->Put16le(f.zip64 ? 28 : 0); // ZIP64 extra field length
 	zip->Put(f.path);
 	if(f.zip64){
 		zip->Put16le(1); // ZIP64
-		zip->Put16le(16); // ZIP64 data to read : usize, csize
+		zip->Put16le(24); // ZIP64 data to read : usize, csize, offset
 		zip->Put64le(0);
 		zip->Put64le(0);
+		zip->Put64le(done);
 	}
-	done += 5*2 + 5*4 + f.path.GetCount() + (f.zip64 ? 20 : 0);
+	done += 5*2 + 5*4 + f.path.GetCount() + (f.zip64 ? 28 : 0);
 }
 
 void Zip::BeginFile(const char *path, Time tm, bool deflate, bool zip64)
@@ -69,7 +70,7 @@ void Zip::BeginFile(const char *path, Time tm, bool deflate, bool zip64)
 void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm, bool deflate, bool zip64)
 {
 	BeginFile(path, tm, deflate, zip64);
-	oz.Filter = THISBACK(Put);
+	oz.Filter = THISBACK(Put64);
 	oz.End = THISBACK(EndFile);
 }
 
@@ -86,28 +87,52 @@ void Zip::Put(const void *ptr, int size)
 	f.usize += size;
 }
 
+void Zip::Put64(const void *ptr, int64 size)
+{
+	ASSERT(IsFileOpened());
+	File& f = file.Top();
+	
+	int64 done = 0;
+	while(done < size){
+		int chunk = (int)min(1024*1024LL, size - done);
+		if(f.method == 0) {
+			PutCompressed((byte *)ptr + done, chunk);
+			crc32.Put((byte *)ptr + done, chunk);
+		}
+		else
+			pipeZLib->Put((byte *)ptr + done, chunk);
+		
+		done += chunk;
+	}
+	f.usize += size;
+}
+
 void Zip::EndFile()
 {
 	if(!IsFileOpened())
 		return;
 	File& f = file.Top();
 	ASSERT(f.gpflag & 0x8);
-
-	if(f.method == 0)
+	
+	if(f.method == 0){
 		zip->Put32le(f.crc = crc32);
+		done += 4;
+	}
 	else {
 		pipeZLib->End();
 		zip->Put32le(f.crc = pipeZLib->GetCRC());
+		done += 4;
 	}
+
 	if(f.zip64){
 		zip->Put64le(f.csize);
 		zip->Put64le(f.usize);
-		done += 20;
+		done += 16;
 	}
 	else{
 		zip->Put32le((dword)f.csize);
 		zip->Put32le((dword)f.usize);
-		done += 12;
+		done += 8;
 	}
 	
 	pipeZLib.Clear();
@@ -163,41 +188,43 @@ void Zip::Finish()
 		return;
 	qword off = done;
 	qword rof = 0;
-	int version = 20;
-	bool zip64 = file.GetCount() >= 0xffff; // Enable zip64 if too many files for old zip
 	
+	
+	bool zip64 = (file.GetCount() >= 0xffff) || (done > 19LL*INT_MAX/20); // Enable zip64 if too many files for old zip or very large data
+	for(int i = 0; i < file.GetCount(); i++) if(file[i].zip64) zip64 = true; // Pre-enable zip64 if any of the files require it
+	
+	int version = zip64 ? 45 : 20;
+
 	for(int i = 0; i < file.GetCount(); i++) {
 		File& f = file[i];
-		version = max(f.version, version);
-		if(f.zip64) zip64 = true; // Enable zip64 if any of the files require it
 		
 		zip->Put32le(0x02014b50);
-		zip->Put16le(f.version); // version made by
+		zip->Put16le(version); // version made by
 		zip->Put16le(f.version); // version required to extract
 		zip->Put16le(f.gpflag);  // general purpose bit flag
 		zip->Put16le(f.method);
 		zip->Put32le(f.time);
 		zip->Put32le(f.crc);
-		zip->Put32le((dword)(f.zip64 ? 0xffffffff : f.csize));
-		zip->Put32le((dword)(f.zip64 ? 0xffffffff : f.usize));
+		zip->Put32le((dword)(zip64 ? 0xffffffff : f.csize));
+		zip->Put32le((dword)(zip64 ? 0xffffffff : f.usize));
 		zip->Put16le(f.path.GetCount());
-		zip->Put16le(f.zip64 ? 28 : 0); // extra field length              2 bytes
+		zip->Put16le(zip64 ? 28 : 0); // extra field length              2 bytes
 		zip->Put16le(0); // file comment length             2 bytes
 		zip->Put16le(0); // disk number start               2 bytes
 		zip->Put16le(0); // internal file attributes        2 bytes
 		zip->Put32le(0); // external file attributes        4 bytes
-		zip->Put32le((dword)(f.zip64 ? 0xffffffff : rof)); // relative offset of local header 4 bytes
+		zip->Put32le((dword)(zip64 ? 0xffffffff : rof)); // relative offset of local header 4 bytes
 		zip->Put(f.path);
 		// ZIP64 additions:
-		if(f.zip64){
+		if(zip64){
 			zip->Put16le(1); // ZIP64 extra field : header ID
 			zip->Put16le(24); // ZIP64 extra field : bytes to follow
 			zip->Put64le(f.usize); // ZIP64 extra field : uncomp size
 			zip->Put64le(f.csize); // ZIP64 extra field : comp size
 			zip->Put64le(rof); // ZIP64 extra field : relative offset of local header
 		}
-		done += 7 * 4 + 9 * 2 + f.path.GetCount() + (f.zip64 ? 28 : 0);
-		rof+=5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? (f.zip64 ? 20 : 12) : 0) + (f.zip64 ? 28 : 0);
+		done = done + 7 * 4 + 9 * 2 + f.path.GetCount() + (zip64 ? 28 : 0);
+		rof = rof + 5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? (f.zip64 ? 20 : 12) : 0) + (f.zip64 ? 28 : 0);
 	}
 	
 	if(zip64){

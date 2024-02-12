@@ -130,6 +130,7 @@ public:
 	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
 	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
 	void Put(const void *data, int size);
+	void Put64(const void *data, int64 size);
 	void EndFile();
 	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
 
