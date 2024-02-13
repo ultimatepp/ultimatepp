@@ -168,13 +168,22 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		break;
 	case GDK_SCROLL: {
 		GdkEventScroll *e = (GdkEventScroll *)event;
-		if(findarg(e->direction, GDK_SCROLL_UP, GDK_SCROLL_LEFT) >= 0)
-			value = 120;
-		else
-		if(findarg(e->direction, GDK_SCROLL_DOWN, GDK_SCROLL_RIGHT) >= 0)
-			value = -120;
-		else
-			return false;
+		switch(e->direction){
+			case GDK_SCROLL_UP:
+				value = Point(0, 120);
+				break;
+			case GDK_SCROLL_DOWN:
+				value = Point(0, -120);
+				break;
+			case GDK_SCROLL_RIGHT:
+				value = Point(120 ,0);
+				break;
+			case GDK_SCROLL_LEFT:
+				value = Point(-120, 0);
+				break;
+			default:
+				return false;
+		}
 		break;
 	}
 	case GDK_KEY_PRESS:
@@ -571,7 +580,9 @@ void Ctrl::Proc()
 			GtkButtonEvent(UP);
 		break;
 	case GDK_SCROLL: {
-		GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, CurrentEvent.value);
+		Point delta = CurrentEvent.value;
+		if(delta.y!=0.0) GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, delta.y);
+		if(delta.x!=0.0) GtkMouseEvent(MOUSEHWHEEL, MOUSEHWHEEL, delta.x);
 		break;
 	}
 	case GDK_KEY_PRESS:
@@ -729,7 +740,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 					b.count += a.count;
 			    else
 			    if(a.type == GDK_SCROLL)
-			        b.value = (int)b.value + (int)a.value;
+			        b.value = (Point)b.value + (Point)a.value;
 				else
 				if(a.type != GDK_CONFIGURE)
 					break;
