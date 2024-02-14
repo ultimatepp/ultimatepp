@@ -6,6 +6,7 @@
 extern bool SilentMode;
 
 bool UppHubAuto(const String& main);
+void UppHubUpdate(const String& main);
 
 class Console {
 public:
