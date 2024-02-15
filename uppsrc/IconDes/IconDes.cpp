@@ -60,6 +60,23 @@ void IconDes::SetSb()
 	}
 }
 
+void IconDes::MouseWheel(Point pt, int zdelta, dword keyflags)
+{
+	if(keyflags & K_CTRL) {
+		if(zdelta < 0)
+			ZoomOut();
+		else
+			ZoomIn();
+	}
+	else
+		sb.WheelY(zdelta);
+}
+
+void IconDes::MouseWheelH(Point pt, int zdelta, dword keyflags)
+{
+	sb.WheelX(zdelta);
+}
+
 void IconDes::Scroll()
 {
 	magnify = max(magnify, 1);

@@ -161,6 +161,11 @@ struct App : TopWindow {
 		Log(Format("MouseWheel(Point(%d, %d), %d, %x)", p.x, p.y, zdelta, (int)keyflags));
 	}
 
+	virtual void   MouseWheelH(Point p, int zdelta, dword keyflags)
+	{
+		Log(Format("MouseWheelH(Point(%d, %d), %d, %x)", p.x, p.y, zdelta, (int)keyflags));
+	}
+
 	virtual void   MouseLeave()
 	{
 		Log("MouseLeave");

@@ -129,7 +129,7 @@ void Ctrl::MouseWheel(Point p, int zd, dword kf)
 	}
 }
 
-void Ctrl::MouseWheelHor(Point p, int zd, dword kf)
+void Ctrl::MouseWheelH(Point p, int zd, dword kf)
 {
 	Ctrl *parent = GetParent();
 	if(parent) {
@@ -238,7 +238,7 @@ Image Ctrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 		MouseWheel(p, zdelta, keyflags);
 		break;
 	case MOUSEHWHEEL:
-		MouseWheelHor(p, zdelta, keyflags);
+		MouseWheelH(p, zdelta, keyflags);
 		break;
 	case CURSORIMAGE:
 		return CursorImage(p, keyflags);

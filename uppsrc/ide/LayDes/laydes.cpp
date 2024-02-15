@@ -294,6 +294,11 @@ void LayDes::MouseWheel(Point p, int zdelta, dword keyflags)
 		sb.WheelY(zdelta);
 }
 
+void LayDes::MouseWheelH(Point, int zdelta, dword)
+{
+	sb.WheelX(zdelta);
+}
+
 double LayDes::GetScale()
 {
 	return (20 - Zoom) / 20.0;

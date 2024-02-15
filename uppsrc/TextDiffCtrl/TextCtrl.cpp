@@ -430,6 +430,11 @@ void TextCompareCtrl::MouseWheel(Point pt, int zdelta, dword keyflags)
 	scroll.WheelY(zdelta);
 }
 
+void TextCompareCtrl::MouseWheelH(Point pt, int zdelta, dword keyflags)
+{
+	scroll.WheelX(zdelta);
+}
+
 void TextCompareCtrl::SetCount(int c)
 {
 	bool rl = (c < lines.GetCount());
