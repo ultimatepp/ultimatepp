@@ -480,8 +480,15 @@ void ScrollBar::NextPage() {
 	Uset(pagepos + max(pagesize - linesize, 1));
 }
 
-void ScrollBar::Wheel(int zdelta, int lines) {
-	Uset(pagepos - lines * linesize * zdelta / 120);
+void ScrollBar::Wheel(int zdelta, int lines)
+{
+	int granularity = 120 / max(1, lines);
+	wheelaccumulator += zdelta;
+	zdelta = granularity * (wheelaccumulator / granularity);
+	wheelaccumulator -= zdelta;
+	if(horz)
+		zdelta = -zdelta;
+	Uset(pagepos - linesize * zdelta / granularity);
 }
 
 void ScrollBar::Wheel(int zdelta) {

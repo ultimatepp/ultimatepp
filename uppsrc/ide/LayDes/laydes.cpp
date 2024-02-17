@@ -291,10 +291,13 @@ void LayDes::MouseWheel(Point p, int zdelta, dword keyflags)
 		SetSb();
 	}
 	else
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
 		sb.WheelY(zdelta);
 }
 
-void LayDes::MouseWheelH(Point, int zdelta, dword)
+void LayDes::HorzMouseWheel(Point, int zdelta, dword)
 {
 	sb.WheelX(zdelta);
 }

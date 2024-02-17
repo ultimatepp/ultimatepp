@@ -988,7 +988,7 @@ public:
 	virtual void   MiddleHold(Point p, dword keyflags);
 	virtual void   MiddleUp(Point p, dword keyflags);
 	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
-	virtual void   MouseWheelH(Point p, int zdelta, dword keyflags);
+	virtual void   HorzMouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   MouseLeave();
 	
 	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);

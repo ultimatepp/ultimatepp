@@ -45,7 +45,7 @@ void LineEdit::MouseWheel(Point, int zdelta, dword keyflags) {
 		sb.WheelY(zdelta);
 }
 
-void LineEdit::MouseWheelH(Point, int zdelta, dword)
+void LineEdit::HorzMouseWheel(Point, int zdelta, dword)
 {
 	sb.WheelX(zdelta);
 }

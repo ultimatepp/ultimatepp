@@ -33,7 +33,7 @@ public:
 	virtual void   Paint(Draw& draw);
 	virtual void   Layout();
 	virtual void   MouseWheel(Point pt, int zdelta, dword keyflags);
-	virtual void   MouseWheelH(Point pt, int zdelta, dword keyflags);
+	virtual void   HorzMouseWheel(Point pt, int zdelta, dword keyflags);
 	virtual void   MouseMove(Point pt, dword keyflags);
 	virtual void   LeftDown(Point pt, dword keyflags);
 	virtual void   LeftDouble(Point pt, dword keyflags);

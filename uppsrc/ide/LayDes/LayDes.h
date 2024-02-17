@@ -276,7 +276,7 @@ public:
 	void   LeftRepeat(Point p, dword keyflags) override;
 	void   MouseMove(Point p, dword keyflags) override;
 	void   MouseWheel(Point p, int zdelta, dword keyflags) override;
-	void   MouseWheelH(Point, int zdelta, dword) override;
+	void   HorzMouseWheel(Point, int zdelta, dword) override;
 	void   LeftUp(Point p, dword keyflags) override;
 	void   RightDown(Point p, dword keyflags) override;
 	void   Layout() override;

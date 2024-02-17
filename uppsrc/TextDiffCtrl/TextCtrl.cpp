@@ -427,10 +427,13 @@ void TextCompareCtrl::Layout()
 
 void TextCompareCtrl::MouseWheel(Point pt, int zdelta, dword keyflags)
 {
-	scroll.WheelY(zdelta);
+	if(keyflags & K_SHIFT)
+		scroll.WheelX(zdelta);
+	else
+		scroll.WheelY(zdelta);
 }
 
-void TextCompareCtrl::MouseWheelH(Point pt, int zdelta, dword keyflags)
+void TextCompareCtrl::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
 {
 	scroll.WheelX(zdelta);
 }
