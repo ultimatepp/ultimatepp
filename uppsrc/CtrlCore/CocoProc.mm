@@ -391,7 +391,10 @@ struct MMImp {
 }
 
 - (void)scrollWheel:(NSEvent *)e {
-	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEWHEEL, [e deltaY]))
+	int dy = [e deltaY];
+	int dx = [e deltaX];
+	if(!(dy && Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEWHEEL, dy)) &&
+	   !(dx && Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEHWHEEL, dx)))
 		[super scrollWheel:e];
 }
 
