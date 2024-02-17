@@ -49,7 +49,7 @@ private:
 	int     totalsize;
 	int     linesize;
 	int     minthumb;
-	int16   wheelaccumulator; // improves touch experience
+	int     wheelaccumulator; // improves touch experience
 	int8    push;
 	int8    light;
 	bool    horz:1;

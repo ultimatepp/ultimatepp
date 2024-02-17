@@ -371,6 +371,7 @@ void ScrollBar::MouseWheel(Point p, int zdelta, dword keyflags)
 
 void ScrollBar::CancelMode() {
 	push = light = -1;
+	wheelaccumulator = 0;
 	ButtonsCancelMode();
 }
 
