@@ -10,6 +10,7 @@ public:
 	virtual void LeftUp(Point p, dword);
 	virtual void LeftRepeat(Point p, dword);
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void HorzMouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void CancelMode();
 
 	virtual void FrameLayout(Rect& r);
