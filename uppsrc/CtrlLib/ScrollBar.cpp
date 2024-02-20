@@ -371,7 +371,7 @@ void ScrollBar::MouseWheel(Point p, int zdelta, dword keyflags)
 
 void ScrollBar::HorzMouseWheel(Point p, int zdelta, dword keyflags)
 {
-	Wheel(-zdelta);
+	Wheel(zdelta);
 }
 
 void ScrollBar::CancelMode() {
