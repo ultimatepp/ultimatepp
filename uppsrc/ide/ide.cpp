@@ -2,6 +2,13 @@
 
 VectorMap<String, String> git_branch_cache;
 
+String GetGitBranchRaw(const String& dir)
+{
+	String branch = GitCmd(dir, "branch --show");
+	branch.TrimEnd("\n");
+	return branch;
+}
+
 String GetGitBranch(const String& dir)
 {
 	int q = git_branch_cache.Find(dir);
@@ -11,11 +18,8 @@ String GetGitBranch(const String& dir)
 		if(GetRepo(git_dir) == GIT_DIR) {
 			q = git_branch_cache.Find(git_dir);
 			if(q < 0) {
+				branch = GetGitBranchRaw(git_dir);
 				q = git_branch_cache.GetCount();
-				branch = GitCmd(git_dir, "branch --show");
-				int j = branch.Find('\n');
-				if(j >= 0)
-					branch.Trim(j);
 				git_branch_cache.Add(git_dir, branch);
 			}
 			branch = git_branch_cache[q];
