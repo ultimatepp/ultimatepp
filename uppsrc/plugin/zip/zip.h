@@ -102,13 +102,15 @@ class Zip {
 		int    version;
 		int    gpflag;
 		int    method;
+		bool   zip64;
 		dword  crc;
-		dword  csize;
-		dword  usize;
+		qword  csize;
+		qword  usize;
 	};
+	
 	Array<File> file;
 
-	dword   done;
+	qword   done;
 
 	One<Zlib> pipeZLib;
 	Crc32Stream crc32; // for uncompressed files
@@ -125,9 +127,10 @@ class Zip {
 public:
 	Callback WhenError;
 
-	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true);
-	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true);
+	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
+	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
 	void Put(const void *data, int size);
+	void Put64(const void *data, int64 size);
 	void EndFile();
 	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
 
@@ -140,7 +143,7 @@ public:
 	
 	bool IsError()                           { return zip && zip->IsError(); }
 
-	dword  GetLength() const                 { return done; }
+	qword  GetLength() const                 { return done; }
 	
 	Zip();
 	Zip(Stream& out);
