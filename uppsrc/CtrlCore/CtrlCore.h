@@ -882,6 +882,7 @@ public:
 		MOUSELEAVE    = 0x30,
 		CURSORIMAGE   = 0x40,
 		MOUSEWHEEL    = 0x50,
+		MOUSEHWHEEL   = 0x60,
 
 		DOWN          = 0x80,
 		UP            = 0x90,
@@ -987,6 +988,7 @@ public:
 	virtual void   MiddleHold(Point p, dword keyflags);
 	virtual void   MiddleUp(Point p, dword keyflags);
 	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void   HorzMouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   MouseLeave();
 	
 	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);

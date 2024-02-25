@@ -141,6 +141,7 @@ public:
 	virtual void  MouseLeave()                             { SyncStatus(); }
 	virtual void  LeftUp(Point p, dword keyflags);
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void  HorzMouseWheel(Point pt, int zdelta, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
 	virtual bool  Key(dword key, int count);
 	virtual Image CursorImage(Point p, dword keyflags);

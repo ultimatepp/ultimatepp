@@ -9,6 +9,7 @@ public:
 	virtual void  LeftDrag(Point p, dword keyflags);
 	virtual void  RightDown(Point p, dword flags);
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void  HorzMouseWheel(Point, int zdelta, dword keyflags);
 	virtual void  MouseMove(Point, dword);
 	virtual bool  Key(dword key, int);
 	virtual void  GotFocus();

@@ -95,7 +95,7 @@ Image Ctrl::MouseEvent0(int event, Point p, int zdelta, dword keyflags)
 	sPropagated = false;
 	Image m = this_ ? MouseEvent(event, p, zdelta, keyflags) : Image();
 	Ctrl *parent = this_ ? this_->GetParent() : NULL;
-	if(event == MOUSEWHEEL && !sPropagated && this_ && parent)
+	if(((event == MOUSEWHEEL)||(event == MOUSEHWHEEL)) && !sPropagated && this_ && parent)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
 	sPropagated = pb;
 	return m;
@@ -111,7 +111,7 @@ Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 	if(this_)
 		LogMouseEvent(NULL, this, event, p, zdelta, keyflags);
 	Ctrl *parent = this_ ? this_->GetParent() : NULL;
-	if(this_ && parent && event != MOUSEWHEEL)
+	if(this_ && parent && event != MOUSEWHEEL && event != MOUSEHWHEEL)
 		parent->ChildMouseEvent(this, event, p, zdelta, keyflags);
 	return MouseEvent0(event, p, zdelta, keyflags);
 }
@@ -124,6 +124,19 @@ void Ctrl::MouseWheel(Point p, int zd, dword kf)
 		Rect r = parent->GetScreenView();
 		if(r.Contains(p)) {
 			parent->MouseEvent0(MOUSEWHEEL, p - r.TopLeft(), zd, kf);
+			sPropagated = true;
+		}
+	}
+}
+
+void Ctrl::HorzMouseWheel(Point p, int zd, dword kf)
+{
+	Ctrl *parent = GetParent();
+	if(parent) {
+		p += GetScreenView().TopLeft();
+		Rect r = parent->GetScreenView();
+		if(r.Contains(p)) {
+			parent->MouseEvent0(MOUSEHWHEEL, p - r.TopLeft(), zd, kf);
 			sPropagated = true;
 		}
 	}
@@ -223,6 +236,9 @@ Image Ctrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 		break;
 	case MOUSEWHEEL:
 		MouseWheel(p, zdelta, keyflags);
+		break;
+	case MOUSEHWHEEL:
+		HorzMouseWheel(p, zdelta, keyflags);
 		break;
 	case CURSORIMAGE:
 		return CursorImage(p, keyflags);
@@ -531,7 +547,7 @@ bool sDblTime(int time)
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	GuiLock __;
 	EventLevelDo ___;
-	if(e == MOUSEWHEEL && !zd) // ignore non-scroll wheel events
+	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !zd) // ignore non-scroll wheel events
 		return Null;
 	if(e == MOUSEMOVE && repeatTopCtrl == this) {
 		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && GetMouseLeft()) {
@@ -621,7 +637,7 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	if(!IsEnabled())
 		return Image::Arrow();
 	Ctrl *top = this;
-	if(e == MOUSEWHEEL && !GetParent()) {
+	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !GetParent()) {
 		Ctrl *w = GetFocusCtrl();
 		if(w) {
 			top = w->GetTopCtrl();

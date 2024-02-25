@@ -21,7 +21,7 @@ struct UppHubDlg {
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
 	void  Load();
-	void  Install(const Index<String>& ii);
+	void  Install(const Index<String>& ii, bool update = false);
 };
 
 Value UppHubDlg::LoadJson(const String& url)
@@ -120,7 +120,7 @@ void UppHubDlg::Load()
 	Load(0, url);
 }
 
-void UppHubDlg::Install(const Index<String>& ii_)
+void UppHubDlg::Install(const Index<String>& ii_, bool update)
 {
 	Index<String> ii = clone(ii_);
 	if(ii.GetCount()) {
@@ -149,6 +149,15 @@ void UppHubDlg::Install(const Index<String>& ii_)
 										break;
 									}
 					}
+				} else if (update) {
+					String cmd = "git -C ";
+					cmd << dir << " clean -fxd";
+					PutConsole(cmd);
+					system(cmd);
+					cmd = "git -C ";
+					cmd << dir << " pull";
+					PutConsole(cmd);
+					system(cmd);
 				}
 			}
 		}
@@ -190,4 +199,22 @@ bool UppHubAuto(const String& main)
 		return false;
 	}
 	return true;
+}
+
+void UppHubUpdate(const String& main)
+{
+	UppHubDlg dlg;
+	dlg.Load();
+	Workspace wspc;
+	wspc.Scan(main);
+	Index<String> packages;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		String pkg = wspc[i];
+		for(const UppHubNest& n : dlg.upv)
+			for(const String& p : n.packages) {
+				if (pkg == p && pkg != main)
+					packages.FindAdd(n.name);
+			}
+	}
+	dlg.Install(packages, true);
 }

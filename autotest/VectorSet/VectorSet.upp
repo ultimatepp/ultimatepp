@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	VectorSet.cpp;
+
+mainconfig
+	"" = "";
+

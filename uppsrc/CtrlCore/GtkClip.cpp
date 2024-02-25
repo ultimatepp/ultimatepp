@@ -160,7 +160,7 @@ void PasteClip::GuiPlatformConstruct()
 void Ctrl::Gclipboard::Clear()
 {
 	gtk_clipboard_clear(clipboard);
-	target.Clear();	
+	target.Clear();
 }
 
 void ClearClipboard()
@@ -170,21 +170,21 @@ void ClearClipboard()
 
 Ctrl::Gclipboard& Ctrl::gclipboard()
 {
-	GuiLock __; 
+	GuiLock __;
 	static Gclipboard c(GDK_SELECTION_CLIPBOARD);
 	return c;
 }
 
 Ctrl::Gclipboard& Ctrl::gselection()
 {
-	GuiLock __; 
+	GuiLock __;
 	static Gclipboard c(GDK_SELECTION_PRIMARY);
 	return c;
 }
 
 void AppendClipboard(const char *format, const Value& data, String (*render)(const Value& data))
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("AppendClipboard " << format);
 	Vector<String> s = Split(format, ';');
 	for(int i = 0; i < s.GetCount(); i++)
@@ -368,7 +368,7 @@ Vector<String> GetClipFiles(const String& data)
 	Vector<String> f = Split(data, '\n');
 	for(int i = 0; i < f.GetCount(); i++)
 		if(f[i].StartsWith("file://"))
-			r.Add(UrlDecode(f[i].Mid(7)));
+			r.Add(f[i].Mid(7));
 	return r;
 }
 
@@ -385,7 +385,7 @@ void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
 		return;
 	String h;
 	for(int i = 0; i < files.GetCount(); i++)
-		h << "file://" << UrlEncode(files[i]) << '\n';
+		h << "file://" << files[i] << '\n';
 	data.GetAdd("files") = h;
 }
 

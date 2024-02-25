@@ -29,10 +29,11 @@ program, with U`+`+ assembly/package/build method system.&]
 [s0;l128;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package ][*C3 `[][*C@(0.0.255)3 build`_me
 thod][*C3 `]][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r
 ][*C3 `]`[][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]
-`[][*C@4;3 M][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 x][*C3 `]
-`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FL
-AG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] 
-`[][*C@(0.0.255)3 !][*C3  `[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
+`[][*C@4;3 M][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 k][*C3 `]
+`[][*C@4;3 j][*C3 `]`[][*C@4;3 h][*C3 `]`[][*C@4;3 U][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[
+][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 F
+LAG][*C3 `]..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@(0.0.255)3 !][*C3  
+`[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
 [s0;3 &]
 [s11; Let`'s take a closer look at all available options:&]
 [s11;l128;i150;O0; [*@(0.0.255) assembly] is a direct set of package 
@@ -93,7 +94,19 @@ cores available.]]
 are any missing packages that can be found in UppHub, they are 
 installed into umk`'s UppHub folder (by git clone). In other 
 words this option makes sure that latest versions of UppHub packages 
-required to build are downloaded.]]}}&]
+required to build are downloaded.]]
+::^ [s0;%- [*C@4;3 U]]
+::= [s0; [3 Install missing packages from UppHub and update all UppHub 
+nests to the latest versions.]]
+::^ [s0;%- [*C@4;3 j]]
+::= [s0; [3 Generate ][^https`:`/`/clang`.llvm`.org`/docs`/JSONCompilationDatabase`.html^3 co
+mpile`_commands.json]]
+::^ [s0;%- [*C@4;3 x]]
+::= [s0; [3 Export projects sources and documentation]]
+::^ [s0;%- [*C@4;3 X]]
+::= [s0; [3 Export entire project]]
+::^ [s0;%- [*C@4;3 k]]
+::= [s0; [3 Delete target directory before project export]]}}&]
 [s0; &]
 [s12;:3: 3. Examples&]
 [s11; Sample usage of UMK is located below:&]

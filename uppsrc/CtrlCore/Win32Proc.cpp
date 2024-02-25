@@ -91,7 +91,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 	cancel_preedit = DoCancelPreedit; // We really need this just once, but whatever..
 
-	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF00) == 0xFF515700;
+	is_pen_event = (GetMessageExtraInfo() & 0xFFFFFF80) == 0xFF515700; // https://learn.microsoft.com/en-us/windows/win32/tablet/system-events-and-mouse-messages?redirectedfrom=MSDN
 	
 	POINT p;
 	if(::GetCursorPos(&p))
@@ -340,6 +340,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
+	case 0x20e: // WM_MOUSEHWHEEL:
 		if(ignoreclick) {
 			EndIgnore();
 			return 0L;
@@ -347,7 +348,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		if(_this) {
 			Point p(0, 0);
 			::ClientToScreen(hwnd, p);
-			DoMouse(MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+			DoMouse(message == 0x20e ? MOUSEHWHEEL : MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
 			CurrentMousePos = Point((dword)lParam);
 		}
 		if(_this) PostInput();

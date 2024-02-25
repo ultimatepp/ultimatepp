@@ -119,8 +119,10 @@ template <class K, class T, class V>
 void AMap<K, T, V>::Serialize(Stream& s) {
 	int version = 0;
 	s / version % key % value;
-	if(key.GetCount() != value.GetCount())
+	if(key.GetCount() != value.GetCount()) {
+		Clear();
 		s.LoadError();
+	}
 }
 
 template <class K, class T, class V>

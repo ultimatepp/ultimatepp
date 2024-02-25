@@ -113,6 +113,7 @@ CONSOLE_APP_MAIN
 	int  exporting = 0;
 	bool run = false;
 	bool auto_hub = false;
+	bool update_hub = false;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
 
@@ -139,6 +140,7 @@ CONSOLE_APP_MAIN
 				case 'u': ide.use_target = true; break;
 				case 'j': ccfile = true; break;
 				case 'h': auto_hub = true; break;
+				case 'U': update_hub = true; break;
 				case 'M': {
 					makefile = true;
 					if(s[1] == '=') {
@@ -230,11 +232,13 @@ CONSOLE_APP_MAIN
 			SetExitCode(2);
 			return;
 		}
-		if(auto_hub) {
+		if(auto_hub || update_hub) {
 			if(!UppHubAuto(ide.main)) {
 				SetExitCode(6);
 				return;
 			}
+			if (update_hub)
+				UppHubUpdate(ide.main);
 		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();

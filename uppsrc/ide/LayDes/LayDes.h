@@ -270,16 +270,17 @@ struct LayDesEditPos {
 
 class LayDes : public StaticRect {
 public:
-	virtual void   Paint(Draw& w) override;
-	virtual Image  CursorImage(Point p, dword keyflags) override;
-	virtual void   LeftDown(Point p, dword keyflags) override;
-	virtual void   LeftRepeat(Point p, dword keyflags) override;
-	virtual void   MouseMove(Point p, dword keyflags) override;
-	virtual void   MouseWheel(Point p, int zdelta, dword keyflags) override;
-	virtual void   LeftUp(Point p, dword keyflags) override;
-	virtual void   RightDown(Point p, dword keyflags) override;
-	virtual void   Layout() override;
-	virtual bool   HotKey(dword key) override;
+	void   Paint(Draw& w) override;
+	Image  CursorImage(Point p, dword keyflags) override;
+	void   LeftDown(Point p, dword keyflags) override;
+	void   LeftRepeat(Point p, dword keyflags) override;
+	void   MouseMove(Point p, dword keyflags) override;
+	void   MouseWheel(Point p, int zdelta, dword keyflags) override;
+	void   HorzMouseWheel(Point, int zdelta, dword) override;
+	void   LeftUp(Point p, dword keyflags) override;
+	void   RightDown(Point p, dword keyflags) override;
+	void   Layout() override;
+	bool   HotKey(dword key) override;
 
 private:
 	bool   DoKey(dword key, int count);

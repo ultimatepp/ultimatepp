@@ -50,14 +50,6 @@ void IconDes::MouseMove(Point p, dword keyflags)
 		(this->*tool)(p, keyflags);
 }
 
-void Upp::IconDes::MouseWheel(Point, int zdelta, dword)
-{
-	if(zdelta < 0)
-		ZoomOut();
-	else
-		ZoomIn();
-}
-
 void IconDes::LeftUp(Point p, dword keyflags)
 {
 	if(!IsCurrent())

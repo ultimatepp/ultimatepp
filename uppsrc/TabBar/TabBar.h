@@ -357,6 +357,7 @@ protected:
 	virtual void DragRepeat(Point p);
 	virtual void CancelMode();
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void HorzMouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void FrameSet();
 	virtual void Layout();
 

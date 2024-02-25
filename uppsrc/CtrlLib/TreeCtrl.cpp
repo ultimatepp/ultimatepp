@@ -1222,6 +1222,11 @@ void TreeCtrl::MouseWheel(Point, int zdelta, dword keyflags)
 		sb.WheelY(zdelta);
 }
 
+void TreeCtrl::HorzMouseWheel(Point, int zdelta, dword keyflags)
+{
+	sb.WheelX(zdelta);
+}
+
 void TreeCtrl::ChildGotFocus()
 {
 	if(chldlck)

@@ -469,8 +469,37 @@ String MakeDefinition(const AnnotationItem& m, const String& klass)
 		result << pretty;
 	else
 		result << pretty.Mid(0, q) << klass << pretty.Mid(q);
-	result << "\n{\n}\n\n";
-	return result;
+
+	const char *s = result;
+	int lvl = 0;
+	String r;
+	while(*s) {
+		if(*s == '(')
+			lvl++;
+		if(*s == ')')
+			lvl--;
+		if(lvl == 1 && *s == '=') { // skip default parameter
+			while(r.GetCount() && s[-1] == ' ') {
+				s--;
+				r.TrimLast();
+			}
+			while(*s) {
+				if((*s == ',' || *s == ')') && lvl == 1) {
+					r.Cat(*s++);
+					break;
+				}
+				if(*s == '(')
+					lvl++;
+				if(*s == ')')
+					lvl--;
+				s++;
+			}
+		}
+		else
+			r.Cat(*s++);
+	}
+	r << "\n{\n}\n\n";
+	return r;
 }
 
 String MakeDefinition(const AnnotationItem& m)

@@ -65,8 +65,8 @@ RepoSync::RepoSync()
 	list.AddIndex();
 	list.AddColumn("Action");
 	list.AddColumn("Path");
-	list.AddColumn("Changes");
-	list.ColumnWidths("220 500 100");
+	list.AddColumn();
+	list.ColumnWidths("220 500 120");
 	list.NoCursor().EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
 	Sizeable().Zoomable();
@@ -212,6 +212,7 @@ String GitCmd(const char *dir, const char *command)
 	return r;
 }
 
+
 bool RepoSync::ListGit(const String& path)
 {
 	Vector<String> ln = Split(GitCmd(path, "status --porcelain ."), CharFilterCrLf);
@@ -291,9 +292,10 @@ void RepoSync::SyncList()
 		Color bk = AdjustIfDark(LtYellow());
 		list.Add(REPOSITORY, path,
 		         AttrText().Paper(bk),
-		         AttrText(path).SetFont(ArialZ(20).Bold()).Paper(bk),
-		         AttrText().Paper(bk));
-		list.SetLineCy(hi, Zy(26));
+		         AttrText(path).Bold().Paper(bk),
+		         AttrText(w.value == GIT_DIR ? GetGitBranchRaw(path) : String())
+		         .Ink(SLtBlue()).Bold().Italic().Paper(bk));
+//		list.SetLineCy(hi, Option::GetStdSize().cy);
 		bool actions = false;
 		if(w.value == SVN_DIR) {
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);

@@ -45,6 +45,11 @@ void LineEdit::MouseWheel(Point, int zdelta, dword keyflags) {
 		sb.WheelY(zdelta);
 }
 
+void LineEdit::HorzMouseWheel(Point, int zdelta, dword)
+{
+	sb.WheelX(zdelta);
+}
+
 void   LineEdit::Clear() {
 	gcolumn = 0;
 	TextCtrl::Clear();

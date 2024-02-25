@@ -292,6 +292,7 @@ public:
 	virtual void   LeftDrag(Point p, dword flags);
 	virtual void   MouseMove(Point p, dword flags);
 	virtual void   MouseWheel(Point, int zdelta, dword);
+	virtual void   HorzMouseWheel(Point, int zdelta, dword);
 	virtual Image  CursorImage(Point, dword);
 	virtual void   DragAndDrop(Point p, PasteClip& d);
 	virtual void   DragRepeat(Point p);

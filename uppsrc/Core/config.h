@@ -142,8 +142,14 @@
 		#define _HAVE_NO_STDWSTRING 1
 		//BF toolchain has no support for __thread (TLS), so U++ Heap not possible
 		#define flagUSEMALLOC
-	#else
-		#error Unknown CPU architecture
+	#else // unknown CPU
+		#ifdef __LP64__
+			#define CPU_64
+		#endif
+		#ifdef __LITTLE_ENDIAN__
+			#define CPU_LITTLE_ENDIAN 1
+			#define CPU_LE 1
+		#endif
 	#endif
 #endif
 
