@@ -575,6 +575,7 @@ struct Builder {
 		const Index<String>& common_config, bool exporting, bool last_ws) {}
 	virtual String GetTargetExt() const = 0;
 	virtual void SaveBuildInfo(const String& package) {}
+	virtual String CompilerName() const { return Null; }
 
 	Builder()          { doall = false; main_conf = false; }
 	virtual ~Builder() {}

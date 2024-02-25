@@ -76,7 +76,7 @@ struct GccBuilder : CppBuilder {
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
-	String CompilerName() const;
+	virtual String CompilerName() const;
 	String CmdLine(const String& package, const Package& pkg);
 	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 	void   CocoaAppBundle();
