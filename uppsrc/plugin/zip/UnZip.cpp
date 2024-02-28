@@ -24,12 +24,12 @@ void UnZip::ReadDir()
 		if(zip->Get32le() == 0x06054b50) {
 			zip->Get16le();  // number of this disk
 			zip->Get16le();  // number of the disk with the start of the central directory
-			int h = zip->Get16le(); // total number of entries in the central directory on this disk
-			entries = zip->Get16le(); // total number of entries in the central directory
+			int h = (word)zip->Get16le(); // total number of entries in the central directory on this disk
+			entries = (word)zip->Get16le(); // total number of entries in the central directory
 			if(h != entries) // Multiple disks not supported
 				return;
 			zip->Get32le(); // size of the central directory
-			offset = zip->Get32le(); //offset of start of central directory with respect to the starting disk number
+			offset = (dword)zip->Get32le(); //offset of start of central directory with respect to the starting disk number
 			zip64eol = pos - 20; // offset of zip64 end of central directory locator
 			int commentlen = zip->Get16le();
 			if(zip->GetPos() + commentlen == zipsize)
@@ -72,8 +72,8 @@ void UnZip::ReadDir()
 		f.method = zip->Get16le();
 		f.time = zip->Get32le();
 		f.crc = zip->Get32le();
-		f.csize = zip->Get32le();
-		f.usize = zip->Get32le();
+		f.csize = (dword)zip->Get32le();
+		f.usize = (dword)zip->Get32le();
 		int fnlen = zip->Get16le();
 		int extralen = zip->Get16le(); // extra field length              2 bytes
 		int commentlen = zip->Get16le(); // file comment length             2 bytes
@@ -92,7 +92,6 @@ void UnZip::ReadDir()
 		}
 		
 		zip->Seek(skipto);
-		//zip->SeekCur(extralen + commentlen);
 		if(zip->IsEof() || zip->IsError())
 			return;
 	}
