@@ -17,10 +17,11 @@ void UnZip::ReadDir()
 	zip->Seek(max((int64)0, zip->GetSize() - 4000)); // Precache end of zip
 	zip->Get();
 	
-	int64 zip64eol = 0;
+	int64 zip64eocdl = 0;
 	while(pos >= max((int64)0, zip->GetSize() - 65536)) {
 		zip->ClearError();
 		zip->Seek(pos);
+		entries = -1; // ensure error return when header fails
 		if(zip->Get32le() == 0x06054b50) {
 			zip->Get16le();  // number of this disk
 			zip->Get16le();  // number of the disk with the start of the central directory
@@ -30,7 +31,7 @@ void UnZip::ReadDir()
 				return;
 			zip->Get32le(); // size of the central directory
 			offset = (dword)zip->Get32le(); //offset of start of central directory with respect to the starting disk number
-			zip64eol = pos - 20; // offset of zip64 end of central directory locator
+			zip64eocdl = pos - 20; // offset of zip64 end of central directory locator
 			int commentlen = zip->Get16le();
 			if(zip->GetPos() + commentlen == zipsize)
 				break;
@@ -40,11 +41,11 @@ void UnZip::ReadDir()
 	if(entries < 0)
 		return;
 
-	zip->Seek(zip64eol);
+	zip->Seek(zip64eocdl);
 	if(zip->Get32le() == 0x07064b50) {
 		zip->Get32le(); // ZIP64 end of central directory locator : number of the disk with the start of the zip64 end of central directory
-		int64 zip64eocdl = zip->Get64le(); // ZIP64 end of central directory locator : relative offset of the zip64 end of central directory record
-		zip->Seek(zip64eocdl);
+		int64 zip64eocdr = zip->Get64le(); // ZIP64 end of central directory locator : relative offset of the zip64 end of central directory record
+		zip->Seek(zip64eocdr);
 		if(zip->Get32le() == 0x06064b50) {
 			zip->Get64le(); // ZIP64 end of central directory record : the rest of the record after this field
 			zip->Get16le(); // ZIP64 end of central directory record : version made by
