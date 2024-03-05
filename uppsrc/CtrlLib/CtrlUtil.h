@@ -385,6 +385,9 @@ class CtrlMapper {
 public:
 	template <class T>
 	CtrlMapper& operator()(Ctrl& ctrl, T& val) { if(toctrls) ctrl <<= val; else val = ~ctrl; return *this; }
+
+	template <class T>
+	CtrlMapper& operator()(Ctrl& ctrl, T& val, const T& f) { if(toctrls) ctrl <<= f * val; else val = (T)~ctrl / f; return *this; }
 	
 	CtrlMapper& ToCtrls()                      { toctrls = true; return *this; }
 	CtrlMapper& ToValues()                     { toctrls = false; return *this; }
