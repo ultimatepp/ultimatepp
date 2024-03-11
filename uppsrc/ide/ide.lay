@@ -11,10 +11,17 @@ LAYOUT(SelectPackageLayout, 816, 468)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).Tip(t_("Cancel package selection")).RightPosZ(8, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
-LAYOUT(ConfigLayout, 724, 214)
-	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(6, 32))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+LAYOUT(ConfigLayout, 724, 216)
+	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(6, 34))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(5, 23))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(5, 23))
+	ITEM(Upp::Button, insert, SetLabel(t_("Insert")).Tip(t_("Add row")).LeftPosZ(4, 64).TopPosZ(188, 23))
+	ITEM(Upp::Button, add, SetLabel(t_("Append")).Tip(t_("Add row")).LeftPosZ(72, 64).TopPosZ(188, 23))
+	ITEM(Upp::Button, duplicate, SetLabel(t_("Duplicate")).Tip(t_("Add row")).LeftPosZ(140, 80).TopPosZ(188, 23))
+	ITEM(Upp::Button, down, Tip(t_("Move down")).RightPosZ(336, 24).TopPosZ(188, 23))
+	ITEM(Upp::Button, up, Tip(t_("Move up")).RightPosZ(308, 24).TopPosZ(188, 23))
+	ITEM(Upp::Button, edit, SetLabel(t_("Edit")).Tip(t_("Edit row")).LeftPosZ(224, 64).TopPosZ(188, 23))
+	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).Tip(t_("Delete row")).LeftPosZ(292, 68).TopPosZ(188, 23))
 END_LAYOUT
 
 LAYOUT(ConfLayout, 368, 752)
