@@ -38,7 +38,6 @@ FileMapping::FileMapping(const char *file_, bool delete_share_)
 	write = false;
 	if(file_)
 		Open(file_, delete_share_);
-
 }
 
 bool FileMapping::Open(const char *file, bool delete_share)

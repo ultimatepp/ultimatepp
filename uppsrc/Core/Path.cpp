@@ -759,8 +759,7 @@ FileTime GetFileTime(const char *filename)
 	HANDLE handle;
 	handle = CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
 	                     FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
-	FileTime ft0;
-	memset(&ft0, 0, sizeof(ft0));
+	static FileTime ft0;
 	if(handle == INVALID_HANDLE_VALUE)
 		return ft0;
 	FileTime ft;
