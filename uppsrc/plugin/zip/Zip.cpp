@@ -7,7 +7,7 @@ void Zip::WriteFolder(const char *path, Time tm)
 	String p = UnixPath(path);
 	if(*p.Last() != '/')
 		p.Cat('/');
-	WriteFile(~p, 0, p, Null, tm);
+	WriteFile(~p, 0, p, Null, tm, false);
 }
 
 int64 zPress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool gzip,
@@ -43,6 +43,11 @@ void Zip::FileHeader(const char *path, Time tm)
 	done += 5*2 + 5*4 + f.path.GetCount() + (f.zip64 ? 28 : 0);
 }
 
+static bool IsPlainASCII(const String &s){
+	for(int i=0;i<s.GetCount();i++) if((s[i]<32) || (s[i]>=127)) return false;
+	return true;
+}
+
 void Zip::BeginFile(const char *path, Time tm, bool deflate, bool zip64)
 {
 	ASSERT(!IsFileOpened());
@@ -55,9 +60,12 @@ void Zip::BeginFile(const char *path, Time tm, bool deflate, bool zip64)
 		crc32.Clear();
 		uncompressed = true;
 	}
+	
+	if(done>=0xffffffffULL) zip64 = true; // must switch to Zip64 due to large archive size
+	
 	File& f = file.Add();
 	f.version = zip64 ? 45 : 20;
-	f.gpflag = 0x8 | 1<<11; // Added UTF-8 marker, i.e.: " | 1<<11";
+	f.gpflag = IsPlainASCII(path) ? 0x8 : 0x8 | 1<<11; // Added UTF-8 marker, i.e.: " | 1<<11"; only for files with non-ASCII characters
 	f.method = deflate ? 8 : 0;
 	f.zip64 = zip64;
 	f.crc = 0;
@@ -189,15 +197,15 @@ void Zip::Finish()
 	qword off = done;
 	qword rof = 0;
 	
+	int version = ((file.GetCount() >= 0xffff) || (done >= 0xffffffffULL)) ? 45 : 20;
 	
-	bool zip64 = (file.GetCount() >= 0xffff) || (done > 19LL*INT_MAX/20); // Enable zip64 if too many files for old zip or very large data
-	for(int i = 0; i < file.GetCount(); i++) if(file[i].zip64) zip64 = true; // Pre-enable zip64 if any of the files require it
+	// Update version info for Zip64 where required:
+	for(int i = 0; i < file.GetCount(); i++) if(file[i].zip64 || (file[i].csize>=0xffffffffULL) || (file[i].usize>=0xffffffffULL)) file[i].version = version = 45;
 	
-	int version = zip64 ? 45 : 20;
-
 	for(int i = 0; i < file.GetCount(); i++) {
 		File& f = file[i];
-		
+		bool zip64record = f.zip64 || (rof>=0xffffffffULL) || (f.csize>=0xffffffffULL) || (f.usize>=0xffffffffULL);
+	
 		zip->Put32le(0x02014b50);
 		zip->Put16le(version); // version made by
 		zip->Put16le(f.version); // version required to extract
@@ -205,27 +213,29 @@ void Zip::Finish()
 		zip->Put16le(f.method);
 		zip->Put32le(f.time);
 		zip->Put32le(f.crc);
-		zip->Put32le((dword)(zip64 ? 0xffffffff : f.csize));
-		zip->Put32le((dword)(zip64 ? 0xffffffff : f.usize));
+		zip->Put32le((dword)(zip64record ? 0xffffffff : f.csize));
+		zip->Put32le((dword)(zip64record ? 0xffffffff : f.usize));
 		zip->Put16le(f.path.GetCount());
-		zip->Put16le(zip64 ? 28 : 0); // extra field length              2 bytes
+		zip->Put16le(zip64record ? 28 : 0); // extra field length              2 bytes
 		zip->Put16le(0); // file comment length             2 bytes
 		zip->Put16le(0); // disk number start               2 bytes
 		zip->Put16le(0); // internal file attributes        2 bytes
 		zip->Put32le(0); // external file attributes        4 bytes
-		zip->Put32le((dword)(zip64 ? 0xffffffff : rof)); // relative offset of local header 4 bytes
+		zip->Put32le((dword)(zip64record ? 0xffffffff : rof)); // relative offset of local header 4 bytes
 		zip->Put(f.path);
 		// ZIP64 additions:
-		if(zip64){
+		if(zip64record){
 			zip->Put16le(1); // ZIP64 extra field : header ID
 			zip->Put16le(24); // ZIP64 extra field : bytes to follow
 			zip->Put64le(f.usize); // ZIP64 extra field : uncomp size
 			zip->Put64le(f.csize); // ZIP64 extra field : comp size
 			zip->Put64le(rof); // ZIP64 extra field : relative offset of local header
 		}
-		done = done + 7 * 4 + 9 * 2 + f.path.GetCount() + (zip64 ? 28 : 0);
+		done = done + 7 * 4 + 9 * 2 + f.path.GetCount() + (zip64record ? 28 : 0);
 		rof = rof + 5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? (f.zip64 ? 20 : 12) : 0) + (f.zip64 ? 28 : 0);
 	}
+	
+	bool zip64 = version==45;
 	
 	if(zip64){
 		zip->Put32le(0x06064b50); // ZIP64 end of central directory record
