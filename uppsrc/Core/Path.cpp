@@ -638,23 +638,6 @@ String FindFile::GetPath() const
 	return AppendFileName(path, GetName());
 }
 
-bool FileExists(const char *name) {
-	FindFile ff(name);
-	return ff && ff.IsFile();
-}
-
-int64 GetFileLength(const char *name) {
-	FindFile ff(name);
-	return ff ? ff.GetLength() : -1;
-}
-
-bool DirectoryExists(const char *name) {
-	if(*name == '\0')
-		return false;
-	FindFile ff(name + String("/*"));
-	return ff;
-}
-
 String NormalizePath(const char *path) {
 #ifdef PLATFORM_WINCE
 	return NormalizePath(path, "");
@@ -756,21 +739,55 @@ Time FileGetTime(const char *filename)
 FileTime GetFileTime(const char *filename)
 {
 #if defined(PLATFORM_WIN32)
-	HANDLE handle;
-	handle = CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
-	                     FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    WIN32_FILE_ATTRIBUTE_DATA wfad;
 	static FileTime ft0;
-	if(handle == INVALID_HANDLE_VALUE)
-		return ft0;
-	FileTime ft;
-	bool res = GetFileTime(handle, 0, 0, &ft);
-	CloseHandle(handle);
-	return res ? ft : ft0;
+    return GetFileAttributesEx(filename, GetFileExInfoStandard, &wfad) ? wfad.ftLastWriteTime : ft0;
 #elif defined(PLATFORM_POSIX)
 	struct stat st;
 	if(stat(ToSystemCharset(filename), &st))
 		return 0;
 	return st.st_mtime;
+#else
+	#error
+#endif//PLATFORM
+}
+
+int64 GetFileLength(const char *path) {
+#if defined(PLATFORM_WIN32)
+    WIN32_FILE_ATTRIBUTE_DATA wfad;
+	static FileTime ft0;
+    return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) ? MAKEQWORD(wfad.nFileSizeLow, wfad.nFileSizeHigh) : -1;
+#elif defined(PLATFORM_POSIX)
+	struct stat st;
+	return stat(ToSystemCharset(filename), &st) ? -1 : st.st_size;
+#else
+	#error
+#endif//PLATFORM
+}
+
+bool FileExists(const char *path)
+{
+#if defined(PLATFORM_WIN32)
+    WIN32_FILE_ATTRIBUTE_DATA wfad;
+	static FileTime ft0;
+    return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) && !(wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+#elif defined(PLATFORM_POSIX)
+	struct stat st;
+	return stat(ToSystemCharset(filename), &st) ? false : S_ISREG(st.st_mode);
+#else
+	#error
+#endif//PLATFORM
+}
+
+bool DirectoryExists(const char *path)
+{
+#if defined(PLATFORM_WIN32)
+    WIN32_FILE_ATTRIBUTE_DATA wfad;
+	static FileTime ft0;
+    return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) && (wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+#elif defined(PLATFORM_POSIX)
+	struct stat st;
+	return stat(ToSystemCharset(filename), &st) ? false : S_ISDIR(st.st_mode);
 #else
 	#error
 #endif//PLATFORM
