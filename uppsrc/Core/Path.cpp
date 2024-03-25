@@ -759,7 +759,7 @@ int64 GetFileLength(const char *path) {
     return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) ? MAKEQWORD(wfad.nFileSizeLow, wfad.nFileSizeHigh) : -1;
 #elif defined(PLATFORM_POSIX)
 	struct stat st;
-	return stat(ToSystemCharset(filename), &st) ? -1 : st.st_size;
+	return stat(ToSystemCharset(path), &st) ? -1 : st.st_size;
 #else
 	#error
 #endif//PLATFORM
@@ -773,7 +773,7 @@ bool FileExists(const char *path)
     return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) && !(wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
 #elif defined(PLATFORM_POSIX)
 	struct stat st;
-	return stat(ToSystemCharset(filename), &st) ? false : S_ISREG(st.st_mode);
+	return stat(ToSystemCharset(path), &st) ? false : S_ISREG(st.st_mode);
 #else
 	#error
 #endif//PLATFORM
@@ -787,7 +787,7 @@ bool DirectoryExists(const char *path)
     return GetFileAttributesEx(path, GetFileExInfoStandard, &wfad) && (wfad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
 #elif defined(PLATFORM_POSIX)
 	struct stat st;
-	return stat(ToSystemCharset(filename), &st) ? false : S_ISDIR(st.st_mode);
+	return stat(ToSystemCharset(path), &st) ? false : S_ISDIR(st.st_mode);
 #else
 	#error
 #endif//PLATFORM

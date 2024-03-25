@@ -8,8 +8,8 @@ namespace Upp {
 
 int FileMapping::MappingGranularity()
 {
-#ifdef PLATFORM_WIN32
 	static int mg = 0;
+#ifdef PLATFORM_WIN32
 	ONCELOCK {
 		SYSTEM_INFO info;
 		GetSystemInfo(&info);
