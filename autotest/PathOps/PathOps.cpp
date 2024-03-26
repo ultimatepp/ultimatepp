@@ -12,7 +12,7 @@ CONSOLE_APP_MAIN
 	ASSERT(!FileExists(testdir));
 	ASSERT(!DirectoryExists(testdir + "q24312"));
 	
-	String path = AppendFileName(testdir, "test.txt");
+	String path = AppendFileName(testdir, "testík.txt");
 	Time tm0 = GetSysTime();
 	SaveFile(path, "test");
 	ASSERT(FileExists(path));
@@ -24,6 +24,7 @@ CONSOLE_APP_MAIN
 	
 	Time tm = GetFileTime(path);
 	DDUMP(tm);
+	ASSERT(tm == FileGetTime(path));
 	
 	ASSERT(tm >= tm0 && tm <= GetSysTime());
 
