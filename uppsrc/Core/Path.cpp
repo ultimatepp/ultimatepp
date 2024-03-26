@@ -708,16 +708,18 @@ bool DirectoryDelete(const char *dirname)
 }
 
 #ifdef PLATFORM_WIN32
+
 int Compare_FileTime(const FileTime& fa, const FileTime& fb)
 {
 	return CompareFileTime(&fa, &fb);
 }
-#endif
 
 static bool sGetFileAttrs(const char *path, WIN32_FILE_ATTRIBUTE_DATA& wfad)
 {
     return GetFileAttributesExW(ToSystemCharsetW(path), GetFileExInfoStandard, &wfad);
 }
+
+#endif
 
 FileTime GetFileTime(const char *filename)
 {
