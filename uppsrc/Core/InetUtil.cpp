@@ -648,6 +648,14 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
 	return data.GetCount() == 0 || socket.PutAll(data);
 }
 
+bool HttpResponse(TcpSocket& socket, bool scgi, const HttpStatusLine& sl,
+                  const char *content_type, const String& data,
+                  const char *server, bool gzip)
+{
+	return HttpResponse(socket, scgi, sl.GetCode(), sl.GetPhrase(), content_type, data, server,
+	                    gzip);
+}
+
 String UrlInfo::operator[](const char *id) const
 {
 	return parameters.Get(id, String());

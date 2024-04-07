@@ -297,6 +297,8 @@ struct UrlInfo {
 	UrlInfo(const String& url)        { Parse(url); }
 };
 
+#include "HttpStatus.h"
+
 struct HttpCookie : Moveable<HttpCookie> {
 	String id;
 	String value;
@@ -597,6 +599,9 @@ public:
 };
 
 bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
+                  const char *content_type = NULL, const String& data = Null,
+                  const char *server = NULL, bool gzip = false);
+bool HttpResponse(TcpSocket& socket, bool scgi, const HttpStatusLine& sl,
                   const char *content_type = NULL, const String& data = Null,
                   const char *server = NULL, bool gzip = false);
 
