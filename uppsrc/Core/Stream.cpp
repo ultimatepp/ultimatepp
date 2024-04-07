@@ -182,6 +182,8 @@ String Stream::Get(int size)
 String Stream::GetAll(int size)
 {
 	String result;
+	if(size < 0)
+		LoadError();
 	if(size < 4 * 1024*1024)
 		result = Get(size);
 	else {

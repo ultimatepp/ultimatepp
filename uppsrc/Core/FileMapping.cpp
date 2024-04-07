@@ -6,22 +6,24 @@
 
 namespace Upp {
 
-static int sMappingGranularity_()
+int FileMapping::MappingGranularity()
 {
-#ifdef PLATFORM_WIN32
 	static int mg = 0;
-	if(!mg) {
+#ifdef PLATFORM_WIN32
+	ONCELOCK {
 		SYSTEM_INFO info;
 		GetSystemInfo(&info);
 		mg = info.dwAllocationGranularity;
 	}
 #else
-	static int mg = 4096;
+	ONCELOCK {
+		mg = getpagesize();
+	}
 #endif
 	return mg;
 }
 
-FileMapping::FileMapping(const char *file_, bool delete_share_)
+FileMapping::FileMapping(const char *file_)
 {
 #ifdef PLATFORM_WIN32
 	hfile = INVALID_HANDLE_VALUE;
@@ -37,11 +39,10 @@ FileMapping::FileMapping(const char *file_, bool delete_share_)
 	filesize = -1;
 	write = false;
 	if(file_)
-		Open(file_, delete_share_);
-
+		Open(file_);
 }
 
-bool FileMapping::Open(const char *file, bool delete_share)
+bool FileMapping::Open(const char *file)
 {
 	Close();
 	write = false;
@@ -97,45 +98,40 @@ bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
 	return true;
 }
 
-bool FileMapping::Map(int64 mapoffset, size_t maplen)
+byte *FileMapping::Map(int64 mapoffset, size_t maplen)
 {
 	ASSERT(IsOpen());
-	if(maplen == 0)
-		return Unmap();
+	Unmap();
 	mapoffset = minmax<int64>(mapoffset, 0, filesize);
-	int gran = sMappingGranularity_();
+	int gran = MappingGranularity();
 	int64 rawoff = mapoffset & -gran;
 	maplen = (size_t)min<int64>(maplen, filesize - mapoffset);
 	size_t rawsz = (size_t)min<int64>((maplen + (size_t)(mapoffset - rawoff) + gran - 1) & -gran, filesize - rawoff);
-	if(rawbase && (mapoffset < rawoffset || mapoffset + maplen > rawoffset + rawsize))
-		Unmap();
-	if(!rawbase) {
-		rawoffset = rawoff;
-		rawsize = rawsz;
+	rawoffset = rawoff;
+	rawsize = rawsz;
 #ifdef PLATFORM_WIN32
-		rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
-			(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
+	rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
+		(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
 #else
-		rawbase = (byte *)mmap(0, rawsize,
-			PROT_READ | (write ? PROT_WRITE : 0),
+	rawbase = (byte *)mmap(0, rawsize,
+		PROT_READ | (write ? PROT_WRITE : 0),
 #ifdef PLATFORM_FREEBSD
-			MAP_NOSYNC,
+		MAP_NOSYNC,
 #else
-			MAP_SHARED,
+		MAP_SHARED,
 #endif
-			hfile, rawoffset);
+		hfile, rawoffset);
 #endif
 #ifdef PLATFORM_POSIX
-		if(rawbase == (byte *)~0)
+	if(rawbase == (byte *)~0)
 #else
-		if(!rawbase)
+	if(!rawbase)
 #endif
-			return false;
-	}
+		return NULL;
 	offset = mapoffset;
 	size = maplen;
 	base = rawbase + (int)(offset - rawoffset);
-	return true;
+	return base;
 }
 
 bool FileMapping::Unmap()
