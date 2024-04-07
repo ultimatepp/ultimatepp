@@ -398,9 +398,10 @@ public:
 protected:
 #ifdef PLATFORM_WIN32
 	HANDLE    handle;
-#endif
-#ifdef PLATFORM_POSIX
+	static bool OpenHandle(const char *name, dword mode, HANDLE& handle, int64& fsz);
+#else
 	int       handle;
+	static bool OpenHandle(const char *name, dword mode, int& handle, int64& fsz, mode_t tmode);
 #endif
 
 	void      SetPos(int64 pos);
@@ -546,14 +547,14 @@ public:
 	~TeeStream()                                 { Close(); }
 };
 
-class FileMapping
-{
+class FileMapping {
 public:
 	FileMapping(const char *file = NULL);
 	~FileMapping() { Close(); }
 
 	bool        Open(const char *file);
 	bool        Create(const char *file, int64 filesize, bool delete_share = false);
+
 	bool        Expand(int64 filesize);
 	byte       *Map(int64 mapoffset, size_t maplen);
 	byte       *Map()                     { return Map(0, GetFileSize()); }
@@ -608,7 +609,6 @@ private:
 	size_t      size;
 	size_t      rawsize;
 	bool        write;
-
 
 	static int MappingGranularity();
 };
