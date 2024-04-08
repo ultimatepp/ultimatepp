@@ -183,7 +183,7 @@ file
 	xxHsh.cpp,
 	Web readonly separator,
 	Inet.h,
-	HttpStatus.h,
+	HttpStatusCode.i,
 	InetUtil.cpp,
 	MIME.cpp,
 	Socket.cpp,

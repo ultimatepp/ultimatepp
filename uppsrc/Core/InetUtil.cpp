@@ -632,7 +632,8 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
                   bool gzip)
 {
 	String r;
-	r << (scgi ? "Status: " : "HTTP/1.1 ") << code << ' ' << phrase << "\r\n"
+	r << (scgi ? "Status: " : "HTTP/1.1 ") <<
+		code << ' ' << (phrase ? String(phrase) : HttpStatus::ToString(code)) << "\r\n"
 		"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
 		"Server: " << (server ? server : "U++ based server") << "\r\n"
 		"Connection: close\r\n";
@@ -646,14 +647,6 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
 	if(!socket.PutAll(r))
 		return false;
 	return data.GetCount() == 0 || socket.PutAll(data);
-}
-
-bool HttpResponse(TcpSocket& socket, bool scgi, const HttpStatusLine& sl,
-                  const char *content_type, const String& data,
-                  const char *server, bool gzip)
-{
-	return HttpResponse(socket, scgi, sl.GetCode(), sl.GetPhrase(), content_type, data, server,
-	                    gzip);
 }
 
 String UrlInfo::operator[](const char *id) const
