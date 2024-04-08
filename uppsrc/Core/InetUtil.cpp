@@ -632,7 +632,8 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
                   bool gzip)
 {
 	String r;
-	r << (scgi ? "Status: " : "HTTP/1.1 ") << code << ' ' << phrase << "\r\n"
+	r << (scgi ? "Status: " : "HTTP/1.1 ") <<
+		code << ' ' << (phrase ? String(phrase) : HttpStatus::ToString(code)) << "\r\n"
 		"Date: " <<  WwwFormat(GetUtcTime()) << "\r\n"
 		"Server: " << (server ? server : "U++ based server") << "\r\n"
 		"Connection: close\r\n";

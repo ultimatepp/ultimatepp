@@ -297,6 +297,15 @@ struct UrlInfo {
 	UrlInfo(const String& url)        { Parse(url); }
 };
 
+namespace HttpStatus
+{
+	#define CODE_(id, code, str) constexpr int id = code;
+	#include "HttpStatusCode.i"
+	#undef CODE_
+	
+	String ToString(int code);
+}
+
 struct HttpCookie : Moveable<HttpCookie> {
 	String id;
 	String value;
@@ -596,7 +605,7 @@ public:
 	static void  TraceShort(bool b = true);
 };
 
-bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
+bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase = NULL,
                   const char *content_type = NULL, const String& data = Null,
                   const char *server = NULL, bool gzip = false);
 
