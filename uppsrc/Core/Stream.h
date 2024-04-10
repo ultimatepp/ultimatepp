@@ -365,6 +365,7 @@ protected:
 public:
 	enum {
 		READ, CREATE, APPEND, READWRITE,
+		MODEMASK = 0x3,
 
 		NOWRITESHARE = 0x10,
 		SHAREMASK = 0x70,
@@ -406,6 +407,8 @@ protected:
 
 	void      SetPos(int64 pos);
 	void      Init(int64 size);
+	
+	friend class FileMapping;
 
 public:
 	operator  bool() const                 { return IsOpen(); }
@@ -546,73 +549,6 @@ public:
 	TeeStream(Stream& a, Stream& b) : a(a), b(b) {}
 	~TeeStream()                                 { Close(); }
 };
-
-class FileMapping {
-public:
-	FileMapping(const char *file = NULL);
-	~FileMapping() { Close(); }
-
-	bool        Open(const char *file);
-	bool        Create(const char *file, int64 filesize, bool delete_share = false);
-
-	bool        Expand(int64 filesize);
-	byte       *Map(int64 mapoffset, size_t maplen);
-	byte       *Map()                     { return Map(0, GetFileSize()); }
-	bool        Unmap();
-	bool        Close();
-
-	bool        IsOpen() const            { return hfile != INVALID_HANDLE_VALUE; }
-
-	int64       GetFileSize() const       { return filesize; }
-	Time        GetTime() const;
-	String      GetData(int64 offset, int len);
-
-	int64       GetOffset() const         { return offset; }
-	size_t      GetCount() const          { return size; }
-
-	int64       GetRawOffset() const      { return rawoffset; }
-	size_t      GetRawCount() const       { return rawsize; }
-
-	const byte *operator ~ () const       { ASSERT(IsOpen()); return base; }
-	const byte *begin() const             { ASSERT(IsOpen()); return base; }
-	const byte *end() const               { ASSERT(IsOpen()); return base + size; }
-	const byte& operator [] (int i) const { ASSERT(IsOpen() && i >= 0 && (size_t)i < size); return base[i]; }
-
-	byte       *operator ~ ()             { ASSERT(IsOpen()); return base; }
-	byte       *begin()                   { ASSERT(IsOpen()); return base; }
-	byte       *end()                     { ASSERT(IsOpen()); return base + size; }
-	byte&       operator [] (int i)       { ASSERT(IsOpen() && i >= 0 && (size_t)i < size); return base[i]; }
-
-	const byte *Begin() const             { ASSERT(IsOpen()); return base; }
-	const byte *End() const               { ASSERT(IsOpen()); return base + size; }
-	const byte *GetIter(int i) const      { ASSERT(IsOpen() && i >= 0 && (size_t)i <= size); return base + i; }
-
-	byte       *Begin()                   { ASSERT(IsOpen()); return base; }
-	byte       *End()                     { ASSERT(IsOpen()); return base + size; }
-	byte       *GetIter(int i)            { ASSERT(IsOpen() && i >= 0 && (size_t)i <= size); return base + i; }
-
-private:
-#ifdef PLATFORM_WIN32
-	HANDLE      hfile;
-	HANDLE      hmap;
-#endif
-#ifdef PLATFORM_POSIX
-	enum { INVALID_HANDLE_VALUE = -1 };
-	int	        hfile;
-	struct stat hfstat;
-#endif
-	byte       *base;
-	byte       *rawbase;
-	int64       filesize;
-	int64       offset;
-	int64       rawoffset;
-	size_t      size;
-	size_t      rawsize;
-	bool        write;
-
-	static int MappingGranularity();
-};
-
 
 String LoadStream(Stream& in);
 bool   SaveStream(Stream& out, const String& data);

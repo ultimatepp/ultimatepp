@@ -42,60 +42,37 @@ FileMapping::FileMapping(const char *file_)
 		Open(file_);
 }
 
-bool FileMapping::Open(const char *file)
+#ifdef PLATFORM_WIN32
+bool FileMapping::Open(const char *filename, dword mode, int64 wsize)
+#else
+bool FileMapping::Open(const char *filename, dword mode, mode_t acm)
+#endif
 {
 	Close();
-	write = false;
+	write = (mode & FileStream::MODEMASK) != FileStream::READ;
 #ifdef PLATFORM_WIN32
-	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if(hfile == INVALID_HANDLE_VALUE)
+	if(!FileStream::OpenHandle(filename, mode, hfile, filesize))
 		return false;
-	filesize = ::GetFileSize(hfile, NULL);
-	hmap = CreateFileMapping(hfile, NULL, PAGE_READONLY, 0, 0, NULL);
+	if(write)
+		filesize = wsize;
+	else
+		wsize = 0;
+	hmap = CreateFileMapping(hfile, NULL, write ? PAGE_READWRITE : PAGE_READONLY, HIDWORD(wsize), LODWORD(wsize), NULL);
 	if(!hmap) {
 		Close();
 		return false;
 	}
-#endif
-#ifdef PLATFORM_POSIX
-	hfile = open(ToSystemCharset(file), O_RDONLY);
-	if(hfile == -1)
+#else
+	if(!FileStream::OpenHandle(filename, mode, hfile, filesize, acm))
 		return false;
-	if(fstat(hfile, &hfstat) == -1) {
-		Close();
-		return false;
-	}
-	filesize = hfstat.st_size;
 #endif
 	return true;
 }
 
-bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
+
+bool FileMapping::Create(const char *file, int64 filesize, bool delete_share)
 {
-	Close();
-	write = true;
-#ifdef PLATFORM_WIN32
-	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share ? FILE_SHARE_DELETE : 0),
-		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if(hfile == INVALID_HANDLE_VALUE)
-		return false;
-	long lo = (dword)filesize_, hi = (dword)(filesize_ >> 32);
-	hmap = CreateFileMapping(hfile, NULL, PAGE_READWRITE, hi, lo, NULL);
-	if(!hmap) {
-		Close();
-		return false;
-	}
-#endif
-#ifdef PLATFORM_POSIX
-	hfile = open(ToSystemCharset(file), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if(hfile == -1)
-		return false;
-#endif
-	filesize = filesize_;
-	return true;
+	return Open(file, FileStream::CREATE | (delete_share ? FileStream::DELETESHARE : 0), filesize);
 }
 
 byte *FileMapping::Map(int64 mapoffset, size_t maplen)
