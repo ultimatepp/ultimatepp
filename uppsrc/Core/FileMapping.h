@@ -11,7 +11,9 @@ public:
 
 	bool        Create(const char *file, int64 filesize) { return Create(file, filesize, false); }
 
-	bool        Expand(int64 filesize);
+	int64       GetFileSize() const       { return filesize; }
+	Time        GetTime() const;
+
 	byte       *Map(int64 mapoffset, size_t maplen);
 	byte       *Map()                     { return Map(0, GetFileSize()); }
 	bool        Unmap();
@@ -19,17 +21,10 @@ public:
 
 	bool        IsOpen() const            { return hfile != INVALID_HANDLE_VALUE; }
 
-	int64       GetFileSize() const       { return filesize; }
-	Time        GetTime() const;
-	String      GetData(int64 offset, int len);
-
 	int64       GetOffset() const         { return offset; }
 	size_t      GetCount() const          { return size; }
 
-	int64       GetRawOffset() const      { return rawoffset; }
-	size_t      GetRawCount() const       { return rawsize; }
-
-	const byte *operator ~ () const       { ASSERT(IsOpen()); return base; }
+	const byte *operator~() const         { ASSERT(IsOpen()); return base; }
 	const byte *begin() const             { ASSERT(IsOpen()); return base; }
 	const byte *end() const               { ASSERT(IsOpen()); return base + size; }
 	const byte& operator [] (int i) const { ASSERT(IsOpen() && i >= 0 && (size_t)i < size); return base[i]; }
@@ -41,6 +36,9 @@ public:
 
 // deprecated:
 	bool        Create(const char *file, int64 filesize, bool delete_share);
+
+	int64       GetRawOffset() const      { return rawoffset; }
+	size_t      GetRawCount() const       { return rawsize; }
 
 	const byte *Begin() const             { ASSERT(IsOpen()); return base; }
 	const byte *End() const               { ASSERT(IsOpen()); return base + size; }
@@ -58,7 +56,6 @@ private:
 #ifdef PLATFORM_POSIX
 	enum { INVALID_HANDLE_VALUE = -1 };
 	int	        hfile;
-	struct stat hfstat;
 #endif
 	byte       *base;
 	byte       *rawbase;

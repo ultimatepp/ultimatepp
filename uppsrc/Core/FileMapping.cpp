@@ -31,7 +31,6 @@ FileMapping::FileMapping(const char *file_)
 #endif
 #ifdef PLATFORM_POSIX
 	hfile = -1;
-	Zero(hfstat);
 #endif
 	base = rawbase = NULL;
 	size = rawsize = 0;
@@ -53,7 +52,7 @@ bool FileMapping::Open(const char *filename, dword mode, int64 wsize, mode_t acm
 #ifdef PLATFORM_WIN32
 	if(!FileStream::OpenHandle(filename, mode, hfile, filesize))
 		return false;
-	if(write)
+	if((mode & FileStream::MODEMASK) == FileStream::CREATE)
 		filesize = wsize;
 	else
 		wsize = 0;
@@ -65,7 +64,7 @@ bool FileMapping::Open(const char *filename, dword mode, int64 wsize, mode_t acm
 #else
 	if(!FileStream::OpenHandle(filename, mode, hfile, filesize, acm))
 		return false;
-	if(write) {
+	if((mode & FileStream::MODEMASK) == FileStream::CREATE) {
 		ftruncate(hfile, wsize);
 		filesize = wsize;
 	}
@@ -132,30 +131,6 @@ bool FileMapping::Unmap()
 	return ok;
 }
 
-bool FileMapping::Expand(int64 new_filesize)
-{
-	ASSERT(IsOpen());
-	if(new_filesize > filesize) {
-		if(!Unmap())
-			return false;
-#ifdef PLATFORM_WIN32
-		if(!CloseHandle(hmap)) {
-			hmap = NULL;
-			return false;
-		}
-		hmap = NULL;
-#endif
-#ifdef PLATFORM_POSIX
-		if(FTRUNCATE64_(hfile, new_filesize - filesize) != 0) {
-			Close();
-			return false;
-		}
-#endif
-		filesize = new_filesize;
-	}
-	return true;
-}
-
 bool FileMapping::Close()
 {
 	bool ok = Unmap();
@@ -172,7 +147,6 @@ bool FileMapping::Close()
 #ifdef PLATFORM_POSIX
 	if(IsOpen()) {
 		if(close(hfile) != 0) ok = false;
-		Zero(hfstat);
 		hfile = -1;
 	}
 #endif
@@ -192,18 +166,10 @@ Time FileMapping::GetTime() const
 	return ft;
 #endif
 #ifdef PLATFORM_POSIX
-	return Time(hfstat.st_mtime);
+	struct stat st;
+	fstat(hfile, st);
+	return Time(st.st_mtime);
 #endif
-}
-
-String FileMapping::GetData(int64 offset, int len)
-{
-	if(IsOpen() && Map(offset, len))
-		return String(base, len);
-	else {
-		NEVER();
-		return String::GetVoid();
-	}
 }
 
 }
