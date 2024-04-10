@@ -5,9 +5,7 @@ public:
 
 #ifdef PLATFORM_WIN32
 	bool        Open(const char *filename, dword mode = FileStream::READ, int64 filesize = 0);
-#endif
-
-#ifdef PLATFORM_POSIX
+#else
 	bool        Open(const char *filename, dword mode = FileStream::READ, int64 filesize = 0, mode_t acm = 0644);
 #endif
 

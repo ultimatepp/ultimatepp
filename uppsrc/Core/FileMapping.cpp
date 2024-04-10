@@ -45,7 +45,7 @@ FileMapping::FileMapping(const char *file_)
 #ifdef PLATFORM_WIN32
 bool FileMapping::Open(const char *filename, dword mode, int64 wsize)
 #else
-bool FileMapping::Open(const char *filename, dword mode, mode_t acm)
+bool FileMapping::Open(const char *filename, dword mode, int64 wsize, mode_t acm)
 #endif
 {
 	Close();
@@ -65,6 +65,10 @@ bool FileMapping::Open(const char *filename, dword mode, mode_t acm)
 #else
 	if(!FileStream::OpenHandle(filename, mode, hfile, filesize, acm))
 		return false;
+	if(write) {
+		ftruncate(hfile, wsize);
+		filesize = wsize;
+	}
 #endif
 	return true;
 }
@@ -86,9 +90,10 @@ byte *FileMapping::Map(int64 mapoffset, size_t maplen)
 	size_t rawsz = (size_t)min<int64>((maplen + (size_t)(mapoffset - rawoff) + gran - 1) & -gran, filesize - rawoff);
 	rawoffset = rawoff;
 	rawsize = rawsz;
+	
 #ifdef PLATFORM_WIN32
 	rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
-		(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
+	                                HIDWORD(rawoffset), LODWORD(rawoffset), rawsize);
 #else
 	rawbase = (byte *)mmap(0, rawsize,
 		PROT_READ | (write ? PROT_WRITE : 0),
@@ -100,7 +105,7 @@ byte *FileMapping::Map(int64 mapoffset, size_t maplen)
 		hfile, rawoffset);
 #endif
 #ifdef PLATFORM_POSIX
-	if(rawbase == (byte *)~0)
+	if(rawbase == (byte *)-1)
 #else
 	if(!rawbase)
 #endif

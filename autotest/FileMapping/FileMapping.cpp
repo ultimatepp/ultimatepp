@@ -7,12 +7,16 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	String test;
-	for(int i = 0; i < 100; i++)
+	for(int i = 0; i < 10000; i++)
 		test << i << " " << i * 12345678 << "\n";
 	
 	int sz = test.GetCount();
 	
+	DUMP(sz);
+	
 	String path = GetHomeDirFile("mapped");
+	
+//	SaveFile(path, String('0', sz));
 	
 	{
 		FileMapping m;
@@ -25,6 +29,12 @@ CONSOLE_APP_MAIN
 	{
 		FileMapping m(path);
 		ASSERT(memcmp(m.Map(), ~test, sz) == 0);
+	}
+	
+	{
+		FileMapping m(path);
+		for(int i = 0; i < sz; i++)
+			ASSERT(*m.Map(i, 1) == test[i]);
 	}
 	
 	DeleteFile(path);
