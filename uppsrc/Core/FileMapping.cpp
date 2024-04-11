@@ -167,7 +167,7 @@ Time FileMapping::GetTime() const
 #endif
 #ifdef PLATFORM_POSIX
 	struct stat st;
-	fstat(hfile, st);
+	fstat(hfile, &st);
 	return Time(st.st_mtime);
 #endif
 }
