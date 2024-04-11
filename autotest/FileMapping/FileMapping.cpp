@@ -37,6 +37,19 @@ CONSOLE_APP_MAIN
 			ASSERT(*m.Map(i, 1) == test[i]);
 	}
 	
+	{
+		FileMapping m;
+		m.Open(path, FileStream::READWRITE);
+		byte *h = m.Map();
+		h[3] = 'X';
+		h[4] = 'Y';
+	}
+	
+	test.Set(3, 'X');
+	test.Set(4, 'Y');
+	
+	ASSERT(LoadFile(path) == test);
+	
 	DeleteFile(path);
 	
 	LOG("============ OK");
