@@ -149,7 +149,7 @@ void HexView::Paint(Draw& w)
 	uint64 adr = sc;
 	Buffer<char> hex(2 * columns), text(columns), mark(columns);
 	Buffer<int>  hex_dx(2 * columns), text_dx(columns, fsz.cx);
-	while(y < sz.cy) {
+	while(y < sz.cy && adr < total) {
 		char h[17];
 		FormatHex(h, adr + start, IsLongMode() ? 16 : 8);
 		w.DrawText(0, y, h, font);
@@ -158,9 +158,7 @@ void HexView::Paint(Draw& w)
 		int hexi = 0;
 		int texti = 0;
 		uint64 adr0 = adr;
-		for(int q = columns; q--;) {
-			if(adr >= total)
-				return;
+		for(int q = columns; q-- && adr < total;) {
 			if(adr == cursor) {
 				w.DrawRect(x + fsz.cx * 3 * int(adr - adr0), y, fsz.cx * 2, fsz.cy, LtCyan);
 				w.DrawRect(tx + fsz.cx * int(adr - adr0), y, fsz.cx, fsz.cy, LtCyan);
@@ -259,7 +257,7 @@ void HexView::SetCursor(uint64 _cursor)
 	
 	if(cursor > INT64_MAX - INT_MAX)
 		cursor = 0;
-	if(cursor > total)
+	if(cursor >= total)
 		cursor = total - 1;
 	int q = int(sc % columns);
 	if(cursor >= sc + bytes)
