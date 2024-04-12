@@ -18281,6 +18281,9 @@ $(OutDir_ide_Common)ComDlg.o: $(UPPDIR1)ide/Common/ComDlg.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -18466,6 +18469,9 @@ $(OutDir_ide_Common)Module.o: $(UPPDIR1)ide/Common/Module.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -18651,6 +18657,9 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -25314,6 +25323,9 @@ $(OutDir_ide_Debuggers)Terminal.o: $(UPPDIR1)ide/Debuggers/Terminal.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -25507,6 +25519,9 @@ $(OutDir_ide_Debuggers)Disas.o: $(UPPDIR1)ide/Debuggers/Disas.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -25701,6 +25716,9 @@ $(OutDir_ide_Debuggers)GdbCmd.o: $(UPPDIR1)ide/Debuggers/GdbCmd.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -25894,6 +25912,9 @@ $(OutDir_ide_Debuggers)GdbData.o: $(UPPDIR1)ide/Debuggers/GdbData.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -26087,6 +26108,9 @@ $(OutDir_ide_Debuggers)Gdb.o: $(UPPDIR1)ide/Debuggers/Gdb.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -26280,6 +26304,9 @@ $(OutDir_ide_Debuggers)GdbMem.o: $(UPPDIR1)ide/Debuggers/GdbMem.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -26563,6 +26590,9 @@ $(OutDir_ide_Debuggers)Cpu.o: $(UPPDIR1)ide/Debuggers/Cpu.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -26756,6 +26786,9 @@ $(OutDir_ide_Debuggers)Debug.o: $(UPPDIR1)ide/Debuggers/Debug.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -26949,6 +26982,9 @@ $(OutDir_ide_Debuggers)Mem.o: $(UPPDIR1)ide/Debuggers/Mem.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -27142,6 +27178,9 @@ $(OutDir_ide_Debuggers)Sym.o: $(UPPDIR1)ide/Debuggers/Sym.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -27335,6 +27374,9 @@ $(OutDir_ide_Debuggers)Exp.o: $(UPPDIR1)ide/Debuggers/Exp.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -27528,6 +27570,9 @@ $(OutDir_ide_Debuggers)PrettyUpp.o: $(UPPDIR1)ide/Debuggers/PrettyUpp.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -27721,6 +27766,9 @@ $(OutDir_ide_Debuggers)PrettyStd.o: $(UPPDIR1)ide/Debuggers/PrettyStd.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -27914,6 +27962,9 @@ $(OutDir_ide_Debuggers)Pretty.o: $(UPPDIR1)ide/Debuggers/Pretty.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -28107,6 +28158,9 @@ $(OutDir_ide_Debuggers)Visualise.o: $(UPPDIR1)ide/Debuggers/Visualise.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -28300,6 +28354,9 @@ $(OutDir_ide_Debuggers)Data.o: $(UPPDIR1)ide/Debuggers/Data.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -28493,6 +28550,9 @@ $(OutDir_ide_Debuggers)Tree.o: $(UPPDIR1)ide/Debuggers/Tree.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -28686,6 +28746,9 @@ $(OutDir_ide_Debuggers)Stack.o: $(UPPDIR1)ide/Debuggers/Stack.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -28879,6 +28942,9 @@ $(OutDir_ide_Debuggers)Code.o: $(UPPDIR1)ide/Debuggers/Code.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -29074,6 +29140,9 @@ $(OutDir_ide_Debuggers)Pdb.o: $(UPPDIR1)ide/Debuggers/Pdb.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -49118,6 +49187,9 @@ $(OutDir_ide_MacroManager)MacroManager.o: $(UPPDIR1)ide/MacroManager/MacroManage
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -50395,6 +50467,9 @@ $(OutDir_ide_clang)libclang.o: $(UPPDIR1)ide/clang/libclang.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -50581,6 +50656,9 @@ $(OutDir_ide_clang)util.o: $(UPPDIR1)ide/clang/util.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -50767,6 +50845,9 @@ $(OutDir_ide_clang)macros.o: $(UPPDIR1)ide/clang/macros.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -50953,6 +51034,9 @@ $(OutDir_ide_clang)Signature.o: $(UPPDIR1)ide/clang/Signature.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -51139,6 +51223,9 @@ $(OutDir_ide_clang)clang.o: $(UPPDIR1)ide/clang/clang.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -51325,6 +51412,9 @@ $(OutDir_ide_clang)Visitor.o: $(UPPDIR1)ide/clang/Visitor.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -51511,6 +51601,9 @@ $(OutDir_ide_clang)CurrentFile.o: $(UPPDIR1)ide/clang/CurrentFile.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
+	$(UPPDIR1)RichEdit/RichEdit.h \
+	$(UPPDIR1)RichEdit/RichEdit.iml \
+	$(UPPDIR1)RichEdit/RichEdit.lay \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
