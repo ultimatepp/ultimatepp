@@ -40,41 +40,14 @@ void QtfDlg::Copy()
 	Break();
 }
 
-struct QtfDlgEditor : TopWindow {
-	RichEditWithToolBar editor;
-
-	void Serialize(Stream& s);
-	
-	QtfDlgEditor();
-};
-
-void QtfDlgEditor::Serialize(Stream& s)
-{
-	SerializePlacement(s);
-}
-
-QtfDlgEditor::QtfDlgEditor()
-{
-    Add(editor.SizePos());
-    Rect r = GetWorkArea();
-    Sizeable().Zoomable();
-    SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
-    SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 100)));
-    Title("Editor");
-}
-
 void QtfDlg::Editor()
 {
-	QtfDlgEditor dlg;
-	LoadFromGlobal(dlg, "QTF-designer-editor");
-	dlg.editor.SetQTF((String)~qtfText.text);
-	dlg.Run();
+	String text = (String)~qtfText.text;
+	QTFEdit(text);
 	if(PromptYesNo("Use the text?")) {
-		qtfText.text <<= AsQTF(dlg.editor.Get(),
-		               CHARSET_UTF8, QTF_BODY|QTF_NOSTYLES|QTF_NOCHARSET|QTF_NOLANG);
+		qtfText.text <<= text;
 		Text();
 	}
-	StoreToGlobal(dlg, "QTF-designer-editor");
 }
 
 void QtfDlg::OnHelpLink(const String& link)

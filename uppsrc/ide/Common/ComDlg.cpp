@@ -288,3 +288,37 @@ void ShellOpenFolder(const String& dir)
 		);
 	#endif
 }
+
+struct QtfDlgEditor : TopWindow {
+	RichEditWithToolBar editor;
+
+	void Serialize(Stream& s);
+	
+	QtfDlgEditor();
+};
+
+void QtfDlgEditor::Serialize(Stream& s)
+{
+	SerializePlacement(s);
+}
+
+QtfDlgEditor::QtfDlgEditor()
+{
+    Add(editor.SizePos());
+    Rect r = GetWorkArea();
+    Sizeable().Zoomable();
+    SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
+    SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 100)));
+    Title("Editor");
+}
+
+void QTFEdit(String& text)
+{
+	QtfDlgEditor dlg;
+	LoadFromGlobal(dlg, "QTF-designer-editor");
+	dlg.editor.SetQTF(text);
+	dlg.Run();
+	bool r = false;
+	text = AsQTF(dlg.editor.Get(), CHARSET_UTF8, QTF_BODY|QTF_NOSTYLES|QTF_NOCHARSET|QTF_NOLANG);
+	StoreToGlobal(dlg, "QTF-designer-editor");
+}
