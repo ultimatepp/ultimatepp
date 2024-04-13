@@ -1,0 +1,6 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\TimeFormat.exe 13.04.2024 14:17:41, user: cxl
+
+d = April 13, 2024
+ScanDate(AsString(d)) = April 13, 2024
+d = APR 13, 2024
+ScanDate(AsString(d)) = APR 13, 2024

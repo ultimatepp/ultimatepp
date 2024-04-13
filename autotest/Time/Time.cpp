@@ -12,7 +12,7 @@ LOG("==================="); }
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-
+	
 	DUMP(GetTimeZoneText());
 
 	DUMP(GetTimeZone());	
