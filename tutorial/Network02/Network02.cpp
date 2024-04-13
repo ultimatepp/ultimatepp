@@ -29,7 +29,7 @@ void ProcessHttpRequest(TcpSocket& client)
 		}
 	}
 	
-	HttpResponse(client, false, 404, "Not Found");
+	HttpResponse(client, false, HttpStatus::NOT_FOUND);
 }
 
 void RunServerLoop(TcpSocket& server)
