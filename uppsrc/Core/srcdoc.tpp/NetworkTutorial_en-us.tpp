@@ -218,8 +218,8 @@ client)]&]
 t)][C ) `{]&]
 [s0;l320; [C         Cerr() ][C@(0.0.255) <<][C  ][C@3 `"Failed to read HttpHeader.][C@(0.0.255) `\
 n][C@3 `"][C ;]&]
-[s0;l320; [C         HttpResponse(client, ][*C@(0.0.255) false][C , ][C@3 400][C , 
-][C@3 `"Invalid request`"][C );]&]
+[s0;l320; [C         HttpResponse(client, ][*C@(0.0.255) false][C , HttpStatus][C@(0.0.255) `:
+:][C BAD`_REQUEST);]&]
 [s0;l320; [C         ][*_C@(128.0.255) return][C ;]&]
 [s0;l320; [C     `}]&]
 [s0;l320;C &]
@@ -235,14 +235,17 @@ etURI()][C ;]&]
 [s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"Brazil`"]&]
 [s0;l320; [C                ][C@(0.0.255) <<][C  ][C@3 `"France`"][C ;]&]
 [s0;l320;C &]
-[s0;l320; [C             ][*_C HttpResponse(client, ][*_C@(0.0.255) false][*_C , 
-][*_C@3 200][*_C , ][*_C@3 `"OK`"][*_C , ][*_C@3 `"application/json`"][*_C , 
-ja][*_C@(0.0.255) .][*_C ToString())][C ;]&]
+[s0; [C                    ][*C@(0.0.255) auto][C  code ][C@(0.0.255) `=][C  
+HttpStatus][C@(0.0.255) `::][C OK;]&]
+[s0; [C                    ][*_C HttpResponse(client, ][*_C@(0.0.255) false][*_C , 
+code, HttpStatus][*_C@(0.0.255) `::][*_C ToString(code), ][*_C@3 `"application/json`"][*_C ,
+]&]
+[s0;l320; [*_C                           ja][*_C@(0.0.255) .][*_C ToString())][C ;]&]
 [s0;l320; [C         `}]&]
 [s0;l320; [C     `}]&]
 [s0;l320;C &]
-[s0;l320; [C     HttpResponse(client, ][*C@(0.0.255) false][C , ][C@3 404][C , 
-][C@3 `"Not found`"][C );]&]
+[s0;l320; [C     HttpResponse(client, ][*C@(0.0.255) false][C , HttpStatus][C@(0.0.255) `::][C N
+OT`_FOUND);]&]
 [s0;l320; [C `}]&]
 [s0;l320;C &]
 [s0;l320; [*C@(0.0.255) void][C  RunServerLoop(TcpSocket][C@(0.0.255) `&][C  
@@ -279,7 +282,19 @@ server][C@(0.0.255) .][C GetErrorDesc()]&]
 [s0;l320;C &]
 [s0;l320; [C     RunServerLoop(server);]&]
 [s0;l320; [C `}]&]
-[s5; To test above the example a [*^https`:`/`/curl`.se`/^ curl] terminal 
+[s5; In the recent version of the U`+`+ framework (2024.1), the HttpStatus 
+codes were introduced. It means that you don`'t longer need to 
+provide an explicit status code and prhase to HttpRepsonse. So,&]
+[s0; &]
+[s0;l320; [C HttpResponse(client, ][*C@(0.0.255) false][C , HttpStatus][C@(0.0.255) `::][C NOT`_
+FOUND);]&]
+[s0; &]
+[s5; is the eqivalent to:&]
+[s0; &]
+[s0;l320; [C HttpResponse(client, ][*C@(0.0.255) false][C@5 , ][C@3 404][C@5 , 
+][C@3 `"Not Found`"][C@5 );]&]
+[s0; &]
+[s5; To test the above example a [*^https`:`/`/curl`.se`/^ curl] terminal 
 application can be used. This application is bundled with most 
 Linux distributions, and it can be easily downloaded for Windows. 
 The command that should be run in the terminal is as follows:&]
