@@ -143,6 +143,13 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL_set_fd");
 		return false;
 	}
+	
+	if(socket.CAcert.GetCount())
+	{
+	    context.VerifyPeer(true);
+	    context.UseCAcert(socket.CAcert, socket.asn1);
+	}
+	
 	return true;
 }
 
@@ -186,6 +193,15 @@ dword TcpSocket::SSLImp::Handshake()
 		f.cert_version = cert.GetVersion();
 		f.cert_verified = SSL_get_verify_result(ssl) == X509_V_OK;
 	}
+	
+	if(socket.CAcert.GetCount() > 0)
+	{
+	    if(f.cert_verified == false)
+	    {
+	        SetSSLError("SSL CA invalid");
+	    }
+	}
+	
 	return 0;
 }
 
