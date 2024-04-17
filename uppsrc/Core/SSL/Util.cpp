@@ -183,7 +183,6 @@ bool SslContext::UseCAcert(String CAcert, bool cert_asn1)
     if(!X509_STORE_add_cert(castore, ca))
         return false;
     
-    
     return true;
 }
 
