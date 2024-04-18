@@ -131,7 +131,7 @@ public:
 	bool     UseCertificate(String certificate, String private_key, bool cert_asn1 = false);
 	void     VerifyPeer(bool verify = true, int depth = 2);
 	
-	bool     UseCAcert(String CAcert, bool cert_asn1 = false);
+	bool     UseCAcert(String ca_cert, bool cert_asn1 = false);
 
 private:
 	SSL_CTX *ssl_ctx;

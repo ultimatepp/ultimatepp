@@ -972,11 +972,9 @@ void TcpSocket::SSLServerNameIndication(const String& name)
 
 void TcpSocket::SSLCAcert(const String& cert, bool asn1_)
 {
-	CAcert = cert;
+	ca_cert = cert;
     asn1 = asn1_;
 }
-
-
 
 void TcpSocket::Clear()
 {

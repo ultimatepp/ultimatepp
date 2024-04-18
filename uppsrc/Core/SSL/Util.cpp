@@ -167,23 +167,20 @@ void SslContext::VerifyPeer(bool verify, int depth)
 	SSL_CTX_set_verify_depth(ssl_ctx, depth);
 }
 
-bool SslContext::UseCAcert(String CAcert, bool cert_asn1)
+bool SslContext::UseCAcert(String ca_cert, bool cert_asn1)
 {
     ASSERT(ssl_ctx);
-    if(IsNull(CAcert))
+    if(IsNull(ca_cert))
         return false;
     SslCertificate ca;
-    if(!ca.Load(CAcert, cert_asn1))
+    if(!ca.Load(ca_cert, cert_asn1))
         return false;
     
-    X509_STORE * castore = SSL_CTX_get_cert_store(ssl_ctx);
-    if(castore == NULL)
+    auto castore = SSL_CTX_get_cert_store(ssl_ctx);
+    if(!castore)
         return false;
     
-    if(!X509_STORE_add_cert(castore, ca))
-        return false;
-    
-    return true;
+    return X509_STORE_add_cert(castore, ca);
 }
 
 String SslGetLastError(int& code)

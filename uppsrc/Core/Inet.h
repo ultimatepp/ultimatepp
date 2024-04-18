@@ -131,7 +131,7 @@ class TcpSocket : NoCopy {
 	String                  cert, pkey, sni;
 	bool                    asn1;
 	
-	String                  CAcert;
+	String                  ca_cert;
 
 	struct SSLImp;
 	friend struct SSLImp;
