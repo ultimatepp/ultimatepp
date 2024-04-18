@@ -97,7 +97,8 @@ in Win32). Separator [*/ is not] included at the end of result.
 If there is none, returns empty string.&]
 [s2;%% Example (POSIX): GetFileFolder([@3 `"/home/user/test.ext`"]) 
 returns [@3 `"/home/user`"].&]
-[s3;%% &]
+[s2;%% &]
+[s3; &]
 [s4;%% &]
 [s5;:GetFileTitle`(const char`*`): [_^String^ String]_[* GetFileTitle]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 path])&]

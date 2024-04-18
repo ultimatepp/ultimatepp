@@ -551,6 +551,11 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 
 		qtf << "]";
 	}
+
+	if(options & QTF_NOSTYLES) // remove redundant []
+		while(qtf.StartsWith("[ ") && qtf.EndsWith("]"))
+			qtf = qtf.Mid(2, qtf.GetCount() - 3);
+
 	return qtf;
 }
 

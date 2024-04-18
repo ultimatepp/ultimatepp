@@ -319,9 +319,8 @@ void     FileStream::SetTime(const FileTime& tm) {
 		SetLastError();
 }
 
-bool FileStream::Open(const char *name, dword mode) {
-	LLOG("Open " << name << " mode: " << mode);
-	Close();
+bool FileStream::OpenHandle(const char *name, dword mode, HANDLE& handle, int64& fsz)
+{
 	int iomode = mode & ~SHAREMASK;
 	handle = CreateFileW(ToSystemCharsetW(name),
 		iomode == READ ? GENERIC_READ : GENERIC_READ|GENERIC_WRITE,
@@ -334,20 +333,28 @@ bool FileStream::Open(const char *name, dword mode) {
 		FILE_ATTRIBUTE_NORMAL|FILE_FLAG_SEQUENTIAL_SCAN,
 		NULL
 	);
-	if(handle == INVALID_HANDLE_VALUE) {
-		SetLastError();
-		return FALSE;
-	}
+	if(handle == INVALID_HANDLE_VALUE)
+		return false;
 	dword fsz_lo, fsz_hi;
 	fsz_lo = ::GetFileSize(handle, &fsz_hi);
-	int64 fsz;
 	if(fsz_lo == 0xffffffff && GetLastError() != NO_ERROR)
 		fsz = 0;
 	else
 		fsz = fsz_lo | (int64(fsz_hi) << 32);
-	OpenInit(iomode, fsz);
-	LLOG("OPEN " << handle);
-	return TRUE;
+	return true;
+}
+
+bool FileStream::Open(const char *name, dword mode) {
+	LLOG("Open " << name << " mode: " << mode);
+	Close();
+	int64 fsz;
+	if(OpenHandle(name, mode, handle, fsz)) {
+		OpenInit(mode, fsz);
+		LLOG("OPEN " << handle);
+		return true;
+	}
+	SetLastError();
+	return false;
 }
 
 void FileStream::Close() {
@@ -461,9 +468,8 @@ FileTime FileStream::GetTime() const {
 	return fst.st_mtime;
 }
 
-bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
-	Close();
-	LLOG("Open " << name);
+bool FileStream::OpenHandle(const char *name, dword mode, int& handle, int64& fsz, mode_t tmode)
+{
 	int iomode = mode & ~SHAREMASK;
 	handle = open(ToSystemCharset(name), iomode == READ ? O_RDONLY :
 	                    iomode == CREATE ? O_CREAT|O_RDWR|O_TRUNC :
@@ -473,18 +479,28 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	if(handle >= 0) {
 		struct stat st[1];
 		fstat(handle, st);
-		int64 fsz = st->st_size;
+		fsz = st->st_size;
 		if(!(st->st_mode & S_IFREG) ||  // not a regular file, e.g. folder - bad things would happen
-		   (mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0 || // lock if not sharing
-		   fsz < 0) {
+		   fsz < 0 ||
+		   (mode & NOWRITESHARE) && flock(handle, LOCK_EX|LOCK_NB) < 0) // lock if not sharing
+		{
 			close(handle);
 			handle = -1;
+			return false;
 		}
-		else {
-			OpenInit(mode, fsz);
-			LLOG("OPEN handle " << handle);
-			return true;
-		}
+		return true;
+	}
+	return false;
+}
+
+bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
+	Close();
+	LLOG("Open " << name);
+	int64 fsz;
+	if(OpenHandle(name, mode, handle, fsz, tmode)) {
+		OpenInit(mode, fsz);
+		LLOG("OPEN handle " << handle);
+		return true;
 	}
 	SetLastError();
 	return false;

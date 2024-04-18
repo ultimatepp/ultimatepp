@@ -68,14 +68,14 @@ String MonName(int i, int lang)
 	return i >= 0 && i < 12 ? Nvl(GetLngString(lang, month[i]), GetENUS(month[i])) : String();
 }
 
-static thread_local char s_date_format_thread[64];
-static char s_date_format_main[64] = "%2:02d/%3:02d/%1:4d";
+static thread_local char s_date_format_thread[128];
+static char s_date_format_main[128] = "%2:02d/%3:02d/%1:4d";
 
 void SetDateFormat(const char *fmt)
 {
-	strncpy(s_date_format_thread, fmt, 63);
+	strncpy(s_date_format_thread, fmt, 127);
 	if(Thread::IsMain())
-		strncpy(s_date_format_main, fmt, 63);
+		strncpy(s_date_format_main, fmt, 127);
 }
 
 #ifdef PLATFORM_WIN32 // resolve nameclash with win32 API
@@ -283,7 +283,7 @@ void Date::Set(int d)
 		year -= 400;
 		d += 400 * 365 + 100 - 3;
 	}
- 	leap = 1;
+	leap = 1;
 	if(d >= 100 * 365 + 24 + 1) {
 		d--;
 		q = d / (100 * 365 + 24);

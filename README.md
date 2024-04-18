@@ -34,6 +34,9 @@ U++ uses the BSD-2 Clause license. The license applies to all source code in thi
 Main downloads:
 * [Latest stable release](https://sourceforge.net/projects/upp/files/latest/download) - starts download with automatic platform detection
 
+Stores download:
+* [Flathub](https://flathub.org/apps/org.ultimatepp.TheIDE) - download latest stable U++ version from Flathub (Linux only)
+
 Other downloads:
 * [Stable releases](https://sourceforge.net/projects/upp/) - all stable releases including historical ones
 * [Nightly build](https://www.ultimatepp.org/www$uppweb$download$en-us.html) - latest unstable release of U++ (might be unstable)

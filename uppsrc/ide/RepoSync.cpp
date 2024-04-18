@@ -295,7 +295,6 @@ void RepoSync::SyncList()
 		         AttrText(path).Bold().Paper(bk),
 		         AttrText(w.value == GIT_DIR ? GetGitBranchRaw(path) : String())
 		         .Ink(SLtBlue()).Bold().Italic().Paper(bk));
-//		list.SetLineCy(hi, Option::GetStdSize().cy);
 		bool actions = false;
 		if(w.value == SVN_DIR) {
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);

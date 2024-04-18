@@ -2,7 +2,7 @@
 #define _ide_GuiCommon_GuiCommon_h_
 
 #include <ide/Core/Core.h>
-#include <CtrlLib/CtrlLib.h>
+#include <RichEdit/RichEdit.h>
 #include <CodeEditor/CodeEditor.h>
 
 #define IMAGECLASS IdeCommonImg
@@ -111,5 +111,7 @@ String LibClangCommandLine();
 String LibClangCommandLineC();
 
 void   IdeShowConsole();
+
+void QTFEdit(String& text);
 
 #endif

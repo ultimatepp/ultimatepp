@@ -49,14 +49,18 @@ void IdeBackgroundThread()
 				dir.FindAdd(NormalizePath(d));
 			Sleep(0);
 		}
+		
 		for(String d : dir)
 			GatherAllFiles(d, filei, file);
+
+		GatherAllFiles(GetDownloadFolder(), filei, file);
+
 		{
 			Mutex::Lock __(s_allfiles_lock);
 			s_allfiles = pick(file);
 			s_allnests = dir.PickKeys();
 		}
-		
+	
 		ide_bg_scheduler.Wait();
 	}
 }

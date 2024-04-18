@@ -856,9 +856,7 @@ void Ide::EditFile(const String& p)
 void Ide::CheckFileUpdate()
 {
 	if(editfile.IsEmpty() || !IsForeground() || designer) return;
-	FindFile ff(editfile);
-	if(!ff) return;
-	FileTime tm = ff.GetLastWriteTime();
+	FileTime tm = GetFileTime(editfile);
 	if(tm == edittime) return;
 	edittime = tm;
 	if(editor.IsDirty() && !Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
@@ -867,7 +865,7 @@ void Ide::CheckFileUpdate()
 		"Reload", "Keep")) return;
 
 	if(!editor.IsView() && !editor.IsReadOnly() && editor.GetUndoCount() &&
-	   max((int64)editor.GetLength(), ff.GetLength()) < 30*1024*1024) {
+	   max((int64)editor.GetLength(), GetFileLength(editfile)) < 30*1024*1024) {
 	    int c = editor.GetCursor();
 	    ApplyChanges(editor, LoadFile(editfile));
 		editor.SetCursor(c);

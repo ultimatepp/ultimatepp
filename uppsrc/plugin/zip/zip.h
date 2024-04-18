@@ -12,8 +12,8 @@ class UnZip {
 		dword  time;
 		int    method;
 		dword  crc;
-		dword  csize;
-		dword  usize;
+		qword  csize;
+		qword  usize;
 		int64  offset;
 	};
 	
@@ -37,7 +37,7 @@ public:
 	String GetPath(int i) const   { return file[i].path; }
 	bool   IsFolder(int i) const  { return *file[i].path.Last() == '/'; }
 	bool   IsFile(int i) const    { return !IsFolder(i); }
-	int    GetLength(int i) const { return file[i].usize; }
+	int64  GetLength(int i) const { return file[i].usize; }
 	Time   GetTime(int i) const   { return GetZipTime(file[i].time); }
 
 	void   Seek(int i)            { ASSERT(i >= 0 && i < file.GetCount()); current = i; }
@@ -45,7 +45,7 @@ public:
 	bool   IsFolder() const       { return IsFolder(current); }
 	bool   IsFile() const         { return !IsFolder(); }
 	String GetPath() const        { return GetPath(current); }
-	int    GetLength() const      { return GetLength(current); }
+	int64  GetLength() const      { return GetLength(current); }
 	Time   GetTime() const        { return GetTime(current); }
 
 	void   Skip()                 { current++; }
@@ -102,13 +102,15 @@ class Zip {
 		int    version;
 		int    gpflag;
 		int    method;
+		bool   zip64;
 		dword  crc;
-		dword  csize;
-		dword  usize;
+		qword  csize;
+		qword  usize;
 	};
+	
 	Array<File> file;
 
-	dword   done;
+	qword   done;
 
 	One<Zlib> pipeZLib;
 	Crc32Stream crc32; // for uncompressed files
@@ -125,9 +127,10 @@ class Zip {
 public:
 	Callback WhenError;
 
-	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true);
-	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true);
+	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
+	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true, bool zip64 = false);
 	void Put(const void *data, int size);
+	void Put64(const void *data, int64 size);
 	void EndFile();
 	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
 
@@ -140,7 +143,7 @@ public:
 	
 	bool IsError()                           { return zip && zip->IsError(); }
 
-	dword  GetLength() const                 { return done; }
+	qword  GetLength() const                 { return done; }
 	
 	Zip();
 	Zip(Stream& out);

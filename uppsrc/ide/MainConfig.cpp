@@ -98,13 +98,14 @@ void MainConfigDlg::FlagDlg()
 
 MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	CtrlLayoutOKCancel(*this, "Main package configuration(s)");
+	Sizeable().Zoomable();
 	fe.AddFrame(cb);
 	fe.SetFilter(FlagFilterM);
 	cb.SetImage(CtrlImg::smallright()).NoWantFocus();
 	cb <<= THISBACK(FlagDlg);
 	list.AddColumn("Flags", 3).Edit(fe);
 	list.AddColumn("Optional name", 2).Edit(ce);
-	list.Appending().Removing().Moving().Duplicating();
+	list.Inserting().Appending().Removing().Moving().Duplicating();
 	
 	list.WhenDrag = [=] {
 		list.DoDragAndDrop(InternalClip(list, "main_config-item"), list.GetDragSample(), DND_MOVE);
@@ -126,6 +127,33 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
+	add.SetImage(IdeImg::add()) << [=] {
+		list.DoAppend();
+	};
+
+	insert.SetImage(IdeImg::insert()) << [=] {
+		list.DoInsertBefore();
+	};
+
+	duplicate.SetImage(IdeImg::duplicate()) << [=] {
+		list.DoDuplicate();
+	};
+
+	edit.SetImage(IdeImg::pencil()) ^= [=] {
+		list.StartEdit();
+	};
+
+	remove.SetImage(IdeImg::remove()) << [=] {
+		list.DoRemove();
+	};
+	
+	up.SetImage(IdeImg::arrow_up()) << [=] {
+		list.SwapUp();
+	};
+
+	down.SetImage(IdeImg::arrow_down()) << [=] {
+		list.SwapDown();
+	};
 }
 
 bool MainConfigDlg::Perform(const String& startwith) {

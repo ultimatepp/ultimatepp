@@ -570,6 +570,13 @@ bool MakeBuild::Build()
 	One<Builder> builder = CreateBuilder(&host);
 	if(!builder)
 		return false;
+	String dummy;
+	String cc = builder->CompilerName();
+	if(cc.GetCount() && HostSys(cc + " --version", dummy)) {
+		PutConsole("Error: Cannot invoke compiler '" + cc + "'");
+		ConsoleShow();
+		return false;
+	}
 	Workspace wspc;
 	BuildWorkspace(wspc, host, *builder);
 	return Build(wspc, mainconfigparam, Null);

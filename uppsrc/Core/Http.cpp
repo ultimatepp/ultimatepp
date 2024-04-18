@@ -922,4 +922,14 @@ String HttpRequest::GetPhaseName() const
 	return phase >= 0 && phase <= FAILED ? m[phase] : "";
 }
 
+String HttpStatus::ToString(int status)
+{
+	switch (status) {
+		#define CODE_(id, code, str) case id: return #str;
+		#include "HttpStatusCode.i"
+		#undef CODE_
+		default: return "";
+	}
+}
+
 }

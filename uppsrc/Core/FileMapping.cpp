@@ -6,22 +6,24 @@
 
 namespace Upp {
 
-static int sMappingGranularity_()
+int FileMapping::MappingGranularity()
 {
-#ifdef PLATFORM_WIN32
 	static int mg = 0;
-	if(!mg) {
+#ifdef PLATFORM_WIN32
+	ONCELOCK {
 		SYSTEM_INFO info;
 		GetSystemInfo(&info);
 		mg = info.dwAllocationGranularity;
 	}
 #else
-	static int mg = 4096;
+	ONCELOCK {
+		mg = getpagesize();
+	}
 #endif
 	return mg;
 }
 
-FileMapping::FileMapping(const char *file_, bool delete_share_)
+FileMapping::FileMapping(const char *file_)
 {
 #ifdef PLATFORM_WIN32
 	hfile = INVALID_HANDLE_VALUE;
@@ -29,7 +31,6 @@ FileMapping::FileMapping(const char *file_, bool delete_share_)
 #endif
 #ifdef PLATFORM_POSIX
 	hfile = -1;
-	Zero(hfstat);
 #endif
 	base = rawbase = NULL;
 	size = rawsize = 0;
@@ -37,105 +38,81 @@ FileMapping::FileMapping(const char *file_, bool delete_share_)
 	filesize = -1;
 	write = false;
 	if(file_)
-		Open(file_, delete_share_);
-
+		Open(file_);
 }
 
-bool FileMapping::Open(const char *file, bool delete_share)
+#ifdef PLATFORM_WIN32
+bool FileMapping::Open(const char *filename, dword mode, int64 wsize)
+#else
+bool FileMapping::Open(const char *filename, dword mode, int64 wsize, mode_t acm)
+#endif
 {
 	Close();
-	write = false;
+	write = (mode & FileStream::MODEMASK) != FileStream::READ;
 #ifdef PLATFORM_WIN32
-	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if(hfile == INVALID_HANDLE_VALUE)
+	if(!FileStream::OpenHandle(filename, mode, hfile, filesize))
 		return false;
-	filesize = ::GetFileSize(hfile, NULL);
-	hmap = CreateFileMapping(hfile, NULL, PAGE_READONLY, 0, 0, NULL);
+	if((mode & FileStream::MODEMASK) == FileStream::CREATE)
+		filesize = wsize;
+	else
+		wsize = 0;
+	hmap = CreateFileMapping(hfile, NULL, write ? PAGE_READWRITE : PAGE_READONLY, HIDWORD(wsize), LODWORD(wsize), NULL);
 	if(!hmap) {
 		Close();
 		return false;
 	}
-#endif
-#ifdef PLATFORM_POSIX
-	hfile = open(ToSystemCharset(file), O_RDONLY);
-	if(hfile == -1)
+#else
+	if(!FileStream::OpenHandle(filename, mode, hfile, filesize, acm))
 		return false;
-	if(fstat(hfile, &hfstat) == -1) {
-		Close();
-		return false;
+	if((mode & FileStream::MODEMASK) == FileStream::CREATE) {
+		ftruncate(hfile, wsize);
+		filesize = wsize;
 	}
-	filesize = hfstat.st_size;
 #endif
 	return true;
 }
 
-bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
+
+bool FileMapping::Create(const char *file, int64 filesize, bool delete_share)
 {
-	Close();
-	write = true;
-#ifdef PLATFORM_WIN32
-	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share ? FILE_SHARE_DELETE : 0),
-		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if(hfile == INVALID_HANDLE_VALUE)
-		return false;
-	long lo = (dword)filesize_, hi = (dword)(filesize_ >> 32);
-	hmap = CreateFileMapping(hfile, NULL, PAGE_READWRITE, hi, lo, NULL);
-	if(!hmap) {
-		Close();
-		return false;
-	}
-#endif
-#ifdef PLATFORM_POSIX
-	hfile = open(ToSystemCharset(file), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if(hfile == -1)
-		return false;
-#endif
-	filesize = filesize_;
-	return true;
+	return Open(file, FileStream::CREATE | (delete_share ? FileStream::DELETESHARE : 0), filesize);
 }
 
-bool FileMapping::Map(int64 mapoffset, size_t maplen)
+byte *FileMapping::Map(int64 mapoffset, size_t maplen)
 {
 	ASSERT(IsOpen());
-	if(maplen == 0)
-		return Unmap();
+	Unmap();
 	mapoffset = minmax<int64>(mapoffset, 0, filesize);
-	int gran = sMappingGranularity_();
+	int gran = MappingGranularity();
 	int64 rawoff = mapoffset & -gran;
 	maplen = (size_t)min<int64>(maplen, filesize - mapoffset);
 	size_t rawsz = (size_t)min<int64>((maplen + (size_t)(mapoffset - rawoff) + gran - 1) & -gran, filesize - rawoff);
-	if(rawbase && (mapoffset < rawoffset || mapoffset + maplen > rawoffset + rawsize))
-		Unmap();
-	if(!rawbase) {
-		rawoffset = rawoff;
-		rawsize = rawsz;
+	rawoffset = rawoff;
+	rawsize = rawsz;
+	
 #ifdef PLATFORM_WIN32
-		rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
-			(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
+	rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
+	                                HIDWORD(rawoffset), LODWORD(rawoffset), rawsize);
 #else
-		rawbase = (byte *)mmap(0, rawsize,
-			PROT_READ | (write ? PROT_WRITE : 0),
+	rawbase = (byte *)mmap(0, rawsize,
+		PROT_READ | (write ? PROT_WRITE : 0),
 #ifdef PLATFORM_FREEBSD
-			MAP_NOSYNC,
+		MAP_NOSYNC,
 #else
-			MAP_SHARED,
+		MAP_SHARED,
 #endif
-			hfile, rawoffset);
+		hfile, rawoffset);
 #endif
 #ifdef PLATFORM_POSIX
-		if(rawbase == (byte *)~0)
+	if(rawbase == (byte *)-1)
 #else
-		if(!rawbase)
+	if(!rawbase)
 #endif
-			return false;
-	}
+		return NULL;
 	offset = mapoffset;
 	size = maplen;
 	base = rawbase + (int)(offset - rawoffset);
-	return true;
+	return base;
 }
 
 bool FileMapping::Unmap()
@@ -154,30 +131,6 @@ bool FileMapping::Unmap()
 	return ok;
 }
 
-bool FileMapping::Expand(int64 new_filesize)
-{
-	ASSERT(IsOpen());
-	if(new_filesize > filesize) {
-		if(!Unmap())
-			return false;
-#ifdef PLATFORM_WIN32
-		if(!CloseHandle(hmap)) {
-			hmap = NULL;
-			return false;
-		}
-		hmap = NULL;
-#endif
-#ifdef PLATFORM_POSIX
-		if(FTRUNCATE64_(hfile, new_filesize - filesize) != 0) {
-			Close();
-			return false;
-		}
-#endif
-		filesize = new_filesize;
-	}
-	return true;
-}
-
 bool FileMapping::Close()
 {
 	bool ok = Unmap();
@@ -194,7 +147,6 @@ bool FileMapping::Close()
 #ifdef PLATFORM_POSIX
 	if(IsOpen()) {
 		if(close(hfile) != 0) ok = false;
-		Zero(hfstat);
 		hfile = -1;
 	}
 #endif
@@ -214,18 +166,10 @@ Time FileMapping::GetTime() const
 	return ft;
 #endif
 #ifdef PLATFORM_POSIX
-	return Time(hfstat.st_mtime);
+	struct stat st;
+	fstat(hfile, &st);
+	return Time(st.st_mtime);
 #endif
-}
-
-String FileMapping::GetData(int64 offset, int len)
-{
-	if(IsOpen() && Map(offset, len))
-		return String(base, len);
-	else {
-		NEVER();
-		return String::GetVoid();
-	}
 }
 
 }

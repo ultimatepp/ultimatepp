@@ -27,6 +27,16 @@ trl][@(0.0.255) `&]_[*@3 ctrl], [*@4 T][@(0.0.255) `&]_[*@3 val])&]
 based on current direction setting.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CtrlMapper`:`:operator`(`)`(Upp`:`:Ctrl`&`,T`&`,const T`&`): [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 T]>_[_^Upp`:`:CtrlMapper^ CtrlMapper][@(0.0.255) `&]_[* op
+erator()]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], [*@4 T][@(0.0.255) `&]_[*@3 val], 
+[@(0.0.255) const] [*@4 T][@(0.0.255) `&]_[*@3 f])&]
+[s2;%% Similar to two parameter operator(), but before setting [%-*@3 val] 
+to [%-*@3 ctrl], it multiplies it by [%-*@3 f] and before retrieving, 
+divides by [%-*@3 f]. Useful as simple conversion tool when e.g. 
+the value is to be stored in meters but edited as kilometers.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:CtrlMapper`:`:ToCtrls`(`): [_^Upp`:`:CtrlMapper^ CtrlMapper][@(0.0.255) `&]_[* T
 oCtrls]()&]
 [s2;%% Sets direction flag to move values to widgets.&]

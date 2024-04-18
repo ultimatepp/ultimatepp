@@ -2375,7 +2375,7 @@ void ArrayCtrl::DoDuplicate() {
 	int c = cursor;
 	if(!KillCursor()) return;
 	Vector<Value> va = ReadRow(c);
-	c = IsAppending() ? array.GetCount() : c + 1;
+	c = IsAppending() && !IsInserting() ? array.GetCount() : c + 1;
 	Insert(c, va);
 	SetCursor(c);
 	DoEdit();

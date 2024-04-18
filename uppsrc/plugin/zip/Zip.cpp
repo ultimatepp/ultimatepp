@@ -7,7 +7,7 @@ void Zip::WriteFolder(const char *path, Time tm)
 	String p = UnixPath(path);
 	if(*p.Last() != '/')
 		p.Cat('/');
-	WriteFile(~p, 0, p, Null, tm);
+	WriteFile(~p, 0, p, Null, tm, false);
 }
 
 int64 zPress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool gzip,
@@ -27,16 +27,28 @@ void Zip::FileHeader(const char *path, Time tm)
 	ASSERT((f.gpflag & 0x8) == 0 || f.crc == 0);
 	zip->Put32le(f.crc);
 	ASSERT((f.gpflag & 0x8) == 0 || f.csize == 0);
-	zip->Put32le(f.csize);
+	zip->Put32le((dword)(f.zip64 ? 0xffffffff : f.csize));
 	ASSERT((f.gpflag & 0x8) == 0 || f.usize == 0);
-	zip->Put32le(f.usize);
+	zip->Put32le((dword)(f.zip64 ? 0xffffffff : f.usize));
 	zip->Put16le((word)strlen(f.path));
-	zip->Put16le(0);
+	zip->Put16le(f.zip64 ? 28 : 0); // ZIP64 extra field length
 	zip->Put(f.path);
-	done += 5*2 + 5*4 + f.path.GetCount();
+	if(f.zip64){
+		zip->Put16le(1); // ZIP64
+		zip->Put16le(24); // ZIP64 data to read : usize, csize, offset
+		zip->Put64le(0);
+		zip->Put64le(0);
+		zip->Put64le(done);
+	}
+	done += 5*2 + 5*4 + f.path.GetCount() + (f.zip64 ? 28 : 0);
 }
 
-void Zip::BeginFile(const char *path, Time tm, bool deflate)
+static bool IsPlainASCII(const String &s){
+	for(int i=0;i<s.GetCount();i++) if((s[i]<32) || (s[i]>=127)) return false;
+	return true;
+}
+
+void Zip::BeginFile(const char *path, Time tm, bool deflate, bool zip64)
 {
 	ASSERT(!IsFileOpened());
 	if(deflate) {
@@ -48,10 +60,14 @@ void Zip::BeginFile(const char *path, Time tm, bool deflate)
 		crc32.Clear();
 		uncompressed = true;
 	}
+	
+	if(done>=0xffffffffULL) zip64 = true; // must switch to Zip64 due to large archive size
+	
 	File& f = file.Add();
-	f.version = 21;
-	f.gpflag = 0x8;
+	f.version = zip64 ? 45 : 20;
+	f.gpflag = IsPlainASCII(path) ? 0x8 : 0x8 | 1<<11; // Added UTF-8 marker, i.e.: " | 1<<11"; only for files with non-ASCII characters
 	f.method = deflate ? 8 : 0;
+	f.zip64 = zip64;
 	f.crc = 0;
 	f.csize = 0;
 	f.usize = 0;
@@ -59,10 +75,10 @@ void Zip::BeginFile(const char *path, Time tm, bool deflate)
 	if (zip->IsError()) WhenError();
 }
 
-void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm, bool deflate)
+void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm, bool deflate, bool zip64)
 {
-	BeginFile(path, tm, deflate);
-	oz.Filter = THISBACK(Put);
+	BeginFile(path, tm, deflate, zip64);
+	oz.Filter = THISBACK(Put64);
 	oz.End = THISBACK(EndFile);
 }
 
@@ -79,21 +95,54 @@ void Zip::Put(const void *ptr, int size)
 	f.usize += size;
 }
 
+void Zip::Put64(const void *ptr, int64 size)
+{
+	ASSERT(IsFileOpened());
+	File& f = file.Top();
+	
+	int64 done = 0;
+	while(done < size){
+		int chunk = (int)min(1024*1024LL, size - done);
+		if(f.method == 0) {
+			PutCompressed((byte *)ptr + done, chunk);
+			crc32.Put((byte *)ptr + done, chunk);
+		}
+		else
+			pipeZLib->Put((byte *)ptr + done, chunk);
+		
+		done += chunk;
+	}
+	f.usize += size;
+}
+
 void Zip::EndFile()
 {
 	if(!IsFileOpened())
 		return;
 	File& f = file.Top();
 	ASSERT(f.gpflag & 0x8);
-	if(f.method == 0)
+	
+	if(f.method == 0){
 		zip->Put32le(f.crc = crc32);
+		done += 4;
+	}
 	else {
 		pipeZLib->End();
 		zip->Put32le(f.crc = pipeZLib->GetCRC());
+		done += 4;
 	}
-	zip->Put32le(f.csize);
-	zip->Put32le(f.usize);
-	done += 3*4;
+
+	if(f.zip64){
+		zip->Put64le(f.csize);
+		zip->Put64le(f.usize);
+		done += 16;
+	}
+	else{
+		zip->Put32le((dword)f.csize);
+		zip->Put32le((dword)f.usize);
+		done += 8;
+	}
+	
 	pipeZLib.Clear();
 	uncompressed = false;
 	if(zip->IsError()) WhenError();
@@ -111,48 +160,22 @@ void Zip::PutCompressed(const void *ptr, int size)
 void Zip::WriteFile(const void *ptr, int size, const char *path, Gate<int, int> progress, Time tm, bool deflate)
 {
 	ASSERT(!IsFileOpened());
-	if(!deflate) {
-		BeginFile(path, tm, deflate);
-		int done = 0;
-		while(done < size) {
-			if(progress(done, size))
-				return;
-			int chunk = min(size - done, 65536);
-			Put((byte *)ptr + done, chunk);
-			if(zip->IsError()) {
-				WhenError();
-				return;
-			}
-			done += chunk;
+
+	BeginFile(path, tm, deflate);
+	int done = 0;
+	while(done < size) {
+		if(progress(done, size))
+			return;
+		int chunk = min(size - done, 65536);
+		Put((byte *)ptr + done, chunk);
+		if(zip->IsError()) {
+			WhenError();
+			return;
 		}
-		EndFile();
-		return;
+		done += chunk;
 	}
-	// following code could be implemented using BeginFile/Put/EndFile, but be conservative, keep proven code
-	File& f = file.Add();
-	StringStream ss;
-	MemReadStream ms(ptr, size);
-
-	f.usize = size;
-	zPress(ss, ms, size, AsGate64(progress), false, true, &f.crc, false);
-
-	String data = ss.GetResult();
-	const void *r = ~data;
-	f.csize = data.GetLength();
-
-	f.version = 20;
-	f.gpflag = 0;
-	if(data.GetLength() >= size) {
-		r = ptr;
-		f.csize = size;
-		f.method = 0;
-	}
-	else
-		f.method = 8;
-	FileHeader(path, tm);
-	zip->Put(r, f.csize);
-	done += f.csize;
-	if (zip->IsError()) WhenError();
+	EndFile();
+	return;
 }
 
 void Zip::WriteFile(const String& s, const char *path, Gate<int, int> progress, Time tm, bool deflate)
@@ -171,39 +194,76 @@ void Zip::Finish()
 {
 	if(!zip)
 		return;
-	dword off = done;
-	dword rof = 0;
+	qword off = done;
+	qword rof = 0;
+	
+	int version = ((file.GetCount() >= 0xffff) || (done >= 0xffffffffULL)) ? 45 : 20;
+	
+	// Update version info for Zip64 where required:
+	for(int i = 0; i < file.GetCount(); i++) if(file[i].zip64 || (file[i].csize>=0xffffffffULL) || (file[i].usize>=0xffffffffULL)) file[i].version = version = 45;
+	
 	for(int i = 0; i < file.GetCount(); i++) {
 		File& f = file[i];
+		bool zip64record = f.zip64 || (rof>=0xffffffffULL) || (f.csize>=0xffffffffULL) || (f.usize>=0xffffffffULL);
+	
 		zip->Put32le(0x02014b50);
-		zip->Put16le(20);
-		zip->Put16le(f.version);
+		zip->Put16le(version); // version made by
+		zip->Put16le(f.version); // version required to extract
 		zip->Put16le(f.gpflag);  // general purpose bit flag
 		zip->Put16le(f.method);
 		zip->Put32le(f.time);
 		zip->Put32le(f.crc);
-		zip->Put32le(f.csize);
-		zip->Put32le(f.usize);
+		zip->Put32le((dword)(zip64record ? 0xffffffff : f.csize));
+		zip->Put32le((dword)(zip64record ? 0xffffffff : f.usize));
 		zip->Put16le(f.path.GetCount());
-		zip->Put16le(0); // extra field length              2 bytes
+		zip->Put16le(zip64record ? 28 : 0); // extra field length              2 bytes
 		zip->Put16le(0); // file comment length             2 bytes
 		zip->Put16le(0); // disk number start               2 bytes
 		zip->Put16le(0); // internal file attributes        2 bytes
 		zip->Put32le(0); // external file attributes        4 bytes
-		zip->Put32le(rof); // relative offset of local header 4 bytes
-		rof+=5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? 3*4 : 0);
+		zip->Put32le((dword)(zip64record ? 0xffffffff : rof)); // relative offset of local header 4 bytes
 		zip->Put(f.path);
-		done += 7 * 4 + 9 * 2 + f.path.GetCount();
+		// ZIP64 additions:
+		if(zip64record){
+			zip->Put16le(1); // ZIP64 extra field : header ID
+			zip->Put16le(24); // ZIP64 extra field : bytes to follow
+			zip->Put64le(f.usize); // ZIP64 extra field : uncomp size
+			zip->Put64le(f.csize); // ZIP64 extra field : comp size
+			zip->Put64le(rof); // ZIP64 extra field : relative offset of local header
+		}
+		done = done + 7 * 4 + 9 * 2 + f.path.GetCount() + (zip64record ? 28 : 0);
+		rof = rof + 5 * 2 + 5 * 4 + f.csize + f.path.GetCount() + (f.gpflag & 0x8 ? (f.zip64 ? 20 : 12) : 0) + (f.zip64 ? 28 : 0);
 	}
-	zip->Put32le(0x06054b50);
+	
+	bool zip64 = version==45;
+	
+	if(zip64){
+		zip->Put32le(0x06064b50); // ZIP64 end of central directory record
+		zip->Put64le(44); // ZIP64 end of central directory record : the rest of the record after this field
+		zip->Put16le(version); // ZIP64 end of central directory record : version made by
+		zip->Put16le(version); // ZIP64 end of central directory record : version required to extract
+		zip->Put32le(0); // ZIP64 end of central directory record : disk number
+		zip->Put32le(0); // ZIP64 end of central directory record : number of disk with the start of central directory
+		zip->Put64le(file.GetCount()); // ZIP64 end of central directory record : number of directory entries on this disk
+		zip->Put64le(file.GetCount()); // ZIP64 end of central directory record : number of directory entries (total)
+		zip->Put64le((qword)(done - off)); // size of the central directory
+		zip->Put64le(off); // offset of the central directory
+		
+		zip->Put32le(0x07064b50); // ZIP64 end of central directory locator
+		zip->Put32le(0); // ZIP64 end of central directory locator : number of the disk with the start of the zip64 end of central directory
+		zip->Put64le(done); // ZIP64 end of central directory locator : relative offset of the zip64 end of central directory record
+		zip->Put32le(1); // ZIP64 end of central directory locator : total number of disks
+	}
+	
+	zip->Put32le(0x06054b50); // end of central directory record
 	zip->Put16le(0);  // number of this disk
 	zip->Put16le(0);  // number of the disk with the start of the central directory
-	zip->Put16le(file.GetCount()); // total number of entries in the central directory on this disk
-	zip->Put16le(file.GetCount()); // total number of entries in the central directory
-	zip->Put32le(done - off); // size of the central directory
-	zip->Put32le(off); //offset of start of central directory with respect to the starting disk number
+	zip->Put16le((word)(zip64 ? 0xffff : file.GetCount())); // total number of entries in the central directory on this disk
+	zip->Put16le((word)(zip64 ? 0xffff : file.GetCount())); // total number of entries in the central directory
+	zip->Put32le((dword)(zip64 ? 0xffffffff : (done - off))); // size of the central directory
+	zip->Put32le((dword)(zip64 ? 0xffffffff : off)); //offset of start of central directory with respect to the starting disk number
 	zip->Put16le(0);
-	if (zip->IsError()) WhenError(); 
+	if (zip->IsError()) WhenError();
 	zip = NULL;
 }
 

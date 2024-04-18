@@ -318,6 +318,7 @@ class JsonIO;
 
 #include "TimeDate.h"
 #include "Stream.h"
+#include "FileMapping.h"
 #include "Diag.h"
 
 #include "Vcont.h"

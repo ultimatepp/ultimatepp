@@ -215,25 +215,39 @@ struct TextProperty : public SmartTextEditProperty<EditString>
 struct DocProperty : public SmartTextEditProperty<DocEdit>
 {
 	Button  large;
+	Button  qtf;
 
 	virtual int      GetHeight() const {
 		return EditField::GetStdHeight() + 6 + Zy(120) + 1;
 	}
 
 	void LargeEdit();
+	void QtfEdit();
 
 	typedef DocProperty CLASSNAME;
 
 	DocProperty() {
 		editor.UpDownLeave();
 		Add(editor.HSizePosZ(2, 2).TopPos(EditField::GetStdHeight() + 2, Zy(120)));
-		Add(large.RightPosZ(2, DPI(16)).TopPos(2, DPI(16)));
+		Add(large.RightPosZ(2, 24).TopPos(2, DPI(16)));
 		large.SetLabel("...");
+		Add(qtf.RightPosZ(26, 24).TopPos(2, DPI(16)));
+		qtf.SetLabel("QTF");
+		qtf << [=] { QtfEdit(); };
 		large <<= THISBACK(LargeEdit);
 	}
 
 	static ItemProperty *Create() { return new DocProperty; }
 };
+
+void DocProperty::QtfEdit()
+{
+	String text = GetData();
+	if(text.StartsWith("\\1"))
+		text = text.Mid(2);
+	QTFEdit(text);
+	editor.SetData("\\1" + text);
+}
 
 Rect s_texteditorpos;
 
@@ -261,6 +275,7 @@ struct QtfProperty : public TextEditProperty<RichTextView>
 	virtual int    GetHeight() const           { return EditField::GetStdHeight() + 6 + 120 + 1; }
 
 	void LargeEdit();
+	void QtfEdit();
 
 	typedef QtfProperty CLASSNAME;
 
