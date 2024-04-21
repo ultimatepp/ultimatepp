@@ -176,7 +176,7 @@ bool SslContext::UseCAcert(String ca_cert, bool cert_asn1)
     if(!ca.Load(ca_cert, cert_asn1))
         return false;
     
-    auto castore = SSL_CTX_get_cert_store(ssl_ctx);
+    X509_STORE *castore = SSL_CTX_get_cert_store(ssl_ctx);
     if(!castore)
         return false;
     
