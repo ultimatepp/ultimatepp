@@ -318,7 +318,6 @@ void QTFEdit(String& text)
 	LoadFromGlobal(dlg, "QTF-designer-editor");
 	dlg.editor.SetQTF(text);
 	dlg.Run();
-	bool r = false;
 	text = AsQTF(dlg.editor.Get(), CHARSET_UTF8, QTF_BODY|QTF_NOSTYLES|QTF_NOCHARSET|QTF_NOLANG);
 	StoreToGlobal(dlg, "QTF-designer-editor");
 }
