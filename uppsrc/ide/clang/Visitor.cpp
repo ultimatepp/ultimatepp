@@ -124,16 +124,13 @@ String ClangCursorInfo::Id()
 #ifdef UBUNTU2204_WORKAROUND
 			s = RawId();
 			m = CleanupId(s);
-			if(s.StartsWith("template ")) { // template method already seems to contain the scope, sometimes
-				int q = s.Find("::");
-				if(q >= 0 && q < s.Find('(')) { // Do we contain partial scope?
-					String ns = Nspace();
-					if(ns.GetCount())
-						id = Nspace() + "::" + m;
-					else
-						id = m;
-					hasid = true;
-					return id;
+			if(s.StartsWith("template ")) { // template class method already seems to contain some scope, sometimes
+				int p = m.Find('(');
+				for(;;) { // remove any scope
+					int q = m.Find("::");
+					if(q < 0 || q >= p)
+						break;
+					m = m.Mid(q + 2);
 				}
 			}
 			while(findarg(m[q], ':', '*', '&', '(', ')', ' ') >= 0)
@@ -144,8 +141,8 @@ String ClangCursorInfo::Id()
 			return id;
 #else
 			m = RawId();
-			break;
 #endif
+			break;
 		case CXCursor_ClassTemplate:
 		case CXCursor_VarDecl:
 		case CXCursor_ParmDecl:
@@ -361,6 +358,9 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		DDUMP(ref_ci.Name());
 		DDUMP(ref_ci.Kind());
 		DDUMP(ref_ci.RawId());
+		DDUMP(ref_ci.Type());
+		DDUMP(ref_ci.Scope());
+		DDUMP(ref_ci.Nspace());
 	#endif
 		Index<ReferenceItem>& rd = ref_done.GetAdd(ref_loc.path);
 		if(rm.id.GetCount() && rd.Find(rm) < 0) {
