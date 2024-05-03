@@ -92,6 +92,10 @@ void Ide::ContextGoto0(int pos)
 	String l = editor.GetUtf8Line(li);
 	if(OpenLink(l, lp))
 		return;
+	if(editfile.EndsWith(".lay")) {
+		EditUsingDesigner();
+		return;
+	}
 	if(IsPif(l) || IsPelse(l)) {
 		int lvl = 0;
 		while(li + 1 < editor.GetLineCount()) {

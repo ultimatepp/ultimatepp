@@ -796,6 +796,8 @@ public:
 	void      GotoPos(String path, int line);
 	void      GotoPos(String path, Point pos);
 
+	bool      GetLayoutItem(String& layout, String& item);
+
 	void      LoadAbbr();
 	void      SaveAbbr();
 

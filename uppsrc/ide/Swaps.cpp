@@ -8,6 +8,10 @@ void Ide::SwapS()
 		return;
 	if(!editor.WaitCurrentFile())
 		return;
+	if(editfile.EndsWith(".lay")) {
+		EditUsingDesigner();
+		return;
+	}
 	AnnotationItem cm = editor.FindCurrentAnnotation();
 	PutAssist("Swap: " + cm.id);
 	Cycle(cm, cm.pos.y, false);

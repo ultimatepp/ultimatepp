@@ -261,6 +261,18 @@ void Ide::Usage()
 
 void Ide::IdUsage()
 {
+	if(designer)
+		return;
+	if(editfile.EndsWith(".lay")) {
+		String layout, item;
+		if(GetLayoutItem(layout, item)) {
+			if(item.GetCount())
+				FindDesignerItemReferences("With" + layout + "::" + item, item);
+			else
+				FindDesignerItemReferences("With" + layout, layout);
+		}
+		return;
+	}
 	String name;
 	Point ref_pos;
 	String ref_id;
