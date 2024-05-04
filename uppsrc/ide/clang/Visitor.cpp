@@ -371,7 +371,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 				info.GetAdd(sl.path).refs.Add(rm);
 			}
 		};
-
+		
 		if(clang_getCursorKind(ref) == CXCursor_OverloadedDeclRef)
 			for(int i = 0; i < clang_getNumOverloadedDecls(ref); i++)
 				AddRef(clang_getOverloadedDecl(ref, i));
