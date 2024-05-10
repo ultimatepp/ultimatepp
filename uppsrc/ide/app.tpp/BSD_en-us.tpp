@@ -19,7 +19,7 @@ topic "Copyright (C) 2020 U++ Team";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[s0;%% [*+117 Copyright © 1998, 2023 U`+`+ team]&]
+[s0;%% [*+117 Copyright © 1998, 2024 U`+`+ team]&]
 [s0;%% All rights reserved.&]
 [s0;%% &]
 [s0;%% Redistribution and use in source and binary forms, with or 
