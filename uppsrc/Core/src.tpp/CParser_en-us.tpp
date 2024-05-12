@@ -313,7 +313,7 @@ form starting with decimal point, like `".21`".&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CParser`:`:ReadDoubleNoE`(`): [@(0.0.255) double] [* ReadDoubleNoE]()&]
-[s2;%% Speacial variant of ReadDouble that ignores exponential part 
+[s2;%% Special variant of ReadDouble that ignores exponential part 
 of number. E.g. CParser(`"1.2em`").ReadDoubleNoE() returns 1.2 
 (and does not throw error for invalid double).&]
 [s3; &]

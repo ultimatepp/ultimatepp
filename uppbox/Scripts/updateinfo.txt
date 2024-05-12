@@ -20,7 +20,7 @@ rename to clang
 delete aarch and arm7 folders and .exe from bin
 
 2022-03-05 CLANG-14
-
+2024-05-12 CLANG-18
 ------------------------------------------------------------------
 OpenSSL
 
@@ -31,9 +31,11 @@ Install pacman -S perl
 
 Start msys2 mingw 64
 
+~ is C:\msys64\home\cxl
+
 Copy current clang to ~
 
-download 1.1.1 openssl, unpack to ~
+download openssl, unpack to ~
 
 edit .bashrc, add 
 
@@ -75,6 +77,8 @@ from perl prompt run
 
 vc32.bat
 
+unpack openssl into new dir (it seems there is a problem reusing it in mingw64)
+
 cd .../openssl...
 
 perl ./Configure VC-WIN32
@@ -111,6 +115,7 @@ libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
 2020-09-03: 1.1.1g
 2022-03-05: 1.1.1n
 2023-09-28: 1.1.1w
+2024-05-12: 3.2.1
 ------------------------------------------------------------------
 plugin/jpg
 
