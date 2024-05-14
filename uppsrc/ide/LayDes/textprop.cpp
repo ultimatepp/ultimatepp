@@ -56,7 +56,7 @@ LTProperty::LTProperty()
 	context.WhenAction = THISBACK(Context);
 	id = LayImg::Id();
 	id.WhenAction = THISBACK(Id);
-	charset = CHARSET_UTF8; //!! not good, but better than a crash; TRC 06/04/10//TODO
+	charset = CHARSET_UTF8;
 }
 
 void LTProperty::SyncLid()
@@ -193,20 +193,45 @@ struct SmartTextEditProperty : public TextEditProperty<Editor> {
 		B::editor.SetCharset(B::charset);
 		B::editor <<= r;
 	}
+	void Qtf() {
+		String text = B::editor.GetData();
+		if(text.TrimStart("\\1"))
+			text.TrimStart("[g ");
+		else
+			text = "\1" + text;
+		QTFEdit(text);
+		B::editor.SetData("\\1[g " + text);
+		B::EditAction();
+	}
 };
 
 struct TextProperty : public SmartTextEditProperty<EditString>
 {
-	virtual int      GetHeight() const {
+	Button qtf;
+
+	virtual int  GetHeight() const {
 		return 2 * EditField::GetStdHeight() + 6;
 	}
 	
-	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(2)); }
+	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(28)); }
 	virtual bool     InlineEditor() const       { return true; }
 
 	TextProperty() {
-		Add(editor.HSizePosZ(100, 2).TopPos(2));
+		Add(editor.HSizePosZ(100, 28).TopPos(2));
+		Add(qtf.RightPosZ(2, 24).TopPos(2, DPI(16)));
+		qtf.SetLabel("Qtf");
 		editor.SetConvert(*this);
+
+		int c = EditField::GetStdHeight();
+		int w = GetTextSize("Qtf", StdFont()).cx + DPI(2);
+		p.Add(lid.TopPos(0, c).HSizePos(0, 3 * w));
+		p.Add(id.TopPos(0, c).RightPos(w, w));
+		p.Add(context.TopPos(0, c).RightPos(2 * w, w));
+		p.Add(qtf.TopPos(0, c).RightPos(0, w));
+		
+		qtf << [=] {
+			Qtf();
+		};
 	}
 
 	static ItemProperty *Create() { return new TextProperty; }
@@ -222,7 +247,6 @@ struct DocProperty : public SmartTextEditProperty<DocEdit>
 	}
 
 	void LargeEdit();
-	void QtfEdit();
 
 	typedef DocProperty CLASSNAME;
 
@@ -232,22 +256,13 @@ struct DocProperty : public SmartTextEditProperty<DocEdit>
 		Add(large.RightPosZ(2, 24).TopPos(2, DPI(16)));
 		large.SetLabel("...");
 		Add(qtf.RightPosZ(26, 24).TopPos(2, DPI(16)));
-		qtf.SetLabel("QTF");
-		qtf << [=] { QtfEdit(); };
+		qtf.SetLabel("Qtf");
+		qtf << [=] { Qtf(); };
 		large <<= THISBACK(LargeEdit);
 	}
 
 	static ItemProperty *Create() { return new DocProperty; }
 };
-
-void DocProperty::QtfEdit()
-{
-	String text = GetData();
-	if(text.StartsWith("\\1"))
-		text = text.Mid(2);
-	QTFEdit(text);
-	editor.SetData("\\1" + text);
-}
 
 Rect s_texteditorpos;
 
@@ -266,6 +281,7 @@ void DocProperty::LargeEdit()
 	w.Run();
 	editor.SetData(~edit);
 	s_texteditorpos = w.GetRect();
+	EditAction();
 }
 
 struct QtfProperty : public TextEditProperty<RichTextView>
@@ -293,6 +309,13 @@ struct QtfProperty : public TextEditProperty<RichTextView>
 
 void QtfProperty::LargeEdit()
 {
+	String text = GetData();
+	if(text.StartsWith("\\1"))
+		text = text.Mid(2);
+	QTFEdit(text);
+	editor.SetData("\\1" + text);
+	EditAction();
+/*
 	large.SetFocus();
 	TopWindow w;
 	w.NoCenter();
@@ -305,6 +328,7 @@ void QtfProperty::LargeEdit()
 	w.Run();
 	editor.SetData(~edit);
 	s_texteditorpos = w.GetRect();
+*/
 }
 
 void RegisterTextProperties() {

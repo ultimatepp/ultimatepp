@@ -757,16 +757,8 @@ void Ide::EditAsText()
 	}
 }
 
-void Ide::EditUsingDesigner()
+bool Ide::GetLayoutItem(String& layout, String& item)
 {
-	String path = editfile;
-	if(editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
-		return;
-	editashex.RemoveKey(editfile);
-	editastext.RemoveKey(editfile);
-	byte cs = editor.GetCharset();
-	int sc = editor.GetSpellcheckComments();
-	String layout, item;
 	if(ToLower(GetFileExt(editfile)) == ".lay") {
 		int i = editor.GetLine(editor.GetCursor());
 		item = GetLayItemId(editor.GetUtf8Line(i));
@@ -777,13 +769,26 @@ void Ide::EditUsingDesigner()
 				if(p.Id("LAYOUT")) {
 					p.Char('(');
 					layout = p.ReadId();
-					break;
+					return true;
 				}
 			}
 			catch(CParser::Error) {}
 		}
-		
 	}
+	return false;
+}
+
+void Ide::EditUsingDesigner()
+{
+	String path = editfile;
+	if(editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
+		return;
+	editashex.RemoveKey(editfile);
+	editastext.RemoveKey(editfile);
+	byte cs = editor.GetCharset();
+	int sc = editor.GetSpellcheckComments();
+	String layout, item;
+	GetLayoutItem(layout, item);
 	FlushFile();
 	EditFile0(path, cs, sc);
 	if(layout.GetCount()) {

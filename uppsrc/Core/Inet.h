@@ -130,6 +130,8 @@ class TcpSocket : NoCopy {
 	One<SSLInfo>            sslinfo;
 	String                  cert, pkey, sni;
 	bool                    asn1;
+	
+	String                  ca_cert;
 
 	struct SSLImp;
 	friend struct SSLImp;
@@ -240,6 +242,8 @@ public:
 	void            SSLCertificate(const String& cert, const String& pkey, bool asn1);
 	void            SSLServerNameIndication(const String& name);
 	const SSLInfo  *GetSSLInfo() const                       { return ~sslinfo; }
+	
+	void            SSLCAcert(const String& cert, bool asn1 = false);
 	
 	void            Clear();
 

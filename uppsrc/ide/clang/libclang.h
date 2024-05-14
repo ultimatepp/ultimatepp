@@ -2039,10 +2039,7 @@ enum CX_StorageClass {
   CX_SC_Register
 };
 
-/**
- * Returns the storage class for a function or variable declaration.
- *
- * If the passed in Cursor is not a function or variable declaration,
- * CX_SC_Invalid is returned else the storage class.
- */
 enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor);
+
+unsigned int clang_getNumOverloadedDecls(CXCursor cursor);
+CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned int index);

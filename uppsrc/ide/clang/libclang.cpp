@@ -281,4 +281,14 @@ enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor c)
 	return LibClang().clang_Cursor_getStorageClass(c);
 }
 
+unsigned clang_getNumOverloadedDecls(CXCursor cursor)
+{
+	return LibClang().clang_getNumOverloadedDecls(cursor);
+}
+
+CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned index)
+{
+	return LibClang().clang_getOverloadedDecl(cursor, index);
+}
+
 #endif

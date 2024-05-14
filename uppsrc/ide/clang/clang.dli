@@ -76,3 +76,6 @@ FN(CXType, clang_getTypedefDeclUnderlyingType, (CXCursor C))
 FN(CXCursor, clang_getTypeDeclaration, (CXType T))
 
 FN(enum CX_StorageClass, clang_Cursor_getStorageClass, (CXCursor))
+
+FN(unsigned, clang_getNumOverloadedDecls, (CXCursor cursor))
+FN(CXCursor, clang_getOverloadedDecl, (CXCursor cursor, unsigned index))

@@ -79,7 +79,7 @@ String Ide::GetRefId(int pos, String& name, Point& ref_pos)
 
 	if(ref_id.GetCount())
 		editor.FromUtf8x(ref_pos);
-		
+	
 	return ref_id;
 }
 
@@ -92,6 +92,10 @@ void Ide::ContextGoto0(int pos)
 	String l = editor.GetUtf8Line(li);
 	if(OpenLink(l, lp))
 		return;
+	if(editfile.EndsWith(".lay")) {
+		EditUsingDesigner();
+		return;
+	}
 	if(IsPif(l) || IsPelse(l)) {
 		int lvl = 0;
 		while(li + 1 < editor.GetLineCount()) {
