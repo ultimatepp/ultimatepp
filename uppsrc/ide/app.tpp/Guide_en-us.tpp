@@ -13,7 +13,7 @@ topic "TheIDE Beginner Guide";
 [b42;a42;ph2 $$12,12#45413000475342174754091244180557:text]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s10; TheIDE Beginner guide&]
+[s10;= TheIDE Beginner guide&]
 [s12; This guide is the continuation of the [^topic`:`/`/ide`/app`/GettingStarted`_en`-us^ G
 etting Started with TheIDE] article. If you didn`'t read it before, 
 We encourage you to do it. It will give you an initial spot. 
