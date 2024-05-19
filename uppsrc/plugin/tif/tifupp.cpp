@@ -2,13 +2,8 @@
 #include "tif.h"
 #include <Painter/Painter.h>
 
-#ifdef PLATFORM_WIN32
-	#define	tif_int32 long
-	#define	tif_uint32 unsigned long
-#else
-	#define	tif_int32 int
-	#define	tif_uint32 unsigned int
-#endif
+#define	tif_int32 int32_t
+#define	tif_uint32 uint32_t
 
 #define LLOG(x)  // LOG(x)
 
@@ -505,7 +500,7 @@ static void UnmapStream(thandle_t fd, tdata_t base, toff_t size)
 struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
 {
 	One<FileStream> fs = new FileStream;
-	int m = _TIFFgetMode(mode, "TIFFOpen");
+	int m = _TIFFgetMode(NULL, NULL, mode, "TIFFOpen");
 	dword fmode = FileStream::READ;
 
 	switch(m) {
@@ -606,7 +601,7 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	Buffer<Row> rows;
 	int64 mapping_offset;
 	int mapping_size;
-	Vector<uint32> buffer;
+	Vector<uint32_t> buffer;
 	tileContigRoutine contig;
 	tileSeparateRoutine separate;
 	int skewfac;

@@ -7,6 +7,9 @@
 #ifndef _TIFFCONF_
 #define _TIFFCONF_
 
+#include <stdint.h>
+#include <inttypes.h>
+
 /* The size of a `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 

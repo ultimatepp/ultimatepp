@@ -50,6 +50,7 @@ file
 	lib\tif_fax3sm.c,
 	lib\tif_flush.c,
 	lib\tif_getimage.c,
+	lib\tif_hash_set.c,
 	lib\tif_jpeg.c,
 	lib\tif_luv.c,
 	lib\tif_lzw.c,

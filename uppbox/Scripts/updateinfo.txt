@@ -162,6 +162,7 @@ remove all files except *.h, *.c and README (put it at the start of package),
 initial: 9b
 2019-03-22: 9c
 2020-09-03: 9d
+2024-05-19: 9f
 -------------------------------------------------------------------
 plugin/tif
 
