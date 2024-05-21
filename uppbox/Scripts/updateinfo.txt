@@ -159,6 +159,8 @@ fix problem with boolean (include from plugin/tif):
 
 remove all files except *.h, *.c and README (put it at the start of package),
 
+update Copying
+
 initial: 9b
 2019-03-22: 9c
 2020-09-03: 9d
@@ -218,6 +220,8 @@ Fix macros in tiffconf.h:
 
 Test with ImageView / upptst/data/tif, all platforms and compilers....
 
+update Copying
+
 2019-03-22: 4.0.10
 2020-09-03: 4.1.0
 2024-05-19: 4.6.0
@@ -238,6 +242,8 @@ fix problem with zlib.h inclidu:
 
 #include <plugin/z/lib/zlib.h>
 
+update Copying
+
 initial: 1.2.59
 2019-03-22: 1.2.59
 2020-09-03: 1.2.59 (no update)
@@ -247,10 +253,13 @@ plugin/z
 
 https://zlib.net/
 
-current version 1.2.11
+update Copying
+
+initial 1.2.11
 2019-03-22: 1.2.11
 2020-09-03: 1.2.11 (no update)
 2022-03-05: 1.2.12
+2024-05-20: 1.3.1
 
 -------------------------------------------------------------------
 plugin/lz4
