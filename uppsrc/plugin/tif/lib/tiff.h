@@ -75,6 +75,7 @@
 #define TIFF_MSC_DEPRECATED
 #endif
 
+#if 0
 #ifndef TIFF_DISABLE_DEPRECATED
 typedef TIFF_MSC_DEPRECATED int8_t int8 TIFF_GCC_DEPRECATED;
 typedef TIFF_MSC_DEPRECATED uint8_t uint8 TIFF_GCC_DEPRECATED;
@@ -88,6 +89,7 @@ typedef TIFF_MSC_DEPRECATED uint32_t uint32 TIFF_GCC_DEPRECATED;
 typedef TIFF_MSC_DEPRECATED int64_t int64 TIFF_GCC_DEPRECATED;
 typedef TIFF_MSC_DEPRECATED uint64_t uint64 TIFF_GCC_DEPRECATED;
 #endif /* TIFF_DISABLE_DEPRECATED */
+#endif
 
 /*
  * Some types as promoted in a variable argument list

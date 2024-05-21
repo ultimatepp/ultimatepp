@@ -220,7 +220,7 @@ Test with ImageView / upptst/data/tif, all platforms and compilers....
 
 2019-03-22: 4.0.10
 2020-09-03: 4.1.0
-
+2024-05-19: 4.6.0
 -------------------------------------------------------------------
 plugin/png
 
