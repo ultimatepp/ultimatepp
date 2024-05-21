@@ -224,23 +224,24 @@ Test with ImageView / upptst/data/tif, all platforms and compilers....
 -------------------------------------------------------------------
 plugin/png
 
-https://sourceforge.net/projects/libpng/files/libpng12/
+// https://sourceforge.net/projects/libpng/files/libpng12/
+
+https://sourceforge.net/projects/libpng/files/libpng16/
 
 download latest .zip
 
 overwrite CHANGES, LICENSE, all *.c (except example.c), *.h
 
+copy pnglibconf.h.prebuilt to pnglibconf.h
+
 fix problem with zlib.h inclidu:
 
-#ifndef PNG_VERSION_INFO_ONLY
-/* Include the compression library's header */
 #include <plugin/z/lib/zlib.h>
-#endif
 
 initial: 1.2.59
 2019-03-22: 1.2.59
 2020-09-03: 1.2.59 (no update)
-
+2024-05-20: 1.6.46
 -------------------------------------------------------------------
 plugin/z
 
