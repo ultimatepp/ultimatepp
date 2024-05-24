@@ -20,5 +20,8 @@
 #include "lib/pngwrite.c"
 #include "lib/pngwtran.c"
 #include "lib/pngwutil.c"
+#include "lib/arm/arm_init.c"
+#include "lib/arm/filter_neon_intrinsics.c"
+#include "lib/arm/palette_neon_intrinsics.c"
 
 #endif

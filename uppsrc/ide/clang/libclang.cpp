@@ -23,7 +23,7 @@ bool LoadLibClang0(const char *path)
 bool LoadLibClang(const String& dir)
 {
 #ifdef PLATFORM_MACOS // it does not seem to work for some reason, block it for now
-	if(LoadLibClang0(dir, "libclang.dylib"))
+	if(LoadLibClang0(dir + "/libclang.dylib"))
 		return true;
 #endif
 	if(LoadLibClang0(dir + "/libclang.so"))
