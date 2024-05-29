@@ -1598,7 +1598,7 @@ void ArrayCtrl::ShowLine(int i, bool e)
 	int q = ln.GetCount();
 	array.At(i).visible = e;
 	ln.At(i);
-	if(q > 0 && i > 0)
+	if(q > 0 && i > 0 && i < q)
 		Reline(i - 1, ln[i - 1].y);
 	else
 		Reline(0, 0);
