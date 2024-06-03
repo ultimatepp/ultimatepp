@@ -276,7 +276,7 @@ class GridClipboard : Moveable<GridClipboard>
 
 		Vector<ClipboardData> data;
 		Point minpos, maxpos;
-		bool shiftmode;
+		bool shiftmode = false;
 
 		virtual void Serialize(Stream &s)
 		{

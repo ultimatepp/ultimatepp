@@ -271,8 +271,10 @@ files
 lz4.c
 lz4.h
 
-put to Core/lib
+put to Core/lib (rename the LICENSE)
 put to lz4/
+
+(in lz4 sources are actually inactive)
 
 initial: 1.7.3
 2019-03-22: 1.8.3
