@@ -405,7 +405,6 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
-#ifndef PLATFORM_WINCE
 	static Image img;
 	if(image.GetSerialId() != img.GetSerialId()) {
 		img = image;
@@ -415,7 +414,6 @@ void  Ctrl::SetMouseCursor(const Image& image)
 			DestroyCursor(hCursor);
 		hCursor = hc;
 	}
-#endif
 }
 
 Ctrl *Ctrl::CtrlFromHWND(HWND hwnd)

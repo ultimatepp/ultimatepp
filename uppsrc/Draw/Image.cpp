@@ -122,7 +122,7 @@ ImageBuffer::ImageBuffer(Image& img)
 
 ImageBuffer::ImageBuffer(ImageBuffer& b)
 {
-	kind = b.kind;
+	kind.store(b.kind);
 	size = b.size;
 	pixels = pick(b.pixels);
 	CopyAttrs(b);

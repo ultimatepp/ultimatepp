@@ -48,7 +48,7 @@ enum ImageResolutionIntent {
 };
 
 class ImageBuffer : NoCopy {
-	mutable int  kind;
+	std::atomic<int> kind; // atomic because it can be set by 2 threads, in theory
 	Size         size;
 	Buffer<RGBA> pixels;
 	Point        hotspot;
@@ -70,7 +70,7 @@ public:
 	void  SetKind(int k)                { kind = k; }
 	int   GetKind() const               { return kind; }
 	int   ScanKind() const;
-	int   GetScanKind() const           { return kind == IMAGE_UNKNOWN ? ScanKind() : kind; }
+	int   GetScanKind() const           { return kind == IMAGE_UNKNOWN ? ScanKind() : (int)kind; }
 
 	void  SetHotSpot(Point p)           { hotspot = p; }
 	Point GetHotSpot() const            { return hotspot; }

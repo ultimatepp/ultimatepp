@@ -3,6 +3,8 @@
 
 #include <Core/Core.h>
 
+// LZ4 really is included in Core, local lib only serves as copy
+
 #include <Core/lib/lz4.h>
 
 namespace Upp {
