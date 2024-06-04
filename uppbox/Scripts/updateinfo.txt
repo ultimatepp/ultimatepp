@@ -303,6 +303,11 @@ Fix includes:
 
 (remove ../common)
 
+Add:
+
+#define ZSTD_DISABLE_ASM
+
+somewhere...
 
 initial 1.3.2
 2019-03-26: 1.3.8
