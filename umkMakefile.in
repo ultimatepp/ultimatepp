@@ -9965,6 +9965,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 $(OutDir_plugin_lzma)LzFind.o: $(UPPDIR1)plugin/lzma/lib/LzFind.c \
 	$(UPPDIR1)plugin/lzma/lib/7zTypes.h \
 	$(UPPDIR1)plugin/lzma/lib/Compiler.h \
+	$(UPPDIR1)plugin/lzma/lib/CpuArch.h \
 	$(UPPDIR1)plugin/lzma/lib/LzFind.c \
 	$(UPPDIR1)plugin/lzma/lib/LzFind.h \
 	$(UPPDIR1)plugin/lzma/lib/LzHash.h \
@@ -9982,22 +9983,33 @@ $(OutDir_plugin_lzma)LzmaDec.o: $(UPPDIR1)plugin/lzma/lib/LzmaDec.c \
 $(OutDir_plugin_lzma)LzmaEnc.o: $(UPPDIR1)plugin/lzma/lib/LzmaEnc.c \
 	$(UPPDIR1)plugin/lzma/lib/7zTypes.h \
 	$(UPPDIR1)plugin/lzma/lib/Compiler.h \
+	$(UPPDIR1)plugin/lzma/lib/CpuArch.h \
 	$(UPPDIR1)plugin/lzma/lib/LzFind.h \
 	$(UPPDIR1)plugin/lzma/lib/LzmaEnc.c \
 	$(UPPDIR1)plugin/lzma/lib/LzmaEnc.h \
 	$(UPPDIR1)plugin/lzma/lib/Precomp.h
 	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_lzma)  $(UPPDIR1)plugin/lzma/lib/LzmaEnc.c -o $(OutDir_plugin_lzma)LzmaEnc.o
 
+$(OutDir_plugin_lzma)CpuArch.o: $(UPPDIR1)plugin/lzma/lib/CpuArch.c \
+	$(UPPDIR1)plugin/lzma/lib/7zTypes.h \
+	$(UPPDIR1)plugin/lzma/lib/Compiler.h \
+	$(UPPDIR1)plugin/lzma/lib/CpuArch.c \
+	$(UPPDIR1)plugin/lzma/lib/CpuArch.h \
+	$(UPPDIR1)plugin/lzma/lib/Precomp.h
+	$(CXX) -c -x c $(CFLAGS) $(CINC) $(Macro_plugin_lzma)  $(UPPDIR1)plugin/lzma/lib/CpuArch.c -o $(OutDir_plugin_lzma)CpuArch.o
+
 $(OutDir_plugin_lzma)lzma.a: \
 	$(OutDir_plugin_lzma)lzma.o \
 	$(OutDir_plugin_lzma)LzFind.o \
 	$(OutDir_plugin_lzma)LzmaDec.o \
-	$(OutDir_plugin_lzma)LzmaEnc.o
+	$(OutDir_plugin_lzma)LzmaEnc.o \
+	$(OutDir_plugin_lzma)CpuArch.o
 	$(AR) $(OutDir_plugin_lzma)lzma.a \
 		$(OutDir_plugin_lzma)lzma.o \
 		$(OutDir_plugin_lzma)LzFind.o \
 		$(OutDir_plugin_lzma)LzmaDec.o \
-		$(OutDir_plugin_lzma)LzmaEnc.o
+		$(OutDir_plugin_lzma)LzmaEnc.o \
+		$(OutDir_plugin_lzma)CpuArch.o
 
 $(OutDir_plugin_lz4):
 	mkdir -p $(OutDir_plugin_lz4)
