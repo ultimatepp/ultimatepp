@@ -18,5 +18,8 @@ file
 	lib\7zTypes.h,
 	lib\Precomp.h,
 	lib\Compiler.h,
+	lib\CpuArch.c,
+	lib\CpuArch.h,
+	lib\7zWindows.h,
 	Copying;
 
