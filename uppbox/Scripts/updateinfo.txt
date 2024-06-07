@@ -345,7 +345,7 @@ initial: 1.0.6
 -------------------------------------------------------------------
 plugin/pcre
 
-ftp://ftp.pcre.org/pub/pcre/
+https://www.pcre.org/
 
 download pcre-x.x.zip
 
@@ -359,6 +359,8 @@ initial: 8.41
 2019-03-22: 8.43
 2020-09-02: 8.44
 ------------------------------------------------------------------
+# now in UppHub
+
 plugin/Eigen
 
 http://eigen.tuxfamily.org

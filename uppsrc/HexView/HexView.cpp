@@ -242,7 +242,7 @@ void HexView::Scroll()
 
 void HexView::RefreshInfo()
 {
-	if(total) {
+	if(total && (int64)cursor >= 0) {
 		info.SetPos(cursor + start, IsLongMode());
 		for(int i = 0; i < 80; i++)
 			info.Set(i, Byte(cursor + i));
