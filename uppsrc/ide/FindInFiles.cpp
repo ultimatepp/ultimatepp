@@ -400,11 +400,6 @@ void Ide::FindFolder()
 	ff.folder <<= ~sSD();
 }
 
-void Ide::SyncFindInFiles()
-{
-	ff.samecase.Enable(ff.ignorecase);
-}
-
 void Ide::ConstructFindInFiles() {
 	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard") <<= THISBACK(FindWildcard);
 	static const char *defs = "*.cpp *.h *.hpp *.c *.m *.C *.M *.cxx *.cc *.mm *.MM *.icpp *.sch *.lay *.rc";
@@ -417,9 +412,9 @@ void Ide::ConstructFindInFiles() {
 	editor.PutI(ff.find);
 	editor.PutI(ff.replace);
 	CtrlLayoutOKCancel(ff, "Find In Files");
-	ff.ignorecase <<= THISBACK(SyncFindInFiles);
+	ff.ignorecase << [=] { ff.Sync(); };
 	ff.samecase <<= true;
-	SyncFindInFiles();
+	ff.Sync();
 }
 
 void FindInFilesDlg::Sync()
@@ -431,6 +426,7 @@ void FindInFilesDlg::Sync()
 	wholeword.Enable(b);
 	folder.Enable(!workspace);
 	folder_lbl.Enable(!workspace);
+	samecase.Enable(ignorecase && b);
 }
 
 FindInFilesDlg::FindInFilesDlg()

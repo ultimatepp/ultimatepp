@@ -1129,7 +1129,6 @@ public:
 	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
 		                   bool wholeword, bool ignorecase, RegExp *regexp);
-	void      SyncFindInFiles();
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
 
