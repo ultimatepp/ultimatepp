@@ -285,9 +285,10 @@ public:
 };
 
 enum {
-	XML_HEADER  = 0x01,
-	XML_DOCTYPE = 0x02,
-	XML_PRETTY =  0x04,
+	XML_HEADER   = 0x01,
+	XML_DOCTYPE  = 0x02,
+	XML_PRETTY   = 0x04,
+	XML_ESCAPELF = 0x08,
 };
 
 void    AsXML(Stream& out, const XmlNode& n, dword style = XML_HEADER|XML_DOCTYPE|XML_PRETTY);

@@ -1146,7 +1146,7 @@ static void sAsXML(Stream& out, const XmlNode& node, dword style, const String& 
 			sAsXML(out, node.Node(i), style, indent);
 		break;
 	case XML_TEXT:
-		out << DeXml(node.GetText());
+		out << DeXml(node.GetText(), CHARSET_DEFAULT, style & XML_ESCAPELF);
 		break;
 	case XML_TAG:
 		XmlTag tag(node.GetText());
