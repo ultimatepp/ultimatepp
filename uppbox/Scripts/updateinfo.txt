@@ -388,6 +388,7 @@ Download amalgamation, replace files lib/sqleet.[c|h]
 2019-03-22: 3.27.2
 2019-03-22: sqleet 0.27.2
 2020-09-03: updated coolman 3.33
+2024-06-26: 3.46.0
 ------------------------------------------------------------------
 plugin/glew
 
