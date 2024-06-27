@@ -261,7 +261,7 @@ String MakeBuild::OutDir(const Index<String>& cfg, const String& package, const 
 	Sort(x);
 	for(int i = 0; i < x.GetCount(); i++)
 		x[i] = InitCaps(x[i]);
-	String outdir = GetVar("OUTPUT");
+	String outdir = GetUppOut();
 	if(output_per_assembly)
 		outdir = AppendFileName(outdir, GetAssemblyId());
 	if(!use_target)

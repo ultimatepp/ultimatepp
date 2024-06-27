@@ -223,7 +223,7 @@ CONSOLE_APP_MAIN
 			PutVerbose("Assembly file: " + v);
 			PutVerbose("Assembly: " + GetVar("UPP"));
 		}
-		PutVerbose("Output directory: " + GetVar("OUTPUT"));
+		PutVerbose("Output directory: " + GetUppOut());
 		ide.main = param[1];
 		v = SourcePath(ide.main, GetFileTitle(ide.main) + ".upp");
 		PutVerbose("Main package: " + v);

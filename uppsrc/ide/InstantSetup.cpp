@@ -486,8 +486,7 @@ void InstantSetup()
 
 	String exe = GetExeFilePath();
 	String dir = GetFileFolder(exe);
-	String out = GetExeDirFile("out");
-	RealizeDirectory(out);
+	RealizeDirectory(GetUppOut());
 
 	for(int i = 0; i < __countof(ass); i++) {
 		String vf = GetExeDirFile(String(ass[i].a) + ".var");
@@ -510,7 +509,6 @@ void InstantSetup()
 			b.Replace("#", dir);
 			SaveFile(vf,
 				"UPP = " + AsCString(b) + ";\r\n"
-				"OUTPUT = " + AsCString(out) + ";\r\n"
 			);
 			dirty = true;
 		}

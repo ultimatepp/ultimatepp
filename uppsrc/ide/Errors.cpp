@@ -99,7 +99,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInf
 					if(IsNull(f.message))
 						f.message = ln;
 					Vector<String> conf = SplitFlags(mainconfigparam, true);
-					String uppout = GetVar("OUTPUT");
+					String uppout = GetOutputDir();
 					int upplen = uppout.GetLength();
 					if(cache.is_java && f.file.GetLength() > upplen
 					&& !MemICmp(f.file, uppout, upplen) && f.file[upplen] == DIR_SEP) { // check for preprocessed file
