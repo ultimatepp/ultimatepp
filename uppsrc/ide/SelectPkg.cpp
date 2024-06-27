@@ -839,31 +839,6 @@ void SelectPackageDlg::SyncBase(String initvars)
 		else
 			OnBase();
 	}
-	load_origin = 0;
-	
-	PostCallback([=] { LoadOrigins(); });
-}
-
-void SelectPackageDlg::LoadOrigins()
-{
-	int tlim = msecs();
-	if(load_origin >= base.GetCount())
-		return;
-	VectorMap<String, String> var;
-	String n = ~base.Get(load_origin, 0);
-	LoadVarFile(ConfigFile(n + ".var"), var);
-	String d = Split(var.Get("UPP", ""), ';').At(0);
-	if(d.GetCount()) {
-		dword h = xxHash(GitCmd(d, "config --get remote.origin.url"));
-		int r = h & 15; h >>= 4;
-		int g = h & 15; h >>= 4;
-		int b = h & 15;
-		base.Set(load_origin, 1, AttrText(n).NormalPaper(IsDarkTheme() ? Color(30 + r, 30 + g, 30 + g)
-		                                                               : Color(240 + r, 240 + g, 240 + b)));
-	}
-	
-	if(++load_origin < base.GetCount())
-		PostCallback([=] { LoadOrigins(); });
 }
 
 bool SelectPackageDlg::Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b)
