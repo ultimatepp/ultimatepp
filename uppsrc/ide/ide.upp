@@ -26,9 +26,9 @@ uses
 file
 	IDE readonly separator,
 	ide.h options(BUILDER_OPTION) PCH,
+	ide.key,
 	version.h,
 	UppDlg.h,
-	ide.key,
 	BaseDlg.cpp,
 	SelectPkg.cpp,
 	UppWspc.cpp,

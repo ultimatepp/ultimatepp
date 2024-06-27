@@ -154,6 +154,9 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	ProgressIndicator progress;
 	StatusBar         lists_status;
 	
+	TimeCallback      tm;
+	int               load_origin = 0;
+	
 	Vector<String> nest_list;
 
 	bool           selectvars;
@@ -228,6 +231,8 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           DeletePackage();
 	void           PackageMenu(Bar& bar);
 	void           MovePackage(bool copy);
+
+	void           LoadOrigins();
 	
 	enum {
 		MAIN = 1, NONMAIN = 2, ALL = 0x8000, UPPHUB = 0x4000, NEST_MASK = 0xfff

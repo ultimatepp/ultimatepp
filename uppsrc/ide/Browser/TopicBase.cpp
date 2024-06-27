@@ -237,7 +237,6 @@ void SyncRefs()
 		SyncRefsShowProgress = true;
 		return;
 	}
-	TIMESTOP("SyncRefs");
 	Progress pi;
 	pi.AlignText(ALIGN_LEFT);
 	Vector<String> upp = GetUppDirs();
