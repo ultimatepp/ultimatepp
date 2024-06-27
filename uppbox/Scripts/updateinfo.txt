@@ -358,23 +358,6 @@ fix errors in pcre_compile.c with casts
 initial: 8.41
 2019-03-22: 8.43
 2020-09-02: 8.44
-------------------------------------------------------------------
-# now in UppHub
-
-plugin/Eigen
-
-http://eigen.tuxfamily.org
-
-download latest .zip
-
-overwrite COPYING.* and README.md
-
-replace Eigen folder without CMakeLists.txt files
-
-replace unsupported folder without CMakeLists.txt files
-
-current version 3.3.7
-
 
 ------------------------------------------------------------------
 plugin/sqlite3
@@ -390,23 +373,15 @@ Download amalgamation, replace files lib/sqleet.[c|h]
 2020-09-03: updated coolman 3.33
 2024-06-26: 3.46.0
 ------------------------------------------------------------------
-plugin/glew
-
-------------------------------------------------------------------
-plugin/FT_fontsys
-
-lz4plugin/astyle
-plugin/box2d
-plugin/ndisasm
-
-------------------------------------------------------------------
 SDL2
 
-https://www.libsdl.org/download-2.0.php
+https://github.com/libsdl-org/SDL/releases
 
 download development libraries for VC and mingw
 take docs, include and lib from VC variant
 copy to lib/x64 x32 libSDL2.dll.a and libSDL2main.a from corresponding mingw directories
+
+2024-06-27: 2.30.4
 
 ------------------------------------------------------------------
 PostgresSQL
@@ -428,6 +403,17 @@ https://github.com/g-truc/glm
 
 -------------------------------------
 MinGit-2.29.2.3-busybox-32-bit
+
+------------------------------------------------------------------
+plugin/glew
+
+------------------------------------------------------------------
+plugin/FT_fontsys
+
+lz4plugin/astyle
+plugin/box2d
+plugin/ndisasm
+
 
 ====================================================================
 DEPRECATED (NOT USED ANYMORE)
@@ -458,4 +444,21 @@ initial: MinGW-W64 GCC-7.2.0
 2019-03-22: 8.1.0
 2020-02-13: ldd.exe update to clang 9.0.0
 
+
+------------------------------------------------------------------
+# now in UppHub
+
+plugin/Eigen
+
+http://eigen.tuxfamily.org
+
+download latest .zip
+
+overwrite COPYING.* and README.md
+
+replace Eigen folder without CMakeLists.txt files
+
+replace unsupported folder without CMakeLists.txt files
+
+current version 3.3.7
 
