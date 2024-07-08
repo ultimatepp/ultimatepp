@@ -70,7 +70,7 @@ ImageIml Iml::GetRaw(int mode, int i)
 	Mutex::Lock __(sImlLock);
 	if(data[mode].GetCount()) {
 		int ii = 0;
-		for(;;) {
+		while(ii < data[mode].GetCount()) {
 			const Data& d = data[mode][ii];
 			if(i < d.count) {
 				static const char *cached_data[4];
@@ -107,8 +107,15 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 {
 	Image image;
 	int mode = IsUHDMode() * GUI_MODE_UHD + IsDarkTheme() * GUI_MODE_DARK;
-	if(mode == GUI_MODE_NORMAL)
+	if(mode == GUI_MODE_NORMAL) {
 		image = GetRaw(GUI_MODE_NORMAL, id).image;
+		if(IsNull(image)) {
+			ImageIml im = GetRaw(GUI_MODE_NORMAL, id + "__UHD");
+			image = im.image;
+			if((im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+				image = Downscale2x(image);
+		}
+	}
 	else {
 		auto Mode = [&](dword m, const char *s) { return mode & m ? String(s) : String(); };
 		image = GetRaw(GUI_MODE_NORMAL, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK")).image;

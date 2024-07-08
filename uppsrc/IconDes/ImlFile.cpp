@@ -342,18 +342,28 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 			if(c.image.GetResolution() == IMAGE_RESOLUTION_STANDARD)
 				std_name.Add(c.name);
 		}
+		Index<String> names;
+		Index<String> saved_names;
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
+			names.FindAdd(c.name);
 			out << "IMAGE_ID(" << c.name;
+			if((c.flags & (IML_IMAGE_FLAG_UHD|IML_IMAGE_FLAG_DARK)) == 0)
+				saved_names.FindAdd(c.name);
 			if(c.flags & IML_IMAGE_FLAG_UHD)
 				out << "__UHD";
 			if(c.flags & IML_IMAGE_FLAG_DARK)
 				out << "__DARK";
 			out << ")";
 			if(c.exp)
-				out << " IMAGE_META(\"exp\", \"\")" << eol;
+				out << " IMAGE_META(\"exp\", \"\")";
 			out << eol;
 		}
+		
+		for(String id : names) // allow UHD versions to be downscaled
+			if(saved_names.Find(id) < 0)
+				out << "IMAGE_ID(" << id << ")" << eol;
+		
 		int ii = 0;
 		while(ii < iml.GetCount()) {
 			int bl = 0;
