@@ -86,22 +86,28 @@ force_inline Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr
 }
 
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
-                           void (*op)(RGBA *t, const RGBA *s, int n))
+                           void (*op)(RGBA *t, const RGBA *s, int n), bool co)
 {
 	dest.SetResolution(src.GetResolution());
 	Rect sr = srect;
 	Size sz = DstSrc(dest, p, src, sr);
-	if(sz.cx > 0)
-		while(--sz.cy >= 0)
-			(*op)(dest[p.y++] + p.x, src[sr.top++] + sr.left, sz.cx);
+	if(sz.cx > 0) {
+		if(co)
+			CoFor(sz.cy, [&](int i) {
+				(*op)(dest[p.y + i] + p.x, src[sr.top + i] + sr.left, sz.cx);
+			});
+		else
+			while(--sz.cy >= 0)
+				(*op)(dest[p.y++] + p.x, src[sr.top++] + sr.left, sz.cx);
+	}
 }
 
-void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, Copy);
 }
 
-void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, AlphaBlend);
 }
@@ -113,7 +119,7 @@ Image GetOver(const Image& dest, const Image& src)
 	return r;
 }
 
-Image Copy(const Image& src, const Rect& srect)
+Image Copy(const Image& src, const Rect& srect, bool co)
 {
 	ImageBuffer ib(srect.GetSize());
 	Copy(ib, Point(0, 0), src, srect);
@@ -129,30 +135,30 @@ void Fill(ImageBuffer& dest, const Rect& rect, RGBA color)
 			Fill(dest[y] + r.left, color, cx);
 }
 
-void OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, AlphaBlendStraightOpaque);
 }
 
-void  Copy(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  Copy(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	Copy(b, p, src, srect);
+	Copy(b, p, src, srect, co);
 	dest = b;
 }
 
-void  Over(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  Over(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	Over(b, p, src, srect);
+	Over(b, p, src, srect, co);
 	dest = b;
 }
 
-void  Over(Image& dest, const Image& _src)
+void  Over(Image& dest, const Image& _src, bool co)
 {
-	Over(dest, Point(0, 0), _src, _src.GetSize());
+	Over(dest, Point(0, 0), _src, _src.GetSize(), co);
 }
 
 void Fill(Image& dest, const Rect& rect, RGBA color)
@@ -162,11 +168,11 @@ void Fill(Image& dest, const Rect& rect, RGBA color)
 	dest = b;
 }
 
-void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	OverStraightOpaque(b, p, src, srect);
+	OverStraightOpaque(b, p, src, srect, co);
 	dest = b;
 }
 
@@ -190,7 +196,7 @@ Image Crop(const Image& img, const Rect& rc)
 	return WithResolution(tgt, img);
 }
 
-Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color)
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color, bool co)
 {
 	Size sz = img.GetSize();
 	ImageBuffer ib(sz.cx + left + right, sz.cy + top + bottom);

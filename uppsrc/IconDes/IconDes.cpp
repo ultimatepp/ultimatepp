@@ -44,8 +44,8 @@ void IconDes::SyncShow()
 		Slot& c = Current();
 		Image image = c.image;
 		iconshow.image = image;
-		iconshow.show_small = show_small;
-		iconshow.show_other = show_other;
+		iconshow.show_downscaled = show_downscaled;
+		iconshow.show_synthetics = show_synthetics;
 		ilist.Set(2, RawToValue(MakeTuple(image, c.flags)));
 	}
 	iconshow.Refresh();
@@ -83,7 +83,7 @@ void IconDes::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
 void IconDes::Scroll()
 {
 	magnify = max(magnify, 1);
-	scroller.Scroll(*this, GetSize(), sb, Size(magnify, magnify));
+	Refresh();
 }
 
 void IconDes::Layout()
@@ -465,19 +465,29 @@ void IconDes::SelectRect()
 	SetBar();
 }
 
+String PackUndo(const Vector<ImageIml>& img)
+{
+	return FastCompress(PackImlDataUncompressed(img));
+}
+
+Vector<ImageIml> UnpackUndo(const String& data)
+{
+	return UnpackImlDataUncompressed(FastDecompress(data));
+}
+
 void IconDes::SaveUndo()
 {
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
-	int maxn = minmax((single_mode ? 4000000 : 400000) / max((int)c.image.GetLength(), 1), 4, 128);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
+	int maxn = minmax((single_mode ? 40000000 : 2000000) / max((int)c.image.GetLength(), 1), 4, 128);
 	while(undo.GetCount() > maxn)
 		undo.Remove(0);
 	if(undo.GetCount() && undo.Top().image == c.image)
 		return;
 	undo.Add().image = c.image;
-	c.undo = PackImlData(undo);
+	c.undo = PackUndo(undo);
 	c.redo.Clear();
 	SetBar();
 	undo.Clear();
@@ -488,14 +498,14 @@ void IconDes::Undo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
 	if(undo.GetCount() == 0)
 		return;
-	Vector<ImageIml> redo = UnpackImlData(c.redo);
+	Vector<ImageIml> redo = UnpackUndo(c.redo);
 	redo.Add().image = c.image;
 	c.image = undo.Pop().image;
-	c.undo = PackImlData(undo);
-	c.redo = PackImlData(redo);
+	c.undo = PackUndo(undo);
+	c.redo = PackUndo(redo);
 	SyncImage();
 	SetBar();
 }
@@ -505,14 +515,14 @@ void IconDes::Redo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> redo = UnpackImlData(c.redo);
+	Vector<ImageIml> redo = UnpackUndo(c.redo);
 	if(redo.GetCount() == 0)
 		return;
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
 	undo.Add().image = c.image;
 	c.image = redo.Pop().image;
-	c.undo = PackImlData(undo);
-	c.redo = PackImlData(redo);
+	c.undo = PackUndo(undo);
+	c.redo = PackUndo(redo);
 	SyncImage();
 	SetBar();
 }

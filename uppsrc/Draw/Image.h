@@ -8,7 +8,8 @@ enum ImageKind {
 	IMAGE_OPAQUE,
 };
 
-inline void Fill(RGBA *t, RGBA c, size_t n) { memset32(t, *(dword *)&c, n); }
+inline void Fill(RGBA *t, RGBA c, size_t n)     { memset32(t, *(dword *)&c, n); }
+void FillDown(RGBA *t, int linecy, RGBA c, int cy);
 inline void Copy(RGBA *t, const RGBA *s, int n) { memcpy_t(t, s, n); }
 
 int  Premultiply(RGBA *t, const RGBA *s, size_t len);
@@ -256,6 +257,7 @@ struct ImageIml : Moveable<ImageIml> {
 	dword  flags = 0;
 };
 
+Vector<ImageIml> UnpackImlDataUncompressed(const String& data);
 Vector<ImageIml> UnpackImlData(const void *ptr, int len);
 Vector<ImageIml> UnpackImlData(const String& d);
 

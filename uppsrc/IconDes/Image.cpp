@@ -40,7 +40,7 @@ void IconDes::KeyMove(int dx, int dy)
 	else {
 		Image h = c.image;
 		c.image = CreateImage(h.GetSize(), Null);
-		UPP::Copy(c.image, Point(dx, dy), h, h.GetSize());
+		UPP::Copy(c.image, Point(dx, dy), h, h.GetSize(), true);
 	}
 	Sync();
 }

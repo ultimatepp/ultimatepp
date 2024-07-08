@@ -115,6 +115,25 @@ int Premultiply(RGBA *t, const RGBA *s, size_t len)
 	return IMAGE_OPAQUE;
 }
 
+void FillDown(RGBA *t, int linecy, RGBA c, int cy)
+{
+	for(int n = cy >> 3; n; n--) {
+		t[0] = t[linecy] = t[2 * linecy] = t[3 * linecy] =
+		t[4 * linecy] = t[5 * linecy] = t[6 * linecy] = t[7 * linecy] = c;
+		t += 8 * linecy;
+	}
+	if(cy & 4) {
+		t[0] = t[linecy] = t[2 * linecy] = t[3 * linecy] = c;
+		t += 4 * linecy;
+	}
+	if(cy & 2) {
+		t[0] = t[linecy] = c;
+		t += 2 * linecy;
+	}
+	if(cy & 1)
+		t[0] = c;
+}
+
 int um_table__[256];
 
 void sInitUmTable__()

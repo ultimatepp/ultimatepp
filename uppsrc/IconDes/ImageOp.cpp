@@ -154,7 +154,7 @@ void MirrorVert(Image& img, const Rect& rect)
 	img = ib;
 }
 
-String PackImlData(const Vector<ImageIml>& image)
+String PackImlDataUncompressed(const Vector<ImageIml>& image)
 {
 	StringBuffer block;
 	for(const ImageIml& m : image) {
@@ -181,16 +181,21 @@ String PackImlData(const Vector<ImageIml>& image)
 			s++;
 		}
 	}
-	return ZCompress(block);
+	return block;
 }
 
-Image DownSample3x(const Image& src)
+String PackImlData(const Vector<ImageIml>& image)
+{
+	return ZCompress(PackImlDataUncompressed(image));
+}
+
+Image DownSample3x(const Image& src, bool co)
 {
 	Size tsz = src.GetSize() / 3;
 	ImageBuffer ib(tsz);
 	int w = src.GetSize().cx;
 	int w2 = 2 * w;
-	for(int y = 0; y < tsz.cy; y++) {
+	CoFor(co, tsz.cy, [&](int y) {
 		RGBA *t = ib[y];
 		RGBA *e = t + tsz.cx;
 		const RGBA *s = src[3 * y];
@@ -210,17 +215,17 @@ Image DownSample3x(const Image& src)
 			t++;
 			s += 3;
 		}
-	}
+	});
 	ib.SetResolution(src.GetResolution());
 	return ib;
 }
 
-Image DownSample2x(const Image& src)
+Image DownSample2x(const Image& src, bool co)
 {
 	Size tsz = src.GetSize() / 2;
 	ImageBuffer ib(tsz);
 	int w = src.GetSize().cx;
-	for(int y = 0; y < tsz.cy; y++) {
+	CoFor(co, tsz.cy, [&](int y) {
 		RGBA *t = ib[y];
 		RGBA *e = t + tsz.cx;
 		const RGBA *s = src[2 * y];
@@ -239,7 +244,7 @@ Image DownSample2x(const Image& src)
 			t++;
 			s += 2;
 		}
-	}
+	});
 	ib.SetResolution(src.GetResolution());
 	return ib;
 }

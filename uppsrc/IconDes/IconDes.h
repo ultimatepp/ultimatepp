@@ -93,8 +93,8 @@ public:
 
 struct IconShow : public Ctrl {
 	Image image;
-	bool  show_small;
-	bool  show_other;
+	bool  show_downscaled;
+	bool  show_synthetics;
 
 	void Paint(Draw& w);
 
@@ -105,9 +105,10 @@ void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tol
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
+String PackImlDataUncompressed(const Vector<ImageIml>& image);
 String PackImlData(const Vector<ImageIml>& image);
-Image  DownSample3x(const Image& src);
-Image  DownSample2x(const Image& src);
+Image  DownSample3x(const Image& src, bool co = false);
+Image  DownSample2x(const Image& src, bool co = false);
 
 /*
 struct IconDraw : ImagePainter {
@@ -177,12 +178,11 @@ private:
 	bool         doselection = false;
 	bool         selectrect = false;
 	int          paste_mode;
-	bool         show_other = false;
-	bool         show_small = false;
+	bool         show_synthetics = false;
+	bool         show_downscaled = false;
 	bool         show_grid2 = false;
 
 	ScrollBars   sb;
-	Scroller     scroller;
 	ToolBar      toolbar;
 
 	SplitterFrame  leftpane;

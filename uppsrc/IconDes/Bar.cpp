@@ -32,7 +32,7 @@ void IconDes::SetMagnify(int mag)
 	if( !IsCurrent() )
 		return;
 
-	magnify = minmax(mag, 1, 27);
+	magnify = minmax(mag, 1, 50);
 
 	sb = Point(0, 0);
 	SetSb();
@@ -204,11 +204,11 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
 	   .Key(AK_RESIZEDOWN3);
 	bar.Add("Show UHD/Dark syntetics", IconDesImg::ShowOther(),
-	        [=] { show_other = !show_other; show_small = false; SyncShow(); SetBar(); })
-	   .Check(show_other);
+	        [=] { show_synthetics = !show_synthetics; show_downscaled = false; SyncShow(); SetBar(); })
+	   .Check(show_synthetics);
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
-	        [=] { show_small = !show_small; show_other = false; SyncShow(); SetBar(); })
-	   .Check(show_small);
+	        [=] { show_downscaled = !show_downscaled; show_synthetics = false; SyncShow(); SetBar(); })
+	   .Check(show_downscaled);
 	bar.Add("Show secondardy grid", IconDesImg::grid2(),
 	        [=] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
 	   .Check(show_grid2);
@@ -324,12 +324,12 @@ void IconDes::SerializeSettings(Stream& s)
 		s % ImgFile();
 	if(version >= 3) {
 		bool b = false;
-		s % b % show_small;
+		s % b % show_downscaled;
 	}
 	if(version >= 4)
 		s % paste_mode;
 	if(version >= 5)
-		s % show_other;
+		s % show_synthetics;
 	if(version >= 6)
 		s % show_grid2;
 }

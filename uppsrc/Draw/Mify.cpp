@@ -179,24 +179,22 @@ Image MinifyCached(const Image& img, int nx, int ny, bool co)
 	return MakeImage(m);
 }
 
-Image Magnify(const Image& img, int nx, int ny)
+Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 {
-	if(nx == 1 && ny == 1)
-		return img;
-	if(nx == 0 || ny == 0)
-		return Image();
-	Size sz = img.GetSize();
+	Rect src = src_ & img.GetSize();
 	bool xdown = nx < 0;
 	nx = abs(nx);
-	int ncx = xdown ? sz.cx / nx : sz.cx * nx;
-	ImageBuffer b(ncx, sz.cy * ny);
-	const RGBA *s = ~img;
-	const RGBA *e = s + img.GetLength();
-	RGBA *t = ~b;
-	while(s < e) {
+	Size ssz = src.GetSize();
+	if(ssz.cx <= 0 || ssz.cy <= 0 || nx == 0 || ny == 0)
+		return Image();
+	int ncx = xdown ? ssz.cx / nx : ssz.cx * nx;
+	ImageBuffer b(ncx, ssz.cy * ny);
+	CoFor(co, ssz.cy, [&](int y) {
+		const RGBA *s = img[src.top + y] + src.left;
+		const RGBA *e = s + ssz.cx;
+		RGBA *t = ~b + y * ncx * ny;
 		RGBA *q = t;
-		const RGBA *le = s + sz.cx;
-		while(s < le) {
+		while(s < e) {
 			Fill(q, *s, nx);
 			q += nx;
 			s++;
@@ -205,10 +203,16 @@ Image Magnify(const Image& img, int nx, int ny)
 			memcpy(q, t, ncx * sizeof(RGBA));
 			q += ncx;
 		}
-		t = q;
-	}
+	});
 	b.SetResolution(img.GetResolution());
 	return b;
+}
+
+Image Magnify(const Image& img, int nx, int ny)
+{
+	if(nx == 1 && ny == 1)
+		return img;
+	return Magnify(img, img.GetSize(), nx, ny, false);
 }
 
 };

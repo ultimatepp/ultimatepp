@@ -2,10 +2,9 @@
 
 namespace Upp {
 
-Vector<ImageIml> UnpackImlData(const void *ptr, int len)
+Vector<ImageIml> UnpackImlDataUncompressed(const String& data)
 {
 	Vector<ImageIml> img;
-	String data = ZDecompress(ptr, len);
 	const char *s = data;
 	while(s + 6 * 2 + 1 <= data.End()) {
 		ImageIml& m = img.Add();
@@ -33,6 +32,11 @@ Vector<ImageIml> UnpackImlData(const void *ptr, int len)
 		m.image = ib;
 	}
 	return img;
+}
+
+Vector<ImageIml> UnpackImlData(const void *ptr, int len)
+{
+	return UnpackImlDataUncompressed(ZDecompress(ptr, len));
 }
 
 Vector<ImageIml> UnpackImlData(const String& d)
