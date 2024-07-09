@@ -52,7 +52,20 @@ void IconDes::PasteText()
 	ImageDraw iw(tsz);
 	iw.Alpha().DrawText(0, 0, text, font, GrayColor(CurrentColor().a));
 	iw.DrawRect(tsz, CurrentColor());
+#ifdef PLATFORM_WIN32 // non-antialiased works
 	Current().paste_image = iw;
+#else
+	if(!font.IsNonAntiAliased())
+		Current().paste_image = iw;
+	else {
+		Image h = iw;
+		ImageBuffer ib(h);
+		RGBA cc = CurrentColor();
+		for(RGBA& c : ib)
+			c = c.a < 128 ? RGBAZero() : cc;
+		Current().paste_image = ib;
+	}
+#endif
 	MakePaste();
 }
 

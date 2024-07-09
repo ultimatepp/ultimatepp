@@ -25,7 +25,7 @@ void IconShow::Paint(Draw& w)
 			isz.cy += 2 * isz.cy + gap;
 		}
 	}
-	int n = sz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
+	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
 	int ncx = sz.cx / n;
 	Image m2, m3;
 	Image dk, up2, up2dk;
