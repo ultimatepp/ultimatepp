@@ -9,6 +9,8 @@ void IconDes::LeftDown(Point p, dword flags)
 		return;
 	SaveUndo();
 	startpoint = GetPos(p);
+	startcolor = InImage(startpoint) ? CurrentImage()[startpoint.y][startpoint.x] : RGBAZero();
+
 	if(IsPasting()) {
 		if(Rect(Current().pastepos, Current().paste_image.GetSize()).Contains(startpoint)) {
 			startpoint -= Current().pastepos;

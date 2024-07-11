@@ -30,7 +30,7 @@ void IconDraw::PutVert(int x, int y, int cy)
 	}
 }
 
-void IconDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
+void IconDraw::DrawRect(int x, int y, int cx, int cy, RGBA color)
 {
 	docolor = color;
 	int b = minmax(y + cy, 0, image.GetHeight());
@@ -40,21 +40,29 @@ void IconDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 		PutHorz(x, y++, cx);
 }
 
-void IconDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
+void IconDraw::DrawFrame(int x, int y, int cx, int cy, RGBA color, int n)
+{
+	DrawRect(x, y, cx, n, color);
+	DrawRect(x, y + n, n, cy - n, color);
+	DrawRect(x + cx - n, y + n, n, cy - n, color);
+	DrawRect(x + n, y + cy - n, cx - 2 * n, n, color);
+}
+
+void IconDraw::DrawLine(Point p1, Point p2, int width, RGBA color)
 {
 	docolor = color;
 	Width(width);
-	Move(Point(x1, y1));
-	Line(Point(x2, y2));
+	Move(p1);
+	Line(p2);
 }
 
-void IconDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
+void IconDraw::DrawEllipse(const Rect& r, bool fill_empty, RGBA color, int pen, RGBA pencolor)
 {
-	if(!IsNull(color)) {
+	if(fill_empty) {
 		docolor = color;
 		Polygon().Ellipse(r).Fill();
 	}
-	if(!IsNull(pen) && !IsNull(pencolor)) {
+	if(!IsNull(pen)) {
 		docolor = pencolor;
 		Width(pen);
 		Ellipse(r);

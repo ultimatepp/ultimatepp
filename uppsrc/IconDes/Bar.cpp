@@ -167,6 +167,12 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(tool == &IconDes::RectTool && notpasting);
 	bar.Add(AK_EMPTY_RECTANGLES, IconDesImg::EmptyRects(), THISBACK1(SetTool, &IconDes::EmptyRectTool))
 	   .Check(tool == &IconDes::EmptyRectTool && notpasting && !selectrect);
+	bar.Add(AK_RADIAL, IconDesImg::Radial(), THISBACK1(SetTool, &IconDes::RadialTool))
+	   .Check(tool == &IconDes::RadialTool && notpasting && !doselection)
+	   .Enable(!doselection);
+	bar.Add(AK_LINEAR, IconDesImg::Linear(), THISBACK1(SetTool, &IconDes::LinearTool))
+	   .Check(tool == &IconDes::LinearTool && notpasting && !doselection)
+	   .Enable(!doselection);
 	bar.Add(AK_HOTSPOTS, IconDesImg::HotSpot(), THISBACK1(SetTool, &IconDes::HotSpotTool))
 	   .Check(tool == &IconDes::HotSpotTool);
 	bar.Add(AK_TEXT, IconDesImg::Text(), THISBACK(Text))
@@ -183,6 +189,10 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add("Antifill", antifill_cursor, [=] { SetTool(&IconDes::AntiFillTool); })
 	   .Check(tool == &IconDes::AntiFillTool && notpasting)
 	   .Tip("Antifill (Shift+Ctrl+Click)");
+	bar.Add("Antialiased", IconDesImg::aa(),
+	        [=] { antialiased = !antialiased; Refresh(); SetBar(); })
+	   .Check(antialiased && !doselection)
+	   .Enable(!doselection);
 	bar.Separator();
 	for(int i = 1; i <= 6; i++)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))
@@ -304,7 +314,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 6;
+	int version = 7;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -332,6 +342,8 @@ void IconDes::SerializeSettings(Stream& s)
 		s % show_synthetics;
 	if(version >= 6)
 		s % show_grid2;
+	if(version >= 7)
+		s % antialiased;
 }
 
 void IconDes::SyncStatus()

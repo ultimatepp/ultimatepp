@@ -443,7 +443,7 @@ void AssistEditor::SetAnnotations(const CppFileInfo& f)
 		SetAnnotation(m.pos.y,
 		              GetRefLinks(m.id).GetCount() ? IdeImg::tpp_doc()
 		                                           : IdeImg::tpp_pen(),
-		              m.id);
+		              TppId(m.id));
 	}
 	references = clone(f.refs);
 	locals = clone(f.locals);

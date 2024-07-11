@@ -110,26 +110,19 @@ String PackImlData(const Vector<ImageIml>& image);
 Image  DownSample3x(const Image& src, bool co = false);
 Image  DownSample2x(const Image& src, bool co = false);
 
-/*
-struct IconDraw : ImagePainter {
-	IconDraw(Size sz) : ImagePainter(sz, MODE_NOAA) {}
-};
-*/
-
-struct IconDraw : NilDraw, DDARasterizer {
-	RGBA        docolor;
-	ImageBuffer image;
+struct IconDraw : DDARasterizer {
+	RGBA         docolor;
+	ImageBuffer& image;
 	
 	virtual void PutHorz(int x, int y, int cx);
 	virtual void PutVert(int x, int y, int cy);
 
-	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
-	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
-	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	void DrawRect(int x, int y, int cx, int cy, RGBA color);
+	void DrawFrame(int x, int y, int cx, int cy, RGBA color, int n);
+	void DrawLine(Point p1, Point p2, int width, RGBA color);
+	void DrawEllipse(const Rect& r, bool fill_empty, RGBA color, int pen, RGBA pencolor);
 	
-	operator Image() { return image; }
-	
-	IconDraw(Size sz) { image.Create(sz); Cy(sz.cy); }
+	IconDraw(ImageBuffer& image) : image(image) { Cy(image.GetHeight()); }
 };
 
 class IconDes : public Ctrl {
@@ -173,6 +166,7 @@ private:
 	int          magnify;
 	int          pen;
 	Point        startpoint;
+	RGBA         startcolor = RGBAZero();
 	Rect         m1refresh;
 	void        (IconDes::*tool)(Point p, dword flags);
 	bool         doselection = false;
@@ -181,6 +175,7 @@ private:
 	bool         show_synthetics = false;
 	bool         show_downscaled = false;
 	bool         show_grid2 = false;
+	bool         antialiased = false;
 
 	ScrollBars   sb;
 	ToolBar      toolbar;
@@ -219,14 +214,19 @@ private:
 	
 	TextDlg        textdlg;
 
-	void  PenSet(Point p, dword flags);
+	void  DoBuffer(Event<ImageBuffer&> tool);
+	void  DoPainter(Event<Painter&> tool);
+	void  DoDraw(Event<IconDraw&> tool);
+	void  DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool);
 
 	void  LineTool(Point p, dword f);
 	void  FreehandTool(Point p, dword f);
 
-	void  EllipseTool0(Point p, dword flags, Color inner);
+	void  EllipseTool0(Point p, dword flags, bool fill_empty);
 	void  EllipseTool(Point p, dword f);
 	void  EmptyEllipseTool(Point p, dword f);
+	void  RadialTool(Point p, dword f);
+	void  LinearTool(Point p, dword f);
 
 	void  RectTool0(Point p, dword f, bool empty);
 	void  RectTool(Point p, dword f);
@@ -261,11 +261,7 @@ private:
 
 	void  SyncShow();
 
-	void  RefreshPixel(Point p, int cx = 1, int cy = 1);
-	void  RefreshPixel(int x, int y, int cx = 1, int cy = 1);
 	Point GetPos(Point p);
-	void  Set(Point p, RGBA rgba, dword flags);
-	void  ApplyDraw(IconDraw& iw, dword flags);
 	void  ApplyImage(Image m, dword flags, bool alpha = false);
 
 	void  SyncImage();
