@@ -64078,174 +64078,6 @@ $(OutDir_IconDes)Event.o: $(UPPDIR1)IconDes/Event.cpp \
 	$(UPPDIR1)VirtualGui/VirtualGui.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_IconDes)  $(UPPDIR1)IconDes/Event.cpp -o $(OutDir_IconDes)Event.o
 
-$(OutDir_IconDes)Fast.o: $(UPPDIR1)IconDes/Fast.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FileMapping.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/HttpStatusCode.i \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/mt_.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)CtrlCore/Coco.h \
-	$(UPPDIR1)CtrlCore/CocoCode.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.h \
-	$(UPPDIR1)CtrlCore/CtrlCore.iml \
-	$(UPPDIR1)CtrlCore/Gtk.h \
-	$(UPPDIR1)CtrlCore/lay.h \
-	$(UPPDIR1)CtrlCore/lay0.h \
-	$(UPPDIR1)CtrlCore/MKeys.h \
-	$(UPPDIR1)CtrlCore/stdids.h \
-	$(UPPDIR1)CtrlCore/TopWindow.h \
-	$(UPPDIR1)CtrlCore/Win32Gui.h \
-	$(UPPDIR1)CtrlCore/X11Gui.h \
-	$(UPPDIR1)CtrlLib/AKeys.h \
-	$(UPPDIR1)CtrlLib/ArrayCtrl.h \
-	$(UPPDIR1)CtrlLib/Bar.h \
-	$(UPPDIR1)CtrlLib/Ch.h \
-	$(UPPDIR1)CtrlLib/ColumnList.h \
-	$(UPPDIR1)CtrlLib/Ctrl.iml \
-	$(UPPDIR1)CtrlLib/Ctrl.lay \
-	$(UPPDIR1)CtrlLib/CtrlLib.h \
-	$(UPPDIR1)CtrlLib/Ctrls.iml \
-	$(UPPDIR1)CtrlLib/CtrlUtil.h \
-	$(UPPDIR1)CtrlLib/DateTimeCtrl.h \
-	$(UPPDIR1)CtrlLib/DisplayPopup.h \
-	$(UPPDIR1)CtrlLib/DlgColor.h \
-	$(UPPDIR1)CtrlLib/DropChoice.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.h \
-	$(UPPDIR1)CtrlLib/EditCtrl.hpp \
-	$(UPPDIR1)CtrlLib/FileSel.h \
-	$(UPPDIR1)CtrlLib/HeaderCtrl.h \
-	$(UPPDIR1)CtrlLib/key_header.h \
-	$(UPPDIR1)CtrlLib/LabelBase.h \
-	$(UPPDIR1)CtrlLib/Lang.h \
-	$(UPPDIR1)CtrlLib/MultiButton.h \
-	$(UPPDIR1)CtrlLib/Progress.h \
-	$(UPPDIR1)CtrlLib/PushCtrl.h \
-	$(UPPDIR1)CtrlLib/RichText.h \
-	$(UPPDIR1)CtrlLib/ScrollBar.h \
-	$(UPPDIR1)CtrlLib/SliderCtrl.h \
-	$(UPPDIR1)CtrlLib/Splitter.h \
-	$(UPPDIR1)CtrlLib/StaticCtrl.h \
-	$(UPPDIR1)CtrlLib/StatusBar.h \
-	$(UPPDIR1)CtrlLib/SuggestCtrl.h \
-	$(UPPDIR1)CtrlLib/TabCtrl.h \
-	$(UPPDIR1)CtrlLib/TextEdit.h \
-	$(UPPDIR1)CtrlLib/TreeCtrl.h \
-	$(UPPDIR1)Draw/Cham.h \
-	$(UPPDIR1)Draw/DDARasterizer.h \
-	$(UPPDIR1)Draw/Display.h \
-	$(UPPDIR1)Draw/Draw.h \
-	$(UPPDIR1)Draw/DrawImg.iml \
-	$(UPPDIR1)Draw/FontInt.h \
-	$(UPPDIR1)Draw/Image.h \
-	$(UPPDIR1)Draw/ImageOp.h \
-	$(UPPDIR1)Draw/iml_header.h \
-	$(UPPDIR1)Draw/Raster.h \
-	$(UPPDIR1)Draw/SDraw.h \
-	$(UPPDIR1)Draw/SIMD.h \
-	$(UPPDIR1)guiplatform.h \
-	$(UPPDIR1)IconDes/Fast.cpp \
-	$(UPPDIR1)IconDes/IconDes.h \
-	$(UPPDIR1)IconDes/IconDes.iml \
-	$(UPPDIR1)IconDes/IconDes.lay \
-	$(UPPDIR1)Painter/BufferPainter.h \
-	$(UPPDIR1)Painter/LinearPath.h \
-	$(UPPDIR1)Painter/Painter.h \
-	$(UPPDIR1)Painter/Painter.hpp \
-	$(UPPDIR1)Painter/Painting.h \
-	$(UPPDIR1)plugin/bmp/bmp.h \
-	$(UPPDIR1)plugin/png/png.h \
-	$(UPPDIR1)RichEdit/RichEdit.h \
-	$(UPPDIR1)RichEdit/RichEdit.iml \
-	$(UPPDIR1)RichEdit/RichEdit.lay \
-	$(UPPDIR1)RichText/Para.h \
-	$(UPPDIR1)RichText/RichText.h \
-	$(UPPDIR1)RichText/RichText.iml \
-	$(UPPDIR1)RichText/Table.h \
-	$(UPPDIR1)RichText/Text.h \
-	$(UPPDIR1)RichText/Txt.h \
-	$(UPPDIR1)uppconfig.h \
-	$(UPPDIR1)VirtualGui/FB.iml \
-	$(UPPDIR1)VirtualGui/VirtualGui.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_IconDes)  $(UPPDIR1)IconDes/Fast.cpp -o $(OutDir_IconDes)Fast.o
-
 $(OutDir_IconDes)IconDes.o: $(UPPDIR1)IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
@@ -65598,7 +65430,6 @@ $(OutDir_IconDes)IconDes.a: \
 	$(OutDir_IconDes)ImageOp.o \
 	$(OutDir_IconDes)Paint.o \
 	$(OutDir_IconDes)Event.o \
-	$(OutDir_IconDes)Fast.o \
 	$(OutDir_IconDes)IconDes.o \
 	$(OutDir_IconDes)List.o \
 	$(OutDir_IconDes)Image.o \
@@ -65614,7 +65445,6 @@ $(OutDir_IconDes)IconDes.a: \
 		$(OutDir_IconDes)ImageOp.o \
 		$(OutDir_IconDes)Paint.o \
 		$(OutDir_IconDes)Event.o \
-		$(OutDir_IconDes)Fast.o \
 		$(OutDir_IconDes)IconDes.o \
 		$(OutDir_IconDes)List.o \
 		$(OutDir_IconDes)Image.o \
