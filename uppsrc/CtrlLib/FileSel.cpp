@@ -1729,7 +1729,7 @@ Image GetDirIcon(const String& s)
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
-	return DPI(img);
+	return img;
 }
 
 void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
@@ -2198,7 +2198,7 @@ void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name
 		row = row < 0 ? places.GetCount() : row;
 		places.Insert(row);
 		places.Set(row, 0, path);
-		places.Set(row, 1, DPI(m));
+		places.Set(row, 1, m);
 		places.Set(row, 2, name);
 		places.Set(row, 3, group);
 		places.SetLineCy(row, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
@@ -2210,7 +2210,7 @@ void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name
 FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name, const char* group, int row)
 {
 	if(path.GetCount())
-		AddPlaceRaw(NormalizePath(path), DPI(m), name, group, row);
+		AddPlaceRaw(NormalizePath(path), m, name, group, row);
 	return *this;
 }
 

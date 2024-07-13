@@ -11,6 +11,11 @@ void IconShow::Paint(Draw& w)
 	Size sz = GetSize();
 	static Color color[] = { White(), Black(), WhiteGray(), LtGray(), Gray(),
 	                         Yellow(), Brown(), Red(), Green(), Blue(), Cyan(), Magenta() };
+	Image image = this->image;
+	if(show_downscaled || show_synthetics)
+		if(flags & IML_IMAGE_FLAG_S3)
+			image = DownSample3x(image, true);
+	
 	Size msz = image.GetSize();
 	Size isz = msz;
 	int  gap = DPI(8);
@@ -21,14 +26,20 @@ void IconShow::Paint(Draw& w)
 			isz.cy += max(isz.cy, (isz.cy + 1) / 2 + (isz.cy + 2) / 3 + gap);
 		}
 		if(show_synthetics) {
-			isz.cx += 3 * isz.cx + gap;
-			isz.cy += 2 * isz.cy + gap;
+			if(flags & IML_IMAGE_FLAG_UHD) {
+				isz.cx += isz.cx + gap;
+				isz.cy += isz.cy + gap;
+			}
+			else {
+				isz.cx += 3 * isz.cx + gap;
+				isz.cy += 2 * isz.cy + gap;
+			}
 		}
 	}
 	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
 	int ncx = sz.cx / n;
 	Image m2, m3;
-	Image dk, up2, up2dk;
+	Image dk, s2, s2dk;
 	if(fits) {
 		if(msz.cx && show_downscaled) {
 			m2 = DownSample2x(image);
@@ -36,8 +47,18 @@ void IconShow::Paint(Draw& w)
 		}
 		if(show_synthetics) {
 			dk = DarkTheme(image);
-			up2 = Upscale2x(image);
-			up2dk = Upscale2x(DarkTheme(image));
+			if(flags & IML_IMAGE_FLAG_UHD) {
+				s2 = Downscale2x(image);
+				s2dk = Downscale2x(DarkTheme(image));
+				if(IsUHDMode()) {
+					s2 = Magnify(s2, 2, 2, true);
+					s2dk = Magnify(s2dk, 2, 2, true);
+				}
+			}
+			else {
+				s2 = Upscale2x(image);
+				s2dk = Upscale2x(DarkTheme(image));
+			}
 		}
 	}
 	else
@@ -51,12 +72,12 @@ void IconShow::Paint(Draw& w)
 			Point pos(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2);
 			if(fits) {
 				if(show_synthetics) {
-					int x2 = pos.x + 2 * msz.cx + gap;
+					int x2 = pos.x + msz.cx + gap;
 					w.DrawImage(pos.x, pos.y, image);
 					w.DrawImage(x2, pos.y, dk);
 					pos.y += msz.cy + gap;
-					w.DrawImage(pos.x, pos.y, up2);
-					w.DrawImage(x2, pos.y, up2dk);
+					w.DrawImage(pos.x, pos.y, s2);
+					w.DrawImage(x2, pos.y, s2dk);
 				}
 				else {
 					int y = pos.y + (isz.cy - msz.cy) / 2;

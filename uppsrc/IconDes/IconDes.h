@@ -95,6 +95,7 @@ struct IconShow : public Ctrl {
 	Image image;
 	bool  show_downscaled;
 	bool  show_synthetics;
+	dword flags;
 
 	void Paint(Draw& w);
 
@@ -107,8 +108,6 @@ void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
 String PackImlDataUncompressed(const Vector<ImageIml>& image);
 String PackImlData(const Vector<ImageIml>& image);
-Image  DownSample3x(const Image& src, bool co = false);
-Image  DownSample2x(const Image& src, bool co = false);
 
 struct IconDraw : DDARasterizer {
 	RGBA         docolor;
@@ -146,14 +145,12 @@ private:
 		Image           image;
 		Image           base_image;
 		Image           selection;
-		Point           pastepos;
+		Point           pastepos = Null;
 		Image           paste_image;
 		String          undo;
 		String          redo;
-		bool            exp;
+		bool            exp = false;
 		dword           flags = 0;
-
-		Slot();
 	};
 	
 	enum {
@@ -425,8 +422,6 @@ struct ImlImage : ImageIml {
 
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
 String SaveIml(const Array<ImlImage>& iml, int format, const String& eol = "\r\n");
-
-void SetRes(Image& m, int resolution);
 
 }
 

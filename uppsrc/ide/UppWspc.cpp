@@ -77,7 +77,6 @@ void WorkspaceWork::SyncErrorPackages()
 					break;
 				}
 			}
-			ff.icon = DPI(ff.icon);
 			package.Set(i, ff);
 		}
 	}

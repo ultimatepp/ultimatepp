@@ -108,10 +108,10 @@ hash_t memhash(const void *ptr, size_t len)
 			uint64 val1, val2, val3, val4;
 			val1 = val2 = val3 = val4 = HASH_CONST1;
 			while(len >= 32) {
-				val1 = HASH_CONST2 * val1 + *(qword *)(s);
-				val2 = HASH_CONST2 * val2 + *(qword *)(s + 8);
-				val3 = HASH_CONST2 * val3 + *(qword *)(s + 16);
-				val4 = HASH_CONST2 * val4 + *(qword *)(s + 24);
+				val1 = HASH_CONST2 * val1 + Peek64(s);
+				val2 = HASH_CONST2 * val2 + Peek64(s + 8);
+				val3 = HASH_CONST2 * val3 + Peek64(s + 16);
+				val4 = HASH_CONST2 * val4 + Peek64(s + 24);
 				s += 32;
 				len -= 32;
 			}
@@ -122,19 +122,19 @@ hash_t memhash(const void *ptr, size_t len)
 		}
 		const byte *e = s + len - 8;
 		while(s < e) {
-			val = HASH_CONST2 * val + *(qword *)(s);
+			val = HASH_CONST2 * val + Peek64(s);
 			s += 8;
 		}
-		return HASH_CONST2 * val + *(qword *)(e);
+		return HASH_CONST2 * val + Peek64(e);
 	}
 	if(len > 4) {
-		val = HASH_CONST2 * val + *(dword *)(s);
-		val = HASH_CONST2 * val + *(dword *)(s + len - 4);
+		val = HASH_CONST2 * val + Peek32(s);
+		val = HASH_CONST2 * val + Peek32(s + len - 4);
 		return val;
 	}
 	if(len >= 2) {
-		val = HASH_CONST2 * val + *(word *)(s);
-		val = HASH_CONST2 * val + *(word *)(s + len - 2);
+		val = HASH_CONST2 * val + Peek16(s);
+		val = HASH_CONST2 * val + Peek16(s + len - 2);
 		return val;
 	}
 	return len ? HASH_CONST2 * val + *s : val;
@@ -172,8 +172,8 @@ hash_t memhash(const void *ptr, size_t len)
 		return HASH_CONST2 * val + *(dword *)(e);
 	}
 	if(len >= 2) {
-		val = HASH_CONST2 * val + *(word *)(s);
-		val = HASH_CONST2 * val + *(word *)(s + len - 2);
+		val = HASH_CONST2 * val + Peek16(s);
+		val = HASH_CONST2 * val + Peek16(s + len - 2);
 		return val;
 	}
 	return len ? HASH_CONST2 * val + *s : val;

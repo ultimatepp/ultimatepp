@@ -204,15 +204,76 @@ Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 			q += ncx;
 		}
 	});
-	b.SetResolution(img.GetResolution());
 	return b;
 }
 
-Image Magnify(const Image& img, int nx, int ny)
+Image Magnify(const Image& img, int nx, int ny, bool co)
 {
 	if(nx == 1 && ny == 1)
 		return img;
-	return Magnify(img, img.GetSize(), nx, ny, false);
+	return Magnify(img, img.GetSize(), nx, ny, co);
+}
+
+Image DownSample3x(const Image& src, bool co)
+{
+	Size tsz = src.GetSize() / 3;
+	if(tsz.cx * tsz.cy == 0)
+		return Null;
+	ImageBuffer ib(tsz);
+	int w = src.GetSize().cx;
+	int w2 = 2 * w;
+	CoFor(co, tsz.cy, [&](int y) {
+		RGBA *t = ib[y];
+		RGBA *e = t + tsz.cx;
+		const RGBA *s = src[3 * y];
+		while(t < e) {
+			int r, g, b, a;
+			const RGBA *q;
+			r = g = b = a = 0;
+#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
+			S__SUM(0) S__SUM(1) S__SUM(2)
+			S__SUM(w + 0) S__SUM(w + 1) S__SUM(w + 2)
+			S__SUM(w2 + 0) S__SUM(w2 + 1) S__SUM(w2 + 2)
+#undef  S__SUM
+			t->a = a / 9;
+			t->r = r / 9;
+			t->g = g / 9;
+			t->b = b / 9;
+			t++;
+			s += 3;
+		}
+	});
+	return ib;
+}
+
+Image DownSample2x(const Image& src, bool co)
+{
+	Size tsz = src.GetSize() / 2;
+	if(tsz.cx * tsz.cy == 0)
+		return Null;
+	ImageBuffer ib(tsz);
+	int w = src.GetSize().cx;
+	CoFor(co, tsz.cy, [&](int y) {
+		RGBA *t = ib[y];
+		RGBA *e = t + tsz.cx;
+		const RGBA *s = src[2 * y];
+		while(t < e) {
+			int r, g, b, a;
+			const RGBA *q;
+			r = g = b = a = 0;
+#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
+			S__SUM(0) S__SUM(1)
+			S__SUM(w + 0) S__SUM(w + 1)
+#undef  S__SUM
+			t->a = a / 4;
+			t->r = r / 4;
+			t->g = g / 4;
+			t->b = b / 4;
+			t++;
+			s += 2;
+		}
+	});
+	return ib;
 }
 
 };

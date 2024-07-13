@@ -19,6 +19,8 @@ String IconDes::FormatImageName(const Slot& c)
 		r << " HD";
 	if(c.flags & IML_IMAGE_FLAG_DARK)
 		r << " Dk";
+	if(c.flags & IML_IMAGE_FLAG_S3)
+		r << " S3";
 	if(c.exp)
 		r << " X";
 	return r;
@@ -88,8 +90,11 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		dlg.uhd <<= !!(flags & IML_IMAGE_FLAG_UHD);
 		dlg.dark <<= !!(flags & IML_IMAGE_FLAG_DARK);
 		
-		dlg.uhd ^= dlg.dark ^= dlg.exp ^= dlg.fixed_colors ^= dlg.fixed_size ^= dlg.fixed ^= dlg.name ^=
-			[&] { dlg.Break(-1000); };
+		dlg.s3 <<= !!(flags & IML_IMAGE_FLAG_S3);
+		
+		for(Ctrl& q : dlg)
+			if(dynamic_cast<Option *>(&q))
+				q << [&] { dlg.Break(-1000); };
 	}
 	dlg.name.SetFilter(sCharFilterCid);
 }
@@ -114,6 +119,8 @@ dword IconDes::GetFlags(WithImageLayout<TopWindow>& dlg)
 		flags |= IML_IMAGE_FLAG_UHD;
 	if(dlg.dark)
 		flags |= IML_IMAGE_FLAG_DARK;
+	if(dlg.s3)
+		flags |= IML_IMAGE_FLAG_S3;
 	return flags;
 }
 
@@ -149,15 +156,6 @@ void IconDes::InsertRemoved(int q)
 	}
 }
 
-void SetRes(Image& m, int resolution)
-{
-	ImageBuffer ib(m);
-	ib.SetResolution(findarg(resolution, IMAGE_RESOLUTION_STANDARD, IMAGE_RESOLUTION_UHD,
-	                         IMAGE_RESOLUTION_NONE)
-	                 >= 0 ? resolution : IMAGE_RESOLUTION_STANDARD);
-	m = ib;
-}
-
 IconDes::Slot& IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
 {
 	Slot& c = slot.Insert(ii);
@@ -191,6 +189,7 @@ void IconDes::InsertImage()
 	}
 	Image m = CreateImage(Size(~dlg.cx, ~dlg.cy), Null);
 	ImageInsert(~dlg.name, m, dlg.exp).flags = GetFlags(dlg);
+	SyncList();
 }
 
 void IconDes::Slice()
@@ -224,6 +223,7 @@ void IconDes::Slice()
 			Image m = Crop(src, x, y, ~dlg.cx, ~dlg.cy);
 			ImageInsert(++ii, s + AsString(n++), m, ~dlg.exp).flags = GetFlags(dlg);
 		}
+	SyncList();
 }
 
 void IconDes::Duplicate()
@@ -242,7 +242,6 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
-	SetRes(m, IMAGE_RESOLUTION_STANDARD);
 	ImageInsert("", m);
 	EditImage();
 }
@@ -339,7 +338,6 @@ void IconDes::InsertFile()
 				id = '_' + id;
 			if(ii)
 				id << "_" << ii;
-			SetRes(m, IMAGE_RESOLUTION_STANDARD);
 			ImageInsert(id, m);
 			ii++;
 		}

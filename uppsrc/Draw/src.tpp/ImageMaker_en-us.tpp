@@ -114,9 +114,9 @@ is optimization hint that can save some memory in certain situations).&]
 [* Magnify]([@(0.0.255) const] Image[@(0.0.255) `&] [*@3 img], [@(0.0.255) const] 
 Rect[@(0.0.255) `&] [*@3 src], [@(0.0.255) int] [*@3 nx], [@(0.0.255) int] 
 [*@3 ny], [@(0.0.255) bool] [*@3 co])&]
-[s5;:Upp`:`:Magnify`(const Upp`:`:Image`&`,int`,int`): [_^Upp`:`:Image^ Image]_[* Magnify
-]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img], 
-[@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
+[s5;:Upp`:`:Magnify`(const Image`&`,int`,int`,bool`): Image [* Magnify]([@(0.0.255) const
+] Image[@(0.0.255) `&] [*@3 img], [@(0.0.255) int] [*@3 nx], [@(0.0.255) int] 
+[*@3 ny], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Multiplies the resolution of [%-*@3 img] by factors [%-*@3 nx] 
 and [%-*@3 ny] by simply repeating the pixels (each pixel becomes 
 [%-*@3 nx] x [%-*@3 ny] same color block). If present in overload, 

@@ -63,7 +63,7 @@ void RichRuler::Paint(Draw& w)
 	for(i = marker.GetCount() - 1; i >= 0; --i) {
 		const Marker& m = marker[i];
 		if(!IsNull(m.pos))
-			HotPaint(w, x0 + m.pos * zoom, m.top ? Zy(1) : sz.cy - Zy(4), DPI(m.image));
+			HotPaint(w, x0 + m.pos * zoom, m.top ? Zy(1) : sz.cy - Zy(4), m.image);
 	}
 	i = 0;
 	if(tabsize)

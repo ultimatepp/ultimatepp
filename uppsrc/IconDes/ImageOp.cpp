@@ -160,7 +160,7 @@ String PackImlDataUncompressed(const Vector<ImageIml>& image)
 	for(const ImageIml& m : image) {
 		const Image& img = m.image;
 		StringStream ss;
-		ss.Put(((dword)img.GetResolution() << 6) | m.flags);
+		ss.Put(m.flags);
 		Size sz = img.GetSize();
 		ss.Put16le(sz.cx);
 		ss.Put16le(sz.cy);
@@ -187,66 +187,6 @@ String PackImlDataUncompressed(const Vector<ImageIml>& image)
 String PackImlData(const Vector<ImageIml>& image)
 {
 	return ZCompress(PackImlDataUncompressed(image));
-}
-
-Image DownSample3x(const Image& src, bool co)
-{
-	Size tsz = src.GetSize() / 3;
-	ImageBuffer ib(tsz);
-	int w = src.GetSize().cx;
-	int w2 = 2 * w;
-	CoFor(co, tsz.cy, [&](int y) {
-		RGBA *t = ib[y];
-		RGBA *e = t + tsz.cx;
-		const RGBA *s = src[3 * y];
-		while(t < e) {
-			int r, g, b, a;
-			const RGBA *q;
-			r = g = b = a = 0;
-#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
-			S__SUM(0) S__SUM(1) S__SUM(2)
-			S__SUM(w + 0) S__SUM(w + 1) S__SUM(w + 2)
-			S__SUM(w2 + 0) S__SUM(w2 + 1) S__SUM(w2 + 2)
-#undef  S__SUM
-			t->a = a / 9;
-			t->r = r / 9;
-			t->g = g / 9;
-			t->b = b / 9;
-			t++;
-			s += 3;
-		}
-	});
-	ib.SetResolution(src.GetResolution());
-	return ib;
-}
-
-Image DownSample2x(const Image& src, bool co)
-{
-	Size tsz = src.GetSize() / 2;
-	ImageBuffer ib(tsz);
-	int w = src.GetSize().cx;
-	CoFor(co, tsz.cy, [&](int y) {
-		RGBA *t = ib[y];
-		RGBA *e = t + tsz.cx;
-		const RGBA *s = src[2 * y];
-		while(t < e) {
-			int r, g, b, a;
-			const RGBA *q;
-			r = g = b = a = 0;
-#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
-			S__SUM(0) S__SUM(1)
-			S__SUM(w + 0) S__SUM(w + 1)
-#undef  S__SUM
-			t->a = a / 4;
-			t->r = r / 4;
-			t->g = g / 4;
-			t->b = b / 4;
-			t++;
-			s += 2;
-		}
-	});
-	ib.SetResolution(src.GetResolution());
-	return ib;
 }
 
 }

@@ -25,15 +25,6 @@ void IconDes::MaskSelection()
 	SyncShow();
 }
 
-IconDes::Slot::Slot()
-{
-	pastepos = Null;
-	exp = false;
-	ImageBuffer b;
-	b.SetResolution(IMAGE_RESOLUTION_STANDARD);
-	image = b;
-}
-
 IconDes::Slot& IconDes::Current()
 {
 	if(ilist.IsCursor())
@@ -65,11 +56,11 @@ void IconDes::SyncShow()
 	iconshow.image.Clear();
 	if(IsCurrent()) {
 		Slot& c = Current();
-		Image image = c.image;
-		iconshow.image = image;
+		iconshow.image = c.image;
+		iconshow.flags = c.flags;
 		iconshow.show_downscaled = show_downscaled;
 		iconshow.show_synthetics = show_synthetics;
-		ilist.Set(2, RawToValue(MakeTuple(image, c.flags)));
+		ilist.Set(2, RawToValue(MakeTuple(c.image, c.flags)));
 	}
 	iconshow.Refresh();
 }
@@ -211,7 +202,7 @@ void IconDes::EllipseTool0(Point p, dword flags, bool fill_empty)
 	DoTool(
 		[&](IconDraw& iw) {
 			iw.DrawEllipse(Rect(startpoint, p).Normalized(), fill_empty,
-			               doselection ? CurrentColor() : RGBAZero(), pen, GrayColor(255));
+			               doselection ? CurrentColor() : RGBAZero(), pen, CurrentColor());
 		},
 		[&](Painter& sw) {
 			sw.DrawEllipse(Rect(startpoint, p).Normalized(),

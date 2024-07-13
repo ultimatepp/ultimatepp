@@ -33,23 +33,6 @@ onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 x1],
 [s2; [%% Returns ][*@3 m][%%  with hotspot ][*@3 x1,][%%  ][*@3 y1.]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:SetResolution`(Upp`:`:Image`&`,int`): [@(0.0.255) void]_[* SetResolution]([_^Upp`:`:Image^ I
-mage][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 res])&]
-[s2;%% Sets the resolution of [%-*@3 m] to [%-*@3 res].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:WithResolution`(const Upp`:`:Image`&`,int`): [_^Upp`:`:Image^ Image]_[* WithR
-esolution]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], 
-[@(0.0.255) int]_[*@3 res])&]
-[s2;%% Returns [%-*@3 m] with resolution [%-*@3 res].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:WithResolution`(const Upp`:`:Image`&`,const Upp`:`:Image`&`): [_^Upp`:`:Image^ I
-mage]_[* WithResolution]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m],
- [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 res])&]
-[s2;%% Returns [%-*@3 m] with resolution equal to [%-*@3 res].GetResolution().&]
-[s3; &]
-[s4; &]
 [s5;:CreateImage`(Size`,const RGBA`&`): [_^Image^ Image]_[* CreateImage]([_^Size^ Size]_[*@3 s
 z], [@(0.0.255) const]_[_^RGBA^ RGBA][@(0.0.255) `&]_[*@3 rgba])&]
 [s2;%% Creates a new Image with Size [%-*@3 sz] filled with color [%-*@3 rgba].&]
@@ -212,7 +195,7 @@ alpha.&]
 [s5;:Equalight`(const Image`&`,int`): [_^Image^ Image]_[* Equalight]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 thold]_`=_[@3 10])&]
 [s2;%%  [%-*@3 img] [%-*@3 thold].&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Grayscale`(const Image`&`): [_^Image^ Image]_[* Grayscale]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img])&]

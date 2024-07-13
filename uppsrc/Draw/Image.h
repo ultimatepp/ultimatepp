@@ -42,12 +42,6 @@ inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x 
 
 class  Image;
 
-enum ImageResolutionIntent {
-	IMAGE_RESOLUTION_NONE = -1,
-	IMAGE_RESOLUTION_STANDARD = 0,
-	IMAGE_RESOLUTION_UHD = 1,
-};
-
 class ImageBuffer : NoCopy {
 	std::atomic<int> kind; // atomic because it can be set by 2 threads, in theory
 	Size         size;
@@ -55,7 +49,6 @@ class ImageBuffer : NoCopy {
 	Point        hotspot;
 	Point        spot2;
 	Size         dots;
-	int8         resolution;
 	bool         paintonce = false;
 
 	void         Set(Image& img);
@@ -86,9 +79,6 @@ public:
 	void  SetDPI(Size sz);
 	Size  GetDPI();
 	
-	void  SetResolution(int i)          { resolution = i; }
-	int   GetResolution() const         { return resolution; }
-
 	void  CopyAttrs(const ImageBuffer& img);
 	void  CopyAttrs(const Image& img);
 	
@@ -178,7 +168,6 @@ public:
 	Size   GetDPI() const;
 	int    GetKindNoScan() const;
 	int    GetKind() const;
-	int    GetResolution() const;
 	bool   IsOpaque() const                    { return GetKind() == IMAGE_OPAQUE; }
 
 	const RGBA *Begin() const                  { return data ? ~data->buffer : NULL; }
@@ -274,6 +263,7 @@ enum {
 	IML_IMAGE_FLAG_FIXED_SIZE   = 0x4,
 	IML_IMAGE_FLAG_UHD          = 0x8,
 	IML_IMAGE_FLAG_DARK         = 0x10,
+	IML_IMAGE_FLAG_S3           = 0x20,
 };
 
 Image MakeImlImage(const String& id, Function<ImageIml (int, const String&)> GetRaw, dword global_flags);
