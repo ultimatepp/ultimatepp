@@ -28,7 +28,7 @@ void IconShow::Paint(Draw& w)
 		if(show_synthetics) {
 			if(flags & IML_IMAGE_FLAG_UHD) {
 				isz.cx += isz.cx + gap;
-				isz.cy += isz.cy + gap;
+				isz.cy += isz.cy + (isz.cy + 1 / 2) + 2 * gap;
 			}
 			else {
 				isz.cx += 3 * isz.cx + gap;
@@ -39,7 +39,7 @@ void IconShow::Paint(Draw& w)
 	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
 	int ncx = sz.cx / n;
 	Image m2, m3;
-	Image dk, s2, s2dk;
+	Image dk, s2, s2dk, s22, s2dk2;
 	if(fits) {
 		if(msz.cx && show_downscaled) {
 			m2 = DownSample2x(image);
@@ -51,8 +51,8 @@ void IconShow::Paint(Draw& w)
 				s2 = Downscale2x(image);
 				s2dk = Downscale2x(DarkTheme(image));
 				if(IsUHDMode()) {
-					s2 = Magnify(s2, 2, 2, true);
-					s2dk = Magnify(s2dk, 2, 2, true);
+					s22 = Magnify(s2, 2, 2, true);
+					s2dk2 = Magnify(s2dk, 2, 2, true);
 				}
 			}
 			else {
@@ -78,6 +78,11 @@ void IconShow::Paint(Draw& w)
 					pos.y += msz.cy + gap;
 					w.DrawImage(pos.x, pos.y, s2);
 					w.DrawImage(x2, pos.y, s2dk);
+					if((flags & IML_IMAGE_FLAG_UHD) && IsUHDMode()) {
+						pos.y += (msz.cy + 1) / 2 + gap;
+						w.DrawImage(pos.x, pos.y, s22);
+						w.DrawImage(x2, pos.y, s2dk2);
+					}
 				}
 				else {
 					int y = pos.y + (isz.cy - msz.cy) / 2;

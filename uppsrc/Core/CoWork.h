@@ -1,5 +1,5 @@
 class CoWork : NoCopy {
-	struct MJob : Moveable<MJob>, Link<MJob, 2> {
+	struct MJob : Moveable<MJob>, Link<2> {
 		Function<void ()> fn;
 		CoWork           *work = NULL;
 		bool              looper = false;
@@ -9,8 +9,8 @@ class CoWork : NoCopy {
 
 public:
 	struct Pool {
-		MJob             *free;
-		Link<MJob, 2>     jobs;
+		Link<2>          *free;
+		Link<2>           jobs;
 		MJob              slot[SCHEDULED_MAX];
 		int               waiting_threads;
 		Array<Thread>     threads;
@@ -43,7 +43,7 @@ public:
 	static thread_local CoWork *current;
 
 	ConditionVariable  waitforfinish;
-	Link<MJob, 2>      jobs; // global stack and CoWork stack as double-linked lists
+	Link<2>            jobs; // global stack and CoWork stack as double-linked lists
 	int                todo;
 	bool               canceled;
 	std::exception_ptr exc = nullptr; // workaround for sanitizer bug(?)

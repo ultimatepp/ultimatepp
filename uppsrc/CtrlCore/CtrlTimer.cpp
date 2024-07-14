@@ -8,7 +8,7 @@ namespace Upp {
 
 int MemoryProbeInt;
 
-struct TimeEvent : public Link<TimeEvent> {
+struct TimeEvent : public Link<> {
 	dword      time;
 	int        delay;
 	Event<>    cb;
@@ -20,24 +20,27 @@ static dword sTClick;
 
 static StaticCriticalSection sTimerLock;
 
-struct CtrlTimerOwner__ : public LinkOwner<TimeEvent> {
-	CtrlTimerOwner__();
-	~CtrlTimerOwner__();
+struct TimeEventsOwner__ : Link<> {
+	~TimeEventsOwner__() {
+		while(GetNext() != this)
+			delete (TimeEvent *)GetNext();
+	}
 };
 
-static TimeEvent *tevents() {
-	static LinkOwner<TimeEvent> t;
-	return t.GetPtr();
+static Link<> *tevents() {
+	static TimeEventsOwner__ t[1];
+	return t;
 }
 
 static void sTimeCallback(dword time, int delay, Event<>  cb, void *id) {
-	TimeEvent *ne = tevents()->InsertPrev();
-	ne->time = time;
-	ne->cb = cb;
-	ne->delay = delay;
-	ne->id = id;
-	ne->rep = false;
-	LLOG("sTimeCalllback " << ne->time << " " << ne->delay << " " << ne->id);
+	TimeEvent *e = new TimeEvent;
+	e->LinkBefore(tevents());
+	e->time = time;
+	e->cb = cb;
+	e->delay = delay;
+	e->id = id;
+	e->rep = false;
+	LLOG("sTimeCallback " << ne->time << " " << ne->delay << " " << ne->id);
 }
 
 void SetTimeCallback(int delay_ms, Function<void ()> cb, void *id) {
@@ -49,14 +52,14 @@ void SetTimeCallback(int delay_ms, Function<void ()> cb, void *id) {
 
 void KillTimeCallbacks(void *id, void *idlim) {
 	Mutex::Lock __(sTimerLock);
-	TimeEvent *list = tevents();
-	for(TimeEvent *e = list->GetNext(); e != list;)
-		if(e->id >= id && e->id < idlim) {
-			e = e->GetNext();
-			delete e->GetPrev();
-		}
-		else
-			e = e->GetNext();
+	Link<> *list = tevents();
+	Link<> *le = list->GetNext();
+	while(le != list) {
+		TimeEvent *e = (TimeEvent *)le;
+		le = le->GetNext();
+		if(e->id >= id && e->id < idlim)
+			delete e;
+	}
 }
 
 EXITBLOCK
@@ -68,10 +71,12 @@ EXITBLOCK
 
 bool ExistsTimeCallback(void *id) {
 	Mutex::Lock __(sTimerLock);
-	TimeEvent *list = tevents();
-	for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext())
+	Link<> *list = tevents();
+	for(Link<> *le = list->GetNext(); le != list; le = le->GetNext()) {
+		TimeEvent *e = (TimeEvent *)le;
 		if(e->id == id)
 			return true;
+	}
 	return false;
 }
 
@@ -84,7 +89,7 @@ void Ctrl::TimerProc(dword time)
 	if(IsPanicMode())
 		return;
 	sTimerLock.Enter();
-	TimeEvent *list = tevents();
+	Link<> *list = tevents();
 	if(time == sTClick) {
 		sTimerLock.Leave();
 		return;
@@ -97,15 +102,19 @@ void Ctrl::TimerProc(dword time)
 
 	#ifdef LOG_QUEUE
 		LLOG("--- Timer queue at " << time);
-		for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext())
+		for(Link<> *le = list->GetNext(); le != list; le = le->GetNext()) {
+			TimeEvent *e = (TimeEvent *)le;
 			LLOG("TP " << e->time << " " << e->delay << " " << e->id << " " << e->rep);
+		}
 		LLOG("----");
 	#endif
 
 	for(;;) {
 		TimeEvent *todo = NULL;
 		int maxtm = -1;
-		for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext()) {
+		
+		for(Link<> *le = list->GetNext(); le != list; le = le->GetNext()) {
+			TimeEvent *e = (TimeEvent *)le;
 			int tm = (int)(time - e->time);
 			if(!e->rep && tm >= 0 && tm > maxtm) {
 				maxtm = tm;
@@ -133,10 +142,10 @@ void Ctrl::TimerProc(dword time)
 	}
 	time = msecs();
 	LLOG("--- Rescheduling at " << time);
-	TimeEvent *e = list->GetNext();
-	while(e != list) {
-		TimeEvent *w = e;
-		e = e->GetNext();
+	Link<> *le = list->GetNext();
+	while(le != list) {
+		TimeEvent *w = (TimeEvent *)le;
+		le = le->GetNext();
 		if(w->rep) {
 			LLOG("Rescheduling " << e->id);
 			sTimeCallback(time - w->delay, w->delay, w->cb, w->id);

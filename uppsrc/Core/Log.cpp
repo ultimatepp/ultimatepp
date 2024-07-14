@@ -4,22 +4,6 @@ namespace Upp {
 
 StaticMutex log_mutex;
 
-#ifdef PLATFORM_WINCE
-const char *FromSysChrSet(const wchar *s)
-{
-	static char out[256];
-	FromUnicode(out, s, wstrlen(s), CHARSET_DEFAULT);
-	return out;
-}
-
-const wchar *ToSysChrSet(const char *s)
-{
-	static wchar out[1024];
-	ToUnicode(out, s, strlen(s), CHARSET_DEFAULT);
-	return out;
-}
-#endif
-
 struct LogOut {
 	dword options;
 	int   sizelimit;
@@ -95,7 +79,7 @@ void LogOut::Create(bool append)
 	filesize = 0;
 
 #ifdef PLATFORM_WIN32
-	hfile = CreateFile(ToSysChrSet(filepath),
+	hfile = CreateFile(filepath,
 		GENERIC_READ|GENERIC_WRITE,
 		FILE_SHARE_READ|FILE_SHARE_WRITE,
 		NULL,
@@ -134,8 +118,7 @@ void LogOut::Create(bool append)
 
 	char h[1200];
 	snprintf(h, 1200, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
-	         FromSysChrSet(exe),
-	         t.day, t.month, t.year, t.hour, t.minute, t.second, user);
+	         exe, t.day, t.month, t.year, t.hour, t.minute, t.second, user);
 #ifdef PLATFORM_WIN32
 	dword n;
 	WriteFile(hfile, h, (dword)strlen(h), &n, NULL);
@@ -350,13 +333,7 @@ void InitBlockEnd__(const char *fn, int line) {
 #ifdef PLATFORM_WIN32
 static void sLogFile(char *fn, const char *app = ".log")
 {
-#ifdef PLATFORM_WINCE
-	wchar wfn[256];
-	::GetModuleFileName(NULL, wfn, 512);
-	strcpy(fn, FromSysChrSet(wfn));
-#else
 	::GetModuleFileName(NULL, fn, 512);
-#endif
 	char *e = fn + strlen(fn), *s = e;
 	while(s > fn && *--s != '\\' && *s != '.')
 		;
