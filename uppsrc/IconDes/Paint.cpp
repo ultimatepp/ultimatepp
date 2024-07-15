@@ -71,8 +71,8 @@ void IconShow::Paint(Draw& w)
 		if(msz.cx) {
 			Point pos(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2);
 			if(fits) {
+				int x2 = pos.x + isz.cx / 2;
 				if(show_synthetics) {
-					int x2 = pos.x + msz.cx + gap;
 					w.DrawImage(pos.x, pos.y, image);
 					w.DrawImage(x2, pos.y, dk);
 					pos.y += msz.cy + gap;
@@ -88,7 +88,6 @@ void IconShow::Paint(Draw& w)
 					int y = pos.y + (isz.cy - msz.cy) / 2;
 					w.DrawImage(pos.x, y, image);
 					if(show_downscaled) {
-						int x2 = pos.x + msz.cx + gap;
 						w.DrawImage(x2, y, m2);
 						w.DrawImage(x2, y + (msz.cx + 1) / 2 + gap, m3);
 					}
