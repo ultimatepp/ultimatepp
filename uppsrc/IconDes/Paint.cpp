@@ -171,12 +171,12 @@ void IconDes::Paint(Draw& w)
 	
 	ImageBuffer b(src.GetSize() * magnify);
 	int m2 = magnify / 2;
-	CoFor(src.GetHeight(), [&](int y) { // paint chequered background
+	CoFor(src.GetHeight(), [&](int y) { // create chequered background
 		RGBA *q = b[y * magnify];
 		int i = 0;
 		Color c1 = GrayColor(102);
 		Color c2 = GrayColor(153);
-		int m = m2;
+		int m = magnify - m2;
 		for(int pass = 0; pass < 2; pass++) {
 			RGBA *t = q;
 			for(int i = 0; i < src.GetWidth(); i++) {
@@ -197,6 +197,36 @@ void IconDes::Paint(Draw& w)
 	
 	w.DrawImage(0, 0, b); // paint chequered background
 	w.DrawImage(0, 0, Magnify(image, src, magnify, magnify, true)); // paint actual image
+
+	if(!pastepaint && !IsNull(selection)) { // paint selection
+		RGBA c1 = 170 * Black();
+		RGBA c2 = 80 * LtGray();
+		int ncx = ssz.cx * magnify;
+		ImageBuffer b(ncx, ssz.cy * magnify);
+		CoFor(ssz.cy, [&](int y) {
+			const RGBA *s = selection[src.top + y] + src.left;
+			const RGBA *e = s + ssz.cx;
+			RGBA *t = ~b + y * ncx * magnify;
+			RGBA *q = t;
+			while(s < e) {
+				RGBA c = s->r ? RGBAZero() : c1;
+				Fill(q, c, magnify);
+				Fill(q + ncx, c, magnify);
+				if(!s->r)
+					for(int i = 0; i < magnify - 1; i += 2)
+						q[i] = c2;
+				q += magnify;
+				s++;
+			}
+		
+			for(int i = 2; i < magnify; i++) {
+				q += ncx;
+				memcpy_t(q, t, ncx);
+				t += ncx;
+			}
+		});
+		w.DrawImage(0, 0, b);
+	}
 
 	if(magnify > 6) {
 		int grid2 = 0;
@@ -222,32 +252,6 @@ void IconDes::Paint(Draw& w)
 		m = ssz.cy * magnify + 1;
 		for(int x = 0; x <= src.GetWidth(); x++)
 			w.DrawRect(magnify * x, 0, 1, m, GridColor(x + src.left, isz.cx));
-	}
-
-	if(!pastepaint && !IsNull(selection)) { // paint selection
-		RGBA c1 = 120 * Black();
-		RGBA c2 = 120 * White();
-		int ncx = ssz.cx * magnify;
-		ImageBuffer b(ncx, ssz.cy * magnify);
-		CoFor(ssz.cy, [&](int y) {
-			const RGBA *s = selection[src.top + y] + src.left;
-			const RGBA *e = s + ssz.cx;
-			RGBA *t = ~b + y * ncx * magnify;
-			RGBA *q = t;
-			while(s < e) {
-				Fill(q, s->r ? RGBAZero() : c1, magnify);
-				Fill(q + ncx, s->r ? RGBAZero() : c2, magnify);
-				q += magnify;
-				s++;
-			}
-		
-			for(int i = 2; i < magnify; i++) {
-				q += ncx;
-				memcpy_t(q, t, ncx);
-				t += ncx;
-			}
-		});
-		w.DrawImage(0, 0, b);
 	}
 
 	if(IsPasting() && !pastepaint)

@@ -56,16 +56,27 @@ void IconDraw::DrawLine(Point p1, Point p2, int width, RGBA color)
 	Line(p2);
 }
 
-void IconDraw::DrawEllipse(const Rect& r, bool fill_empty, RGBA color, int pen, RGBA pencolor)
+void IconDraw::DrawEllipse(const Rect& r_, bool fill_empty, RGBA color, int pen, RGBA pencolor)
 {
+	Rect r = r_.Normalized();
+	if(r.IsEmpty() && Rect(image.GetSize()).Contains(r.TopLeft())) {
+		image[r.top][r.left] = pencolor;
+		return;
+	}
+	r.right++;
+	r.bottom++;
 	if(fill_empty) {
 		docolor = color;
 		Polygon().Ellipse(r).Fill();
 	}
 	if(!IsNull(pen)) {
 		docolor = pencolor;
-		Width(pen);
+		Polygon();
 		Ellipse(r);
+		Size sz = r.GetSize();
+		if(pen < max(sz.cx, sz.cy))
+			Ellipse(r.Deflated(pen));
+		Fill();
 	}
 }
 

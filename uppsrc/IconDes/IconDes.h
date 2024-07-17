@@ -102,7 +102,7 @@ struct IconShow : public Ctrl {
 	IconShow() { BackPaint(); }
 };
 
-void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance);
+void   FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance);
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);

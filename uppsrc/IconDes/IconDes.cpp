@@ -187,26 +187,30 @@ void IconDes::DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool)
 
 void IconDes::LineTool(Point p, dword flags)
 {
+	RGBA c = CurrentColor();
 	DoTool(
 		[&](IconDraw& iw) {
-			iw.DrawLine(startpoint, p, pen, CurrentColor());
+			iw.DrawLine(startpoint, p, pen, c);
+			if(pen == 1 && Rect(iw.image.GetSize()).Contains(p))
+				iw.image[p.y][p.x] = c;
 		},
 		[&](Painter& sw) {
-			sw.Move(startpoint).Line(p).Stroke(pen, CurrentColor());
+			sw.Move(startpoint).Line(p).Stroke(pen, c);
 		}
 	);
 }
 
 void IconDes::EllipseTool0(Point p, dword flags, bool fill_empty)
 {
+	RGBA c = CurrentColor();
 	DoTool(
 		[&](IconDraw& iw) {
-			iw.DrawEllipse(Rect(startpoint, p).Normalized(), fill_empty,
-			               doselection ? CurrentColor() : RGBAZero(), pen, CurrentColor());
+			iw.DrawEllipse(Rect(startpoint, p), fill_empty,
+			               doselection ? c : RGBAZero(), pen, c);
 		},
 		[&](Painter& sw) {
 			sw.DrawEllipse(Rect(startpoint, p).Normalized(),
-			               fill_empty ? LtGray() : Null, pen, CurrentColor());
+			               fill_empty ? LtGray() : Null, pen, c);
 		}
 	);
 }
@@ -275,13 +279,14 @@ void IconDes::FreehandTool(Point p, dword flags)
 
 void IconDes::DoFill(int tolerance)
 {
+	Image src = Current().image;
 	ImageBuffer ib(CurrentImage());
 	if(!doselection) {
 		RGBA c = CurrentColor();
 		c.r += 127;
 		MaskFill(ib, c, 0);
 	}
-	FloodFill(ib, CurrentColor(), startpoint, ib.GetSize(), tolerance);
+	FloodFill(src, ib, CurrentColor(), startpoint, tolerance);
 	SetCurrentImage(ib);
 	if(!doselection)
 		MaskSelection();

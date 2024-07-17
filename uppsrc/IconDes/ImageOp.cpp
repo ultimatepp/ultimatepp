@@ -3,56 +3,53 @@
 namespace Upp {
 
 struct sFloodFill {
-	Rect         rc;
 	Size         sz;
 	Buffer<byte> flag;
-	ImageBuffer& ib;
+	Image        source;
+	ImageBuffer& target;
 	RGBA         scolor;
 	RGBA         color;
 	bool         done;
 	int          tolerance;
 
-	RGBA& At(int x, int y)         { return ib[y + rc.top][x + rc.left]; }
+	RGBA& At(int x, int y)         { return target[y][x]; }
 	bool  Eq(int x, int y);
 	byte& Flag(int x, int y) { return flag[y * sz.cx + x]; }
-	void  Fill(RGBA color, Point pt, const Rect& rc, int tolerance_);
+	void  Fill(RGBA color, Point pt, int tolerance_);
 	void  Try(int x, int y);
 
-	sFloodFill(ImageBuffer& ib) : ib(ib) { tolerance = 0; }
+	sFloodFill(const Image& source, ImageBuffer& target) : source(source), target(target) { tolerance = 0; }
 };
 
 force_inline
 bool sFloodFill::Eq(int x, int y)
 {
-	const RGBA& q = At(x, y);
+	const RGBA& q = source[y][x];
 	if(tolerance < 0 && q.a)
 		return q.a != scolor.a || q.r != scolor.r || q.g != scolor.g || q.b != scolor.b;
 	if((q.a | scolor.a) == 0) return true;
 	return abs(q.a - scolor.a) <= tolerance && abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
 }
 
+force_inline
 void sFloodFill::Try(int x, int y)
 {
 	if(x >= 0 && x < sz.cx && y >= 0 && y < sz.cy && Flag(x, y) == 0 && Eq(x, y)) {
 		Flag(x, y) = 1;
-		At(x, y) = color;
+		target[y][x] = color;
 		done = false;
 	}
 }
 
-void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
+void sFloodFill::Fill(RGBA _color, Point pt, int tolerance_)
 {
 	tolerance = tolerance_;
-	rc = _rc & ib.GetSize();
-	if(!rc.Contains(pt))
-		return;
-	scolor = tolerance < 0 ? _color : ib[pt.y][pt.x];
+	scolor = tolerance < 0 ? _color : source[pt.y][pt.x];
 	color = tolerance < 0 ? RGBAZero() : _color;
-	sz = rc.GetSize();
+	sz = source.GetSize();
 	flag.Alloc(sz.cx * sz.cy, 0);
-	pt -= rc.TopLeft();
 	Flag(pt.x, pt.y) = 1;
-	At(pt.x, pt.y) = color;
+	target[pt.y][pt.x] = color;
 	do {
 		done = true;
 		for(int y = 0; y < sz.cy; y++)
@@ -69,9 +66,9 @@ void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
 	while(!done);
 }
 
-void FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance)
+void FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance)
 {
-	sFloodFill(img).Fill(color, pt, rc, tolerance);
+	sFloodFill(source, target).Fill(color, pt, tolerance);
 }
 
 struct InterpolateFilter : ImageFilter9 {

@@ -231,7 +231,12 @@ void IconDes::Duplicate()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
+	dword flags = c.flags;
 	ImageInsert(c.name, c.image);
+	Current().flags = flags;
+	SyncList();
+	SyncShow();
+	Refresh();
 	EditImage();
 }
 
