@@ -101,7 +101,7 @@ struct ScanTopicIterator : RichText::Iterator {
 	Index<int>     words;
 	Index<String>  ref;
 
-	virtual bool operator()(int pos, const RichPara& para)// A++ bug here....
+	virtual bool operator()(int pos, const RichPara& para)
 	{
 		if(!IsNull(para.format.label)) {
 			AddLinkRef(link, para.format.label);
