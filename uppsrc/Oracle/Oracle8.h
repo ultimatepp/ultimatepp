@@ -78,7 +78,7 @@ private:
 	OCIServer           *srvhp;
 	OCISession          *seshp;
 	OCISvcCtx           *svchp;
-	Link<OCI8Connection> clink;
+	Link<>               clink;
 	bool                 in_server;
 	bool                 in_session;
 	bool                 utf8_session;

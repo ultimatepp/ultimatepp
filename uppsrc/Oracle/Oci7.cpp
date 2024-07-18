@@ -34,7 +34,7 @@ void OCI7SetDllPath(String oci7_path, T_OCI7& oci7)
 		oci7.SetLibName(Nvl(oci7_path, dflt_name));
 }
 
-class OCI7Connection : public Link<OCI7Connection>, public OciSqlConnection {
+class OCI7Connection : public Link<>, public OciSqlConnection {
 protected:
 	virtual void        SetParam(int i, OracleRef r);
 	virtual void        SetParam(int i, const Value& r);
@@ -831,8 +831,9 @@ SqlConnection *Oracle7::CreateConnection() {
 void Oracle7::Close() {
 	SessionClose();
 	while(!clink.IsEmpty()) {
-		clink.GetNext()->Clear();
-		clink.GetNext()->Unlink();
+		auto cl = (OCI7Connection *)clink.GetNext();
+		cl->Clear();
+		cl->Unlink();
 	}
 	if(connected) {
 		oci7.ologof((cda_def *)lda);
