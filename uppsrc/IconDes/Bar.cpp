@@ -106,12 +106,6 @@ void IconDes::SettingBar(Bar& bar)
 		.Enable(magnify > 1);
 	bar.Add(c, AK_ZOOM_OUT,  IconDesImg::ZoomPlus(), THISBACK(ZoomIn))
 		.Enable(magnify < 27);
-	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
-	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_OPAQUE);
-	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
-	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_BACK);
 }
 
 void IconDes::SelectBar(Bar& bar)
@@ -126,6 +120,12 @@ void IconDes::SelectBar(Bar& bar)
 	   .Check(selectrect);
 	bar.Add(c, AK_MOVE, IconDesImg::Move(), THISBACK(Move))
 	   .Check(IsPasting());
+	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
+	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_OPAQUE);
+	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
+	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_BACK);
 }
 
 void IconDes::ImageBar(Bar& bar)

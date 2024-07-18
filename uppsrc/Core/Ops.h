@@ -107,24 +107,24 @@ inline int    Peek16(const void *ptr)        { word x; memcpy(&x, ptr, 2); retur
 inline int    Peek32(const void *ptr)        { dword x; memcpy(&x, ptr, 4); return x; }
 inline int64  Peek64(const void *ptr)        { uint64 x; memcpy(&x, ptr, 8); return x; }
 
-inline void   Poke16(void *ptr, int val)     { memcpy(ptr, &val, 2); }
-inline void   Poke32(void *ptr, int val)     { memcpy(ptr, &val, 4); }
+inline void   Poke16(void *ptr, word val)    { memcpy(ptr, &val, 2); }
+inline void   Poke32(void *ptr, dword val)   { memcpy(ptr, &val, 4); }
 inline void   Poke64(void *ptr, int64 val)   { memcpy(ptr, &val, 8); }
 
 inline int    Peek16le(const void *ptr)      { return Peek16(ptr); }
 inline int    Peek32le(const void *ptr)      { return Peek32(ptr); }
 inline int64  Peek64le(const void *ptr)      { return Peek64(ptr); }
 
-inline void   Poke16le(void *ptr, int val)   { Poke16(ptr, val); }
-inline void   Poke32le(void *ptr, int val)   { Poke32(ptr, val); }
+inline void   Poke16le(void *ptr, word val)   { Poke16(ptr, val); }
+inline void   Poke32le(void *ptr, dword val)   { Poke32(ptr, val); }
 inline void   Poke64le(void *ptr, int64 val) { Poke64(ptr, val); }
 
 inline int    Peek16be(const void *ptr)      { return SwapEndian16(Peek16(ptr)); }
 inline int    Peek32be(const void *ptr)      { return SwapEndian32(Peek32(ptr)); }
 inline int64  Peek64be(const void *ptr)      { return SwapEndian64(Peek64(ptr)); }
 
-inline void   Poke16be(void *ptr, int val)   { Poke16(ptr, SwapEndian16(val)); }
-inline void   Poke32be(void *ptr, int val)   { Poke32(ptr, SwapEndian32(val)); }
+inline void   Poke16be(void *ptr, word val)  { Poke16(ptr, SwapEndian16(val)); }
+inline void   Poke32be(void *ptr, dword val) { Poke32(ptr, SwapEndian32(val)); }
 inline void   Poke64be(void *ptr, int64 val) { Poke64(ptr, SwapEndian64(val)); }
 
 #define MAKE2B(b0, b1)                            MAKEWORD(b0, b1)

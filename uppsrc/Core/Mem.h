@@ -2,7 +2,7 @@
 
 void memset8__(void *t, i16x8 data, size_t len);
 
-inline void Set2__(void *t, dword val)
+inline void Set2__(void *t, word val)
 {
 	memcpy(t, &val, 2);
 }
