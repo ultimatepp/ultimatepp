@@ -43,8 +43,8 @@ void memset8(void *p, byte data, size_t count)
 	}
 	dword val4 = 0x1010101 * data;
 	if(count <= 4) {
-		Set2__(t, val4);
-		Set2__(t + count - 2, val4);
+		Set2__(t, (word)val4);
+		Set2__(t + count - 2, (word)val4);
 		return;
 	}
 	if(count > 16) {
