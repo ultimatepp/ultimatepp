@@ -163,6 +163,8 @@ private:
 	int          magnify;
 	int          pen;
 	Point        startpoint;
+	Point        scroll_start = Null;
+	Point        scroll_base;
 	RGBA         startcolor = RGBAZero();
 	Rect         m1refresh;
 	void        (IconDes::*tool)(Point p, dword flags);
@@ -173,6 +175,7 @@ private:
 	bool         show_downscaled = false;
 	bool         show_grid2 = false;
 	bool         antialiased = false;
+	int          fill_type = 0;
 
 	ScrollBars   sb;
 	ToolBar      toolbar;
@@ -186,7 +189,7 @@ private:
 
 	RGBACtrl       rgbactrl;
 	IconShow       iconshow;
-	Image          cursor_image;
+	Image          cursor_image, cursor_image_free;
 	Image          fill_cursor, fill_cursor2, fill_cursor3, antifill_cursor;
 	bool           single_mode;
 	ParentCtrl     single;
@@ -217,6 +220,7 @@ private:
 	void  DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool);
 
 	void  LineTool(Point p, dword f);
+	void  Freehand(Point p, int pen);
 	void  FreehandTool(Point p, dword f);
 
 	void  EllipseTool0(Point p, dword flags, bool fill_empty);
@@ -232,10 +236,6 @@ private:
 	void  HotSpotTool(Point p, dword f);
 
 	void  DoFill(int tolerance);
-	void  FillTool(Point p, dword flags);
-	void  Fill2Tool(Point p, dword flags);
-	void  Fill3Tool(Point p, dword flags);
-	void  AntiFillTool(Point p, dword flags);
 
 	void  Text();
 	void  PasteText();

@@ -74,26 +74,6 @@ void IconDes::SetSb()
 	}
 }
 
-void IconDes::MouseWheel(Point pt, int zdelta, dword keyflags)
-{
-	if(keyflags & K_CTRL) {
-		if(zdelta < 0)
-			ZoomOut();
-		else
-			ZoomIn();
-	}
-	else
-	if(keyflags & K_SHIFT)
-		sb.WheelX(zdelta);
-	else
-		sb.WheelY(zdelta);
-}
-
-void IconDes::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
-{
-	sb.WheelX(zdelta);
-}
-
 void IconDes::Scroll()
 {
 	magnify = max(magnify, 1);
@@ -267,7 +247,7 @@ void IconDes::EmptyRectTool(Point p, dword flags)
 	RectTool0(p, flags, true);
 }
 
-void IconDes::FreehandTool(Point p, dword flags)
+void IconDes::Freehand(Point p, int pen)
 {
 	DoDraw([&](IconDraw& iw) {
 		iw.DrawRect(p.x - pen / 2, p.y - pen / 2, pen, pen, CurrentColor());
@@ -275,6 +255,11 @@ void IconDes::FreehandTool(Point p, dword flags)
 	});
 	Current().base_image = CurrentImage();
 	startpoint = p;
+}
+
+void IconDes::FreehandTool(Point p, dword flags)
+{
+	Freehand(p, pen);
 }
 
 void IconDes::DoFill(int tolerance)
@@ -290,26 +275,6 @@ void IconDes::DoFill(int tolerance)
 	SetCurrentImage(ib);
 	if(!doselection)
 		MaskSelection();
-}
-
-void IconDes::FillTool(Point p, dword flags)
-{
-	DoFill(0);
-}
-
-void IconDes::Fill2Tool(Point p, dword flags)
-{
-	DoFill(20);
-}
-
-void IconDes::Fill3Tool(Point p, dword flags)
-{
-	DoFill(40);
-}
-
-void IconDes::AntiFillTool(Point p, dword flags)
-{
-	DoFill(-1);
 }
 
 void IconDes::HotSpotTool(Point p, dword f)
@@ -346,6 +311,7 @@ Image IconDes::MakeIconDesCursor(const Image& arrow, const Image& cmask)
 void IconDes::ColorChanged()
 {
 	cursor_image = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColor());
+	cursor_image_free = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColorFree());
 	fill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::FillColor());
 	fill_cursor2 = MakeIconDesCursor(IconDesImg::Fill2(), IconDesImg::FillColor());
 	fill_cursor3 = MakeIconDesCursor(IconDesImg::Fill3(), IconDesImg::FillColor());

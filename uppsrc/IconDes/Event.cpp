@@ -22,9 +22,17 @@ void IconDes::LeftDown(Point p, dword flags)
 	}
 	SetCapture();
 	Current().base_image = CurrentImage();
-	int fill = (flags & (K_SHIFT|K_CTRL)) == (K_SHIFT|K_CTRL) ? -1 : flags & K_SHIFT ? 0 : flags & K_CTRL ? 20 : flags & K_ALT ? 40 : Null;
-	if(!IsNull(fill)) {
-		DoFill(fill);
+	if(flags & K_CTRL) {
+		scroll_start = startpoint;
+		scroll_base = sb;
+		return;
+	}
+	if(flags & K_SHIFT) {
+		DoFill(decode(fill_type, 0, 0, 1, 20, 2, 40, -1));
+		return;
+	}
+	if(flags & K_ALT) {
+		Freehand(startpoint, 1);
 		return;
 	}
 	if(selectrect)
@@ -39,6 +47,11 @@ void IconDes::MouseMove(Point p, dword keyflags)
 	SyncStatus();
 	if(!HasCapture() || !IsCurrent())
 		return;
+	if(!IsNull(scroll_start)) {
+		p = p / max(magnify, 1) + scroll_base;
+		sb = scroll_base + scroll_start - p;
+		return;
+	}
 	p = GetPos(p);
 	if(IsPasting()) {
 		Current().pastepos = p - startpoint;
@@ -65,6 +78,7 @@ void IconDes::LeftUp(Point p, dword keyflags)
 		Current().base_image.Clear();
 	SetBar();
 	SyncShow();
+	scroll_start = Null;
 }
 
 void IconDes::RightDown(Point p, dword flags)
@@ -101,10 +115,37 @@ Image IconDes::CursorImage(Point p, dword flags)
 		return HasCapture() ? IconDesImg::MoveMove()
 		       : Rect(Current().pastepos, Current().paste_image.GetSize()).Contains(GetPos(p)) ? IconDesImg::MoveCursor()
 		       : IconDesImg::MoveOk();
-	return (flags & (K_SHIFT|K_CTRL)) == (K_SHIFT|K_CTRL) ? antifill_cursor :
-	       flags & K_SHIFT ? fill_cursor :
-	       flags & K_CTRL ? fill_cursor2 :
-	       flags & K_ALT ? fill_cursor3 : cursor_image;
+	if(!IsNull(scroll_start))
+		return IconDesImg::MoveMove();
+	if(flags & K_CTRL)
+		return IconDesImg::MoveCursor();
+	if(flags & K_SHIFT)
+		return decode(fill_type, 0, fill_cursor, 1, fill_cursor2, 2, fill_cursor3, antifill_cursor);
+	if(flags & K_ALT)
+		return cursor_image_free;
+	return cursor_image;
+}
+
+void IconDes::MouseWheel(Point pt, int zdelta, dword keyflags)
+{
+	if(keyflags & K_CTRL) {
+		Point p = GetPos(pt);
+		if(zdelta < 0)
+			ZoomOut();
+		else
+			ZoomIn();
+		sb = sb + p - GetPos(pt);
+	}
+	else
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
+		sb.WheelY(zdelta);
+}
+
+void IconDes::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
+{
+	sb.WheelX(zdelta);
 }
 
 }

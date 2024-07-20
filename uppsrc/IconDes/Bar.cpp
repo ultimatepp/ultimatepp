@@ -85,10 +85,18 @@ void IconDes::ToolEx(Bar& bar) {}
 
 void IconDes::EditBar(Bar& bar)
 {
+	using namespace IconDesKeys;
 	Slot *c = IsCurrent() ? &Current() : NULL;
 	bar.Add(c, "Cut", CtrlImg::cut(), THISBACK(DoCut)).Key(K_DELETE).Key(K_CTRL_X);
 	bar.Add(c, "Copy", CtrlImg::copy(), THISBACK(DoCopy)).Key(K_CTRL_C);
 	bar.Add(c, "Paste", CtrlImg::paste(), THISBACK(DoPaste)).Key(K_CTRL_V);
+	bar.Separator();
+	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
+	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_OPAQUE);
+	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
+	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_BACK);
 	bar.Separator();
 	bar.Add(c && c->undo.GetCount(), "Undo", CtrlImg::undo(), THISBACK(Undo))
 	   .Key(K_CTRL_Z)
@@ -120,12 +128,6 @@ void IconDes::SelectBar(Bar& bar)
 	   .Check(selectrect);
 	bar.Add(c, AK_MOVE, IconDesImg::Move(), THISBACK(Move))
 	   .Check(IsPasting());
-	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
-	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_OPAQUE);
-	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
-	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_BACK);
 }
 
 void IconDes::ImageBar(Bar& bar)
@@ -177,22 +179,20 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(tool == &IconDes::HotSpotTool);
 	bar.Add(AK_TEXT, IconDesImg::Text(), THISBACK(Text))
 	   .Check(textdlg.IsOpen());
-	bar.Add("Fill", fill_cursor, [=] { SetTool(&IconDes::FillTool); })
-	   .Check(tool == &IconDes::FillTool && notpasting)
-	   .Tip("Fill (Shift+Click)");
-	bar.Add("Fill with small tolerance", fill_cursor2, [=] { SetTool(&IconDes::Fill2Tool); })
-	   .Check(tool == &IconDes::Fill2Tool && notpasting)
-	   .Tip("Fill with small tolerance (Ctrl+Click)");
-	bar.Add("Fill with large tolerance", fill_cursor3, [=] { SetTool(&IconDes::Fill3Tool); })
-	   .Check(tool == &IconDes::Fill3Tool && notpasting)
-	   .Tip("Fill with large tolerance (Alt+Click)");
-	bar.Add("Antifill", antifill_cursor, [=] { SetTool(&IconDes::AntiFillTool); })
-	   .Check(tool == &IconDes::AntiFillTool && notpasting)
-	   .Tip("Antifill (Shift+Ctrl+Click)");
+	bar.Separator();
 	bar.Add("Antialiased", IconDesImg::aa(),
 	        [=] { antialiased = !antialiased; Refresh(); SetBar(); })
 	   .Check(antialiased && !doselection)
 	   .Enable(!doselection);
+	bar.Separator();
+	auto Fill = [&](const char *name, const Image& img, int type) {
+		bar.Add(name, img, [=] { fill_type = type; Refresh(); SetBar(); })
+		   .Check(fill_type == type);
+	};
+	Fill("Exact Fill (Shift+Click)", fill_cursor, 0);
+	Fill("Fill with small tolerance (Shift+Click)", fill_cursor2, 1);
+	Fill("Fill with large tolerance (Shift+Click)", fill_cursor3, 2);
+	Fill("Antifill (Shift+Click)", antifill_cursor, -1);
 	bar.Separator();
 	for(int i = 1; i <= 6; i++)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))
@@ -314,7 +314,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 7;
+	int version = 8;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -344,6 +344,8 @@ void IconDes::SerializeSettings(Stream& s)
 		s % show_grid2;
 	if(version >= 7)
 		s % antialiased;
+	if(version >= 8)
+		s % fill_type;
 }
 
 void IconDes::SyncStatus()
