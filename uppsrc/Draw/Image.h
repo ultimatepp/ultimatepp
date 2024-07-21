@@ -12,6 +12,29 @@ inline void Fill(RGBA *t, RGBA c, size_t n)     { memset32(t, *(dword *)&c, n); 
 void FillDown(RGBA *t, int linecy, RGBA c, int cy);
 inline void Copy(RGBA *t, const RGBA *s, int n) { memcpy_t(t, s, n); }
 
+force_inline RGBA Premultiply(const RGBA& s)
+{
+	RGBA t;
+	int alpha = s.a + (s.a >> 7);
+	t.r = alpha * (s.r) >> 8;
+	t.g = alpha * (s.g) >> 8;
+	t.b = alpha * (s.b) >> 8;
+	t.a = s.a;
+	return t;
+}
+
+force_inline RGBA Unmultiply(const RGBA& s)
+{
+	extern int um_table__[256];
+	RGBA t;
+	int alpha = um_table__[s.a];
+	t.r = (alpha * s.r) >> 8;
+	t.g = (alpha * s.g) >> 8;
+	t.b = (alpha * s.b) >> 8;
+	t.a = s.a;
+	return t;
+}
+
 int  Premultiply(RGBA *t, const RGBA *s, size_t len);
 int  Unmultiply(RGBA *t, const RGBA *s, size_t len);
 

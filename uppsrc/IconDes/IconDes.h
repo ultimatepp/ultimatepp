@@ -327,6 +327,7 @@ private:
 	void  Upscale();
 
 	void  PlaceDlg(TopWindow& dlg);
+	void  Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init = 0);
 	Image ImageStart();
 	void  ImageSet(const Image& m);
 	void  BlurSharpen();
@@ -336,6 +337,7 @@ private:
 	void  Alpha();
 	void  Colors();
 	void  Smoothen();
+	void  RemoveAlpha();
 
 	void  Search();
 	void  GoTo(int q);
@@ -422,6 +424,37 @@ struct ImlImage : ImageIml {
 
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
 String SaveIml(const Array<ImlImage>& iml, int format, const String& eol = "\r\n");
+
+template <class T>
+inline
+Image ForEachPixel(const Image& src, T op)
+{
+	Size sz = src.GetSize();
+	ImageBuffer m(sz);
+	CoFor(sz.cy, [&](int y) {
+		const RGBA *s = src[y];
+		const RGBA *e = s + sz.cx;
+		RGBA *t = m[y];
+		while(s < e) {
+			*t = *s;
+			op(*t);
+			s++;
+			t++;
+		}
+	});
+	return m;
+}
+
+template <class T>
+inline
+Image ForEachPixelStraight(const Image& src, T op)
+{
+	return ForEachPixel(src, [&](RGBA& t) {
+		t = Unmultiply(t);
+		op(t);
+		t = Premultiply(t);
+	});
+}
 
 }
 

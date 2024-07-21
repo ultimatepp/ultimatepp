@@ -34,7 +34,7 @@ END_LAYOUT
 LAYOUT(SharpenLayout, 220, 68)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Level")).LeftPosZ(8, 32).TopPosZ(8, 19))
 	ITEM(Upp::EditDoubleSpin, level, SetInc(0.05).Min(-2).Max(2).NotNull(true).LeftPosZ(44, 64).TopPosZ(8, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("Passes")).LeftPosZ(128, 36).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("Radius")).LeftPosZ(128, 36).TopPosZ(8, 19))
 	ITEM(Upp::EditIntSpin, passes, Min(1).Max(10).NotNull(true).LeftPosZ(168, 44).TopPosZ(8, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(80, 64).TopPosZ(36, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(148, 64).TopPosZ(36, 24))
@@ -45,6 +45,22 @@ LAYOUT(ColorizeLayout, 148, 68)
 	ITEM(Upp::EditDoubleSpin, level, SetInc(0.05).Min(0).Max(1).NotNull(true).LeftPosZ(44, 64).TopPosZ(8, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(36, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
+END_LAYOUT
+
+LAYOUT(ImageDblLayout, 148, 96)
+	ITEM(Upp::Label, txt, SetLabel(t_("Level")).LeftPosZ(8, 64).TopPosZ(8, 19))
+	ITEM(Upp::EditDoubleSpin, level, SetInc(0.05).Min(0).Max(1).NotNull(true).LeftPosZ(76, 64).TopPosZ(8, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(64, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(64, 24))
+	ITEM(Upp::SliderCtrl, slider, LeftPosZ(8, 136).TopPosZ(32, 24))
+END_LAYOUT
+
+LAYOUT(RemoveAlphaLayout, 148, 96)
+	ITEM(Upp::Label, txt, SetLabel(t_("Threshold")).LeftPosZ(8, 64).TopPosZ(8, 19))
+	ITEM(Upp::EditIntSpin, thres, Min(0).Max(255).LeftPosZ(80, 64).TopPosZ(8, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(64, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(64, 24))
+	ITEM(Upp::SliderCtrl, slider, LeftPosZ(8, 136).TopPosZ(32, 24))
 END_LAYOUT
 
 LAYOUT(Colorize2Layout, 164, 92)

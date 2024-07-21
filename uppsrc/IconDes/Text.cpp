@@ -17,9 +17,9 @@ IconDes::TextDlg::TextDlg()
 			face.Add(i);
 	SetupFaceList(face);
 	face <<= Font::ARIAL;
-	height.MinMax(4, 100);
+	height.MinMax(4, 600);
 	height <<= 12;
-	for(int i = 4; i < 100; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
+	for(int i = 4; i < 300; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
 		height.AddList(i);
 }
 

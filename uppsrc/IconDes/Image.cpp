@@ -362,12 +362,10 @@ void IconDes::FreeRotate()
 
 void IconDes::Chroma()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Chroma");
 	PlaceDlg(dlg);
-	dlg.level.Max(10);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 1);
 	Image bk = ImageStart();
 	for(;;) {
 		ImageSet(UPP::Grayscale(bk, 256 - (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255)));
@@ -381,14 +379,22 @@ void IconDes::Chroma()
 	}
 }
 
+void IconDes::Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init)
+{
+	level.Max(max);
+	level <<= init;
+	slider.MinMax(0, 1000);
+	slider <<= 1000 / max;
+	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider / 1000.0 * max; dlg.Break(); };
+	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int((double)~level * 1000 / max), 500); dlg.Break(); };
+}
+
 void IconDes::Contrast()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Contrast");
 	PlaceDlg(dlg);
-	dlg.level.Max(10);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 1);
 	Image bk = ImageStart();
 	for(;;) {
 		ImageSet(UPP::Contrast(bk, (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255)));
@@ -404,26 +410,49 @@ void IconDes::Contrast()
 
 void IconDes::Alpha()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Alpha");
 	PlaceDlg(dlg);
-	dlg.level.Max(4);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 1);
 	Image bk = ImageStart();
 	for(;;) {
-		int a = (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255);
-		ImageBuffer ib(bk.GetSize());
-		RGBA *t = ib;
-		const RGBA *s = bk;
-		const RGBA *e = bk + bk.GetLength();
-		while(s < e) {
-			*t = *s;
-			t->a = Saturate255((s->a * a) >> 8);
-			s++;
-			t++;
+		int a = (int)(minmax((double)~dlg.level, 0.0, 2.0) * 256);
+		ImageSet(ForEachPixelStraight(bk, [&](RGBA& t) {
+			t.a = Saturate255((t.a * a) >> 8);
+		}));
+		switch(dlg.Run()) {
+		case IDCANCEL:
+			ImageSet(bk);
+			return;
+		case IDOK:
+			return;
 		}
-		ImageSet(ib);
+	}
+}
+
+void IconDes::RemoveAlpha()
+{
+	WithRemoveAlphaLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Smoothen");
+	PlaceDlg(dlg);
+	dlg.slider.MinMax(0, 255);
+	dlg.slider << [&] { dlg.thres <<= ~dlg.slider; dlg.Break(); };
+	dlg.thres << [&] { dlg.slider <<= Nvl((int)~dlg.thres, 128); dlg.Break(); };
+	dlg.slider <<= dlg.thres <<= 128;
+	Image bk = ImageStart();
+	for(;;) {
+		int thres = ~dlg.thres;
+		ImageSet(ForEachPixel(bk, [&](RGBA& t) {
+			if(t.a != 255) {
+				if(t.a < thres)
+					t = RGBAZero();
+				else {
+					t = Unmultiply(t);
+					t.a = 255;
+					t = Premultiply(t);
+				}
+			}
+		}));
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			ImageSet(bk);

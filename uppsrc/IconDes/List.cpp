@@ -232,7 +232,9 @@ void IconDes::Duplicate()
 		return;
 	Slot& c = Current();
 	dword flags = c.flags;
-	ImageInsert(c.name, c.image);
+	int ii = ilist.GetCursor();
+	ii = ii >= 0 ? ii + 1 : 0;
+	ImageInsert(ii, c.name, c.image);
 	Current().flags = flags;
 	SyncList();
 	SyncShow();
