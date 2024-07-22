@@ -188,7 +188,8 @@ Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 	if(ssz.cx <= 0 || ssz.cy <= 0 || nx == 0 || ny == 0)
 		return Image();
 	int ncx = xdown ? ssz.cx / nx : ssz.cx * nx;
-	ImageBuffer b(ncx, ssz.cy * ny);
+	Size tsz(ncx, ssz.cy * ny);
+	ImageBuffer b(tsz);
 	CoFor(co, ssz.cy, [&](int y) {
 		const RGBA *s = img[src.top + y] + src.left;
 		const RGBA *e = s + ssz.cx;
@@ -204,6 +205,15 @@ Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 			q += ncx;
 		}
 	});
+	
+	auto HotSpot = [&](Point p) {
+		p = (p - src.TopLeft()) * Point(nx, ny);
+		return Point(clamp(p.x, 0, tsz.cx), clamp(p.y, 0, tsz.cy));
+	};
+	
+	b.SetHotSpot(HotSpot(img.GetHotSpot()));
+	b.Set2ndSpot(HotSpot(img.Get2ndSpot()));
+	
 	return b;
 }
 
@@ -243,6 +253,8 @@ Image DownSample3x(const Image& src, bool co)
 			s += 3;
 		}
 	});
+	ib.SetHotSpot(src.GetHotSpot() / 3);
+	ib.Set2ndSpot(src.Get2ndSpot() / 3);
 	return ib;
 }
 
@@ -273,6 +285,8 @@ Image DownSample2x(const Image& src, bool co)
 			s += 2;
 		}
 	});
+	ib.SetHotSpot(src.GetHotSpot() / 2);
+	ib.Set2ndSpot(src.Get2ndSpot() / 2);
 	return ib;
 }
 
