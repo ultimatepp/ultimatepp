@@ -401,7 +401,7 @@ void IconDes::Alpha()
 void IconDes::RemoveAlpha()
 {
 	WithRemoveAlphaLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Smoothen");
+	CtrlLayoutOKCancel(dlg, "Remove Alpha");
 	PlaceDlg(dlg);
 	Couple(dlg, dlg.thres, dlg.slider, 255, 128);
 	Image bk = ImageStart();
