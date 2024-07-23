@@ -359,7 +359,6 @@ private:
 	void  InsertPaste();
 	void  InsertFile();
 	void  ExportPngs();
-	void  InsertIml();
 	void  MoveSlot(int d);
 	void  ChangeSlot(int d);
 	void  DnDInsert(int line, PasteClip& d);
