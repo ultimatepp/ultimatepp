@@ -328,6 +328,7 @@ private:
 
 	void  PlaceDlg(TopWindow& dlg);
 	void  Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init = 0);
+	void  Couple(TopWindow& dlg, EditInt& level, SliderCtrl& slider, int max, int init = 0);
 	Image ImageStart();
 	void  ImageSet(const Image& m);
 	void  BlurSharpen();
@@ -426,11 +427,11 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol = "\r\n
 
 template <class T>
 inline
-Image ForEachPixel(const Image& src, T op)
+Image ForEachPixel(const Image& src, T op, bool co = true)
 {
 	Size sz = src.GetSize();
 	ImageBuffer m(sz);
-	CoFor(sz.cy, [&](int y) {
+	CoFor(co, sz.cy, [&](int y) {
 		const RGBA *s = src[y];
 		const RGBA *e = s + sz.cx;
 		RGBA *t = m[y];
@@ -441,18 +442,19 @@ Image ForEachPixel(const Image& src, T op)
 			t++;
 		}
 	});
+	m.SetHotSpots(src);
 	return m;
 }
 
 template <class T>
 inline
-Image ForEachPixelStraight(const Image& src, T op)
+Image ForEachPixelStraight(const Image& src, T op, bool co = true)
 {
 	return ForEachPixel(src, [&](RGBA& t) {
 		t = Unmultiply(t);
 		op(t);
 		t = Premultiply(t);
-	});
+	}, co);
 }
 
 }

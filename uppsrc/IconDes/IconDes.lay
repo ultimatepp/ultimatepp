@@ -63,20 +63,12 @@ LAYOUT(RemoveAlphaLayout, 148, 96)
 	ITEM(Upp::SliderCtrl, slider, LeftPosZ(8, 136).TopPosZ(32, 24))
 END_LAYOUT
 
-LAYOUT(Colorize2Layout, 164, 92)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("Level")).LeftPosZ(8, 76).TopPosZ(8, 19))
-	ITEM(Upp::EditDoubleSpin, level, SetInc(0.05).Min(0).Max(1).NotNull(true).LeftPosZ(92, 64).TopPosZ(8, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("Maximum gray")).LeftPosZ(8, 84).TopPosZ(32, 19))
-	ITEM(Upp::EditDoubleSpin, gray, SetInc(0.05).Min(0).Max(1).NotNull(true).LeftPosZ(92, 64).TopPosZ(32, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(24, 64).TopPosZ(60, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(92, 64).TopPosZ(60, 24))
-END_LAYOUT
-
-LAYOUT(FreeRotateLayout, 148, 68)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("Angle")).LeftPosZ(8, 32).TopPosZ(8, 19))
-	ITEM(Upp::EditIntSpin, angle, Min(0).Max(360).NotNull(true).LeftPosZ(44, 64).TopPosZ(8, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(36, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
+LAYOUT(FreeRotateLayout, 152, 96)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Angle")).LeftPosZ(8, 68).TopPosZ(8, 19))
+	ITEM(Upp::EditIntSpin, angle, Min(0).Max(360).NotNull(true).LeftPosZ(80, 64).TopPosZ(8, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(64, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(64, 24))
+	ITEM(Upp::SliderCtrl, slider, LeftPosZ(8, 136).TopPosZ(32, 24))
 END_LAYOUT
 
 LAYOUT(RescaleLayout, 192, 108)
