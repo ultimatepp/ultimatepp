@@ -27,30 +27,24 @@ topic "Supporting UHD displays and Dark theme";
 [s0; &]
 [s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#1^ 1. GUI 
 mode detection]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#2^ 2. Activating 
-Dark mode support]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#3^ 3. Scaling 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#3^ 2. Scaling 
 GUI for actual GUI font and UHD resolution]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#4^ 4. Color 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#4^ 3. Color 
 adjustment]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#5^ 5. Iml 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#5^ 4. Iml 
 files]&]
 [s0; &]
 [s3;:1: 1. GUI mode detection&]
-[s5; UHD mode is activated when GUI font is larger than 24 pixels. 
-Dark theme mode is activated if [* IsDark]([* SColorPaper]()), which 
-means that grayscale value of default background is less than 
-80. Note that both modes create 4 combinations in total `- standard 
-resolution with light theme, standard resolution with dark theme, 
-UHD resolution with light theme, UHD resolution with dark theme.&]
+[s5; UHD mode is activated when standard GUI font is larger than 
+24 pixels. Dark theme mode is activated if [* IsDark]([* SColorPaper]()), 
+which means that grayscale value of default background is less 
+than 80. Note that both modes create 4 combinations in total 
+`- standard resolution with light theme, standard resolution 
+with dark theme, UHD resolution with light theme, UHD resolution 
+with dark theme.&]
 [s5; [* IsUHDMode() ]and [* IsDarkTheme() ]functions return respective 
 current GUI status.&]
-[s3;:2: 2. Activating Dark mode support&]
-[s5; On some platforms (Win32), application needs to call Ctrl`::SetDarkThemeEnabled()
-; at the starth of GUI`_APP`_MAIN to actually allow dark mode. 
-This is make sure that application behaves correctly with dark 
-colors.&]
-[s3;:3: 3. Scaling GUI for actual GUI font and UHD resolution&]
+[s3;:3: 2. Scaling GUI for actual GUI font and UHD resolution&]
 [s5; U`+`+ coordinates in drawing operations are always in real pixels 
 for screen targets. U`+`+ provides various functions to adjust 
 GUI elements metrics to host platform font size and UHD mode. 
@@ -88,11 +82,11 @@ by 2, otherwise returns it unchanged.]
 :: [s5; Returns [* b] if UHD is active, [* a] otherwise.]}}&]
 [s5; Usually [* DPI ]functions are used if the value is Image related, 
 `'Z`' functions if it is text size related.&]
-[s3;:4: 4. Color adjustment&]
+[s3;:4: 3. Color adjustment&]
 [s5; If application is specifying any colors, these colors need to 
 be adjusted for dark theme. This can be often done by using [^topic`:`/`/Draw`/src`/Colors`_en`-us^ p
 redefined colors]. Sometimes only the light theme color is available 
-that needs to be converted to dark theme `- this can be done 
+that needs to be converted to the dark theme `- this can be done 
 using [* DarkTheme ]function. Alternatively [* AdjustIfDark] converts 
 the color with [* DarkTheme] only if dark theme mode is currently 
 active.&]
@@ -100,8 +94,9 @@ active.&]
 [s5; Iml files most often contain images that are used in GUI interface. 
 Obviously, these images must be usually different for any of 
 4 GUI modes.&]
-[s5; .iml should always contain images for standard resolution / 
-light theme. These images are used to define the set of icons.&]
+[s5; .iml should always contain images for either standard or UHD 
+resolution and the light theme. These images are used to define 
+the set of icons.&]
 [s5; U`+`+ then uses smart algorithms to convert such images for 
 the current GUI mode. These work acceptably well in most cases.&]
 [s5; Developer might decide to provide dedicated variants for any 
@@ -133,21 +128,6 @@ it.]
 checked, the Image is exported as .ico and .png files. This is 
 intended for application icon (e.g. shown in host shell).]]}}&]
 [s0; &]
-[s5; Alternatively, .iml dedicated for overrides for particular mode 
-is used. This override is then used as parameter to `"iml`_source`" 
-part of .iml inclusion process:&]
-[s0; &]
-[s7; #define IMAGECLASS MyImg&]
-[s7; #define IMAGEFILE <MyApp/MyImg.iml>&]
-[s7; #define [* IMAGEFILE`_UHD ]<MyApp/MyImgHD.iml>&]
-[s7; &]
-[s7; #include <Draw/iml`_source.h>&]
-[s0; &]
-[s5; The macro names for corresponding GUI modes are [* IMAGEFILE`_DARK], 
-[* IMAGEFILE`_UHD], [* IMAGEFILE`_DARK`_UHD]. Note that theide tool 
-that creates .iml import code will automatically add reasonably 
-named .iml files (like MyAppHD.iml, MyAppDK.iml, MyAppHDDK.iml) 
-as variant .imls automatically.&]
 [s5; Finally, it is also possible to disable automatic conversion 
 for the while .iml file by #defining FIXED`_COLORS and/or FIXED`_SIZE 
 macros:&]

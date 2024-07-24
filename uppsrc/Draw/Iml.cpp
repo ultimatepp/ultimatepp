@@ -101,53 +101,44 @@ ImageIml Iml::GetRaw(int mode, const String& id)
 
 Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> GetRaw, dword global_flags)
 {
-	Image image;
 	int mode = IsUHDMode() * GUI_MODE_UHD + IsDarkTheme() * GUI_MODE_DARK;
-	auto GetImg = [&](int mode, const String& id) {
-		ImageIml m = GetRaw(mode, id);
-		if(m.flags & IML_IMAGE_FLAG_S3)
-			m.image = DownSample3x(m.image);
-		return m;
+	
+	const static int mode_candidates[4][4] = {
+		{ GUI_MODE_NORMAL, GUI_MODE_UHD, -1 },
+		{ GUI_MODE_DARK, GUI_MODE_DARK_UHD, GUI_MODE_NORMAL, GUI_MODE_UHD },
+		{ GUI_MODE_UHD, GUI_MODE_NORMAL, -1 },
+		{ GUI_MODE_DARK_UHD, GUI_MODE_DARK, GUI_MODE_UHD, GUI_MODE_NORMAL }
 	};
-	if(mode == GUI_MODE_NORMAL) {
-		image = GetImg(GUI_MODE_NORMAL, id).image;
-		if(IsNull(image)) {
-			ImageIml im = GetImg(GUI_MODE_NORMAL, id + "__UHD");
-			image = im.image;
-			if((im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
-				image = Downscale2x(image);
+	
+	ImageIml im;
+	const int *candidates = mode_candidates[mode];
+	
+	for(int i = 0; i < 4 && candidates[i] >= 0; i++) {
+		int cmode = candidates[i];
+		auto Mode = [&](dword m, const char *s) { return cmode & m ? String(s) : String(); };
+		im = GetRaw(GUI_MODE_NORMAL, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK"));
+		if(IsNull(im.image))
+			im = GetRaw(cmode, id); // try alternative iml
+		if(!IsNull(im.image)) {
+			if(im.flags & IML_IMAGE_FLAG_S3)
+				im.image = DownSample3x(im.image);
+			break;
 		}
 	}
-	else {
-		auto Mode = [&](dword m, const char *s) { return mode & m ? String(s) : String(); };
-		image = GetImg(GUI_MODE_NORMAL, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK")).image;
-		if(IsNull(image))
-			image = GetImg(mode, id).image; // try to load from alternative iml
-		if(IsNull(image)) { // we do not have specific image for given mode, need to convert
-			ImageIml im;
-			if(mode & GUI_MODE_UHD) {
-				im = GetImg(GUI_MODE_NORMAL, id + "__UHD");
-				if(IsNull(im.image))
-					im = GetImg(GUI_MODE_UHD, id);
-			}
-			if(IsNull(im.image))
-				if(mode & GUI_MODE_DARK) {
-					im = GetImg(0, id + "__DARK");
-					if(IsNull(im.image))
-						im = GetImg(GUI_MODE_DARK, id);
-				}
-			if(IsNull(im.image))
-				im = GetImg(GUI_MODE_NORMAL, id);
-			if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
-				im.image = Upscale2x(im.image);
-			if((mode & GUI_MODE_DARK) && !(im.flags & IML_IMAGE_FLAG_DARK) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
-				im.image = DarkTheme(im.image);
-			image = im.image;
-		}
+	
+	if(IsNull(im.image))
+		return Null;
 
-		ScanOpaque(image);
-	}
-	return image;
+	if(!(mode & GUI_MODE_UHD) && (im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+		im.image = Downscale2x(im.image);
+	if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
+		im.image = Upscale2x(im.image);
+	if((mode & GUI_MODE_DARK) && !(im.flags & IML_IMAGE_FLAG_DARK) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
+		im.image = DarkTheme(im.image);
+
+	ScanOpaque(im.image);
+	
+	return im.image;
 }
 
 Image Iml::Get(int i)

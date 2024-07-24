@@ -8,11 +8,6 @@ using namespace Upp;
 
 #define IMAGECLASS TestImg
 #define IMAGEFILE <ImlUHDDark/Test.iml>
-#define IMAGEFILE_UHD <ImlUHDDark/TestHD.iml>
-
-// #define FIXED_COLORS
-// #define FIXED_SIZE
-
 #include <Draw/iml_source.h>
 
 struct Test : TopWindow {
@@ -23,11 +18,15 @@ struct Test : TopWindow {
 			SColorPaper_Write(mode & 1 ? Black() : White());
 			SetUHDMode(mode & 2);
 			w.DrawRect(x, 0, sz.cx, sz.cy, SColorPaper());
-			int y = 0;
+			w.DrawText(x, 0, get_i(mode, "Normal", "Dark", "UHD", "UHD Dark"), StdFont(), LtMagenta());
+			int y = 200;
 			w.DrawImage(x + 10, y += 40, TestImg::Test1());
 			w.DrawImage(x + 10, y += 40, TestImg::Test2());
 			w.DrawImage(x + 10, y += 40, TestImg::Test3());
-			x += 100;
+			w.DrawImage(x + 10, y += 40, TestImg::Test4());
+			w.DrawImage(x + 10, y += 40, TestImg::Test5());
+			w.DrawImage(x + 10, y += 40, TestImg::Test6());
+			x += 200;
 		}
 	}
 };
