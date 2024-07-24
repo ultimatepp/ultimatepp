@@ -342,7 +342,7 @@ void IconDes::Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, doub
 	level.Max(max);
 	level <<= init;
 	slider.MinMax(0, 1000);
-	slider <<= init * max / 1000;
+	slider <<= init * 1000 / max;
 	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider / 1000.0 * max; dlg.Break(); };
 	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int((double)~level * 1000 / max), 500); dlg.Break(); };
 }

@@ -28,13 +28,13 @@ void IconDes::LeftDown(Point p, dword flags)
 		return;
 	}
 	if(flags & K_SHIFT) {
-		DoFill(decode(fill_type, 0, 0, 1, 20, 2, 40, -1));
+		if(Rect(CurrentImage().GetSize()).Contains(startpoint))
+			DoFill(decode(fill_type, 0, 0, 1, 20, 2, 40, -1));
 		return;
 	}
-	if(flags & K_ALT) {
+	if(flags & K_ALT)
 		Freehand(startpoint, 1);
-		return;
-	}
+	else
 	if(selectrect)
 		EmptyRectTool(startpoint, flags);
 	else
@@ -42,7 +42,7 @@ void IconDes::LeftDown(Point p, dword flags)
 		(this->*tool)(startpoint, flags);
 }
 
-void IconDes::MouseMove(Point p, dword keyflags)
+void IconDes::MouseMove(Point p, dword flags)
 {
 	SyncStatus();
 	if(!HasCapture() || !IsCurrent())
@@ -58,11 +58,16 @@ void IconDes::MouseMove(Point p, dword keyflags)
 		MakePaste();
 		return;
 	}
+	if(flags & K_SHIFT)
+		return;
+	if(flags & K_ALT)
+		Freehand(p, 1);
+	else
 	if(selectrect)
-		EmptyRectTool(p, keyflags);
+		EmptyRectTool(p, flags);
 	else
 	if(tool)
-		(this->*tool)(p, keyflags);
+		(this->*tool)(p, flags);
 }
 
 void IconDes::LeftUp(Point p, dword keyflags)
@@ -97,12 +102,6 @@ void IconDes::RightDown(Point p, dword flags)
 	}
 	RGBA ic = CurrentImage()[p.y][p.x];
 	RGBA c = CurrentColor();
-	if(flags & K_ALT) {
-		c.a = ic.a;
-		ic = c;
-	}
-	if(flags & K_CTRL)
-		ic.a = c.a;
 	rgbactrl.Set(ic);
 	ColorChanged();
 }
