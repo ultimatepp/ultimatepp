@@ -359,7 +359,8 @@ void InstantSetup()
 
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
-				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
+				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj -D_CRT_SECURE_NO_WARNINGS"
+				                                : "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS");
 				bmSet(bm, "COMMON_CPP_OPTIONS", "");
 				bmSet(bm, "COMMON_C_OPTIONS", "");
 				bmSet(bm, "COMMON_FLAGS", "");
