@@ -67,22 +67,11 @@ void IconDraw::DrawEllipse(const Rect& r_, bool fill_empty, RGBA color, int pen,
 	r.bottom++;
 	if(fill_empty) {
 		docolor = color;
-		Polygon().Ellipse(r).Fill();
+		Ellipse(r, -1);
 	}
 	if(!IsNull(pen)) {
 		docolor = pencolor;
-		if(pen < 2) {
-			Width(1);
-			Ellipse(r);
-		}
-		else {
-			Polygon();
-			Ellipse(r);
-			Size sz = r.GetSize();
-			if(pen < max(sz.cx, sz.cy))
-				Ellipse(r.Deflated(pen - 1));
-			Fill();
-		}
+		Ellipse(r, pen);
 	}
 }
 

@@ -16,12 +16,12 @@ void SDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
 	if(!IsNull(color)) {
 		docolor = color;
-		Polygon().Ellipse(r).Fill();
+		Ellipse(r, -1);
 	}
 	if(!IsNull(pen) && !IsNull(pencolor)) {
 		docolor = pencolor;
 		Width(pen);
-		Ellipse(r);
+		Ellipse(r, max(pen, 0));
 	}
 }
 
