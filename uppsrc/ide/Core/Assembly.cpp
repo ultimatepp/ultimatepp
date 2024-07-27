@@ -151,6 +151,41 @@ bool SaveVars(const char *name)
 	return true;
 }
 
+#ifdef PLATFORM_POSIX
+
+String GetDefaultUppOut()
+{
+	String out;
+	String p = GetExeFolder();
+	while(p.GetCount() > 1 && DirectoryExists(p)) {
+		String h = AppendFileName(p, ".cache");
+		if(DirectoryExists(h)) {
+			out = h;
+			break;
+		}
+		p = GetFileFolder(p);
+	}
+	
+	out = Nvl(out, GetHomeDirFile(".cache")) + "/upp.out";
+	
+	RealizeDirectory(out);
+	return out;
+}
+
+#else
+
+String GetDefaultUppOut()
+{
+	return ConfigFile("out");
+}
+
+#endif
+
+String GetUppOut()
+{
+	return Nvl(GetVar("OUTPUT"), GetDefaultUppOut());
+}
+
 String DefaultHubFilePath()
 {
 	return ConfigFile("UppHub.path");

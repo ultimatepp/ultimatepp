@@ -577,6 +577,21 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			if(!IsNull(editfile))
 				RunRepoDiff(editfile);
 		}).Text(txt + "file..");
+		if(editfile_repo == GIT_DIR) {
+			String origin = Sys("git -C " + GetFileFolder(editfile) + " remote get-url origin");
+			if(origin.StartsWith("https://github.com/")) {
+				origin.TrimEnd("\n");
+				origin.TrimEnd("\r");
+				origin.TrimEnd(".git");
+				String rp = editfile;
+				GetRepo(rp);
+				String p = editfile.Mid(rp.GetCount());
+				p.Replace("\\", "/");
+				menu.AddMenu("Show file on github", IdeImg::GitHub(), [=] {
+					LaunchWebBrowser(origin + "/blob/" + GetGitBranchRaw(rp) + p);
+				});
+			}
+		}
 		if(editfile.GetCount()) {
 			String mine;
 			String theirs;

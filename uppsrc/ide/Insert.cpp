@@ -242,8 +242,6 @@ void Ide::InsertMenu(Bar& bar)
 {
 	if(bar.IsScanKeys())
 		return;
-	bar.Add("Insert color..", THISBACK(InsertColor));
-	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	int pi = GetPackageIndex();
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= 0 && pi < wspc.GetCount()) {
@@ -273,6 +271,9 @@ void Ide::InsertMenu(Bar& bar)
 			}
 		}
 	}
+	bar.Separator();
+	bar.Add("Insert color..", THISBACK(InsertColor));
+	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });

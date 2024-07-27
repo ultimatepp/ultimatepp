@@ -179,24 +179,23 @@ Image MinifyCached(const Image& img, int nx, int ny, bool co)
 	return MakeImage(m);
 }
 
-Image Magnify(const Image& img, int nx, int ny)
+Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 {
-	if(nx == 1 && ny == 1)
-		return img;
-	if(nx == 0 || ny == 0)
-		return Image();
-	Size sz = img.GetSize();
+	Rect src = src_ & img.GetSize();
 	bool xdown = nx < 0;
 	nx = abs(nx);
-	int ncx = xdown ? sz.cx / nx : sz.cx * nx;
-	ImageBuffer b(ncx, sz.cy * ny);
-	const RGBA *s = ~img;
-	const RGBA *e = s + img.GetLength();
-	RGBA *t = ~b;
-	while(s < e) {
+	Size ssz = src.GetSize();
+	if(ssz.cx <= 0 || ssz.cy <= 0 || nx == 0 || ny == 0)
+		return Image();
+	int ncx = xdown ? ssz.cx / nx : ssz.cx * nx;
+	Size tsz(ncx, ssz.cy * ny);
+	ImageBuffer b(tsz);
+	CoFor(co, ssz.cy, [&](int y) {
+		const RGBA *s = img[src.top + y] + src.left;
+		const RGBA *e = s + ssz.cx;
+		RGBA *t = ~b + y * ncx * ny;
 		RGBA *q = t;
-		const RGBA *le = s + sz.cx;
-		while(s < le) {
+		while(s < e) {
 			Fill(q, *s, nx);
 			q += nx;
 			s++;
@@ -205,10 +204,90 @@ Image Magnify(const Image& img, int nx, int ny)
 			memcpy(q, t, ncx * sizeof(RGBA));
 			q += ncx;
 		}
-		t = q;
-	}
-	b.SetResolution(img.GetResolution());
+	});
+	
+	auto HotSpot = [&](Point p) {
+		p = (p - src.TopLeft()) * Point(nx, ny);
+		return Point(clamp(p.x, 0, tsz.cx), clamp(p.y, 0, tsz.cy));
+	};
+	
+	b.SetHotSpot(HotSpot(img.GetHotSpot()));
+	b.Set2ndSpot(HotSpot(img.Get2ndSpot()));
+	
 	return b;
+}
+
+Image Magnify(const Image& img, int nx, int ny, bool co)
+{
+	if(nx == 1 && ny == 1)
+		return img;
+	return Magnify(img, img.GetSize(), nx, ny, co);
+}
+
+Image DownSample3x(const Image& src, bool co)
+{
+	Size tsz = src.GetSize() / 3;
+	if(tsz.cx * tsz.cy == 0)
+		return Null;
+	ImageBuffer ib(tsz);
+	int w = src.GetSize().cx;
+	int w2 = 2 * w;
+	CoFor(co, tsz.cy, [&](int y) {
+		RGBA *t = ib[y];
+		RGBA *e = t + tsz.cx;
+		const RGBA *s = src[3 * y];
+		while(t < e) {
+			int r, g, b, a;
+			const RGBA *q;
+			r = g = b = a = 0;
+#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
+			S__SUM(0) S__SUM(1) S__SUM(2)
+			S__SUM(w + 0) S__SUM(w + 1) S__SUM(w + 2)
+			S__SUM(w2 + 0) S__SUM(w2 + 1) S__SUM(w2 + 2)
+#undef  S__SUM
+			t->a = a / 9;
+			t->r = r / 9;
+			t->g = g / 9;
+			t->b = b / 9;
+			t++;
+			s += 3;
+		}
+	});
+	ib.SetHotSpot(src.GetHotSpot() / 3);
+	ib.Set2ndSpot(src.Get2ndSpot() / 3);
+	return ib;
+}
+
+Image DownSample2x(const Image& src, bool co)
+{
+	Size tsz = src.GetSize() / 2;
+	if(tsz.cx * tsz.cy == 0)
+		return Null;
+	ImageBuffer ib(tsz);
+	int w = src.GetSize().cx;
+	CoFor(co, tsz.cy, [&](int y) {
+		RGBA *t = ib[y];
+		RGBA *e = t + tsz.cx;
+		const RGBA *s = src[2 * y];
+		while(t < e) {
+			int r, g, b, a;
+			const RGBA *q;
+			r = g = b = a = 0;
+#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
+			S__SUM(0) S__SUM(1)
+			S__SUM(w + 0) S__SUM(w + 1)
+#undef  S__SUM
+			t->a = a / 4;
+			t->r = r / 4;
+			t->g = g / 4;
+			t->b = b / 4;
+			t++;
+			s += 2;
+		}
+	});
+	ib.SetHotSpot(src.GetHotSpot() / 2);
+	ib.Set2ndSpot(src.Get2ndSpot() / 2);
+	return ib;
 }
 
 };

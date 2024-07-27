@@ -73,7 +73,7 @@ void IdeIconDes::ToolEx(Bar& bar)
 			String name = GetCurrentName();
 			TheIde()->FindDesignerItemReferences(name + "()", name);
 		});
-		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
+//		bar.Add("File properties..", IconDesImg::FileProperties(), THISBACK(FileProperties));
 	}
 }
 

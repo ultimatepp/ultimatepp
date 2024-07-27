@@ -93,42 +93,35 @@ public:
 
 struct IconShow : public Ctrl {
 	Image image;
-	bool  show_small;
-	bool  show_other;
+	bool  show_downscaled;
+	bool  show_synthetics;
+	dword flags;
 
 	void Paint(Draw& w);
 
 	IconShow() { BackPaint(); }
 };
 
-void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance);
+void   FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance);
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
+String PackImlDataUncompressed(const Vector<ImageIml>& image);
 String PackImlData(const Vector<ImageIml>& image);
-Image  DownSample3x(const Image& src);
-Image  DownSample2x(const Image& src);
 
-/*
-struct IconDraw : ImagePainter {
-	IconDraw(Size sz) : ImagePainter(sz, MODE_NOAA) {}
-};
-*/
-
-struct IconDraw : NilDraw, DDARasterizer {
-	RGBA        docolor;
-	ImageBuffer image;
+struct IconDraw : DDARasterizer {
+	RGBA         docolor;
+	ImageBuffer& image;
 	
 	virtual void PutHorz(int x, int y, int cx);
 	virtual void PutVert(int x, int y, int cy);
 
-	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
-	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
-	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	void DrawRect(int x, int y, int cx, int cy, RGBA color);
+	void DrawFrame(int x, int y, int cx, int cy, RGBA color, int n);
+	void DrawLine(Point p1, Point p2, int width, RGBA color);
+	void DrawEllipse(const Rect& r, bool fill_empty, RGBA color, int pen, RGBA pencolor);
 	
-	operator Image() { return image; }
-	
-	IconDraw(Size sz) { image.Create(sz); Cy(sz.cy); }
+	IconDraw(ImageBuffer& image) : image(image) { Cy(image.GetHeight()); }
 };
 
 class IconDes : public Ctrl {
@@ -152,14 +145,12 @@ private:
 		Image           image;
 		Image           base_image;
 		Image           selection;
-		Point           pastepos;
+		Point           pastepos = Null;
 		Image           paste_image;
 		String          undo;
 		String          redo;
-		bool            exp;
+		bool            exp = false;
 		dword           flags = 0;
-
-		Slot();
 	};
 	
 	enum {
@@ -172,17 +163,21 @@ private:
 	int          magnify;
 	int          pen;
 	Point        startpoint;
+	Point        scroll_start = Null;
+	Point        scroll_base;
+	RGBA         startcolor = RGBAZero();
 	Rect         m1refresh;
 	void        (IconDes::*tool)(Point p, dword flags);
 	bool         doselection = false;
 	bool         selectrect = false;
 	int          paste_mode;
-	bool         show_other = false;
-	bool         show_small = false;
+	bool         show_synthetics = false;
+	bool         show_downscaled = false;
 	bool         show_grid2 = false;
+	bool         antialiased = false;
+	int          fill_type = 0;
 
 	ScrollBars   sb;
-	Scroller     scroller;
 	ToolBar      toolbar;
 
 	SplitterFrame  leftpane;
@@ -194,7 +189,7 @@ private:
 
 	RGBACtrl       rgbactrl;
 	IconShow       iconshow;
-	Image          cursor_image;
+	Image          cursor_image, cursor_image_free;
 	Image          fill_cursor, fill_cursor2, fill_cursor3, antifill_cursor;
 	bool           single_mode;
 	ParentCtrl     single;
@@ -219,14 +214,20 @@ private:
 	
 	TextDlg        textdlg;
 
-	void  PenSet(Point p, dword flags);
+	void  DoBuffer(Event<ImageBuffer&> tool);
+	void  DoPainter(Event<Painter&> tool);
+	void  DoDraw(Event<IconDraw&> tool);
+	void  DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool);
 
 	void  LineTool(Point p, dword f);
+	void  Freehand(Point p, int pen);
 	void  FreehandTool(Point p, dword f);
 
-	void  EllipseTool0(Point p, dword flags, Color inner);
+	void  EllipseTool0(Point p, dword flags, bool fill_empty);
 	void  EllipseTool(Point p, dword f);
 	void  EmptyEllipseTool(Point p, dword f);
+	void  RadialTool(Point p, dword f);
+	void  LinearTool(Point p, dword f);
 
 	void  RectTool0(Point p, dword f, bool empty);
 	void  RectTool(Point p, dword f);
@@ -235,10 +236,6 @@ private:
 	void  HotSpotTool(Point p, dword f);
 
 	void  DoFill(int tolerance);
-	void  FillTool(Point p, dword flags);
-	void  Fill2Tool(Point p, dword flags);
-	void  Fill3Tool(Point p, dword flags);
-	void  AntiFillTool(Point p, dword flags);
 
 	void  Text();
 	void  PasteText();
@@ -261,11 +258,7 @@ private:
 
 	void  SyncShow();
 
-	void  RefreshPixel(Point p, int cx = 1, int cy = 1);
-	void  RefreshPixel(int x, int y, int cx = 1, int cy = 1);
 	Point GetPos(Point p);
-	void  Set(Point p, RGBA rgba, dword flags);
-	void  ApplyDraw(IconDraw& iw, dword flags);
 	void  ApplyImage(Image m, dword flags, bool alpha = false);
 
 	void  SyncImage();
@@ -334,6 +327,8 @@ private:
 	void  Upscale();
 
 	void  PlaceDlg(TopWindow& dlg);
+	void  Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init = 0);
+	void  Couple(TopWindow& dlg, EditInt& level, SliderCtrl& slider, int max, int init = 0);
 	Image ImageStart();
 	void  ImageSet(const Image& m);
 	void  BlurSharpen();
@@ -343,6 +338,7 @@ private:
 	void  Alpha();
 	void  Colors();
 	void  Smoothen();
+	void  RemoveAlpha();
 
 	void  Search();
 	void  GoTo(int q);
@@ -364,7 +360,6 @@ private:
 	void  InsertPaste();
 	void  InsertFile();
 	void  ExportPngs();
-	void  InsertIml();
 	void  MoveSlot(int d);
 	void  ChangeSlot(int d);
 	void  DnDInsert(int line, PasteClip& d);
@@ -430,7 +425,37 @@ struct ImlImage : ImageIml {
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
 String SaveIml(const Array<ImlImage>& iml, int format, const String& eol = "\r\n");
 
-void SetRes(Image& m, int resolution);
+template <class T>
+inline
+Image ForEachPixel(const Image& src, T op, bool co = true)
+{
+	Size sz = src.GetSize();
+	ImageBuffer m(sz);
+	CoFor(co, sz.cy, [&](int y) {
+		const RGBA *s = src[y];
+		const RGBA *e = s + sz.cx;
+		RGBA *t = m[y];
+		while(s < e) {
+			*t = *s;
+			op(*t);
+			s++;
+			t++;
+		}
+	});
+	m.SetHotSpots(src);
+	return m;
+}
+
+template <class T>
+inline
+Image ForEachPixelStraight(const Image& src, T op, bool co = true)
+{
+	return ForEachPixel(src, [&](RGBA& t) {
+		t = Unmultiply(t);
+		op(t);
+		t = Premultiply(t);
+	}, co);
+}
 
 }
 

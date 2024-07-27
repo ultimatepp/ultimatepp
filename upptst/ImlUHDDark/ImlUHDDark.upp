@@ -5,8 +5,7 @@ uses
 
 file
 	main.cpp,
-	Test.iml,
-	TestHD.iml;
+	Test.iml;
 
 mainconfig
 	"" = "GUI";

@@ -1,60 +1,9 @@
-#if defined(CPU_UNALIGNED) && defined(CPU_LE)
-NOUBSAN inline int    Peek16le(const void *ptr)  { return *(const word *)ptr; }
-NOUBSAN inline int    Peek32le(const void *ptr)  { return *(const dword *)ptr; }
-NOUBSAN inline int64  Peek64le(const void *ptr)  { return *(const int64 *)ptr; }
-
-NOUBSAN inline void   Poke16le(const void *ptr, int val)    { *(word *)ptr = val; }
-NOUBSAN inline void   Poke32le(const void *ptr, int val)    { *(dword *)ptr = val; }
-NOUBSAN inline void   Poke64le(const void *ptr, int64 val)  { *(int64 *)ptr = val; }
-#else
-inline int    Peek16le(const void *ptr)  { return MAKEWORD(((byte *)ptr)[0], ((byte *)ptr)[1]); }
-inline int    Peek32le(const void *ptr)  { return MAKELONG(Peek16le(ptr), Peek16le((byte *)ptr + 2)); }
-inline int64  Peek64le(const void *ptr)  { return MAKEQWORD(Peek32le(ptr), Peek32le((byte *)ptr + 4)); }
-
-inline void   Poke16le(const void *ptr, int val)    { ((byte *)ptr)[0] = LOBYTE(val); ((byte *)ptr)[1] = HIBYTE(val); }
-inline void   Poke32le(const void *ptr, int val)    { Poke16le(ptr, LOWORD(val)); Poke16le((byte *)ptr + 2, HIWORD(val)); }
-inline void   Poke64le(const void *ptr, int64 val)  { Poke32le(ptr, LODWORD(val)); Poke32le((byte *)ptr + 4, HIDWORD(val)); }
-#endif
-
-inline int    Peek16be(const void *ptr)  { return MAKEWORD(((byte *)ptr)[1], ((byte *)ptr)[0]); }
-inline int    Peek32be(const void *ptr)  { return MAKELONG(Peek16be((byte *)ptr + 2), Peek16be(ptr)); }
-inline int64  Peek64be(const void *ptr)  { return MAKEQWORD(Peek32be((byte *)ptr + 4), Peek32be(ptr)); }
-
-inline void   Poke16be(const void *ptr, int val)    { ((byte *)ptr)[1] = LOBYTE(val); ((byte *)ptr)[0] = HIBYTE(val); }
-inline void   Poke32be(const void *ptr, int val)    { Poke16be(ptr, HIWORD(val)); Poke16be((byte *)ptr + 2, LOWORD(val)); }
-inline void   Poke64be(const void *ptr, int64 val)  { Poke32be(ptr, HIDWORD(val)); Poke32be((byte *)ptr + 4, LODWORD(val)); }
-
-#ifdef CPU_LITTLE_ENDIAN
-
-#define MAKE2B(b0, b1)                            MAKEWORD(b0, b1)
-#define MAKE4B(b0, b1, b2, b3)                    MAKELONG(MAKEWORD(b0, b1), MAKEWORD(b2, b3))
-#define MAKE8B(b0, b1, b2, b3, b4, b5, b6, b7)    MAKEQWORD(MAKE4B(b0, b1, b2, b3), MAKE4B(b4, b5, b6, b7))
-
-inline int    Peek16(const void *ptr)  { return Peek16le(ptr); }
-inline int    Peek32(const void *ptr)  { return Peek32le(ptr); }
-inline int64  Peek64(const void *ptr)  { return Peek64le(ptr); }
-
-inline void   Poke16(const void *ptr, int val)    { Poke16le(ptr, val); }
-inline void   Poke32(const void *ptr, int val)    { Poke32le(ptr, val); }
-inline void   Poke64(const void *ptr, int64 val)  { Poke64le(ptr, val); }
-
-#else
-
-#define MAKE2B(b0, b1)                            MAKEWORD(b1, b0);
-#define MAKE4B(b0, b1, b2, b3)                    MAKELONG(MAKEWORD(b2, b3), MAKEWORD(b0, b1))
-#define MAKE8B(b0, b1, b2, b3, b4, b5, b6, b7)    MAKEQWORD(MAKE4B(b7, b6, b5, b4), MAKE4B(b3, b2, b1, b0))
-
-inline int    Peek16(const void *ptr)  { return Peek16be(ptr); }
-inline int    Peek32(const void *ptr)  { return Peek32be(ptr); }
-inline int64  Peek64(const void *ptr)  { return Peek64be(ptr); }
-
-inline void   Poke16(const void *ptr, int val)    { Poke16be(ptr, val); }
-inline void   Poke32(const void *ptr, int val)    { Poke32be(ptr, val); }
-inline void   Poke64(const void *ptr, int64 val)  { Poke64be(ptr, val); }
-
+#ifndef CPU_LE
+#error Only little endian CPUs supported
 #endif
 
 #if defined(CPU_X86) && defined(COMPILER_MSC)
+
 #ifdef COMPILER_GCC
 #ifdef CPU_64
 inline word   SwapEndian16(word v)    { __asm__("xchgb %b0,%h0" : "=Q" (v) :  "0" (v)); return v; }
@@ -151,6 +100,36 @@ void EndianSwap(dword *v, size_t count);
 void EndianSwap(int *v, size_t count);
 void EndianSwap(int64 *v, size_t count);
 void EndianSwap(uint64 *v, size_t count);
+
+// unligned access - memcpy converts to simple load/store with normal compilers
+
+inline int    Peek16(const void *ptr)        { word x; memcpy(&x, ptr, 2); return x; }
+inline int    Peek32(const void *ptr)        { dword x; memcpy(&x, ptr, 4); return x; }
+inline int64  Peek64(const void *ptr)        { uint64 x; memcpy(&x, ptr, 8); return x; }
+
+inline void   Poke16(void *ptr, word val)    { memcpy(ptr, &val, 2); }
+inline void   Poke32(void *ptr, dword val)   { memcpy(ptr, &val, 4); }
+inline void   Poke64(void *ptr, int64 val)   { memcpy(ptr, &val, 8); }
+
+inline int    Peek16le(const void *ptr)      { return Peek16(ptr); }
+inline int    Peek32le(const void *ptr)      { return Peek32(ptr); }
+inline int64  Peek64le(const void *ptr)      { return Peek64(ptr); }
+
+inline void   Poke16le(void *ptr, word val)   { Poke16(ptr, val); }
+inline void   Poke32le(void *ptr, dword val)   { Poke32(ptr, val); }
+inline void   Poke64le(void *ptr, int64 val) { Poke64(ptr, val); }
+
+inline int    Peek16be(const void *ptr)      { return SwapEndian16(Peek16(ptr)); }
+inline int    Peek32be(const void *ptr)      { return SwapEndian32(Peek32(ptr)); }
+inline int64  Peek64be(const void *ptr)      { return SwapEndian64(Peek64(ptr)); }
+
+inline void   Poke16be(void *ptr, word val)  { Poke16(ptr, SwapEndian16(val)); }
+inline void   Poke32be(void *ptr, dword val) { Poke32(ptr, SwapEndian32(val)); }
+inline void   Poke64be(void *ptr, int64 val) { Poke64(ptr, SwapEndian64(val)); }
+
+#define MAKE2B(b0, b1)                            MAKEWORD(b0, b1)
+#define MAKE4B(b0, b1, b2, b3)                    MAKELONG(MAKEWORD(b0, b1), MAKEWORD(b2, b3))
+#define MAKE8B(b0, b1, b2, b3, b4, b5, b6, b7)    MAKEQWORD(MAKE4B(b0, b1, b2, b3), MAKE4B(b4, b5, b6, b7))
 
 #ifdef CPU_64
 

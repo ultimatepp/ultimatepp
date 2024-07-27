@@ -40,7 +40,7 @@ void IconDes::KeyMove(int dx, int dy)
 	else {
 		Image h = c.image;
 		c.image = CreateImage(h.GetSize(), Null);
-		UPP::Copy(c.image, Point(dx, dy), h, h.GetSize());
+		UPP::Copy(c.image, Point(dx, dy), h, h.GetSize(), true);
 	}
 	Sync();
 }
@@ -170,7 +170,6 @@ void IconDes::SmoothRescale()
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
 		Image m = RescaleFilter(bk, sz, ~dlg.method);
-		SetRes(m, bk.GetResolution());
 		if(IsPasting()) {
 			c.paste_image = m;
 			MakePaste();
@@ -262,71 +261,30 @@ void IconDes::BlurSharpen()
 	}
 }
 
-Image Colorize2(const Image& img, Color color, int alpha, int gray)
-{
-	const RGBA *s = ~img;
-	const RGBA *e = s + img.GetLength();
-	ImageBuffer w(img.GetSize());
-	Unmultiply(w);
-	RGBA *t = w;
-	byte r0 = color.GetR();
-	byte g0 = color.GetG();
-	byte b0 = color.GetB();
-	alpha = alpha + (alpha >> 7);
-	if(gray == 0)
-		gray = 1;
-	while(s < e) {
-		int ga = Grayscale(*s);
-		if(gray >= 255) {
-			ga = ga + (ga >> 7);
-			t->r = (alpha * (((ga * r0) >> 8) - s->r) >> 8) + s->r;
-			t->g = (alpha * (((ga * g0) >> 8) - s->g) >> 8) + s->g;
-			t->b = (alpha * (((ga * b0) >> 8) - s->b) >> 8) + s->b;
-		}
-		else {
-			int r, g, b;
-			if(ga <= gray) {
-				r = ga * r0 / gray;
-				g = ga * g0 / gray;
-				b = ga * b0 / gray;
-			}
-			else {
-				int div = 255 - gray;
-				int ao = ga - gray;
-				int ac = div - ao;
-				r = (ao * s->r + ac * r0) / div;
-				g = (ao * s->g + ac * g0) / div;
-				b = (ao * s->b + ac * b0) / div;
-			}
-			t->r = (alpha * (r - s->r) >> 8) + s->r;
-			t->g = (alpha * (g - s->g) >> 8) + s->g;
-			t->b = (alpha * (b - s->b) >> 8) + s->b;
-		}
-		t->a = s->a;
-		t++;
-		s++;
-	}
-	Premultiply(w);
-	w.SetHotSpots(img);
-	return w;
-}
-
 void IconDes::Colorize()
 {
-	WithColorize2Layout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Colorize");
+	WithImageDblLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Chroma");
 	PlaceDlg(dlg);
-	dlg.level.MinMax(0, 1);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
-	dlg.gray.MinMax(0, 1);
-	dlg.gray <<= 1;
-	dlg.gray <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 1, 1);
 	Image bk = ImageStart();
 	for(;;) {
-		ImageSet(Colorize2(bk, CurrentColor(),
-		                  (int)(minmax((double)~dlg.level, 0.0, 1.0) * 255),
-		                  (int)(minmax((double)~dlg.gray, 0.0, 1.0) * 255)));
+		RGBA c = rgbactrl.GetColor();
+		double mg = 0;
+		ForEachPixelStraight(bk, [&](RGBA& t) {
+			mg = max(mg, (double)Grayscale(t));
+		},
+		false);
+		if(mg)
+			mg = 1 / mg;
+		double a = Nvl(dlg.level, 1.0);
+		double ca = 1 - a;
+		ImageSet(ForEachPixelStraight(bk, [&](RGBA& t) {
+			double x = Grayscale(t) * mg;
+			t.r = Saturate255(int(a * (x * c.r + 0.5) + ca * t.r));
+			t.g = Saturate255(int(a * (x * c.g + 0.5) + ca * t.g));
+			t.b = Saturate255(int(a * (x * c.b + 0.5) + ca * t.b));
+		}));
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			ImageSet(bk);
@@ -342,8 +300,7 @@ void IconDes::FreeRotate()
 	WithFreeRotateLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Rotate");
 	PlaceDlg(dlg);
-	dlg.angle <<= 0;
-	dlg.angle <<= dlg.Breaker();
+	Couple(dlg, dlg.angle, dlg.slider, 360);
 	Image bk = ImageStart();
 	Size tsz = bk.GetSize();
 	Image src = Magnify(bk, 3, 3);
@@ -363,12 +320,10 @@ void IconDes::FreeRotate()
 
 void IconDes::Chroma()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Chroma");
 	PlaceDlg(dlg);
-	dlg.level.Max(10);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 0);
 	Image bk = ImageStart();
 	for(;;) {
 		ImageSet(UPP::Grayscale(bk, 256 - (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255)));
@@ -382,14 +337,32 @@ void IconDes::Chroma()
 	}
 }
 
+void IconDes::Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init)
+{
+	level.Max(max);
+	level <<= init;
+	slider.MinMax(0, 1000);
+	slider <<= init * 1000 / max;
+	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider / 1000.0 * max; dlg.Break(); };
+	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int((double)~level * 1000 / max), 500); dlg.Break(); };
+}
+
+void IconDes::Couple(TopWindow& dlg, EditInt& level, SliderCtrl& slider, int max, int init)
+{
+	level.Max(max);
+	level <<= init;
+	slider.MinMax(0, max);
+	slider <<= init;
+	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider; dlg.Break(); };
+	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int((double)~level), init); dlg.Break(); };
+}
+
 void IconDes::Contrast()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Contrast");
 	PlaceDlg(dlg);
-	dlg.level.Max(10);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 1);
 	Image bk = ImageStart();
 	for(;;) {
 		ImageSet(UPP::Contrast(bk, (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255)));
@@ -405,26 +378,46 @@ void IconDes::Contrast()
 
 void IconDes::Alpha()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Alpha");
 	PlaceDlg(dlg);
-	dlg.level.Max(4);
-	dlg.level <<= 1;
-	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 2, 1);
 	Image bk = ImageStart();
 	for(;;) {
-		int a = (int)(minmax((double)~dlg.level, 0.0, 4.0) * 255);
-		ImageBuffer ib(bk.GetSize());
-		RGBA *t = ib;
-		const RGBA *s = bk;
-		const RGBA *e = bk + bk.GetLength();
-		while(s < e) {
-			*t = *s;
-			t->a = Saturate255((s->a * a) >> 8);
-			s++;
-			t++;
+		int a = (int)(minmax((double)~dlg.level, 0.0, 2.0) * 256);
+		ImageSet(ForEachPixelStraight(bk, [&](RGBA& t) {
+			t.a = Saturate255((t.a * a) >> 8);
+		}));
+		switch(dlg.Run()) {
+		case IDCANCEL:
+			ImageSet(bk);
+			return;
+		case IDOK:
+			return;
 		}
-		ImageSet(ib);
+	}
+}
+
+void IconDes::RemoveAlpha()
+{
+	WithRemoveAlphaLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Remove Alpha");
+	PlaceDlg(dlg);
+	Couple(dlg, dlg.thres, dlg.slider, 255, 128);
+	Image bk = ImageStart();
+	for(;;) {
+		int thres = ~dlg.thres;
+		ImageSet(ForEachPixel(bk, [&](RGBA& t) {
+			if(t.a != 255) {
+				if(t.a < thres)
+					t = RGBAZero();
+				else {
+					t = Unmultiply(t);
+					t.a = 255;
+					t = Premultiply(t);
+				}
+			}
+		}));
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			ImageSet(bk);

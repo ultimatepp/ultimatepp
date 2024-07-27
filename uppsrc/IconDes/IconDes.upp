@@ -16,7 +16,6 @@ file
 	ImageOp.cpp,
 	Paint.cpp,
 	Event.cpp,
-	Fast.cpp,
 	IconDes.cpp,
 	List.cpp,
 	Image.cpp,

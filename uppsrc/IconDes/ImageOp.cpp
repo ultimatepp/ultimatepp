@@ -3,56 +3,53 @@
 namespace Upp {
 
 struct sFloodFill {
-	Rect         rc;
 	Size         sz;
 	Buffer<byte> flag;
-	ImageBuffer& ib;
+	Image        source;
+	ImageBuffer& target;
 	RGBA         scolor;
 	RGBA         color;
 	bool         done;
 	int          tolerance;
 
-	RGBA& At(int x, int y)         { return ib[y + rc.top][x + rc.left]; }
+	RGBA& At(int x, int y)         { return target[y][x]; }
 	bool  Eq(int x, int y);
 	byte& Flag(int x, int y) { return flag[y * sz.cx + x]; }
-	void  Fill(RGBA color, Point pt, const Rect& rc, int tolerance_);
+	void  Fill(RGBA color, Point pt, int tolerance_);
 	void  Try(int x, int y);
 
-	sFloodFill(ImageBuffer& ib) : ib(ib) { tolerance = 0; }
+	sFloodFill(const Image& source, ImageBuffer& target) : source(source), target(target) { tolerance = 0; }
 };
 
 force_inline
 bool sFloodFill::Eq(int x, int y)
 {
-	const RGBA& q = At(x, y);
+	const RGBA& q = source[y][x];
 	if(tolerance < 0 && q.a)
 		return q.a != scolor.a || q.r != scolor.r || q.g != scolor.g || q.b != scolor.b;
 	if((q.a | scolor.a) == 0) return true;
 	return abs(q.a - scolor.a) <= tolerance && abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
 }
 
+force_inline
 void sFloodFill::Try(int x, int y)
 {
 	if(x >= 0 && x < sz.cx && y >= 0 && y < sz.cy && Flag(x, y) == 0 && Eq(x, y)) {
 		Flag(x, y) = 1;
-		At(x, y) = color;
+		target[y][x] = color;
 		done = false;
 	}
 }
 
-void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
+void sFloodFill::Fill(RGBA _color, Point pt, int tolerance_)
 {
 	tolerance = tolerance_;
-	rc = _rc & ib.GetSize();
-	if(!rc.Contains(pt))
-		return;
-	scolor = tolerance < 0 ? _color : ib[pt.y][pt.x];
+	scolor = tolerance < 0 ? _color : source[pt.y][pt.x];
 	color = tolerance < 0 ? RGBAZero() : _color;
-	sz = rc.GetSize();
+	sz = source.GetSize();
 	flag.Alloc(sz.cx * sz.cy, 0);
-	pt -= rc.TopLeft();
 	Flag(pt.x, pt.y) = 1;
-	At(pt.x, pt.y) = color;
+	target[pt.y][pt.x] = color;
 	do {
 		done = true;
 		for(int y = 0; y < sz.cy; y++)
@@ -69,9 +66,9 @@ void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
 	while(!done);
 }
 
-void FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance)
+void FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance)
 {
-	sFloodFill(img).Fill(color, pt, rc, tolerance);
+	sFloodFill(source, target).Fill(color, pt, tolerance);
 }
 
 struct InterpolateFilter : ImageFilter9 {
@@ -154,13 +151,13 @@ void MirrorVert(Image& img, const Rect& rect)
 	img = ib;
 }
 
-String PackImlData(const Vector<ImageIml>& image)
+String PackImlDataUncompressed(const Vector<ImageIml>& image)
 {
 	StringBuffer block;
 	for(const ImageIml& m : image) {
 		const Image& img = m.image;
 		StringStream ss;
-		ss.Put(((dword)img.GetResolution() << 6) | m.flags);
+		ss.Put(m.flags);
 		Size sz = img.GetSize();
 		ss.Put16le(sz.cx);
 		ss.Put16le(sz.cy);
@@ -181,67 +178,12 @@ String PackImlData(const Vector<ImageIml>& image)
 			s++;
 		}
 	}
-	return ZCompress(block);
+	return block;
 }
 
-Image DownSample3x(const Image& src)
+String PackImlData(const Vector<ImageIml>& image)
 {
-	Size tsz = src.GetSize() / 3;
-	ImageBuffer ib(tsz);
-	int w = src.GetSize().cx;
-	int w2 = 2 * w;
-	for(int y = 0; y < tsz.cy; y++) {
-		RGBA *t = ib[y];
-		RGBA *e = t + tsz.cx;
-		const RGBA *s = src[3 * y];
-		while(t < e) {
-			int r, g, b, a;
-			const RGBA *q;
-			r = g = b = a = 0;
-#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
-			S__SUM(0) S__SUM(1) S__SUM(2)
-			S__SUM(w + 0) S__SUM(w + 1) S__SUM(w + 2)
-			S__SUM(w2 + 0) S__SUM(w2 + 1) S__SUM(w2 + 2)
-#undef  S__SUM
-			t->a = a / 9;
-			t->r = r / 9;
-			t->g = g / 9;
-			t->b = b / 9;
-			t++;
-			s += 3;
-		}
-	}
-	ib.SetResolution(src.GetResolution());
-	return ib;
-}
-
-Image DownSample2x(const Image& src)
-{
-	Size tsz = src.GetSize() / 2;
-	ImageBuffer ib(tsz);
-	int w = src.GetSize().cx;
-	for(int y = 0; y < tsz.cy; y++) {
-		RGBA *t = ib[y];
-		RGBA *e = t + tsz.cx;
-		const RGBA *s = src[2 * y];
-		while(t < e) {
-			int r, g, b, a;
-			const RGBA *q;
-			r = g = b = a = 0;
-#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
-			S__SUM(0) S__SUM(1)
-			S__SUM(w + 0) S__SUM(w + 1)
-#undef  S__SUM
-			t->a = a / 4;
-			t->r = r / 4;
-			t->g = g / 4;
-			t->b = b / 4;
-			t++;
-			s += 2;
-		}
-	}
-	ib.SetResolution(src.GetResolution());
-	return ib;
+	return ZCompress(PackImlDataUncompressed(image));
 }
 
 }

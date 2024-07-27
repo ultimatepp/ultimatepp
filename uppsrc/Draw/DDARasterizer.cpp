@@ -218,30 +218,52 @@ DDARasterizer& DDARasterizer::Fill()
 	return *this;
 }
 
-DDARasterizer& DDARasterizer::Ellipse(const Rect& rect)
+DDARasterizer& DDARasterizer::Ellipse(const Rect& r, int width)
 {
-	Size size = rect.GetSize() / 2;
-	int n = 16;
-	Buffer<Point> p(n);
-	for(int i = 0; i < n; i++) {
-		double angle = M_PI * i / (n - 1) / 2;
-		p[i].x = min(size.cx, int(sin(angle) * size.cx + 0.5));
-		p[i].y = min(size.cy, int(cos(angle) * size.cy + 0.5));
+	double rx = r.GetWidth() * 0.5;
+	double ry = r.GetHeight() * 0.5;
+	double r2 = sqr(ry);
+	double rr = rx / ry;
+	
+	if(rx <= 0 || ry <= 0)
+		return *this;
+	
+	double wx, wy, w2, wr;
+	if(width > 1) {
+		wy = ry - width;
+		w2 = sqr(wy);
+		wr = (rx - width) / wy;
 	}
-	Point center = rect.TopLeft() + size;
-	Move(Point(center.x - p[0].x, center.y - p[0].y));
-	for(int i = 1; i < n; i++)
-		Line(Point(center.x - p[i].x, center.y - p[i].y));
-	center.y = rect.bottom - 1 - size.cy;
-	for(int i = n - 1; i >= 0; i--)
-		Line(Point(center.x - p[i].x, center.y + p[i].y));
-	center.x = rect.right - 1 - size.cx;
-	for(int i = 0; i < n; i++)
-		Line(Point(center.x + p[i].x, center.y + p[i].y));
-	center.y = rect.top + size.cy;
-	for(int i = n - 1; i >= 0; i--)
-		Line(Point(center.x + p[i].x, center.y - p[i].y));
-	Close();
+	
+
+	int y = 0;
+	int px = rx;
+	for(;;) {
+		int x = int(rr * (ry - sqrt(r2 - sqr(ry - y - 0.5))) + 0.5);
+		int y1 = y + r.top;
+		int y2 = r.bottom - y - 1;
+		int n = max(px - x, 1);
+		int n2 = n;
+		int x1 = x + r.left;
+		int x2 = r.right - x - n;
+		if(width < 0 || y == 0 || width > 1 && y < width || width >= ry) {
+			n = x2 - x1 + n;
+			n2 = 0;
+		}
+		else
+		if(width > 1) {
+			int wx = int(wr * (wy - sqrt(max(w2 - sqr(wy - (y - width) - 0.5), 0.0))) + 0.5) + (ry - wy);
+			n = n2 = wx - x;
+			x2 = r.right - x - n;
+		}
+		PutHorz(x1, y1, n);
+		PutHorz(x2, y1, n2);
+		if(y2 < y1) break;
+		PutHorz(x1, y2, n);
+		PutHorz(x2, y2, n2);
+		px = x;
+		y++;
+	}
 	return *this;
 }
 

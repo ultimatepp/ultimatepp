@@ -59,7 +59,7 @@ void Oracle8::SetOciError(String text, OCIError *from_errhp)
 	SetError(msg, text, errcode, NULL, OciErrorClass(errcode));
 }
 
-class OCI8Connection : public Link<OCI8Connection>, public OciSqlConnection {
+class OCI8Connection : public Link<>, public OciSqlConnection {
 protected:
 	virtual void        SetParam(int i, const Value& r);
 	virtual void        SetParam(int i, OracleRef r);
@@ -1343,8 +1343,9 @@ void Oracle8::Logoff() {
 	SessionClose();
 	LOG("Oracle8::Logoff, #" << conn_count << " connections pending");
 	while(!clink.IsEmpty()) {
-		clink.GetNext()->Clear();
-		clink.GetNext()->Unlink();
+		auto cl = (OCI8Connection *)clink.GetNext();
+		cl->Clear();
+		cl->Unlink();
 		LOG("-> #" << conn_count << " connections left");
 	}
 	if(in_session)

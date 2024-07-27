@@ -307,61 +307,8 @@ void GetSystemMemoryStatus(uint64& total, uint64& available);
 template <class T>
 inline void Swap(T& a, T& b) { T tmp = pick(a); a = pick(b); b = pick(tmp); }
 
-//Quick fix....
-#ifdef PLATFORM_WINCE
-const char *FromSysChrSet(const wchar *s);
-const wchar *ToSysChrSet(const char *s);
-#else
-inline const char *FromSysChrSet(const char *s) { return s; }
-inline const char *ToSysChrSet(const char *s) { return s; }
-#endif
-
-#ifdef _DEBUG
-void __LOGF__(const char *format, ...);
-#define LOGF             UPP::__LOGF__
-#else
-inline void __LOGF__(const char *format, ...);
-#endif
-
 template <class T>
 void IGNORE_RESULT(const T&) {}
-
-// Backward compatibility
-
-#define GLOBAL_VP(type, name, param) \
-name() \
-{ \
-	static type x param; \
-	return x; \
-}
-
-#define GLOBAL_VARP(type, name, param) \
-type& GLOBAL_VP(type, name, param)
-
-#define GLOBAL_V(type, name)   GLOBAL_VP(type, name, init_)
-#define GLOBAL_VAR(type, name) type& GLOBAL_V(type, name)
-
-#define GLOBAL_VP_INIT(type, name, param) \
-name() \
-{ \
-	static type x param; \
-	return x; \
-} \
-INITBLOCK { name(); }
-
-#define GLOBAL_VARP_INIT(type, name, param) \
-type& GLOBAL_VP_INIT(type, name, param)
-
-#define GLOBAL_V_INIT(type, name)   GLOBAL_VP_INIT(type, name, init_)
-#define GLOBAL_VAR_INIT(type, name) type& GLOBAL_V_INIT(type, name)
-
-#if __GNUC__ > 6
-	#define NOUBSAN __attribute__((no_sanitize_undefined))
-#elif __clang_major__ > 6
-	#define NOUBSAN __attribute__((no_sanitize("undefined")))
-#else
-	#define NOUBSAN
-#endif
 
 // DEPRECATED:
 

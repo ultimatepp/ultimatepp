@@ -29,5 +29,6 @@ file
 	lib\zutil.h,
 	lib\ChangeLog,
 	lib\README,
+	lib\LICENSE,
 	Copying;
 

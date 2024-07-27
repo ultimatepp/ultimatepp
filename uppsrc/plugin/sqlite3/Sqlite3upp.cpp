@@ -7,7 +7,7 @@ namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
-class Sqlite3Connection : public SqlConnection, public Link<Sqlite3Connection> {
+class Sqlite3Connection : public SqlConnection, public Link<> {
 protected:
 	virtual void        SetParam(int i, const Value& r);
 	virtual bool        Execute();
@@ -472,14 +472,14 @@ int Sqlite3Session::SqlExecRetry(const char *sql)
 
 void Sqlite3Session::Reset()
 {
-	for(Sqlite3Connection *s = clink.GetNext(); s != &clink; s = s->GetNext())
-		s->Reset();
+	for(Link<> *s = clink.GetNext(); s != &clink; s = s->GetNext())
+		((Sqlite3Connection *)s)->Reset();
 }
 
 void Sqlite3Session::Cancel()
 {
-	for(Sqlite3Connection *s = clink.GetNext(); s != &clink; s = s->GetNext())
-		s->Cancel();
+	for(Link<> *s = clink.GetNext(); s != &clink; s = s->GetNext())
+		((Sqlite3Connection *)s)->Cancel();
 }
 
 Sqlite3Session::Sqlite3Session()

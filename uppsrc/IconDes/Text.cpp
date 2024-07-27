@@ -17,9 +17,9 @@ IconDes::TextDlg::TextDlg()
 			face.Add(i);
 	SetupFaceList(face);
 	face <<= Font::ARIAL;
-	height.MinMax(4, 100);
+	height.MinMax(4, 600);
 	height <<= 12;
-	for(int i = 4; i < 100; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
+	for(int i = 4; i < 300; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
 		height.AddList(i);
 }
 
@@ -52,7 +52,20 @@ void IconDes::PasteText()
 	ImageDraw iw(tsz);
 	iw.Alpha().DrawText(0, 0, text, font, GrayColor(CurrentColor().a));
 	iw.DrawRect(tsz, CurrentColor());
+#ifdef PLATFORM_WIN32 // non-antialiased works
 	Current().paste_image = iw;
+#else
+	if(!font.IsNonAntiAliased())
+		Current().paste_image = iw;
+	else {
+		Image h = iw;
+		ImageBuffer ib(h);
+		RGBA cc = CurrentColor();
+		for(RGBA& c : ib)
+			c = c.a < 128 ? RGBAZero() : cc;
+		Current().paste_image = ib;
+	}
+#endif
 	MakePaste();
 }
 

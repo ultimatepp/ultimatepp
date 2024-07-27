@@ -73,11 +73,9 @@ jpeg_free_large (j_common_ptr cinfo, void FAR * object, size_t sizeofobject)
  * a slop factor of 5% or so.
  */
 
-#ifdef DEFAULT_MAX_MEM		/* so can override from makefile */
-#undef DEFAULT_MAX_MEM
+#ifndef DEFAULT_MAX_MEM		/* so can override from makefile */
+#define DEFAULT_MAX_MEM		1000000L /* default: one megabyte */
 #endif
-
-#define DEFAULT_MAX_MEM		100000000L //U++: Let us have this fixed at 100MB...
 
 GLOBAL(long)
 jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,

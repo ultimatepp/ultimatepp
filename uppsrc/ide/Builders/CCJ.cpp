@@ -174,7 +174,7 @@ void MakeBuild::SaveCCJ(const String& fn, bool exporting)
 	String makefile;
 
 	Vector<String> uppdirs = GetUppDirs();
-	String uppout = exporting ? GetVar("OUTPUT") : ".cache/upp.out";
+	String uppout = exporting ? GetUppOut() : ".cache/upp.out";
 
 	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, host, *b);
 	bool win32 = allconfig.Find("WIN32") >= 0;

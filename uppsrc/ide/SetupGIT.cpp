@@ -38,15 +38,13 @@ bool SetupGITMaster()
 	}
 
 #ifdef PLATFORM_WIN32
-	String out = GetExeDirFile("out");
 	String ass = GetExeFolder();
 	String myapps = GetExeDirFile("MyApps");
 #else
-	String out = GetHomeDirFile("out");
 	String ass = GetConfigFolder();
 	String myapps = GetHomeDirFile("MyApps");
 #endif
-	RealizeDirectory(out);
+	RealizeDirectory(GetUppOut());
 	
 	String uppsrc = AppendFileName(dir, "uppsrc");
 
@@ -58,7 +56,6 @@ bool SetupGITMaster()
 		console.Log("Creating assembly " + a);
 		SaveFile(a,
 			"UPP = " + AsCString(b) + ";\r\n"
-			"OUTPUT = " + AsCString(out) + ";\r\n"
 		);
 	};
 

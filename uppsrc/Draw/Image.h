@@ -8,8 +8,32 @@ enum ImageKind {
 	IMAGE_OPAQUE,
 };
 
-inline void Fill(RGBA *t, RGBA c, size_t n) { memset32(t, *(dword *)&c, n); }
+inline void Fill(RGBA *t, RGBA c, size_t n)     { memset32(t, *(dword *)&c, n); }
+void FillDown(RGBA *t, int linecy, RGBA c, int cy);
 inline void Copy(RGBA *t, const RGBA *s, int n) { memcpy_t(t, s, n); }
+
+force_inline RGBA Premultiply(const RGBA& s)
+{
+	RGBA t;
+	int alpha = s.a + (s.a >> 7);
+	t.r = alpha * (s.r) >> 8;
+	t.g = alpha * (s.g) >> 8;
+	t.b = alpha * (s.b) >> 8;
+	t.a = s.a;
+	return t;
+}
+
+force_inline RGBA Unmultiply(const RGBA& s)
+{
+	extern int um_table__[256];
+	RGBA t;
+	int alpha = um_table__[s.a];
+	t.r = (alpha * s.r) >> 8;
+	t.g = (alpha * s.g) >> 8;
+	t.b = (alpha * s.b) >> 8;
+	t.a = s.a;
+	return t;
+}
 
 int  Premultiply(RGBA *t, const RGBA *s, size_t len);
 int  Unmultiply(RGBA *t, const RGBA *s, size_t len);
@@ -41,20 +65,13 @@ inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x 
 
 class  Image;
 
-enum ImageResolutionIntent {
-	IMAGE_RESOLUTION_NONE = -1,
-	IMAGE_RESOLUTION_STANDARD = 0,
-	IMAGE_RESOLUTION_UHD = 1,
-};
-
 class ImageBuffer : NoCopy {
-	mutable int  kind;
+	std::atomic<int> kind; // atomic because it can be set by 2 threads, in theory
 	Size         size;
 	Buffer<RGBA> pixels;
 	Point        hotspot;
 	Point        spot2;
 	Size         dots;
-	int8         resolution;
 	bool         paintonce = false;
 
 	void         Set(Image& img);
@@ -70,7 +87,7 @@ public:
 	void  SetKind(int k)                { kind = k; }
 	int   GetKind() const               { return kind; }
 	int   ScanKind() const;
-	int   GetScanKind() const           { return kind == IMAGE_UNKNOWN ? ScanKind() : kind; }
+	int   GetScanKind() const           { return kind == IMAGE_UNKNOWN ? ScanKind() : (int)kind; }
 
 	void  SetHotSpot(Point p)           { hotspot = p; }
 	Point GetHotSpot() const            { return hotspot; }
@@ -85,9 +102,6 @@ public:
 	void  SetDPI(Size sz);
 	Size  GetDPI();
 	
-	void  SetResolution(int i)          { resolution = i; }
-	int   GetResolution() const         { return resolution; }
-
 	void  CopyAttrs(const ImageBuffer& img);
 	void  CopyAttrs(const Image& img);
 	
@@ -177,7 +191,6 @@ public:
 	Size   GetDPI() const;
 	int    GetKindNoScan() const;
 	int    GetKind() const;
-	int    GetResolution() const;
 	bool   IsOpaque() const                    { return GetKind() == IMAGE_OPAQUE; }
 
 	const RGBA *Begin() const                  { return data ? ~data->buffer : NULL; }
@@ -256,6 +269,7 @@ struct ImageIml : Moveable<ImageIml> {
 	dword  flags = 0;
 };
 
+Vector<ImageIml> UnpackImlDataUncompressed(const String& data);
 Vector<ImageIml> UnpackImlData(const void *ptr, int len);
 Vector<ImageIml> UnpackImlData(const String& d);
 
@@ -272,6 +286,7 @@ enum {
 	IML_IMAGE_FLAG_FIXED_SIZE   = 0x4,
 	IML_IMAGE_FLAG_UHD          = 0x8,
 	IML_IMAGE_FLAG_DARK         = 0x10,
+	IML_IMAGE_FLAG_S3           = 0x20,
 };
 
 Image MakeImlImage(const String& id, Function<ImageIml (int, const String&)> GetRaw, dword global_flags);

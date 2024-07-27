@@ -44,7 +44,7 @@ private:
 	sqlite3 *db;
 	String current_filename;
 	String current_dbname;
-	Link<Sqlite3Connection> clink;
+	Link<> clink;
 
 	int busy_timeout;
 

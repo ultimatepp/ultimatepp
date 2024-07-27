@@ -223,27 +223,21 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 Rect Ctrl::GetVirtualWorkArea()
 {
 	GuiLock __;
-	static Rect r;
-	if(r.right == 0) {
-		r = GetPrimaryWorkArea();
-		Array<Rect> rc;
-		GetWorkArea(rc);
-		for(int i = 0; i < rc.GetCount(); i++)
-			r |= rc[i];
-	}
+	Rect r = GetPrimaryWorkArea();
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		r |= rc[i];
 	return r;
 }
 
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	static Rect r;
-	if(r.right == 0) {
-		gint x, y, width, height;
-		gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-	                            &x, &y, &width, &height);
-	    r = SCL(x, y, width, height);
-	}
+	gint x, y, width, height;
+	gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
+                            &x, &y, &width, &height);
+    Rect r = SCL(x, y, width, height);
 	return r;
 }
 

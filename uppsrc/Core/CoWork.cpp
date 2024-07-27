@@ -158,7 +158,7 @@ void CoWork::Pool::ThreadRun(int tno)
 		}
 		LLOG("#" << tno << " Job acquired");
 		LHITCOUNT("CoWork: Running new job");
-		p.DoJob(*p.jobs.GetNext());
+		p.DoJob(*(MJob *)p.jobs.GetNext());
 		LLOG("#" << tno << " Job finished");
 	}
 	p.lock.Leave();
@@ -168,8 +168,8 @@ void CoWork::Pool::ThreadRun(int tno)
 void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work, bool looper)
 {
 	ASSERT(free);
-	MJob& job = *free;
-	free = job.link_next[0];
+	MJob& job = *(MJob *)free;
+	free = job.GetNext();
 	job.LinkAfter(&jobs);
 	if(work)
 		job.LinkAfter(&work->jobs, 1);
@@ -245,7 +245,7 @@ void CoWork::Cancel0()
 	Pool& p = GetPool();
 	while(!jobs.IsEmpty(1)) {
 		LHITCOUNT("CoWork::Canceling scheduled Job");
-		MJob& job = *jobs.GetNext(1);
+		MJob& job = *(MJob *)jobs.GetNext(1);
 		job.UnlinkAll();
 		if(job.looper)
 			todo -= job.work->looper_count;
@@ -294,7 +294,7 @@ void CoWork::Finish() {
 	p.lock.Enter();
 	while(todo && !jobs.IsEmpty(1)) {
 		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
-		p.DoJob(*jobs.GetNext(1));
+		p.DoJob(*(MJob *)jobs.GetNext(1));
 	}
 	Finish0();
 	p.lock.Leave();

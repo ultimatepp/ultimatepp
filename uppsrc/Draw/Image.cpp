@@ -54,7 +54,6 @@ void ImageBuffer::InitAttrs()
 {
 	spot2 = hotspot = Point(0, 0);
 	dots = Size(0, 0);
-	resolution = IMAGE_RESOLUTION_NONE;
 	paintonce = false;
 }
 
@@ -63,7 +62,6 @@ void ImageBuffer::CopyAttrs(const ImageBuffer& img)
 	SetHotSpot(img.GetHotSpot());
 	Set2ndSpot(img.Get2ndSpot());
 	SetDots(img.GetDots());
-	SetResolution(img.GetResolution());
 	PaintOnceHint(img.IsPaintOnceHint());
 }
 
@@ -122,7 +120,7 @@ ImageBuffer::ImageBuffer(Image& img)
 
 ImageBuffer::ImageBuffer(ImageBuffer& b)
 {
-	kind = b.kind;
+	kind.store(b.kind);
 	size = b.size;
 	pixels = pick(b.pixels);
 	CopyAttrs(b);
@@ -193,11 +191,6 @@ Size Image::GetDPI() const
 	Size size = GetSize();
 	Size dots = GetDots();
 	return data ?  Size(int(600.*size.cx/dots.cx), int(600.*size.cy/dots.cy)): Size(0, 0);
-}
-
-int Image::GetResolution() const
-{
-	return data ? data->buffer.GetResolution() : IMAGE_RESOLUTION_NONE;
 }
 
 int Image::GetKindNoScan() const
@@ -282,7 +275,6 @@ bool Image::operator==(const Image& img) const
 	   GetHotSpot() == img.GetHotSpot() &&
 	   Get2ndSpot() == img.Get2ndSpot() &&
 	   GetDots() == img.GetDots() &&
-	   GetResolution() == img.GetResolution() &&
 	   memeq_t(~*this, ~img, GetLength());
 }
 
@@ -397,7 +389,6 @@ String StoreImageAsString(const Image& img)
 	if(img.GetKind() == IMAGE_EMPTY)
 		return Null;
 	int type = img.GetKind() == IMAGE_OPAQUE ? 3 : 4;
-	type |= decode(img.GetResolution(), IMAGE_RESOLUTION_STANDARD, 0x40, IMAGE_RESOLUTION_UHD, 0x80, 0);
 	StringStream ss;
 	ss.Put(type);
 	Size sz = img.GetSize();
@@ -439,7 +430,6 @@ Image  LoadImageFromString(const String& src)
 		return Null;
 	StringStream ss(src);
 	int type = ss.Get();
-	int resolution = decode(type & 0xc0, 0x40, IMAGE_RESOLUTION_STANDARD, 0x80, IMAGE_RESOLUTION_UHD, 0);
 	type &= 0x3f;
 	Size sz;
 	sz.cx = ss.Get16le();
@@ -464,7 +454,6 @@ Image  LoadImageFromString(const String& src)
 	ImageBuffer ib(sz);
 	ib.SetHotSpot(p);
 	ib.SetDots(dots);
-	ib.SetResolution(resolution);
 	RGBA *t = ib;
 	const RGBA *e = t + ib.GetLength();
 	const byte *s = data;

@@ -359,7 +359,8 @@ void InstantSetup()
 
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
-				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
+				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj -D_CRT_SECURE_NO_WARNINGS"
+				                                : "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS");
 				bmSet(bm, "COMMON_CPP_OPTIONS", "");
 				bmSet(bm, "COMMON_C_OPTIONS", "");
 				bmSet(bm, "COMMON_FLAGS", "");
@@ -486,8 +487,7 @@ void InstantSetup()
 
 	String exe = GetExeFilePath();
 	String dir = GetFileFolder(exe);
-	String out = GetExeDirFile("out");
-	RealizeDirectory(out);
+	RealizeDirectory(GetUppOut());
 
 	for(int i = 0; i < __countof(ass); i++) {
 		String vf = GetExeDirFile(String(ass[i].a) + ".var");
@@ -510,7 +510,6 @@ void InstantSetup()
 			b.Replace("#", dir);
 			SaveFile(vf,
 				"UPP = " + AsCString(b) + ";\r\n"
-				"OUTPUT = " + AsCString(out) + ";\r\n"
 			);
 			dirty = true;
 		}

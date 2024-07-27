@@ -228,7 +228,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           DeletePackage();
 	void           PackageMenu(Bar& bar);
 	void           MovePackage(bool copy);
-	
+
 	enum {
 		MAIN = 1, NONMAIN = 2, ALL = 0x8000, UPPHUB = 0x4000, NEST_MASK = 0xfff
 	};

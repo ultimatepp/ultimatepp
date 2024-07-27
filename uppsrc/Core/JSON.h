@@ -1,9 +1,9 @@
 Value  ParseJSON(CParser& p);
 Value  ParseJSON(const char *s);
 
-inline String AsJSON(int i)             { return IsNull(i) ? "null" : AsString(i); }
-inline String AsJSON(double n)          { return IsNull(n) ? "null" : AsString(n); }
-inline String AsJSON(float f)           { return IsNull(f) ? "null" : AsString(f); }
+inline String AsJSON(int i)             { return IsNull(i) ? String("null") : AsString(i); }
+inline String AsJSON(double n)          { return IsNull(n) ? String("null") : AsString(n); }
+inline String AsJSON(float f)           { return IsNull(f) ? String("null") : AsString(f); }
 inline String AsJSON(bool b)            { return b ? "true" : "false"; }
 inline String AsJSON(const String& s)   { return AsCString(s, INT_MAX, NULL, ASCSTRING_JSON); }
 inline String AsJSON(const WString& s)  { return AsCString(s.ToString(), INT_MAX, NULL, ASCSTRING_JSON); }

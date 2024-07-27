@@ -194,30 +194,4 @@ void CreateBuildMethods()
 #endif
 }
 
-String GetDefaultUppOut()
-{
-	String out;
-	String p = GetExeFolder();
-	while(p.GetCount() > 1 && DirectoryExists(p)) {
-		String h = AppendFileName(p, ".cache");
-		if(DirectoryExists(h)) {
-			out = h;
-			break;
-		}
-		p = GetFileFolder(p);
-	}
-	
-	out = Nvl(out, GetHomeDirFile(".cache")) + "/upp.out";
-	
-	RealizeDirectory(out);
-	return out;
-}
-
-#else
-
-String GetDefaultUppOut()
-{
-	return ConfigFile("_out");
-}
-
 #endif

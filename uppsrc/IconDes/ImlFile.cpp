@@ -295,96 +295,55 @@ static void PutOctalString(Stream& out, const char *b, const char *e, const Stri
 
 String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 	StringStream out;
-	if(format == 1) {
-		for(int i = 0; i < iml.GetCount(); i++) {
-			const ImlImage& c = iml[i];
-			if(c.exp)
-				out << "IMAGE_META(\"exp\", \"\")" << eol;
-			String name = c.name;
-			Image buffer = c.image;
-			if(IsNull(name))
-				name = "im__" + IntStr(i);
-			out.PutLine(Format("IMAGE_BEGIN(%s)", name));
-			int last = 0;
-			for(int i = 0; i < buffer.GetHeight(); i++) {
-				String scan = PackRLE(buffer[i], buffer.GetWidth());
-				if(!scan.IsEmpty() || i == 0) // force at least 1 scan
-				{
-					for(; last < i; last++)
-						out.PutLine("\tIMAGE_SCAN(\"\")");
-					out.Put("\tIMAGE_SCAN(");
-					PutOctalString(out, scan.Begin(), scan.End(), eol, true);
-					out << ")" << eol;
-					last = i + 1;
-				}
+	out << "PREMULTIPLIED" << eol;
+	Index<String> names;
+	Index<String> saved_names;
+	for(int i = 0; i < iml.GetCount(); i++) {
+		const ImlImage& c = iml[i];
+		names.FindAdd(c.name);
+		out << "IMAGE_ID(" << c.name;
+		if((c.flags & (IML_IMAGE_FLAG_UHD|IML_IMAGE_FLAG_DARK)) == 0)
+			saved_names.FindAdd(c.name);
+		if(c.flags & IML_IMAGE_FLAG_UHD)
+			out << "__UHD";
+		if(c.flags & IML_IMAGE_FLAG_DARK)
+			out << "__DARK";
+		out << ")";
+		if(c.exp)
+			out << " IMAGE_META(\"exp\", \"\")";
+		out << eol;
+	}
+
+	for(String id : names) // allow UHD versions to be downscaled
+		if(saved_names.Find(id) < 0)
+			out << "IMAGE_ID(" << id << ")" << eol;
+
+	int ii = 0;
+	while(ii < iml.GetCount()) {
+		int bl = 0;
+		int bn = 0;
+		Vector<ImageIml> bimg;
+		while(bl < 4096 && ii < iml.GetCount()) {
+			const ImlImage& c = iml[ii++];
+			ImageIml& m = bimg.Add();
+			m.image = c.image;
+			m.flags = c.flags;
+			bl += (int)c.image.GetLength();
+			bn++;
+		}
+		String bs = PackImlData(bimg);
+		out << eol << "IMAGE_BEGIN_DATA" << eol;
+		bs.Cat(0, ((bs.GetCount() + 31) & ~31) - bs.GetCount());
+		const byte *s = bs;
+		for(int n = bs.GetCount() / 32; n--;) {
+			out << "IMAGE_DATA(";
+			for(int j = 0; j < 32; j++) {
+				if(j) out << ',';
+				out << (int)*s++;
 			}
-			out.Put("IMAGE_PACKED(");
-			out.Put(name);
-			out.Put(", ");
-			StringStream datastrm;
-			Size size = buffer.GetSize();
-			Point hotspot = buffer.GetHotSpot();
-			int encoding = AlphaImageInfo::COLOR_RLE;
-			int version = 1;
-			datastrm / version;
-			datastrm % size % hotspot % encoding;
-			ASSERT(!datastrm.IsError());
-			String s = datastrm.GetResult();
-			PutOctalString(out, s.Begin(), s.End(), eol);
 			out << ")" << eol;
 		}
-	}
-	else {
-		out << "PREMULTIPLIED" << eol;
-		Index<String> std_name;
-		for(int i = 0; i < iml.GetCount(); i++) {
-			const ImlImage& c = iml[i];
-			if(c.image.GetResolution() == IMAGE_RESOLUTION_STANDARD)
-				std_name.Add(c.name);
-		}
-		for(int i = 0; i < iml.GetCount(); i++) {
-			const ImlImage& c = iml[i];
-			out << "IMAGE_ID(" << c.name;
-			if(c.flags & IML_IMAGE_FLAG_UHD)
-				out << "__UHD";
-			if(c.flags & IML_IMAGE_FLAG_DARK)
-				out << "__DARK";
-			out << ")";
-			if(c.exp)
-				out << " IMAGE_META(\"exp\", \"\")" << eol;
-			out << eol;
-		}
-		int ii = 0;
-		while(ii < iml.GetCount()) {
-			int bl = 0;
-			int bn = 0;
-			Vector<ImageIml> bimg;
-			while(bl < 4096 && ii < iml.GetCount()) {
-				const ImlImage& c = iml[ii++];
-				ImageIml& m = bimg.Add();
-				m.image = c.image;
-				m.flags = c.flags;
-				if(c.flags & IML_IMAGE_FLAG_UHD)
-					SetResolution(m.image, IMAGE_RESOLUTION_UHD);
-				if(c.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))
-					SetResolution(m.image, IMAGE_RESOLUTION_NONE);
-				bl += (int)c.image.GetLength();
-				bn++;
-			}
-			String bs = PackImlData(bimg);
-			out << eol << "IMAGE_BEGIN_DATA" << eol;
-			bs.Cat(0, ((bs.GetCount() + 31) & ~31) - bs.GetCount());
-			const byte *s = bs;
-			for(int n = bs.GetCount() / 32; n--;) {
-				out << "IMAGE_DATA(";
-				for(int j = 0; j < 32; j++) {
-					if(j) out << ',';
-					out << (int)*s++;
-				}
-				out << ")" << eol;
-			}
-			out << "IMAGE_END_DATA(" << bs.GetCount() << ", " << bn << ")" << eol;
-		}
+		out << "IMAGE_END_DATA(" << bs.GetCount() << ", " << bn << ")" << eol;
 	}
 	return out.GetResult();
 }

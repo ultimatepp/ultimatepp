@@ -203,12 +203,13 @@ BaseSetupDlg::BaseSetupDlg()
 	DirSelect(output, output_sel);
 	DirSelect(upv, upv_sel);
 	upv.NullText(GetHubDir());
+	output.NullText(GetUppOut());
 }
 
 bool BaseSetupDlg::Run(String& vars)
 {
 	upp     <<= GetVar("UPP");
-	output  <<= GetVar("OUTPUT");
+	output  <<= GetUppOut();
 	upv     <<= GetVar("UPPHUB");
 	base    <<= vars;
 	new_base = IsNull(vars);

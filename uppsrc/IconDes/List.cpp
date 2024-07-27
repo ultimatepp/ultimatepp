@@ -19,6 +19,8 @@ String IconDes::FormatImageName(const Slot& c)
 		r << " HD";
 	if(c.flags & IML_IMAGE_FLAG_DARK)
 		r << " Dk";
+	if(c.flags & IML_IMAGE_FLAG_S3)
+		r << " S3";
 	if(c.exp)
 		r << " X";
 	return r;
@@ -88,8 +90,11 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		dlg.uhd <<= !!(flags & IML_IMAGE_FLAG_UHD);
 		dlg.dark <<= !!(flags & IML_IMAGE_FLAG_DARK);
 		
-		dlg.uhd ^= dlg.dark ^= dlg.exp ^= dlg.fixed_colors ^= dlg.fixed_size ^= dlg.fixed ^= dlg.name ^=
-			[&] { dlg.Break(-1000); };
+		dlg.s3 <<= !!(flags & IML_IMAGE_FLAG_S3);
+		
+		for(Ctrl& q : dlg)
+			if(dynamic_cast<Option *>(&q))
+				q << [&] { dlg.Break(-1000); };
 	}
 	dlg.name.SetFilter(sCharFilterCid);
 }
@@ -114,6 +119,8 @@ dword IconDes::GetFlags(WithImageLayout<TopWindow>& dlg)
 		flags |= IML_IMAGE_FLAG_UHD;
 	if(dlg.dark)
 		flags |= IML_IMAGE_FLAG_DARK;
+	if(dlg.s3)
+		flags |= IML_IMAGE_FLAG_S3;
 	return flags;
 }
 
@@ -149,21 +156,13 @@ void IconDes::InsertRemoved(int q)
 	}
 }
 
-void SetRes(Image& m, int resolution)
-{
-	ImageBuffer ib(m);
-	ib.SetResolution(findarg(resolution, IMAGE_RESOLUTION_STANDARD, IMAGE_RESOLUTION_UHD,
-	                         IMAGE_RESOLUTION_NONE)
-	                 >= 0 ? resolution : IMAGE_RESOLUTION_STANDARD);
-	m = ib;
-}
-
 IconDes::Slot& IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
 {
 	Slot& c = slot.Insert(ii);
 	c.name = name;
 	c.image = m;
 	c.exp = exp;
+	search <<= Null;
 	SyncList();
 	GoTo(ii);
 	return c;
@@ -191,6 +190,7 @@ void IconDes::InsertImage()
 	}
 	Image m = CreateImage(Size(~dlg.cx, ~dlg.cy), Null);
 	ImageInsert(~dlg.name, m, dlg.exp).flags = GetFlags(dlg);
+	SyncList();
 }
 
 void IconDes::Slice()
@@ -224,6 +224,7 @@ void IconDes::Slice()
 			Image m = Crop(src, x, y, ~dlg.cx, ~dlg.cy);
 			ImageInsert(++ii, s + AsString(n++), m, ~dlg.exp).flags = GetFlags(dlg);
 		}
+	SyncList();
 }
 
 void IconDes::Duplicate()
@@ -231,7 +232,14 @@ void IconDes::Duplicate()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	ImageInsert(c.name, c.image);
+	dword flags = c.flags;
+	int ii = ilist.GetCursor();
+	ii = ii >= 0 ? ii + 1 : 0;
+	ImageInsert(ii, c.name, c.image);
+	Current().flags = flags;
+	SyncList();
+	SyncShow();
+	Refresh();
 	EditImage();
 }
 
@@ -242,7 +250,6 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
-	SetRes(m, IMAGE_RESOLUTION_STANDARD);
 	ImageInsert("", m);
 	EditImage();
 }
@@ -302,7 +309,7 @@ FileSel& IconDes::ImgFile()
 {
 	static FileSel sel;
 	ONCELOCK {
-		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif *.ico");
+		sel.Type("Image files", "*.iml *.png *.bmp *.jpg *.jpeg *.gif *.ico");
 		sel.AllFilesType();
 		sel.Multi();
 		sel.WhenIconLazy = sLoadImage;
@@ -319,31 +326,53 @@ int CharFilterImageId(int c)
 void IconDes::InsertFile()
 {
 	if(!ImgFile().ExecuteOpen()) return;
+	String errors;
 	for(int i = 0; i < ImgFile().GetCount(); i++) {
 		String fn = ImgFile()[i];
-		Index<Image> ml;
-		if(ToLower(GetFileExt(fn)) == ".ico")
+		Array<ImlImage> ml;
+		String ext = ToLower(GetFileExt(fn));
+		String id = Filter(GetFileTitle(fn), CharFilterImageId);
+		if(!IsAlpha(*id) && *id != '_')
+			id = '_' + id;
+		if(ext == ".iml") {
+			int f;
+			LoadIml(LoadFile(fn), ml, f);
+		}
+		else
+		if(ext == ".ico") {
+			Index<Image> im;
 			for(Image m : ReadIcon(LoadFile(fn), true))
-				ml.FindAdd(m);
+				im.FindAdd(m);
+			int ii = 0;
+			for(Image mm : im) {
+				ImlImage& m = ml.Add();
+				m.image = mm;
+				m.name = id;
+				if(ii)
+					m.name << "_" << ii;
+				ii++;
+			}
+		}
 		else {
 			Image mm = StreamRaster::LoadFileAny(fn);
-			if(IsNull(mm))
-				Exclamation(DeQtf(fn) + " not an image.");
-			else
-				ml.Add(mm);
+			if(!IsNull(mm)) {
+				ImlImage& m = ml.Add();
+				m.image = mm;
+				m.name = id;
+			}
 		}
-		int ii = 0;
-		for(Image m : ml) {
-			String id = Filter(GetFileTitle(fn), CharFilterImageId);
-			if(!IsAlpha(*id) && *id != '_')
-				id = '_' + id;
-			if(ii)
-				id << "_" << ii;
-			SetRes(m, IMAGE_RESOLUTION_STANDARD);
-			ImageInsert(id, m);
-			ii++;
+		if(ml.GetCount() == 0)
+			errors << fn << '\n';
+		int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
+		if(ii == slot.GetCount() - 1)
+			ii = slot.GetCount();
+		for(ImlImage m : ml) {
+			ImageInsert(ii, m.name, m.image, m.exp).flags = m.flags;
+			GoTo(ii++);
 		}
 	}
+	if(errors.GetCount())
+		Exclamation("Failed to load:&&\1" + errors);
 }
 
 void IconDes::ExportPngs()
@@ -358,17 +387,6 @@ void IconDes::ExportPngs()
 			if(f & IML_IMAGE_FLAG_DARK)
 				n << ".dark";
 			PNGEncoder().SaveFile(AppendFileName(dir, n + ".png"), GetImage(i));
-		}
-}
-
-void IconDes::InsertIml()
-{
-	Array<ImlImage> iml;
-	int f;
-	if(LoadIml(SelectLoadFile("Iml files\t*.iml"), iml, f))
-		for(const ImlImage& m : iml) {
-			ImageInsert(m.name, m.image, m.exp).flags = m.flags;
-			GoTo((int)ilist.GetKey() + 1);
 		}
 }
 
@@ -503,8 +521,7 @@ void IconDes::ListMenu(Bar& bar)
 		bar.Add(IsCurrent(), AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
 		bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
 		bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
-		bar.Add(AK_INSERT_FILE, IconDesImg::InsertFile(), THISBACK(InsertFile));
-		bar.Add(AK_INSERT_IML, IconDesImg::InsertIml(), THISBACK(InsertIml));
+		bar.Add(AK_INSERT_FILE, CtrlImg::open(), THISBACK(InsertFile));
 		bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
 		bar.Separator();
 		int q = ilist.GetKey();

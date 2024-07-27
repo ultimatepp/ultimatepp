@@ -2,13 +2,27 @@
 
 namespace Upp {
 
-IconDes::Slot::Slot()
+void IconDes::MaskSelection()
 {
-	pastepos = Null;
-	exp = false;
-	ImageBuffer b;
-	b.SetResolution(IMAGE_RESOLUTION_STANDARD);
-	image = b;
+	Slot& c = Current();
+	ImageBuffer ib(c.image);
+	Size isz = ib.GetSize();
+	CoFor(isz.cy, [&](int y) {
+		RGBA *t = ib[y];
+		const RGBA *e = t + isz.cx;
+		const RGBA *s = c.base_image[y];
+		const RGBA *k = c.selection[y];
+		while(t < e) {
+			if(!k->r)
+				*t = *s;
+			t++;
+			s++;
+			k++;
+		}
+	});
+	Current().image = ib;
+	Refresh();
+	SyncShow();
 }
 
 IconDes::Slot& IconDes::Current()
@@ -42,11 +56,11 @@ void IconDes::SyncShow()
 	iconshow.image.Clear();
 	if(IsCurrent()) {
 		Slot& c = Current();
-		Image image = c.image;
-		iconshow.image = image;
-		iconshow.show_small = show_small;
-		iconshow.show_other = show_other;
-		ilist.Set(2, RawToValue(MakeTuple(image, c.flags)));
+		iconshow.image = c.image;
+		iconshow.flags = c.flags;
+		iconshow.show_downscaled = show_downscaled;
+		iconshow.show_synthetics = show_synthetics;
+		ilist.Set(2, RawToValue(MakeTuple(c.image, c.flags)));
 	}
 	iconshow.Refresh();
 }
@@ -60,59 +74,15 @@ void IconDes::SetSb()
 	}
 }
 
-void IconDes::MouseWheel(Point pt, int zdelta, dword keyflags)
-{
-	if(keyflags & K_CTRL) {
-		if(zdelta < 0)
-			ZoomOut();
-		else
-			ZoomIn();
-	}
-	else
-	if(keyflags & K_SHIFT)
-		sb.WheelX(zdelta);
-	else
-		sb.WheelY(zdelta);
-}
-
-void IconDes::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
-{
-	sb.WheelX(zdelta);
-}
-
 void IconDes::Scroll()
 {
 	magnify = max(magnify, 1);
-	scroller.Scroll(*this, GetSize(), sb, Size(magnify, magnify));
+	Refresh();
 }
 
 void IconDes::Layout()
 {
 	SetSb();
-}
-
-void IconDes::RefreshPixel(int x, int y, int cx, int cy)
-{
-	Point p = sb;
-	x -= p.x;
-	y -= p.y;
-	if(magnify == 1) {
-		if(IsNull(m1refresh))
-			m1refresh = RectC(x, y, cx, cx);
-		else {
-			if(m1refresh.Contains(x, y))
-				return;
-			m1refresh = m1refresh | RectC(x, y, 1, 1);
-		}
-		Refresh(m1refresh);
-	}
-	else
-		Refresh(x * magnify - 4, y * magnify - 4, cx * magnify + 10, cy * magnify + 10);
-}
-
-void IconDes::RefreshPixel(Point p, int cx, int cy)
-{
-	RefreshPixel(p.x, p.y, cx, cy);
 }
 
 void IconDes::SetCurrentImage(ImageBuffer& ib)
@@ -157,33 +127,72 @@ void IconDes::MakePaste()
 	MaskSelection();
 }
 
-void IconDes::PenSet(Point p, dword flags)
+void IconDes::DoBuffer(Event<ImageBuffer&> tool)
 {
-	return;
-	p -= (pen - 1) / 2;
-	Over(CurrentImage(), p, IconDesImg::Get(IconDesImg::I_pen1 + minmax(pen - 1, 0, 5)),
-	     Size(pen, pen));
-	RefreshPixel(p, pen, pen);
+	Size isz = GetImageSize();
+	Image h = Current().base_image;
+	ImageBuffer ib(h);
+	tool(ib);
+	CurrentImage() = ib;
+	if(!doselection)
+		MaskSelection();
+	Refresh();
+}
+
+void IconDes::DoPainter(Event<Painter&> tool)
+{
+	DoBuffer([&](ImageBuffer& ib) {
+		BufferPainter iw(ib);
+		iw.Co();
+		iw.Translate(0.5, 0.5);
+		tool(iw);
+	});
+}
+
+void IconDes::DoDraw(Event<IconDraw&> tool)
+{
+	DoBuffer([&](ImageBuffer& ib) {
+		IconDraw iw(ib);
+		tool(iw);
+	});
+}
+
+void IconDes::DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool)
+{
+	if(antialiased && !doselection)
+		DoPainter(aa_tool);
+	else
+		DoDraw(tool);
 }
 
 void IconDes::LineTool(Point p, dword flags)
 {
-	Size isz = GetImageSize();
-	IconDraw iw(isz);
-	iw.DrawRect(isz, GrayColor(0));
-	iw.DrawLine(startpoint, p, pen, GrayColor(255));
-	ApplyDraw(iw, flags);
-	Set(p, CurrentColor(), flags);
-	RefreshPixel(p);
+	RGBA c = CurrentColor();
+	DoTool(
+		[&](IconDraw& iw) {
+			iw.DrawLine(startpoint, p, pen, c);
+			if(pen == 1 && Rect(iw.image.GetSize()).Contains(p))
+				iw.image[p.y][p.x] = c;
+		},
+		[&](Painter& sw) {
+			sw.Move(startpoint).Line(p).Stroke(pen, c);
+		}
+	);
 }
 
-void IconDes::EllipseTool0(Point p, dword flags, Color inner)
+void IconDes::EllipseTool0(Point p, dword flags, bool fill_empty)
 {
-	Size isz = GetImageSize();
-	IconDraw iw(isz);
-	iw.DrawRect(isz, GrayColor(0));
-	iw.DrawEllipse(Rect(startpoint, p).Normalized(), inner, pen, GrayColor(255));
-	ApplyDraw(iw, flags);
+	RGBA c = CurrentColor();
+	DoTool(
+		[&](IconDraw& iw) {
+			iw.DrawEllipse(Rect(startpoint, p), fill_empty,
+			               doselection ? c : RGBAZero(), pen, c);
+		},
+		[&](Painter& sw) {
+			sw.DrawEllipse(Rect(startpoint, p).Normalized(),
+			               fill_empty ? LtGray() : Null, pen, c);
+		}
+	);
 }
 
 void IconDes::EllipseTool(Point p, dword flags)
@@ -196,16 +205,36 @@ void IconDes::EmptyEllipseTool(Point p, dword flags)
 	EllipseTool0(p, flags, GrayColor(128));
 }
 
+void IconDes::RadialTool(Point p, dword f)
+{
+	DoPainter([&](Painter& iw) {
+		double r = Distance(startpoint, p);
+		iw.Circle(startpoint.x, startpoint.y, Distance(startpoint, p))
+		  .Fill(startpoint.x, startpoint.y, startcolor, r, CurrentColor());
+	});
+}
+
+void IconDes::LinearTool(Point p, dword f)
+{
+	DoPainter([&](Painter& iw) {
+		Pointf pf = p;
+		Pointf sf = startpoint;
+		Pointf vec = 10000 * Orthogonal(sf - pf);
+		iw.Move(sf - vec).Line(pf - vec).Line(pf + vec).Line(sf + vec)
+		  .Fill(sf, startcolor, pf, CurrentColor());
+	});
+}
+
 void IconDes::RectTool0(Point p, dword flags, bool empty)
 {
-	Size isz = GetImageSize();
-	IconDraw iw(isz);
-	iw.DrawRect(isz, GrayColor(0));
-	rect = Rect(startpoint, p + 1).Normalized();
-	if(empty)
-		iw.DrawRect(rect.Deflated(pen, pen), GrayColor(128));
-	DrawFatFrame(iw, rect, GrayColor(255), pen);
-	ApplyDraw(iw, flags);
+	DoDraw([&](IconDraw& iw) {
+		rect = Rect(startpoint, p + 1).Normalized();
+		Size sz = rect.GetSize();
+		if(empty)
+			iw.DrawRect(rect.left, rect.top, sz.cx, sz.cy,
+			            doselection ? CurrentColor() : RGBAZero());
+		iw.DrawFrame(rect.left, rect.top, sz.cx, sz.cy, CurrentColor(), pen);
+	});
 }
 
 void IconDes::RectTool(Point p, dword flags)
@@ -218,45 +247,34 @@ void IconDes::EmptyRectTool(Point p, dword flags)
 	RectTool0(p, flags, true);
 }
 
-void IconDes::FreehandTool(Point p, dword flags)
+void IconDes::Freehand(Point p, int pen)
 {
-	LineTool(p, flags);
+	DoDraw([&](IconDraw& iw) {
+		iw.DrawRect(p.x - pen / 2, p.y - pen / 2, pen, pen, CurrentColor());
+		iw.DrawLine(startpoint, p, pen, CurrentColor());
+	});
 	Current().base_image = CurrentImage();
 	startpoint = p;
 }
 
+void IconDes::FreehandTool(Point p, dword flags)
+{
+	Freehand(p, pen);
+}
+
 void IconDes::DoFill(int tolerance)
 {
+	Image src = Current().image;
 	ImageBuffer ib(CurrentImage());
 	if(!doselection) {
 		RGBA c = CurrentColor();
 		c.r += 127;
 		MaskFill(ib, c, 0);
 	}
-	FloodFill(ib, CurrentColor(), startpoint, ib.GetSize(), tolerance);
+	FloodFill(src, ib, CurrentColor(), startpoint, tolerance);
 	SetCurrentImage(ib);
 	if(!doselection)
 		MaskSelection();
-}
-
-void IconDes::FillTool(Point p, dword flags)
-{
-	DoFill(0);
-}
-
-void IconDes::Fill2Tool(Point p, dword flags)
-{
-	DoFill(20);
-}
-
-void IconDes::Fill3Tool(Point p, dword flags)
-{
-	DoFill(40);
-}
-
-void IconDes::AntiFillTool(Point p, dword flags)
-{
-	DoFill(-1);
 }
 
 void IconDes::HotSpotTool(Point p, dword f)
@@ -293,6 +311,7 @@ Image IconDes::MakeIconDesCursor(const Image& arrow, const Image& cmask)
 void IconDes::ColorChanged()
 {
 	cursor_image = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColor());
+	cursor_image_free = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColorFree());
 	fill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::FillColor());
 	fill_cursor2 = MakeIconDesCursor(IconDesImg::Fill2(), IconDesImg::FillColor());
 	fill_cursor3 = MakeIconDesCursor(IconDesImg::Fill3(), IconDesImg::FillColor());
@@ -465,19 +484,29 @@ void IconDes::SelectRect()
 	SetBar();
 }
 
+String PackUndo(const Vector<ImageIml>& img)
+{
+	return FastCompress(PackImlDataUncompressed(img));
+}
+
+Vector<ImageIml> UnpackUndo(const String& data)
+{
+	return UnpackImlDataUncompressed(FastDecompress(data));
+}
+
 void IconDes::SaveUndo()
 {
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
-	int maxn = minmax((single_mode ? 4000000 : 400000) / max((int)c.image.GetLength(), 1), 4, 128);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
+	int maxn = minmax((single_mode ? 40000000 : 2000000) / max((int)c.image.GetLength(), 1), 4, 128);
 	while(undo.GetCount() > maxn)
 		undo.Remove(0);
 	if(undo.GetCount() && undo.Top().image == c.image)
 		return;
 	undo.Add().image = c.image;
-	c.undo = PackImlData(undo);
+	c.undo = PackUndo(undo);
 	c.redo.Clear();
 	SetBar();
 	undo.Clear();
@@ -488,14 +517,14 @@ void IconDes::Undo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
 	if(undo.GetCount() == 0)
 		return;
-	Vector<ImageIml> redo = UnpackImlData(c.redo);
+	Vector<ImageIml> redo = UnpackUndo(c.redo);
 	redo.Add().image = c.image;
 	c.image = undo.Pop().image;
-	c.undo = PackImlData(undo);
-	c.redo = PackImlData(redo);
+	c.undo = PackUndo(undo);
+	c.redo = PackUndo(redo);
 	SyncImage();
 	SetBar();
 }
@@ -505,14 +534,14 @@ void IconDes::Redo()
 	if(!IsCurrent())
 		return;
 	Slot& c = Current();
-	Vector<ImageIml> redo = UnpackImlData(c.redo);
+	Vector<ImageIml> redo = UnpackUndo(c.redo);
 	if(redo.GetCount() == 0)
 		return;
-	Vector<ImageIml> undo = UnpackImlData(c.undo);
+	Vector<ImageIml> undo = UnpackUndo(c.undo);
 	undo.Add().image = c.image;
 	c.image = redo.Pop().image;
-	c.undo = PackImlData(undo);
-	c.redo = PackImlData(redo);
+	c.undo = PackUndo(undo);
+	c.redo = PackUndo(redo);
 	SyncImage();
 	SetBar();
 }

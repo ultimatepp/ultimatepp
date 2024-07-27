@@ -38,9 +38,9 @@ public:
 	DDARasterizer& Polygon();
 	DDARasterizer& Fill();
 	
-	DDARasterizer& Ellipse(const Rect& rect);
-	
 	DDARasterizer& Width(int width_)          { width = width_; return *this; }
+	
+	DDARasterizer& Ellipse(const Rect& rect, int width);
 
 	void Cy(int cy_)                          { cy = cy_; }
 	

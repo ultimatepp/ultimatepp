@@ -35,6 +35,7 @@ void            SyncTopicFile(const String& link);
 String          GetTopicTitle(const String& link);
 void            InvalidateTopicInfoPath(const String& path);
 
+String          TppId(const String& ref, bool remove_first_scope = false);
 String          CleanupTppId(const String& ref);
 Vector<String>  AnnotationCandidates(const String& ref);
 Vector<String>  GetRefLinks(const String& ref);

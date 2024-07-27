@@ -149,6 +149,8 @@ bool TryLoadLibClang()
 	}
 	if(LoadLibClang(libdir))
 		return true;
+	if(LoadLibClang("/usr/lib64"))
+		return true;
 	if(LoadLibClang("/usr/lib"))
 		return true;
 	for(int i = 200; i >= 10; i--)

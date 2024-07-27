@@ -201,7 +201,6 @@ CONSOLE_APP_MAIN
 	CheckFill<uint64>(memset64);
 	CheckFill<m128n>(memset128);
 
-	struct dqword { qword x[2]; };
 	CheckCopy<byte>(memcpy8);
 	CheckCopy<word>(memcpy16);
 	CheckCopy<dword>(memcpy32);

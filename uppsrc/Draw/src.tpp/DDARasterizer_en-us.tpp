@@ -1,5 +1,4 @@
 topic "DDA Rasterizer";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "DDA Rasterizer";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0;%- [*@2;3 DDARasterizer]]}}&]
 [s3;%- &]
@@ -66,10 +66,12 @@ ygon]()&]
 )&]
 [s2; Finishes polygon and fills it.&]
 [s3; &]
-[s4; &]
-[s5;:DDARasterizer`:`:Ellipse`(const Rect`&`):%- [_^DDARasterizer^ DDARasterizer][@(0.0.255) `&
-]_[* Ellipse]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect])&]
-[s2; Renders ellipse as serie of Move/Line commands.&]
+[s4;%- &]
+[s5;:Upp`:`:DDARasterizer`:`:Ellipse`(const Rect`&`,int`):%- DDARasterizer[@(0.0.255) `&
+] [* Ellipse]([@(0.0.255) const] Rect[@(0.0.255) `&] [*@3 rect], [@(0.0.255) int] 
+[*@3 width])&]
+[s2; Draws ellipse with given [%-*@3 width]. If width < 0, ellipse 
+is filled.&]
 [s3; &]
 [s4; &]
 [s5;:DDARasterizer`:`:Width`(int`):%- [_^DDARasterizer^ DDARasterizer][@(0.0.255) `&]_[* Wi

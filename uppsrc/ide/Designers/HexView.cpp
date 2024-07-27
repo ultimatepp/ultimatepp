@@ -67,6 +67,8 @@ int FileHexView::Make(String& object) const
 
 int FileHexView::Byte(int64 addr)
 {
+	if(addr < 0)
+		return 0;
 	blk = addr >> BLKSHIFT;
 	String h = cache.Get(*this);
 	cache.ShrinkCount(10); // cache only 10 blocks (~150 KB)

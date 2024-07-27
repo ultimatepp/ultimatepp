@@ -293,6 +293,8 @@ public:
 
 Nest& MainNest();
 
+String GetUppOut();
+
 String DefaultHubFilePath();
 
 void   SetHubDir(const String& path);

@@ -242,7 +242,6 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	#endif
 		}
 	});
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 

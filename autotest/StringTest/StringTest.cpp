@@ -133,5 +133,17 @@ CONSOLE_APP_MAIN
 		lc2 = lc;
 	}
 	
+	for(int c = '1'; c <= '9'; c++) {
+		String h(c, 64);
+		
+		for(int i = 0; i < h.GetCount(); i++) {
+			String q = h;
+			q.Trim(i);
+			String w = h.Mid(0, i);
+			ASSERT(GetHashValue(q) == GetHashValue(w));
+			ASSERT(q == w);
+		}
+	}
+	
 	LOG("============== OK");
 }

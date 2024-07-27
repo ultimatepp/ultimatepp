@@ -30,25 +30,6 @@ Image WithHotSpot(const Image& m, int x1, int y1)
 	return b;
 }
 
-void  SetResolution(Image& m, int res)
-{
-	ImageBuffer b(m);
-	b.SetResolution(res);
-	m = b;
-}
-
-Image WithResolution(const Image& m, int res)
-{
-	Image h = m;
-	SetResolution(h, res);
-	return h;
-}
-
-Image WithResolution(const Image& m, const Image& res)
-{
-	return WithResolution(m, res.GetResolution());
-}
-
 Image CreateImage(Size sz, const RGBA& rgba)
 {
 	ImageBuffer ib(sz);
@@ -86,22 +67,27 @@ force_inline Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr
 }
 
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
-                           void (*op)(RGBA *t, const RGBA *s, int n))
+                           void (*op)(RGBA *t, const RGBA *s, int n), bool co)
 {
-	dest.SetResolution(src.GetResolution());
 	Rect sr = srect;
 	Size sz = DstSrc(dest, p, src, sr);
-	if(sz.cx > 0)
-		while(--sz.cy >= 0)
-			(*op)(dest[p.y++] + p.x, src[sr.top++] + sr.left, sz.cx);
+	if(sz.cx > 0) {
+		if(co)
+			CoFor(sz.cy, [&](int i) {
+				(*op)(dest[p.y + i] + p.x, src[sr.top + i] + sr.left, sz.cx);
+			});
+		else
+			while(--sz.cy >= 0)
+				(*op)(dest[p.y++] + p.x, src[sr.top++] + sr.left, sz.cx);
+	}
 }
 
-void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, Copy);
 }
 
-void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, AlphaBlend);
 }
@@ -113,7 +99,7 @@ Image GetOver(const Image& dest, const Image& src)
 	return r;
 }
 
-Image Copy(const Image& src, const Rect& srect)
+Image Copy(const Image& src, const Rect& srect, bool co)
 {
 	ImageBuffer ib(srect.GetSize());
 	Copy(ib, Point(0, 0), src, srect);
@@ -129,30 +115,30 @@ void Fill(ImageBuffer& dest, const Rect& rect, RGBA color)
 			Fill(dest[y] + r.left, color, cx);
 }
 
-void OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
+void OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co)
 {
 	DstSrcOp(dest, p, src, srect, AlphaBlendStraightOpaque);
 }
 
-void  Copy(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  Copy(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	Copy(b, p, src, srect);
+	Copy(b, p, src, srect, co);
 	dest = b;
 }
 
-void  Over(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  Over(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	Over(b, p, src, srect);
+	Over(b, p, src, srect, co);
 	dest = b;
 }
 
-void  Over(Image& dest, const Image& _src)
+void  Over(Image& dest, const Image& _src, bool co)
 {
-	Over(dest, Point(0, 0), _src, _src.GetSize());
+	Over(dest, Point(0, 0), _src, _src.GetSize(), co);
 }
 
 void Fill(Image& dest, const Rect& rect, RGBA color)
@@ -162,11 +148,11 @@ void Fill(Image& dest, const Rect& rect, RGBA color)
 	dest = b;
 }
 
-void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect)
+void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect, bool co)
 {
 	Image src = _src;
 	ImageBuffer b(dest);
-	OverStraightOpaque(b, p, src, srect);
+	OverStraightOpaque(b, p, src, srect, co);
 	dest = b;
 }
 
@@ -187,10 +173,10 @@ Image Crop(const Image& img, const Rect& rc)
 	ImageRaster  src(img);
 	ImageEncoder tgt;
 	Crop(tgt, src, rc);
-	return WithResolution(tgt, img);
+	return tgt;
 }
 
-Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color)
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color, bool co)
 {
 	Size sz = img.GetSize();
 	ImageBuffer ib(sz.cx + left + right, sz.cy + top + bottom);
@@ -268,7 +254,6 @@ void ClampHotSpots(Image& m)
 Image ColorMask(const Image& src, Color key)
 {
 	ImageBuffer ib(src.GetSize());
-	ib.SetResolution(src.GetResolution());
 	const RGBA *s = src;
 	const RGBA *e = src + src.GetLength();
 	RGBA *t = ~ib;
@@ -307,7 +292,7 @@ Image CanvasSize(const Image& img, int cx, int cy)
 	ImageRaster  src(img);
 	ImageEncoder tgt;
 	CanvasSize(tgt, src, cx, cy);
-	return WithResolution(tgt, img);
+	return tgt;
 }
 
 Image AssignAlpha(const Image& img, const Image& alpha)
@@ -328,7 +313,6 @@ Image AssignAlpha(const Image& img, const Image& alpha)
 		}
 	}
 	ib.SetHotSpots(img);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -372,7 +356,6 @@ Image Equalight(const Image& img, int thold)
 		t++;
 	}
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -392,7 +375,6 @@ Image Grayscale(const Image& img)
 		s++;
 	}
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -413,7 +395,6 @@ Image Grayscale(const Image& img, int amount)
 		s++;
 	}
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -440,7 +421,6 @@ Image Colorize(const Image& img, Color color, int alpha)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -468,7 +448,6 @@ Image DarkTheme(const Image& img)
 	Premultiply(ib);
 
 	ib.SetHotSpots(img);
-	ib.SetResolution(img.GetResolution());
 
 	return ib;
 }
@@ -496,7 +475,6 @@ Image Contrast(const Image& img, int amount)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -571,7 +549,7 @@ Image Filter(const Image& img, ImageFilter9& filter)
 	ImageEncoder tgt;
 	ImageRaster src(img);
 	Filter(tgt, src, filter);
-	return WithResolution(tgt, img);
+	return tgt;
 }
 
 struct RGBAI {
@@ -629,7 +607,7 @@ Image Sharpen(const Image& img, int amount)
 	ImageEncoder tgt;
 	ImageRaster src(img);
 	Sharpen(tgt, src, amount);
-	return WithResolution(tgt, img);
+	return tgt;
 }
 
 struct sEtchFilter : ImageFilter9 {
@@ -674,7 +652,6 @@ Image SetColorKeepAlpha(const Image& img, Color c)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
-	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -741,7 +718,6 @@ Image  RotateClockwise(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, sz.cy - p1.y - 1, p1.x, sz.cy - p2.y - 1, p2.x);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -756,7 +732,6 @@ Image  RotateAntiClockwise(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, p1.y, sz.cx - p1.x - 1, p2.y, sz.cx - p2.x - 1);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -770,7 +745,6 @@ Image Rotate180(const Image& orig)
 	Point p1 = orig.GetHotSpot();
 	Point p2 = orig.Get2ndSpot();
 	SetNormalizedHotSpots(dest, sz.cy - p1.y - 1, sz.cx - p1.x - 1, sz.cy - p2.y - 1, sz.cx - p2.x - 1);
-	dest.SetResolution(dest.GetResolution());
 	return dest;
 }
 
@@ -784,7 +758,6 @@ Image Transpose(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, p1.y, p1.x, p2.y, p2.x);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -798,7 +771,6 @@ Image Transverse(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, sz.cy - p1.y - 1, sz.cx - p1.x - 1, sz.cy - p2.y - 1, sz.cx - p2.x - 1);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -819,7 +791,6 @@ Image MirrorHorz(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, sz.cx - p1.x - 1, p1.y, sz.cx - p2.x - 1, p2.y);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -841,7 +812,6 @@ Image MirrorVert(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, p1.x, sz.cy - p1.y - 1, p2.x, sz.cy - p2.y - 1);
-	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -904,7 +874,6 @@ Image Rotate(const Image& m, int angle)
 			*t++ = xs >= 0 && xs < isz.cx && ys >= 0 && ys < isz.cy ? m[ys][xs] : RGBAZero();
 		}
 	}
-	ib.SetResolution(m.GetResolution());
 	return ib;
 }
 
@@ -930,7 +899,6 @@ Image Dither(const Image& m, int dival)
 			int g = Grayscale(*s++) * 100 / dival;
 			*t++ = g > dither[y & 7][x & 7] ? White() : Black();
 		}
-	ib.SetResolution(m.GetResolution());
 	return ib;
 }
 
@@ -1063,7 +1031,6 @@ Image GaussianBlur(const Image& img, int radius, bool co)
 				DoColumn(i);
 
 		out.SetHotSpots(src);
-		out.SetResolution(src.GetResolution());
 		return out;
 	};
 

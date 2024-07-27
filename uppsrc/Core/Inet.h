@@ -738,7 +738,7 @@ public:
 
 	dword  GetWaitEvents() const                        { return WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE); }
 	SOCKET GetSOCKET() const                            { return socket ? socket->GetSOCKET() : INVALID_SOCKET; }
-	String GetPeerAddr() const                          { return socket ? socket->GetPeerAddr() : ""; }
+	String GetPeerAddr() const                          { return socket ? socket->GetPeerAddr() : String(); }
 	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, GetWaitEvents()); }
 
 	static void Trace(bool b = true);

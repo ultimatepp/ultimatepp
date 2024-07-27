@@ -32,7 +32,7 @@ void IconDes::SetMagnify(int mag)
 	if( !IsCurrent() )
 		return;
 
-	magnify = minmax(mag, 1, 27);
+	magnify = minmax(mag, 1, 50);
 
 	sb = Point(0, 0);
 	SetSb();
@@ -85,10 +85,18 @@ void IconDes::ToolEx(Bar& bar) {}
 
 void IconDes::EditBar(Bar& bar)
 {
+	using namespace IconDesKeys;
 	Slot *c = IsCurrent() ? &Current() : NULL;
 	bar.Add(c, "Cut", CtrlImg::cut(), THISBACK(DoCut)).Key(K_DELETE).Key(K_CTRL_X);
 	bar.Add(c, "Copy", CtrlImg::copy(), THISBACK(DoCopy)).Key(K_CTRL_C);
 	bar.Add(c, "Paste", CtrlImg::paste(), THISBACK(DoPaste)).Key(K_CTRL_V);
+	bar.Separator();
+	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
+	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_OPAQUE);
+	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
+	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_BACK);
 	bar.Separator();
 	bar.Add(c && c->undo.GetCount(), "Undo", CtrlImg::undo(), THISBACK(Undo))
 	   .Key(K_CTRL_Z)
@@ -106,12 +114,6 @@ void IconDes::SettingBar(Bar& bar)
 		.Enable(magnify > 1);
 	bar.Add(c, AK_ZOOM_OUT,  IconDesImg::ZoomPlus(), THISBACK(ZoomIn))
 		.Enable(magnify < 27);
-	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
-	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_OPAQUE);
-	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
-	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
-	   .Check(paste_mode == PASTE_BACK);
 }
 
 void IconDes::SelectBar(Bar& bar)
@@ -147,6 +149,7 @@ void IconDes::ImageBar(Bar& bar)
 	bar.Add(c, AK_CHROMA, IconDesImg::Chroma(), THISBACK(Chroma));
 	bar.Add(c, AK_CONTRAST, IconDesImg::Contrast(), THISBACK(Contrast));
 	bar.Add(c, AK_ALPHA, IconDesImg::AlphaI(), THISBACK(Alpha));
+	bar.Add(c, "Remove alpha", IconDesImg::RemoveAlpha(), THISBACK(RemoveAlpha));
 	bar.Add(c, AK_COLORS, IconDesImg::Colors(), THISBACK(Colors));
 	bar.Add(c, AK_SMOOTHEN, IconDesImg::Smoothen(), THISBACK(Smoothen));
 }
@@ -167,22 +170,30 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(tool == &IconDes::RectTool && notpasting);
 	bar.Add(AK_EMPTY_RECTANGLES, IconDesImg::EmptyRects(), THISBACK1(SetTool, &IconDes::EmptyRectTool))
 	   .Check(tool == &IconDes::EmptyRectTool && notpasting && !selectrect);
+	bar.Add(AK_RADIAL, IconDesImg::Radial(), THISBACK1(SetTool, &IconDes::RadialTool))
+	   .Check(tool == &IconDes::RadialTool && notpasting && !doselection)
+	   .Enable(!doselection);
+	bar.Add(AK_LINEAR, IconDesImg::Linear(), THISBACK1(SetTool, &IconDes::LinearTool))
+	   .Check(tool == &IconDes::LinearTool && notpasting && !doselection)
+	   .Enable(!doselection);
 	bar.Add(AK_HOTSPOTS, IconDesImg::HotSpot(), THISBACK1(SetTool, &IconDes::HotSpotTool))
 	   .Check(tool == &IconDes::HotSpotTool);
 	bar.Add(AK_TEXT, IconDesImg::Text(), THISBACK(Text))
 	   .Check(textdlg.IsOpen());
-	bar.Add("Fill", fill_cursor, [=] { SetTool(&IconDes::FillTool); })
-	   .Check(tool == &IconDes::FillTool && notpasting)
-	   .Tip("Fill (Shift+Click)");
-	bar.Add("Fill with small tolerance", fill_cursor2, [=] { SetTool(&IconDes::Fill2Tool); })
-	   .Check(tool == &IconDes::Fill2Tool && notpasting)
-	   .Tip("Fill with small tolerance (Ctrl+Click)");
-	bar.Add("Fill with large tolerance", fill_cursor3, [=] { SetTool(&IconDes::Fill3Tool); })
-	   .Check(tool == &IconDes::Fill3Tool && notpasting)
-	   .Tip("Fill with large tolerance (Alt+Click)");
-	bar.Add("Antifill", antifill_cursor, [=] { SetTool(&IconDes::AntiFillTool); })
-	   .Check(tool == &IconDes::AntiFillTool && notpasting)
-	   .Tip("Antifill (Shift+Ctrl+Click)");
+	bar.Separator();
+	bar.Add("Antialiased", IconDesImg::aa(),
+	        [=] { antialiased = !antialiased; Refresh(); SetBar(); })
+	   .Check(antialiased && !doselection)
+	   .Enable(!doselection);
+	bar.Separator();
+	auto Fill = [&](const char *name, const Image& img, int type) {
+		bar.Add(name, img, [=] { fill_type = type; Refresh(); SetBar(); })
+		   .Check(fill_type == type);
+	};
+	Fill("Exact Fill (Shift+Click)", fill_cursor, 0);
+	Fill("Fill with small tolerance (Shift+Click)", fill_cursor2, 1);
+	Fill("Fill with large tolerance (Shift+Click)", fill_cursor3, 2);
+	Fill("Antifill (Shift+Click)", antifill_cursor, -1);
 	bar.Separator();
 	for(int i = 1; i <= 6; i++)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))
@@ -204,11 +215,11 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
 	   .Key(AK_RESIZEDOWN3);
 	bar.Add("Show UHD/Dark syntetics", IconDesImg::ShowOther(),
-	        [=] { show_other = !show_other; show_small = false; SyncShow(); SetBar(); })
-	   .Check(show_other);
+	        [=] { show_synthetics = !show_synthetics; show_downscaled = false; SyncShow(); SetBar(); })
+	   .Check(show_synthetics);
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
-	        [=] { show_small = !show_small; show_other = false; SyncShow(); SetBar(); })
-	   .Check(show_small);
+	        [=] { show_downscaled = !show_downscaled; show_synthetics = false; SyncShow(); SetBar(); })
+	   .Check(show_downscaled);
 	bar.Add("Show secondardy grid", IconDesImg::grid2(),
 	        [=] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
 	   .Check(show_grid2);
@@ -304,7 +315,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 6;
+	int version = 8;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -324,14 +335,18 @@ void IconDes::SerializeSettings(Stream& s)
 		s % ImgFile();
 	if(version >= 3) {
 		bool b = false;
-		s % b % show_small;
+		s % b % show_downscaled;
 	}
 	if(version >= 4)
 		s % paste_mode;
 	if(version >= 5)
-		s % show_other;
+		s % show_synthetics;
 	if(version >= 6)
 		s % show_grid2;
+	if(version >= 7)
+		s % antialiased;
+	if(version >= 8)
+		s % fill_type;
 }
 
 void IconDes::SyncStatus()

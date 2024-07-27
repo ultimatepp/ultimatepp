@@ -7,28 +7,26 @@ Image WithHotSpots(const Image& m, Point hotspot, Point hotspot2 = Point(0, 0));
 Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2);
 Image WithHotSpot(const Image& m, int x1, int y1);
 
-void  SetResolution(Image& m, int res);
-Image WithResolution(const Image& m, int res);
-Image WithResolution(const Image& m, const Image& res);
-
 void  ScanOpaque(Image& m);
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
-                           void (*op)(RGBA *t, const RGBA *s, int n));
+                           void (*op)(RGBA *t, const RGBA *s, int n), bool co = false);
 
-void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
-void Over(Image& dest, const Image& src);
-void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
+void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co = false);
+
+void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co = false);
+void Over(Image& dest, Point p, const Image& _src, const Rect& srect, bool co = false);
+void Over(Image& dest, const Image& _src, bool co = false);
+
 void Fill(ImageBuffer& dest, const Rect& rect, RGBA color);
 
-void  Copy(Image& dest, Point p, const Image& src, const Rect& srect);
-void  Over(Image& dest, Point p, const Image& src, const Rect& srect);
+void  Copy(Image& dest, Point p, const Image& src, const Rect& srect, bool co = false);
 Image GetOver(const Image& dest, const Image& src);
 void  Fill(Image& dest, const Rect& rect, RGBA color);
 
 Image Copy(const Image& src, const Rect& srect);
 
-void  OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
-void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect);
+void  OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect, bool co = false);
+void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect, bool co = false);
 
 void  Crop(RasterEncoder& tgt, Raster& img, const Rect& rc);
 Image Crop(const Image& img, const Rect& rc);
@@ -241,9 +239,13 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 Image CachedSetColorKeepAlpha(const Image& img, Color color);
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
-Image Magnify(const Image& img, int nx, int ny);
+Image Magnify(const Image& img, const Rect& src, int nx, int ny, bool co);
+Image Magnify(const Image& img, int nx, int ny, bool co = false);
 Image Minify(const Image& img, int nx, int ny, bool co = false);
 Image MinifyCached(const Image& img, int nx, int ny, bool co = false);
+
+Image  DownSample3x(const Image& src, bool co = false);
+Image  DownSample2x(const Image& src, bool co = false);
 
 Image Upscale2x(const Image& src);
 Image Downscale2x(const Image& src);
@@ -252,7 +254,7 @@ void SetUHDMode(bool b = true);
 bool IsUHDMode();
 void SyncUHDMode();
 
-Image DPI(const Image& m);
+// Image DPI(const Image& m);
 Image DPI(const Image& img, int expected);
 
 inline int    DPI(int a)          { return IsUHDMode() ? 2 * a : a; }

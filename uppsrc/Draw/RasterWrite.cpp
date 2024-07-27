@@ -308,7 +308,6 @@ void RasterFormat::Write(byte *t, const RGBA *s, int cx, const PaletteCv *palcv)
 		break;
 	case RASTER_32ALPHA:
 	case RASTER_32ALPHA|RASTER_MSBFIRST:
-		sInitUmTable__();
 		while(s < e) {
 			int alpha = um_table__[t[apos] = s->a];
 			t[rpos] = (alpha * s->r) >> 8;

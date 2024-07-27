@@ -43,13 +43,37 @@ VectorMap<String, TopicInfo>& topic_info()
 	return x;
 }
 
+String TppId(const String& ref, bool noscope)
+{ // as clanglib tends to keep changing printing, let us make 'standard' id without qualified parameters
+	const char *s = ref;
+	StringBuffer r;
+	while(*s) {
+		if(*s == '(')
+			noscope = true;
+		if(iscib(*s)) {
+			const char *id = s;
+			while(iscib(*s))
+				s++;
+			while(*s == ' ')
+				s++;
+			if(s[0] == ':' && s[1] == ':' && noscope)
+				s += 2;
+			else
+				r.Cat(id, s);
+		}
+		else
+			r.Cat(*s++);
+	}
+	return r;
+}
+
 String CleanupTppId(const String& ref_)
 {
 	String ref = ref_;
 	ref.TrimEnd("::struct"); // fix legacy format
 	ref.TrimEnd("::class");
 	ref.TrimEnd("::union");
-	return CleanupId(ref);
+	return TppId(CleanupId(ref));
 }
 
 void AddLinkRef(const String& link, const String& ref_)
@@ -77,7 +101,7 @@ struct ScanTopicIterator : RichText::Iterator {
 	Index<int>     words;
 	Index<String>  ref;
 
-	virtual bool operator()(int pos, const RichPara& para)// A++ bug here....
+	virtual bool operator()(int pos, const RichPara& para)
 	{
 		if(!IsNull(para.format.label)) {
 			AddLinkRef(link, para.format.label);
@@ -237,7 +261,6 @@ void SyncRefs()
 		SyncRefsShowProgress = true;
 		return;
 	}
-	TIMESTOP("SyncRefs");
 	Progress pi;
 	pi.AlignText(ALIGN_LEFT);
 	Vector<String> upp = GetUppDirs();

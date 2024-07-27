@@ -31,24 +31,7 @@ mage]_[* WithHotSpots]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]
 onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 x1], 
 [@(0.0.255) int]_[*@3 y1])&]
 [s2; [%% Returns ][*@3 m][%%  with hotspot ][*@3 x1,][%%  ][*@3 y1.]&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:SetResolution`(Upp`:`:Image`&`,int`): [@(0.0.255) void]_[* SetResolution]([_^Upp`:`:Image^ I
-mage][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 res])&]
-[s2;%% Sets the resolution of [%-*@3 m] to [%-*@3 res].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:WithResolution`(const Upp`:`:Image`&`,int`): [_^Upp`:`:Image^ Image]_[* WithR
-esolution]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], 
-[@(0.0.255) int]_[*@3 res])&]
-[s2;%% Returns [%-*@3 m] with resolution [%-*@3 res].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:WithResolution`(const Upp`:`:Image`&`,const Upp`:`:Image`&`): [_^Upp`:`:Image^ I
-mage]_[* WithResolution]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m],
- [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 res])&]
-[s2;%% Returns [%-*@3 m] with resolution equal to [%-*@3 res].GetResolution().&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:CreateImage`(Size`,const RGBA`&`): [_^Image^ Image]_[* CreateImage]([_^Size^ Size]_[*@3 s
 z], [@(0.0.255) const]_[_^RGBA^ RGBA][@(0.0.255) `&]_[*@3 rgba])&]
@@ -77,12 +60,12 @@ RGBA_`*t, [@(0.0.255) const]_RGBA_`*s, [@(0.0.255) int]_n))&]
 of ImageBuffer [%-*@3 dest] using copying function [%-*@3 op].&]
 [s3;%% &]
 [s4; &]
-[s5;:Copy`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) void]_[* Copy
-]([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], 
-[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rec
-t][@(0.0.255) `&]_[*@3 srect])&]
+[s5;:Upp`:`:Copy`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`,bool`): [@(0.0.255) v
+oid] [* Copy](ImageBuffer[@(0.0.255) `&] [*@3 dest], Point [*@3 p], [@(0.0.255) const] 
+Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) const] Rect[@(0.0.255) `&] 
+[*@3 srect], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Copies Rect [%-*@3 srect] of Image [%-*@3 src] into Point [%-*@3 p] 
-of ImageBuffer [%-*@3 dest].&]
+of ImageBuffer [%-*@3 dest]. [%-*@3 co] activates multithreading.&]
 [s3;%% &]
 [s4; &]
 [s5;:Fill`(ImageBuffer`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^ImageBuffer^ I
@@ -212,7 +195,7 @@ alpha.&]
 [s5;:Equalight`(const Image`&`,int`): [_^Image^ Image]_[* Equalight]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 thold]_`=_[@3 10])&]
 [s2;%%  [%-*@3 img] [%-*@3 thold].&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Grayscale`(const Image`&`): [_^Image^ Image]_[* Grayscale]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img])&]
@@ -274,7 +257,7 @@ blur approximation algorithms by Wojciech Jarosz and Peter Kovesi.]
 [s5;:SetColorKeepAlpha`(const Image`&`,Color`): [_^Image^ Image]_[* SetColorKeepAlpha]([@(0.0.255) c
 onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Color^ Color]_[*@3 c])&]
 [s2;%% Returns a new Image based on [%-*@3 img] alpha and [%-*@3 c] Color.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:RotateClockwise`(const Image`&`): [_^Image^ Image]_[* RotateClockwise]([@(0.0.255) con
 st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]

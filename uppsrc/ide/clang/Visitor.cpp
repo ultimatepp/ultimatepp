@@ -8,7 +8,7 @@ class ClangCursorInfo {
 	CXCursor     parent;
 	CXCursorKind parentKind;
 	CXPrintingPolicy pp_id;
-
+ 
 
 	bool         hasraw_id = false;
 	String       raw_id;
@@ -179,25 +179,30 @@ String ClangCursorInfo::Id()
 
 String ClangCursorInfo::Bases()
 {
-	String result;
+	Tuple<CXPrintingPolicy, String> q;
+	q.a = pp_id;
 	if(findarg(cursorKind, CXCursor_StructDecl, CXCursor_ClassDecl, CXCursor_ClassTemplate) >= 0) {
 		clang_visitChildren(cursor,
 			[](CXCursor cursor, CXCursor p, CXClientData clientData) -> CXChildVisitResult {
 				if(findarg(clang_getCursorKind(cursor), CXCursor_CXXBaseSpecifier) >= 0) {
-					String& result = *(String *)clientData;
-					MergeWith(result, ";", GetTypeSpelling(cursor));
+					Tuple<CXPrintingPolicy, String>& q = *(Tuple<CXPrintingPolicy, String>*)clientData;
+					CXCursor ref = clang_getCursorReferenced(cursor);
+					if(!clang_Cursor_isNull(ref)) {
+						ClangCursorInfo rf(ref, q.a);
+						MergeWith(q.b, ";", rf.Id());
+					}
 				}
 				return CXChildVisit_Continue;
 			},
-			&result
+			&q
 		);
 	}
 	if(cursorKind == CXCursor_TypedefDecl) {
 		CXType type = clang_getTypedefDeclUnderlyingType(cursor);
 		ClangCursorInfo cci(clang_getTypeDeclaration(type), pp_id);
-		result = CleanupId(cci.Type());
+		q.b = CleanupId(cci.Type());
 	}
-	return result;
+	return q.b;
 }
 
 ClangVisitor::CXLocation ClangVisitor::GetLocation(CXSourceLocation cxlocation)

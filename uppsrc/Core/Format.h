@@ -78,11 +78,6 @@ template<> inline String AsString(const uint64& a)          { return FormatUInt6
 template<> inline String AsString(const double& a)          { return FormatDoubleN(a); }
 template<> inline String AsString(const float& a)           { return FormatFloatN(a); }
 
-/*
-Date        ScanDate(const char *text, const char **endptr, const char *format, int language, Date base_date);
-Time        ScanTime(const char *text, const char **endptr, const char *format, int language, Time base_time);
-*/
-
 struct Formatting
 {
 	int    language;

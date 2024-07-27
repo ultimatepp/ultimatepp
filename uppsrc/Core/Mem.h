@@ -2,6 +2,36 @@
 
 void memset8__(void *t, i16x8 data, size_t len);
 
+inline void Set2__(void *t, word val)
+{
+	memcpy(t, &val, 2);
+}
+
+inline void Set4__(void *t, dword val)
+{
+	memcpy(t, &val, 4);
+}
+
+inline void Set8__(void *t, uint64 val)
+{
+	memcpy(t, &val, 8);
+}
+
+inline void Cpy2__(void *t, const void *s)
+{
+	memcpy(t, s, 2);
+}
+
+inline void Cpy4__(void *t, const void *s)
+{
+	memcpy(t, s, 4);
+}
+
+inline void Cpy8__(void *t, const void *s)
+{
+	memcpy(t, s, 8);
+}
+
 inline
 void memset8(void *p, byte data, size_t count)
 {
@@ -13,16 +43,20 @@ void memset8(void *p, byte data, size_t count)
 	}
 	dword val4 = 0x1010101 * data;
 	if(count <= 4) {
-		*(word *)t = *(word *)(t + count - 2) = (word)val4;
+		Set2__(t, (word)val4);
+		Set2__(t + count - 2, (word)val4);
 		return;
 	}
 	if(count > 16) {
 		memset8__(t, i32all(val4), count);
 		return;
 	}
-	*(dword *)t = *(dword *)(t + count - 4) = val4;
-	if(count > 8)
-		*(dword *)(t + 4) = *(dword *)(t + count - 8) = val4;
+	Set4__(t, val4);
+	Set4__(t + count - 4, val4);
+	if(count > 8) {
+		Set4__(t + 4, val4);
+		Set4__(t + count - 8, val4);
+	}
 }
 
 inline
@@ -31,7 +65,7 @@ void memset16(void *p, word data, size_t count)
 	word *t = (word *)p;
 	if(count < 2) {
 		if(count)
-			t[0] = data;
+			Set2__(t, data);
 		return;
 	}
 	dword val4 = 0x10001 * data;
@@ -39,18 +73,18 @@ void memset16(void *p, word data, size_t count)
 		memset8__(t, i32all(val4), 2 * count);
 		return;
 	}
-	*(dword *)(t + count - 2) = val4;
+	Set4__(t + count - 2, val4);
 	if(count & 8) {
 		i32all(val4).Store(t);
 		t += 8;
 	}
 	if(count & 4) {
-		*(dword *)t = val4;
-		*(dword *)(t + 2) = val4;
+		Set4__(t, val4);
+		Set4__(t + 2, val4);
 		t += 4;
 	}
 	if(count & 2)
-		*(dword *)t = val4;
+		Set4__(t, val4);
 }
 
 inline
@@ -59,11 +93,13 @@ void memset32(void *p, dword data, size_t count)
 	dword *t = (dword *)p;
 	if(count < 4) {
 		if(count & 2) {
-			t[0] = t[1] = t[count - 1] = data;
+			Set4__(t, data);
+			Set4__(t + 1, data);
+			Set4__(t + count - 1, data);
 			return;
 		}
 		if(count & 1)
-			t[0] = data;
+			Set4__(t, data);
 		return;
 	}
 	i32x4 val4 = i32all(data);
@@ -87,7 +123,7 @@ void memset64(void *p, qword data, size_t count)
 	qword *t = (qword *)p;
 	if(count < 2) {
 		if(count)
-			t[0] = data;
+			Set8__(t, data);
 		return;
 	}
 	i16x8 val2 = i64all(data);
@@ -125,18 +161,18 @@ void memcpy8(void *p, const void *q, size_t count)
 				t[0] = s[0];
 			return;
 		}
-		*(word *)t = *(word *)s;
-		*(word *)(t + count - 2) = *(word *)(s + count - 2);
+		Cpy2__(t, s);
+		Cpy2__(t + count - 2, s + count - 2);
 		return;
 	}
 	if(count <= 16) {
 		if(count <= 8) {
-			*(dword *)(t) = *(dword *)(s);
-			*(dword *)(t + count - 4) = *(dword *)(s + count - 4);
+			Cpy4__(t, s);
+			Cpy4__(t + count - 4, s + count - 4);
 			return;
 		}
-		*(uint64 *)t = *(uint64 *)s;
-		*(uint64 *)(t + count - 8) = *(uint64 *)(s + count - 8);
+		Cpy8__(t, s);
+		Cpy8__(t + count - 8, s + count - 8);
 		return;
 	}
 	if(count <= 32) { // improves String::LSet
@@ -157,17 +193,17 @@ void memcpy16(void *p, const void *q, size_t count)
 	if(count <= 4) {
 		if(count < 2) {
 			if(count)
-				t[0] = s[0];
+				Cpy2__(t, s);
 			return;
 		}
-		*(dword *)t = *(dword *)s;
-		*(dword *)(t + count - 2) = *(dword *)(s + count - 2);
+		Cpy4__(t, s);
+		Cpy4__(t + count - 2, s + count - 2);
 		return;
 	}
 	if(count <= 16) {
 		if(count <= 8) {
-			*(uint64 *)(t) = *(uint64 *)(s);
-			*(uint64 *)(t + count - 4) = *(uint64 *)(s + count - 4);
+			Cpy8__(t, s);
+			Cpy8__(t + count - 4, s + count - 4);
 			return;
 		}
 		auto Copy128 = [&](size_t at) { i16x8(s + at).Store(t + at); };
@@ -188,8 +224,8 @@ void memcpy32(void *p, const void *q, size_t count)
 	if(count <= 4) {
 		if(count) {
 			if(count > 1) {
-				*(int64 *)t = *(int64 *)s;
-				*(int64 *)(t + count - 2) = *(int64 *)(s + count - 2);
+				Cpy8__(t, s);
+				Cpy8__(t + count - 2, s + count - 2);
 				return;
 			}
 			*t = *s;
@@ -200,9 +236,9 @@ void memcpy32(void *p, const void *q, size_t count)
 	if(count < 4) {
 		if(count) {
 			if(count > 1) {
-				t[0] = s[0];
-				t[1] = s[1];
-				t[count - 1] = s[count - 1];
+				Cpy4__(t, s);
+				Cpy4__(t + 1, s + 1);
+				Cpy4__(t + count - 1, s + count - 1);
 				return;
 			}
 			*t = *s;
@@ -236,8 +272,8 @@ void memcpy64(void *p, const void *q, size_t count)
 	if(count <= 2) {
 		if(count) {
 			if(count > 1) {
-				*(int64 *)t = *(int64 *)s;
-				*(int64 *)(t + count - 1) = *(int64 *)(s + count - 1);
+				Cpy8__(t, s);
+				Cpy8__(t + count - 1, s + count - 1);
 				return;
 			}
 			*t = *s;

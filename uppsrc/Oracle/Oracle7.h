@@ -47,7 +47,7 @@ protected:
 protected:
 	friend class OCI7Connection;
 
-	Link<OCI7Connection> clink;
+	Link<>               clink;
 	bool                 connected;
 	byte                 lda[256];
 	byte                 hda[512];

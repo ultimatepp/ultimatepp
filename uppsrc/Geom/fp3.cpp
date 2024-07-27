@@ -127,6 +127,8 @@ void Box3::Union(Pointf3 pt)
 //////////////////////////////////////////////////////////////////////
 // Matrix3::
 
+#define GLOBAL_VARP_INIT(a, b, c) a & b() { static a m c; return m; }
+
 GLOBAL_VARP_INIT(const Matrixf3, Matrixf3_0, (0, 0, 0, 0, 0, 0, 0, 0, 0))
 GLOBAL_VARP_INIT(const Matrixf3, Matrixf3_1, (1, 0, 0, 0, 1, 0, 0, 0, 1))
 GLOBAL_VARP_INIT(const Matrixf3, Matrixf3_Null, (0, 0, 0, 0, 0, 0, 0, 0, 0, Null, Null, Null))

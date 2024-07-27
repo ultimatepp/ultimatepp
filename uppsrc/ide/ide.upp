@@ -26,9 +26,9 @@ uses
 file
 	IDE readonly separator,
 	ide.h options(BUILDER_OPTION) PCH,
+	ide.key,
 	version.h,
 	UppDlg.h,
-	ide.key,
 	BaseDlg.cpp,
 	SelectPkg.cpp,
 	UppWspc.cpp,
@@ -133,7 +133,8 @@ mainconfig
 	"" = "GUI CHECKCLIPBOARD",
 	"" = "GUI PEAKMEM",
 	"" = "GUI HEAPLOG",
-	"" = "GUI X11";
+	"" = "GUI X11",
+	"" = "GUI DEBUGCODE";
 
 custom() "",
 	"ASDFASDFASDF",

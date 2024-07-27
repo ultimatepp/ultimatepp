@@ -30,7 +30,7 @@ void PutAssist(const char *s);
 
 #include "libclang.h"
 
-bool LoadLibClang(const char *dir);
+bool LoadLibClang(const String& dir);
 bool LoadLibClangAutomatically();
 
 inline bool HasLibClang()

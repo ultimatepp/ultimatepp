@@ -949,9 +949,9 @@ LAYOUT(RemoveInvalidAssembliesLayout, 704, 708)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(ReplaceResultsLayout, 268, 68)
+LAYOUT(ReplaceResultsLayout, 404, 68)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Replace with")).LeftPosZ(8, 72).TopPosZ(8, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, text, LeftPosZ(88, 172).TopPosZ(8, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, text, LeftPosZ(88, 308).TopPosZ(8, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT

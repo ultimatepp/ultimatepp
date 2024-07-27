@@ -11,7 +11,6 @@ file
 	src.tpp,
 	Copying,
 	lib readonly separator,
-	lib\zstd.h,
 	lib\huf_decompress.c,
 	lib\zstd_ddict.c,
 	lib\zstd_decompress.c,
@@ -34,5 +33,7 @@ file
 	lib\zstd_compress_superblock.c,
 	lib\zstd_compress_sequences.c,
 	lib\zstd_compress_literals.c,
-	lib\zstd_compress_superblock.h;
+	lib\zstd_compress_superblock.h,
+	lib\xxhash.c,
+	lib\zstd.h;
 
