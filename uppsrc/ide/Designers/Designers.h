@@ -1,9 +1,6 @@
 #ifndef _ide_Designers_Designers_h_
 #define _ide_Designers_Designers_h_
 
-#include <HexView/HexView.h>
-#include <ide/Common/Common.h>
-#include <ide/IconDes/IconDes.h>
 #include <ide/ide.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
@@ -21,7 +18,7 @@ struct IdeImgView : IdeDesigner, Ctrl {
 	typedef IdeImgView CLASSNAME;
 };
 
-struct IdePngDes : IdeIconDes {
+struct IdePngDes : IconDes {
 	virtual void   Save();
 
 	void   Load(const char *filename);

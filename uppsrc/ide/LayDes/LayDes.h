@@ -4,7 +4,7 @@
 #include <ide/Common/Common.h>
 #include <RichEdit/RichEdit.h>
 #include <CodeEditor/CodeEditor.h>
-#include <IconDes/IconDes.h>
+#include <ide/IconDes/IconDes.h>
 #include <ide/Browser/Browser.h>
 
 #define LAYOUTFILE <ide/LayDes/LayDes.lay>

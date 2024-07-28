@@ -247,7 +247,7 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 				}
 				DoEditAsText(found_path);
 			}
-			IdeIconDes *k = dynamic_cast<IdeIconDes *>(~designer);
+			IconDes *k = dynamic_cast<IconDes *>(~designer);
 			if(k) {
 				k->FindId(found_name);
 				return true;

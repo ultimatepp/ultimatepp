@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 RGBA GetPixel(const Image& img, int x, int y)
 {
 	if(x < 0 || x >= img.GetWidth() || y < 0 || y >= img.GetHeight())
@@ -80,7 +78,7 @@ void IconDes::Smoothen()
 	dlg.level <<= dlg.Breaker();
 	Image bk = ImageStart();
 	for(;;) {
-		ImageSet(Upp::Smoothen(bk, 0.4 * minmax((double)~dlg.level + 0.01, 0.01, 1.1)));
+		ImageSet(::Smoothen(bk, 0.4 * minmax((double)~dlg.level + 0.01, 0.01, 1.1)));
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			ImageSet(bk);
@@ -89,6 +87,4 @@ void IconDes::Smoothen()
 			return;
 		}
 	}
-}
-
 }

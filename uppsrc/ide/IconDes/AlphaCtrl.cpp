@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 void AlphaCtrl::Layout()
 {
 	MakeImage();
@@ -120,6 +118,4 @@ AlphaCtrl::AlphaCtrl()
 	alpha = 255;
 	mask = false;
 	maskvalue = 255;
-}
-
 }

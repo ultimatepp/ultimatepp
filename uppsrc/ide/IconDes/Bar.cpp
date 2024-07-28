@@ -1,10 +1,8 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 #define KEYNAMESPACE IconDesKeys
 #define KEYGROUPNAME "Icon designer"
-#define KEYFILE      <IconDes/IconDes.key>
+#define KEYFILE      <ide/IconDes/IconDes.key>
 #include             <CtrlLib/key_source.h>
 
 void IconDes::SetPen(int _pen)
@@ -80,8 +78,6 @@ void IconDes::DoCut()
 	else
 		Delete();
 }
-
-void IconDes::ToolEx(Bar& bar) {}
 
 void IconDes::EditBar(Bar& bar)
 {
@@ -418,6 +414,4 @@ IconDes::IconDes()
 
 	status.Width(200);
 	status.NoTransparent();
-}
-
 }

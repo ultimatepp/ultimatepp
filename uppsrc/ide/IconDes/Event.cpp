@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 void IconDes::LeftDown(Point p, dword flags)
 {
 	SetFocus();
@@ -145,6 +143,4 @@ void IconDes::MouseWheel(Point pt, int zdelta, dword keyflags)
 void IconDes::HorzMouseWheel(Point pt, int zdelta, dword keyflags)
 {
 	sb.WheelX(zdelta);
-}
-
 }

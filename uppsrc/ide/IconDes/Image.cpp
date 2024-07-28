@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 void IconDes::Interpolate()
 {
 	if(!IsCurrent())
@@ -10,7 +8,7 @@ void IconDes::Interpolate()
 	SaveUndo();
 	Slot& c = Current();
 	c.base_image = c.image;
-	UPP::InterpolateImage(c.image, c.image.GetSize());
+	::InterpolateImage(c.image, c.image.GetSize());
 	MaskSelection();
 }
 
@@ -481,6 +479,4 @@ void IconDes::Colors()
 			return;
 		}
 	}
-}
-
 }

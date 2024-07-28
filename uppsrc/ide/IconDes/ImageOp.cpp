@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 struct sFloodFill {
 	Size         sz;
 	Buffer<byte> flag;
@@ -184,6 +182,4 @@ String PackImlDataUncompressed(const Vector<ImageIml>& image)
 String PackImlData(const Vector<ImageIml>& image)
 {
 	return ZCompress(PackImlDataUncompressed(image));
-}
-
 }
