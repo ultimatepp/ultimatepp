@@ -200,12 +200,12 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add(c && c->image.GetLength() < 256 * 256, "Smart Upscale 2x",
 	        IconDesImg::Upscale(), THISBACK(Upscale))
 	   .Key(AK_RESIZEUP2);
-	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 2x",
+	bar.Add(c && c->image.GetLength() < 4096 * 4096, "Resize Up 2x",
 	        IconDesImg::ResizeUp2(), THISBACK(ResizeUp2))
 	   .Key(AK_RESIZEUP2);
 	bar.Add(c, "Supersample 2x", IconDesImg::ResizeDown2(), THISBACK(ResizeDown2))
 	   .Key(AK_RESIZEDOWN2);
-	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 3x",
+	bar.Add(c && c->image.GetLength() < 4096 * 4096, "Resize Up 3x",
 	        IconDesImg::ResizeUp(), THISBACK(ResizeUp))
        .Key(AK_RESIZEUP3);
 	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))

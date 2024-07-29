@@ -212,7 +212,6 @@ String GitCmd(const char *dir, const char *command)
 	return r;
 }
 
-
 bool RepoSync::ListGit(const String& path)
 {
 	Vector<String> ln = Split(GitCmd(path, "status --porcelain ."), CharFilterCrLf);
