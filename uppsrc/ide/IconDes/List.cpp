@@ -438,6 +438,12 @@ void IconDes::EditImage()
 	dword flags = c.flags;
 	bool exp = c.exp;
 	String name = c.name;
+
+	Vector<ImageIml> bimg;
+	ImageIml mm;
+	mm.image = c.image;
+	bimg << mm;
+	dlg.estimated_size = FormatFileSize(PackImlData(bimg).GetCount());
 	
 	dlg.cx <<= img.GetWidth();
 	dlg.cy <<= img.GetHeight();

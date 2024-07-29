@@ -1,4 +1,4 @@
-LAYOUT(ImageLayout, 168, 232)
+LAYOUT(ImageLayout, 168, 252)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Name")).LeftPosZ(8, 40).TopPosZ(8, 19))
 	ITEM(Upp::EditString, name, LeftPosZ(52, 108).TopPosZ(8, 19))
 	ITEM(Upp::Label, dv___2, SetLabel(t_("Size")).LeftPosZ(8, 40).TopPosZ(32, 19))
@@ -12,8 +12,9 @@ LAYOUT(ImageLayout, 168, 232)
 	ITEM(Upp::Option, dark, SetLabel(t_("Dark variant")).LeftPosZ(8, 156).TopPosZ(128, 16))
 	ITEM(Upp::Option, s3, SetLabel(t_("Supersampled 3x")).LeftPosZ(8, 156).TopPosZ(152, 16))
 	ITEM(Upp::Option, exp, SetLabel(t_("Export as icon.ico and .png")).LeftPosZ(8, 160).TopPosZ(176, 16))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(28, 64).TopPosZ(200, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 64).TopPosZ(200, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(28, 64).TopPosZ(220, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 64).TopPosZ(220, 24))
+	ITEM(Upp::Label, estimated_size, SetAlign(Upp::ALIGN_RIGHT).LeftPosZ(8, 156).TopPosZ(196, 19))
 END_LAYOUT
 
 LAYOUT(ImageSizeLayout, 168, 68)
