@@ -81,6 +81,7 @@ void IconDes::Text()
 			textdlg.NoCenter().SetRect(r);
 		}
 		Paste(CreateImage(Size(1, 1), RGBAZero()));
+		textdlg.nonaa = Current().flags & IML_IMAGE_FLAG_S3;
 		textdlg.WhenClose = THISBACK(CloseText);
 		textdlg <<= THISBACK(PasteText);
 		textdlg.Open();
