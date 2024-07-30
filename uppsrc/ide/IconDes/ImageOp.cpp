@@ -1,72 +1,60 @@
 #include "IconDes.h"
 
-struct sFloodFill {
-	Size         sz;
-	Buffer<byte> flag;
-	Image        source;
-	ImageBuffer& target;
-	RGBA         scolor;
-	RGBA         color;
-	bool         done;
-	int          tolerance;
-
-	RGBA& At(int x, int y)         { return target[y][x]; }
-	bool  Eq(int x, int y);
-	byte& Flag(int x, int y) { return flag[y * sz.cx + x]; }
-	void  Fill(RGBA color, Point pt, int tolerance_);
-	void  Try(int x, int y);
-
-	sFloodFill(const Image& source, ImageBuffer& target) : source(source), target(target) { tolerance = 0; }
-};
-
+template <class Eq>
 force_inline
-bool sFloodFill::Eq(int x, int y)
+void FloodFill(const Image& src, ImageBuffer& ib, RGBA fill, Point p, const Eq& eq)
 {
-	const RGBA& q = source[y][x];
-	if(tolerance < 0 && q.a)
-		return q.a != scolor.a || q.r != scolor.r || q.g != scolor.g || q.b != scolor.b;
-	if((q.a | scolor.a) == 0) return true;
-	return abs(q.a - scolor.a) <= tolerance && abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
-}
+	Size isz = ib.GetSize();
+	if(!Rect(isz).Contains(p))
+		return;
 
-force_inline
-void sFloodFill::Try(int x, int y)
-{
-	if(x >= 0 && x < sz.cx && y >= 0 && y < sz.cy && Flag(x, y) == 0 && Eq(x, y)) {
-		Flag(x, y) = 1;
-		target[y][x] = color;
-		done = false;
-	}
-}
-
-void sFloodFill::Fill(RGBA _color, Point pt, int tolerance_)
-{
-	tolerance = tolerance_;
-	scolor = tolerance < 0 ? _color : source[pt.y][pt.x];
-	color = tolerance < 0 ? RGBAZero() : _color;
-	sz = source.GetSize();
-	flag.Alloc(sz.cx * sz.cy, 0);
-	Flag(pt.x, pt.y) = 1;
-	target[pt.y][pt.x] = color;
-	do {
-		done = true;
-		for(int y = 0; y < sz.cy; y++)
-			for(int x = 0; x < sz.cx; x++) {
-				if(Flag(x, y) == 1) {
-					Flag(x, y) = 2;
-					Try(x + 1, y);
-					Try(x - 1, y);
-					Try(x, y + 1);
-					Try(x, y - 1);
+	Vector<Point> stack { p };
+	Buffer<byte> filled(isz.cx * isz.cy, 0);
+	auto Filled = [&](int y) -> byte * { return ~filled + y * isz.cx; };
+	
+	RGBA color = ib[p.y][p.x];
+	while(stack.GetCount()) {
+		Point p = stack.Pop();
+		const RGBA *l = src[p.y];
+		byte *f = Filled(p.y);
+		int xl = p.x;
+		while(xl > 0 && !f[xl - 1] && eq(l[xl - 1], color))
+			xl--;
+		int xh = p.x;
+		while(xh < isz.cx - 1 && !f[xh + 1] && eq(l[xh + 1], color))
+			xh++;
+		Fill(ib[p.y] + xl, fill, xh - xl + 1);
+		memset(f + xl, 1, xh - xl + 1);
+		Point q;
+		for(q.y = p.y - 1; q.y <= p.y + 1; q.y += 2)
+			if(q.y >= 0 && q.y < isz.cx) {
+				const RGBA *ql = src[q.y];
+				byte *qf = Filled(q.y);
+				bool flag = false;
+				for(q.x = xl; q.x <= xh; q.x++) {
+					bool f = !qf[q.x] && eq(ql[q.x], color);
+					if(f != flag) {
+						flag = f;
+						if(f) stack.Add(q);
+					}
 				}
 			}
 	}
-	while(!done);
 }
 
 void FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance)
 {
-	sFloodFill(source, target).Fill(color, pt, tolerance);
+	if(tolerance == 0)
+		FloodFill(source, target, color, pt,
+		          [](RGBA a, RGBA b) { return a == b; });
+	else
+	if(tolerance < 0)
+		FloodFill(source, target, RGBAZero(), pt,
+		          [&](RGBA a, RGBA b) { return a != color; });
+	else
+		FloodFill(source, target, color, pt,
+		          [&](RGBA a, RGBA b) { return abs(a.a - b.a) <= tolerance &&
+		                                       abs(a.r - b.r) + abs(a.g - b.g) + abs(a.b - b.b) <= tolerance; });
 }
 
 struct InterpolateFilter : ImageFilter9 {

@@ -17,10 +17,12 @@ struct SmoothPixel {
 	int x;
 	int y;
 	
+	force_inline
 	RGBA Get(int dx, int dy) {
 		return GetPixel(img, x + dx, y + dy);
 	}
 	
+	force_inline
 	void Do(int dx, int dy) {
 		RGBA c = Get(dx, 0);
 		if(c.a > 128 && c == Get(0, dy) && (c != Get(dx, dy) || c != Get(-dx, dy) || c != Get(dx, -dy))) {
@@ -32,6 +34,7 @@ struct SmoothPixel {
 		}
 	}
 	
+	force_inline
 	RGBA Get(double level) {
 		RGBA x;
 		n = max(int(n * level), 1);
