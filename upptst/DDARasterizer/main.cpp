@@ -110,7 +110,7 @@ void MyApp::Paint(Draw& w)
 
 #if 1
 	r.Width(width);
-	r.Ellipse(Rect(10, 10, p.x, p.y));
+	r.Ellipse(Rect(10, 10, p.x, p.y), 10);
 #endif
 
 	r.color = Black();
