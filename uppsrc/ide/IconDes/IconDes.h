@@ -103,6 +103,7 @@ void   FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt,
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
+void   MirrorDiag(Image& img, const Rect& rect, bool symm);
 String PackImlDataUncompressed(const Vector<ImageIml>& image);
 String PackImlData(const Vector<ImageIml>& image);
 
@@ -332,6 +333,7 @@ private:
 	bool  BeginTransform();
 	void  MirrorX();
 	void  MirrorY();
+	void  MirrorD(bool symm);
 	void  SymmX();
 	void  SymmY();
 	void  FreeRotate();

@@ -135,8 +135,10 @@ void IconDes::ImageBar(Bar& bar)
 	bar.Add(c, AK_INTERPOLATE, IconDesImg::Interpolate(), THISBACK(Interpolate));
 	bar.Add(c, AK_HMIRROR, IconDesImg::MirrorX(), THISBACK(MirrorX));
 	bar.Add(c, AK_VMIRROR, IconDesImg::MirrorY(), THISBACK(MirrorY));
+	bar.Add(c, AK_DMIRROR, IconDesImg::MirrorD(), [=] { MirrorD(false); });
 	bar.Add(c, AK_HSYM, IconDesImg::SymmX(), THISBACK(SymmX));
 	bar.Add(c, AK_VSYM, IconDesImg::SymmY(), THISBACK(SymmY));
+	bar.Add(c, AK_DSYM, IconDesImg::SymmD(), [=] { MirrorD(true); });
 	bar.Add(c, AK_ROTATE, IconDesImg::Rotate(), THISBACK(Rotate));
 	bar.Add(c, AK_FREE_ROTATE, IconDesImg::FreeRotate(), THISBACK(FreeRotate));
 	bar.Add(c, AK_RESCALE, IconDesImg::Rescale(), THISBACK(SmoothRescale));

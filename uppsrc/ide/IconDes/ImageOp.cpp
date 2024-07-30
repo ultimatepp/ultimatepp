@@ -137,6 +137,28 @@ void MirrorVert(Image& img, const Rect& rect)
 	img = ib;
 }
 
+void MirrorDiag(Image& img, const Rect& rect, bool symm)
+{
+	ImageBuffer ib(img);
+	Size isz = ib.GetSize();
+	Rect rc = rect & isz;
+	int sz = min(rc.GetWidth(), rc.GetHeight());
+	for(int y = 0; y < sz - 1; y++) {
+		RGBA *h = ib[y + rect.top] + rect.left + y + 1;
+		RGBA *e = ib[y + rect.top] + rect.left + sz;
+		RGBA *v = ib[y + rect.top + 1] + rect.left + y;
+		while(h < e) {
+			if(symm)
+				*h = *v;
+			else
+				Swap(*h, *v);
+			h++;
+			v += isz.cx;
+		}
+	}
+	img = ib;
+}
+
 String PackImlDataUncompressed(const Vector<ImageIml>& image)
 {
 	StringBuffer block;

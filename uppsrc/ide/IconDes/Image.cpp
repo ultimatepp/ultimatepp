@@ -125,6 +125,20 @@ void IconDes::SymmY()
 	SyncShow();
 }
 
+void IconDes::MirrorD(bool symm)
+{
+	if(!IsCurrent())
+		return;
+	Slot& c = Current();
+	if(BeginTransform()) {
+		MirrorDiag(c.paste_image, c.paste_image.GetSize(), symm);
+		MakePaste();
+	}
+	else
+		MirrorDiag(c.image, c.image.GetSize(), symm);
+	SyncShow();
+}
+
 void IconDes::Rotate()
 {
 	if(!IsCurrent())
