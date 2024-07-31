@@ -73,12 +73,14 @@ Image Smoothen(const Image& img, double level)
 
 void IconDes::Smoothen()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Smoothen");
 	PlaceDlg(dlg);
+	dlg.txt = "Level";
 	dlg.level.MinMax(0, 1);
 	dlg.level <<= 0.75;
 	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 1, 0.75);
 	Image bk = ImageStart();
 	for(;;) {
 		ImageSet(::Smoothen(bk, 0.4 * minmax((double)~dlg.level + 0.01, 0.01, 1.1)));

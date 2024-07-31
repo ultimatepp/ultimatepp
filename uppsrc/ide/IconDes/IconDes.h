@@ -349,7 +349,7 @@ private:
 	void  Upscale();
 
 	void  PlaceDlg(TopWindow& dlg);
-	void  Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init = 0);
+	void  Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init = 0, double offset = 0);
 	void  Couple(TopWindow& dlg, EditInt& level, SliderCtrl& slider, int max, int init = 0);
 	Image ImageStart();
 	void  ImageSet(const Image& m);

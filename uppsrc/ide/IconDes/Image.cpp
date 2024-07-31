@@ -253,14 +253,14 @@ void IconDes::BlurSharpen()
 	WithSharpenLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Blur/Sharpen");
 	PlaceDlg(dlg);
-	dlg.level <<= 0;
-	dlg.level <<= dlg.Breaker();
-	dlg.passes <<= 1;
-	dlg.passes <<= dlg.Breaker();
+
+	Couple(dlg, dlg.level, dlg.slider2, 1);
+	Couple(dlg, dlg.radius, dlg.slider, 10, 1);
+	
 	Image bk = ImageStart();
 	for(;;) {
 		Image m = bk;
-		for(int q = 0; q < (int)~dlg.passes; q++)
+		for(int q = 0; q < (int)~dlg.radius; q++)
 			m = Sharpen(m, -int(256 * (double)~dlg.level));
 		ImageSet(m);
 		switch(dlg.Run()) {
@@ -349,14 +349,14 @@ void IconDes::Chroma()
 	}
 }
 
-void IconDes::Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init)
+void IconDes::Couple(TopWindow& dlg, EditDouble& level, SliderCtrl& slider, double max, double init, double offset)
 {
 	level.Max(max);
 	level <<= init;
 	slider.MinMax(0, 1000);
 	slider <<= init * 1000 / max;
-	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider / 1000.0 * max; dlg.Break(); };
-	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int((double)~level * 1000 / max), 500); dlg.Break(); };
+	slider << [=, &dlg, &level, &slider] { level <<= (int)~slider / 1000.0 * max + offset; dlg.Break(); };
+	level << [=, &dlg, &level, &slider] { slider <<= Nvl(int(((double)~level - offset) * 1000 / max), 500); dlg.Break(); };
 }
 
 void IconDes::Couple(TopWindow& dlg, EditInt& level, SliderCtrl& slider, int max, int init)
