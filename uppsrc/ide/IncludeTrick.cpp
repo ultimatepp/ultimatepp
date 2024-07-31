@@ -122,5 +122,4 @@ void AssistEditor::MakeIncludeTrick(CurrentFileContext& cfx)
 	}
 	else
 		cfx.content.Clear();
-	DDUMP(cfx.content);
 }
