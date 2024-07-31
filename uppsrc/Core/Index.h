@@ -187,7 +187,7 @@ public:
 	const_iterator        Begin() const          { return begin(); }
 	const_iterator        End() const            { return end(); }
 	void                  clear()                { Clear(); }
-	size_type             size()                 { return GetCount(); }
+	size_type             size() const           { return GetCount(); }
 	bool                  empty() const          { return IsEmpty(); }
 #endif
 
