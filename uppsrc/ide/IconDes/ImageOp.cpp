@@ -27,7 +27,7 @@ void FloodFill(const Image& src, ImageBuffer& ib, RGBA fill, Point p, const Eq& 
 		memset(f + xl, 1, xh - xl + 1);
 		Point q;
 		for(q.y = p.y - 1; q.y <= p.y + 1; q.y += 2)
-			if(q.y >= 0 && q.y < isz.cx) {
+			if(q.y >= 0 && q.y < isz.cy) {
 				const RGBA *ql = src[q.y];
 				byte *qf = Filled(q.y);
 				bool flag = false;
