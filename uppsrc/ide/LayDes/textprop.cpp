@@ -213,12 +213,11 @@ struct TextProperty : public SmartTextEditProperty<EditString>
 		return 2 * EditField::GetStdHeight() + 6;
 	}
 	
-	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, Zx(28)); }
+	virtual void     AdjustLabelWidth(int cx)   { editor.HSizePos(cx, 0); }
 	virtual bool     InlineEditor() const       { return true; }
 
 	TextProperty() {
-		Add(editor.HSizePosZ(100, 28).TopPos(2));
-		Add(qtf.RightPosZ(2, 24).TopPos(2, DPI(16)));
+		Add(editor.HSizePosZ(100, 0).TopPos(2));
 		qtf.SetLabel("Qtf");
 		editor.SetConvert(*this);
 
