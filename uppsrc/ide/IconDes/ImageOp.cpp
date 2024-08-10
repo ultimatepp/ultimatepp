@@ -12,7 +12,7 @@ void FloodFill(const Image& src, ImageBuffer& ib, RGBA fill, Point p, const Eq& 
 	Buffer<byte> filled(isz.cx * isz.cy, 0);
 	auto Filled = [&](int y) -> byte * { return ~filled + y * isz.cx; };
 	
-	RGBA color = ib[p.y][p.x];
+	RGBA color = src[p.y][p.x];
 	while(stack.GetCount()) {
 		Point p = stack.Pop();
 		const RGBA *l = src[p.y];

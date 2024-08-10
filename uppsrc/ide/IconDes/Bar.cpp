@@ -64,6 +64,7 @@ void IconDes::DoCopy()
 	if(!IsCurrent())
 		return;
 	WriteClipboardImage(IsPasting() ? Current().paste_image : Copy(SelectionRect()));
+	AppendClipboardText(Current().name);
 }
 
 void IconDes::DoCut()

@@ -248,7 +248,7 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
-	ImageInsert("", m);
+	ImageInsert(ReadClipboardText(), m);
 	EditImage();
 }
 
