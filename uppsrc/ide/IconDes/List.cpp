@@ -241,6 +241,26 @@ void IconDes::Duplicate()
 	EditImage();
 }
 
+int CharFilterImageId(int c)
+{
+	return IsAlNum(c) ? c : '_';
+}
+
+String FixImageName(String name)
+{
+	if(IsNull(name))
+		return name;
+	int q = name.Find("\n");
+	if(q >= 0)
+		name.Trim(q);
+	if(name.GetCount() > 32)
+		name.Trim(32);
+	String id = Filter(name, CharFilterImageId);
+	if(!IsAlpha(*id) && *id != '_')
+		id = '_' + id;
+	return id;
+}
+
 void IconDes::InsertPaste()
 {
 	Image m = ReadClipboardImage();
@@ -248,7 +268,7 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
-	ImageInsert(ReadClipboardText(), m);
+	ImageInsert(FixImageName(ReadClipboardText()), m);
 	EditImage();
 }
 
@@ -316,11 +336,6 @@ FileSel& IconDes::ImgFile()
 	return sel;
 }
 
-int CharFilterImageId(int c)
-{
-	return IsAlNum(c) ? c : '_';
-}
-
 void IconDes::InsertFile()
 {
 	if(!ImgFile().ExecuteOpen()) return;
@@ -329,9 +344,7 @@ void IconDes::InsertFile()
 		String fn = ImgFile()[i];
 		Array<ImlImage> ml;
 		String ext = ToLower(GetFileExt(fn));
-		String id = Filter(GetFileTitle(fn), CharFilterImageId);
-		if(!IsAlpha(*id) && *id != '_')
-			id = '_' + id;
+		String id = FixImageName(GetFileTitle(fn));
 		if(ext == ".iml") {
 			int f;
 			LoadIml(LoadFile(fn), ml, f);
