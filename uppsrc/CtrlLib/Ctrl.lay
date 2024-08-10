@@ -26,7 +26,7 @@ LAYOUT(EditDateLayout, 236, 62)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
-LAYOUT(ProgressLayout, 320, 72)
+LAYOUT(ProgressLayout, 500, 72)
 	ITEM(Upp::Button, stop, SetLabel(t_("Cancel")).HCenterPosZ(68, 0).BottomPosZ(4, 24))
 	UNTYPED(pi, HSizePosZ(4, 4).TopPosZ(28, 12))
 	ITEM(Upp::Label, info, HSizePosZ(4, 4).TopPosZ(4, 20))

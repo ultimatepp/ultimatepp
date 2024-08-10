@@ -105,7 +105,10 @@ void LoadBranches(DropList& branch, const String& dir)
 
 void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file)
 {
-	String gitcmd = "log --format=medium --date=short --follow --name-only " + branch;
+	String gitcmd = "log --format=medium --date=short --name-only ";
+	if(file.GetCount())
+		gitcmd << " --follow ";
+	gitcmd << branch;
 	if(file.GetCount())
 		gitcmd << " -- " << GetFileName(file);
 	String log = GitCmd(dir, gitcmd);
