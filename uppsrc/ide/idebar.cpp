@@ -59,6 +59,13 @@ void Ide::File(Bar& menu)
 		.Help("Select any file in file selector and open it in editor");
 	menu.AddMenu(!IsNull(GetOpposite()), AK_OPPOSITE, IdeImg::opposite(), THISBACK(GoOpposite))
 		.Help("Switch between source and header file");
+	String fn = GetFileExt(editfile);
+	if(findarg(ToLower(fn), ".cpp", ".c", ".cxx", ".h", ".cc", ".hpp") >= 0)
+		fn = ".cpp";
+	fn = "scratchpad" + fn;
+	menu.AddMenu(AK_SCRATCHPAD, CtrlImg::open(), [=] { EditFile(ConfigFile(fn)); })
+	    .Text(fn)
+		.Help("Open scratchpad file");
 	menu.AddMenu(AK_SAVEFILE, CtrlImg::save(), THISBACK(DoSaveFile))
 		.Help("Save current file");
 	if(!designer)
