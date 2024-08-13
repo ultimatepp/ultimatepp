@@ -1605,7 +1605,7 @@ void LayDes::LayoutMenu(Bar& bar)
 	bar.Add("Insert new layout..", THISBACK1(AddLayout, true));
 	bar.Add(iscursor, "Duplicate layout..", THISBACK(DuplicateLayout));
 	bar.Add(iscursor, "Rename layout..", THISBACK(RenameLayout));
-	bar.Add(iscursor, "Remove layout..", THISBACK(RemoveLayout));
+	bar.Add(iscursor, "Remove layout..", LayImg::Remove(), THISBACK(RemoveLayout));
 	bar.Separator();
 	int q = list.GetKey();
 	bar.Add(iscursor && q > 0,

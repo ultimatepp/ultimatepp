@@ -87,6 +87,8 @@ void IconDes::EditBar(Bar& bar)
 	bar.Add(c, "Cut", CtrlImg::cut(), THISBACK(DoCut)).Key(K_DELETE).Key(K_CTRL_X);
 	bar.Add(c, "Copy", CtrlImg::copy(), THISBACK(DoCopy)).Key(K_CTRL_C);
 	bar.Add(c, "Paste", CtrlImg::paste(), THISBACK(DoPaste)).Key(K_CTRL_V);
+	bar.Add(c, AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
+	bar.Add(c, AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
 	bar.Separator();
 	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
 	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
