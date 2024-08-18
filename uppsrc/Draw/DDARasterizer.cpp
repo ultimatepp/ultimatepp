@@ -228,7 +228,7 @@ DDARasterizer& DDARasterizer::Ellipse(const Rect& r, int width)
 	if(rx <= 0 || ry <= 0)
 		return *this;
 	
-	double wx, wy, w2, wr;
+	double wy, w2, wr;
 	if(width > 1) {
 		wy = ry - width;
 		w2 = sqr(wy);
@@ -237,7 +237,7 @@ DDARasterizer& DDARasterizer::Ellipse(const Rect& r, int width)
 	
 
 	int y = 0;
-	int px = rx;
+	int px = (int)rx;
 	for(;;) {
 		int x = int(rr * (ry - sqrt(r2 - sqr(ry - y - 0.5))) + 0.5);
 		int y1 = y + r.top;
@@ -252,7 +252,7 @@ DDARasterizer& DDARasterizer::Ellipse(const Rect& r, int width)
 		}
 		else
 		if(width > 1) {
-			int wx = int(wr * (wy - sqrt(max(w2 - sqr(wy - (y - width) - 0.5), 0.0))) + 0.5) + (ry - wy);
+			int wx = int(wr * (wy - sqrt(max(w2 - sqr(wy - (y - width) - 0.5), 0.0))) + 0.5) + int(ry - wy);
 			n = n2 = wx - x;
 			x2 = r.right - x - n;
 		}
