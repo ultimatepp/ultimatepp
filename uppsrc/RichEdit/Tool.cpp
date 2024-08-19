@@ -337,7 +337,7 @@ void RichEdit::ObjectTool(Bar& bar, dword key)
 
 void RichEdit::LoadImageTool(Bar& bar, dword key)
 {
-	bar.Add(!IsReadOnly(), t_("Insert image from file.."), RichEditImg::LoadImageFile(), THISBACK(InsertImage));
+	bar.Add(!IsReadOnly(), t_("Insert image from file.."), CtrlImg::open(), THISBACK(InsertImage));
 }
 
 void RichEdit::PrintTool(Bar& bar, dword key)
