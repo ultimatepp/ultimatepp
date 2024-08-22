@@ -357,6 +357,8 @@ private:
 	};
 	
 	int             Zoom = 0;
+	Point           scroll_start = Null;
+	Point           scroll_base;
 	
 	Rect   CtrlRect(Ctrl::LogPos pos, Size sz);
 	Rect   CtrlRectZ(Ctrl::LogPos pos, Size sz);

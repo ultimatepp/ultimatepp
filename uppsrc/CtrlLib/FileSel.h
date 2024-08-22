@@ -179,7 +179,7 @@ public:
 private:
 	SizeGrip    sizegrip;
 
-	Button      dirup, mkdir, plus, minus, toggle;
+	Button      dirup, mkdir;
 
 protected:
 	Vector<String> mask;
@@ -256,11 +256,7 @@ protected:
 	void        Open();
 	void        DirUp();
 	void        MkDir();
-	void        Plus();
-	void        Minus();
-	void        Toggle();
 	void        Reload();
-	void        PlusMinus(const char *title, bool sel);
 	void        Update();
 	void        FileUpdate();
 	void        Rename(const String& on, const String& nn);

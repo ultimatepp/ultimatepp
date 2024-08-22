@@ -401,6 +401,8 @@ int   LayDes::FindItem(Point p, bool cursor_first)
 
 Image LayDes::CursorImage(Point p, dword keyflags)
 {
+	if(keyflags & K_CTRL)
+		return IsNull(scroll_start) ? IconDesImg::MoveCursor() : IconDesImg::MoveMove();
 	int hi;
 	if(HasCapture())
 		hi = draghandle;
@@ -612,9 +614,18 @@ void  LayDes::LeftDown(Point p, dword keyflags)
 	SetCapture();
 	LayoutData& l = CurrentLayout();
 	draglayoutsize = l.size;
+
+	if(keyflags & K_CTRL) {
+		scroll_start = p;
+		scroll_base = sb;
+		return;
+	}
+
 	p = Normalize(p);
+
 	draghandle = FindHandle(p);
 	dragbase = ZPoint(p);
+
 	if(draghandle >= 0)
 		StoreItemRects();
 	else {
@@ -674,8 +685,16 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 {
 	if(!HasCapture() || IsNull(currentlayout))
 		return;
+
+	if(!IsNull(scroll_start)) {
+		sb = scroll_base + scroll_start - p;
+		return;
+	}
+
 	Point pz = Normalize(p);
+
 	p = ZPoint(pz);
+
 	LayoutData& l = CurrentLayout();
 	bool smallmove = max(abs(p.x - dragbase.x), abs(p.y - dragbase.y)) < 4;
 	if(draghandle == 14) {
@@ -780,6 +799,10 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 
 void  LayDes::LeftUp(Point p, dword keyflags)
 {
+	if(!IsNull(scroll_start)) {
+		scroll_start = Null;
+		return;
+	}
 	if(draghandle == 11 && (keyflags & (K_SHIFT|K_CTRL)) == 0)
 		SelectOne(FindItem(ZPoint(Normalize(p))), 0);
 	draghandle = -1;
@@ -1603,7 +1626,7 @@ void LayDes::LayoutMenu(Bar& bar)
 	bool iscursor = list.IsCursor();
 	bar.Add("Add new layout..", THISBACK1(AddLayout, false));
 	bar.Add("Insert new layout..", THISBACK1(AddLayout, true));
-	bar.Add(iscursor, "Duplicate layout..", THISBACK(DuplicateLayout));
+	bar.Add(iscursor, "Duplicate layout..", LayImg::Duplicate(), THISBACK(DuplicateLayout));
 	bar.Add(iscursor, "Rename layout..", THISBACK(RenameLayout));
 	bar.Add(iscursor, "Remove layout..", LayImg::Remove(), THISBACK(RemoveLayout));
 	bar.Separator();
