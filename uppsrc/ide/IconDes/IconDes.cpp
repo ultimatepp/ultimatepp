@@ -208,7 +208,7 @@ void IconDes::RadialTool(Point p, dword f)
 	DoPainter([&](Painter& iw) {
 		double r = Distance(startpoint, p);
 		iw.Circle(startpoint.x, startpoint.y, Distance(startpoint, p))
-		  .Fill(startpoint.x, startpoint.y, CurrentColor(), r, ImageColor(p, startcolor));
+		  .Fill(startpoint.x, startpoint.y, startcolor, r, CurrentColor());
 	});
 }
 
@@ -219,7 +219,7 @@ void IconDes::LinearTool(Point p, dword f)
 		Pointf sf = startpoint;
 		Pointf vec = 10000 * Orthogonal(sf - pf);
 		iw.Move(sf - vec).Line(pf - vec).Line(pf + vec).Line(sf + vec)
-		  .Fill(sf, CurrentColor(), pf, ImageColor(p, startcolor));
+		  .Fill(sf, startcolor, pf, CurrentColor());
 	});
 }
 
