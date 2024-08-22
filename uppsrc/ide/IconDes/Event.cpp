@@ -1,5 +1,11 @@
 #include "IconDes.h"
 
+RGBA IconDes::ImageColor(Point p, RGBA def)
+{
+	const Image& m = Current().base_image;
+	return Rect(m.GetSize()).Contains(p) ? m[startpoint.y][startpoint.x] : def;
+}
+
 void IconDes::LeftDown(Point p, dword flags)
 {
 	SetFocus();
@@ -7,7 +13,7 @@ void IconDes::LeftDown(Point p, dword flags)
 		return;
 	SaveUndo();
 	startpoint = GetPos(p);
-	startcolor = InImage(startpoint) ? CurrentImage()[startpoint.y][startpoint.x] : RGBAZero();
+	startcolor = ImageColor(p);
 
 	if(IsPasting()) {
 		if(Rect(Current().pastepos, Current().paste_image.GetSize()).Contains(startpoint)) {

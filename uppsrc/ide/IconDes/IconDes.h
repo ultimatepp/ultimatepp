@@ -240,6 +240,8 @@ private:
 	void  DoDraw(Event<IconDraw&> tool);
 	void  DoTool(Event<IconDraw&> tool, Event<Painter&> aa_tool);
 
+	RGBA  ImageColor(Point p, RGBA def = RGBAZero());
+
 	void  LineTool(Point p, dword f);
 	void  Freehand(Point p, int pen);
 	void  FreehandTool(Point p, dword f);
