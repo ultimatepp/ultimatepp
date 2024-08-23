@@ -241,19 +241,29 @@ Tie4<A, B, C, D> Tie(A& a, B& b, C& c, D& d) { return Tie4<A, B, C, D>(a, b, c, 
 }; // end Upp namespace
 
 template<typename... Args>
-    struct std::tuple_element<0, Upp::Tuple<Args...>> { using type = typename Upp::Tuple<Args...>::T1; };
+	struct std::tuple_element<0, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T1;
+    };
 
 template<typename... Args>
-    struct std::tuple_element<1, Upp::Tuple<Args...>> { using type = typename Upp::Tuple<Args...>::T2; };
+	struct std::tuple_element<1, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T2;
+	};
 
 template<typename... Args>
-    struct std::tuple_element<2, Upp::Tuple<Args...>> { using type = typename Upp::Tuple<Args...>::T3; };
+	struct std::tuple_element<2, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T3;
+	};
 
 template<typename... Args>
-    struct std::tuple_element<3, Upp::Tuple<Args...>> { using type = typename Upp::Tuple<Args...>::T4; };
+	struct std::tuple_element<3, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T4;
+	};
 
 template<typename... Args>
-    struct std::tuple_size<Upp::Tuple<Args...>> { static const int value = sizeof...(Args); };
+	struct std::tuple_size<Upp::Tuple<Args...>> {
+		static const int value = sizeof...(Args);
+	};
 
 namespace Upp {
 
