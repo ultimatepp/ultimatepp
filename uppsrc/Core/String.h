@@ -166,7 +166,7 @@ public:
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 };
 
-class String0 : Moveable<String0> {
+class String0 {
 	enum { // 
 		KIND = 14,    // chr[KIND] is String tier flag, 0 - small, 31 - medium, 32..254 ref alloc, 255 - read alloc from Ref
 		SLEN = 15,    // chr[SLEN] stores the length of small tier strings (up to 14 bytes)

@@ -158,11 +158,11 @@ inline void Destroy(T *t, const T *end)
 template <class T>
 struct TriviallyRelocatable {};
 
-template <class T, class B = EmptyClass>
+template <class T>
 struct Moveable : TriviallyRelocatable<T> {};
 
 template <class T> // backward compatiblity
-struct Moveable_ : Moveable<T> {};
+struct Moveable_ {};
 
 template <class T>
 inline constexpr bool is_trivially_relocatable = std::is_trivially_copyable_v<T> ||
