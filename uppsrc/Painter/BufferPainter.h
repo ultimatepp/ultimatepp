@@ -148,7 +148,7 @@ private:
 		byte                            cap;
 		bool                            invert;
 	};
-	struct Attr : Moveable<Attr, SimpleAttr> {
+	struct Attr : Moveable<Attr>, SimpleAttr {
 		int                             mtx_serial; // used to detect changes to speedup preclip
 		WithDeepCopy<Vector<ColorStop>> color_stop;
 

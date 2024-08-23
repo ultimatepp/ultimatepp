@@ -155,6 +155,21 @@ public:
 	Tuple(const Args... args) : Base(args...) {};
 };
 
+template <typename A, typename B>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B>> = is_trivially_relocatable<A> &&
+                                                              is_trivially_relocatable<B>;
+
+template <typename A, typename B, typename C>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B, C>> = is_trivially_relocatable<A> &&
+                                                                 is_trivially_relocatable<B> &&
+                                                                 is_trivially_relocatable<C>;
+
+template <typename A, typename B, typename C, typename D>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B, C, D>> = is_trivially_relocatable<A> &&
+                                                                    is_trivially_relocatable<B> &&
+                                                                    is_trivially_relocatable<C> &&
+                                                                    is_trivially_relocatable<D>;
+
 template <typename... Args>
 Tuple<Args...> MakeTuple(const Args... args) {
 	return Tuple<Args...>(args...);

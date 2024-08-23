@@ -343,7 +343,7 @@ public:
 	~String0()                  { Free(); }
 };
 
-class String : public Moveable<String, AString<String0> > {
+class String : Moveable<String>, public AString<String0> {
 	void Swap(String& b)                                   { String0::Swap(b); }
 
 #ifdef _DEBUG
@@ -799,7 +799,7 @@ public:
 //	WString0& operator=(const WString0& s) { Free(); Set0(s); return *this; }
 };
 
-class WString : public Moveable<WString, AString<WString0> >
+class WString : Moveable<WString>, public AString<WString0>
 {
 	void Swap(WString& b)                                   { WString0::Swap(b); }
 

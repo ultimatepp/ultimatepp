@@ -5,7 +5,7 @@ struct FileLine : Moveable<FileLine> {
 	int    line;
 };
 
-struct LngEntry : Moveable<LngEntry, DeepCopyOption<LngEntry> > {
+struct LngEntry : Moveable<LngEntry>, DeepCopyOption<LngEntry> {
 	bool                   added;
 	VectorMap<int, String> text;
 	Vector<FileLine>       fileline;

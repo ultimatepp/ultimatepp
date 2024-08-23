@@ -41,8 +41,6 @@ static void png_user_warning_fn(png_structp png_ptr, png_const_charp warning_msg
 	LLOG("png warning: " << warning_msg);
 }
 
-NTL_MOVEABLE(png_color)
-
 static Size GetDotSize(Size pixel_size, png_uint_32 x_ppm, png_uint_32 y_ppm, int unit_type)
 {
 	if(unit_type != 1 || !x_ppm || !y_ppm)

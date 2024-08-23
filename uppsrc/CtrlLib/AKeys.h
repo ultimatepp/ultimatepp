@@ -3,8 +3,6 @@ struct KeyInfo {
 	dword key[4];
 };
 
-NTL_MOVEABLE(KeyInfo)
-
 void RegisterKeyBinding(const char *group, const char *id, KeyInfo& (*info)());
 
 KeyInfo& AK_NULL();
