@@ -26,16 +26,15 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 #if __GNUC__
 #if __clang__
-#endif
-
-#if CPU_ARM
 	h << " (CLANG)";
 #else
 	h << " (GCC)";
 #endif
 #endif
 
-#if __cplusplus >= 202000
+#if __cplusplus >= 202300
+	h << " (C++23)";
+#elif __cplusplus >= 202000
 	h << " (C++20)";
 #elif __cplusplus >= 201700
 	h << " (C++17)";
@@ -43,6 +42,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 	h << " (C++14)";
 #elif __cplusplus >= 201100
 	h << " (C++11)";
+#endif
+	
+#if CPU_ARM
 	h << " (ARM)";
 #endif
 
