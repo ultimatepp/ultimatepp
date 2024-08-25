@@ -43,7 +43,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #elif __cplusplus >= 201100
 	h << " (C++11)";
 #endif
-	
+
 #if CPU_ARM
 	h << " (ARM)";
 #endif
