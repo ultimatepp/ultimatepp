@@ -26,6 +26,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 #if __GNUC__
 #if __clang__
+#endif
+
+#if CPU_ARM
 	h << " (CLANG)";
 #else
 	h << " (GCC)";
@@ -40,9 +43,6 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 	h << " (C++14)";
 #elif __cplusplus >= 201100
 	h << " (C++11)";
-#endif
-
-#if CPU_ARM
 	h << " (ARM)";
 #endif
 
@@ -51,7 +51,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 
 #ifdef GUI_GTK
-	h << " (Gtk)";
+	h << " (Gtk::" << ToString(GetGdkBackend()) << ")";
 #endif
 #ifdef FLATPAK
 	h << " (Flatpak)";
