@@ -341,7 +341,22 @@ void IconDes::Paste(const Image& img)
 	Slot& c = Current();
 	c.base_image = c.image;
 	c.paste_image = img;
+#if 1
+	Point p = GetPos(GetMousePos() - GetScreenView().TopLeft());
+	if(InImage(p)) {
+		Size isz = GetImageSize();
+		Size sz = img.GetSize();
+		if(p.x + sz.cx > isz.cx)
+			p.x = max(isz.cx - sz.cx, 0);
+		if(p.y + sz.cy > isz.cy)
+			p.y = max(isz.cy - sz.cy, 0);
+		c.pastepos = p;
+	}
+	else
+		c.pastepos = Point(0, 0);
+#else
 	c.pastepos = Point(0, 0);
+#endif
 	MakePaste();
 	SetBar();
 }
