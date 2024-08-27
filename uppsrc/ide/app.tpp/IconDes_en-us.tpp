@@ -17,7 +17,7 @@ topic "Icon Designer";
 editing [/ .iml] files. This file type acts as an icon container. 
 Each icon can be directly referenced in the source code of the 
 application. This documentation page focuses on showing Icon 
-designer as a tool and do not discuss code aspects.&]
+designer as a tool and does not discuss code aspects.&]
 [s0; &]
 [s0;= 
 @@rawimage:2594&2004
@@ -28,22 +28,29 @@ designer as a tool and do not discuss code aspects.&]
 [s3; More information about using icons in the source code can be 
 found in the [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`_en`-us^ image 
 tutorial].&]
-[s2;:2: 2. Fundamental controls&]
-[s3; Below is the list of the control scheme of Icon Designer:&]
+[s2;:2: 2. Mouse inputs in edit area&]
 [s0; &]
 [ {{3462:6538 [s3; [* Left mouse button]]
 :: [s3; Draws the current color.]
 :: [s3; [* Right mouse button]]
 :: [s3; Picks current color.]
 :: [s3; [* Shift`+Left mouse button]]
-:: [s3; Flood fill.]
+:: [s3; Flood fill. The type of fill is set by associated icons in the 
+toolbar:&]
+[s3; 
+@@image:600&600
+(BGAAYAAAAAAAAAAAAHic7ZtNjtQwEIU9/EuwYwNouAAbtn2RPgBH6C0SezZzkZZYIO7Q1xipR1wDsEmsJBDbZbvsKpf9pKfp0Uwn9vecsuNOK1VMR+3D/NP4OvusfTu7pH47LFWG593sk3L33/o6/99pfg+2euJv2BueIeY+n5HbJJX/U+3H2k/m1+9VPvsSGUjkf6P9UvuN9kftD9oPCoc9dgZS+b/W/qH9c3Ys29C1gjUXSORv6s43Bee9nWPv77+qZZ4+O94TO/6xrrsW5GL2r+2a8/Yvc5f3j3dVy9r0BtCmXvjD2fuYb/kfHcewNcrM748C7ZLI3/T5mZrm2ucqzN7ygrNfalEuF4n8zbgza5x32t9VmP10PxvDfuIPuU8LsZHI/4X2WzWtc8LsY7mH608MH4n8Tc2BjftU9hP/Q+AcOYxa4OwSpN7nsY8f/7H8Wubvq8s47N3rT6wMWuXv20vDZB9be2I5tsi/Dvtl7bl3rvP899wMWuMf2kM+VGBvfFn9H2Rf1aWW+EP27+PurdLY719jeHMyV4XuQ3HYh8f01fM+yRn45kI89hPHS/K55GbgWoefkNn71puwnGHzcoyp5as9F1bsy2VAmYdrPqx1n5VW38pmUDuLvZrsngvx2BvfZRy7Rgals3DV/vzaU2MfqW4GJXJwfw7LnT1dBpg54NWe5bnCWvunFNyxc/Dvw8Sxh+wX5H5m4+r79jx1c8zVHjd4/a/BPsQco46lZ5Er1xwcuh81z/EcirL/v4/4zHHyyJFv/8E+K3Vevb4o+Gcn9rnzVPZb7jWYp2eRKshzICk+qpRnI7b9oecel0OKUj6HDbNP75sVL+7tZJDLnt+Y55+B/W5RPntqrnQZmO9UfNL+rP3FkYfh/Gv1+0lBnrWVyB6WQWwOJoNXq9/X353bP35+263a5I+fwZ78x+917MMzwBBuBpLYt5aBRPbhDLCUl4Fk9nWugbwMpPOvcw2kZ4CxbmrBHDPoYezX5R+XQS9jvy5/eAaDP10GPbGnuQZgGVAzkc3fnwE1jz74uzOg5sGHP801QM2DVwaDv0z+o/7D+Nddh1Jz4JnB4D/4y/fgP/hTMxj86TkM/n168B/8qRn0zr/XDOrf/7ozoGbBi39JDf6DPw9z4t9bBjS1358BNRMe/Gto8OfIv5cMaGuPPwNqNvLHvps/NZfe+feQAY/a4+YvPQM+/PvLgBd75W0PNas++Ctvm6h5yWdvJTsD3uyNfO1rO4NQ3/hIXgbtsF9LRgbtcV+r7QzaZm/VZgYy2Fu1lYEs9lb85+U259kYhfpHkwOkXXIE6Wv5LGLaIUsx/cbLI+e8MpXDA5ZF7jn6UC6jEu5N1Lx7Zr/W4M5HgzkvDd581AzzP9vQSHI=)
+
+@@image:600&600
+(BGAAYAAAAAAAAAAAAHic7ZtNjhMxEIU9/A0S7NgAGi7Ahm0ukgNwhGyR2LOZi7TEAnGHXGOkoLkGYJO20h3adtkuu8plP+lpMpqJ2/6eu+zudJQqpr32bv5pfJo9ad/NLqk/DrfSfqwMz/vZh41+Xfs0/99hfg+2euJv2J88fYJ4Qu6TVP7PtZ9qP5tff1D57EtkIJH/jfYr7bfan7Q/av/y9IUyA6n832j/1H6cHcs2dK5grQUS+Zu6891z7Guv19iHh2/qsk5PjvfEzn+s846q/Ri5mF3b7jnv/jF3ebu9k7rsTW8AfeqFP5y9j/ma/97Rhq1RZn1/EuiXRP5mzC/Uea29VWH2lhec/aUW5fZbIn8z78we5732j0C7tl74a802f8h1WqjvEvm/1H6nzvucMPtY7uH6w4kPBX9Tc2DzPpX9mf+u4Bgw2qBqH1Lv89jHz//Y8bXM31eXcdi7959YGbTK33cvDZN9bO2JHWeL/Ouwv+w9t441zX/PzaA1/qF7yLsK7I2Pi/+D3Fetxadk+5D793HXVmnst88xnPWAs0LXoTjsw3P65Hmf5Ax8ayEe+zPHY/Kx5Gbg2ocfkNn79puwnGHrcoyp5as9R1bsy2VAmYdrPax1nZVW38pmUDuLrZrsXgvx2BvfZ7RdI4PSWbhqf37tqXEfqW4GJXJwfw7LnT1dBpg54NWey3OFte6fUnDHzsF/HyaOPeR+Qe5nNq6xr49TN8dcbXGD1/8a7EPMMepYeha5cq3BoetR8xzPrij7/8eIzxwnjxz57j/YZ6Wmxeujgn92Yp87T2W/5l6DeXoWqYI8B5LivUp5NmI9HnrucTmkKOVz2DD79LFZ8eLeTga57PnNef4Z2O8W5bOn5kqXgflOxWftL9pfHXkYzr8Xvx8U5FlbiexhGcTmYDJ4vfh9+d257fbz+27VJn/8DLbkb7/XuQ/PAEO4GUhi31oGEtmHM8BSXgaS2dc5B/IykM6/zjmQngHGvqkFc8ygh7lfl39cBr3M/br84RkM/nQZ9MSe5hyAZUDNRDZ/fwbUPPrg786Amgcf/jTnADUPXhkM/jL5j/oP4193H0rNgWcGg//gL9+D/+BPzWDwp+cw+PfpwX/wp2bQO/9eM6h//evOgJoFL/4lNfgP/jzMiX9vGdDUfn8G1Ex48K+hwZ8j/14yoK09/gyo2cif+27+1Fx6599DBjxqj5u/9Az48O8vA17slbc/1Kz64K+8faLmJZ+9lewMeLM38vWv7QxCY+MjeRm0w34pGRm0x32ptjNom71VmxnIYG/VVgay2FvxX5fbXGdjFBofTQ6QfskRZKzls4jphyzFjBsvj5zjylQOD1gWucfoQ7mMSrg3UfPumf1SgzsfDea8NHjzUTPM/wJJNfu+)
+]
 :: [s3; [* Ctrl`+Left mouse button]]
 :: [s3; Flood fill with color tolerance.]
 :: [s3; [* Alt`+Left mouse button]]
-:: [s3; Flood fill with larger color tolerance.]
+:: [s3; ]
 :: [s3; [* Shift`+cursor keys]]
 :: [s3; Move selection if any, scroll image otherwise.]
-:: [s3; [* Mouse wheel]]
+:: [s3; [* Ctrl`+Mouse wheel]]
 :: [s3; Zoom in / out]}}&]
 [s0; &]
 [s2;:3: 3. Supersampling&]
