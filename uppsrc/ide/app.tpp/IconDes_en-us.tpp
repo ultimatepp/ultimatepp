@@ -310,6 +310,30 @@ sets second hotspot.&]
 -|Activates antialiasing for relevant tools. Somewhat obsoleted 
 by S3 supersampled images.&]
 [s0; &]
+[s2; -|-|Upscaling / downscaling&]
+[s0; &]
+[s0;i288;O9; 
+@@image:120&120
+(BBAAEAAAAAAAAAAAAHicY2AgBOr/MzCUvmZgcOtlYOCUIagcq35knLiZNP0N/xG4HkqnHiNPP7IZuNwBU4dLfwOSX7CFBzH6YWaAwhSXOmL0g+KFEv31eNTRQz+y+ykNP1L044s/XOYRm37w6Scn/VKaf/DnXwCcMLp7)
+-|Upscales image 2x using `"smart upscale`" algorithm used by 
+framework to upscale normal resolution images to UHD mode. Probably 
+not very useful in image designer.&]
+[s0;i288;O9; 
+@@image:120&120
+(BGAAYAAAAAAAAAAAAHic7ZvtbSQhEEQ3LgfkNK5C2GiczAZzN6Mzkr3abr666WannsQvWx54QMEw+HYjhBBCCCGEEEIIIQcfR7kf5esoj6P8fVEe3z//DKrjUnC0Gf/b7cnpUvJdK2dffDjXLwR8u4dfH5zeRr0/l7tD/cLAk3vY98E55i28P2fT9kBwD7s+8HD/Fn2AinvM98GZOaOZXtbnWmZ9TdQvDDS6x1wfaO56vNXm0Fb7I3S6x1gfaM5G1k9tLm2TQxh0j/4+OMe3dV5ofZB+X4pJ9+jrA8nTLHfh76bek8LIPdr6QMoeC0fSHEi7DsPYPep9II1Rq3VymzUATu5LER4rZb9VRr/aV73yb70HKJjuhTGX8xKn68/b7/M1K1r9327yWBitj/XfW3H+YE3v2LMar9p8Gs5W7OV/ZG238maaOwXs5f9V9rR4nM0N89wpYB//0jhu3fuMjl+X3ClgD//au2/rXmbUo0vuFLCHfyl3euvZmyNuuVNAfv+a+5H53zqPXHOngNz+tfE3Ov81rz/fEV1zp4C8/rVxP3veUDufdc+dAnL619xb1U16hnR+ZZo7BeTy33JPwvJZ2nNcc6eAPP5rPh43++8s2lh3zZ0CcvivfeP1PF+uzTeX3Ckg3n9tDHqf7dfmneu3HcT6r429Vd+1tHq4fltGjP+WdXbVN93I7Ivw33InbuWdnpa1120sYK3/lrG28i6J9p61JIewzn/0OvtM791Ul/phjf+a+4j7I1r2SfPCPIfg77/mPuL+Zu38Z9ldO/j6r83xiHuDreef0rgxzSH4+a+910Td2ezZ47jvh+DnP+ydRkHKHWlMt86VYeDjX8v8KPejLnv7rAv4+M+01tbq1JIlbu2Bvf+eM13LojE7hrW5MwXs/Ue41+prleHSepbp/pvn/zuO+p/JnZ9o+7ks9z+jskeqr/V3dK19Q8DWf895lrd/r/s7pjkEW/8t3/JW+Zd+b/asybRfYeufdAL6DwX0HwroPxTQfyig/1Dwpv6xSRvwxv6xQTvw5v6RvC24gH8kbg8u4h9J24QL+UfCdmGTevYCoV1I1jZsUMcRoPhHovYhef1GQcU/krTxz1GPVwUXKVYeR7m6fwT3Af3H9gH90390MVI5xNX9W3kkvwHdhwK6DwV0HwroPhTQfSig+1BA96GA7kMB3RNCCCGEEELIW/MPdVRM0Q==)
+-|Upscales image 2x by repeating pixels.&]
+[s0;i288;O9; 
+@@image:120&120
+(BGAAYAAAAAAAAAAAAHic7ZvbccMgEEWpKwWlHleTZlxMEiaRxnG0D2AfgO+Z4cuOtTqCK4RIKQAAAAAAAAAA9uXzM7uC16W6h/8cDvfwH8+je/iP5dk9/Mdx5R7+Y6Dcw78/nHv490VyD/9+aNzv3OD+Nf1nn/csDf5f0z+uQb5/XINs+z+sUucIs58X/OcD//msUmcrK53XKnW2sJL/yip1alnNf2WVOjWs6L+ySp0Sq/qvrFInx8r+dwD+c4H/XOA/l1D/b9/t9t3u9cAX7f77+ZvT8Sckxf9H4a9B/fzdqYbJCPFfXVK+pVavxcbjwdV/9dbr/bndjGqaDDf/tc9beH/Ops1w8e/hftNrYO6/Zk5vpkvzo8e/3wRz/5y7Fm/SGNpkfmTqn3PWc//kxtImOWTqv/Zv67zgrsEG81JT/5SnUW7E724wJzXzT2WPhSNqDGxwHzbzT/VRq/vkpvcAM/9U9ltl9NW86sq/9RzgwGJOd/WzlvlfXb+Xv+trVmj9l0L3Bet5hcH5LbP+39r3rPorN54MsnUJ/z33ditvTrlz/vwK/qlnasnjaG445s7B9P6pfqyd+/T2X+fcOcub2T/37Kudy/R6dM6d8zAz++fW8lpozZGA3DmY1j/nvmf8a8dRUO6cZc3on+t/veOf8/r4jBiUO+fhZvPP9fvR9QZpfTYwdw6m8i+99/I8BrV+5ZQ7B1P41+yTsDwWd5yg3DlI9y/5uBf79yxcXw/KnYNU/9I7Xs/1Zc2+pIB3zGn+pT7ovbYvjbugdzsp/mfZX8LVEfRuOdS/5j4b9U43M/seCPOv2RMXuadHc+8N6Ash/jV9LXIvCfecFZxD7v6z77PPtO5Nda7P1b/kPmP/CJd91LhwzCE3/5L7jP2b0vqP8V47yq1VI5HGeMa+Qe36J9VvOnMo3L30XJO1Z5Oq5ypbWr6rOXSU+8oEzzT/oHKH6tPasdJAiHsu87Pc97psvWYKXN0X5jwz/1diJEsczsfNfcuarmXjGO3D3NgZwNx9YerM8m+V4dT9zGnfbZf7QtSY6Z/6fuschpvPDeaqmfvC1Jjh3/o9Opetg5i4L0x90f699u845VBl2H0hasvwT31v1FPQPnQAAAAAAAAAAAAAAP7zBbQqHTU=)
+-|Downscales image 2x by averaging 2x2 pixel blocks.&]
+[s0;i288;O9; 
+@@image:120&120
+(BGAAYAAAAAAAAAAAAHic7ZzbcdswEEVVlwtyG7kluBo3o2IcITE8iqLFYx9agLxnBj/JmMaeBRYgSPpyIYQQQgghhBBCyEK83drHrV1v7etJu37//1tWBw/K+0V2LrXr988dFtzixN9YoyjjeNb7szwcbj7g2z3iclCcWbw/tsPkAA/u4Z8Db/eHyQEE9/DNQa/mPFtje2tzbduCjnv45KA4lNx9Olzjw9i/FDDoHvYceHl7b1xrKzDpHvocSOP2quz6p3C9bfalULqHLgdS7daum9I6PlrHUoHRPeZyILnSjv3Ks5xarxkOnNxjPAdSvbaul9v5h7N7jOegzIGSh/t9pLVWz/pvrduWsTC0p0OQ+9oM/deiqf/Suq3tv+v1sI7bHpaaZr0H6fVBPbexj3/LfsrLm1cef8Ae/qU5PxO3tW5417E/YG3/vTPrWbTj173uVLCe/9GzN819nNaje92pIN//7Pm0db8/W0dC6k4F+f5bY9J1rt8hXf9xLxVWdyrYy3+d89ZnL63feX/tsLpTQb7/1vl+q1nPMnp7qtC6U0G+/xJnqenF5/tda8XvtRZIa3xrTLiedyPff4/eHtSSg9m13/2sG+v7r7Tmg6UWzdQ/d7CP/0IrB5Y1uXev4V53KtjLfyFiDvTqUNgzNuznX9o7Rq3F1rnVBPv5L3h76t2DWHMrgj39S2NVW6NH1t6Qd42wp3/Pd1FG7jPC6hDO7X/27MO9DiHOf33+Xu9vPfvu5b+115R+h2sdQox/y7PCV12/d/7T2pO61SHE+I8cOy0vo4yef3q/Q/kfiPEf2W+Pa8/scUL3Q4jx3xqj1vt4qw9pbkr5G50rKhDjvyDVaMscaN2jjqB1OZuzYRDnvxWr5jzF4/zT8vMh8xlx/gu9c/uR+et1/m8dwyHfgCDW/8jzDel57uh3wtb332ZquNSfld9/i/r+ccadtW6NxLLy+58RORh17/0cvfW8bBq8xn/B4/v32bke9f6OWx3C6/xXNH//4eui+9sDHjmUYnCZA3i9/8r9e57P8lH+rXja5vtGDcjzTy70nw3oPxXQfyqg/1RA/6ngoP6xSQw4sH9sEAcO7h+Lx4IT+MfC8eAk/rFoTDiRfywYFzbp5ywQ4sJisWGDPmpAwz8Wig+L908LOv6xSIy/bv141nCS5uVRy9n9IzkH9J+bA/qn/+zmpFLF2f17eST/ArpPBXSfCug+FdB9KqD7VED3qYDuUwHdpwK6J4QQQgghhJBD8xuY8SuZ)
+-|Upscales image 3x by repeating pixels.&]
+[s0;i288;O9; 
+@@image:120&120
+(BGAAYAAAAAAAAAAAAHic7ZxbcsMgDEWzri4o68lqupksJi3T4vFkLCGQLq/cM8NXWwwHEBhwbzdCCCGEEEIIIfvyeo0uweeS3NP/GLJ7+u/P2T399+XdPf3348o9/fdBck//eDT39I+l5J7+cVjc75zo/jP9j673LIn+P9M/22C8f7bBaPt/rFJOD7PXi/7HQ//jWaWctaxUr1XKWcNK/hOrlNPKav7PrFJOjZX97wD9j4X+x0L/Y6H/sdD/WOh/LF39f/2mx296pgdfpOf/z79Az5+QLv7vN9m5lJ7/f7c5UP+pH9d6v2qHjccDzH9y5vH+njZtA4j/aPcbtwHEfynmXM2xpbk5p80I958cSu6+A/J4OMo2IeH+o7zdlbw2ItS/1G+fjfl9C/lttC4N9S/F7tZ5U5rHrXFsAcL8S65a+37mqk29eU5EmH8pXnvnS/q3k8ZAaofzOtIbq2v9a/O2py9413RSttHrn2ha6izN2631is7vxNT+PTEtqr9q4ylgHTa1f896KsobKO4c2c/qXxrzNfX2xg1g3MlM57+0Z11La/8Fx52jeDP4t+69tbzHtXoEx53jMSP81+5Pe9f7tXGkQ9zJDPGv9UnUWJfyf19LdYo7R7Fm95/HvPfsRXvmOe9Oced43Aj/2v6+lrx7GaU1Vce4kxniP9Uz3zW5n5JW/6i5QJrjtT4B3O+eYv3zTmkN6mmD2rkfvNc9pf+MNh48sagm/oGZ2n9CawPPnGy5l9ThnG16/wnEGCjFoU5nbEv4l9aOqLnYO7YqWMJ/ItpT6R2k0xnbMv6lvtoaoy1zb4e7Rsv4j7yLYnnP6BSHPs5/7d4HOA5Bzt/z+21k2aP8S561929gHArzH333CpF/af9HW5M21ENyG5VMdYvoO5oXK9b9z+A7lF3cA8odnrfk/qp/1Pyu5dFo9wmtj3rf470+pLEptZ91rFQAdZ/RvmtsxXsW3+qyts0MQN2X6tqynxKx/+n5e8B4hrnPlPbtLeM3av/f24dB34DA3Ccs5xvSea71O2Hv/beaGC6VB3Tv1uU+g/r+scadN25Z6uJcV0DcW8qNdh99jq6dlzmBuM9EfP9eO9ZR93dAcSgBcX+m5f8/vG5t/3sgog2lOoDGQALm/sz5nqf0XUvytNH3jYQQQgghhBBCCCF78AM9/ew6)
+-|Downscales image 3x by averaging 3x3 pixel blocks.&]
 [s0; &]
 [s2; -|View settings&]
 [s0;i288;O9; [*4 
