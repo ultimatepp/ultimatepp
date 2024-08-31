@@ -54,19 +54,22 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 int Ctrl::scale;
 
-void InitGtkApp(int argc, char **argv, const char **envptr)
+bool InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 	
-	XInitThreads(); // otherwise there are errors despide GuiLock
-
 #if GTK_CHECK_VERSION(3, 10, 0)
-	gdk_set_allowed_backends("x11"); // this fixes wayland issues
+	gdk_set_allowed_backends("wayland,x11"); // this fixes wayland issues
 #endif
 
+	if (!gtk_init_check(&argc, &argv)) {
+		Cerr() << t_("Failed to initialized GTK app!") << "\n";
+		return false;
+	}
+	if (GdkBackend::IsX11())
+		XInitThreads(); // otherwise there are errors despide GuiLock
 	EnterGuiMutex();
-	gtk_init(&argc, &argv);
-
+	
 	Ctrl::SetUHDEnabled(true);
 	
 	Ctrl::scale = 1;
@@ -82,6 +85,7 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);
 #endif
+	return true;
 }
 
 void ExitGtkApp()

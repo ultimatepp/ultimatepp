@@ -31,14 +31,16 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(popup && !owner) {
 		gtk_window_set_decorated(gtk(), FALSE);
-		// gtk_window_set_has_frame(gtk(), FALSE);
+		if (GdkBackend::IsWayland())
+			gtk_window_set_titlebar(gtk(), gtk_header_bar_new());
 		gtk_window_set_type_hint(gtk(), GDK_WINDOW_TYPE_HINT_POPUP_MENU);
 	}
-	else
+	else {
 		gtk_window_set_type_hint(gtk(), popup ? GDK_WINDOW_TYPE_HINT_COMBO
 		                                : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
 		                                : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
 		                                : GDK_WINDOW_TYPE_HINT_NORMAL);
+	}
 
 	top->cursor_id = -1;
 
@@ -52,7 +54,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	Rect r = GetRect();
 
-	gtk_window_set_default_size (gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
+	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 	
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));

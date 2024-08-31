@@ -164,14 +164,20 @@ public:
 	~ImageGdk();
 };
 
-enum class GdkBackend {
-	X11,
-	WAYLAND,
-	UNKNOWN
-};
+namespace GdkBackend {
 
-GdkBackend GetGdkBackend();
-String ToString(GdkBackend b);
+	enum class Type {
+		X11,
+		WAYLAND,
+		UNKNOWN
+	};
+	
+	Type Get();
+	bool IsX11();
+	bool IsWayland();
+}
+
+String ToString(GdkBackend::Type b);
 
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);

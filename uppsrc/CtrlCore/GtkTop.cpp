@@ -14,7 +14,7 @@ Rect Ctrl::GetFrameMargins()
 	return frameMargins != Rect(0, 0, 0, 0) ? frameMargins : Rect(8, 32, 8, 8);
 }
 
-void    TopWindow::SyncSizeHints()
+void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
 	if(!top)

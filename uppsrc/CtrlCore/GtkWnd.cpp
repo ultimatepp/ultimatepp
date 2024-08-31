@@ -195,20 +195,24 @@ Rect Ctrl::GetWorkArea() const
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
+	rc.Clear();
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDisplay *s = gdk_display_get_default();
 	int n = gdk_display_get_n_monitors(s);
-	rc.Clear();
 	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
-		gdk_monitor_get_workarea(gdk_display_get_monitor(s, i), &rr);
+		auto *pMonitor = gdk_display_get_monitor(s, i);
+		if (GdkBackend::IsWayland()) {
+			gdk_monitor_get_geometry(pMonitor, &rr);
+		} else {
+			gdk_monitor_get_workarea(pMonitor, &rr);
+		}
 		rc.Add(SCL(rr.x, rr.y, rr.width, rr.height));
 	}
 #else
 	GdkScreen *s = gdk_screen_get_default();
 	int n = gdk_screen_get_n_monitors(s);
-	rc.Clear();
 	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
@@ -234,19 +238,45 @@ Rect Ctrl::GetVirtualWorkArea()
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
+	auto pRootWindow = gdk_screen_get_root_window(gdk_screen_get_default());
+	if (!pRootWindow) {
+		ASSERT("Failed to obtain root window!");
+		return Rect();
+	}
+#if GTK_CHECK_VERSION(3, 22, 0)
+	if (GdkBackend::IsWayland()) {
+		GdkRectangle rr;
+		auto *pDisplay = gdk_display_get_default();
+		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
+		if (!pMonitor) {
+			ASSERT("Failed to obtain monitor!");
+			return Rect();
+		}
+		gdk_monitor_get_geometry(pMonitor, &rr);
+		return SCL(rr.x, rr.y, rr.width, rr.height);
+	}
+#endif
+	if (GdkBackend::IsWayland()) {
+		ASSERT("GTK Wayland backend not supported before 3.22 GTK version.");
+		return Rect();
+	}
 	gint x, y, width, height;
-	gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-                            &x, &y, &width, &height);
-    Rect r = SCL(x, y, width, height);
-	return r;
+	gdk_window_get_geometry(pRootWindow, &x, &y, &width, &height);
+    return SCL(x, y, width, height);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
+	if (GdkBackend::IsWayland()) {
+		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
+		// windows.
+		return GetVirtualScreenArea();
+	}
 	GdkRectangle rr;
-	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &rr);
+	auto* display = gdk_display_get_default();
+	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(display), &rr);
 	return SCL(rr.x, rr.y, rr.width, rr.height);
 #else
 	static Rect r;
