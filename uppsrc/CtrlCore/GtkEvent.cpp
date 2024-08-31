@@ -2,7 +2,9 @@
 
 #ifdef GUI_GTK
 
+#ifndef PLATFORM_OPENBSD
 #undef CurrentTime
+#endif
 
 namespace Upp {
 
