@@ -81,7 +81,8 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
-	gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
+	if (GdkBackend::IsX11())
+		gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);
 #endif

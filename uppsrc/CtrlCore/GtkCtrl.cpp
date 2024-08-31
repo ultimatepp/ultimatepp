@@ -2,6 +2,8 @@
 
 #ifdef GUI_GTK
 
+#undef CurrentTime
+
 #define LLOG(x) // DLOG(x)
 
 namespace Upp {
