@@ -152,10 +152,14 @@ Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
 	if(IsOpen()) {
+		//gint x, y;
+		//gdk_window_get_position(gdk(), &x, &y);
+		
 		gint x, y;
-		gdk_window_get_position(gdk(), &x, &y);
-		gint width = gdk_window_get_width(gdk());
-		gint height = gdk_window_get_height(gdk());
+		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+
+		gint width = gtk_widget_get_allocated_width(utop->drawing_area);
+		gint height = gtk_widget_get_allocated_height(utop->drawing_area);
 		return SCL(x, y, width, height);
 	}
 	return Null;

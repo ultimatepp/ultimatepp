@@ -42,29 +42,41 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		                                : GDK_WINDOW_TYPE_HINT_NORMAL);
 	}
 	
+	int header_height = 0;
 	if (GdkBackend::IsWayland() && !popup) {
 		top->header = gtk_header_bar_new();
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
 		gtk_window_set_titlebar(gtk(), top->header);
+		gtk_widget_show(top->header);
+		GtkRequisition req1;
+		gtk_widget_get_preferred_size(top->header, &req1, nullptr);
+		header_height = req1.height;
+		
+		top->drawing_area = gtk_drawing_area_new();
+	} else {
+		top->drawing_area = top->window;
 	}
 	
 	top->cursor_id = -1;
 
-	gtk_widget_set_events(top->window, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK);
-	//g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
-	g_signal_connect(top->window, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
+	gtk_widget_set_events(top->drawing_area, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK);
+	g_signal_connect(top->drawing_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
+	g_signal_connect(top->drawing_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 
 	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
 	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
 		tw->SyncSizeHints();
 
 	Rect r = GetRect();
-
-	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
+	
+	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight() + header_height));
 	
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
-	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
-
+	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight() + header_height));
+	
+	if (top->header) {
+		gtk_container_add(GTK_CONTAINER(gtk()), top->drawing_area);
+	}
 	gtk_widget_show_all(top->window);
 
 	w.gdk = gtk_widget_get_window(top->window);
