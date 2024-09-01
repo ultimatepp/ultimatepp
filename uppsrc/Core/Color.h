@@ -1,9 +1,9 @@
 #ifdef PLATFORM_MACOS
-struct RGBA : Moveable<RGBA> {
+struct RGBA {
 	byte a, r, g, b;
 };
 #else
-struct RGBA : Moveable<RGBA> {
+struct RGBA {
 	byte b, g, r, a;
 };
 #endif

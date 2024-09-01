@@ -158,11 +158,11 @@ inline void Destroy(T *t, const T *end)
 template <class T>
 struct TriviallyRelocatable {};
 
-template <class T>
+template <class T> // alternate name
 struct Moveable : TriviallyRelocatable<T> {};
 
 template <class T> // backward compatiblity
-struct Moveable_ {};
+struct Moveable_ : TriviallyRelocatable<T> {};
 
 template <class T>
 inline constexpr bool is_trivially_relocatable = std::is_trivially_copyable_v<T> ||
@@ -172,20 +172,20 @@ template <class T>
 inline constexpr bool is_upp_guest = false;
 
 template <class T>
-inline typename std::enable_if_t<is_trivially_relocatable<T>> Move(T *dst, T *src)
+inline typename std::enable_if_t<is_trivially_relocatable<T>> Relocate(T *dst, T *src)
 {
 	memcpy(dst, src, sizeof(T));
 }
 
 template <class T>
-inline typename std::enable_if_t<!is_trivially_relocatable<T>> Move(T *dst, T *src)
+inline typename std::enable_if_t<!is_trivially_relocatable<T>> Relocate(T *dst, T *src)
 {
 	new(dst) T(pick(*src));
 	Destruct(src);
 }
 
 template <class T>
-inline void InMove(T *dst, T *src, int n)
+inline void InsertRelocate(T *dst, T *src, int n)
 {
 	if(is_trivially_relocatable<T>)
 		memmove(dst, src, n * sizeof(T));
@@ -195,7 +195,7 @@ inline void InMove(T *dst, T *src, int n)
 		dst += n - 1;
 		T *s = src + n - 1;
 		for(;;) {
-			Move(dst, s);
+			Relocate(dst, s);
 			if(s == src) break;
 			dst--;
 			s--;
@@ -204,14 +204,14 @@ inline void InMove(T *dst, T *src, int n)
 }
 
 template <class T>
-inline void ReMove(T *dst, T *src, int n)
+inline void RemoveRelocate(T *dst, T *src, int n)
 {
 	if(is_trivially_relocatable<T>)
 		memmove(dst, src, n * sizeof(T));
 	else {
 		T *lim = src + n;
 		while(src != lim)
-			Move(dst++, src++);
+			Relocate(dst++, src++);
 	}
 }
 
@@ -223,7 +223,7 @@ inline void Relocate(T *dst, T *src, int n)
 	else {
 		T *lim = src + n;
 		while(src != lim)
-			Move(dst++, src++);
+			Relocate(dst++, src++);
 	}
 }
 
@@ -249,8 +249,8 @@ public:
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
-template <class T, class B = EmptyClass>
-class MoveableAndDeepCopyOption : public Moveable<T> {
+template <class T>
+class MoveableAndDeepCopyOption : public TriviallyRelocatable<T> {
 #ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->~T(); ::new(&dest) T(src, 1); } return dest; }

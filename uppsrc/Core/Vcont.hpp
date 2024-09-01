@@ -306,7 +306,7 @@ void Vector<T>::Remove(int q, int count) {
 	ASSERT(q >= 0 && q <= items - count && count >= 0);
 	if(count == 0) return;
 	Destroy(vector + q, vector + q + count);
-	ReMove(vector + q, vector + q + count, items - q - count);
+	RemoveRelocate(vector + q, vector + q + count, items - q - count);
 	items -= count;
 }
 
@@ -326,10 +326,10 @@ void Vector<T>::Remove(const int *sorted_list, int n)
 			ASSERT(*sorted_list >= pos);
 		}
 		else
-			Move(vector + npos++, vector + pos++);
+			Relocate(vector + npos++, vector + pos++);
 	}
 	while(pos < items)
-		Move(vector + npos++, vector + pos++);
+		Relocate(vector + npos++, vector + pos++);
 	items = npos;
 }
 
@@ -354,7 +354,7 @@ void Vector<T>::RemoveIf(Condition c)
 		if(c(i))
 			Destruct(vector + i);
 		else
-			Move(vector + ti++, vector + i);
+			Relocate(vector + ti++, vector + i);
 	items = ti;
 }
 
@@ -374,7 +374,7 @@ void Vector<T>::RawInsert(int q, int count)
 		vector = newvector;
 	}
 	else
-		InMove(vector + q + count, vector + q, items - q);
+		InsertRelocate(vector + q + count, vector + q, items - q);
 	items += count;
 }
 
