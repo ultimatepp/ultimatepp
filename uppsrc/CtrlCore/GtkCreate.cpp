@@ -41,11 +41,17 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		                                : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
 		                                : GDK_WINDOW_TYPE_HINT_NORMAL);
 	}
-
+	
+	if (GdkBackend::IsWayland() && !popup) {
+		top->header = gtk_header_bar_new();
+		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
+		gtk_window_set_titlebar(gtk(), top->header);
+	}
+	
 	top->cursor_id = -1;
 
 	gtk_widget_set_events(top->window, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK);
-	g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
+	//g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(top->window, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 
 	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
@@ -59,7 +65,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 
-	gtk_widget_realize(top->window);
+	gtk_widget_show_all(top->window);
 
 	w.gdk = gtk_widget_get_window(top->window);
 

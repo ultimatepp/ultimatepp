@@ -87,6 +87,10 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
+		auto pHeader = p->utop->header;
+		if (p->top && pHeader) {
+			gtk_widget_draw(p->utop->header, cr);
+		}
 		p->fullrefresh = false;
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing

@@ -196,6 +196,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget            *window; \
+	GtkWidget            *header = nullptr; \
 	GtkIMContext         *im_context; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \

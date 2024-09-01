@@ -80,8 +80,6 @@ GtkWindow *Ctrl::gtk() const
 	return top ? (GtkWindow *)top->window : NULL;
 }
 
-
-
 }
 
 #endif
