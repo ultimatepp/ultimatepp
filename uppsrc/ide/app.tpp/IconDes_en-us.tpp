@@ -107,6 +107,10 @@ same attributes.&]
 @@image:120&120
 (BCAAIAAAAAAAAAAAAHic7Ze9DcIwEIUzCFKWyTRQMQASFV0qKkpaJDZICw0DpM8IDBDjh3zIejLBf8EFWHpSFFv3XZ7vEqeq/oPGQqvVUpnVmtif2MNqtVZ9P6j7XWURYiEmYk/k8GQfj6dsXBZiT+TQIse52CLjQ+vgD113nZ0PhvGAR1Cc2+USnYOpxyA+eLumGbd6HWtT1+N+uRzn4jMXvPPhoCB7Dte5+WDZbDB5jcyxB/rWU7F8Zr/zWNZxbil8sNjzqf3BvNSkcFkhfK6xsPpK48NH5sf0W6z/7P028N2Qynf1Www/tv+Y79vXPs/+redP4Yf0HtYiX9/e8+Ejlk/92+ty8n1rwPYpp/8ifv9yDjLv2p8cfFctsORbmLP/XML+yjdXFNP7E/zS56/S58/S5+9XDoX+P+wcSv1//dx4AAU+F4I=)
 -|Shows all locations in the code where current image is used.&]
+[s0;i288;O9; 
+@@image:120&120
+(BGAAYAAAAAAAAAAAAHic7dr3q1xFGMbxVVETe+9dEbFXREQREQsixtgL9t57N7uKPZaImBiRYEFENHaCiIUYrNi99v6P3PUZfFeGcWZ25j3n7Jy993nh84vk7ux+z3nvPbmx0+FwOBwOh8PhcDgcDofD4Uzx6RdS6v20rQP7j+bctinVodS5bVOqQ6lz26ZUh1Lntk2pDqXOzdPvNytYYfjXrjo52Z8BHRv++3KwPKwgVhQrwcowI3ZuoMOa+Jq1YG1YB9aF9WB92AA2hI1gY9gENhWbiy1hq3/PbUf/Qa/QKJrOhFXMdYHVYHVYA3ztcvvHmm4N28C2sJ3YXuwgdoSdmu7v3osJ7UIRNE1T78eO8vtPqOnOYhfYFXaD3WEP2BP2gr1hH01/RdOcdqEIVXZ82P2Y0r8n7Bahpsa+Yj+xvzhAHAgHKfpX2fGUdqEIVXY8dj9any27v+FrahwsDhGHisPgcDgCjlT0r+NnTqxdKEKVHQ/dj85nC/bvOeyv8zU1jhJHi1lwDMyGY+E4OEHRv8rPnNjrWvejd6rseOh+TOnvtnf7G25T40Q4CU6GU+BUOE2cLs5Q9M/Z8f99/UTEkA5Vdtx3P3o+W3J/9xq4Tc+Es+BsOAfOhfPgfLgALoSL4GJF/5wdH9rcfx1Co95x3/1of6Zuxf6G3fQSuBQug8vhCrgSroKr4Rq4Fq5T9E/dcVX7WH/ZEc2Ou/ej+5k0/bueNoOm18MNcCPcBDfDLXAr3AZzoAs9Rf/UHW+qv2bH7fvR117b370Gg6a3wx3iTnG3uAfuhfvgfkX/1B1vqr9mx+370de+rv6GaToXHoAH4SF4GObBI+JR8Ziif8qOq9sn9Nfs+OB+dD9LSv+u8+d87Nc0TefDAngcFsIT4kmxSDyl6J+84w311+z43CHt6+xvPI3znoFnxXPiefGCeFHRf9iOV2qf0N9umrrj8yPfd+ro716Dl3CesRhehlfgVXgNXoc34E2R2z9px5voj9d1m2p3vOn+xhKc+5Z4W7wj3oX34H1F/9iOD+7HStcg0t9uqt3xSL9K/d1rsBTnLhMfio/gY/gEPoXPFP1jOz64H5vqbzdN3XH3/Y+qv/EFzv8SvoKv4Rv4Fr6DCfhe0T+04+79qL4Gkf72980lInfHu12/0KG9Hp43PSKv85+fcPbP8Av8Cr/B7/AH/Al/KfqHdtx3P6quQaS/3XSpyN3xUfZfNjnZXwwL4S4wzy7m+d383dX87mYLRf/Qz3Hf/Vh3f7vp5yJ3x0fZP/Hfu7OEdtx3P9bd3276A/wIuTs+7v1DO+67H2vtL8//g6Z/m/7Y6Q+sHZ8Hc4bs+Lj3D+24736svb9cA9N0puezbCZin3GM+nM4HA6Hw+FMt/E+F4X+juN7Hu808fw5EX62S3n+DD1PhjP0+j6R12n0+T/0ewzf8zj7198/6/9/Zv/6++dqqr/SSPu3QQO/f2D/Qv1reD9j37+bSNM+pX/q+e57ESP9/Vvo/RxvGZf+2vbTuX/u96VOpL+2/XTtP+yahP8M+7M/+7P/lOwfEZr8Rjmt2J/92X9q9097b6XOHV3/dndgf/Znf/Znf/Znf/avp38voH0d2J/92yA0U/XctinVodS5bVOqQ6lz26ZUh1Lntk2pDqXObZtSHUqdm/t+OBwOh8PhcDgcDofD4XA4HA6Hw+FwOJyxm38A8llqIg==)
+-|Split current image into smaller images of given size.&]
 [s0;i288;O9; &]
 [s2; -|Paste mode&]
 [s0; In standard Paste mode, clipboard image (source) is pasted over 
@@ -311,7 +315,6 @@ sets second hotspot.&]
 by S3 supersampled images.&]
 [s0; &]
 [s2; -|-|Upscaling / downscaling&]
-[s0; &]
 [s0;i288;O9; 
 @@image:120&120
 (BBAAEAAAAAAAAAAAAHicY2AgBOr/MzCUvmZgcOtlYOCUIagcq35knLiZNP0N/xG4HkqnHiNPP7IZuNwBU4dLfwOSX7CFBzH6YWaAwhSXOmL0g+KFEv31eNTRQz+y+ykNP1L044s/XOYRm37w6Scn/VKaf/DnXwCcMLp7)

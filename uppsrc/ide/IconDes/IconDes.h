@@ -194,7 +194,7 @@ private:
 	int          paste_mode;
 	bool         show_synthetics = true;
 	bool         show_downscaled = false;
-	bool         show_grid2 = false;
+	bool         show_grid2 = true;
 	bool         antialiased = false;
 	int          fill_type = 0;
 
