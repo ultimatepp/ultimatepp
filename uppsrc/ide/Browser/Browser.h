@@ -188,6 +188,7 @@ protected:
 
 	void   OnSearch();
 	void   DoSearch();
+	void   InsertTableOfContents();
 	
 public:
 	Event<Bar&> WhenTemplatesMenu;
