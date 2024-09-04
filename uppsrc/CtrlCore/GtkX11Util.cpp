@@ -28,7 +28,7 @@ namespace Upp {
 
 XDisplay *Xdisplay()
 {
-	return NULL;//GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+	return GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
 }
 
 Window Xroot()

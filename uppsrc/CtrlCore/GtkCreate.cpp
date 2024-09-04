@@ -42,7 +42,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		                                : GDK_WINDOW_TYPE_HINT_NORMAL);
 	}
 	
-	int header_height = 0;
 	if (GdkBackend::IsWayland() && !popup) {
 		top->header = gtk_header_bar_new();
 		gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
@@ -50,7 +49,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		gtk_widget_show(top->header);
 		GtkRequisition req1;
 		gtk_widget_get_preferred_size(top->header, &req1, nullptr);
-		header_height = req1.height;
 		
 		top->drawing_area = gtk_drawing_area_new();
 	} else {
@@ -69,10 +67,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	Rect r = GetRect();
 	
-	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight() + header_height));
-	
+	// TODO: Normalize
+	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
-	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight() + header_height));
+	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 	
 	if (top->header) {
 		gtk_container_add(GTK_CONTAINER(gtk()), top->drawing_area);
