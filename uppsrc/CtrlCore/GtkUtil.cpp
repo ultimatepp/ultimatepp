@@ -48,6 +48,7 @@ String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf)
 				l += stride;
 			}
 			img = m;
+			img = Premultiply(img);
 		}
 		g_object_unref(pixbuf);
 	}

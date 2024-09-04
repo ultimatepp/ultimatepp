@@ -45,6 +45,12 @@ static String sBmp(const Value& data)
 	return BMPEncoder().SaveString(img);
 }
 
+static String sPng(const Value& data)
+{
+	Image img = data;
+	return BMPEncoder().SaveString(img);
+}
+
 static String sImg(const Value& data)
 {
 	Image img = data;
@@ -57,6 +63,8 @@ String GetImageClip(const Image& img, const String& fmt)
 		return Null;
 	if(fmt == "image/bmp")
 		return BMPEncoder().SaveString(img);
+	if(fmt == "image/png")
+		return PNGEncoder().SaveString(img);
 	if(fmt == ClipFmt<Image>())
 		return StoreAsString(const_cast<Image&>(img));
 	return Null;
@@ -67,12 +75,14 @@ void AppendClipboardImage(const Image& img)
 	if(img.IsEmpty()) return;
 	AppendClipboard(ClipFmt<Image>(), img, sImg);
 	AppendClipboard("image/bmp", img, sBmp);
+	AppendClipboard("image/png", img, sPng);
 }
 
 void Append(VectorMap<String, ClipData>& data, const Image& img)
 {
 	data.Add(ClipFmt<Image>(), ClipData(img, sImg));
 	data.Add("image/bmp", ClipData(img, sBmp));
+	data.Add("image/png", ClipData(img, sPng));
 }
 
 }
