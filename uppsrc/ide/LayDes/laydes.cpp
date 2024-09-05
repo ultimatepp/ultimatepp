@@ -194,7 +194,7 @@ void LayDes::PaintLayoutItems(Draw& w, int layid, Size size, Index<int>& passed,
 						break;
 					}
 				}
-		
+
 		if(show) {
 			w.Clipoff(r);
 			if(lrs[i] < 0)
@@ -401,8 +401,6 @@ int   LayDes::FindItem(Point p, bool cursor_first)
 
 Image LayDes::CursorImage(Point p, dword keyflags)
 {
-	if(keyflags & K_CTRL)
-		return IsNull(scroll_start) ? IconDesImg::MoveCursor() : IconDesImg::MoveMove();
 	int hi;
 	if(HasCapture())
 		hi = draghandle;
@@ -447,7 +445,7 @@ Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Rect& r, Size sz)
 struct IDisplay : public Display {
 	Color paper, ink;
 	Font  font;
-	
+
 	Size GetStdSize(const Value& q) const {
 		Size sz = GetSmartTextSize(~q, font);
 		sz.cx += 2 * DPI(4);
@@ -614,18 +612,9 @@ void  LayDes::LeftDown(Point p, dword keyflags)
 	SetCapture();
 	LayoutData& l = CurrentLayout();
 	draglayoutsize = l.size;
-
-	if(keyflags & K_CTRL) {
-		scroll_start = p;
-		scroll_base = sb;
-		return;
-	}
-
 	p = Normalize(p);
-
 	draghandle = FindHandle(p);
 	dragbase = ZPoint(p);
-
 	if(draghandle >= 0)
 		StoreItemRects();
 	else {
@@ -685,16 +674,8 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 {
 	if(!HasCapture() || IsNull(currentlayout))
 		return;
-
-	if(!IsNull(scroll_start)) {
-		sb = scroll_base + scroll_start - p;
-		return;
-	}
-
 	Point pz = Normalize(p);
-
 	p = ZPoint(pz);
-
 	LayoutData& l = CurrentLayout();
 	bool smallmove = max(abs(p.x - dragbase.x), abs(p.y - dragbase.y)) < 4;
 	if(draghandle == 14) {
@@ -799,10 +780,6 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 
 void  LayDes::LeftUp(Point p, dword keyflags)
 {
-	if(!IsNull(scroll_start)) {
-		scroll_start = Null;
-		return;
-	}
 	if(draghandle == 11 && (keyflags & (K_SHIFT|K_CTRL)) == 0)
 		SelectOne(FindItem(ZPoint(Normalize(p))), 0);
 	draghandle = -1;
@@ -1417,10 +1394,10 @@ void LayDes::SortItems()
 			}
 	}
 	while(swap);
-	
+
 	int ii = cursor[0];
 	l.item.InsertPick(ii, pick(item));
-	
+
 	cursor.Clear();
 	for(int i = 0; i < count; i++)
 		cursor.Add(i + ii);
