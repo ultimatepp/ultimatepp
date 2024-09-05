@@ -32,7 +32,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(popup && !owner) {
 		gtk_window_set_decorated(gtk(), FALSE);
 		if (GdkBackend::IsWayland())
-			gtk_window_set_titlebar(gtk(), gtk_header_bar_new());
+			gtk_window_set_titlebar(gtk(), gtk_drawing_area_new());
 		gtk_window_set_type_hint(gtk(), GDK_WINDOW_TYPE_HINT_POPUP_MENU);
 	}
 	else {
