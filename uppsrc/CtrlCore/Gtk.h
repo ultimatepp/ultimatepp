@@ -167,6 +167,8 @@ public:
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
 
+bool   RunningOnWayland();
+
 GdkAtom GAtom(const String& id);
 
 #ifdef GDK_WINDOWING_X11

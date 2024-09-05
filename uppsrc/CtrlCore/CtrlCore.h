@@ -1424,6 +1424,8 @@ public:
 	virtual void   Dump(Stream& s) const;
 
 	static bool LogMessages;
+	
+	void    SetTitle(const char *s);
 #endif
 
 	static void ShowRepaint(int ms);
