@@ -11,5 +11,6 @@ file
 	UWord.iml;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI X11";
 
