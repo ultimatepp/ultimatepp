@@ -171,7 +171,6 @@ void Ctrl::WndShow(bool b)
 	LLOG("WndShow " << Name() << ", " << b);
 	Top *top = GetTop();
 	if(IsOpen() && top) {
-		
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
