@@ -54,14 +54,23 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 int Ctrl::scale;
 
+bool running_on_wayland;
+
+bool   RunningOnWayland()
+{
+	return running_on_wayland;
+}
+
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 	
 	XInitThreads(); // otherwise there are errors despide GuiLock
+	
+	running_on_wayland = GetEnv("XDG_SESSION_TYPE") == "wayland";
 
 #if GTK_CHECK_VERSION(3, 10, 0)
-	gdk_set_allowed_backends("x11"); // this fixes wayland issues
+	gdk_set_allowed_backends("x11"); // this fixes some wayland issues
 #endif
 
 	EnterGuiMutex();

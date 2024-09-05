@@ -111,6 +111,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
+			if(RunningOnWayland()) // wayland is broken, need some paint to change the cursor...
+				topctrl->Refresh(0, 0, 1, 1);
 			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
 	}
