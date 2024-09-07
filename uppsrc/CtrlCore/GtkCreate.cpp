@@ -27,6 +27,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.id = top->id;
 	w.ctrl = this;
 	w.gtk = top->window;
+	w.gdk = nullptr;
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(popup && !owner) {
@@ -56,7 +57,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
-
+	
 	gtk_widget_realize(top->window);
 
 	w.gdk = gtk_widget_get_window(top->window);

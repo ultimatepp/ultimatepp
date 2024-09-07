@@ -290,7 +290,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 						return;
 					}
 			}
-		#ifndef PLATFORM_OSX11
 			if(GetCtrl() || GetAlt()) { // fix Ctrl+Shift+1 etc...
 				keysym = decode((int)event->xkey.keycode,
 								0x0a, 0x31,
@@ -304,7 +303,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 								0x12, 0x39,
 								0x13, 0x30, keysym);
 			}
-		#endif
 			// DLOG("keysym: " << keysym << " " << (char)keysym);
 			if(keysym >= '0' && keysym <= '9' && (chr == 0 || GetCtrl() || GetAlt())) {
 				DispatchKey(KEYtoK(keysym - '0' + K_0)|up, count);
