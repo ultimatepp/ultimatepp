@@ -65,7 +65,7 @@ Value ParseJSON(const char *s)
 
 String AsJSON(Time tm)
 {
-	return IsNull(tm) ? "null" : "\"\\/Date(" + AsString(1000 * (tm - Time(1970, 1, 1))) + ")\\/\"";
+	return IsNull(tm) ? String("null") : "\"\\/Date(" + AsString(1000 * (tm - Time(1970, 1, 1))) + ")\\/\"";
 }
 
 String AsJSON(Date dt)

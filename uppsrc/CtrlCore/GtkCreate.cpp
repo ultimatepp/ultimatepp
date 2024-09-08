@@ -27,6 +27,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.id = top->id;
 	w.ctrl = this;
 	w.gtk = top->window;
+	w.gdk = nullptr;
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	GdkWindowTypeHint type_hint;
@@ -53,8 +54,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 			gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
 			gtk_window_set_titlebar(gtk(), top->header);
 			gtk_widget_show(top->header);
-			GtkRequisition req1;
-			gtk_widget_get_preferred_size(top->header, &req1, nullptr);
 		}
 		
 		top->drawing_area = gtk_drawing_area_new();
@@ -78,14 +77,14 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
-	
+		
 	if (top->header) {
 		gtk_container_add(GTK_CONTAINER(gtk()), top->drawing_area);
 	}
 	gtk_widget_show_all(top->window);
-
+	
 	w.gdk = gtk_widget_get_window(top->window);
-
+	
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
 	gtk_widget_set_app_paintable(top->window, TRUE);

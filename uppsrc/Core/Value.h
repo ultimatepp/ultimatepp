@@ -77,7 +77,7 @@ class AssignValueTypeNo : public ValueType<T, type, B> {};
 template <class T>
 dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
 
-class Value : Moveable_<Value> {
+class Value : Moveable<Value> {
 public:
 	class Void {
 	protected:
@@ -292,7 +292,7 @@ public:
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }
 
-	typedef ConstIteratorOf<Vector<Value>> const_iterator;
+	typedef const Value   *const_iterator;
 
 	const_iterator         begin() const                      { return GetVA().begin(); }
 	const_iterator         end() const                        { return GetVA().end(); }

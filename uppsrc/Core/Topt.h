@@ -130,74 +130,108 @@ inline void Fill(unsigned char *t, const unsigned char *lim, const unsigned char
 inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned char *lim)
 { memcpy8(dst, src, size_t((byte *)lim - (byte *)src)); }
 
-#ifdef NO_MOVEABLE_CHECK
+template <class T>
+inline void DeepCopyConstructFill(T *t, const T *end, const T& x) {
+	while(t != end)
+		new(t++) T(clone(x));
+}
 
 template <class T>
-inline void AssertMoveable(T *) {}
+inline void Construct(T *t, const T *lim) {
+	while(t < lim)
+		new(t++) T;
+}
 
-#define MoveableTemplate(T)
-
-template <class T, class B = EmptyClass>
-class Moveable : public B
+template <class T>
+inline void Destruct(T *t)
 {
-};
+	t->~T();
+}
 
 template <class T>
-struct Moveable_ {
-};
-
-#define NTL_MOVEABLE(T)
-
-#else
-
-template <class T>
-inline void AssertMoveablePtr(T, T) {}
+inline void Destroy(T *t, const T *end)
+{
+	while(t != end)
+		Destruct(t++);
+}
 
 template <class T>
-inline void AssertMoveable0(T *t) { AssertMoveablePtr(&**t, *t); }
-// COMPILATION ERROR HERE MEANS TYPE T WAS NOT MARKED AS Moveable
+struct TriviallyRelocatable {};
 
-template <class T, class B = EmptyClass>
-struct Moveable : public B {
-	friend void AssertMoveable0(T *) {}
-};
+template <class T> // alternate name
+struct Moveable : TriviallyRelocatable<T> {};
 
-template <class T>
-struct Moveable_ {
-	friend void AssertMoveable0(T *) {}
-};
+template <class T> // backward compatiblity
+struct Moveable_ : TriviallyRelocatable<T> {};
 
 template <class T>
-inline void AssertMoveable(T *t = 0) { if(t) AssertMoveable0(t); }
+inline constexpr bool is_trivially_relocatable = std::is_trivially_copyable_v<T> ||
+                                                 std::is_base_of_v<TriviallyRelocatable<T>, T>;
 
-#if defined(COMPILER_MSC) || defined(COMPILER_GCC) && (__GNUC__ < 4 || __GNUC_MINOR__ < 1)
-	#define NTL_MOVEABLE(T) inline void AssertMoveable0(T *) {}
-#else
-	#define NTL_MOVEABLE(T) template<> inline void AssertMoveable<T>(T *) {}
-#endif
+template <class T>
+inline constexpr bool is_upp_guest = false;
 
-#endif
+template <class T>
+inline typename std::enable_if_t<is_trivially_relocatable<T>> Relocate(T *dst, T *src)
+{
+	memcpy(dst, src, sizeof(T));
+}
 
-NTL_MOVEABLE(bool)
-NTL_MOVEABLE(char)
-NTL_MOVEABLE(signed char)
-NTL_MOVEABLE(unsigned char)
-NTL_MOVEABLE(short)
-NTL_MOVEABLE(unsigned short)
-NTL_MOVEABLE(int)
-NTL_MOVEABLE(unsigned int)
-NTL_MOVEABLE(long)
-NTL_MOVEABLE(unsigned long)
-NTL_MOVEABLE(int64)
-NTL_MOVEABLE(uint64)
-NTL_MOVEABLE(float)
-NTL_MOVEABLE(double)
-NTL_MOVEABLE(void *)
-NTL_MOVEABLE(const void *)
+template <class T>
+inline typename std::enable_if_t<!is_trivially_relocatable<T>> Relocate(T *dst, T *src)
+{
+	new(dst) T(pick(*src));
+	Destruct(src);
+}
 
-#if defined(_NATIVE_WCHAR_T_DEFINED) || defined(COMPILER_GCC)
-NTL_MOVEABLE(wchar_t)
-#endif
+template <class T>
+inline void InsertRelocate(T *dst, T *src, int n)
+{
+	if(is_trivially_relocatable<T>)
+		memmove(dst, src, n * sizeof(T));
+	else {
+		if(n <= 0)
+			return;
+		dst += n - 1;
+		T *s = src + n - 1;
+		for(;;) {
+			Relocate(dst, s);
+			if(s == src) break;
+			dst--;
+			s--;
+		}
+	}
+}
+
+template <class T>
+inline void RemoveRelocate(T *dst, T *src, int n)
+{
+	if(is_trivially_relocatable<T>)
+		memmove(dst, src, n * sizeof(T));
+	else {
+		T *lim = src + n;
+		while(src != lim)
+			Relocate(dst++, src++);
+	}
+}
+
+template <class T>
+inline void Relocate(T *dst, T *src, int n)
+{
+	if(is_trivially_relocatable<T>)
+		memcpy_t(dst, src, n);
+	else {
+		T *lim = src + n;
+		while(src != lim)
+			Relocate(dst++, src++);
+	}
+}
+
+template <class T, class S>
+inline void DeepCopyConstruct(T *t, const S *s, const S *end) {
+	while(s != end)
+		new (t++) T(clone(*s++));
+}
 
 template <class T, class B = EmptyClass>
 class WithClone : public B {
@@ -215,9 +249,8 @@ public:
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
-template <class T, class B = EmptyClass>
-class MoveableAndDeepCopyOption : public B {
-	friend void AssertMoveable0(T *) {}
+template <class T>
+class MoveableAndDeepCopyOption : public TriviallyRelocatable<T> {
 #ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->~T(); ::new(&dest) T(src, 1); } return dest; }
@@ -421,9 +454,6 @@ public:
 	STL_ITERATOR_COMPATIBILITY
 };
 
-unsigned Pow2Bound(unsigned i);
-unsigned PrimeBound(unsigned i);
-
 hash_t memhash(const void *ptr, size_t size);
 
 template <class T>
@@ -478,12 +508,6 @@ public:
 	CombineHash(const T& h1, const U& h2, const V& h3, const W& h4)	{ hash = HASH_CONST1; Do(h1); Do(h2); Do(h3); Do(h4); }
 
 	template <class T> CombineHash& operator<<(const T& x)          { Do(x); return *this; }
-};
-
-template <int size>
-struct Data_S_ : Moveable< Data_S_<size> >
-{
-	byte filler[size];
 };
 
 template <class C>

@@ -8,7 +8,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "$COMMON$";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wall -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "$COMMON$";
 COMMON_FLAGS = "";
@@ -37,7 +37,7 @@ const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14";
+COMMON_CPP_OPTIONS = "-std=c++17";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -64,7 +64,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -93,7 +93,7 @@ const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14";
+COMMON_CPP_OPTIONS = "-std=c++17";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -120,7 +120,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";

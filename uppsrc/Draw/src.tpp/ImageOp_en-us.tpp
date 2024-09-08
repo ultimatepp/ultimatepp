@@ -50,15 +50,18 @@ r])&]
 [s2;%% Calculates the minimum Size of Rect [%-*@3 sr] of Image [%-*@3 src] 
 when trying to copy it into Point [%-*@3 p] of ImageBuffer [%-*@3 dest].&]
 [s3;%% &]
+[s3; &]
 [s4; &]
-[s5;:DstSrcOp`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`,void`(`*`)`(RGBA`*t`,const RGBA`*s`,int n`)`): [@(0.0.255) v
-oid]_[* DstSrcOp]([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[*@3 dest], 
-[_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], 
-[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect], [@(0.0.255) void]_(`*[*@3 op])(
-RGBA_`*t, [@(0.0.255) const]_RGBA_`*s, [@(0.0.255) int]_n))&]
+[s5;:Upp`:`:DstSrcOp`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`,void`(`*`)`(RGBA`*`,const RGBA`*`,int`)`,bool`): [@(0.0.255) v
+oid] [* DstSrcOp](ImageBuffer[@(0.0.255) `&] [*@3 dest], Point [*@3 p], 
+[@(0.0.255) const] Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) const] 
+Rect[@(0.0.255) `&] [*@3 srect], [@(0.0.255) void] ([@(0.0.255) `*]op)(RGBA 
+[@(0.0.255) `*], [@(0.0.255) const] [*@3 RGBA] [@(0.0.255) `*], [@(0.0.255) int]), 
+[@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Copies Rect [%-*@3 srect] of Image [%-*@3 src] into Point [%-*@3 p] 
-of ImageBuffer [%-*@3 dest] using copying function [%-*@3 op].&]
-[s3;%% &]
+of ImageBuffer [%-*@3 dest] using copying function [%-*@3 op]. If 
+[%-*@3 co] is true, uses multithreading.&]
+[s0;%% &]
 [s4; &]
 [s5;:Upp`:`:Copy`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`,bool`): [@(0.0.255) v
 oid] [* Copy](ImageBuffer[@(0.0.255) `&] [*@3 dest], Point [*@3 p], [@(0.0.255) const] 
@@ -66,7 +69,7 @@ Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) const] Rect[@(0.0.255) `&]
 [*@3 srect], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Copies Rect [%-*@3 srect] of Image [%-*@3 src] into Point [%-*@3 p] 
 of ImageBuffer [%-*@3 dest]. [%-*@3 co] activates multithreading.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Fill`(ImageBuffer`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^ImageBuffer^ I
 mageBuffer][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r
@@ -74,32 +77,37 @@ ect], [_^RGBA^ RGBA]_[*@3 color])&]
 [s2;%% Fills rectangular are [%-*@3 rect] with [%-*@3 color] .&]
 [s3;%% &]
 [s4; &]
-[s5;:Copy`(Image`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) void]_[* Copy]([_^Image^ I
-mage][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image
-][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
+[s5;:Upp`:`:Copy`(Image`&`,Point`,const Image`&`,const Rect`&`,bool`): [@(0.0.255) void
+] [* Copy](Image[@(0.0.255) `&] [*@3 dest], Point [*@3 p], [@(0.0.255) const] 
+Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) const] Rect[@(0.0.255) `&] 
+[*@3 srect], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Copies Rect [%-*@3 srect] of Image [%-*@3 src] into Point [%-*@3 p] 
-of Image [%-*@3 dest].&]
+of Image [%-*@3 dest]. If [%-*@3 co] is true, uses multithreading.&]
 [s3;%% &]
 [s4; &]
-[s5;:Over`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) void]_[* Over
-]([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], 
-[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rec
-t][@(0.0.255) `&]_[*@3 srect])&]
-[s2;%% Mixes using alpha information Rect [%-*@3 srect] of Image [%-*@3 src] 
-into Point [%-*@3 p] of ImageBuffer [%-*@3 dest].&]
+[s5;:Upp`:`:Over`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`,bool`): [@(0.0.255) v
+oid] [* Over](ImageBuffer[@(0.0.255) `&] [*@3 dest], Point [*@3 p], [@(0.0.255) const] 
+Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) const] Rect[@(0.0.255) `&] 
+[*@3 srect], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
+[s2;%% Paints over (using alpha channel) Rect [%-*@3 srect] of Image 
+[%-*@3 src] into Point [%-*@3 p] of ImageBuffer [%-*@3 dest]. If [%-*@3 co] 
+is true, uses multithreading.&]
 [s3;%% &]
 [s4; &]
-[s5;:Over`(Image`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) void]_[* Over]([_^Image^ I
-mage][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image
-][@(0.0.255) `&]_[*@3 src], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
-[s2;%% Mixes using alpha information Rect [%-*@3 srect] of Image [%-*@3 src] 
-into Point [%-*@3 p] of Image [%-*@3 dest].&]
-[s3;%% &]
+[s5;:Upp`:`:Over`(Image`&`,Point`,const Image`&`,const Rect`&`,bool`): [@(0.0.255) void
+] [* Over](Image[@(0.0.255) `&] [*@3 dest], Point [*@3 p], [@(0.0.255) const] 
+Image[@(0.0.255) `&] [*@3 `_src], [@(0.0.255) const] Rect[@(0.0.255) `&] 
+[*@3 srect], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
+[s2;%% Paints over (using alpha channel) Rect [%-*@3 srect] of Image 
+[%-*@3 src] into Point [%-*@3 p] of Image [%-*@3 dest]. If [%-*@3 co] 
+is true, uses multithreading.&]
+[s3; &]
 [s4; &]
-[s5;:Upp`:`:Over`(Upp`:`:Image`&`,const Upp`:`:Image`&`): [@(0.0.255) void]_[* Over]([_^Upp`:`:Image^ I
-mage][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_
-[*@3 src])&]
-[s2;%% Same as Over([%-*@3 dest], Point(0, 0), [%-*@3 src], [%-*@3 src].GetSize()).&]
+[s5;:Upp`:`:Over`(Image`&`,const Image`&`,bool`): [@(0.0.255) void] 
+[* Over](Image[@(0.0.255) `&] [*@3 dest], [@(0.0.255) const] Image[@(0.0.255) `&] 
+[*@3 `_src], [@(0.0.255) bool] [*@3 co] [@(0.0.255) `=] [@(0.0.255) false])&]
+[s2;%% Same as Over([%-*@3 dest], Point(0, 0), [%-*@3 src], [%-*@3 src].GetSize(), 
+[%-*@3 co]).&]
 [s3;%% &]
 [s4; &]
 [s5;:Fill`(Image`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^Image^ Image][@(0.0.255) `&
@@ -112,24 +120,6 @@ mage][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.
 [* Copy]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 src], 
 [@(0.0.255) const]_[_^Upp`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
 [s2;%% Returns [%-*@3 srect] area of [%-*@3 src].&]
-[s3;%% &]
-[s4; &]
-[s5;:OverStraightOpaque`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) v
-oid]_[* OverStraightOpaque]([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[*@3 dest], 
-[_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], 
-[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
-[s2;%% Mixes using alpha information Rect [%-*@3 srect] of Image [%-*@3 src] 
-into Point [%-*@3 p] of ImageBuffer [%-*@3 dest].&]
-[s2;%% The alpha channel of [%-*@3 dest] is 255 (opaque).&]
-[s3;%% &]
-[s4; &]
-[s5;:OverStraightOpaque`(Image`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) voi
-d]_[* OverStraightOpaque]([_^Image^ Image][@(0.0.255) `&]_[*@3 dest], 
-[_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 `_src], 
-[@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
-[s2;%% Mixes using alpha information Rect [%-*@3 srect] of Image [%-*@3 src] 
-into Point [%-*@3 p] of Image [%-*@3 dest].&]
-[s2;%% The alpha channel of [%-*@3 dest] is 255 (opaque).&]
 [s3;%% &]
 [s4; &]
 [s5;:Crop`(const Image`&`,const Rect`&`): [_^Image^ Image]_[* Crop]([@(0.0.255) const]_[_^Image^ I
@@ -219,13 +209,23 @@ mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 amount]_`=_[@3 256])&]
 based on [%-*@3 img].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rescale`(const Image`&`,Size`,const Rect`&`,Gate2`<int`,int`>`): [_^Image^ Image]_
-[* Rescale]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], 
+[s5;:Rescale`(const Image`&`,Size`,const Rect`&`,Gate`<int`,int`>`): [_^Image^ Image]_[* R
+escale]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 src], 
 [_^Size^ Size]_[*@3 sz], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 src`_rc], 
 [_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 progress]_`=_[@(0.0.255) false])&]
 [s2; [%% Returns a new Image rescaled to Size ][*@3 sz][%%  based on Rect 
 ][*@3 src`_rc ][%% of Image ][*@3 src]&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Rescale`(const Image`&`,Size`,Gate`): Image [* Rescale]([@(0.0.255) const] 
+Image[@(0.0.255) `&] [*@3 src], Size [*@3 sz], Gate<[@(0.0.255) int], 
+[@(0.0.255) int]> progress [@(0.0.255) `=] [*@3 Null])&]
+[s5;:Upp`:`:Rescale`(const Image`&`,int`,int`,Gate`): Image [* Rescale]([@(0.0.255) const
+] Image[@(0.0.255) `&] [*@3 src], [@(0.0.255) int] [*@3 cx], [@(0.0.255) int] 
+[*@3 cy], Gate<[@(0.0.255) int], [@(0.0.255) int]> progress [@(0.0.255) `=] 
+[*@3 Null])&]
+[s2;%% Returns [%-*@3 src] rescaled to requested size.&]
+[s3; &]
 [s4; &]
 [s5;:Sharpen`(const Image`&`,int`): [_^Image^ Image]_[* Sharpen]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 amount]_`=_[@3 100])&]

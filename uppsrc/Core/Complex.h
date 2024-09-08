@@ -54,4 +54,6 @@ inline bool IsInf(const Complex& x)        { return IsInf(x.real()) || IsInf(x.i
 inline bool IsFin(const Complex& x)        { return IsFin(x.real()) && IsFin(x.imag()); }
 
 VALUE_COMPARE(Complex)
-NTL_MOVEABLE(Complex)
+
+template <> inline constexpr bool is_trivially_relocatable<Complex> = true;
+

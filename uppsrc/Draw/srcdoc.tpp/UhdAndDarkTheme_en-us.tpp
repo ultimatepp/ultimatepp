@@ -129,7 +129,7 @@ checked, the Image is exported as .ico and .png files. This is
 intended for application icon (e.g. shown in host shell).]]}}&]
 [s0; &]
 [s5; Finally, it is also possible to disable automatic conversion 
-for the while .iml file by #defining FIXED`_COLORS and/or FIXED`_SIZE 
+for the whole .iml file by #defining FIXED`_COLORS and/or FIXED`_SIZE 
 macros:&]
 [s0; &]
 [s7; #define IMAGECLASS MyImg&]
