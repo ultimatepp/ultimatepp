@@ -64,7 +64,7 @@ _DBG_
 		Pointf     pen_tilt;
 	};
 	
-	struct GEvent : Moveable<GEvent, GEvent0> {
+	struct GEvent : Moveable<GEvent>, GEvent0 {
 		GdkEvent  *event;
 
 		void Free();

@@ -12,8 +12,8 @@ protected:
 	void     ReAlloc(int newalloc);
 	void     Add0();
 	void     DeepCopy0(const BiVector& src);
-	T       *AddHead0()              { AssertMoveable<T>(); Add0(); return &vector[start = Ix(alloc - 1)/*(start + alloc - 1) % alloc*/]; }
-	T       *AddTail0()              { AssertMoveable<T>(); Add0(); return &vector[EI()]; }
+	T       *AddHead0()              { Add0(); return &vector[start = Ix(alloc - 1)/*(start + alloc - 1) % alloc*/]; }
+	T       *AddTail0()              { Add0(); return &vector[EI()]; }
 	void     Zero()                  { start = items = alloc = 0; vector = NULL; }
 	void     Free();
 	void     Pick(BiVector&& x)      { vector = pick(x.vector); start = x.start; items = x.items;
@@ -21,6 +21,8 @@ protected:
 	void     Copy(T *dst, int start, int count) const;
 
 public:
+	static_assert(is_trivially_relocatable<T> || is_upp_guest<T>);
+
 	int      GetCount() const        { return items; }
 	bool     IsEmpty() const         { return items == 0; }
 	void     Clear();

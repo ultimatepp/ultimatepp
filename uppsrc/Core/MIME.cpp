@@ -233,13 +233,13 @@ String FileExtToMIME(const String& ext)
 	if(*h == '.')
 		h = h.Mid(1);
 	int q = sEXT().Find(h);
-	return q >= 0 ? sMIME()[q] : "application/octet-stream";
+	return q >= 0 ? sMIME()[q] : String("application/octet-stream");
 }
 
 String MIMEToFileExt(const String& mime)
 {
 	int q = sMIME().Find(ToLower(mime));
-	return q >= 0 ? sEXT()[q] : "bin";
+	return q >= 0 ? sEXT()[q] : String("bin");
 }
 
 }

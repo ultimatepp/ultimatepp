@@ -14,6 +14,8 @@ template <typename A>
 struct TupleN<1, A>
 {
 	A a;
+	
+	using T1 = A;
 
 	bool  operator==(const TupleN& x) const   { return a == x.a; }
 	int   Compare(const TupleN& x) const      { return SgnCompare(a, x.a); }
@@ -56,6 +58,8 @@ template <typename A, typename B>
 struct TupleN<2, A, B> : public TupleN<1, A> {
 	typedef TupleN<1, A> Base;
 	B b;
+
+	using T2 = B;
 	
 	TUPLE_N_METHODS(b, 1);
 
@@ -71,6 +75,8 @@ struct TupleN<3, A, B, C> : public TupleN<2, A, B>
 	typedef TupleN<2, A, B> Base;
 	C c;
 
+	using T3 = C;
+
 	TUPLE_N_METHODS(c, 2);
 
 	TupleN(const A& a, const B& b, const C& c) : Base(a, b), c(c) {}
@@ -84,6 +90,8 @@ struct TupleN<4, A, B, C, D> : public TupleN<3, A, B, C>
 {
 	typedef TupleN<3, A, B, C> Base;
 	D d;
+
+	using T4 = D;
 
 	TUPLE_N_METHODS(d, 3);
 	
@@ -118,13 +126,16 @@ struct Tuple : public TupleN<sizeof...(Args), Args...> {
 private:
 	typedef TupleN<sizeof...(Args), Args...> Base;
 
-	friend void AssertMoveable0(Tuple *) {}
-
 public:
 	template <int I>
 	const auto& Get() const { return GetFromTuple(*this, IndexI__<I>()); }
 	template <int I>
 	auto& Get() { return GetFromTuple(*this, IndexI__<I>()); }
+
+	template <int I> // std compatibility & C++17 structured binding support
+	const auto& get() const { return GetFromTuple(*this, IndexI__<I>()); }
+	template <int I> // std compatibility & C++17 structured binding support
+	auto& get() { return GetFromTuple(*this, IndexI__<I>()); }
 	
 	template <typename T> const T& Get() const { return GetFromTupleByType(*this, (T*)NULL); }
 	template <typename T> T& Get()             { return GetFromTupleByType(*this, (T*)NULL); }
@@ -154,6 +165,21 @@ public:
 	Tuple() {}
 	Tuple(const Args... args) : Base(args...) {};
 };
+
+template <typename A, typename B>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B>> = is_trivially_relocatable<A> &&
+                                                              is_trivially_relocatable<B>;
+
+template <typename A, typename B, typename C>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B, C>> = is_trivially_relocatable<A> &&
+                                                                 is_trivially_relocatable<B> &&
+                                                                 is_trivially_relocatable<C>;
+
+template <typename A, typename B, typename C, typename D>
+inline constexpr bool is_trivially_relocatable<Tuple<A, B, C, D>> = is_trivially_relocatable<A> &&
+                                                                    is_trivially_relocatable<B> &&
+                                                                    is_trivially_relocatable<C> &&
+                                                                    is_trivially_relocatable<D>;
 
 template <typename... Args>
 Tuple<Args...> MakeTuple(const Args... args) {
@@ -211,6 +237,35 @@ struct Tie4 {
 
 template <typename A, typename B, typename C, typename D>
 Tie4<A, B, C, D> Tie(A& a, B& b, C& c, D& d) { return Tie4<A, B, C, D>(a, b, c, d); }
+
+}; // end Upp namespace
+
+template<typename... Args>
+	struct std::tuple_element<0, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T1;
+    };
+
+template<typename... Args>
+	struct std::tuple_element<1, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T2;
+	};
+
+template<typename... Args>
+	struct std::tuple_element<2, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T3;
+	};
+
+template<typename... Args>
+	struct std::tuple_element<3, Upp::Tuple<Args...>> {
+		using type = typename Upp::Tuple<Args...>::T4;
+	};
+
+template<typename... Args>
+	struct std::tuple_size<Upp::Tuple<Args...>> {
+		static const int value = sizeof...(Args);
+	};
+
+namespace Upp {
 
 // Backward compatibility
 
