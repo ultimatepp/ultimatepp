@@ -162,6 +162,7 @@ Rect Ctrl::GetWndScreenRect() const
 
 		gint width = gtk_widget_get_allocated_width(utop->drawing_area);
 		gint height = gtk_widget_get_allocated_height(utop->drawing_area);
+		
 		return SCL(x, y, width, height);
 	}
 	return Null;

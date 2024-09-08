@@ -43,17 +43,16 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	}
 	gtk_window_set_type_hint(gtk(), type_hint);
 	
-	if (GdkBackend::IsWayland()) {
-		if (type_hint == GDK_WINDOW_TYPE_HINT_COMBO || type_hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) {
+	top->csd_info.Create(type_hint);
+	if (GdkBackend::IsWayland() && top->csd_info->ShouldEnable() && type_hint != GDK_WINDOW_TYPE_HINT_COMBO) {
+		if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
 			top->header = gtk_drawing_area_new();
-			//gtk_header_bar_set_decoration_layout(GTK_HEADER_BAR(top->header), NULL);
 			gtk_widget_set_size_request(top->header, 1, 1);
 			gtk_window_set_titlebar(gtk(), top->header);
 		} else {
 			top->header = gtk_header_bar_new();
 			gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
 			gtk_window_set_titlebar(gtk(), top->header);
-			gtk_widget_show(top->header);
 		}
 		
 		top->drawing_area = gtk_drawing_area_new();
@@ -80,8 +79,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		
 	if (top->header) {
 		gtk_container_add(GTK_CONTAINER(gtk()), top->drawing_area);
+		gtk_widget_show_all(top->window);
+	} else {
+		gtk_widget_realize(top->window);
 	}
-	gtk_widget_show_all(top->window);
 	
 	w.gdk = gtk_widget_get_window(top->window);
 	

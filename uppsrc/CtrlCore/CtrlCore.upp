@@ -93,6 +93,7 @@ file
 	GdkBackend.cpp,
 	GdkImage.cpp,
 	GtkUtil.cpp,
+	GtkCSD.cpp,
 	GtkX11Util.cpp,
 	GtkCtrl.h,
 	GtkCtrl.cpp,
