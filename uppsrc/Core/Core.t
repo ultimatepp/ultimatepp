@@ -3,6 +3,26 @@
 #endif
 // Path.cpp
 
+T_("Network drive")
+caES("")
+csCZ("")
+deDE("")
+esES("")
+fiFI("")
+frFR("")
+huHU("")
+itIT("")
+nlNL("")
+plPL("")
+ptBR("")
+roRO("")
+ruRU("")
+skSK("")
+srSP("")
+trTR("")
+zhCN("")
+zhTW("")
+
 T_("Empty drive")
 caES("")
 csCZ("")
@@ -988,7 +1008,8 @@ deDE("Zeitangabe muss liegen zwischen ")
 esES("La fecha debe estar entre ")
 fiFI("Ajan t\303\244ytyy olla v\303\244lill\303\244 ")
 frFR("")
-huHU("Az id\305\221pont a k\303\266vetkez\305\221 kett\305\221 k\303\266zt kell lennie: ")
+huHU("Az id\305\221pont a k\303\266vetkez\305\221 kett\305\221 k\303\266zt kell "
+     "lennie: ")
 itIT("L'ora dev'essere tra ")
 nlNL("Tijd moet liggen tussen ")
 plPL("Czas musi by\304\207 z zakresu ")
@@ -1134,316 +1155,3 @@ srSP("")
 trTR("")
 zhCN("")
 zhTW("")
-
-
-// Obsolete
-
-T_("invalid day number.")
-caES("nombre de dia incorrecte.")
-csCZ("neplatn\303\251 \304\215\303\255slo dne.")
-deDE("Ung\303\274ltige Tageszahl")
-esES("n\303\272mero de d\303\255a incorrecto.")
-fiFI("virheellinen p\303\244iv\303\244.")
-frFR("jour invalide.")
-huHU("\303\251rv\303\251nytelen nap.")
-itIT("giorno non valido.")
-nlNL("ongeldig dagnummer.")
-plPL("niepoprawny numer dnia.")
-ptBR("dia inv\303\241lido")
-roRO("num\304\203r de zi invalid.")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\264\320\275\321\217 \320\274\320\265\321\201\321\217\321\206\320\260.")
-skSK("neplatn\303\251 \304\215\303\255slo d\305\210a.")
-srSP("nevalidan dan.")
-trTR("ge\303\247ersiz g\303\274n.")
-zhCN("\346\227\240\346\225\210\345\244\251\346\225\260")
-zhTW("\347\204\241\346\225\210\345\244\251\346\225\270")
-
-T_("invalid month number.")
-caES("nombre de mes incorrecte.")
-csCZ("neplatn\303\251 \304\215\303\255slo m\304\233s\303\255ce.")
-deDE("Ung\303\274ltige Monatszahl")
-esES("n\303\272mero de mes incorrecto.")
-fiFI("virheellinen kuukausi.")
-frFR("mois invalide.")
-huHU("\303\251rv\303\251nytelen h\303\263nap.")
-itIT("mese non valido.")
-nlNL("ongeldig maandnummer.")
-plPL("niepoprawny numer miesi\304\205ca.")
-ptBR("m\303\252s inv\303\241lido")
-roRO("num\304\203r de lun\304\203 invalid")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\274\320\265\321\201\321\217\321\206\320\260.")
-skSK("neplatn\303\251 \304\215\303\255slo mesiaca.")
-srSP("nevalidan mesec.")
-trTR("ge\303\247ersiz ay.")
-zhCN("\346\227\240\346\225\210\346\234\210\346\225\260")
-zhTW("\347\204\241\346\225\210\346\234\210\346\225\270")
-
-T_("invalid year number.")
-caES("mombre d'any incorrecte.")
-csCZ("neplatn\303\251 \304\215\303\255slo roku.")
-deDE("Ung\303\274ltige Jahreszahl")
-esES("n\303\272mero de a\303\261o incorrecto.")
-fiFI("virheellinen vuosi.")
-frFR("ann\303\251e invalide.")
-huHU("\303\251rv\303\251nytelen \303\251v.")
-itIT("anno non valido.")
-nlNL("ongeldig jaarnummer.")
-plPL("niepoprawny numer roku.")
-ptBR("ano inv\303\241lido")
-roRO("an invalid")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\263\320\276\320\264\320\260.")
-skSK("neplatn\303\251 \304\215\303\255slo roku.")
-srSP("nevalidana godina.")
-trTR("ge\303\247ersiz y\304\261l.")
-zhCN("\346\227\240\346\225\210\345\271\264\346\225\260")
-zhTW("\347\204\241\346\225\210\345\271\264\346\225\270")
-
-T_("invalid hour number.")
-caES("nombre d'hora incorrecte.")
-csCZ("chybn\303\251 \304\215\303\255slo hodiny.")
-deDE("Ung\303\274ltige Stundenzahl")
-esES("n\303\272mero de hora incorrecto.")
-fiFI("virheellinen tunti.")
-frFR("heure invalide.")
-huHU("\303\251rv\303\251nytelen \303\263ra.")
-itIT("ora non valida.")
-nlNL("ongeldig uurnummer.")
-plPL("niepoprawna warto\305\233\304\207 godziny.")
-ptBR("hora inv\303\241lida")
-roRO("or\304\203 invalid\304\203")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \321\207\320\260\321\201\320\260.")
-skSK("nespr\303\241vne \304\215\303\255slo hodiny.")
-srSP("nevalidan sat.")
-trTR("ge\303\247ersiz saat.")
-zhCN("\346\227\240\346\225\210\345\260\217\346\227\266")
-zhTW("\347\204\241\346\225\210\345\260\217\346\231\202")
-
-T_("invalid minute number.")
-caES("nombre de minut incorrecte.")
-csCZ("chybn\303\251 \304\215\303\255slo minuty.")
-deDE("Ung\303\274ltige Minutenzahl")
-esES("n\303\272mero de minuto incorrecto.")
-fiFI("virheellinen minuutti.")
-frFR("minute invalide.")
-huHU("\303\251rv\303\251nytelen perc.")
-itIT("minuti non valido.")
-nlNL("ongeldig minuutnummer.")
-plPL("niepoprawna warto\305\233\304\207 minuty.")
-ptBR("minuto inv\303\241lido")
-roRO("minut invalid")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\274\320\270\320\275\321\203\321\202\321\213.")
-skSK("nespr\303\241vne \304\215\303\255slo min\303\272ty.")
-srSP("nevalidna minuta.")
-trTR("ge\303\247ersiz dakika.")
-zhCN("\346\227\240\346\225\210\345\210\206")
-zhTW("\347\204\241\346\225\210\345\210\206")
-
-T_("invalid second number.")
-caES("nombre de segon incorrecte.")
-csCZ("chybn\303\251 \304\215\303\255slo sekundy.")
-deDE("Ung\303\274ltige Sekundenzahl")
-esES("n\303\272mero de segundo incorrecto.")
-fiFI("virheellinen sekunti.")
-frFR("seconde invalide.")
-huHU("\303\251rv\303\251nytelen m\303\241sodperc.")
-itIT("secondi non valido.")
-nlNL("ongeldig secondenummer.")
-plPL("niepoprawna druga warto\305\233\304\207.")
-ptBR("segundo inv\303\241lido")
-roRO("secund\304\203 invalid\304\203")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \321\201\320\265\320\272\321\203\320\275\320\264\321\213.")
-skSK("nespr\303\241vne \304\215\303\255slo sekundy.")
-srSP("nevalidna sekunda.")
-trTR("ge\303\247ersiz saniye.")
-zhCN("\346\227\240\346\225\210\347\247\222")
-zhTW("\347\204\241\346\225\210\347\247\222")
-
-T_("invalid character '%c' following date/time.")
-caES("car\303\240cter '%c' incorrecte despr\303\251s de data/hora.")
-csCZ("neplatn\303\275 znak '%c' za koncem data.")
-deDE("Ung\303\274ltiges Zeichen '%c' folgt Datum/Zeit.")
-esES("car\303\241cter '%c' incorrecto despu\303\251s de fecha/hora.")
-fiFI("virheellinen merkki '%c' seuraa p\303\244iv\303\244m\303\244\303\244r\303\244\303\244/kellonaikaa.")
-frFR("caract\303\250re invalide '%c' suivant la date.")
-huHU("\303\251rv\303\251nytelen karakter '%c' a d\303\241tum/id\305\221 mellett.")
-itIT("carattere non valido '%c' dopo la data.")
-nlNL("ongeldige karakter '%c' na de datum/tijd.")
-plPL("niepoprawny znak '%c' na ko\305\204cu daty/czasu.")
-ptBR("caractere inv\303\241lido '%c' ap\303\263s data/hora")
-roRO("data/ora este urmat\304\203 de caracterul invalid '%c'")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\321\213\320\271 "
-     "\321\201\320\270\320\274\320\262\320\276\320\273 '%c' \320\270\320\264\321\203\321\211\320\270\320\271 "
-     "\320\267\320\260 \320\264\320\260\321\202\320\276\320\271/\320\262\321\200\320\265\320\274\320\265\320\275\320\265\320\274.")
-skSK("neplatn\303\275 znak '%c' za koncom d\303\241tumu.")
-srSP("nevalidni karakter '%c' posle datuma/vremena.")
-trTR("girilen tarih/zaman bilgisi i\303\247indeki '%c' ge\303\247ersiz bir karakterdir.")
-zhCN("\346\227\245\346\234\237/\346\227\266\351\227\264\345\220\216\350\267\237\345\255\227\347\254\246 "
-     "'%c' \346\227\240\346\225\210")
-zhTW("\346\227\245\346\234\237/\346\231\202\351\226\223\345\276\214\350\267\237\345\255\227\345\205\203 "
-     "'%c' \347\204\241\346\225\210")
-
-T_("invalid day number %d - February in year %d has only %d days.")
-caES("nombre de dia %d incorrecte - Febrer l'any %d nom\303\251s t\303\251 %d "
-     "dies.")
-csCZ("neplatn\303\251 \304\215\303\255slo dne %d - \303\272nor v roce %d m\303\241 "
-     "pouze %d dn\303\255.")
-deDE("Ung\303\274ltige Tagesnummer %d - Februar im Jahr %d hat nur %d Tage.")
-esES("n\303\272mero de d\303\255a %d incorrecto - En el a\303\261o %d Febrero "
-     "solo tiene %d d\303\255as.")
-fiFI("virheellinen p\303\244iv\303\244 %d - Helmikuussa %d on vain %d p\303\244iv\303\244\303\244.")
-frFR("jour %d invalide pour F\303\251vrier qui n'a que %d jours.")
-huHU("\303\251rv\303\251nytelen nap %d - a febru\303\241r a(z) %d \303\251vben "
-     "csak %d napos.")
-itIT("Febbraio ha solo %d giorni.")
-nlNL("ongeldige dag nummer %d - Februari in jaar %d heeft alleen maar % dagen.")
-plPL("niepoprawny numer dnia %d - Luty w roku %d ma tylko %d dni.")
-ptBR("dia inv\303\241lido %d - Fevereiro no ano %d tem apenas %d dias.")
-roRO("ziua %d invalid\304\203 - februarie are doar %d zile \303\256n anul %d")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\274\320\265\321\201\321\217\321\206\320\260 "
-     "%d - \320\222 \321\204\320\265\320\262\321\200\320\260\320\273\320\265 "
-     "%d \320\263\320\276\320\264\320\260 \321\202\320\276\320\273\321\214\320\272\320\276 "
-     "%d \320\264\320\275\320\265\320\271.")
-skSK("neplatn\303\251 \304\215\303\255slo d\305\210a %d - febru\303\241r v roku "
-     "%d m\303\241 len %d dn\303\255.")
-srSP("nevalidan dan %d - Februar u godini %d ima %d dana.")
-trTR("%d ge\303\247ersiz bir g\303\274n say\304\261s\304\261d\304\261r - %d "
-     "y\304\261l\304\261nda \305\236ubat ay\304\261 %d g\303\274n \303\247eker.")
-zhCN("\346\227\240\346\225\210\345\244\251\346\225\260 %d -  %d\345\271\264\344\272\214\346\234\210\345\217\252\346\234\211%d\345\244\251.")
-zhTW("\347\204\241\346\225\210\345\244\251\346\225\270 %d -  %d\345\271\264\344\272\214\346\234\210\345\217\252\346\234\211%d\345\244\251.")
-
-T_("invalid day number %d - %month has only %d days.")
-caES("nombre de dia %d incorrecte - %month t\303\251 nom\303\251s %d dies.")
-csCZ("neplatn\303\251 \304\215\303\255slo dne %d - %month m\303\241 pouze %d "
-     "dn\303\255.")
-deDE("Ung\303\274ltige Tagesnummer %d - %month hat nur %d Tage.")
-esES("n\303\272mero de d\303\255a %d incorrecto - %month tiene solo %d d\303\255as.")
-fiFI("virheellinen p\303\244iv\303\244 %d - %monthssa on vain %d p\303\244iv\303\244\303\244.")
-frFR("jour %d invalide pour %month qui n'a que %d jours.")
-huHU("\303\251rv\303\251nytelen nap %d - %month csak % napos.")
-itIT("Giorno non valido %d - %month ha solo %d giorni.")
-nlNL("ongeldige dag nummer %d - %month heeft alleen maar %d dagen.")
-plPL("niepoprawny numer dnia - %month ma tylko %d dni.")
-ptBR("dia inv\303\241lido %d - %month tem apenas %d dias.")
-roRO("ziua %d invalid\304\203 - %month are numai %d zile")
-ruRU("\320\275\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\320\276\320\265 "
-     "\321\207\320\270\321\201\320\273\320\276 \320\274\320\265\321\201\321\217\321\206\320\260 "
-     "%d - \320\222 %month \321\202\320\276\320\273\321\214\320\272\320\276 %d "
-     "\320\264\320\275\320\265\320\271.")
-skSK("neplatn\303\251 \304\215\303\255slo d\305\210a %d - %month m\303\241 len "
-     "%d dn\303\255.")
-srSP("nevalidan dan %d - %month ima %d dana.")
-trTR("%d ge\303\247ersiz bir g\303\274n say\304\261s\304\261d\304\261r - %month "
-     "ay\304\261 %d g\303\274n \303\247eker.")
-zhCN("\346\227\240\346\225\210\345\244\251\346\225\260 %d - %month\346\234\210\345\217\252\346\234\211 "
-     "%d \345\244\251.")
-zhTW("\347\204\241\346\225\210\345\244\251\346\225\270 %d - %month\346\234\210\345\217\252\346\234\211 "
-     "%d \345\244\251.")
-
-T_("exceeded valid range (lower bound: %`).")
-caES("rang v\303\240lid excedit (l\303\255mit inferior: %`).")
-csCZ("p\305\231ekro\304\215en\303\255 povolen\303\251ho rozsahu (doln\303\255 "
-     "mez: %`).")
-deDE("G\303\274ltigkeitsbereich unterschritten (untere Grenze: %`).")
-esES("rango v\303\241lido excedido (l\303\255mite inferior: %`).")
-fiFI("sallitun alueen ulkopuolella (alaraja: %`).")
-frFR("validit\303\251 de l'intervalle d\303\251pass\303\251e (limite inf\303\251rieure "
-     ": %d`).")
-huHU("\303\251rv\303\251nyes tartom\303\241ny alatt (als\303\263 hat\303\241r: "
-     "%`).")
-itIT("range valido superato (limite inferiore: %`).")
-nlNL("geldig gebied overschreden (beneden grens: %`).")
-plPL("przekroczono dopuszczalny zakres (dolna granica: %`).")
-ptBR("exceeded valid range (lower bound: %`).")
-roRO("interval dep\304\203\310\231it (margine inferioar\304\203: %`).")
-ruRU("\320\277\321\200\320\265\320\262\321\213\321\210\320\265\320\275 \320\264\320\276\320\277\321\203\321\201\321\202\320\270\320\274\321\213\320\271 "
-     "\320\277\321\200\320\265\320\264\320\265\320\273 (\320\275\320\270\320\266\320\275\320\270\320\271 "
-     "\320\277\321\200\320\265\320\264\320\265\320\273: %`).")
-skSK("prekro\304\215enie povolen\303\251ho rozsahu (doln\303\241 hranica: %`).")
-srSP("prekora\304\215ena validna granica (donja granica: %`).")
-trTR("Ge\303\247erli aral\304\261k a\305\237\304\261ld\304\261 (alt s\304\261n\304\261r: "
-     "%`).")
-zhCN("\350\266\205\345\207\272\346\234\211\346\225\210\350\214\203\345\233\264(\344\270\213\351\231\220:%`).")
-zhTW("\350\266\205\345\207\272\346\234\211\346\225\210\347\257\204\345\234\215(\344\270\213\351\231\220:%`).")
-
-T_("exceeded valid range (upper bound: %`).")
-caES("rang v\303\240lid excedit (l\303\255mit superior: %`).")
-csCZ("p\305\231ekro\304\215en\303\255 povolen\303\251ho rozsahu (horn\303\255 "
-     "mez: %`).")
-deDE("G\303\274ltigkeitsbereich \303\274berschritten (obere Grenze: %`).")
-esES("rango v\303\241lido excedido (l\303\255mite superior: %`).")
-fiFI("sallitun alueen ulkopuolella (yl\303\244raja: %`).")
-frFR("validit\303\251 de l'intervalle d\303\251pass\303\251e (limite sup\303\251rieure "
-     ": %d`).")
-huHU("\303\251rv\303\251nyes tartom\303\241ny f\303\266l\303\266tt (fels\305\221 "
-     "hat\303\241r: %`)")
-itIT("range valido superato (limite superiore: %`).")
-nlNL("geldig gebied overschreden (boven grens: %`).")
-plPL("przekroczono dopuszczalny zakres (g\303\263rna granica: %`).")
-ptBR("exceeded valid range (upper bound: %`).")
-roRO("interval dep\304\203\310\231it (margine superioar\304\203: %`).")
-ruRU("\320\277\321\200\320\265\320\262\321\213\321\210\320\265\320\275 \320\264\320\276\320\277\321\203\321\201\321\202\320\270\320\274\321\213\320\271 "
-     "\320\277\321\200\320\265\320\264\320\265\320\273 (\320\262\320\265\321\200\321\205\320\275\320\270\320\271 "
-     "\320\277\321\200\320\265\320\264\320\265\320\273: %`).")
-skSK("prekro\304\215enie povolen\303\251ho rozsahu (horn\303\241 hranica: %`).")
-srSP("prekora\304\215ena validna granica (gornja granica: %`).")
-trTR("Ge\303\247erli aral\304\261k a\305\237\304\261ld\304\261 (\303\274st s\304\261n\304\261r: "
-     "%`).")
-zhCN("\350\266\205\345\207\272\346\234\211\346\225\210\350\214\203\345\233\264(\344\270\212\351\231\220:%`).")
-zhTW("\350\266\205\345\207\272\346\234\211\346\225\210\347\257\204\345\234\215(\344\270\212\351\231\220:%`).")
-
-T_("Invalid date/time: digit expected, found character")
-caES("Data/hora incorrecte: s'espera d\303\255git, trobat car\303\240cter")
-csCZ("Chybn\303\251 datum/\304\215as: o\304\215ek\303\241v\303\241na \304\215\303\255slice, "
-     "nalezen znak")
-deDE("Ung\303\274ltige(s) Datum/Zeit: Ziffer erwartet, Zeichen vorgefunden")
-esES("Fecha/d\303\255a incorrecto: se espera d\303\255gito, encontrado car\303\241cter")
-fiFI("Virheellinen pvm/aika: K\303\244yt\303\244 numeroita kirjaimien sijaan.")
-frFR("Date/heure invalide : chiffre attendu, caract\303\250re d\303\251tect\303\251")
-huHU("\303\251rv\303\251nytelen d\303\241tum/id\305\221: sz\303\241mjegy helyett "
-     "m\303\241s karakter \303\241ll")
-itIT("Data/ora non valida")
-nlNL("Ongeldige datum/tijd: getal verwacht, karakter gevonden")
-plPL("Niepoprawna data/czas: oczekiwano cyfry, znaleziono znak")
-ptBR("Data/hora inv\303\241lida: digito esperado, encontrou caractere")
-roRO("Dat\304\203/or\304\203 invalid\304\203: se a\310\231teapt\304\203 cifr\304\203, "
-     "caracter g\304\203sit")
-ruRU("\320\235\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\321\213\320\265 "
-     "\320\264\320\260\321\202\320\260/\320\262\321\200\320\265\320\274\321\217: "
-     "\320\276\320\266\320\270\320\264\320\260\320\265\321\202\321\201\321\217 "
-     "\321\206\320\270\321\204\321\200\320\260, \320\260 \320\275\320\260\320\271\320\264\320\265\320\275 "
-     "\321\201\320\270\320\274\320\262\320\276\320\273")
-skSK("Nespr\303\241vny d\303\241tum/\304\215as: o\304\215ak\303\241van\303\241 "
-     "\304\215\303\255slica, n\303\241jden\303\275 znak")
-srSP("Nevalidan datum/vreme: o\304\215ekuje se cifra, prona\304\221en karakter")
-trTR("Ge\303\247ersiz tarih/zaman: say\304\261 olmas\304\261 gereken yerde harf "
-     "var")
-zhCN("\346\227\240\346\225\210\346\227\245\346\234\237/\346\227\266\351\227\264:\345\217\252\350\203\275\346\230\257\346\225\260\345\255\227,\344\270\215\350\203\275\344\270\272\345\255\227\347\254\246")
-zhTW("\347\204\241\346\225\210\346\227\245\346\234\237/\346\231\202\351\226\223:\345\217\252\350\203\275\346\230\257\346\225\270\344\275\215,\344\270\215\350\203\275\347\202\272\345\255\227\345\205\203")
-
-T_("Invalid date/time:")
-caES("Data/hora incorrecte:")
-csCZ("Chybn\303\251 datum/\304\215as:")
-deDE("Ung\303\274ltige(s) Datum/Zeit:")
-esES("Fecha/d\303\255a incorrecto:")
-fiFI("Virheellinen pvm/aika:")
-frFR("Date/heure invalide :")
-huHU("\303\251rv\303\251nytelen d\303\241tum/id\305\221")
-itIT("Data/ora non valida:")
-nlNL("Ongeldige datum/tijd:")
-plPL("Niepoprawna data/czas:")
-ptBR("Data/hora inv\303\241lida:")
-roRO("Dat\304\203/or\304\203 invalid\304\203:")
-ruRU("\320\235\320\265\320\277\321\200\320\260\320\262\320\270\320\273\321\214\320\275\321\213\320\265 "
-     "\320\264\320\260\321\202\320\260/\320\262\321\200\320\265\320\274\321\217:")
-skSK("Nespr\303\241vny d\303\241tum/\304\215as:")
-srSP("Nevalidan datum/vreme:")
-trTR("Ge\303\247ersiz tarih/zaman:")
-zhCN("\346\227\240\346\225\210\346\227\245\346\234\237/\346\227\266\351\227\264:")
-zhTW("\347\204\241\346\225\210\346\227\245\346\234\237/\346\231\202\351\226\223:")
