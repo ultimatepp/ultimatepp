@@ -26,12 +26,12 @@ void TopWindow::SyncSizeHints()
 	if(sizeable)
 		sz = GetMinSize();
 	m.min_width = LSC(sz.cx + utop->csd_info->ExtraWidth());
-	m.min_height = LSC(sz.cy + + utop->csd_info->ExtraHeight());
+	m.min_height = LSC(sz.cy + utop->csd_info->ExtraHeight());
 	sz = sz0;
 	if(sizeable)
 		sz = GetMaxSize();
-	m.max_width = LSC(sz.cx);
-	m.max_height = LSC(sz.cy);
+	m.max_width = LSC(sz.cx + utop->csd_info->ExtraWidth());
+	m.max_height = LSC(sz.cy + utop->csd_info->ExtraHeight());
 	gtk_window_set_resizable(gtk(), sizeable);
 	Top *top = GetTop();
 	if(top) {
