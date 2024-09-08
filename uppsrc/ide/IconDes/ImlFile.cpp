@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 class AlphaImageInfo
 {
 public:
@@ -346,6 +344,4 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 		out << "IMAGE_END_DATA(" << bs.GetCount() << ", " << bn << ")" << eol;
 	}
 	return out.GetResult();
-}
-
 }

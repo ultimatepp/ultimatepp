@@ -3,7 +3,6 @@ description "TheIDE - layout (.lay) designer \377B";
 uses
 	RichEdit,
 	Esc,
-	IconDes,
 	CodeEditor,
 	ide/Common,
 	ide/Browser;

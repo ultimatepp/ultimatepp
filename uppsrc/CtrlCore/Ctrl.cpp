@@ -510,6 +510,12 @@ void   Dump(const Ctrl *ctrl)
 		LOG("NULL");
 }
 
+void Ctrl::SetTitle(const char *s)
+{
+	TopWindow *w = GetTopWindow();
+	if(w) w->Title(s);
+}
+
 #endif
 
 bool Ctrl::IsOcxChild()

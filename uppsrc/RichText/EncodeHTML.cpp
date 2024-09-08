@@ -112,7 +112,8 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
               const VectorMap<String, String>& links,
               const VectorMap<String, String>& labels,
               Zoom z, const VectorMap<String, String>& escape,
-              HtmlObjectSaver& object_saver)
+              HtmlObjectSaver& object_saver,
+              RichPara::Number& n)
 {
 	String html;
 	for(int i = 0; i < text.GetPartCount(); i++) {
@@ -170,7 +171,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						if(c.vspan)
 							html << " rowspan=" << c.vspan + 1;
 						html << '>';
-						html << AsHtml(c.text, styles, css, links, labels, z, escape, object_saver);
+						html << AsHtml(c.text, styles, css, links, labels, z, escape, object_saver, n);
 						html << "</td>\r\n";
 					}
 				}
@@ -189,6 +190,13 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			if(p.format.ruler)
 				html << "<hr>";
 			bool bultext = false;
+			String number;
+			if(p.format.GetNumberLevel() > 0) {
+				n.TestReset(p.format);
+				n.Next(p.format);
+				number = n.AsText(p.format);
+			}
+			else
 			if(p.format.bullet == RichPara::BULLET_TEXT)
 				for(int i = 0; i < p.part.GetCount(); i++) {
 					const RichPara::Part& part = p.part[i];
@@ -270,7 +278,16 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 					}
 					bool spc = false;
 					const wchar *end = part.text.End();
-					for(const wchar *s = part.text.Begin(); s != end; s++) {
+					const wchar *s = part.text.Begin();
+					WString h;
+					if(number.GetCount()) {
+						if(*s == '\t')
+							s++;
+						h << number.ToWString() << ' ' << WString(s, end);
+						s = h;
+						end = h.end();
+					}
+					for(;s != end; s++) {
 						if(*s == ' ') {
 							html.Cat(spc ? "&nbsp;" : " ");
 							spc = true;
@@ -369,8 +386,9 @@ String EncodeHtml(const RichText& text, Index<String>& css,
                   const String& outdir, const String& namebase, Zoom z,
                   const VectorMap<String, String>& escape, int imt)
 {
+	RichPara::Number n;
 	DefaultHtmlObjectSaver default_saver(outdir, namebase, imt, z);
-	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, default_saver);
+	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, default_saver, n);
 }
 
 String EncodeHtml(const RichText& text, Index<String>& css,
@@ -379,7 +397,8 @@ String EncodeHtml(const RichText& text, Index<String>& css,
                   HtmlObjectSaver& object_saver, Zoom z,
                   const VectorMap<String, String>& escape)
 {
-	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, object_saver);
+	RichPara::Number n;
+	return AsHtml(text, text.GetStyles(), css, links, labels, z, escape, object_saver, n);
 }
 
 String AsCss(Index<String>& ss)

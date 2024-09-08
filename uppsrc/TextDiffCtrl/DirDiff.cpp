@@ -217,7 +217,11 @@ void DirDiffDlg::Compare()
 		String p1 = AppendFileName(~dir1, f[i]);
 		String p2 = AppendFileName(~dir2, f[i]);
 		int n = NORMAL_FILE;
-		if((IsNull(dlim) || FileGetTime(p1) >= dlim || FileGetTime(p2) >= dlim) && !FileEqual(p1, p2, n))
+		auto IsGit = [&](const String& path) {
+			return path.Find("/.git/") >= 0 || path.Find("\\.git/") >= 0 || path.Find("\\.git\\") >= 0 || path.Find("/.git\\") >= 0;
+		};
+		if((IsNull(dlim) || FileGetTime(p1) >= dlim || FileGetTime(p2) >= dlim) && !FileEqual(p1, p2, n) &&
+		   !IsGit(p1) && !IsGit(p2))
 			list.Add(MakeTuple(f[i], p1, p2, n));
 	}
 	

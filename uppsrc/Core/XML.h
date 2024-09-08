@@ -174,7 +174,7 @@ public:
 	XmlParser(Stream& in);
 };
 
-class XmlNode : Moveable< XmlNode, DeepCopyOption<XmlNode> > {
+class XmlNode : Moveable<XmlNode>, DeepCopyOption<XmlNode> {
 	int                              type;
 	String                           text;
 	Array<XmlNode>                   node;

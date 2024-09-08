@@ -73,7 +73,7 @@ inline Size operator/(Size sz, Zoom m)
 	return Size(sz.cx / m, sz.cy / m);
 }
 
-struct PageY : Moveable<PageY, RelOps<PageY> > {
+struct PageY : Moveable<PageY>, RelOps<PageY> {
 	int page;
 	int y;
 

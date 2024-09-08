@@ -4,7 +4,6 @@ uses
 	ide\Common,
 	ide\Core,
 	ide\LayDes,
-	ide\IconDes,
 	ide\Builders,
 	ide\Debuggers,
 	ide\Browser,

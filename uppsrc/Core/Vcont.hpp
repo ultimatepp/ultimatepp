@@ -122,7 +122,7 @@ bool Vector<T>::ReAlloc(int newalloc)
 	alloc = newalloc == INT_MAX ? INT_MAX // maximum alloc reached
 	        : (int)((sz - sz0) / sizeof(T) + newalloc); // adjust alloc to real memory size
 	if(vector && newvector)
-		memcpy_t((T *)newvector, vector, items);
+		Relocate((T *)newvector, vector, items);
 	vector = (T *)newvector;
 	return alloced;
 }
@@ -306,7 +306,7 @@ void Vector<T>::Remove(int q, int count) {
 	ASSERT(q >= 0 && q <= items - count && count >= 0);
 	if(count == 0) return;
 	Destroy(vector + q, vector + q + count);
-	memmove((void *)(vector + q), (void *)(vector + q + count), (items - q - count) * sizeof(T));
+	RemoveRelocate(vector + q, vector + q + count, items - q - count);
 	items -= count;
 }
 
@@ -319,18 +319,17 @@ void Vector<T>::Remove(const int *sorted_list, int n)
 	for(;;) {
 		ASSERT(pos < items);
 		if(pos == *sorted_list) {
-			(vector + pos)->~T();
+			Destruct(vector + pos);
 			pos++;
 			sorted_list++;
 			if(--n == 0) break;
 			ASSERT(*sorted_list >= pos);
 		}
 		else
-			*((Data_S_<sizeof(T)>*)vector + npos++)
-				= *((Data_S_<sizeof(T)>*)vector + pos++);
+			Relocate(vector + npos++, vector + pos++);
 	}
 	while(pos < items)
-		*((Data_S_<sizeof(T)>*)vector + npos++) = *((Data_S_<sizeof(T)>*)vector + pos++);
+		Relocate(vector + npos++, vector + pos++);
 	items = npos;
 }
 
@@ -347,15 +346,15 @@ void Vector<T>::RemoveIf(Condition c)
 	int i = 0;
 	for(; i < items; i++) // run to the first element without moving
 		if(c(i)) {
-			(vector + i)->~T();
+			Destruct(vector + i);
 			break;
 		}
 	int ti = i++;
 	for(; i < items; i++)
 		if(c(i))
-			(vector + i)->~T();
+			Destruct(vector + i);
 		else
-			*((Data_S_<sizeof(T)>*)vector + ti++) = *((Data_S_<sizeof(T)>*)vector + i);
+			Relocate(vector + ti++, vector + i);
 	items = ti;
 }
 
@@ -368,14 +367,14 @@ void Vector<T>::RawInsert(int q, int count)
 	if(items + count > alloc) {
 		T *newvector = RawAlloc(alloc = max(alloc + count, int(alloc + ((unsigned)alloc >> 1))));
 		if(vector) {
-			memcpy_t(newvector, vector, q);
-			memcpy_t(newvector + q + count, vector + q, items - q);
+			Relocate(newvector, vector, q);
+			Relocate(newvector + q + count, vector + q, items - q);
 			RawFree(vector);
 		}
 		vector = newvector;
 	}
 	else
-		memmove((void *)(vector + q + count), (void *)(vector + q), (items - q) * sizeof(T));
+		InsertRelocate(vector + q + count, vector + q, items - q);
 	items += count;
 }
 
@@ -442,7 +441,7 @@ void Vector<T>::Insert(int i, Vector<T>&& v) {
 	ASSERT(!vector || v.vector != vector);
 	if(v.items) {
 		RawInsert(i, v.items);
-		memcpy_t(vector + i, v.vector, v.items);
+		Relocate(vector + i, v.vector, v.items);
 	}
 	RawFree(v.vector);
 	v.Zero();
@@ -455,7 +454,7 @@ void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
 	int n = v.GetCount() - from;
 	if(n) {
 		RawInsert(i, n);
-		memcpy_t(vector + i, v.vector + from, n);
+		Relocate(vector + i, v.vector + from, n);
 		v.items = from;
 	}
 }
@@ -737,10 +736,10 @@ void BiVector<T>::ReAlloc(int newalloc) {
 	if(items) {
 		int end = start + items;
 		if(end <= alloc)
-			memcpy_t(newvector, vector + start, end - start);
+			Relocate(newvector, vector + start, end - start);
 		else {
-			memcpy_t(newvector, vector + start, alloc - start);
-			memcpy_t(newvector + alloc - start, vector, end - alloc);
+			Relocate(newvector, vector + start, alloc - start);
+			Relocate(newvector + alloc - start, vector, end - alloc);
 		}
 		MemoryFree(vector);
 	}

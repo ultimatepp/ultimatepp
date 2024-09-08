@@ -111,6 +111,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
+			if(RunningOnWayland()) // wayland is broken, need some paint to change the cursor...
+				topctrl->Refresh(0, 0, 1, 1);
 			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
 	}
@@ -297,6 +299,7 @@ bool Ctrl::HasWndFocus() const
 	return IsOpen() && gtk_window_is_active(gtk());
 }
 
+#if 0
 void Ctrl::FocusSync()
 {
 	GuiLock __;
@@ -312,11 +315,35 @@ void Ctrl::FocusSync()
 			break;
 		}
 	if(focus != ctrl) {
+		DLOG("FocusSync " << Upp::Name(ctrl) << ", focus: " << Upp::Name(focus));
 		if(ctrl)
 			ctrl->KillFocusWnd();
 		ctrl = focus;
 		if(ctrl)
 			ctrl->SetFocusWnd();
+		SyncCaret();
+	}
+}
+#endif
+
+void Ctrl::FocusSync()
+{
+	GuiLock __;
+	static Ptr<Ctrl> ctrl;
+	if(focusCtrlWnd && focusCtrlWnd->IsOpen() && gtk_window_is_active(focusCtrlWnd->gtk()))
+		return;
+	Ptr<Ctrl> focus = NULL;
+	for(int i = 0; i < wins.GetCount(); i++)
+		if(gtk_window_is_active((GtkWindow *)wins[i].gtk)) {
+			focus = wins[i].ctrl;
+			break;
+		}
+	if(focus != focusCtrlWnd) {
+		LLOG("FocusSync " << Upp::Name(focusCtrlWnd) << " -> " << Upp::Name(focus));
+		if(focusCtrlWnd && focusCtrlWnd->IsOpen())
+			focusCtrlWnd->KillFocusWnd();
+		if(focus)
+			focus->SetFocusWnd();
 		SyncCaret();
 	}
 }
@@ -328,9 +355,11 @@ bool Ctrl::SetWndFocus()
 	if(top) {
 		LLOG("SetWndFocus0 DO gdk: " << gdk());
 		SetWndForeground();
+	#if 0 // this does not seem necessary
 		int t0 = msecs();
 		while(!gtk_window_is_active(gtk()) && msecs() - t0 < 500) // Wait up to 500ms for window to become active - not ideal, but only possibility
 			FetchEvents(true);
+	#endif
 		FocusSync();
 	}
 	return true;
@@ -371,9 +400,9 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		if(win.ctrl == this) {
 			if(win.invalid.GetCount() && win.invalid[0].right > 99999 && win.invalid[0].bottom > 99999)
 				return;
-			if(win.invalid.GetCount() > 200) { // keep things sane
+			if(win.invalid.GetCount() > 40) { // keep things sane
 				win.invalid.Clear();
-				win.invalid.Add(Rect(0, 0, 100000, 100000));
+				win.invalid.Add(Rect(0, 0, 20000, 20000));
 			}
 			else
 				win.invalid.Add(rr);

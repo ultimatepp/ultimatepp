@@ -73,9 +73,6 @@ void UWord::FileBar(Bar& bar)
 	   .Help("Save current document with a new name");
 	bar.ToolGap();
 	bar.MenuSeparator();
-	bar.Add("Print..", CtrlImg::print(), THISBACK(Print))
-	   .Key(K_CTRL_P)
-	   .Help("Print document");
 	bar.Add("Export to PDF..", UWordImg::pdf(), THISBACK(Pdf))
 	   .Help("Export document to PDF file");
 	if(bar.IsMenuBar()) {

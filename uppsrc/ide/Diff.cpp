@@ -4,7 +4,8 @@ struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
 	
-	int  kind;
+	String repo_dir;
+	int    kind;
 	
 	void LoadGit();
 	void Load();
@@ -17,7 +18,8 @@ struct RepoDiff : DiffDlg {
 
 void RepoDiff::Set(const String& f)
 {
-	kind = GetRepoKind(f);
+	repo_dir = f;
+	kind = GetRepo(repo_dir);
 	editfile = f;
 	if(kind == SVN_DIR) {
 		pane << r.SizePos();
@@ -103,36 +105,42 @@ void LoadBranches(DropList& branch, const String& dir)
 
 void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file)
 {
-	String gitcmd = "log --format=medium --date=short " + branch;
+	String gitcmd = "log --format=medium --date=short --name-only ";
+	if(file.GetCount())
+		gitcmd << " --follow ";
+	gitcmd << branch;
 	if(file.GetCount())
 		gitcmd << " -- " << GetFileName(file);
 	String log = GitCmd(dir, gitcmd);
 	StringStream ss(log);
-	String author, date, commit;
+	String author, date, commit, path, msg;
 	r.ClearList();
+	auto AddCommit = [&] {
+		if(commit.GetCount()) {
+			String h = commit;
+			if(h.GetCount() > 4)
+				h.Trim(6);
+			r.Add(IsNull(file) ? commit : commit + ":" + path,
+			      "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
+			      "[* \1" + Join(Split(msg, CharFilterWhitespace), " "));
+		}
+		date = commit = author = msg = Null;
+	};
 	while(!ss.IsEof()) {
 		String l = TrimBoth(ss.GetLine());
-		if(l.GetCount() == 0) {
+		if(l.GetCount() == 0 && msg.GetCount() == 0) {
 			while(!ss.IsEof()) {
 				l = ss.GetLine();
 				if(l.GetCount())
 					break;
 			}
-			String msg = l;
+			msg = l;
 			while(!ss.IsEof()) {
 				l = ss.GetLine();
 				if(l.GetCount() == 0)
 					break;
 				msg << l;
 			}
-			if(commit.GetCount()) {
-				String h = commit;
-				if(h.GetCount() > 4)
-					h.Trim(6);
-				r.Add(commit, "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
-				              "[* \1" + Join(Split(msg, CharFilterWhitespace), " "));
-			}
-			date = commit = author = Null;
 		}
 		else
 		if(l.TrimStart("Author:")) {
@@ -143,9 +151,15 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 		if(l.TrimStart("Date:"))
 			date = TrimBoth(l);
 		else
-		if(l.TrimStart("commit"))
+		if(l.TrimStart("commit")) {
+			AddCommit();
 			commit = TrimBoth(l);
+		}
+		else
+		if(l.GetCount())
+			path = l;
 	}
+	AddCommit();
 	
 	if(r.GetCount())
 		r.SetIndex(0);
@@ -163,8 +177,15 @@ void RepoDiff::Load()
 		return;
 	if(kind == SVN_DIR)
 		extfile = HostSys("svn cat " + editfile + '@' + AsString(~r));
-	if(kind == GIT_DIR)
-		extfile = GitCmd(GetFileFolder(editfile), "show " + ~~r + ":./" + GetFileName(editfile));
+	if(kind == GIT_DIR) {
+		String h = ~~r;
+		String commit, path;
+		SplitTo(h, ':', commit, path);
+		if(path.GetCount())
+			extfile = GitCmd(repo_dir, "show " + h);
+		else
+			extfile = GitCmd(GetFileFolder(editfile), "show " + commit + ":./" + GetFileName(editfile));
+	}
 	diff.Set(backup = LoadFile(editfile), extfile);
 }
 

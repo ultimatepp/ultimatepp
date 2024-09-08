@@ -62,6 +62,7 @@ CONSOLE_APP_MAIN
 	RDUMP(sizeof(Pointf));
 	RDUMP(sizeof(Rectf));
 	RDUMP(sizeof(Color));
+	RDUMP(sizeof(RGBA));
 	RDUMP(sizeof(Complex));
 	RDUMP(sizeof(Uuid));
 	RDUMP(sizeof(Mutex));

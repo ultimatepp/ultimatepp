@@ -444,7 +444,7 @@ String LanguageInfo::FormatDouble(double value, int digits, int FD_flags, int fi
 		return Null;
 	return NlsFormatRaw(UPP::FormatDouble(value, digits, FD_flags),
 	                    FD_flags & FD_NOTHSEPS ? String() : thousand_separator,
-	                    FD_flags & FD_COMMA ? "," : decimal_point);
+	                    FD_flags & FD_COMMA ? String(",") : decimal_point);
 }
 
 String LanguageInfo::FormatDate(Date date) const

@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 Color s_stdcolor[] = {
 	Black,
 	Red,
@@ -233,6 +231,4 @@ RGBACtrl::RGBACtrl()
 	};
 	Add(text);
 	SyncText();
-}
-
 }

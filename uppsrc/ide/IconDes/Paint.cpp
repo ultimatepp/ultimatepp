@@ -1,9 +1,7 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 #define IMAGECLASS IconDesImg
-#define IMAGEFILE <IconDes/IconDes.iml>
+#define IMAGEFILE <ide/IconDes/IconDes.iml>
 #include <Draw/iml_source.h>
 
 void IconShow::Paint(Draw& w)
@@ -269,6 +267,4 @@ void IconDes::Paint(Draw& w)
 		PaintHotSpot(image.GetHotSpot(), LtRed());
 		PaintHotSpot(image.Get2ndSpot(), LtBlue());
 	}
-}
-
 }

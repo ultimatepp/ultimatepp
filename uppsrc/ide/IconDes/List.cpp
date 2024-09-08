@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 String IconDes::FormatImageName(const Slot& c)
 {
 	Size sz = c.image.GetSize();
@@ -243,6 +241,26 @@ void IconDes::Duplicate()
 	EditImage();
 }
 
+int CharFilterImageId(int c)
+{
+	return IsAlNum(c) ? c : '_';
+}
+
+String FixImageName(String name)
+{
+	if(IsNull(name))
+		return name;
+	int q = name.Find("\n");
+	if(q >= 0)
+		name.Trim(q);
+	if(name.GetCount() > 32)
+		name.Trim(32);
+	String id = Filter(name, CharFilterImageId);
+	if(!IsAlpha(*id) && *id != '_')
+		id = '_' + id;
+	return id;
+}
+
 void IconDes::InsertPaste()
 {
 	Image m = ReadClipboardImage();
@@ -250,7 +268,7 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
-	ImageInsert("", m);
+	ImageInsert(FixImageName(ReadClipboardText()), m);
 	EditImage();
 }
 
@@ -318,11 +336,6 @@ FileSel& IconDes::ImgFile()
 	return sel;
 }
 
-int CharFilterImageId(int c)
-{
-	return IsAlNum(c) ? c : '_';
-}
-
 void IconDes::InsertFile()
 {
 	if(!ImgFile().ExecuteOpen()) return;
@@ -331,9 +344,7 @@ void IconDes::InsertFile()
 		String fn = ImgFile()[i];
 		Array<ImlImage> ml;
 		String ext = ToLower(GetFileExt(fn));
-		String id = Filter(GetFileTitle(fn), CharFilterImageId);
-		if(!IsAlpha(*id) && *id != '_')
-			id = '_' + id;
+		String id = FixImageName(GetFileTitle(fn));
 		if(ext == ".iml") {
 			int f;
 			LoadIml(LoadFile(fn), ml, f);
@@ -440,6 +451,12 @@ void IconDes::EditImage()
 	dword flags = c.flags;
 	bool exp = c.exp;
 	String name = c.name;
+
+	Vector<ImageIml> bimg;
+	ImageIml mm;
+	mm.image = c.image;
+	bimg << mm;
+	dlg.estimated_size = FormatFileSize(PackImlData(bimg).GetCount());
 	
 	dlg.cx <<= img.GetWidth();
 	dlg.cy <<= img.GetHeight();
@@ -518,8 +535,6 @@ void IconDes::ListMenu(Bar& bar)
 	else {
 		bar.Add(AK_INSERT_IMAGE, IconDesImg::Insert(), THISBACK(InsertImage));
 		bar.Add(IsCurrent(), AK_IMAGE, IconDesImg::Edit(), THISBACK(EditImage));
-		bar.Add(IsCurrent(), AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
-		bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
 		bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
 		bar.Add(AK_INSERT_FILE, CtrlImg::open(), THISBACK(InsertFile));
 		bar.Add(AK_EXPORT_PNGS, IconDesImg::ExportPngs(), THISBACK(ExportPngs));
@@ -541,9 +556,6 @@ void IconDes::ListMenu(Bar& bar)
 	EditBar(bar);
 	ListMenuEx(bar);
 }
-
-void IconDes::ListMenuEx(Bar& bar) {}
-
 
 void IconDes::Clear()
 {
@@ -637,6 +649,4 @@ void IconDes::DnDInsert(int line, PasteClip& d)
 void IconDes::Drag()
 {
 	ilist.DoDragAndDrop(InternalClip(ilist, "icondes-icon"), ilist.GetDragSample(), DND_MOVE);
-}
-
 }

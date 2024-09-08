@@ -46,12 +46,7 @@
 		#elif __APPLE__
 			// zvzv note
 			// s/b MACOSX
-			#ifdef flagX11
-				#define PLATFORM_OSX11 1
-				#define flagNOGTK
-			#else
-				#define PLATFORM_COCOA 1
-			#endif
+			#define PLATFORM_COCOA 1
 			#define PLATFORM_BSD 1
 			#define PLATFORM_MACOS 1
 			#define PLATFORM_OSX 1

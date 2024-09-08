@@ -10,33 +10,6 @@ void BREAK_WHEN_PICKED(T& x)
 #endif
 
 template <class T>
-inline void DeepCopyConstructFill(T *t, const T *end, const T& x) {
-	while(t != end)
-		new(t++) T(clone(x));
-}
-
-template <class T>
-inline void Construct(T *t, const T *lim) {
-	while(t < lim)
-		new(t++) T;
-}
-
-template <class T>
-inline void Destroy(T *t, const T *end)
-{
-	while(t != end) {
-		t->~T();
-		t++;
-	}
-}
-
-template <class T, class S>
-inline void DeepCopyConstruct(T *t, const S *s, const S *end) {
-	while(s != end)
-		new (t++) T(clone(*s++));
-}
-
-template <class T>
 class Buffer : Moveable< Buffer<T> > {
 	T *ptr;
 	
@@ -165,6 +138,8 @@ template <class U> class Index;
 
 template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
+	static_assert(is_trivially_relocatable<T> || is_upp_guest<T>);
+	
 	T       *vector;
 	int      items;
 	int      alloc;
@@ -283,9 +258,8 @@ public:
 	~Vector() {
 		Free();
 		return; // Constraints:
-		AssertMoveable((T *)0);  // T must be moveable
 	}
-
+	
 // Pick assignment & copy. Picked source can only do Clear(), ~Vector(), operator=, operator <<=
 	Vector(Vector&& v)               { Pick(pick(v)); }
 	void operator=(Vector&& v)       { if(this != &v) { Free(); Pick(pick(v)); } }

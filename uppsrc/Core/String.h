@@ -166,7 +166,7 @@ public:
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 };
 
-class String0 : Moveable<String0> {
+class String0 {
 	enum { // 
 		KIND = 14,    // chr[KIND] is String tier flag, 0 - small, 31 - medium, 32..254 ref alloc, 255 - read alloc from Ref
 		SLEN = 15,    // chr[SLEN] stores the length of small tier strings (up to 14 bytes)
@@ -343,7 +343,7 @@ public:
 	~String0()                  { Free(); }
 };
 
-class String : public Moveable<String, AString<String0> > {
+class String : Moveable<String>, public AString<String0> {
 	void Swap(String& b)                                   { String0::Swap(b); }
 
 #ifdef _DEBUG
@@ -799,7 +799,7 @@ public:
 //	WString0& operator=(const WString0& s) { Free(); Set0(s); return *this; }
 };
 
-class WString : public Moveable<WString, AString<WString0> >
+class WString : Moveable<WString>, public AString<WString0>
 {
 	void Swap(WString& b)                                   { WString0::Swap(b); }
 

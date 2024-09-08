@@ -107,6 +107,7 @@ void TopicEditor::Tools(Bar& bar)
 	   .Key(K_ALT_U).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
+	bar.Add("Generate Table of Contents", TopicImg::TOC(), [=] { InsertTableOfContents(); });
 }
 
 void TopicEditor::MainTool(Bar& bar)
@@ -310,6 +311,40 @@ void TopicEditor::Save()
 {
 	SaveTopic();
 	SaveInc();
+}
+
+void TopicEditor::InsertTableOfContents()
+{
+	struct MyIter : RichText::Iterator {
+		RichPara::Number n;
+		RichEdit *editor;
+		int label = 0;
+		String toc_qtf = "[A5* Table of Contents&]";
+		
+		bool operator()(int pos, const RichPara& para) override {
+			int lvl = para.format.GetNumberLevel();
+			if(lvl > 0) {
+				n.TestReset(para.format);
+				n.Next(para.format);
+				editor->SetSelection(pos, pos);
+				RichText::FormatInfo fmt = editor->GetFormatInfo();
+				fmt.label = AsString(++label);
+				editor->ApplyFormatInfo(fmt);
+				String s = para.GetText().ToString();
+				s.TrimStart("\t");
+				toc_qtf << "[^#" << fmt.label << "^ \1" << String(' ', (lvl - 1) * 4) << n.AsText(para.format) << " " << s << "\1&]";
+			}
+			return false;
+		};
+	} it;
+
+	it.editor = &editor;
+	editor.RemoveSelection();
+	editor.BeginOp();
+	int cursor = editor.GetCursor();
+	editor.Get().Iterate(it);
+	editor.SetSelection(cursor, cursor);
+	editor.PasteText(ParseQTF(it.toc_qtf));
 }
 
 void TopicEditor::SetFocus()

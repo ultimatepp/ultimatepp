@@ -6,7 +6,7 @@ static VectorMap<String, IdeIconEditPos>& sEP()
 	return x;
 }
 
-void IdeIconDes::SaveEditPos()
+void IconDes::SaveEditPos()
 {
 	IdeIconEditPos& ep = sEP().GetAdd(filename);
 	ep.filetime = filetime;
@@ -47,7 +47,7 @@ void SerializeIconDesPos(Stream& s)
 	}
 }
 
-void IdeIconDes::RestoreEditPos()
+void IconDes::RestoreEditPos()
 {
 	IdeIconEditPos& ep = sEP().GetAdd(filename);
 	if(ep.filetime == filetime)
@@ -66,7 +66,7 @@ struct IconDesModule : public IdeModule {
 	}
 	virtual IdeDesigner *CreateDesigner(const char *path, byte) {
 		if(IsImlFile(path)) {
-			IdeIconDes *d = new IdeIconDes;
+			IconDes *d = new IconDes;
 			LoadFromGlobal(*d, "icondes-ctrl");
 			if(d->Load(path)) {
 				return d;
@@ -88,18 +88,18 @@ void RegisterIconDes()
 	RegisterIdeModule(Single<IconDesModule>());
 }
 
-void IdeIconDes::CopyId(const String& n)
+void IconDes::CopyId(const String& n)
 {
 	ClearClipboard();
 	AppendClipboardText(n);
 }
 
-void IdeIconDes::FindId(const String& id)
+void IconDes::FindId(const String& id)
 {
 	FindName(id);
 }
 
-void IdeIconDes::ListMenuEx(Bar& bar)
+void IconDes::ListMenuEx(Bar& bar)
 {
 	if(IsSingleMode())
 		return;

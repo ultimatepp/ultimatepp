@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 RGBA GetPixel(const Image& img, int x, int y)
 {
 	if(x < 0 || x >= img.GetWidth() || y < 0 || y >= img.GetHeight())
@@ -19,10 +17,12 @@ struct SmoothPixel {
 	int x;
 	int y;
 	
+	force_inline
 	RGBA Get(int dx, int dy) {
 		return GetPixel(img, x + dx, y + dy);
 	}
 	
+	force_inline
 	void Do(int dx, int dy) {
 		RGBA c = Get(dx, 0);
 		if(c.a > 128 && c == Get(0, dy) && (c != Get(dx, dy) || c != Get(-dx, dy) || c != Get(dx, -dy))) {
@@ -34,6 +34,7 @@ struct SmoothPixel {
 		}
 	}
 	
+	force_inline
 	RGBA Get(double level) {
 		RGBA x;
 		n = max(int(n * level), 1);
@@ -72,15 +73,17 @@ Image Smoothen(const Image& img, double level)
 
 void IconDes::Smoothen()
 {
-	WithColorizeLayout<TopWindow> dlg;
+	WithImageDblLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Smoothen");
 	PlaceDlg(dlg);
+	dlg.txt = "Level";
 	dlg.level.MinMax(0, 1);
 	dlg.level <<= 0.75;
 	dlg.level <<= dlg.Breaker();
+	Couple(dlg, dlg.level, dlg.slider, 1, 0.75);
 	Image bk = ImageStart();
 	for(;;) {
-		ImageSet(Upp::Smoothen(bk, 0.4 * minmax((double)~dlg.level + 0.01, 0.01, 1.1)));
+		ImageSet(::Smoothen(bk, 0.4 * minmax((double)~dlg.level + 0.01, 0.01, 1.1)));
 		switch(dlg.Run()) {
 		case IDCANCEL:
 			ImageSet(bk);
@@ -89,6 +92,4 @@ void IconDes::Smoothen()
 			return;
 		}
 	}
-}
-
 }

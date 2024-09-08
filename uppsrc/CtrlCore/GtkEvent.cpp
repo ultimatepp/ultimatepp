@@ -397,7 +397,8 @@ bool Ctrl::ProcessInvalids()
 	if(invalids) {
 		for(Win& win : wins) {
 			for(const Rect& r : win.invalid)
-				gdk_window_invalidate_rect(win.gdk, GdkRect(r), TRUE);
+				if(win.gdk)
+					gdk_window_invalidate_rect(win.gdk, GdkRect(r), TRUE);
 			win.invalid.Clear();
 		}
 		invalids = false;
@@ -454,7 +455,7 @@ Image Ctrl::GtkMouseEvent(int action, int act, int zd)
 				return Null;
 		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
 			IgnoreMouseUp();
-			if(activePopup.Top())
+			if(activePopup.Top() && activePopup.Top()->HasFocusDeep())
 				activePopup.Top()->GetTopWindow()->ActivateWnd();
 		}
 		else

@@ -164,6 +164,7 @@ void Ctrl::DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 {
 	GuiLock __;
+	LLOG("DoSetFocus " << Upp::Name(pfocusCtrl) << " -> " << Upp::Name(nfocusCtrl) << " " << activate);
 	if(activate && focusCtrl == nfocusCtrl && nfocusCtrl) {
 		Ctrl *top = nfocusCtrl->GetTopCtrl();
 		if((!pfocusCtrl || pfocusCtrl->GetTopCtrl() != top) && !top->destroying) {
@@ -184,40 +185,6 @@ void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 	SyncCaret();
 }
 
-/*
-bool Ctrl::SetFocus0(bool activate)
-{
-	GuiLock __;
-	if(IsUsrLog())
-		UsrLogT(6, String().Cat() << "SETFOCUS " << Desc(this));
-	LLOG("Ctrl::SetFocus " << Desc(this));
-	LLOG("focusCtrlWnd " << UPP::Name(focusCtrlWnd));
-	LLOG("Ctrl::SetFocus0 -> deferredSetFocus = NULL; was: " << UPP::Name(defferedSetFocus));
-	defferedSetFocus = NULL;
-	if(focusCtrl == this) return true;
-	if(!IsOpen() || !IsEnabled() || !IsVisible()) return false;
-	Ptr<Ctrl> pfocusCtrl = focusCtrl;
-	Ptr<Ctrl> topwindow = GetTopWindow();
-	Ptr<Ctrl> topctrl = GetTopCtrl();
-	Ptr<Ctrl> _this = this;
-	if(!topwindow) topwindow = topctrl;
-	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
-	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
-	if(activate) // Dolik/fudadmin 2011-5-1
-		topctrl->SetWndForeground();  // cxl 2007-4-27
-	LLOG("SetFocus -> focusCtrl = this: " << FormatIntHex(this) << ", _this = " << FormatIntHex(~_this) << ", " << UPP::Name(_this));
-	focusCtrl = _this;
-	focusCtrlWnd = topwindow;
-	DoKillFocus(pfocusCtrl, _this);
-	LLOG("SetFocus 2");
-	DoDeactivate(pfocusCtrl, _this);
-	DoSetFocus(pfocusCtrl, _this, activate);
-	if(topwindow)
-		lastActiveWnd = topwindow;
-	return true;
-}
-*/
-
 bool Ctrl::SetFocus0(bool activate)
 {
 	GuiLock __;
@@ -232,21 +199,10 @@ bool Ctrl::SetFocus0(bool activate)
 	Ptr<Ctrl> topwindow = GetTopWindow();
 	Ptr<Ctrl> topctrl = GetTopCtrl();
 	Ptr<Ctrl> _this = this;
-#ifdef PLATFORM_COCOA0 // hopefully no needed
-	topwindow = topctrl;
-#else
 	if(!topwindow) topwindow = topctrl;
-#endif
 	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
-	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
-#ifdef PLATFORM_OSX11 // ugly temporary hack - popups not behaving right in MacOS
-	// before 2012-9-2 was #ifdef GUI_X11, but that caused issues in most linux distros (cxl)
-	// as parent window of popup always manages focus/keyboard for popup in X11
-	if(activate) // Dolik/fudadmin 2011-5-1
-		topctrl->SetWndForeground();
-#else
-	topwindow->SetWndForeground();  // cxl 2007-4-27
-#endif
+	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;
+	topwindow->SetWndForeground();
 	LLOG("SetFocus -> focusCtrl = this: " << FormatIntHex(this) << ", _this = " << FormatIntHex(~_this) << ", " << UPP::Name(_this));
 	focusCtrl = _this;
 	focusCtrlWnd = topwindow;
@@ -354,6 +310,7 @@ bool  Ctrl::HasFocusDeep() const
 	a = a->GetOwnerCtrl();
 	return a && HasChildDeep(a);
 }
+
 Ptr<Ctrl> Ctrl::caretCtrl;
 Ptr<Ctrl> Ctrl::prevCaretCtrl;
 Rect      Ctrl::caretRect;

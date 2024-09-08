@@ -50,7 +50,6 @@ struct IdeDesigner  {
 	virtual void   EditMenu(Bar& menu) = 0;
 	virtual int    GetCharset() const                               { return -1; }
 	virtual Ctrl&  DesignerCtrl() = 0;
-	virtual void   SetFocus()                                       { DesignerCtrl().SetFocus(); }
 
 	virtual ~IdeDesigner() {}
 };

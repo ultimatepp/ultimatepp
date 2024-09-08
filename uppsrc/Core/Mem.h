@@ -330,14 +330,12 @@ void memcpy128(void *p, const void *q, size_t count)
 template <class T>
 void memcpy_t(void *t, const T *s, size_t count)
 {
-#ifdef CPU_X86
 	if((sizeof(T) & 15) == 0)
 		memcpy128(t, s, count * (sizeof(T) >> 4));
 	else
 	if((sizeof(T) & 7) == 0)
 		memcpy64(t, s, count * (sizeof(T) >> 3));
 	else
-#endif
 	if((sizeof(T) & 3) == 0)
 		memcpy32(t, s, count * (sizeof(T) >> 2));
 	else

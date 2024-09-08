@@ -1,7 +1,5 @@
 #include "IconDes.h"
 
-namespace Upp {
-
 void IconDraw::PutHorz(int x, int y, int cx)
 {
 	if(y < 0 || y >= image.GetHeight())
@@ -73,6 +71,4 @@ void IconDraw::DrawEllipse(const Rect& r_, bool fill_empty, RGBA color, int pen,
 		docolor = pencolor;
 		Ellipse(r, pen);
 	}
-}
-
 }

@@ -90,7 +90,7 @@ struct Pdb : Debugger, ParentCtrl {
 		bool   reference = false; // this is reference
 	};
 
-	struct Val : Moveable<Val, TypeInfo> {
+	struct Val : Moveable<Val>, TypeInfo {
 		bool   array = false;
 		bool   rvalue = false; // data is loaded from debugee (if false, data pointed to by address)
 		bool   udt = false; // user defined type (e.g. struct..)
