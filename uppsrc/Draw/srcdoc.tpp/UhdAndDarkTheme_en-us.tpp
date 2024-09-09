@@ -27,11 +27,11 @@ topic "Supporting UHD displays and Dark theme";
 [s0; &]
 [s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#1^ 1. GUI 
 mode detection]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#3^ 2. Scaling 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#2^ 2. Scaling 
 GUI for actual GUI font and UHD resolution]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#4^ 3. Color 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#3^ 3. Color 
 adjustment]&]
-[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#5^ 4. Iml 
+[s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#4^ 4. Iml 
 files]&]
 [s0; &]
 [s3;:1: 1. GUI mode detection&]
@@ -44,7 +44,7 @@ with dark theme, UHD resolution with light theme, UHD resolution
 with dark theme.&]
 [s5; [* IsUHDMode() ]and [* IsDarkTheme() ]functions return respective 
 current GUI status.&]
-[s3;:3: 2. Scaling GUI for actual GUI font and UHD resolution&]
+[s3;:2: 2. Scaling GUI for actual GUI font and UHD resolution&]
 [s5; U`+`+ coordinates in drawing operations are always in real pixels 
 for screen targets. U`+`+ provides various functions to adjust 
 GUI elements metrics to host platform font size and UHD mode. 
@@ -82,7 +82,7 @@ by 2, otherwise returns it unchanged.]
 :: [s5; Returns [* b] if UHD is active, [* a] otherwise.]}}&]
 [s5; Usually [* DPI ]functions are used if the value is Image related, 
 `'Z`' functions if it is text size related.&]
-[s3;:4: 3. Color adjustment&]
+[s3;:3: 3. Color adjustment&]
 [s5; If application is specifying any colors, these colors need to 
 be adjusted for dark theme. This can be often done by using [^topic`:`/`/Draw`/src`/Colors`_en`-us^ p
 redefined colors]. Sometimes only the light theme color is available 
@@ -90,7 +90,7 @@ that needs to be converted to the dark theme `- this can be done
 using [* DarkTheme ]function. Alternatively [* AdjustIfDark] converts 
 the color with [* DarkTheme] only if dark theme mode is currently 
 active.&]
-[s3;:5: 5. Iml files&]
+[s3;:4: 4. Iml files&]
 [s5; Iml files most often contain images that are used in GUI interface. 
 Obviously, these images must be usually different for any of 
 4 GUI modes.&]
