@@ -242,6 +242,13 @@ int  Grayscale2(const Color& c)
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
+/* pre 2024 release values
+double DarkTheme_c[3] = { 0.4, 0.3, 0.4 };
+int    DarkTheme_middle = 155;
+*/
+double DarkTheme_c[3] = { 0.3, 0.3, 0.4 };
+int    DarkTheme_middle = 128;
+
 Color DarkTheme(Color color)
 {
 	if(IsNull(color))
@@ -253,12 +260,11 @@ Color DarkTheme(Color color)
 	v[2] = color.GetB();
 
 // this represent physiological perception of brightness of R,G,B. Sum = 1
-//	static double c[3] = { 0.21, 0.72, 0.07 }; // physiologically correct values
-	static double c[3] = { 0.3, 0.5, 0.2 }; // with this set, blues and reds are more pronounced
+	static double *c = DarkTheme_c; // with this set, blues and reds are more pronounced
 
 	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2]; // base brightness
 	
-	const int middle = 155; // this value represents gamma-like feature, imbalance of perception of dark vs bright
+	const int middle = DarkTheme_middle; // this value represents gamma-like feature, imbalance of perception of dark vs bright
 	const double up = (256.0 - middle) / middle;
 	const double down = 1 / up;
 
