@@ -83,6 +83,8 @@ MyApp::MyApp()
 	ret(r, DarkTheme_c[0])
 	   (g, DarkTheme_c[1])
 	   (middle, DarkTheme_middle);
+	
+	Sizeable();
 };
 
 GUI_APP_MAIN
