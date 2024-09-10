@@ -15,7 +15,7 @@ public:
 	Time        GetTime() const;
 
 	byte       *Map(int64 mapoffset, size_t maplen);
-	byte       *Map()                     { return Map(0, GetFileSize()); }
+	byte       *Map()                     { ASSERT((size_t)GetFileSize() == GetFileSize()); return Map(0, (size_t)GetFileSize()); }
 	bool        Unmap();
 	bool        Close();
 
