@@ -247,7 +247,7 @@ double DarkTheme_c[3] = { 0.4, 0.3, 0.4 };
 int    DarkTheme_middle = 155;
 */
 double DarkTheme_c[3] = { 0.3, 0.3, 0.4 };
-int    DarkTheme_middle = 128;
+int    DarkTheme_middle = 145;
 
 Color DarkTheme(Color color)
 {

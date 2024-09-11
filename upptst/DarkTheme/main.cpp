@@ -1,5 +1,13 @@
 #include <CtrlLib/CtrlLib.h>
 
+#define IMAGECLASS DarkImg
+#define IMAGEFILE <DarkTheme/dark.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS DarkImg
+#define IMAGEFILE <DarkTheme/dark.iml>
+#include <Draw/iml_source.h>
+
 using namespace Upp;
 
 struct MyApp : TopWindow {
@@ -57,6 +65,10 @@ void MyApp::Paint(Draw& w)
 		w.DrawImage(i * 40, 120, 32, 32, DarkTheme(img[i]));
 	}
 
+	int x = col.GetCount() * 32 + 50;
+	w.DrawImage(x, 0, DarkImg::ide());
+	x += DarkImg::ide().GetWidth();
+	w.DrawImage(x, 0, DarkTheme(DarkImg::ide()));
 }
 
 void MyApp::Sync()
