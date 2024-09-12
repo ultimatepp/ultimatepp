@@ -242,13 +242,12 @@ int  Grayscale2(const Color& c)
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
-/* pre 2024 release values
 double DarkTheme_c[3] = { 0.4, 0.3, 0.4 };
 int    DarkTheme_middle = 155;
-*/
+/*
 double DarkTheme_c[3] = { 0.3, 0.3, 0.4 };
 int    DarkTheme_middle = 145;
-
+*/
 Color DarkTheme(Color color)
 {
 	if(IsNull(color))
@@ -268,7 +267,7 @@ Color DarkTheme(Color color)
 	const double up = (256.0 - middle) / middle;
 	const double down = 1 / up;
 
-	double m;
+	double m; // target brightness
 	if(m0 < middle)
 		m = middle + (middle - m0) * up;
 	else

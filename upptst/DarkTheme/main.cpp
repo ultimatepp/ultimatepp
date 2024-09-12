@@ -59,13 +59,23 @@ void MyApp::Paint(Draw& w)
 		w.DrawRect(i * 32, 35, 32, 32, DarkTheme(col[i]));
 	}
 	
-	Vector<Image> img = { CtrlImg::CdRom__UHD(), CtrlImg::open(), CtrlImg::new_doc(), CtrlImg::undo(), CtrlImg::select_all(), CtrlImg::copy() };
+	Vector<Image> img = { CtrlImg::CdRom__UHD(), CtrlImg::open(), CtrlImg::new_doc(), CtrlImg::undo(),
+	                     CtrlImg::select_all(), CtrlImg::copy(), DarkImg::read_only(), DarkImg::build_rebuild_all(),
+	                     DarkImg::info(), DarkImg::Cpp() };
 	for(int i = 0; i < img.GetCount(); i++) {
 		w.DrawImage(i * 40, 70, 32, 32, img[i]);
 		w.DrawImage(i * 40, 120, 32, 32, DarkTheme(img[i]));
 	}
+	
+	Size tsz = GetTextSize("Test", StdFont());
+	w.DrawRect(0, 200, tsz.cx * col.GetCount(), tsz.cy, White());
+	for(int i = 0; i < col.GetCount(); i++)
+		w.DrawText(i * tsz.cx, 200, "Text", StdFont(), col[i]);
 
-	int x = col.GetCount() * 32 + 50;
+	for(int i = 0; i < col.GetCount(); i++)
+		w.DrawText(i * tsz.cx, 200 + tsz.cy, "Text", StdFont(), DarkTheme(col[i]));
+
+	int x = tsz.cx * 32 + 50;
 	w.DrawImage(x, 0, DarkImg::ide());
 	x += DarkImg::ide().GetWidth();
 	w.DrawImage(x, 0, DarkTheme(DarkImg::ide()));

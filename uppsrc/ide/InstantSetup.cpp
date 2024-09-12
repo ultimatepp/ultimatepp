@@ -164,7 +164,7 @@ void InstantSetup()
 			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++17");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_LINK", "");
-			bmSet(bm, "COMMON_FLAGS", "");
+			bmSet(bm, "COMMON_FLAGS", x64 ? "" : "CPU32");
 			bmSet(bm, "DEBUG_INFO", "2");
 			bmSet(bm, "DEBUG_BLITZ", "1");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
@@ -363,7 +363,7 @@ void InstantSetup()
 				                                : "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS");
 				bmSet(bm, "COMMON_CPP_OPTIONS", "/std:c++17");
 				bmSet(bm, "COMMON_C_OPTIONS", "");
-				bmSet(bm, "COMMON_FLAGS", "");
+				bmSet(bm, "COMMON_FLAGS", x64 ? "" : "CPU32");
 				bmSet(bm, "DEBUG_INFO", "2");
 				bmSet(bm, "DEBUG_BLITZ", "1");
 				bmSet(bm, "DEBUG_LINKMODE", "0");
