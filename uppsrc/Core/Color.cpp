@@ -242,12 +242,9 @@ int  Grayscale2(const Color& c)
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
-double DarkTheme_c[3] = { 0.4, 0.3, 0.4 };
+double DarkTheme_c[3] = { 0.3, 0.5, 0.2 };
 int    DarkTheme_middle = 155;
-/*
-double DarkTheme_c[3] = { 0.3, 0.3, 0.4 };
-int    DarkTheme_middle = 145;
-*/
+
 Color DarkTheme(Color color)
 {
 	if(IsNull(color))
