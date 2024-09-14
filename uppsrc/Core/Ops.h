@@ -161,6 +161,8 @@ inline dword FoldHash(dword h)
 
 #endif
 
+inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x >> 8) >> 24)) & 0xff); }
+
 force_inline
 int SignificantBits(dword x)
 { // basically log2(x) + 1 except that for 0 this is 0, number of significant bits of x
