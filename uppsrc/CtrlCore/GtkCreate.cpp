@@ -56,6 +56,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		}
 		
 		top->drawing_area = gtk_drawing_area_new();
+		gtk_widget_set_can_focus(top->drawing_area, TRUE);
 	} else {
 		top->drawing_area = top->window;
 	}
@@ -78,7 +79,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 		
 	if (top->header) {
-		gtk_container_add(GTK_CONTAINER(gtk()), top->drawing_area);
+		gtk_container_add(GTK_CONTAINER(top->window), top->drawing_area);
 		gtk_widget_show_all(top->window);
 	} else {
 		gtk_widget_realize(top->window);
