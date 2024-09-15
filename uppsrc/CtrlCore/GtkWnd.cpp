@@ -153,19 +153,22 @@ void Ctrl::UnregisterSystemHotKey(int id)
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	if(IsOpen()) {
-		//gint x, y;
-		//gdk_window_get_position(gdk(), &x, &y);
-		
-		gint x, y;
-		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
-
-		gint width = gtk_widget_get_allocated_width(utop->drawing_area);
-		gint height = gtk_widget_get_allocated_height(utop->drawing_area);
-		
-		return SCL(x, y, width, height);
+	if(!IsOpen()) {
+		return Null;
 	}
-	return Null;
+	
+	gint x, y;
+	gint width, height;
+	
+	if(top && utop->csd->IsEnable()) {
+		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+		width = gtk_widget_get_allocated_width(utop->drawing_area);
+		height = gtk_widget_get_allocated_height(utop->drawing_area);
+	} else {
+		gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+	}
+	
+	return SCL(x, y, width, height);
 }
 
 void Ctrl::WndShow(bool b)
@@ -420,12 +423,15 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	
 	Rect nr = r;
-	if (top) {
-		nr.left += utop->csd_info->LeftMaring();
-		nr.top += utop->csd_info->TopMargin();
+	if (top && utop->csd->IsEnable()) {
+		gint x, y;
+		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+		
+		nr.left += x;
+		nr.top += y;
 			
-		nr.right += utop->csd_info->LeftMaring();
-		nr.bottom += utop->csd_info->TopMargin();
+		nr.right += x;
+		nr.bottom += y;
 	}
 	
 	Rect rr;

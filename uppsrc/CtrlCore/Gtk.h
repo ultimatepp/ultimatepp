@@ -164,11 +164,14 @@ public:
 	~ImageGdk();
 };
 
-class GtkCSDInfo final {
+class GtkCSD final {
 public:
-	GtkCSDInfo(GdkWindowTypeHint hint);
+	static bool ShouldEnable();
 	
-	bool ShouldEnable() const;
+public:
+	GtkCSD(GdkWindowTypeHint hint);
+	
+	bool IsEnable() const      { return enable; }
 	
 	int ExtraWidth() const   { return left_margin + right_margin; }
 	int ExtraHeight() const  { return top_margin + bottom_margin; }
@@ -180,6 +183,7 @@ public:
 	
 private:
 	int left_margin = 0, right_margin = 0, top_margin = 0, bottom_margin = 0;
+	bool enable = false;
 };
 
 namespace GdkBackend {
@@ -221,7 +225,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	GtkIMContext         *im_context; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
-	One<GtkCSDInfo>       csd_info; \
+	One<GtkCSD>           csd; \
 	int64                 cursor_id; \
 	int                   id; \
 

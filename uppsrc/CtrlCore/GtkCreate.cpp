@@ -43,8 +43,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	}
 	gtk_window_set_type_hint(gtk(), type_hint);
 	
-	top->csd_info.Create(type_hint);
-	if (GdkBackend::IsWayland() && top->csd_info->ShouldEnable() && type_hint != GDK_WINDOW_TYPE_HINT_COMBO) {
+	top->csd.Create(type_hint);
+	if (top->csd->IsEnable()) {
 		if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
 			top->header = gtk_drawing_area_new();
 			gtk_widget_set_size_request(top->header, 1, 1);

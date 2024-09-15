@@ -2,9 +2,29 @@
 
 namespace Upp {
 
-GtkCSDInfo::GtkCSDInfo(GdkWindowTypeHint hint)
+bool GtkCSD::ShouldEnable()
 {
-	if (hint == GDK_WINDOW_TYPE_HINT_COMBO)
+	if (GdkBackend::IsX11()) {
+		return false;
+	}
+	
+	// TODO: Rewrite to negotiate with window manager once XDG decoration protocol will be
+	// stable. (https://wayland.app/protocols/xdg-decoration-unstable-v1)
+	
+	// NOTE: Server side decoration are optional. It might be supported by Window manager or
+	// not. Let's have a list of desktop environments on which we tested it works correctly.
+	auto desktop = GetEnv("XDG_SESSION_DESKTOP");
+	if (desktop == "KDE") {
+		return false;
+		//return true;
+	}
+	
+	return true;
+}
+
+GtkCSD::GtkCSD(GdkWindowTypeHint hint)
+{
+	if (!GdkBackend::IsWayland() || !ShouldEnable() || hint == GDK_WINDOW_TYPE_HINT_COMBO)
 		return;
 	
 	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -36,26 +56,8 @@ GtkCSDInfo::GtkCSDInfo(GdkWindowTypeHint hint)
 	gtk_widget_destroy(drawing_area);
 	gtk_widget_destroy(header);
 	gtk_widget_destroy(win);
-}
-
-bool GtkCSDInfo::ShouldEnable() const
-{
-	if (GdkBackend::IsX11()) {
-		return false;
-	}
 	
-	// TODO: Rewrite to negotiate with window manager once XDG decoration protocol will be
-	// stable. (https://wayland.app/protocols/xdg-decoration-unstable-v1)
-	
-	// NOTE: Server side decoration are optional. It might be supported by Window manager or
-	// not. Let's have a list of desktop environments on which we tested it works correctly.
-	auto desktop = GetEnv("XDG_SESSION_DESKTOP");
-	if (desktop == "KDE") {
-		//return false;
-		return true;
-	}
-	
-	return true;
+	enable = true;
 }
 
 }
