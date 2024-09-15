@@ -324,7 +324,6 @@ void TopicEditor::InsertTableOfContents()
 		bool operator()(int pos, const RichPara& para) override {
 			int lvl = para.format.GetNumberLevel();
 			if(lvl > 0) {
-				n.TestReset(para.format);
 				n.Next(para.format);
 				editor->SetSelection(pos, pos);
 				RichText::FormatInfo fmt = editor->GetFormatInfo();
