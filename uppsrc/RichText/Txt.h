@@ -70,12 +70,18 @@ protected:
 		int                   length;
 		String                content;
 		Array<RichObject>     object;
-		int64                 updateserial;
+		One<RichPara::NumberFormat> number_fmt;
+
+		mutable int64         updateserial;
+		mutable RichPara::Number number;
+		mutable Vector<int>   linecy;
+		mutable Bits          spellerrors;
+		mutable String        header_qtf, footer_qtf;
+		mutable One<RichText> header, footer;
 		mutable int           ccx;
 		mutable int           cy;
 		mutable int           ruler;
 		mutable int           before;
-		mutable Vector<int>   linecy;
 		mutable int           after;
 		mutable bool          newpage;
 		mutable bool          firstonpage;
@@ -83,15 +89,11 @@ protected:
 		mutable bool          keepnext;
 		mutable bool          orphan;
 		mutable int           numbering;
-		mutable Bits          spellerrors;
 		mutable bool          checked;
 		mutable bool          haspos;
 		mutable bool          newhdrftr;
-		mutable String        header_qtf, footer_qtf;
-		mutable One<RichText> header, footer;
-		One<RichPara::NumberFormat> number;
 
-		void Invalidate();
+		void Invalidate() const;
 
 		Para(const Para& src, int);
 		Para() { length = 0; Invalidate(); numbering = -1; checked = false; haspos = false; }
@@ -228,7 +230,6 @@ public:
 	void                  SetPick(int parti, RichTable&& table);
 	void                  CatPick(RichTable&& table)                  { SetPick(GetPartCount(), pick(table)); }
 	void                  Set(int parai, const RichPara& p, const RichStyles& s);
-	void                  Insert(int parai, const RichPara& p, const RichStyles& s);
 	void                  Cat(const RichPara& p, const RichStyles& s) { Set(GetPartCount(), p, s); }
 
 	void                  RemovePart(int parti);

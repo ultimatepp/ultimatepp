@@ -84,6 +84,7 @@ void RichEdit::FinishNF()
 			Action();
 	}
 	useraction = modified = false;
+	WhenSel();
 }
 
 void RichEdit::Finish()
