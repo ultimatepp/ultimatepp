@@ -139,8 +139,10 @@ void Ctrl::WndDestroy()
 			activeCtrl = owner;
 	}
 	Top *top = GetTop();
-	if(top->im_context)
+	if(top->im_context) {
 		g_object_unref(top->im_context);
+		top->im_context = nullptr;
+	}
 	gtk_widget_destroy(top->window);
 	isopen = false;
 	popup = false;
@@ -149,8 +151,14 @@ void Ctrl::WndDestroy()
 	int q = FindCtrl(this);
 	if(q >= 0)
 		wins.Remove(q);
-	if(owner)
+	if(owner) {
+		if(owner->utop->csd->IsEnable()) {
+			// TODO: This fix the problem with keyboard when backing to original window, but
+			// the previous control is not being focused like it should be.
+			gtk_window_set_focus(owner->gtk(), owner->utop->drawing_area);
+		}
 		owner->WndUpdate();
+	}
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
 	if(w && w->overlapped.GetWidth() && w->overlapped.GetHeight())
 		SetRect(w->overlapped);

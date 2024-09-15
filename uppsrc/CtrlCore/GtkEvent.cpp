@@ -141,7 +141,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		p->CancelPreedit();
 		if(p) {
 			Top *top = p->GetTop();
-			if(top) {
+			if(top && top->im_context) {
 				if(((GdkEventFocus *)event)->in)
 					gtk_im_context_focus_in(top->im_context);
 				else
