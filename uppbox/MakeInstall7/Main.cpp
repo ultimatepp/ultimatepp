@@ -13,6 +13,7 @@ using namespace Upp;
 void Log(const char *txt)
 {
 	Cout() << txt << "\r\n";
+	LOG(txt);
 }
 
 void Error(const char *e)
@@ -65,6 +66,7 @@ int CrLfSm(int c)
 
 void CopyFolders(const char *src, const char *dst, const char *folders, bool deep = true)
 {
+	Log(String() << "Copy " << src << " -> " << dst << ": " << folders << " " << LoadFile(folders));
 	Vector<String> folder = Split(LoadFile(folders), CrLfSm);
 	for(int i = 0; i < folder.GetCount(); i++)
 		CopyFolder(AppendFileName(src, folder[i]), AppendFileName(dst, folder[i]), deep);
@@ -76,7 +78,7 @@ String tmp = home + "/upp.tmp";
 String upptmp = tmp + "/upp";
 String ass = upptmp + "/uppsrc";
 String upp = home + "/upp.src";
-String uppsrc = home + "/uppsrc";
+String uppsrc = upp + "/uppsrc";
 String bin = home + "/upp.bin";
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
