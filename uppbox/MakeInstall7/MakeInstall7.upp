@@ -1,0 +1,14 @@
+description "Install creator - Wine version for nightly builds - for clang - Linux binary\377";
+
+uses
+	plugin\bz2,
+	Core,
+	plugin\ftp;
+
+file
+	Main.cpp,
+	CLANGx64.bm;
+
+mainconfig
+	"" = "";
+
