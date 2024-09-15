@@ -24,8 +24,9 @@ struct MyApp : TopWindow {
 };
 
 namespace Upp {
-extern double DarkTheme_c[];
-extern int    DarkTheme_middle;
+extern double C_R;
+extern double C_G;
+extern double C_B;
 };
 
 void MyApp::Paint(Draw& w)
@@ -53,7 +54,7 @@ void MyApp::Paint(Draw& w)
 		<< LtCyan()
 	;
 	
-	w.DrawRect(GetSize(), Color(20, 20, 20));
+	w.DrawRect(GetSize(), Black());
 	for(int i = 0; i < col.GetCount(); i++) {
 		w.DrawRect(i * 32, 0, 32, 32, col[i]);
 		w.DrawRect(i * 32, 35, 32, 32, DarkTheme(col[i]));
@@ -68,12 +69,29 @@ void MyApp::Paint(Draw& w)
 	}
 	
 	Size tsz = GetTextSize("Test", StdFont());
+	int y = 200;
 	w.DrawRect(0, 200, tsz.cx * col.GetCount(), tsz.cy, White());
 	for(int i = 0; i < col.GetCount(); i++)
-		w.DrawText(i * tsz.cx, 200, "Text", StdFont(), col[i]);
+		w.DrawText(i * tsz.cx, y, "Text", StdFont(), col[i]);
+	y += tsz.cy;
 
 	for(int i = 0; i < col.GetCount(); i++)
-		w.DrawText(i * tsz.cx, 200 + tsz.cy, "Text", StdFont(), DarkTheme(col[i]));
+		w.DrawText(i * tsz.cx, y, "Text", StdFont(), DarkTheme(col[i]));
+	y += tsz.cy;
+/*
+	for(int i = 0; i < col.GetCount(); i++)
+		w.DrawText(i * tsz.cx, y, "Text", StdFont(), DarkTheme2(col[i]));
+	y += tsz.cy;
+*/
+	y += tsz.cy;
+	
+	for(Color c : col) {
+		w.DrawRect(0, y, tsz.cy, tsz.cy, c);
+		c = DarkTheme(c);
+		w.DrawRect(tsz.cy + 10, y, tsz.cy, tsz.cy, c);
+		w.DrawText(2 * (tsz.cy + 10), y, AsString(c), StdFont(), White());
+		y += tsz.cy;
+	}
 
 	int x = tsz.cx * 32 + 50;
 	w.DrawImage(x, 0, DarkImg::ide());
@@ -84,7 +102,6 @@ void MyApp::Paint(Draw& w)
 void MyApp::Sync()
 {
 	ret.Retrieve();
-	DarkTheme_c[2] = 1 - DarkTheme_c[0] - DarkTheme_c[1];
 	Refresh();
 }
 
@@ -98,18 +115,37 @@ MyApp::MyApp()
 		w << [=] { Sync(); };
 	};
 	
-	Add(r.SetInc(0.02).MinMax(0, 1));
-	Add(g.SetInc(0.02).MinMax(0, 1));
+	Add(r.SetInc(0.01).MinMax(0, 1));
+	Add(g.SetInc(0.01).MinMax(0, 1));
+	Add(b.SetInc(0.01).MinMax(0, 1));
 	Add(middle);
-	
+
+/*
 	ret(r, DarkTheme_c[0])
 	   (g, DarkTheme_c[1])
 	   (middle, DarkTheme_middle);
-	
+*/
+
+	ret(r, C_R)
+	   (g, C_G)
+	   (b, C_B)
+	;
+
 	Sizeable();
 };
 
 GUI_APP_MAIN
 {
+	DDUMP(DarkTheme(LtYellow()));
+	DDUMP(DarkTheme(Yellow()));
+	DDUMP(DarkTheme(Brown()));
+	DDUMP(DarkTheme(LtRed()));
+	DDUMP(DarkTheme(Black()));
+	DDUMP(DarkTheme(LtBlue()));
+	DDUMP(DarkTheme(LtBlue()));
+	DDUMP(DarkTheme(LtGreen()));
+
+	DDUMP(DarkTheme(LtRed()));
+	DDUMP(DarkTheme(LtBlue()));
 	MyApp().Run();
 }
