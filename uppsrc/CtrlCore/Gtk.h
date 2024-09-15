@@ -166,7 +166,7 @@ public:
 
 class GtkCSD final {
 public:
-	static bool ShouldEnable();
+	static bool IsSSDSupported();
 	
 public:
 	GtkCSD(GdkWindowTypeHint hint);
@@ -180,6 +180,9 @@ public:
 	int RightMargin() const  { return right_margin; }
 	int TopMargin() const    { return top_margin; }
 	int BottomMargin() const { return bottom_margin; }
+	
+private:
+	void FindMargins(GdkWindowTypeHint hint);
 	
 private:
 	int left_margin = 0, right_margin = 0, top_margin = 0, bottom_margin = 0;

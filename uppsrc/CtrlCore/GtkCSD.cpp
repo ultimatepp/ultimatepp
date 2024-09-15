@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-bool GtkCSD::ShouldEnable()
+bool GtkCSD::IsSSDSupported()
 {
 	if (GdkBackend::IsX11()) {
 		return false;
@@ -24,9 +24,26 @@ bool GtkCSD::ShouldEnable()
 
 GtkCSD::GtkCSD(GdkWindowTypeHint hint)
 {
-	if (!GdkBackend::IsWayland() || !ShouldEnable() || hint == GDK_WINDOW_TYPE_HINT_COMBO)
+	if (!GdkBackend::IsWayland())
 		return;
+	if (!IsSSDSupported()) {
+		if (hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) {
+			FindMargins(hint);
+			enable = true;
+		}
+		
+		return;
+	}
+	if (hint == GDK_WINDOW_TYPE_HINT_COMBO) {
+		return;
+	}
 	
+	FindMargins(hint);
+	enable = true;
+}
+
+void GtkCSD::FindMargins(GdkWindowTypeHint hint)
+{
 	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	GtkWidget* header;
 	if (findarg(hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
@@ -56,8 +73,6 @@ GtkCSD::GtkCSD(GdkWindowTypeHint hint)
 	gtk_widget_destroy(drawing_area);
 	gtk_widget_destroy(header);
 	gtk_widget_destroy(win);
-	
-	enable = true;
 }
 
 }
