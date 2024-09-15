@@ -303,8 +303,11 @@ int LineZoom(Zoom z, int a);
 class RichTable;
 class RichText;
 struct RichStyle;
+struct RichContext;
 
 typedef ArrayMap<Uuid, RichStyle> RichStyles;
+
+#include "Para.h"
 
 struct RichContext {
 	const RichText   *text;
@@ -314,6 +317,7 @@ struct RichContext {
 	int               current_header_cy, current_footer_cy; // current header/footer size
 	Rect              page;
 	PageY             py;
+	RichPara::Number  number;
 
 	void              HeaderFooter(RichText *header, RichText *footer_qtf);
 	void              AdjustPage();
@@ -323,8 +327,6 @@ struct RichContext {
 	RichContext(const RichStyles& styles, const RichText *text);
 	RichContext() {}
 };
-
-#include "Para.h"
 
 struct RichPos {
 	int              tabtextparti;

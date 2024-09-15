@@ -8,7 +8,7 @@ Macro  =  -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)
 CFLAGS = -O3 -ffunction-sections -fdata-sections 
-CXXFLAGS = -O3 -ffunction-sections -fdata-sections  -std=c++14
+CXXFLAGS = -O3 -ffunction-sections -fdata-sections  -std=c++17
 LDFLAGS = -Wl,--gc-sections $(LINKOPTIONS)
 LIBPATH =
 AR = ar -sr

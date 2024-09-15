@@ -1,8 +1,8 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	RichEdit;
 
 file
-	dark.iml,
 	main.cpp;
 
 mainconfig

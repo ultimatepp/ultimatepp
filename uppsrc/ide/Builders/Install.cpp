@@ -8,7 +8,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "$COMMON$";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wall -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wall -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "$COMMON$";
 COMMON_FLAGS = "";
@@ -37,7 +37,7 @@ const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14";
+COMMON_CPP_OPTIONS = "-std=c++17";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -64,7 +64,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -89,11 +89,69 @@ LINKMODE_LOCK = "0";)";
 
 #else
 
+#ifdef CPU_32
+
 const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14";
+COMMON_CPP_OPTIONS = "-std=c++17";
+COMMON_C_OPTIONS = "";
+COMMON_LINK = "";
+COMMON_FLAGS = "CPU_32";
+DEBUG_INFO = "2";
+DEBUG_BLITZ = "1";
+DEBUG_LINKMODE = "1";
+DEBUG_OPTIONS = "-O0";
+DEBUG_FLAGS = "";
+DEBUG_LINK = "";
+RELEASE_BLITZ = "1";
+RELEASE_LINKMODE = "1";
+RELEASE_OPTIONS = "-O3 -ffunction-sections -fdata-sections";
+RELEASE_FLAGS = "";
+RELEASE_LINK = "-Wl,--gc-sections";
+DEBUGGER = "gdb";
+ALLOW_PRECOMPILED_HEADERS = "0";
+DISABLE_BLITZ = "0";
+PATH = "";
+INCLUDE = "";
+LIB = "";
+LINKMODE_LOCK = "0";)";
+
+const char *clang_bm =
+R"(BUILDER = "CLANG";
+COMPILER = "clang++";
+COMMON_OPTIONS = "";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
+COMMON_C_OPTIONS = "";
+COMMON_LINK = "";
+COMMON_FLAGS = "CPU_32";
+DEBUG_INFO = "2";
+DEBUG_BLITZ = "1";
+DEBUG_LINKMODE = "1";
+DEBUG_OPTIONS = "-O0";
+DEBUG_FLAGS = "";
+DEBUG_LINK = "";
+RELEASE_BLITZ = "1";
+RELEASE_LINKMODE = "1";
+RELEASE_OPTIONS = "-O3 -ffunction-sections -fdata-sections";
+RELEASE_FLAGS = "";
+RELEASE_LINK = "-Wl,--gc-sections";
+DEBUGGER = "gdb";
+ALLOW_PRECOMPILED_HEADERS = "0";
+DISABLE_BLITZ = "0";
+PATH = "";
+INCLUDE = "";
+LIB = "";
+LINKMODE_LOCK = "0";)";
+
+#else
+
+const char *gcc_bm =
+R"(BUILDER = "GCC";
+COMPILER = "";
+COMMON_OPTIONS = "";
+COMMON_CPP_OPTIONS = "-std=c++17";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -120,7 +178,7 @@ const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
 COMMON_OPTIONS = "";
-COMMON_CPP_OPTIONS = "-std=c++14 -Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
 COMMON_FLAGS = "";
@@ -142,6 +200,8 @@ PATH = "";
 INCLUDE = "";
 LIB = "";
 LINKMODE_LOCK = "0";)";
+
+#endif
 
 #endif
 

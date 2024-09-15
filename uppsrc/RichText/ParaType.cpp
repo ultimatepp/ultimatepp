@@ -81,7 +81,7 @@ struct RichPara::StorePart {
 	const CharFormat **f;
 	HeightInfo        *h;
 	int                pos;
-	FontInfo           pfi;
+	Font               font;
 
 	void Store(Lines& lines, const Part& p, int pinc);
 };
@@ -115,48 +115,47 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 		const wchar *s = part.text;
 		const wchar *lim = part.text.End();
 		Font fnt = part.format;
-		FontInfo fi = fnt.Info();
-		FontInfo wfi = fi;
+		Font fi = fnt;
+		Font wf = fnt;
 		if(part.format.sscript) {
 			fnt.Height(fnt.GetHeight() * 3 / 5);
-			wfi = fnt.Info();
+			wf = fnt;
 		}
 		if(part.format.capitals) {
 			CharFormat& cfmt = lines.hformat.Add();
 			cfmt = part.format;
 			cfmt.Height(cfmt.GetHeight() * 4 / 5);
-			FontInfo cfi = cfmt.Info();
-			FontInfo cwfi = cfi;
+			Font cwf = cfmt;
 			if(part.format.sscript) {
 				Font fnt = cfmt;
 				fnt.Height(fnt.GetHeight() * 3 / 5);
-				cwfi = fnt.Info();
+				cwf = fnt;
 			}
 
 			while(s < lim) {
 				wchar c = *s++;
 				if(c == 9) {
 					*f++ = &pfmt;
-					h->ascent = pfi.GetAscent();
-					h->descent = pfi.GetDescent();
-					h->external = pfi.GetExternal();
+					h->ascent = font.GetAscent();
+					h->descent = font.GetDescent();
+					h->external = font.GetExternal();
 					*w++ = 0;
 				}
 				else
 				if(IsLower(c)) {
 					*f++ = &cfmt;
 					c = (wchar)ToUpper(c);
-					h->ascent = cfi.GetAscent();
-					h->descent = cfi.GetDescent();
-					h->external = cfi.GetExternal();
-					*w++ = c >= 32 ? cwfi[c] : 0;
+					h->ascent = cfmt.GetAscent();
+					h->descent = cfmt.GetDescent();
+					h->external = cfmt.GetExternal();
+					*w++ = c >= 32 ? cwf[c] : 0;
 				}
 				else {
 					*f++ = &pfmt;
 					h->ascent = fi.GetAscent();
 					h->descent = fi.GetDescent();
 					h->external = fi.GetExternal();
-					*w++ = c >= 32 ? wfi[c] : 0;
+					*w++ = c >= 32 ? wf[c] : 0;
 				}
 				h->object = NULL;
 				*t++ = c;
@@ -170,9 +169,9 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 				wchar c = *s++;
 				*f++ = &pfmt;
 				if(c == 9) {
-					h->ascent = pfi.GetAscent();
-					h->descent = pfi.GetDescent();
-					h->external = pfi.GetExternal();
+					h->ascent = font.GetAscent();
+					h->descent = font.GetDescent();
+					h->external = font.GetExternal();
 				}
 				else {
 					h->ascent = fi.GetAscent();
@@ -183,7 +182,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 				*p++ = pos;
 				pos += pinc;
 				h++;
-				*w++ = c >= 32 ? wfi[c] : 0;
+				*w++ = c >= 32 ? wf[c] : 0;
 				*t++ = c;
 			}
 		}
@@ -208,6 +207,7 @@ RichPara::Lines::Lines()
 	justified = false;
 	incache = false;
 	cacheid = 0;
+	number_chars = 0;
 }
 
 Array<RichPara::Lines>& RichPara::Lines::Cache()
@@ -235,7 +235,7 @@ RichPara::Lines::~Lines()
 	}
 }
 
-RichPara::Lines RichPara::FormatLines(int acx) const
+RichPara::Lines RichPara::FormatLines(int acx, const Number& n) const
 {
 	Lines lines;
 	if(cacheid) {
@@ -249,12 +249,19 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 				return lines;
 			}
 	}
+	
+	Number nn = n;
+	nn.Next(format);
+	WString number = nn.AsText(format).ToWString();
+	
+	if(number.GetCount())
+		number.Cat(' ');
 
 	int i;
 	lines.cacheid = cacheid;
 	lines.cx = acx;
 	lines.len = GetLength();
-	lines.clen = CountChars(part);
+	lines.clen = CountChars(part) + number.GetCount();
 	lines.first_indent = lines.next_indent = format.indent;
 	if(format.bullet == BULLET_TEXT)
 		lines.first_indent = 0;
@@ -262,8 +269,7 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 	if(!format.bullet && !format.IsNumbered())
 		lines.next_indent = 0;
 
-	FontInfo pfi = format.Info();
-	if(lines.len == 0) {
+	if(lines.clen == 0) {
 		Line& l = lines.line.Add();
 		l.pos = 0;
 		l.ppos = 0;
@@ -273,9 +279,9 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 		l.withtabs = false;
 		HeightInfo dummy;
 		Smh(lines, &dummy, lines.cx);
-		l.ascent = pfi.GetAscent();
-		l.descent = pfi.GetDescent();
-		l.external = pfi.GetExternal();
+		l.ascent = format.GetAscent();
+		l.descent = format.GetDescent();
+		l.external = format.GetExternal();
 		return lines;
 	}
 
@@ -291,8 +297,18 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 	sp.p = lines.pos;
 	sp.f = lines.format;
 	sp.h = lines.height;
-	sp.pfi = pfi;
+	sp.font = format;
 	sp.pos = 0;
+	
+	if(number.GetCount()) {
+		Part np;
+		np.text = number;
+		np.format = part.GetCount() ? part[0].format : format;
+		np.format.indexentry.Clear();
+		np.format.link.Clear();
+		sp.Store(lines, np, 0);
+		lines.number_chars = number.GetCount();
+	}
 
 	for(i = 0; i < part.GetCount(); i++)
 		sp.Store(lines, part[i], 1);

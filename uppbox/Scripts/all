@@ -17,7 +17,11 @@ cd ~/upp.src
 git rev-list --count master >~/upp-revision
 cd ~
 
+echo ------------------------- Win32
+
 bash ~/Scripts/win
+
+echo ------------------------- POSIX
 
 bash ~/Scripts/posix
 
