@@ -63,7 +63,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	
 	top->cursor_id = -1;
 
-	gtk_widget_set_events(top->drawing_area, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK);
+	gtk_widget_set_events(top->drawing_area, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
 	g_signal_connect(top->drawing_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(top->drawing_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 
