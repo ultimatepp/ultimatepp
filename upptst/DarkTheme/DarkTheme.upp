@@ -2,9 +2,8 @@ uses
 	CtrlLib;
 
 file
-	DarkTheme.h,
-	main.cpp,
-	DarkTheme.lay;
+	dark.iml,
+	main.cpp;
 
 mainconfig
 	"" = "GUI";

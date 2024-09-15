@@ -1,10 +1,7 @@
+#!/usr/bin/env bash
+
 set -e
 
-#rm ~/upload/* || true
-# u:/ is set to be the home folder of account responsible for building
-# wine and SDK is installed there...
-
-wine c:/upp/umk.exe u:/upp.src/uppbox,u:/upp.src/uppsrc MakeInstall6 c:/upp/CLANG.bm -ar u:/mku.exe
-wine u:/mku.exe
-
-#~/bin/upload
+D=~/upp.src
+~/bin/umk $D/uppbox,$D/uppsrc MakeInstall7 CLANG -rsvb ~/makewindows
+~/makewindows

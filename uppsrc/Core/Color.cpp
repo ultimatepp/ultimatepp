@@ -242,6 +242,52 @@ int  Grayscale2(const Color& c)
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
 
+#if 1
+
+double C_R = 0.32;
+double C_G = 0.5;
+double C_B = 0.2;
+
+Color DarkTheme(Color color)
+{
+	double r = color.GetR();
+	double g = color.GetG();
+	double b = color.GetB();
+	
+	double saturation = min(r, g, b);
+	
+	r -= saturation;
+	g -= saturation;
+	b -= saturation;
+	
+	auto Val = [&] {
+		return C_R * r + C_G * g + C_B * b;
+	};
+	
+	double target = 255 - Saturate255(Val() + saturation);
+	if(target < 30)
+		target *= (1 + (30 - target) / 30) * 1.5;
+	double ratio = target / 128;
+	
+	double m = max(r, g, b);
+	
+	if(m * ratio >= 255)
+		ratio = 255 / m;
+	
+	r *= ratio;
+	g *= ratio;
+	b *= ratio;
+	saturation = target - Val();
+	
+	return Color(Saturate255(r + saturation), Saturate255(g + saturation), Saturate255(b + saturation));
+}
+
+
+#else // older worse algorithm
+
+double DarkTheme_c[3] = { 0.3, 0.5, 0.2 };
+int    DarkTheme_middle = 155;
+
 Color DarkTheme(Color color)
 {
 	if(IsNull(color))
@@ -253,16 +299,15 @@ Color DarkTheme(Color color)
 	v[2] = color.GetB();
 
 // this represent physiological perception of brightness of R,G,B. Sum = 1
-//	static double c[3] = { 0.21, 0.72, 0.07 }; // physiologically correct values
-	static double c[3] = { 0.3, 0.5, 0.2 }; // with this set, blues and reds are more pronounced
+	static double *c = DarkTheme_c; // with this set, blues and reds are more pronounced
 
 	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2]; // base brightness
 	
-	const int middle = 155; // this value represents gamma-like feature, imbalance of perception of dark vs bright
+	const int middle = DarkTheme_middle; // this value represents gamma-like feature, imbalance of perception of dark vs bright
 	const double up = (256.0 - middle) / middle;
 	const double down = 1 / up;
 
-	double m;
+	double m; // target brightness
 	if(m0 < middle)
 		m = middle + (middle - m0) * up;
 	else
@@ -312,6 +357,8 @@ Color DarkTheme(Color color)
 	
 	return Color((int)v[0], (int)v[1], (int)v[2]);
 }
+
+#endif
 
 Color DarkThemeCached(Color c)
 {
