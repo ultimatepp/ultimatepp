@@ -183,7 +183,7 @@ class AsyncWork {
 		Ret2   ret;
 	
 		template<class Function, class... Args>
-		void        Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
+		void        Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(std::forward<Args>(args)...); }); }
 		const Ret2& Get()                            { return ret; }
 		Ret2        Pick()                           { return pick(ret); }
 	};
@@ -192,7 +192,7 @@ class AsyncWork {
 		CoWork co;
 	
 		template<class Function, class... Args>
-		void        Do(Function&& f, Args&&... args) { co.Do([=]() { f(args...); }); }
+		void        Do(Function&& f, Args&&... args) { co.Do([=]() { f(std::forward<Args>(args)...); }); }
 		void        Get()                            {}
 		void        Pick()                           {}
 	};
@@ -203,7 +203,7 @@ class AsyncWork {
 	
 public:
 	template< class Function, class... Args>
-	void  Do(Function&& f, Args&&... args)          { imp.Create().Do(f, args...); }
+	void  Do(Function&& f, Args&&... args)          { imp.Create().Do(f, std::forward<Args>(args)...); }
 
 	void        Cancel()                            { if(imp) imp->co.Cancel(); }
 	static bool IsCanceled()                        { return CoWork::IsCanceled(); }
