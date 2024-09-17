@@ -347,12 +347,13 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				int i = li.pos;
 				int q = z * (rc.py.y + linecy);
 				while(w < wl) {
-					if(spellerror[pl.pos[i++]]) {
+					if(spellerror[pl.pos[i]] && (lni || (i >= pl.number_chars))) {
 						if(zlcy > 16)
 							draw.DrawRect(x, q - 3, *w, 1, Red);
 						draw.DrawRect(x, q - 2, *w, 1, LtRed);
 					}
 					x += *w++;
+					i++;
 				}
 			}
 

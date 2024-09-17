@@ -76,6 +76,24 @@ Color CmykColorf(double c, double m, double y, double k)
 	return Color(min(int(r * 255), 255), min(int(g * 255), 255), min(int(b * 255), 255));
 }
 
+// Formula from https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+
+double RelativeLuminance(Color color) {
+	auto comp = [&] (double c){
+		c /= 255;
+		return (c <= 0.03928) ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);
+	};
+	return comp(color.GetR()) * 0.2126 + comp(color.GetG()) * 0.7152 + comp(color.GetB()) * 0.0722;
+}
+
+// Formula from https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
+
+double ContrastRatio(Color c1, Color c2) {
+	double rl1 = RelativeLuminance(c1);
+	double rl2 = RelativeLuminance(c2);
+	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
+}
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;

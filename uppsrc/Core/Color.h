@@ -136,6 +136,9 @@ void   RGBtoCMYK(double r, double g, double b, double& c, double& m, double& y, 
 
 Color  CmykColorf(double c, double m, double y, double k = 0);
 
+double RelativeLuminance(Color color);
+double ContrastRatio(Color c1, Color c2);
+
 Color  Blend(Color c1, Color c2, int alpha = 128);
 
 String ColorToHtml(Color color);

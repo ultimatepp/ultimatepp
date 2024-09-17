@@ -153,15 +153,15 @@ void CodeEditor::Paint(Draw& w)
 
 	Size sz = GetSize();
 
-	Color paper = IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color) ?
-	              GrayColor(70) : SColorLtFace();
+	bool dark = IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color);
+	Color paper = GrayColor(dark ? 40 : 245);
 
 	w.DrawRect(0, 0, GetSize().cx, GetFontSize().cy, paper);
 	
 	Size hsz = CodeEditorImg::HdrSep0().GetSize();
 	for(int x = 0; x < sz.cx; x += hsz.cx) {
 		w.DrawImage(x, GetFontSize().cy, CodeEditorImg::HdrSep0(), paper);
-		w.DrawImage(x, GetFontSize().cy, CodeEditorImg::HdrSep());
+		w.DrawImage(x, GetFontSize().cy, CodeEditorImg::HdrSep(), dark ? White() : Black());
 	}
 	
 	String ls = TrimBoth(Get(l, h - l));

@@ -192,7 +192,6 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			bool bultext = false;
 			String number;
 			if(p.format.GetNumberLevel() > 0) {
-				n.TestReset(p.format);
 				n.Next(p.format);
 				number = n.AsText(p.format);
 			}

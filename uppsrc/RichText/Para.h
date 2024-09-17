@@ -199,7 +199,6 @@ struct RichPara {
 		int                        clen;
 		int                        cx;
 		Buffer<wchar>              text;
-		Buffer<byte>               spell;
 		Buffer<int>                pos;
 		Buffer<int>                width;
 		Buffer<HeightInfo>         height;

@@ -355,6 +355,7 @@ void AppMain___()
 		}
 
 		Ide ide;
+		SetTheIde(&ide);
 		ide.Maximize();
 		bool clset = false;
 		
@@ -443,6 +444,7 @@ void AppMain___()
 		DelTemps();
 		DeletePCHFiles();
 		ReduceCfgCache();
+		SetTheIde(nullptr);
 #ifndef _DEBUG
 	}
 	catch(const CParser::Error& e) {
