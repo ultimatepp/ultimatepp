@@ -562,8 +562,6 @@ Ide::Ide()
 
 	default_charset = CHARSET_UTF8;
 
-	SetTheIde(this);
-
 	targetmode = 0;
 
 	doc.WhenTopic = THISBACK(OpenATopic);
@@ -627,7 +625,6 @@ Ide::Ide()
 
 Ide::~Ide()
 {
-	SetTheIde(NULL);
 }
 
 void Ide::DeleteWindows()
