@@ -282,7 +282,7 @@ Color DarkTheme(Color color)
 		return C_R * r + C_G * g + C_B * b;
 	};
 	
-	double target = 255 - Saturate255(Val() + saturation);
+	double target = 255 - Saturate255(int(Val() + saturation));
 	if(target < 30)
 		target *= (1 + (30 - target) / 30) * 1.5;
 	double ratio = target / 128;
@@ -297,7 +297,9 @@ Color DarkTheme(Color color)
 	b *= ratio;
 	saturation = target - Val();
 	
-	return Color(Saturate255(r + saturation), Saturate255(g + saturation), Saturate255(b + saturation));
+	return Color(Saturate255(int(r + saturation)),
+	             Saturate255(int(g + saturation)),
+	             Saturate255(int(b + saturation)));
 }
 
 
