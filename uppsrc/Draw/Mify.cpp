@@ -75,7 +75,7 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		for(int y = 0; y < tsz.cy; y++)
 			do_line(y, b, div);
 	}
-	return ib;
+	return Image(ib);
 }
 
 #else
@@ -139,7 +139,7 @@ Image Minify(const Image& img, int nx, int ny, bool co)
 		for(int y = 0; y < tsz.cy; y++)
 			do_line(y, b, div);
 	}
-	return ib;
+	return Image(ib);
 }
 
 #endif
@@ -214,7 +214,7 @@ Image Magnify(const Image& img, const Rect& src_, int nx, int ny, bool co)
 	b.SetHotSpot(HotSpot(img.GetHotSpot()));
 	b.Set2ndSpot(HotSpot(img.Get2ndSpot()));
 	
-	return b;
+	return Image(b);
 }
 
 Image Magnify(const Image& img, int nx, int ny, bool co)
@@ -255,7 +255,7 @@ Image DownSample3x(const Image& src, bool co)
 	});
 	ib.SetHotSpot(src.GetHotSpot() / 3);
 	ib.Set2ndSpot(src.Get2ndSpot() / 3);
-	return ib;
+	return Image(ib);
 }
 
 Image DownSample2x(const Image& src, bool co)
@@ -287,7 +287,7 @@ Image DownSample2x(const Image& src, bool co)
 	});
 	ib.SetHotSpot(src.GetHotSpot() / 2);
 	ib.Set2ndSpot(src.Get2ndSpot() / 2);
-	return ib;
+	return Image(ib);
 }
 
 };

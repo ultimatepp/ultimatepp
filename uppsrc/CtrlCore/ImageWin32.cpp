@@ -395,7 +395,7 @@ Image ImageDraw::Get(bool pm) const
 		}
 		b.SetKind(IMAGE_OPAQUE);
 	}
-	return b;
+	return Image(b);
 }
 
 ImageDraw::operator Image() const

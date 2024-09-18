@@ -255,6 +255,9 @@ typedef int SOCKET;
 #include <atomic>
 #include <chrono>
 #include <utility>
+#include <exception>
+#include <stdexcept>
+#include <tuple>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC

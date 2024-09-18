@@ -105,7 +105,7 @@ Image VertBlend(Image img1, Image img2, int y0, int y1)
 			memcpy(b[y], img1[y], sz.cx * sizeof(RGBA));
 	b.SetHotSpot(img1.GetHotSpot());
 	b.Set2ndSpot(img1.Get2ndSpot());
-	return b;
+	return Image(b);
 }
 
 Image HorzBlend(Image img1, Image img2, int x0, int x1)
@@ -114,7 +114,7 @@ Image HorzBlend(Image img1, Image img2, int x0, int x1)
 	ImageBuffer b(m);
 	b.SetHotSpot(img1.GetHotSpot());
 	b.Set2ndSpot(img1.Get2ndSpot());
-	return b;
+	return Image(b);
 }
 
 Image HorzSymm(Image src) {
@@ -127,7 +127,7 @@ Image HorzSymm(Image src) {
 	}
 	b.SetHotSpot(src.GetHotSpot());
 	b.Set2ndSpot(src.Get2ndSpot());
-	return b;
+	return Image(b);
 }
 
 bool EqLine(const Image& m, int l1, int l2, int x, int width)
@@ -179,7 +179,7 @@ Image RecreateAlpha(const Image& overwhite, const Image& overblack)
 		ws++;
 	}
 	Premultiply(r);
-	return r;
+	return Image(r);
 }
 
 int ImageMargin(const Image& _m, int p, int dist)
@@ -276,7 +276,7 @@ Image ChPartMaker::Make() const
 	int q = max(max(tl, tr), max(br, bl));
 	ib.SetHotSpot(Point(q, q));
 	ib.Set2ndSpot(Point(sz.cx - q - 1, sz.cy - q - 1));
-	return ib;
+	return Image(ib);
 }
 
 }

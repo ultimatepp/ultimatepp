@@ -68,7 +68,7 @@ Image Smoothen(const Image& img, double level)
 			}
 			ib[y][x] = a;
 		}
-	return ib;
+	return Image(ib);
 }
 
 void IconDes::Smoothen()

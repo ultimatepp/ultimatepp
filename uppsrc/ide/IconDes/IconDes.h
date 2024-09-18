@@ -462,7 +462,7 @@ Image ForEachPixel(const Image& src, T op, bool co = true)
 		}
 	});
 	m.SetHotSpots(src);
-	return m;
+	return Image(m);
 }
 
 template <class T>
