@@ -1,3 +1,5 @@
+#include "CocoCode.i"
+
 K_BACK = kVK_Delete|K_DELTA,
 K_BACKSPACE = K_BACK,
 
