@@ -550,68 +550,68 @@ inline String& operator<<(String& s, const char& x)
 	return s;
 }
 
-force_inline String& operator<<(String&& s, const char *x)
+force_inline String&& operator<<(String&& s, const char *x)
 {
 	s.Cat(x, strlen__(x));
-	return s;
+	return pick(s);
 }
 
-force_inline String& operator<<(String&& s, char *x)
+force_inline String&& operator<<(String&& s, char *x)
 {
 	s.Cat(x);
-	return s;
+	return pick(s);
 }
 
-inline String& operator<<(String&& s, const String &x)
+inline String&& operator<<(String&& s, const String &x)
 {
 	s.Cat(x);
-	return s;
+	return pick(s);
 }
 
-inline String& operator<<(String&& s, char x)
+inline String&& operator<<(String&& s, char x)
 {
 	s.Cat((int) x);
-	return s;
+	return pick(s);
 }
 
-inline String& operator<<(String&& s, const void *x)
+inline String&& operator<<(String&& s, const void *x)
 {
 	s << FormatPtr(x);
-	return s;
+	return pick(s);
 }
 
-inline String& operator<<(String&& s, void *x)
+inline String&& operator<<(String&& s, void *x)
 {
 	s << FormatPtr(x);
-	return s;
+	return pick(s);
 }
 
 template <class T>
-inline String& operator<<(String&& s, const T& x)
+inline String&& operator<<(String&& s, const T& x)
 {
 	s.Cat(AsString(x));
-	return s;
+	return pick(s);
 }
 
 template<>
-inline String& operator<<(String&& s, const char * const &x)
+inline String&& operator<<(String&& s, const char * const &x)
 {
 	s.Cat(x);
-	return s;
+	return pick(s);
 }
 
 template<>
-inline String& operator<<(String&& s, const String &x)
+inline String&& operator<<(String&& s, const String &x)
 {
 	s.Cat(x);
-	return s;
+	return pick(s);
 }
 
 template<>
-inline String& operator<<(String&& s, const char& x)
+inline String&& operator<<(String&& s, const char& x)
 {
 	s.Cat(x);
-	return s;
+	return pick(s);
 }
 
 template<>

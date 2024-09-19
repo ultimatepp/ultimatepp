@@ -168,14 +168,14 @@ ImageDraw::operator Image() const
 	ImageBuffer img(isz);
 	FetchStraight(img);
 	Premultiply(img);
-	return img;
+	return Image(img);
 }
 
 Image ImageDraw::GetStraight() const
 {
 	ImageBuffer img(isz);
 	FetchStraight(img);
-	return img;
+	return Image(img);
 }
 
 void ImageDraw::Init(Size sz)

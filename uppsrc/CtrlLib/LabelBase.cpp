@@ -153,7 +153,7 @@ Image DisImage(const Image& m)
 	while(s < e)
 		(s++)->a /= 3;
 	Premultiply(ib);
-	return ib;
+	return Image(ib);
 }
 
 Image DisabledImage(const Image& img, bool dis)

@@ -242,7 +242,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 	#endif
 		}
 	});
-	return ib;
+	return Image(ib);
 }
 
 Image RescaleFilter(const Image& img, Size sz,

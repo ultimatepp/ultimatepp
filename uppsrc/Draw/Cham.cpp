@@ -556,7 +556,7 @@ Image AdjustColors(const Image& simg) {
 	w.SetHotSpot(img.GetHotSpot());
 	w.Set2ndSpot(img.Get2ndSpot());
 	Premultiply(w);
-	return w;
+	return Image(w);
 }
 
 void  Override(Iml& target, Iml& source, bool colored)

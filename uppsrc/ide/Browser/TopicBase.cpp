@@ -64,7 +64,7 @@ String TppId(const String& ref, bool noscope)
 		else
 			r.Cat(*s++);
 	}
-	return r;
+	return String(r);
 }
 
 String CleanupTppId(const String& ref_)

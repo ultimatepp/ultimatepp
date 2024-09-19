@@ -603,7 +603,7 @@ Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader)
 	sw.Scale(min(isz.cx / f.GetWidth(), isz.cy / f.GetHeight()));
 	sw.Translate(-f.left, -f.top);
 	RenderSVG(sw, svg, resloader);
-	return ib;
+	return Image(ib);
 }
 
 Image RenderSVGImage(Size sz, const char *svg)

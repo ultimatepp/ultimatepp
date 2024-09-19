@@ -425,7 +425,7 @@ Image WithRect(Image m, int x, int y, int cx, int cy, Color c)
 	for(int i = 0; i < cx; i++)
 		for(int j = 0; j < cy; j++)
 			ib[y + j][x + i] = c;
-	return ib;
+	return Image(ib);
 }
 
 Image WithLeftLine(const Image& m, Color c, int w)

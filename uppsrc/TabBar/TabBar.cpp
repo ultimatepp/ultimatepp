@@ -1439,7 +1439,7 @@ Image TabBar::GetDragSample(int n)
 		s++;
 	}
 	Premultiply(ib);
-	return ib;
+	return Image(ib);
 }
 
 void TabBar::Scroll()

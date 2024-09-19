@@ -405,7 +405,7 @@ Image IconDes::Copy(const Rect& r)
 			s++;
 		}
 	}
-	return ib;
+	return Image(ib);
 }
 
 void IconDes::Delete()

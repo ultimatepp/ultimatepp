@@ -68,7 +68,7 @@ String ScopeWorkaround(const char *s)
 			r.Cat(b, s);
 		}
 	}
-	return r;
+	return String(r);
 }
 
 void GatherBaseVirtuals(const String& cls, const String& signature, Index<String>& ids, Index<String>& visited)

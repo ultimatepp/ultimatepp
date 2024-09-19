@@ -16,6 +16,10 @@ String qtf =
 "[H6;b73;*7 $$6,3#07864147445237544204111237153677:section]"
 ;
 
+#ifdef OUT
+#undef OUT
+#endif
+
 #define OUT(x) out << x << '\n';
 
 String toc;

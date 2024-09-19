@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-struct Foo : Moveable< Foo, Comparable<Foo> > {
+struct Foo : Moveable<Foo>, Comparable<Foo> {
 	String a;
 	int    b;
 

@@ -180,7 +180,7 @@ Image MakeDragImage(const Image& arrow, Image sample)
 		Over(b, Point(0, 0), arrow, arrow.GetSize());
 	}
 
-	return b;
+	return Image(b);
 }
 
 Ptr<Ctrl> Ctrl::dndctrl;

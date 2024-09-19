@@ -35,7 +35,7 @@ Image RLEToAlpha(const String& rle, Size sz)
 			s = UnpackRLE(ib[y], s, sz.cx) + 1;
 		else
 			memset(ib[y], 0, sz.cx * sizeof(RGBA));
-	return ib;
+	return Image(ib);
 }
 
 void AlphaImageInfo::Serialize(Stream& stream)

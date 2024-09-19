@@ -106,7 +106,7 @@ file
 	GtkApp.cpp,
 	Cocoa readonly separator,
 	Coco.h,
-	CocoCode.h,
+	CocoCode.i,
 	CocoAfter.h,
 	CocoKeys.h,
 	CocoMM.h,
