@@ -127,7 +127,6 @@ void IconDes::MakePaste()
 
 void IconDes::DoBuffer(Event<ImageBuffer&> tool)
 {
-	Size isz = GetImageSize();
 	Image h = Current().base_image;
 	ImageBuffer ib(h);
 	tool(ib);

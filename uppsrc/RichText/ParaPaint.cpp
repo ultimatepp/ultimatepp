@@ -465,7 +465,6 @@ RichCaret RichPara::GetCaret(int pos, RichContext rc) const
 			}
 			int *w = pl.width + npos;
 			int *p = pl.pos + npos;
-			int *pe = pl.pos + npos + li.len;
 			const CharFormat **i = pl.format + npos;
 			const HeightInfo *h = pl.height + npos;
 			if(li.len && *i) {

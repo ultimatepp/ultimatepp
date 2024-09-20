@@ -585,12 +585,13 @@ again:
 	for(int i = 0; i < dlg.list.GetCount(); i++)
 		if((bool)dlg.list.Get(i, 0))
 			n++;
-	if(n)
+	if(n) {
 		if(!PromptYesNo("Remove " + AsString(n) + " assemblies?"))
 			goto again;
 		for(int i = 0; i < dlg.list.GetCount(); i++)
 			if((bool)dlg.list.Get(i, 0))
 				DeleteFile(VarFilePath(~dlg.list.Get(i, 1)));
+	}
 	SyncBase(vars);
 }
 
