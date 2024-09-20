@@ -16,7 +16,7 @@ struct TypeInfo : Moveable<TypeInfo> {
 
 typedef TypeInfo Context;
 
-struct Val : Moveable<Val, TypeInfo> {
+struct Val : Moveable<Val>, TypeInfo {
 	bool   array = false;
 	bool   rvalue = false; // data is loaded from debugee (if false, data pointed to by address)
 	byte   bitpos = 0;
