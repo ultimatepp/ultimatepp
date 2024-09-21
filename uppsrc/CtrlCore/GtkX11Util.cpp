@@ -5,7 +5,6 @@
 
 #define Time        XTime
 #define Font        XFont
-#define Display     XDisplay
 #define Picture     XPicture
 
 #ifndef PLATFORM_OPENBSD // avoid warning
@@ -18,7 +17,6 @@
 #undef Picture
 #undef Time
 #undef Font
-#undef Display
 
 #ifndef PLATFORM_OPENBSD // avoid warning
 #undef CurrentTime
@@ -26,7 +24,7 @@
 
 namespace Upp {
 
-XDisplay *Xdisplay()
+_XDisplay *Xdisplay()
 {
 	return GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
 }
@@ -89,7 +87,7 @@ Atom XAtom(const char *name)
 
 Vector<int> GetPropertyInts(GdkWindow *w, const char *property)
 {
-	if (GdkBackend::IsWayland())
+	if (GtkBackend::IsWayland())
 		return {}; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -117,7 +115,7 @@ dword X11mods(dword key)
 
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
-	if (GdkBackend::IsWayland())
+	if (GtkBackend::IsWayland())
 		return -1; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -148,7 +146,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
-	if (GdkBackend::IsWayland())
+	if (GtkBackend::IsWayland())
 		return; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -167,7 +165,7 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointer data)
 {
-	if (GdkBackend::IsWayland())
+	if (GtkBackend::IsWayland())
 		return GDK_FILTER_CONTINUE; // Not supported on Wayland...
 	
 	XEvent *event = (XEvent *)xevent;

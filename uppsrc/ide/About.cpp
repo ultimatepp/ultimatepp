@@ -53,7 +53,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 
 #ifdef GUI_GTK
-	h << " (Gtk::" << ToString(GdkBackend::Get()) << ")";
+	h << " (Gtk::" << ToString(GtkBackend::Get()) << ")";
 #endif
 #ifdef FLATPAK
 	h << " (Flatpak)";

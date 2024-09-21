@@ -77,7 +77,7 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 		Cerr() << t_("Failed to initialized GTK app!") << "\n";
 		return false;
 	}
-	if (GdkBackend::IsX11())
+	if (GtkBackend::IsX11())
 		XInitThreads(); // otherwise there are errors despide GuiLock
 	EnterGuiMutex();
 	
@@ -92,7 +92,7 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
-	if (GdkBackend::IsX11())
+	if (GtkBackend::IsX11())
 		gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);

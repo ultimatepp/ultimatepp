@@ -10,7 +10,7 @@
 #endif
 
 namespace Upp {
-namespace GdkBackend {
+namespace GtkBackend {
 
 Type Get()
 {
@@ -47,11 +47,11 @@ bool IsX11()
 
 }
 
-String ToString(GdkBackend::Type t)
+String ToString(GtkBackend::Type t)
 {
 	switch (t) {
-		case GdkBackend::Type::X11: return "X11";
-		case GdkBackend::Type::WAYLAND: return "Wayland";
+		case GtkBackend::Type::X11: return "X11";
+		case GtkBackend::Type::WAYLAND: return "Wayland";
 		default: return "Unknown";
 	}
 }

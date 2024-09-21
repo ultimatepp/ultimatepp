@@ -90,7 +90,7 @@ file
 	GtkDrawOp.cpp,
 	GtkDrawText.cpp,
 	GtkDrawImage.cpp,
-	GdkBackend.cpp,
+	GtkBackend.cpp,
 	GdkImage.cpp,
 	GtkUtil.cpp,
 	GtkCSD.cpp,

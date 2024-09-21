@@ -4,7 +4,7 @@ namespace Upp {
 
 bool GtkCSD::IsSSDSupported()
 {
-	if (GdkBackend::IsX11()) {
+	if (GtkBackend::IsX11()) {
 		return false;
 	}
 	
@@ -24,7 +24,7 @@ bool GtkCSD::IsSSDSupported()
 
 GtkCSD::GtkCSD(GdkWindowTypeHint hint)
 {
-	if (!GdkBackend::IsWayland())
+	if (!GtkBackend::IsWayland())
 		return;
 	if (!IsSSDSupported()) {
 		if (hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) {

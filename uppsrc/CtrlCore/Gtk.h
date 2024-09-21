@@ -189,7 +189,7 @@ private:
 	bool enable = false;
 };
 
-namespace GdkBackend {
+namespace GtkBackend {
 
 	enum class Type {
 		X11,
@@ -202,7 +202,7 @@ namespace GdkBackend {
 	bool IsWayland();
 }
 
-String ToString(GdkBackend::Type b);
+String ToString(GtkBackend::Type b);
 
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
