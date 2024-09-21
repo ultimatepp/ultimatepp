@@ -124,7 +124,7 @@ void DockableCtrlImgsLook(Value* look, int i, int n)
 Image ChCrop(const Value& element, Size canvas, Rect crop, Color baseline)
 {
 	ImageDraw draw(canvas);
-	ChPaint(draw, canvas, element);	
+	ChPaint(draw, canvas, element);
 	if (!IsNull(baseline)) {
 		draw.DrawLine(0, canvas.cy-1, canvas.cx+1, canvas.cy, 1, baseline);
 	}
@@ -141,7 +141,7 @@ Image StandardHighlight(Color inside, Color border)
 			*(q++) = (i == 4 || j == 4 || !i || !j) ? border : inside;
 	ib.SetHotSpot(Point(1, 1));
 	ib.Set2ndSpot(Point(3, 3));
-	return ib;
+	return Image(ib);
 }
 
 Image AlphaHighlight(const Image& img, int alpha)
@@ -154,7 +154,7 @@ Image AlphaHighlight(const Image& img, int alpha)
 	ImageBuffer ib(temp);
 	ib.SetHotSpot(Point(1, 1));
 	ib.Set2ndSpot(Point(3, 3));
-	return ib;
+	return Image(ib);
 }
 
 CH_STYLE(DockableCtrl, Style, StyleDefault)
