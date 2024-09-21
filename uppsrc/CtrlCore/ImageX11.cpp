@@ -362,7 +362,7 @@ ImageDraw::operator Image() const
 		}
 	}
 	Premultiply(ib);
-	return ib;
+	return Image(ib);
 }
 
 ImageDraw::ImageDraw(Size sz)
