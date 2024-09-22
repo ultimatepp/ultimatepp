@@ -160,12 +160,18 @@ Rect Ctrl::GetWndScreenRect() const
 	gint x, y;
 	gint width, height;
 	
-	if(top && utop->csd->IsEnable()) {
-		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
-		width = gtk_widget_get_allocated_width(utop->drawing_area);
-		height = gtk_widget_get_allocated_height(utop->drawing_area);
+	if (GdkBackend::IsWayland()) {
+		if(top && utop->csd->IsEnable()) {
+			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+			width = gtk_widget_get_allocated_width(utop->drawing_area);
+			height = gtk_widget_get_allocated_height(utop->drawing_area);
+		} else {
+			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+		}
 	} else {
-		gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+		gdk_window_get_position(gdk(), &x, &y);
+		width = gdk_window_get_width(gdk());
+		height = gdk_window_get_height(gdk());
 	}
 	
 	return SCL(x, y, width, height);

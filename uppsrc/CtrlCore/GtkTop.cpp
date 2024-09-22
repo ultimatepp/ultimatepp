@@ -21,7 +21,7 @@ void TopWindow::SyncSizeHints()
 		return;
 	GdkGeometry m;
 	Size sz0 = GetRect().GetSize();
-	RLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
+	LLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
 	Size sz = sz0;
 	if(sizeable)
 		sz = GetMinSize();
