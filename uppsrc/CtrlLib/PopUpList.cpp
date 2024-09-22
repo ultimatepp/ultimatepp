@@ -273,7 +273,7 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		popup.Create(this);
 	int h = popup->ac.AddFrameSize(width, min(droplines * popup->ac.GetLineCy(), popup->ac.GetTotalCy())).cy;
 	Rect rt = RectC(x, bottom, width, h);
-	Rect area = Ctrl::GetWorkArea(Point(x, top));
+	Rect area = Ctrl::GetWorkArea(Point(x, top), owner);
 	bool up = false;
 	if(rt.bottom > area.bottom) {
 		up = true;

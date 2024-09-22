@@ -196,7 +196,10 @@ public: // really private:
 	static double LSC(int x)                        { return (double)x / scale; }
 	
 	static int    GetCaretBlinkTime()               { return 500; }
-            
+
+private:
+	static Rect GetPrimaryWorkAreaForWayland(const Ctrl* ctrl);
+	
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }

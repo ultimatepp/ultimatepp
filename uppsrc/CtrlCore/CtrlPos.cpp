@@ -425,29 +425,28 @@ Ctrl& Ctrl::VCenterPosZ(int size, int delta) {
 	return VCenterPos(VertLayoutZoom(size), VertLayoutZoom(delta));
 }
 
-Rect Ctrl::GetWorkArea(Point pt)
+Rect Ctrl::GetWorkArea(Point pt, const Ctrl* ctrl)
 {
 	GuiLock __;
-	static Array<Rect> rc;
+	Array<Rect> rc;
 	if (rc.IsEmpty())
-		GetWorkArea(rc);
+		GetWorkArea(rc, ctrl);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
-	return GetPrimaryWorkArea();
+	return GetPrimaryWorkArea(ctrl);
 }
 
 Rect Ctrl::StdGetWorkArea() const
 {
 	GuiLock __;
 
-	static Array<Rect> rc;
-	if(rc.IsEmpty())
-		GetWorkArea(rc);
+	Array<Rect> rc;
+	GetWorkArea(rc, this);
 	
 	const Ctrl *top = GetTopCtrl();
 	if(top && top->IsOpen())
-		return GetWorkArea(top->GetScreenRect().TopLeft());
+		return GetWorkArea(top->GetScreenRect().TopLeft(), this);
 	return GetPrimaryWorkArea();
 }
 

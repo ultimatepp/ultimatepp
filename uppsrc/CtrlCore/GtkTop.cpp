@@ -257,7 +257,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	LLOG("rect = " << rect << ", overlapped = " << overlapped);
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
-		Rect limit = GetVirtualWorkArea();
+		Rect limit = GetVirtualWorkArea(); // TODO: Disable for Wayland...
 		Rect fm = GetFrameMargins();
 		limit.left += fm.left;
 		limit.right -= fm.right;

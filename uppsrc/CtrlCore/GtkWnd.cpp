@@ -196,16 +196,47 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
+Rect Ctrl::GetPrimaryWorkAreaForWayland(const Ctrl* ctrl)
+{
+	if(!GtkBackend::IsWayland()) {
+		ASSERT("GetWorkAreaForWayland() should be callend only when Wayland backend is enabled!");
+		return Rect();
+	}
+	
+	// NOTE: WorkArea on Wayland is not available... The work area is associated with the
+	// current window. So, we need to return Rect..
+	if(!ctrl) {
+		ASSERT("GetWorkAreaForWayland() passed ctrl is nullptr.");
+		return Rect();
+	}
+	
+	auto top = ctrl->GetTopWindow();
+	if(!top) {
+		return Rect();
+	}
+	
+	auto rect = top->GetRect();
+	return rect;
+}
+
 Rect Ctrl::GetWorkArea() const
 {
 	return StdGetWorkArea();
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkArea(Array<Rect>& rc, const Ctrl *ctrl)
 {
 	GuiLock __;
 	rc.Clear();
 #if GTK_CHECK_VERSION(3, 22, 0)
+	if(GtkBackend::IsWayland() && ctrl) {
+		auto rect = GetPrimaryWorkAreaForWayland(ctrl);
+		if (!rect.IsEmpty()) {
+			rc.Add(rect);
+			return;
+		}
+	}
+
 	GdkDisplay *s = gdk_display_get_default();
 	int n = gdk_display_get_n_monitors(s);
 	Vector<int> netwa;
@@ -233,12 +264,12 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 #endif
 }
 
-Rect Ctrl::GetVirtualWorkArea()
+Rect Ctrl::GetVirtualWorkArea(const Ctrl *ctrl)
 {
 	GuiLock __;
-	Rect r = GetPrimaryWorkArea();
+	Rect r = GetPrimaryWorkArea(ctrl);
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkArea(rc, ctrl);
 	for(int i = 0; i < rc.GetCount(); i++)
 		r |= rc[i];
 	return r;
@@ -274,14 +305,12 @@ Rect Ctrl::GetVirtualScreenArea()
     return SCL(x, y, width, height);
 }
 
-Rect Ctrl::GetPrimaryWorkArea()
+Rect Ctrl::GetPrimaryWorkArea(const Ctrl* ctrl)
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if (GtkBackend::IsWayland()) {
-		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
-		// windows.
-		return GetVirtualScreenArea();
+	if (GtkBackend::IsWayland() && ctrl) {
+		return GetPrimaryWorkAreaForWayland(ctrl);
 	}
 	GdkRectangle rr;
 	auto* display = gdk_display_get_default();
@@ -301,6 +330,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
+	// TODO: This implementation is bad for non Wayland...
 	return GetPrimaryWorkArea();
 }
 

@@ -821,7 +821,7 @@ protected:
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
 
 	Rect StdGetWorkArea() const;
-			
+
 	enum {
 		ATTR_LAYOUT_ID,
 		ATTR_TIP,
@@ -1395,13 +1395,13 @@ public:
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);
 
-	static Rect   GetVirtualWorkArea();
+	static Rect   GetVirtualWorkArea(const Ctrl *ctrl = nullptr);
 	static Rect   GetVirtualScreenArea();
-	static Rect   GetPrimaryWorkArea();
+	static Rect   GetPrimaryWorkArea(const Ctrl *ctrl = nullptr);
 	static Rect   GetPrimaryScreenArea();
-	static void   GetWorkArea(Array<Rect>& rc);
-	static Rect   GetWorkArea(Point pt);
-	static Rect   GetMouseWorkArea()                     { return GetWorkArea(GetMousePos()); }
+	static void   GetWorkArea(Array<Rect>& rc, const Ctrl *ctrl);
+	static Rect   GetWorkArea(Point pt, const Ctrl *ctrl);
+	static Rect   GetMouseWorkArea(const Ctrl *ctrl)       { return GetWorkArea(GetMousePos(), ctrl); }
 	static int    GetKbdDelay();
 	static int    GetKbdSpeed();
 	static bool   IsAlphaSupported();
