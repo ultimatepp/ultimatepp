@@ -17,7 +17,7 @@ Image GetRect_(const Image& orig, const Rect &r) {
 			s++;
 		}
 	}
-	return ib;
+	return Image(ib);
 }
 
 Rect Fit(const Size &frame, const Size &object) {

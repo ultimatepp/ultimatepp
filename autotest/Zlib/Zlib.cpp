@@ -10,7 +10,7 @@ String RandomString(int len)
 			r.Cat("\r\n");
 		else
 			r.Cat(Random(64) + 32);
-	return r;
+	return String(r);
 }
 
 void Check(const String& data)

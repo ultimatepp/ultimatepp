@@ -134,7 +134,7 @@ Image GeoFun::GetImage()
 	BufferPainter bp(ib, MODE_ANTIALIASED);
 	dc1.DoPaint0(bp, 1);
 
-	return ib;
+	return Image(ib);
 }
 
 void GeoFun::SaveToImageFile(String fileName)

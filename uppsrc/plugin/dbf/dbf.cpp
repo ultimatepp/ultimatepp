@@ -195,7 +195,7 @@ String DbfStream::Field::Format(Value value, byte charset) const
 			StringBuffer temp;
 			temp.SetCount(4);
 			Poke32le(~temp, (int)value);
-			return temp;
+			return String(temp);
 		}
 
 		case '@': {
@@ -206,7 +206,7 @@ String DbfStream::Field::Format(Value value, byte charset) const
 			temp.SetCount(8);
 			Poke32le(~temp + 0, dt);
 			Poke32le(~temp + 4, tm);
-			return temp;
+			return String(temp);
 		}
 
 		case 'O': {
@@ -229,7 +229,7 @@ String DbfStream::Field::Format(Value value, byte charset) const
 			temp[6] = s[1];
 			temp[7] = s[0];
 #endif
-			return temp;
+			return String(temp);
 		}
 
 		case 'L': {

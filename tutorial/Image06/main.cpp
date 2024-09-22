@@ -16,7 +16,7 @@ Image CreateBall(int r, Color color)
 			int q = ((x - r) * (x - r) + (y - r) * (y - r)) * 256 / r2;
 			a.a = q <= 255 ? q : 0;
 		}
-	return b;
+	return Image(b);
 }
 
 struct BallMaker : ImageMaker {

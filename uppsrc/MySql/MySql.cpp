@@ -255,7 +255,7 @@ String MySqlConnection::EscapeString(const String& v)
 	int n = mysql_real_escape_string(mysql, q + 1, v, v.GetLength());
 	q[1 + n] = '\"';
 	b.SetCount(2 + n); //TODO - check this fix
-	return b;
+	return String(b);
 }
 
 void MySqlConnection::SetParam(int i, const Value& r) {
