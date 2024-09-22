@@ -18,7 +18,7 @@ Color PaintInfo::ResolvePaper(Color paper) const
 
 RichPara::Lines RichPara::Begin(RichContext& rc) const
 {
-	Lines pl = FormatLines(rc.page.Width());
+	Lines pl = FormatLines(rc.page.Width(), rc.number);
 	rc.py.y += format.before + format.ruler;
 	pl.Justify(format);
 	return pl;
@@ -337,15 +337,6 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				case BULLET_ROUND:
 					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
 					break;
-				default:
-					String s = n.AsText(format);
-					if(!IsNull(s)) {
-						CharFormat cf = li.len && *pl.format ? **pl.format : format;
-						cf.Height(z * cf.GetHeight());
-						draw.DrawText(r.left,
-						              z * y0 - cf.Info().GetAscent(),
-						              s, cf, pi.ResolveInk(cf.ink));
-					}
 				}
 			}
 			int zlcy = z * linecy;
@@ -356,12 +347,13 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				int i = li.pos;
 				int q = z * (rc.py.y + linecy);
 				while(w < wl) {
-					if(spellerror[pl.pos[i++]]) {
+					if(spellerror[pl.pos[i]] && (lni || (i >= pl.number_chars))) {
 						if(zlcy > 16)
 							draw.DrawRect(x, q - 3, *w, 1, Red);
 						draw.DrawRect(x, q - 2, *w, 1, LtRed);
 					}
 					x += *w++;
+					i++;
 				}
 			}
 
@@ -464,16 +456,22 @@ RichCaret RichPara::GetCaret(int pos, RichContext rc) const
 		pr.lineascent = li.ascent;
 		pr.line = lni;
 		if(pos < li.ppos + li.plen) {
-			int *w = pl.width + li.pos;
-			int *p = pl.pos + li.pos;
-			const CharFormat **i = pl.format + li.pos;
-			const HeightInfo *h = pl.height + li.pos;
+			int npos = li.pos;
 			int x = li.xpos + rc.page.left;
+			if(lni == 0 && pl.number_chars) { // skip the number
+				npos += pl.number_chars;
+				for(int i = 0; i < pl.number_chars; i++)
+					x += pl.width[li.pos + i];
+			}
+			int *w = pl.width + npos;
+			int *p = pl.pos + npos;
+			const CharFormat **i = pl.format + npos;
+			const HeightInfo *h = pl.height + npos;
 			if(li.len && *i) {
 				pr.caretascent = h->ascent;
 				pr.caretdescent = h->descent;
 			}
-			while(pos > *p) {
+			while(pos > *p) { // second condition to skip the number
 				x += *w++;
 				if(*i) {
 					pr.caretascent = h->ascent;
@@ -502,11 +500,17 @@ RichCaret RichPara::GetCaret(int pos, RichContext rc) const
 int RichPara::PosInLine(int x, const Rect& page, const Lines& pl, int lni) const
 {
 	const Line& li = pl[lni];
-	const int *w = pl.width + li.pos;
-	const int *wl = w + li.len;
-	if(lni < pl.GetCount() - 1 && li.len > 0 && pl.text[li.pos + li.len - 1] == ' ')
-		wl--;
 	int xp = li.xpos + page.left;
+	int npos = li.pos;
+	if(lni == 0 && pl.number_chars) { // skip the number
+		npos += pl.number_chars;
+		for(int i = 0; i < pl.number_chars; i++)
+			xp += pl.width[li.pos + i];
+	}
+	const int *w = pl.width + npos;
+	const int *wl = w + li.len;
+	if(lni < pl.GetCount() - 1 && li.len > 0 && pl.text[npos + li.len - 1] == ' ')
+		wl--;
 	while(w < wl && xp + *w <= x)
 		xp += *w++;
 	int pos = (int)(w - pl.width);
@@ -529,9 +533,9 @@ int RichPara::GetPos(int x, PageY y, RichContext rc) const
 	return pl.len;
 }
 
-int RichPara::GetVertMove(int pos, int gx, const Rect& page, int dir) const
+int RichPara::GetVertMove(int pos, int gx, const Rect& page, int dir, const RichContext& rc) const
 {
-	Lines pl = FormatLines(page.Width());
+	Lines pl = FormatLines(page.Width(), rc.number);
 	int lni;
 	if(pos >= 0) {
 		for(lni = 0; lni < pl.GetCount() - 1; lni++) {
@@ -540,7 +544,7 @@ int RichPara::GetVertMove(int pos, int gx, const Rect& page, int dir) const
 				break;
 		}
 		lni += sgn(dir);
-		if(lni < 0 || lni >= pl.GetCount())
+		if(lni < 0 || lni >= pl.GetCount() || lni == 0 && pl.number_chars == pl[lni].len)
 			return -1;
 	}
 	else

@@ -99,7 +99,6 @@ void IconDes::RightDown(Point p, dword flags)
 		return;
 	}
 	RGBA ic = CurrentImage()[p.y][p.x];
-	RGBA c = CurrentColor();
 	rgbactrl.Set(ic);
 	ColorChanged();
 }

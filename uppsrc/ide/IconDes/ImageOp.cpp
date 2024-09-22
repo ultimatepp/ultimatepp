@@ -186,7 +186,7 @@ String PackImlDataUncompressed(const Vector<ImageIml>& image)
 			s++;
 		}
 	}
-	return block;
+	return String(block);
 }
 
 String PackImlData(const Vector<ImageIml>& image)

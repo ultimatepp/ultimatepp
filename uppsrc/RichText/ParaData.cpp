@@ -98,7 +98,7 @@ String RichPara::Number::AsText(const RichPara::NumberFormat& format) const
 	return format.before_number + result + format.after_number;
 }
 
-void   RichPara::Number::TestReset(const RichPara::NumberFormat& fmt)
+void   RichPara::Number::Next(const RichPara::NumberFormat& fmt)
 {
 	if(fmt.reset_number) {
 		bool done = false;
@@ -111,10 +111,6 @@ void   RichPara::Number::TestReset(const RichPara::NumberFormat& fmt)
 		if(!done && !IsNull(n[0]))
 			n[0] = 0;
 	}
-}
-
-void   RichPara::Number::Next(const RichPara::NumberFormat& fmt)
-{
 	for(int i = 7; i >= 0; --i)
 		if(fmt.number[i]) {
 			n[i++]++;
@@ -122,11 +118,6 @@ void   RichPara::Number::Next(const RichPara::NumberFormat& fmt)
 				n[i++] = 0;
 			break;
 		}
-}
-
-RichPara::Number::Number()
-{
-	memset8(n, 0, sizeof(n));
 }
 
 bool RichPara::NumberFormat::IsNumbered() const

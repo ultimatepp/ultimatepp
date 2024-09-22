@@ -13,7 +13,7 @@
  *    in this case, pressing 'A' will generate a different virtual
  *    keycode.
  */
-enum {
+
   kVK_ANSI_A                    = 0x00,
   kVK_ANSI_S                    = 0x01,
   kVK_ANSI_D                    = 0x02,
@@ -78,11 +78,10 @@ enum {
   kVK_ANSI_Keypad6              = 0x58,
   kVK_ANSI_Keypad7              = 0x59,
   kVK_ANSI_Keypad8              = 0x5B,
-  kVK_ANSI_Keypad9              = 0x5C
-};
+  kVK_ANSI_Keypad9              = 0x5C,
 
 /* keycodes for keys that are independent of keyboard layout*/
-enum {
+
   kVK_Return                    = 0x24,
   kVK_Tab                       = 0x30,
   kVK_Space                     = 0x31,
@@ -129,5 +128,4 @@ enum {
   kVK_LeftArrow                 = 0x7B,
   kVK_RightArrow                = 0x7C,
   kVK_DownArrow                 = 0x7D,
-  kVK_UpArrow                   = 0x7E
-};
+  kVK_UpArrow                   = 0x7E,

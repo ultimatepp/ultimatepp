@@ -5,12 +5,14 @@ namespace Upp {
 int RichTxt::GetWidth(const RichStyles& st) const
 {
 	int cx = 0;
+	RichPara::Number n;
 	for(int i = 0; i < part.GetCount(); i++) {
 		if(IsPara(i)) {
 			RichPara p = Get(i, st, true);
-			RichPara::Lines pl = p.FormatLines(INT_MAX);
+			RichPara::Lines pl = p.FormatLines(INT_MAX, n);
 			if(pl.GetCount())
 				cx = max(cx, pl[0].xpos + pl[0].cx);
+			n.Next(p.format);
 		}
 		else
 			cx = max(cx, GetTable(i).GetWidth(st));
@@ -20,10 +22,11 @@ int RichTxt::GetWidth(const RichStyles& st) const
 
 void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 {
+	pp.Invalidate();
 	int cx = rc.page.Width();
 	pp.ccx = cx;
 	RichPara p = Get(parti, *rc.styles, false);
-	RichPara::Lines pl = p.FormatLines(cx);
+	RichPara::Lines pl = p.FormatLines(cx, rc.number);
 	pp.ruler = p.format.ruler;
 	pp.before = p.format.before;
 	pp.linecy.Clear();
@@ -38,6 +41,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.keepnext = p.format.keepnext;
 	pp.orphan = p.format.orphan;
 	pp.newhdrftr = p.format.newhdrftr;
+	pp.number = rc.number;
 	if(~pp.header_qtf != ~p.format.header_qtf) { // we compare just pointers
 		pp.header_qtf = p.format.header_qtf;
 		Upp::SetQTF(pp.header, pp.header_qtf);
@@ -51,7 +55,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 void RichTxt::Sync(int parti, const RichContext& rc) const {
 	ASSERT(part[parti].Is<Para>());
 	const Para& pp = part[parti].Get<Para>();
-	if(rc.page.Width() != pp.ccx)
+	if(rc.page.Width() != pp.ccx || pp.number_fmt && pp.number != rc.number)
 		Sync0(pp, parti, rc);
 }
 
@@ -93,7 +97,12 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 			int nbefore = 0;
 			int nline = 0;
 			if(pp.keepnext && parti + 1 < part.GetCount() && part[parti + 1].Is<Para>()) {
+				RichPara::Number n = rc.number;
+				if(pp.number_fmt)
+					rc.number.Next(*pp.number_fmt);
 				Sync(parti + 1, rc);
+				if(pp.number_fmt)
+					rc.number = n;
 				const Para& p = part[parti + 1].Get<Para>();
 				nbefore = p.before + p.ruler;
 				nline   = p.linecy[0];
@@ -121,6 +130,8 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 			begin = rc;
 			rc.py.y += pp.before + pp.cy + pp.after + pp.ruler;
 		}
+		if(pp.number_fmt)
+			rc.number.Next(*pp.number_fmt);
 	}
 }
 
@@ -162,6 +173,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 	PaintInfo pi = _pi;
 	int parti = 0;
 	RichPara::Number n;
+	rc.number.Reset();
 	while(rc.py < pi.bottom && parti < part.GetCount()) {
 		if(part[parti].Is<RichTable>()) {
 			pi.tablesel--;
@@ -173,10 +185,8 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 		}
 		else {
 			const Para& pp = part[parti].Get<Para>();
-			if(pp.number) {
-				n.TestReset(*pp.number);
-				n.Next(*pp.number);
-			}
+			if(pp.number_fmt)
+				n.Next(*pp.number_fmt);
 			RichContext begin;
 			RichContext next = GetAdvanced(parti, rc, begin);
 			if(next.py >= pi.top) {
@@ -192,7 +202,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 					pp.spellerrors.Clear();
 				}
 				if(IsPainting(pw, pi.zoom, rc.page, begin.py, next.py))
-					p.Paint(pw, begin, pi, n, pp.spellerrors, rc.text == this);
+					p.Paint(pw, begin, pi, pp.number_fmt ? rc.number : n, pp.spellerrors, rc.text == this);
 			}
 			rc = next;
 		}
@@ -209,6 +219,7 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 	int parti = 0;
 	if(pos > GetLength())
 		pos = GetLength();
+	rc.number.Reset();
 	while(parti < part.GetCount()) {
 		int l = GetPartLength(parti) + 1;
 		RichContext begin;
@@ -230,6 +241,8 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 
 int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 {
+	rc.number.Reset();
+
 	int parti = 0;
 	int pos = 0;
 
@@ -253,6 +266,8 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 
 RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
 {
+	rc.number.Reset();
+
 	int parti = 0;
 	int ti = 0;
 	if(part.GetCount()) {
@@ -280,6 +295,8 @@ RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) con
 
 int RichTxt::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 {
+	rc.number.Reset();
+
 	ASSERT(dir == -1 || dir == 1);
 	if(GetPartCount() == 0)
 		return -1;
@@ -295,8 +312,13 @@ int RichTxt::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 		pos = GetPartPos(pi);
 	}
 	while(pi < GetPartCount()) {
-		int q = IsTable(pi) ? GetTable(pi).GetVertMove(p, gx, rc, dir)
-		                    : Get(pi, *rc.styles, true).GetVertMove(p, gx, rc.page, dir);
+		int q;
+		if(IsTable(pi))
+			q = GetTable(pi).GetVertMove(p, gx, rc, dir);
+		else {
+			rc.number = part[pi].Get<Para>().number;
+			q = Get(pi, *rc.styles, true).GetVertMove(p, gx, rc.page, dir, rc);
+		}
 		if(q >= 0)
 			return q + pos;
 		if(dir > 0)
@@ -313,6 +335,8 @@ int RichTxt::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 
 void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int type) const
 {
+	rc.number.Reset();
+
 	int parti = 0;
 	while(parti < part.GetCount()) {
 		RichContext begin;

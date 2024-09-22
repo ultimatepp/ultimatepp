@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-void RichTxt::Para::Invalidate()
+void RichTxt::Para::Invalidate() const
 {
 	INTERLOCKED {
 		static int64 ss;
@@ -18,8 +18,8 @@ RichTxt::Para::Para(const Para& src, int)
 	styleid = src.styleid;
 	content = src.content;
 	haspos = src.haspos;
-	if(src.number)
-		number.Create<RichPara::NumberFormat>(*src.number);
+	if(src.number_fmt)
+		number_fmt.Create<RichPara::NumberFormat>(*src.number_fmt);
 	Invalidate();
 	checked = false;
 }
@@ -115,12 +115,12 @@ void RichTxt::Put(int i, const RichPara& p, const RichStyle& s)
 	if(i >= part.GetCount() || !IsPara(i))
 		part.At(i).Create<Para>();
 	Para& pp = part[i].Get<Para>();
-	int numbering = p.format.GetNumberLevel();
+	int numbering = p.format.GetNumberLevel(); // level 0 just adds after and before...
 	if(pp.numbering != numbering)
 		SetRefreshFrom(i);
 	else
 		SetRefresh(i);
-	pp.number.Clear();
+	pp.number_fmt.Clear();
 	pp.content = p.Pack(s.format, pp.object);
 	pp.Invalidate();
 	pp.checked = false;
@@ -130,7 +130,7 @@ void RichTxt::Put(int i, const RichPara& p, const RichStyle& s)
 	pp.spellerrors.Clear();
 	pp.haspos = p.HasPos();
 	if(numbering >= 0 || p.format.reset_number)
-		pp.number.Create() = p.format;
+		pp.number_fmt.Create() = p.format;
 }
 
 void RichTxt::Put(int i, const RichPara& p, const RichStyles& s)
@@ -142,12 +142,6 @@ void RichTxt::Set(int i, const RichPara& p, const RichStyles& s)
 {
 	Put(i, p, s);
 	Invalidate();
-}
-
-void RichTxt::Insert(int i, const RichPara& p, const RichStyles& s)
-{
-	part.Insert(i);
-	Set(i, p, s);
 }
 
 void RichTxt::RemovePart(int parti)
@@ -435,7 +429,7 @@ void RichTxt::Init()
 {
 	r_type = ALL;
 	r_parti = 0;
-	r_paraocx = r_paraocy = -1;	
+	r_paraocx = r_paraocy = -1;
 	tabcount = length = 0;
 }
 

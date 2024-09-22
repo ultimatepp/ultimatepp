@@ -144,10 +144,12 @@ struct RichPara {
 		int     n[8];
 
 		String  AsText(const NumberFormat& format) const;
-		void    TestReset(const NumberFormat& format);
 		void    Next(const NumberFormat& format);
+		void    Reset()                               { memset(n, 0, sizeof(n)); }
 
-		Number();
+		bool        operator!=(const Number& b) const { return !memeq_t(n, b.n, 8); }
+
+		Number()                                      { Reset(); }
 	};
 
 	struct Part {
@@ -182,10 +184,10 @@ struct RichPara {
 	};
 
 	struct Line : public HeightInfo {
-		int  pos;
-		int  len;
-		int  ppos;
-		int  plen;
+		int  pos; // offset in Lines arrays (e.g. text or pos)
+		int  len; // number of characters in lines array
+		int  ppos; // position of the first character
+		int  plen; // length in source characters (e.g. fields are single)
 		int  xpos;
 		int  cx;
 		int  objecti;
@@ -197,7 +199,6 @@ struct RichPara {
 		int                        clen;
 		int                        cx;
 		Buffer<wchar>              text;
-		Buffer<byte>               spell;
 		Buffer<int>                pos;
 		Buffer<int>                width;
 		Buffer<HeightInfo>         height;
@@ -207,6 +208,7 @@ struct RichPara {
 		Array<RichObject>          object;
 		int                        first_indent;
 		int                        next_indent;
+		int                        number_chars; // if paragraph starts with numbering, otherwise 0
 
 
 		int                  GetCount() const        { return line.GetCount(); }
@@ -265,13 +267,13 @@ struct RichPara {
 
 	void        GetRichPos(RichPos& rp, int pos) const;
 
-	Lines       FormatLines(int cx) const;
+	Lines       FormatLines(int cx, const Number& n) const;
 	void        Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi, const Number& n, const Bits& spellerror, bool baselevel) const;
 	RichCaret   GetCaret(int pos, RichContext rc) const;
 	int         GetPos(int x, PageY y, RichContext rc) const;
 	void        GatherLabels(Vector<RichValPos>& info, RichContext rc, int pos) const;
 	void        GatherIndexes(Vector<RichValPos>& info, RichContext rc, int pos) const;
-	int         GetVertMove(int pos, int gx, const Rect& page, int dir) const;
+	int         GetVertMove(int pos, int gx, const Rect& page, int dir, const RichContext& rc) const;
 
 	WString     GetText() const;
 

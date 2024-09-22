@@ -76,6 +76,24 @@ Color CmykColorf(double c, double m, double y, double k)
 	return Color(min(int(r * 255), 255), min(int(g * 255), 255), min(int(b * 255), 255));
 }
 
+// Formula from https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+
+double RelativeLuminance(Color color) {
+	auto comp = [&] (double c){
+		c /= 255;
+		return (c <= 0.03928) ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);
+	};
+	return comp(color.GetR()) * 0.2126 + comp(color.GetG()) * 0.7152 + comp(color.GetB()) * 0.0722;
+}
+
+// Formula from https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
+
+double ContrastRatio(Color c1, Color c2) {
+	double rl1 = RelativeLuminance(c1);
+	double rl2 = RelativeLuminance(c2);
+	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
+}
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
@@ -264,7 +282,7 @@ Color DarkTheme(Color color)
 		return C_R * r + C_G * g + C_B * b;
 	};
 	
-	double target = 255 - Saturate255(Val() + saturation);
+	double target = 255 - Saturate255(int(Val() + saturation));
 	if(target < 30)
 		target *= (1 + (30 - target) / 30) * 1.5;
 	double ratio = target / 128;
@@ -279,7 +297,9 @@ Color DarkTheme(Color color)
 	b *= ratio;
 	saturation = target - Val();
 	
-	return Color(Saturate255(r + saturation), Saturate255(g + saturation), Saturate255(b + saturation));
+	return Color(Saturate255(int(r + saturation)),
+	             Saturate255(int(g + saturation)),
+	             Saturate255(int(b + saturation)));
 }
 
 

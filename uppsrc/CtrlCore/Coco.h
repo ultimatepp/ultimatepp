@@ -141,8 +141,6 @@ Image GetIconForFile(const char *path);
 #include <CtrlCore/stdids.h>
 #endif
 
-#include "CocoCode.h"
-
 #define GUIPLATFORM_KEYCODES_INCLUDE <CtrlCore/CocoKeys.h>
 
 struct CocoTop;

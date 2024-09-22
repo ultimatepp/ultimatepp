@@ -673,6 +673,7 @@ public:
 	Event<String&>           WhenLabel;
 	Event<String&>           WhenIndexEntry;
 	Event<Bar&>              WhenBar;
+	Event<>                  WhenSel;
 
 	void   StdBar(Bar& menu);
 
