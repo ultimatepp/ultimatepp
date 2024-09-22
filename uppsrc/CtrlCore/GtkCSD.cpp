@@ -1,4 +1,6 @@
-#include "CtrlCore.h"
+#include <CtrlCore/CtrlCore.h>
+
+#ifdef GUI_GTK
 
 namespace Upp {
 
@@ -76,3 +78,5 @@ void GtkCSD::FindMargins(GdkWindowTypeHint hint)
 }
 
 }
+
+#endif

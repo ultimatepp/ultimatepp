@@ -1,4 +1,4 @@
-#include "CtrlCore.h"
+#include <CtrlCore/CtrlCore.h>
 
 #ifdef GUI_GTK
 #ifdef GDK_WINDOWING_X11
