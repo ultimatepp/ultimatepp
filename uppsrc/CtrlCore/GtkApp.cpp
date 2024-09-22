@@ -54,31 +54,25 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 int Ctrl::scale;
 
-bool running_on_wayland;
-
-bool   RunningOnWayland()
-{
-	return running_on_wayland;
-}
-
 bool InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 	
-	XInitThreads(); // otherwise there are errors despide GuiLock
-	
-	running_on_wayland = GetEnv("XDG_SESSION_TYPE") == "wayland";
-
 #if GTK_CHECK_VERSION(3, 10, 0)
-	gdk_set_allowed_backends("wayland,x11"); // this fixes some wayland issues
+	String backends = "x11,wayland";
+#ifdef GUI_GTK_WAYLAND
+	backends = "wayland,x11";
+#endif
+	gdk_set_allowed_backends(backends);
 #endif
 
 	if (!gtk_init_check(&argc, &argv)) {
 		Cerr() << t_("Failed to initialized GTK app!") << "\n";
 		return false;
 	}
-	if (GtkBackend::IsX11())
+	if (GdkBackend::IsX11()) {
 		XInitThreads(); // otherwise there are errors despide GuiLock
+	}
 	EnterGuiMutex();
 	
 	Ctrl::SetUHDEnabled(true);
@@ -92,7 +86,7 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
-	if (GtkBackend::IsX11())
+	if (GdkBackend::IsX11())
 		gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);

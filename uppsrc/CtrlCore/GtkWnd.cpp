@@ -111,7 +111,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
-			if(RunningOnWayland()) // wayland is broken, need some paint to change the cursor...
+			if(GdkBackend::IsX11() && GdkBackend::IsRunningOnWayland()) // wayland is broken, need some paint to change the cursor...
 				topctrl->Refresh(0, 0, 1, 1);
 			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
@@ -212,7 +212,7 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		auto *pMonitor = gdk_display_get_monitor(s, i);
-		if (GtkBackend::IsWayland()) {
+		if (GdkBackend::IsWayland()) {
 			gdk_monitor_get_geometry(pMonitor, &rr);
 		} else {
 			gdk_monitor_get_workarea(pMonitor, &rr);
@@ -253,7 +253,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		return Rect();
 	}
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if (GtkBackend::IsWayland()) {
+	if (GdkBackend::IsWayland()) {
 		GdkRectangle rr;
 		auto *pDisplay = gdk_display_get_default();
 		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
@@ -265,7 +265,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		return SCL(rr.x, rr.y, rr.width, rr.height);
 	}
 #endif
-	if (GtkBackend::IsWayland()) {
+	if (GdkBackend::IsWayland()) {
 		ASSERT("GTK Wayland backend not supported before 3.22 GTK version.");
 		return Rect();
 	}
@@ -278,7 +278,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if (GtkBackend::IsWayland()) {
+	if (GdkBackend::IsWayland()) {
 		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
 		// windows.
 		return GetVirtualScreenArea();

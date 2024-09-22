@@ -10,7 +10,7 @@
 #endif
 
 namespace Upp {
-namespace GtkBackend {
+namespace GdkBackend {
 
 Type Get()
 {
@@ -45,13 +45,19 @@ bool IsX11()
 	return Get() == Type::X11;
 }
 
+bool IsRunningOnWayland()
+{
+	static bool running = GetEnv("XDG_SESSION_TYPE") == "wayland";
+	return running;
 }
 
-String ToString(GtkBackend::Type t)
+}
+
+String ToString(GdkBackend::Type t)
 {
 	switch (t) {
-		case GtkBackend::Type::X11: return "X11";
-		case GtkBackend::Type::WAYLAND: return "Wayland";
+		case GdkBackend::Type::X11: return "X11";
+		case GdkBackend::Type::WAYLAND: return "Wayland";
 		default: return "Unknown";
 	}
 }

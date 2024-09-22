@@ -4,7 +4,7 @@ namespace Upp {
 
 bool GtkCSD::IsSSDSupported()
 {
-	if (GtkBackend::IsX11()) {
+	if (GdkBackend::IsX11()) {
 		return false;
 	}
 	
@@ -15,18 +15,18 @@ bool GtkCSD::IsSSDSupported()
 	// not. Let's have a list of desktop environments on which we tested it works correctly.
 	auto desktop = GetEnv("XDG_SESSION_DESKTOP");
 	if (desktop == "KDE") {
-		return false;
+		return true;
 		//return true;
 	}
 	
-	return true;
+	return false;
 }
 
 GtkCSD::GtkCSD(GdkWindowTypeHint hint)
 {
-	if (!GtkBackend::IsWayland())
+	if (!GdkBackend::IsWayland())
 		return;
-	if (!IsSSDSupported()) {
+	if (IsSSDSupported()) {
 		if (hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) {
 			FindMargins(hint);
 			enable = true;

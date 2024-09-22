@@ -189,7 +189,7 @@ private:
 	bool enable = false;
 };
 
-namespace GtkBackend {
+namespace GdkBackend {
 
 	enum class Type {
 		X11,
@@ -200,14 +200,14 @@ namespace GtkBackend {
 	Type Get();
 	bool IsX11();
 	bool IsWayland();
+	
+	bool IsRunningOnWayland();
 }
 
-String ToString(GtkBackend::Type b);
+String ToString(GdkBackend::Type b);
 
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
-
-bool   RunningOnWayland();
 
 GdkAtom GAtom(const String& id);
 

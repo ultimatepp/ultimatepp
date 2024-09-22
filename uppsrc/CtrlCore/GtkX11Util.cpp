@@ -87,7 +87,7 @@ Atom XAtom(const char *name)
 
 Vector<int> GetPropertyInts(GdkWindow *w, const char *property)
 {
-	if (GtkBackend::IsWayland())
+	if (GdkBackend::IsWayland())
 		return {}; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -115,7 +115,7 @@ dword X11mods(dword key)
 
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
-	if (GtkBackend::IsWayland())
+	if (GdkBackend::IsWayland())
 		return -1; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -146,7 +146,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
-	if (GtkBackend::IsWayland())
+	if (GdkBackend::IsWayland())
 		return; // Not supported on Wayland...
 	
 	GuiLock __;
@@ -165,7 +165,7 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointer data)
 {
-	if (GtkBackend::IsWayland())
+	if (GdkBackend::IsWayland())
 		return GDK_FILTER_CONTINUE; // Not supported on Wayland...
 	
 	XEvent *event = (XEvent *)xevent;
