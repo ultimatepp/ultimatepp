@@ -17,7 +17,7 @@ CONSOLE_APP_MAIN
 		{ "www.idnes.cz", "</html>" },
 		{ "www.google.com", "</script>" },
 		{ "http://wattsupwiththat.com/", "</html>" },
-		{ "http://www.rcalbum.cz", "</html>" },
+	//	{ "http://www.rcalbum.cz", "</html>" },
 		{ "www.cekas.eu", "<script src='https://www.cekas.eu/" },
 	};
 	for(int nd = 0; nd < 1; nd++)
