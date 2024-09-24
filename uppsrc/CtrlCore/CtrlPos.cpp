@@ -317,7 +317,7 @@ Ctrl& Ctrl::SetFramePosY(Logc y) {
 void  Ctrl::SetRect(int x, int y, int cx, int cy)
 {
 	LLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
-	auto clampc = [](int c) { return clamp(c, -10000, 10000); }; // Logc vals only have 15 bits
+	auto clampc = [](int c) { return clamp(c, -32700, 32700); }; // Logc vals only have 15 bits
 	SetPos(PosLeft(clampc(x), clampc(cx)), PosTop(clampc(y), clampc(cy)));
 }
 
