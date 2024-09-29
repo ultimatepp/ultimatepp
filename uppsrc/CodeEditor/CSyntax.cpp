@@ -195,7 +195,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 		}
 		if(cl == 0) {
 			blk_end.y = line;
-			blk_end.x = e - ln;
+			blk_end.x = int(e - ln);
 		}
 		p = e;
 	}
@@ -255,7 +255,7 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 					auto Cl0Pos = [&](Point& t) {
 						if(cl == 0) {
 							t.y = line;
-							t.x = p - 1 - ln;
+							t.x = int(p - 1 - ln);
 						}
 					};
 					if(c == '/') break;
