@@ -58,6 +58,8 @@ CONSOLE_APP_MAIN
 		ForwardTcpIp(session);
 #elif defined(SSH_PICK_SEMANTICS)
 		SshPick(session);
+#elif defined(SSH_POLYMORPHISM)
+		SshPolymorphism(session);
 #endif
 		return;
 	}

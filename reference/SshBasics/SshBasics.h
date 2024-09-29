@@ -18,6 +18,7 @@ void ScpGet(SshSession& session);
 void ForwardTcpIp(SshSession& session);
 void X11Forwarding(SshSession& session);
 void SshPick(SshSession& session);
+void SshPolymorphism(SshSession& session);
 void TraceVerbose();
 
 #endif
