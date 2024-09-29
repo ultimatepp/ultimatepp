@@ -65,3 +65,4 @@ CONSOLE_APP_MAIN
 	}
 	LOG(session.GetErrorDesc());
 }
+
