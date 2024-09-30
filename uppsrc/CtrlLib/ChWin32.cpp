@@ -49,6 +49,7 @@ struct XpElement : Moveable<XpElement> {
 
 	bool  whista;
 	bool  contentm;
+	bool  nocache = false;
 
 	bool  operator==(const XpElement& e) const {
 		return e.widget == widget && e.part == part && e.state == state;
@@ -216,7 +217,6 @@ struct Win32ImageMaker : ImageMaker {
 	}
 };
 
-#ifndef STATIC_IMAGES
 Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 {
 	if(IsTypeRaw<XpElement>(v)) {
@@ -237,7 +237,7 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 			return Rect(q, q, q, q);
 		}
 		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
-			LTIMING("XpPaint");
+			RTIMING("XpPaint");
 			Rect r = rect;
 			if(op == LOOK_PAINTEDGE) {
 				q = XpMargin(e);
@@ -258,7 +258,7 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 					m.part = e.part;
 					m.state = e.state;
 					m.sz = r.GetSize();
-					w.DrawImage(r.left, r.top, MakeImage(m));
+					w.DrawImage(r.left, r.top, e.widget == XP_PROGRESS && findarg(e.part, PP_CHUNK, PP_CHUNKVERT) >= 0 ? m.Make() : MakeImage(m));
 				}
 				else {
 					SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
@@ -278,7 +278,6 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 	}
 	return Null;
 }
-#endif
 
 struct chCtrlsImg {
 	int id;
@@ -297,7 +296,7 @@ static chCtrlsImg sImgs[] = {
 	{ CtrlsImg::I_O2, 4, XP_BUTTON, BP_CHECKBOX, CBS_MIXEDNORMAL },
 };
 
-void Win32Look(Value *ch, int count, int widget, int part, int state = 1, bool contentm = false)
+void Win32Look(Value *ch, int count, int widget, int part, int state = 1, bool contentm = false, bool img = false)
 {
 	for(int i = 0; i < count; i++) {
 		XpElement e;
@@ -305,28 +304,28 @@ void Win32Look(Value *ch, int count, int widget, int part, int state = 1, bool c
 		e.part = part;
 		e.state = state + i;
 		e.contentm = contentm;
-	#ifdef STATIC_IMAGES
-		Image m = XpImage(widget, part, state + i);
-		int hotspot;
-		if(contentm) {
-			Rect r(0, 0, 100, 100);
-			Rect cr;
-			HANDLE htheme = XpWidget(widget);
-			XpTheme().GetThemeBackgroundContentRect(htheme, NULL, e.part, e.state, r, cr);
-			hotspot = cr.left;
+		if(img) {
+			Image m = XpImage(widget, part, state + i);
+			int hotspot;
+			if(contentm) {
+				Rect r(0, 0, 100, 100);
+				Rect cr;
+				HANDLE htheme = XpWidget(widget);
+				XpTheme().GetThemeBackgroundContentRect(htheme, NULL, e.part, e.state, r, cr);
+				hotspot = cr.left;
+			}
+			else
+				hotspot = XpMargin(e);
+			ch[i] = WithHotSpot(m, hotspot, hotspot);
 		}
 		else
-			hotspot = XpMargin(e);
-		ch[i] = WithHotSpot(m, hotspot, hotspot);
-	#else
-		ch[i] = RawToValue(e);
-	#endif
+			ch[i] = RawToValue(e);
 	}
 }
 
-void Win32Look(Value& ch, int widget, int part, int state = 1, bool contentm = false)
+void Win32Look(Value& ch, int widget, int part, int state = 1, bool contentm = false, bool img = false)
 {
-	Win32Look(&ch, 1, widget, part, state, contentm);
+	Win32Look(&ch, 1, widget, part, state, contentm, img);
 }
 
 String XpThemeInfo(LPCWSTR pszPropertyName)
@@ -464,9 +463,7 @@ void ChHostSkin()
 	}
 	else SColorDisabled_Write(Color(0x80, 0x80, 0x80));
 
-#ifndef STATIC_IMAGES
 	ChLookFn(XpLookFn);
-#endif
 
 	if(XpWidget(XP_BUTTON)) {
 		GUI_GlobalStyle_Write(GUISTYLE_XP);
@@ -620,8 +617,8 @@ void ChHostSkin()
 			ProgressIndicator::Style& s = ProgressIndicator::StyleDefault().Write();
 			Win32Look(s.hlook, XP_PROGRESS, PP_BAR, 0, true);
 			Win32Look(s.vlook, XP_PROGRESS, PP_BARVERT, 0, true);
-			Win32Look(s.hchunk, XP_PROGRESS, PP_CHUNK);
-			Win32Look(s.vchunk, XP_PROGRESS, PP_CHUNKVERT);
+			Win32Look(s.hchunk, XP_PROGRESS, PP_CHUNK, 1, false, sEmulateDarkTheme);
+			Win32Look(s.vchunk, XP_PROGRESS, PP_CHUNKVERT, 1, false, sEmulateDarkTheme);
 		}
 		{
 			MenuBar::Style& s = MenuBar::StyleDefault().Write();
