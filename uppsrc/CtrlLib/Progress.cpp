@@ -84,12 +84,12 @@ void ProgressIndicator::Paint(Draw& w) {
 		if(sz.cx > sz.cy) {
 			ChPaint(w, sz, style->hlook);
 			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
-			ChPaint(w, r.left + p0, r.top, p, sz.cy - r.top - r.bottom, style->hchunk);
+			ChPaintNoCache(w, r.left + p0, r.top, p, sz.cy - r.top - r.bottom, style->hchunk);
 		}
 		else {
 			ChPaint(w, sz, style->vlook);
 			w.Clip(r.left, r.top, sz.cx - r.left - r.right, sz.cy - r.top - r.bottom);
-			ChPaint(w, r.left, sz.cy - r.bottom - p - p0, sz.cx - r.left - r.right, p, style->vchunk);
+			ChPaintNoCache(w, r.left, sz.cy - r.bottom - p - p0, sz.cx - r.left - r.right, p, style->vchunk);
 		}
 		w.End();
 	}
