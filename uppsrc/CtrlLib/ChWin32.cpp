@@ -47,17 +47,14 @@ struct XpElement : Moveable<XpElement> {
 	int8  part;
 	int8  state;
 
-	bool  whista;
-	bool  contentm;
-	bool  nocache = false;
+	bool  whista = false;
+	bool  contentm = false;
 
 	bool  operator==(const XpElement& e) const {
 		return e.widget == widget && e.part == part && e.state == state;
 	}
 
 	hash_t GetHashValue() const { return widget ^ part ^ state; }
-
-	XpElement() { contentm = whista = false; }
 };
 
 static HANDLE xp_widget_handle[XP_COUNT];
@@ -219,6 +216,7 @@ struct Win32ImageMaker : ImageMaker {
 
 Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 {
+	op = op & ~LOOK_NOCACHE;
 	if(IsTypeRaw<XpElement>(v)) {
 		const XpElement& e = ValueTo<XpElement>(v);
 		HANDLE htheme = XpWidget(e.widget);
@@ -237,7 +235,7 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op, Color)
 			return Rect(q, q, q, q);
 		}
 		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
-			RTIMING("XpPaint");
+			LTIMING("XpPaint");
 			Rect r = rect;
 			if(op == LOOK_PAINTEDGE) {
 				q = XpMargin(e);
@@ -703,7 +701,7 @@ void ChHostSkin()
 
 			MultiButton::StyleDefault().Write().simple[i] = m;
 			MultiButton::StyleFrame().Write().simple[i] = m;
-			
+
 			Button::StyleNormal().Write().monocolor[i] = c;
 			Button::StyleOk().Write().monocolor[i] = c;
 			Button::StyleEdge().Write().monocolor[i] = c;
@@ -736,7 +734,7 @@ void ChHostSkin()
 			                                   paper, Size(40, 40))),
 			                14, 26);
 		}
-		
+
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));
 	}
