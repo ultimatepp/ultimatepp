@@ -541,9 +541,7 @@ Ctrl::Ctrl() {
 	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
 	inframe = false;
 	ignoremouse = transparent = false;
-	pos.x = PosLeft(0, 0);
-	pos.y = PosTop(0, 0);
-	rect = Rect(0, 0, 0, 0);
+	packed_rect = Rect16(0, 0, 0, 0);
 	inloop = popup = isopen = false;
 	modify = false;
 	unicode = false;

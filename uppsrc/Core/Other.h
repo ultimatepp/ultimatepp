@@ -106,9 +106,6 @@ public:
 class PackedData {
 	void *ptr = nullptr;
 	
-	template <class T>
-	T Get(int ii, T def) const;
-
 public:
 	void   SetRawPtr(void *p)                   { ptr = p; }
 	void  *GetRawPtr() const                    { return ptr; }
@@ -117,6 +114,12 @@ public:
 
 	template <class F>
 	bool   GetData(int ii, F out) const;
+
+	template <class T>
+	void Set(int ii, T val);
+
+	template <class T>
+	T Get(int ii, T def) const;
 	
 	void   SetNull(int ii)                      { SetData(ii, NULL, 0); }
 
@@ -146,57 +149,6 @@ public:
 	PackedData(const PackedData&) = delete;
 	~PackedData();
 };
-
-/*
-template <class T, int N = 1>
-struct Link {
-	T *link_prev[N];
-	T *link_next[N];
-
-protected:
-	void LPN(int i)                      { link_prev[i]->link_next[i] = link_next[i]->link_prev[i] = (T *)this; }
-
-public:
-	NOUBSAN	T *GetPtr()                  { return (T *) this; }
-	const T *GetPtr() const              { return (const T *) this; }
-	T       *GetNext(int i = 0)          { return link_next[i]; }
-	T       *GetPrev(int i = 0)          { return link_prev[i]; }
-	const T *GetNext(int i = 0) const    { return link_next[i]; }
-	const T *GetPrev(int i = 0) const    { return link_prev[i]; }
-
-	NOUBSAN	void LinkSelf(int i = 0)     { link_next[i] = link_prev[i] = (T *)this; }
-	void LinkSelfAll()                   { for(int i = 0; i < N; i++) LinkSelf(i); }
-	void Unlink(int i = 0)               { link_next[i]->link_prev[i] = link_prev[i]; link_prev[i]->link_next[i] = link_next[i];
-	                                       LinkSelf(i); }
-	void UnlinkAll()                     { for(int i = 0; i < N; i++) Unlink(i); }
-	NOUBSAN	void LinkBefore(Link *n, int i = 0)  { link_next[i] = (T *)n; link_prev[i] = link_next[i]->link_prev[i]; LPN(i); }
-	NOUBSAN	void LinkAfter(Link *p, int i = 0)   { link_prev[i] = (T *)p; link_next[i] = link_prev[i]->link_next[i]; LPN(i); }
-
-	T   *InsertNext(int i = 0)           { T *x = new T; x->LinkAfter(this, i); return x; }
-	T   *InsertPrev(int i = 0)           { T *x = new T; x->LinkBefore(this, i); return x; }
-
-	void DeleteList(int i = 0)           { while(link_next[i] != GetPtr()) delete link_next[i]; }
-
-	bool InList(int i = 0) const         { return link_next[i] != GetPtr(); }
-	bool IsEmpty(int i = 0) const        { return !InList(i); }
-
-	Link()                               { LinkSelfAll(); }
-	~Link()                              { UnlinkAll(); }
-
-private:
-	Link(const Link&);
-	void operator=(const Link&);
-
-public:
-#ifdef _DEBUG
-	void Dump() {
-		for(T *t = GetNext(); t != this; t = t->GetNext())
-			LOG(t);
-		LOG("-------------------------------------");
-	}
-#endif
-};
-*/
 
 template <int N = 1>
 struct Link {

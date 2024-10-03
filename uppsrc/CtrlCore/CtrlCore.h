@@ -428,24 +428,24 @@ public:
 		STDSIZE  = -16382,
 	};
 
-	class Logc {
-		dword data;
+	struct Logc {
+		int   align = LEFT;
+		int   a = 0;
+		int   b = 0;
 
-		static int LSGN(dword d)       { return int16((d & 0x7fff) | ((d & 0x4000) << 1)); }
+		bool  operator==(Logc q) const { return a == q.a && b == q.b && align == q.align; }
+		bool  operator!=(Logc q) const { return !operator==(q); }
+		int   GetAlign() const         { return align; }
+		int   GetA() const             { return a; }
+		int   GetB() const             { return b; }
+		void  SetAlign(int align_)     { align = align_; }
+		void  SetA(int a_)             { a = a_; }
+		void  SetB(int b_)             { b = b_; }
+		bool  IsEmpty() const          { return align == SIZE ? b <= a : b <= 0; }
+		bool  CanPack() const          { return a >= -16000 && a <= 16000 && b >= -16000 && b <= 16000; }
 
-	public:
-		bool  operator==(Logc q) const { return data == q.data; }
-		bool  operator!=(Logc q) const { return data != q.data; }
-		int   GetAlign() const         { return (data >> 30) & 3; }
-		int   GetA() const             { return LSGN(data >> 15); }
-		int   GetB() const             { return LSGN(data); }
-		void  SetAlign(int align)      { data = (data & ~(3 << 30)) | (align << 30); }
-		void  SetA(int a)              { data = (data & ~(0x7fff << 15)) | ((a & 0x7fff) << 15); }
-		void  SetB(int b)              { data = (data & ~0x7fff) | (b & 0x7fff); }
-		bool  IsEmpty() const;
-
-		Logc(int al, int a, int b)     { data = (al << 30) | ((a & 0x7fff) << 15) | (b & 0x7fff); }
-		Logc()                         { data = 0xffffffff; }
+		Logc(int al, int a_, int b_)   { align = al; a = a_; b = b_; }
+		Logc()                         {}
 	};
 
 	struct LogPos : Moveable<LogPos> {
@@ -453,6 +453,8 @@ public:
 
 		bool operator==(LogPos b) const   { return x == b.x && y == b.y; }
 		bool operator!=(LogPos b) const   { return !(*this == b); }
+		
+		bool CanPack() const              { return x.CanPack() && y.CanPack(); }
 
 		LogPos(Logc x, Logc y)            : x(x), y(y) {}
 		LogPos()                          {}
@@ -465,6 +467,24 @@ public:
 	static Logc PosSize(int lpos, int rpos)      { return Logc(SIZE, lpos, rpos); }
 	static Logc PosCenter(int size, int offset)  { return Logc(CENTER, offset, size); }
 	static Logc PosCenter(int size)              { return Logc(CENTER, 0, size); }
+
+	struct PackedLogc {
+		unsigned align:2;
+		int      a:15;
+		int      b:15;
+		
+		operator Logc() const     { return Logc(align, a, b); }
+		PackedLogc(const Logc& c) { align = c.align; a = c.a; b = c.b; }
+		PackedLogc()              { align = LEFT; a = 0; b = 0; }
+	};
+
+	struct PackedLogPos : Moveable<LogPos> {
+		PackedLogc x, y;
+
+		operator LogPos() const   { return LogPos(x, y); }
+		PackedLogPos(LogPos pos)  { x = pos.x; y = pos.y; }
+		PackedLogPos()            {}
+	};
 
 	typedef bool (*MouseHook)(Ctrl *ctrl, bool inframe, int event, Point p,
 	                          int zdelta, dword keyflags);
@@ -525,8 +545,12 @@ private:
 
 
 	Frame        frame;
-	LogPos       pos;//8
-	Rect16       rect; //8
+	
+	PackedLogPos packed_pos;//8
+	Rect16       packed_rect; //8
+	
+	void   LogPosSet(LogPos p);
+	void   RectSet(const Rect& r);
 
 	union {
 		Ctrl *uparent;
@@ -828,6 +852,8 @@ protected:
 		ATTR_HELPLINE,
 		ATTR_DESCRIPTION,
 		ATTR_HELPTOPIC,
+		ATTR_RECT,
+		ATTR_LOGPOS,
 		ATTR_LAST
 	};
 	
@@ -846,6 +872,12 @@ protected:
 
 	void   SetInt64Attr(int ii, int64 val);
 	int64  GetInt64Attr(int ii, int64 def = Null) const;
+	
+	void   SetLogPosAttr(int ii, LogPos pos);
+	LogPos GetLogPosAttr(int ii) const;
+	
+	void   SetRectAttr(int ii, const Rect& r);
+	Rect   GetRectAttr(int ii) const;
 	
 	void   SetVoidPtrAttr(int ii, const void *ptr);
 	void  *GetVoidPtrAttr(int ii) const;
@@ -1134,7 +1166,7 @@ public:
 
 	bool        InFrame() const                          { return inframe; }
 	bool        InView() const                           { return !inframe; }
-	LogPos      GetPos() const                           { return pos; }
+	LogPos      GetPos() const;
 
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }

@@ -24,9 +24,14 @@ bool PackedData::GetData(int ii, F out) const
 }
 
 template <class T>
-T PackedData::Get(int ii, T def) const
+void PackedData::Set(int ii, T val)
 {
-	T q = def;
+	SetData(ii, &val, sizeof(T));
+}
+
+template <class T>
+T PackedData::Get(int ii, T q) const
+{
 	GetData(ii, [&](const char *ptr, int len) {
 		if(len) {
 			ASSERT(len == sizeof(T));

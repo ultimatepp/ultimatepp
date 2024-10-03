@@ -5,8 +5,40 @@ namespace Upp {
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
-bool Ctrl::Logc::IsEmpty() const {
-	return GetAlign() == SIZE ? GetB() <= GetA() : GetB() <= 0;
+void Ctrl::LogPosSet(LogPos p)
+{
+	if(p.CanPack()) {
+		packed_pos = p;
+	}
+	else {
+		packed_pos.x.a = 16001;
+		SetLogPosAttr(Ctrl::ATTR_LOGPOS, p);
+	}
+}
+
+Ctrl::LogPos Ctrl::GetPos() const
+{
+	if(packed_pos.x.a == 16001)
+		return GetLogPosAttr(Ctrl::ATTR_LOGPOS);
+	return packed_pos;
+}
+
+void Ctrl::RectSet(const Rect& r)
+{
+	auto CanPack = [](int a) { return a >= -32000 && a <= 32000; };
+	if(CanPack(r.left) && CanPack(r.right) && CanPack(r.top) && CanPack(r.bottom))
+		packed_rect = r;
+	else {
+		SetRectAttr(Ctrl::ATTR_RECT, r);
+		packed_rect.left = 32001;
+	}
+}
+
+Rect Ctrl::GetRect() const
+{
+	if(packed_rect.left == 32001)
+		return GetRectAttr(Ctrl::ATTR_RECT);
+	return packed_rect;
 }
 
 Size Ctrl::PosVal(int v) const {
@@ -49,19 +81,15 @@ Rect Ctrl::CalcRect(LogPos pos, const Rect& prect, const Rect& pview) const
 
 Rect Ctrl::CalcRect(const Rect& prect, const Rect& pview) const
 {
-	return CalcRect(pos, prect, pview);
-}
-
-Rect Ctrl::GetRect() const
-{
-	return rect;
+	return CalcRect(GetPos(), prect, pview);
 }
 
 Rect Ctrl::GetView() const
 {
 	GuiLock __;
 	int n = GetFrameCount();
-	return n == 0 ? Rect(Size(rect.Size())) : Rect(GetFrame0(n - 1).GetView());
+	Rect vr = GetRect().Size();
+	return n == 0 ? vr : GetFrame0(n - 1).GetView();
 }
 
 Size Ctrl::GetSize() const
@@ -162,7 +190,7 @@ void Ctrl::SyncLayout(int force)
 	}
 	if(oview.Size() != view.Size() || force > 1) {
 		for(Ctrl& q : *this) {
-			q.rect = q.CalcRect(rect, view);
+			q.RectSet(q.CalcRect(GetRect(), view));
 			LLOG("Layout set rect " << q.Name() << " " << q.rect);
 			q.SyncLayout(force > 1 ? force : 0);
 		}
@@ -205,7 +233,7 @@ Ctrl::MoveCtrl *Ctrl::FindMoveCtrlPtr(VectorMap<Ctrl *, MoveCtrl>& m, Ctrl *x)
 void Ctrl::SetPos0(LogPos p, bool _inframe)
 {
 	GuiLock __;
-	if(p == pos && inframe == _inframe) return;
+	if(p == GetPos() && inframe == _inframe) return;
 	Ctrl *parent = GetParent();
 	if(parent && !IsDHCtrl()) {
 		if(!globalbackbuffer) {
@@ -213,7 +241,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
 				LTIMING("SetPos0 MoveCtrl");
-				pos = p;
+				LogPosSet(p);
 				inframe = _inframe;
 				Rect to = GetRect().Size();
 				UpdateRect0();
@@ -236,7 +264,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 		}
 		RefreshFrame();
 	}
-	pos = p;
+	LogPosSet(p);
 	inframe = _inframe;
 	UpdateRect();
 	StateH(POSITION);
@@ -248,13 +276,13 @@ void Ctrl::UpdateRect0(bool sync)
 	LTIMING("UpdateRect0");
 	Ctrl *parent = GetParent();
 	if(parent)
-		rect = CalcRect(parent->GetRect(), parent->GetView());
+		RectSet(CalcRect(parent->GetRect(), parent->GetView()));
 	else {
 		static Rect pwa;
 		ONCELOCK {
 			pwa = GetPrimaryWorkArea();
 		}
-		rect = CalcRect(pwa, pwa);
+		RectSet(CalcRect(pwa, pwa));
 	}
 	LLOG("UpdateRect0 " << Name() << " to " << rect);
 	LTIMING("UpdateRect0 SyncLayout");
@@ -274,7 +302,7 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 {
 	GuiLock __;
 	Ctrl *parent = GetParent();
-	if(p != pos || inframe != _inframe) {
+	if(p != GetPos() || inframe != _inframe) {
 		if(parent || !IsOpen())
 			SetPos0(p, _inframe);
 		else {
@@ -293,12 +321,12 @@ Ctrl& Ctrl::SetPos(LogPos p)
 
 Ctrl& Ctrl::SetPosX(Logc x)
 {
-	return SetPos(LogPos(x, pos.y));
+	return SetPos(LogPos(x, GetPos().y));
 }
 
 Ctrl& Ctrl::SetPosY(Logc y)
 {
-	return SetPos(LogPos(pos.x, y));
+	return SetPos(LogPos(GetPos().x, y));
 }
 
 Ctrl& Ctrl::SetFramePos(LogPos p)
@@ -307,18 +335,17 @@ Ctrl& Ctrl::SetFramePos(LogPos p)
 }
 
 Ctrl& Ctrl::SetFramePosX(Logc x) {
-	return SetPos(LogPos(x, pos.y), true);
+	return SetPos(LogPos(x, GetPos().y), true);
 }
 
 Ctrl& Ctrl::SetFramePosY(Logc y) {
-	return SetPos(LogPos(pos.x, y), true);
+	return SetPos(LogPos(GetPos().x, y), true);
 }
 
 void  Ctrl::SetRect(int x, int y, int cx, int cy)
 {
 	LLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
-	auto clampc = [](int c) { return clamp(c, -32700, 32700); }; // Logc vals only have 15 bits
-	SetPos(PosLeft(clampc(x), clampc(cx)), PosTop(clampc(y), clampc(cy)));
+	SetPos(PosLeft(x, cx), PosTop(y, cy));
 }
 
 void  Ctrl::SetWndRect(const Rect& r)

@@ -162,6 +162,29 @@ int64 Ctrl::GetInt64Attr(int ii, int64 def) const
 	return attrs.GetInt64(ii, def);
 }
 
+void Ctrl::SetLogPosAttr(int ii, LogPos pos)
+{
+	Attrs().Set(ii, pos);
+}
+
+Ctrl::LogPos Ctrl::GetLogPosAttr(int ii) const
+{
+	if(layout_id_literal)
+		return LogPos();
+	return attrs.Get<LogPos>(ii, LogPos());
+}
+
+void Ctrl::SetRectAttr(int ii, const Rect& r)
+{
+	Attrs().Set(ii, r);
+}
+
+Rect Ctrl::GetRectAttr(int ii) const
+{
+	if(layout_id_literal)
+		return Null;
+	return attrs.Get<Rect>(ii, Rect(Null));
+}
 
 void Ctrl::SetVoidPtrAttr(int ii, const void *ptr)
 {
