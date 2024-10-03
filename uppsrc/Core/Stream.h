@@ -211,8 +211,13 @@ public:
 	Stream&   operator%(unsigned short& d) { return SerializeRaw((word *)&d); }
 	Stream&   operator%(int& d)            { return SerializeRaw((dword *)&d); }
 	Stream&   operator%(unsigned int& d)   { return SerializeRaw((dword *)&d); }
+#if LONG_SIZE == 4
 	Stream&   operator%(long& d)           { return SerializeRaw((dword *)&d); }
 	Stream&   operator%(unsigned long& d)  { return SerializeRaw((dword *)&d); }
+#else
+	Stream&   operator%(long& d)           { return SerializeRaw((uint64 *)&d); }
+	Stream&   operator%(unsigned long& d)  { return SerializeRaw((uint64 *)&d); }
+#endif
 	Stream&   operator%(float& d)          { return SerializeRaw((dword *)&d); }
 	Stream&   operator%(double& d)         { return SerializeRaw((uint64 *)&d); }
 	Stream&   operator%(int64& d)          { return SerializeRaw((uint64 *)&d); }
