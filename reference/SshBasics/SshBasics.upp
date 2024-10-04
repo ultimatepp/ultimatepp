@@ -22,6 +22,7 @@ file
 	ExecMT.cpp,
 	"Misc. examples" readonly separator,
 	PickSemantics.cpp,
+	Polymorphism.cpp,
 	VerboseLogging.cpp;
 
 mainconfig
