@@ -21,7 +21,7 @@ Color FaceColor(int adj)
 	return AdjustColor(SColorFace(), adj);
 };
 
-void SyntheticTab(int i, int roundness, Color ink)
+void SyntheticTab(int i, int roundness, Color ink, int pen)
 {
 	TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
 	s.body = MakeButton(0, FaceColor(8), DPI(1), ink);
@@ -32,9 +32,14 @@ void SyntheticTab(int i, int roundness, Color ink)
 	                                                    CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
 	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
 	s.margin = 0;
-	s.sel = Rect(0, DPI(1), 0, DPI(1));
-	s.extendleft = DPI(2);
+	s.sel = Rect(0, pen, 0, pen);
+	s.extendleft = 2 * pen;
 	s.text_color[i] = SColorText();
+}
+
+void SyntheticTab(int i, int roundness, Color ink)
+{
+	SyntheticTab(i, roundness, ink, DPI(1));
 }
 
 void MakeDialogIcons()
@@ -448,8 +453,9 @@ Image WithBottomLine(const Image& m, Color c, int w)
 	return WithRect(m, 0, m.GetHeight() - w, m.GetWidth(), w, c);
 }
 
-void ChSynthetic(Image *button100x100, Color *text, bool macos)
+void ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 {
+	auto DPI = [&](int i) { return dpi * i; };
 	int roundness = DPI(3);
 	int roundness2 = roundness;
 	Color ink = SColorText();

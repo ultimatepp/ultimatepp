@@ -372,7 +372,7 @@ void Ide::MacroInput(EscEscape& e)
 	else {
 		EscValue out;
 		for(int i = 0; i < tags.GetCount(); i++)
-			out.MapSet(i, (WString)~editors[i]);
+			out.ArrayAdd((WString)~editors[i]);
 		e = out;
 	}
 }

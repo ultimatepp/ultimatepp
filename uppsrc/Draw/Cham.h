@@ -2,6 +2,8 @@ enum LookOp {
 	LOOK_PAINT,
 	LOOK_MARGINS,
 	LOOK_PAINTEDGE,
+	
+	LOOK_NOCACHE = 0x8000,
 };
 
 enum {
@@ -21,6 +23,7 @@ void   ChFinish();
 
 void   ChPaint(Draw& w, const Rect& r, const Value& look, Color ink = Null);
 void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void   ChPaintNoCache(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
 void   ChPaintEdge(Draw& w, const Rect& r, const Value& look, Color ink = Null);
 void   ChPaintEdge(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
 void   ChPaintBody(Draw& w, const Rect& r, const Value& look, Color ink = Null);

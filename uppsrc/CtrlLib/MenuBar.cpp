@@ -546,6 +546,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 		WhenHelp = parentmenu->WhenHelp;
 	}
 	Rect workarea = GetWorkArea(p);
+	
 	restorefocus = GetFocusCtrl();
 	LLOG("PopUp " << UPP::Name(this) << " set restorefocus:" << UPP::Name(restorefocus));
 	DistributeAccessKeys();
