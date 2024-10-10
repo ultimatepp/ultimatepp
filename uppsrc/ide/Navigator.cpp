@@ -122,7 +122,7 @@ AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
 void Navigator::SyncCursor()
 {
 	String k = "(" + GetKeyDesc(IdeKeys::AK_GOTO().key[0]) + ") ";
-	search.NullText("Symbol/lineno " + k);
+	search.NullText("Symbol/lineno/file " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 	
 	if(!navigating && theide && !theide->replace_in_files) {
