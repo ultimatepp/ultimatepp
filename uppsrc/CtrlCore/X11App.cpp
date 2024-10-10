@@ -420,7 +420,7 @@ void Ctrl::InitX11(const char *display)
 		_NET_Supported().Add(nets[i]);
 
 	Font::SetDefaultFont(Arial(12));
-
+	
 	ReSkin();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);

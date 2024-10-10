@@ -32,7 +32,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 #endif
 
-#if __cplusplus >= 202000
+#if __cplusplus >= 202300
+	h << " (C++23)";
+#elif __cplusplus >= 202000
 	h << " (C++20)";
 #elif __cplusplus >= 201700
 	h << " (C++17)";
@@ -51,7 +53,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 
 #ifdef GUI_GTK
-	h << " (Gtk)";
+	h << " (Gtk::" << ToString(GdkBackend::Get()) << ")";
 #endif
 #ifdef FLATPAK
 	h << " (Flatpak)";
