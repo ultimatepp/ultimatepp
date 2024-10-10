@@ -553,6 +553,7 @@ Ctrl::Ctrl() {
 	layout_id_literal = false;
 	top = false;
 	uparent = nullptr;
+	megarect = false;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);

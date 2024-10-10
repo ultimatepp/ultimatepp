@@ -552,7 +552,7 @@ void UppHubDlg::Install(const Index<String>& ii_)
 					if(n->branch.GetCount())
 						cmd << "-b " + n->branch << ' ';
 					cmd << n->repo;
-					cmd << ' ' << dir;
+					cmd << " \"" << dir << "\"";
 					console.System(cmd);
 					for(String p : FindAllPaths(dir, "*.upp")) {
 						Package pkg;
