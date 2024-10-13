@@ -13,7 +13,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 7;
+	int version = 8;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -36,8 +36,13 @@ void Ide::SerializeFindInFiles(Stream& s) {
 		s % ff.samecase;
 	if(version >= 5)
 		s % ff.regexp;
-	if(version >= 6)
-		s % ff.workspace;
+	if(version >= 6) {
+		Option dummy;
+		s % dummy;
+	}
+	if(version >= 8) {
+		s % ff.where;
+	}
 }
 
 void SearchForFiles(Index<String>& files, String dir, String mask, int readonly, Time since, Progress& pi) {
@@ -243,12 +248,15 @@ void Ide::FindInFiles(bool replace) {
 		Time since = Null;
 		if(!IsNull(ff.recent))
 			since = ToTime(GetSysDate() - (int)~ff.recent);
-		if(ff.workspace) {
+		int where = ~ff.where;
+		if(where == 0) {
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++)
-				SearchForFiles(files, GetFileFolder(PackagePath(wspc[i])),
-					           ~ff.files, ~ff.readonly, since, pi);
+				SearchForFiles(files, GetFileFolder(PackagePath(wspc[i])), ~ff.files, ~ff.readonly, since, pi);
 		}
+		if(where == 1)
+			for(String h : GetAllNests())
+				SearchForFiles(files, NormalizePath(h), ~ff.files, ~ff.readonly, since, pi);
 		else
 			SearchForFiles(files, NormalizePath(~~ff.folder, GetUppDir()), ~ff.files,
 			               ~ff.readonly, since, pi);
@@ -424,8 +432,7 @@ void FindInFilesDlg::Sync()
 	wildcards.Enable(b);
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
-	folder.Enable(!workspace);
-	folder_lbl.Enable(!workspace);
+	folder.Enable((int)~where == 2);
 	samecase.Enable(ignorecase && b);
 }
 
@@ -443,7 +450,8 @@ FindInFilesDlg::FindInFilesDlg()
 	recent.Add(7, "7 Days");
 	recent.Add(14, "14 Days");
 	recent.Add(32, "28 Days");
-	workspace <<= THISBACK(Sync);
+	where <<= THISBACK(Sync);
+	where <<= 0;
 }
 
 void FindInFilesDlg::Setup(bool replacing)

@@ -35,20 +35,27 @@ void GatherAllFiles(const String& path, Index<String>& filei, VectorMap<String, 
 
 CoEvent ide_bg_scheduler;
 
+Index<String> GetAllNests(bool sleep)
+{
+	Index<String> dir;
+	for(FindFile ff(ConfigFile("*.var")); ff && !Thread::IsShutdownThreads(); ff.Next()) {
+		VectorMap<String, String> var;
+		LoadVarFile(ff.GetPath(), var);
+		for(String d : Split(var.Get("UPP", ""), ';'))
+			dir.FindAdd(NormalizePath(d));
+		if(sleep)
+			Sleep(0);
+	}
+	return dir;
+}
+
 void IdeBackgroundThread()
 {
 	while(!Thread::IsShutdownThreads()) {
 		VectorMap<String, String> file;
-		Index<String> dir;
 		Index<String> filei;
-		
-		for(FindFile ff(ConfigFile("*.var")); ff && !Thread::IsShutdownThreads(); ff.Next()) {
-			VectorMap<String, String> var;
-			LoadVarFile(ff.GetPath(), var);
-			for(String d : Split(var.Get("UPP", ""), ';'))
-				dir.FindAdd(NormalizePath(d));
-			Sleep(0);
-		}
+
+		Index<String> dir = GetAllNests(true);
 		
 		for(String d : dir)
 			GatherAllFiles(d, filei, file);
