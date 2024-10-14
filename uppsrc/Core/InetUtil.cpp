@@ -119,10 +119,7 @@ String UrlEncode(const char *p, const char *e)
 			out.Cat(b, int(p - b));
 		if(p >= e)
 			break;
-		if(*p == ' ')
-			out << '+';
-		else
-			out << '%' << hex_digits[(*p >> 4) & 15] << hex_digits[*p & 15];
+		out << '%' << hex_digits[(*p >> 4) & 15] << hex_digits[*p & 15];
 	}
 	return String(out);
 }
@@ -137,12 +134,12 @@ String UrlEncode(const String& s)
 	return UrlEncode(~s, s.GetLength());
 }
 
-String UrlDecode(const char *b, const char *e)
+String UrlDecode(const char *b, const char *e, bool plus_is_space)
 {
 	StringBuffer out;
 	byte d1, d2, d3, d4;
 	for(const char *p = b; p < e; p++)
-		if(*p == '+')
+		if(*p == '+' && plus_is_space)
 			out.Cat(' ');
 		else if(*p == '%' && (d1 = ctoi(p[1])) < 16 && (d2 = ctoi(p[2])) < 16) {
 			out.Cat(d1 * 16 + d2);
@@ -159,14 +156,14 @@ String UrlDecode(const char *b, const char *e)
 	return String(out);
 }
 
-String UrlDecode(const char *s, int len)
+String UrlDecode(const char *s, int len, bool plus_is_space)
 {
-	return UrlDecode(s, s + len);
+	return UrlDecode(s, s + len, plus_is_space);
 }
 
-String UrlDecode(const String& s)
+String UrlDecode(const String& s, bool plus_is_space)
 {
-	return UrlDecode(~s, s.GetLength());
+	return UrlDecode(~s, s.GetLength(), plus_is_space);
 }
           
 String QPEncode(const char* s)
