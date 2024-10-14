@@ -45,7 +45,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 	}
 //	RLOGBLOCK("Ctrl::DispatchKey");
 //	RLOG("DispatchKey: focusCtrl = " << FormatIntHex((int)~focusCtrl) << ", wnd = " << FormatIntHex((int)~focusCtrlWnd) << ")");
-	LLOG("DispatchKey " << keycode << " (0x" << Sprintf("%08x", keycode)
+	DLOG("DispatchKey " << keycode << " (0x" << Sprintf("%08x", keycode)
 		<< ", " << GetKeyDesc(keycode) << "), count:" << count
 		<< " focusCtrl:" << UPP::Name(focusCtrl) << " focusCtrlWnd:" << UPP::Name(focusCtrlWnd));
 	if((keycode & K_KEYUP) && ignorekeyup)

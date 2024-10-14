@@ -82,11 +82,24 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
+	DLOG("========= GtkDraw " << Upp::Name(p));
 	if(p) {
 		p->fullrefresh = false;
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
+		DDUMP(p->GetWndScreenRect());
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
+		DDUMP(p->GetWndScreenRect());
 
+		DDUMP(p->GetScreenView());
+		DDUMP(p->GetScreenRect());
+		DDUMP(p->GetVirtualScreenArea());
+		DDUMP(p->GetVirtualWorkArea());
+		DDUMP(p->GetPrimaryWorkArea());
+		DDUMP(p->GetWorkArea());
+		Array<Rect> work_area;
+		GetWorkArea(work_area);
+		DDUMP(work_area);
+		DLOG("--------");
 		SystemDraw w(cr);
 		painting = true;
 		double x1, y1, x2, y2;
@@ -397,8 +410,10 @@ bool Ctrl::ProcessInvalids()
 	if(invalids) {
 		for(Win& win : wins) {
 			for(const Rect& r : win.invalid)
-				if(win.gdk && win.ctrl)
+				if(win.gdk && win.ctrl) {
 					gdk_window_invalidate_rect(win.gdk, GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
+					DLOG("INVALIDATE " << r);
+				}
 			win.invalid.Clear();
 		}
 		invalids = false;
