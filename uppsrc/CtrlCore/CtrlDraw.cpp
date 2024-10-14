@@ -20,6 +20,8 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	DDUMP(IsOpen());
 	DDUMP(IsVisible());
 	DDUMP(r.IsEmpty());
+	DDUMP(isopen);
+	DDUMP(IsWndOpen());
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
 	DLOG("RefreshRect A");
