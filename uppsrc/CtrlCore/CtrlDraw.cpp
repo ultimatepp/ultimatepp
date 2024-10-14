@@ -16,11 +16,16 @@ static void sCheckGuiLock()
 void Ctrl::RefreshFrame(const Rect& r) {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
+	DLOG("RefreshFrame " << Name() << ' ' << r);
+	DDUMP(IsOpen());
+	DDUMP(IsVisible());
+	DDUMP(r.IsEmpty());
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
-	LLOG("RefreshRect " << Name() << ' ' << r);
+	DLOG("RefreshRect A");
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
+	DLOG("RefreshRect B");
 	if(!top && !IsDHCtrl()) {
 		Ctrl *parent = GetParent();
 		if(InFrame())
@@ -29,7 +34,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 			parent->Refresh(r + GetRect().TopLeft());
 	}
 	else {
-		LLOG("WndInvalidateRect: " << r << ' ' << Name());
+		DLOG("WndInvalidateRect: " << r << ' ' << Name());
 		LTIMING("RefreshFrame InvalidateRect");
 		WndInvalidateRect(r);
 	}
