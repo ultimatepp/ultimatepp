@@ -14,22 +14,18 @@ static void sCheckGuiLock()
 }
 
 void Ctrl::RefreshFrame(const Rect& r) {
+	LTIMING("RefreshFrame");
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	DLOG("RefreshFrame " << Name() << ' ' << r);
-	DDUMP(IsOpen());
-	DDUMP(IsVisible());
-	DDUMP(r.IsEmpty());
-	DDUMP(isopen);
-	DDUMP(IsWndOpen());
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
-	LTIMING("RefreshFrame");
 	DLOG("RefreshRect A");
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	DLOG("RefreshRect B");
 	if(!top && !IsDHCtrl()) {
 		Ctrl *parent = GetParent();
+		DDUMP(GetRect());
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -49,20 +45,35 @@ void Ctrl::Refresh0(const Rect& area) {
 void Ctrl::Refresh(const Rect& area) {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
+	DLOG("Refresh " << Name() << ' ' <<  area << " full:" << fullrefresh);
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
-	LLOG("Refresh " << Name() << ' ' <<  area);
 	Refresh0(area);
 }
 
+#if 0 // CHANGE TO 1 TO TEST THE FIX
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
+	DLOG("Refresh " << Name() << " full:" << fullrefresh);
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
-	LLOG("Refresh " << Name() << " full:" << fullrefresh);
+	Rect r = Rect(GetSize()).Inflated(OverPaint());
+	if(r.IsEmpty())
+		return;
+	if(!GuiPlatformSetFullRefreshSpecial())
+		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
+	Refresh0(r);
+}
+#else
+void Ctrl::Refresh() {
+	sCheckGuiLock();
+	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
+	DLOG("Refresh " << Name() << " full:" << fullrefresh << " rect: " << GetRect());
+	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	if(!GuiPlatformSetFullRefreshSpecial())
 		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
 	Refresh0(Rect(GetSize()).Inflated(OverPaint()));
 }
+#endif
 
 void Ctrl::Refresh(int x, int y, int cx, int cy) {
 	Refresh(RectC(x, y, cx, cy));

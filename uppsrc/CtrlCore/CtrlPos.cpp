@@ -155,6 +155,7 @@ void Ctrl::SyncLayout(int force)
 	if(destroying)
 		return;
 	LLOG("SyncLayout " << Name() << " size: " << GetSize());
+//	fullrefresh = false; // UNCOMMENT TO TEST THE FIX
 	bool refresh = false;
 	Rect oview = GetView();
 	Rect view = GetRect().Size();

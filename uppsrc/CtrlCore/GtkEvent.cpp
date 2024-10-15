@@ -493,6 +493,8 @@ void Ctrl::GtkButtonEvent(int action)
 	GtkMouseEvent(action, act, 0);
 }
 
+// #define TRYFIX
+
 void Ctrl::Proc()
 {
 #ifdef LOG_EVENTS
@@ -546,6 +548,10 @@ void Ctrl::Proc()
 
 		DoPen(GetMousePos() - GetScreenRect().TopLeft());
 	}
+#endif
+
+#ifdef TRYFIX
+	SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
 #endif
 
 	switch(CurrentEvent.type) {
@@ -725,7 +731,10 @@ void Ctrl::Proc()
 		return;
 	}
 	case GDK_CONFIGURE:
+		DLOG("*** Configure " << CurrentEvent.value);
+	#ifndef TRYFIX
 		SyncWndRect(CurrentEvent.value);
+	#endif
 		break;
 	default:
 		return;

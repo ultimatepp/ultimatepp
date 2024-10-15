@@ -48,6 +48,10 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 	DLOG("DispatchKey " << keycode << " (0x" << Sprintf("%08x", keycode)
 		<< ", " << GetKeyDesc(keycode) << "), count:" << count
 		<< " focusCtrl:" << UPP::Name(focusCtrl) << " focusCtrlWnd:" << UPP::Name(focusCtrlWnd));
+	if(focusCtrl) {
+		DDUMP(focusCtrl->GetTopWindow()->GetScreenRect());
+		DDUMP(focusCtrl->GetTopWindow()->GetWndScreenRect());
+	}
 	if((keycode & K_KEYUP) && ignorekeyup)
 	{
 		ignorekeyup = false;

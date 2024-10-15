@@ -169,7 +169,7 @@ void Ctrl::WndShow(bool b)
 	LLOG("WndShow " << Name() << ", " << b);
 	Top *top = GetTop();
 	if(IsOpen() && top) {
-		
+
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
@@ -496,7 +496,7 @@ Rect Ctrl::GetDefaultWindowRect()
 	GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
 	Size sz = r.GetSize();
-	
+
 	static int pos = min(sz.cx / 10, 50);
 	pos += 10;
 	int cx = sz.cx * 2 / 3;
