@@ -63,7 +63,7 @@ VectorMap<String, String> GetMethodVars(const String& method)
 
 String GetMethodPath(const String& method)
 {
-	return the_ide ? the_ide->GetMethodName(method) : "";
+	return the_ide ? the_ide->GetMethodName(method) : String();
 }
 
 bool IdeIsBuilding()

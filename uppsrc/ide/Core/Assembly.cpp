@@ -124,7 +124,7 @@ String Nest::PackagePath0(const String& name)
 		if(FileExists(p)) return p;
 	}
 	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile),
-		                                GetFileName(uppfile)) + ".upp") : "";
+		                                GetFileName(uppfile)) + ".upp") : String();
 }
 
 String Nest::PackagePath(const String& name)
