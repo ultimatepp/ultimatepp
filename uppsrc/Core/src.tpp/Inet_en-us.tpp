@@ -1,5 +1,4 @@
 topic "Internet utility";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Internet utility";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Internet format utility functions]]}}&]
 [s3; &]
@@ -46,14 +46,20 @@ space is represented by `'`+`' and anything else as %HH, where
 HH is two digit hexadecimal number.&]
 [s3;%% &]
 [s4; &]
-[s5;:UrlDecode`(const char`*`,const char`*`): [_^String^ String]_[* UrlDecode]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 end])&]
-[s5;:UrlDecode`(const char`*`,int`): [_^String^ String]_[* UrlDecode]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
-[s5;:UrlDecode`(const String`&`): [_^String^ String]_[* UrlDecode]([@(0.0.255) const]_[_^String^ S
-tring][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Decodes data as required by [^http`:`/`/www`.w3`.org`/TR`/html401`/interact`/forms`.html`#h`-17`.13`.4`.1^ M
-IME type application/x`-www`-form`-urlencoded] (see UrlEncode).&]
+[s5;:Upp`:`:UrlDecode`(const char`*`,const char`*`,bool`): String 
+[* UrlDecode]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 b], 
+[@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 e], [@(0.0.255) bool] 
+[*@3 plus`_is`_space] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:UrlDecode`(const char`*`,int`,bool`): String [* UrlDecode]([@(0.0.255) const] 
+[@(0.0.255) char] [@(0.0.255) `*][*@3 s], [@(0.0.255) int] [*@3 len], [@(0.0.255) bool] 
+[*@3 plus`_is`_space] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:UrlDecode`(const String`&`,bool`): String [* UrlDecode]([@(0.0.255) const] 
+String[@(0.0.255) `&] [*@3 s], [@(0.0.255) bool] [*@3 plus`_is`_space] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
+[s2; [%% Decodes data as required by ][%%^http`:`/`/www`.w3`.org`/TR`/html401`/interact`/forms`.html`#h`-17`.13`.4`.1^ M
+IME type application/x`-www`-form`-urlencoded][%%  (see UrlEncode). 
+If ][*@3 plus`_is`_space] is false, `'`+`' is not converted to 
+space.&]
 [s3;%% &]
 [s4; &]
 [s5;:QPEncode`(const char`*`): [_^String^ String]_[* QPEncode]([@(0.0.255) const]_[@(0.0.255) c
