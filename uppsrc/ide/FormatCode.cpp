@@ -141,6 +141,9 @@ int ApplyChanges(LineEdit& editor, const String& new_content)
 	Vector<String> ln2;
 	for(int i = 0; i < editor.GetLineCount(); i++)
 		ln2.Add(editor.GetUtf8Line(i));
+	
+	SaveFile(GetHomeDirFile("reformat_orig.cpp"), Join(ln2, "\n"));
+	SaveFile(GetHomeDirFile("reformat.cpp"), Join(ln, "\n"));
 
 	int lined = 0; // adjustment for source line
 	int cursor = editor.GetCursor();
