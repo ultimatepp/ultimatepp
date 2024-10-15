@@ -164,10 +164,50 @@ public:
 	~ImageGdk();
 };
 
+class GtkCSD final {
+public:
+	static bool IsSSDSupported();
+	
+public:
+	GtkCSD(GdkWindowTypeHint hint);
+	
+	bool IsEnable() const      { return enable; }
+	
+	int ExtraWidth() const   { return left_margin + right_margin; }
+	int ExtraHeight() const  { return top_margin + bottom_margin; }
+	
+	int LeftMaring() const   { return left_margin; }
+	int RightMargin() const  { return right_margin; }
+	int TopMargin() const    { return top_margin; }
+	int BottomMargin() const { return bottom_margin; }
+	
+private:
+	void FindMargins(GdkWindowTypeHint hint);
+	
+private:
+	int left_margin = 0, right_margin = 0, top_margin = 0, bottom_margin = 0;
+	bool enable = false;
+};
+
+namespace GdkBackend {
+
+	enum class Type {
+		X11,
+		WAYLAND,
+		UNKNOWN
+	};
+	
+	Type Get();
+	bool IsX11();
+	bool IsWayland();
+	
+	bool IsRunningOnWayland();
+}
+
+String ToString(GdkBackend::Type b);
+
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
-
-bool   RunningOnWayland();
 
 GdkAtom GAtom(const String& id);
 
@@ -183,9 +223,12 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget            *window; \
-	GtkIMContext         *im_context; \
+	GtkWidget            *header = nullptr; \
+	GtkWidget            *drawing_area = nullptr; \
+	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
+	One<GtkCSD>           csd; \
 	int64                 cursor_id; \
 	int                   id; \
 
