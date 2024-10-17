@@ -18,7 +18,7 @@ String AndroidBuilderUtils::GetAssemblyDir(const String& packageDir, const Strin
 	if (pos >= 0 && pos < assemblyDir.GetCount())
 		assemblyDir.Trim(pos);
 	
-	return assemblyDir != packageDir ? assemblyDir : "";
+	return assemblyDir != packageDir ? assemblyDir : String();
 }
 
 }

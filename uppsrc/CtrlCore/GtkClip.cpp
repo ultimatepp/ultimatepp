@@ -83,10 +83,10 @@ void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 	target.GetAdd(fmt) = data;
 
 	GtkTargetList *list = CreateTargetList(target);
-	
+
 	gint n;
 	GtkTargetEntry *targets = gtk_target_table_new_from_list(list, &n);
-	
+
 	gtk_clipboard_set_with_data(clipboard, targets, n, GtkGetClipData, ClearClipData, this);
 	gtk_clipboard_set_can_store(clipboard, NULL, 0);
 
@@ -366,9 +366,9 @@ Vector<String> GetClipFiles(const String& data)
 {
 	Vector<String> r;
 	Vector<String> f = Split(data, '\n');
-	for(int i = 0; i < f.GetCount(); i++)
-		if(f[i].StartsWith("file://"))
-			r.Add(f[i].Mid(7));
+	for(String s : f)
+		if(s.TrimStart("file://"))
+			r << UrlDecode(s, false);
 	return r;
 }
 
@@ -384,8 +384,8 @@ void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
 	if(files.GetCount() == 0)
 		return;
 	String h;
-	for(int i = 0; i < files.GetCount(); i++)
-		h << "file://" << files[i] << '\n';
+	for(String f : files)
+		h << "file://" << UrlEncode(f) << '\n';
 	data.GetAdd("files") = h;
 }
 

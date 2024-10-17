@@ -455,9 +455,8 @@ Ctrl& Ctrl::VCenterPosZ(int size, int delta) {
 Rect Ctrl::GetWorkArea(Point pt)
 {
 	GuiLock __;
-	static Array<Rect> rc;
-	if (rc.IsEmpty())
-		GetWorkArea(rc);
+	Array<Rect> rc;
+	GetWorkArea(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
@@ -468,10 +467,6 @@ Rect Ctrl::StdGetWorkArea() const
 {
 	GuiLock __;
 
-	static Array<Rect> rc;
-	if(rc.IsEmpty())
-		GetWorkArea(rc);
-	
 	const Ctrl *top = GetTopCtrl();
 	if(top && top->IsOpen())
 		return GetWorkArea(top->GetScreenRect().TopLeft());

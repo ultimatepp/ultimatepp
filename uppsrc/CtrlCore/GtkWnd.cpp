@@ -398,11 +398,11 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	// as gtk3 dropped thread locking, we need to push invalid rectangles onto main loop
 	for(Win& win : wins) {
 		if(win.ctrl == this) {
-			if(win.invalid.GetCount() && win.invalid[0].right > 99999 && win.invalid[0].bottom > 99999)
+			if(win.invalid.GetCount() && IsNull(win.invalid[0]))
 				return;
 			if(win.invalid.GetCount() > 40) { // keep things sane
 				win.invalid.Clear();
-				win.invalid.Add(Rect(0, 0, 20000, 20000));
+				win.invalid.Add(Null);
 			}
 			else
 				win.invalid.Add(rr);

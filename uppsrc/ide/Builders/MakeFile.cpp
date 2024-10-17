@@ -283,7 +283,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	String makefile;
 
 	Vector<String> uppdirs = GetUppDirs();
-	String uppout = exporting ? GetUppOut() : ".cache/upp.out";
+	String uppout = exporting ? GetUppOut() : String(".cache/upp.out");
 	String inclist;
 
 	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, host, *b);
@@ -320,7 +320,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	inclist << " -I$(UPPOUT)"; // build_info.h is created there
 
 	makefile << "\n"
-		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(AppendFileName(uppout, "")), win32)) << "\n"
+		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(AppendFileName(uppout, String())), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
 		"Macro  = ";
 
