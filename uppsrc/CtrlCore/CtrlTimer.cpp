@@ -154,6 +154,7 @@ void Ctrl::TimerProc(dword time)
 	}
 	LLOG("----");
 	sTimerLock.Leave();
+	FullRefreshCleanup();
 }
 
 void  Ctrl::InitTimer()

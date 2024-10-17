@@ -8,6 +8,8 @@ namespace Upp {
 bool Ctrl::globalbackpaint;
 bool Ctrl::globalbackbuffer;
 
+bool Ctrl::was_fullrefresh;
+
 static void sCheckGuiLock()
 {
 	ASSERT_(ThreadHasGuiLock(), "Using GUI in non-main thread without GuiLock");
@@ -17,7 +19,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	LTIMING("RefreshFrame");
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	DLOG("RefreshFrame " << Name() << ' ' << r);
+	DLOG("RefreshFrame " << Name() << ' ' << r << " version 1");
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	DLOG("RefreshRect A");
 	if(GuiPlatformRefreshFrameSpecial(r))
@@ -50,7 +52,6 @@ void Ctrl::Refresh(const Rect& area) {
 	Refresh0(area);
 }
 
-#if 0 // CHANGE TO 1 TO TEST THE FIX
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
@@ -60,20 +61,9 @@ void Ctrl::Refresh() {
 	if(r.IsEmpty())
 		return;
 	if(!GuiPlatformSetFullRefreshSpecial())
-		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
+		was_fullrefresh = fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
 	Refresh0(r);
 }
-#else
-void Ctrl::Refresh() {
-	sCheckGuiLock();
-	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	DLOG("Refresh " << Name() << " full:" << fullrefresh << " rect: " << GetRect());
-	if(fullrefresh || !IsVisible() || !IsOpen()) return;
-	if(!GuiPlatformSetFullRefreshSpecial())
-		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
-	Refresh0(Rect(GetSize()).Inflated(OverPaint()));
-}
-#endif
 
 void Ctrl::Refresh(int x, int y, int cx, int cy) {
 	Refresh(RectC(x, y, cx, cy));
@@ -577,6 +567,17 @@ void Ctrl::RemoveFullRefresh()
 	fullrefresh = false;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 		q->RemoveFullRefresh();
+}
+
+void Ctrl::FullRefreshCleanup()
+{ // remove any potentially stuck fullrefresh
+	GuiLock __;
+	if(was_fullrefresh) {
+		DTIMESTOP("FullRefreshCleanup");
+		for(Ctrl *q : GetTopCtrls())
+			q->RemoveFullRefresh();
+		was_fullrefresh = false;
+	}
 }
 
 Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe, bool clip)

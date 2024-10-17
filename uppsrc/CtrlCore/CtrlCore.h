@@ -565,7 +565,9 @@ private:
 	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
 	bool         multi_frame:1; // there is more than single frame, they are stored in heap
 	bool         top:1;
-	bool         megarect:1; // support for large virtual screen area - SetRect > 16000
+	bool         megarect:1; // support for large virtual screen area - SetRect.TopLeft > 16000
+
+	static  bool      was_fullrefresh; // indicates that some widgets might have fullrefresh true
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -647,6 +649,8 @@ private:
 	Image   DispatchMouseEvent(int e, Point p, int zd = 0);
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
 
+	static bool ProcessEvent(bool *quit = NULL);
+
 	struct CallBox;
 	static void PerformCall(CallBox *cbox);
 
@@ -688,6 +692,7 @@ private:
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	void    RemoveFullRefresh();
+	static  void    FullRefreshCleanup();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
 	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
@@ -1343,7 +1348,6 @@ public:
 	void   SetAlpha(byte alpha);
 
 	static bool IsWaitingEvent();
-	static bool ProcessEvent(bool *quit = NULL);
 	static bool ProcessEvents(bool *quit = NULL);
 	static int  GetEventLevel()     { return EventLevel; }
 

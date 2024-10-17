@@ -209,6 +209,7 @@ void Ctrl::StateH(int reason)
 		if((*statehook()[i])(this, reason))
 			return;
 	StateDeep(reason);
+	FullRefreshCleanup();
 }
 
 bool   Ctrl::Accept()
