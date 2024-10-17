@@ -440,7 +440,7 @@ String Ctrl::GetDesc() const
 
 String Name(const Ctrl *ctrl)
 {
-	return ctrl ? ctrl->Name() : "NULL";
+	return ctrl ? ctrl->Name() : String("NULL");
 }
 
 String Desc(const Ctrl *ctrl)

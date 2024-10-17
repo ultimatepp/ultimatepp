@@ -448,7 +448,7 @@ String IdeCharsetName(byte charset) {
 void PutSpellCheckComments(StringStream& out, int sc)
 {
 	if(!IsNull(sc))
-		out << " spellcheck_comments " << AsCString(sc ? LNGAsText(sc) : "");
+		out << " spellcheck_comments " << AsCString(sc ? LNGAsText(sc) : String());
 }
 
 bool Package::Save(const char *path) const {

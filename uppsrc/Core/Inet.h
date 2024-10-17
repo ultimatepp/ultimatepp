@@ -7,9 +7,9 @@ String MIMECharsetName(byte charset);
 String UrlEncode(const char *s, const char *end);
 String UrlEncode(const char *s, int len);
 String UrlEncode(const String& s);
-String UrlDecode(const char *s, const char *end);
-String UrlDecode(const char *s, int len);
-String UrlDecode(const String& s);
+String UrlDecode(const char *s, const char *end, bool plus_is_space = true);
+String UrlDecode(const char *s, int len, bool plus_is_space = true);
+String UrlDecode(const String& s, bool plus_is_space = true);
 
 String QPEncode(const char* s);
 String QPDecode(const char *s, bool undescore_to_space = false);

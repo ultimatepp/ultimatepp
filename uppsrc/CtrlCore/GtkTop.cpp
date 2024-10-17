@@ -73,25 +73,30 @@ void TopWindow::CenterRect(Ctrl *owner)
 	SetupRect(owner);
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
-		Rect r, wr;
-		wr = Ctrl::GetPrimaryWorkArea();
+		Rect wr = owner? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
 		Rect fm = GetFrameMargins();
-		if(center == 1)
-			r = owner->GetRect();
-		else
-			r = wr;
-		Point p = r.CenterPos(sz);
-		r = RectC(p.x, p.y, sz.cx, sz.cy);
+		Rect r = (center == 1 && owner ? owner->GetRect() : wr)
+		         .CenterRect(sz);
 		wr.left += fm.left;
 		wr.right -= fm.right;
 		wr.top += fm.top;
 		wr.bottom -= fm.bottom;
 		if(r.top < wr.top) {
-			r.bottom += wr.top - r.top;
 			r.top = wr.top;
+			r.bottom = r.top + sz.cy;
 		}
-		if(r.bottom > wr.bottom)
+		if(r.left < wr.left) {
+			r.left = wr.left;
+			r.right = r.left + sz.cx;
+		}
+		if(r.bottom > wr.bottom) {
 			r.bottom = wr.bottom;
+			r.top = r.bottom - sz.cy;
+		}
+		if(r.right > wr.right) {
+			r.right = wr.right;
+			r.left = r.right - sz.cx;
+		}
 		minsize.cx = min(minsize.cx, r.GetWidth());
 		minsize.cy = min(minsize.cy, r.GetHeight());
 		SetRect(r);
