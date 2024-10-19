@@ -384,7 +384,7 @@ void WakeUpGuiThread();
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	DLOG("WndInvalidateRect " << r);
+	DLOG("WndInvalidateRect " << r << " " << Name());
 	Rect rr;
 	if(scale > 1) {
 		rr.left = r.left / 2;
@@ -403,10 +403,10 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 			if(win.invalid.GetCount() > 40) { // keep things sane
 				win.invalid.Clear();
 				win.invalid.Add(Null);
-				DLOG("Invalidate ALL");
+				DLOG("Invalidate ALL " << Name() << " " << win.invalid.GetCount());
 			}
 			else {
-				DLOG("Invalidate " << rr);
+				DLOG("Invalidate " << rr << " " << Name() << " " << win.invalid.GetCount());
 				win.invalid.Add(rr);
 			}
 			if(!invalids) {

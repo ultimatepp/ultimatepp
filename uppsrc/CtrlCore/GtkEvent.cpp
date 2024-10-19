@@ -412,7 +412,7 @@ bool Ctrl::ProcessInvalids()
 			for(const Rect& r : win.invalid)
 				if(win.gdk && win.ctrl) {
 					gdk_window_invalidate_rect(win.gdk, GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
-					DLOG("INVALIDATE " << r);
+					DLOG("INVALIDATE " << r << " / " << Nvl(r, win.ctrl->GetRect().GetSize()) << " " << Name(win.ctrl));
 				}
 			win.invalid.Clear();
 		}

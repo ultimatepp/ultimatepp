@@ -19,7 +19,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	LTIMING("RefreshFrame");
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	DLOG("RefreshFrame " << Name() << ' ' << r << " version 1");
+	DLOG("RefreshFrame " << Name() << ' ' << r << " version 2");
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	DLOG("RefreshRect A");
 	if(GuiPlatformRefreshFrameSpecial(r))
