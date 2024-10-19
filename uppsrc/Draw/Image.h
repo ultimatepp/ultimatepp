@@ -314,7 +314,7 @@ class Iml {
 public:
 	void   Reset();
 	int    GetCount() const                  { return map.GetCount(); }
-	String GetId(int i)                      { return map.GetKey(i); }
+	String GetId(int i) const                { return map.GetKey(i); }
 	Image  Get(int i);
 	int    Find(const String& id) const      { return map.Find(id); }
 	void   Set(int i, const Image& img);
