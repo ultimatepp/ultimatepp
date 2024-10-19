@@ -1,0 +1,7 @@
+// Imports the source files of winpty-agent executable, filters out the test code and other files.
+
+files
+     libssh2/*.c
+;
+
+includes ;
