@@ -1,7 +1,11 @@
-#ifndef LIBSSH2_USERAUTH_H
-#define LIBSSH2_USERAUTH_H
-/* Copyright (C) Sara Golemon <sarag@libssh2.org>
- * Copyright (C) Daniel Stenberg
+/* Copyright (C) 2004-2007 Sara Golemon <sarag@libssh2.org>
+ * Copyright (C) 2005,2006 Mikhail Gusarov <dottedmag@dottedmag.net>
+ * Copyright (C) 2006-2007 The Written Word, Inc.
+ * Copyright (C) 2007 Eli Fant <elifantu@mail.ru>
+ * Copyright (C) 2009-2023 Daniel Stenberg
+ * Copyright (C) 2008, 2009 Simon Josefsson
+ * Copyright (C) 2000 Markus Friedl
+ * Copyright (C) 2015 Microsoft Corp.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -36,18 +40,4 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
- *
- * SPDX-License-Identifier: BSD-3-Clause
  */
-
-int
-_libssh2_userauth_publickey(LIBSSH2_SESSION *session,
-                            const char *username,
-                            size_t username_len,
-                            const unsigned char *pubkeydata,
-                            size_t pubkeydata_len,
-                            LIBSSH2_USERAUTH_PUBLICKEY_SIGN_FUNC
-                                ((*sign_callback)),
-                            void *abstract);
-
-#endif /* LIBSSH2_USERAUTH_H */
