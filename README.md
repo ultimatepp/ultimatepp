@@ -9,22 +9,22 @@
 
 ## Introduction
 
-U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), and an integrated development environment.
+U++ is a C++ cross-platform Rapid Application Development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), and an Integrated Development Environment.
 
 Rapid development is achieved by the [smart and aggressive use of C++](https://www.ultimatepp.org/www$uppweb$overview$en-us.html) rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.
 
-The U++ integrated development environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual designers for U++ libraries, a [Topic++](https://www.ultimatepp.org/app$ide$Topic$en-us.html) system for documenting code and creating rich text resources for applications (like help and code documentation) and [Assist++](https://www.ultimatepp.org/app$ide$Assist$en-us.html) - a powerful C++ code analyzer that provides features like code completion, navigation and transformation.
+The U++ Integrated Development Environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds up by 4 times, Visual designers for U++ libraries, [Topic++](https://www.ultimatepp.org/app$ide$Topic$en-us.html) system for documenting code and creating rich text resources for applications (like help and code documentation) and [Assist++](https://www.ultimatepp.org/app$ide$Assist$en-us.html) - a powerful C++ code analyzer that provides features like code completion, navigation and transformation.
 
-TheIDE can work with GCC, Clang, MinGW and Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
+TheIDE can work with GCC, Clang, MinGW, Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
 
 U++ supports following platforms on the production level: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
 
 ## What you can get with U++?
 
 * A very effective C++ library for cross-platform development in source form.
-* A good integrated development environment, designed for developing large C++ applications.
+* A good integrated development environment, designed for developing complex C++ applications.
 
-You can use both, or you can use whichever you need.
+You can use them individually or together according to your needs.
 
 ## License
 U++ uses the BSD-2 Clause license. The license applies to all source code in this repository except for the situation when the directory contains the "Copying" file. In this case, the license contained in this file is valid for source codes within the directory in which it is present. Moreover, the new license stored in the "Copying" file applies to source files in child directories.
