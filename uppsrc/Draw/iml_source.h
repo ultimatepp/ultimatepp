@@ -151,6 +151,15 @@ struct COMBINE(IMAGECLASS, __Reg) {
 
 static COMBINE(IMAGECLASS, __Reg) COMBINE(IMAGECLASS, ___Reg);
 
+#undef  IMAGE_BEGIN
+#undef  IMAGE_ID
+
+#define IMAGE_BEGIN(n) UPP::Image IMAGECLASS::n() { return Get(I_##n); }
+#define IMAGE_ID(n) UPP::Image IMAGECLASS::n() { return Get(I_##n); }
+#include IMAGEFILE
+#undef  IMAGE_BEGIN
+#undef  IMAGE_ID
+
 #undef  IMAGE_BEGIN_DATA
 #undef  IMAGE_DATA
 #undef  IMAGE_END_DATA

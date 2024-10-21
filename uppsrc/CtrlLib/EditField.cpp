@@ -148,7 +148,7 @@ void EditField::CancelMode()
 	dropcaret.Clear();
 }
 
-int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt) const
+int EditField::GetTextCx(const wchar *txt, int n, bool password) const
 {
 	if(password)
 		return n * font['*'];
@@ -161,7 +161,7 @@ int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt) const
 
 int  EditField::GetCaret(int cursor) const
 {
-	return GetTextCx(text, cursor, password, font);
+	return GetTextCx(text, cursor, password);
 }
 
 int  EditField::GetViewHeight(Font font)
@@ -250,7 +250,7 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 					   bool showspaces)
 {
 	if(n < 0) return;
-	int cx = GetTextCx(txt, n, password, font);
+	int cx = GetTextCx(txt, n, password);
 	w.DrawRect(x, 0, cx, fcy, paper);
 	if(password) {
 		String h;
