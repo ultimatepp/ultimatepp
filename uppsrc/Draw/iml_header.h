@@ -39,8 +39,8 @@ public:
 
 	static void   Reset()                     { Iml().Reset(); }
 
-#define IMAGE_BEGIN(n) static UPP::Image n() { return Get(I_##n); }
-#define IMAGE_ID(n) static UPP::Image n() { return Get(I_##n); }
+#define IMAGE_BEGIN(n) static UPP::Image n();
+#define IMAGE_ID(n) static UPP::Image n();
 #include IMAGEFILE
 #undef  IMAGE_BEGIN
 #undef  IMAGE_ID

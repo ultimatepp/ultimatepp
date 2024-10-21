@@ -144,7 +144,7 @@ protected:
 	void    RefreshAll();
 	int     LowChar(int c) const { return 0x25af /*c + 0x2400*/; }
 	int     GetCharWidth(int c) const { return font[c < 32 ? LowChar(c) : c]; }
-	int     GetTextCx(const wchar *text, int n, bool password, Font fnt) const;
+	int     GetTextCx(const wchar *text, int n, bool password) const;
 	void    Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 		           Color ink, Color paper, int n, bool pwd, Font fnt, Color underline, bool showspaces);
 	int     GetStringCx(const wchar *text, int n);
