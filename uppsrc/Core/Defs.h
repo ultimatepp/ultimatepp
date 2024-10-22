@@ -166,6 +166,16 @@ typedef long long unsigned uint64;
 
 typedef uint64             qword;
 
+#if defined(_MSC_VER) || (defined(__INTEL_COMPILER) && defined(_WIN32))
+    #define LONG_SIZE 4
+#elif defined(__clang__) || defined(__INTEL_COMPILER) || defined(__GNUC__)
+    #if __LONG_MAX__ == 2147483647L
+        #define LONG_SIZE 4
+    #else
+        #define LONG_SIZE 8
+    #endif
+#endif
+
 struct m128 {
 	int64 i64[2];
 	
