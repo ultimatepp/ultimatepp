@@ -342,7 +342,9 @@ private:
 	bool              usegrid;
 	bool              ignoreminsize;
 	bool              sizespring;
-
+	
+	int               layout_zoom = 0;
+	
 	WithMatrixLayout<TopWindow>  matrix;
 	WithSettingLayout<TopWindow> setting;
 
@@ -355,8 +357,6 @@ private:
 		friend unsigned GetHashValue(const TempGroup& g) { return 0; }
 		TempGroup(const String& temp, const String& group) : temp(temp), group(group) {}
 	};
-	
-	int             Zoom = 0;
 	
 	Rect   CtrlRect(Ctrl::LogPos pos, Size sz);
 	Rect   CtrlRectZ(Ctrl::LogPos pos, Size sz);

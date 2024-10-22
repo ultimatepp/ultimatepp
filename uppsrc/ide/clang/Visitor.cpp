@@ -378,7 +378,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		};
 		
 		if(clang_getCursorKind(ref) == CXCursor_OverloadedDeclRef)
-			for(int i = 0; i < clang_getNumOverloadedDecls(ref); i++)
+			for(unsigned int i = 0; i < clang_getNumOverloadedDecls(ref); i++)
 				AddRef(clang_getOverloadedDecl(ref, i));
 		else
 			AddRef(ref);
