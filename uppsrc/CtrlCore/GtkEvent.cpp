@@ -789,6 +789,11 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Value val = e.value;
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		String ev = "?";
+		Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
+		if(f)
+			ev = f->b;
+		LOG("=== PROCESS EVENT " << Upp::Name(w) << " " << ev);
 		FocusSync();
 		CaptureSync();
 		if(w) {
