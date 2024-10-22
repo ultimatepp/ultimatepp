@@ -5,7 +5,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-// #define LOG_EVENTS  _DBG_
+#define LOG_EVENTS _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -412,8 +412,13 @@ bool Ctrl::ProcessInvalids()
 			for(const Rect& r : win.invalid)
 				if(win.gdk && win.ctrl) {
 					gdk_window_invalidate_rect(win.gdk, GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
-					DLOG("INVALIDATE " << r << " / " << win.ctrl->GetRect().GetSize() << " " << Name(win.ctrl));
+					DLOG("== INVALIDATE " << r << " " << Name(win.ctrl));
+					DDUMP(win.ctrl->GetRect());
+					DDUMP(Nvl(r, win.ctrl->GetRect().GetSize()));
 					DDUMP(win.gdk);
+					DDUMP(win.ctrl->IsWndOpen());
+					DDUMP(win.ctrl->GetWndScreenRect());
+					DLOG("..");
 				}
 			win.invalid.Clear();
 		}
