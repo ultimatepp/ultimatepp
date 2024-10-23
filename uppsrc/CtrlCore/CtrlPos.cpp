@@ -111,7 +111,7 @@ Rect  Ctrl::GetVisibleScreenRect() const
 	}
 	else
 		GuiPlatformGetTopRect(r);
-	return r & GetVirtualScreenArea();
+	return r;
 }
 
 Rect  Ctrl::GetVisibleScreenView() const
