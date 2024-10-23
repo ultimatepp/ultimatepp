@@ -38,7 +38,8 @@ private:
 	static bool StateHook(Ctrl *, int reason);
 	static bool MouseHook(Ctrl *, bool, int, Point, int, dword);
 	static void SyncAll();
-	
+	static Rect Check(Ctrl *ctrl, const Rect& item, const Value& value, const Display *display, int margin);
+
 	typedef DisplayPopup CLASSNAME;
 
 public:
