@@ -10,6 +10,8 @@
 #include <sys/un.h>
 #endif
 
+
+#include "libssh2/libssh2_setup.h"
 #include "libssh2/libssh2.h"
 #include "libssh2/libssh2_sftp.h"
 #include "libssh2/libssh2_publickey.h"

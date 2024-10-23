@@ -47,13 +47,6 @@ public:
     TcpSocket&          GetSocket()                             { return session->socket;  }
     ValueMap            GetMethods() const;
 
-    SFtp                CreateSFtp();
-    SshChannel          CreateChannel();
-    SshExec             CreateExec();
-    Scp                 CreateScp();
-    SshTunnel           CreateTunnel();
-    SshShell            CreateShell();
-
     bool                Connect(const String& url);
     bool                Connect(const String& host, int port, const String& user, const String& password);
     void                Disconnect();
@@ -71,6 +64,14 @@ public:
     virtual ~SshSession();
 
     SshSession(SshSession&&) = default;
+
+    // Deprecations.
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] SFtp                CreateSFtp();
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] SshChannel          CreateChannel();
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] SshExec             CreateExec();
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] Scp                 CreateScp();
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] SshTunnel           CreateTunnel();
+    [[deprecated("This method is deprecated and will be removed in U++ 2025.1. Use the class constructor instead.")]] SshShell            CreateShell();
 
 private:
     void                Exit() override;

@@ -1,11 +1,4 @@
-/* Copyright (c) 2004-2007 Sara Golemon <sarag@libssh2.org>
- * Copyright (c) 2005,2006 Mikhail Gusarov <dottedmag@dottedmag.net>
- * Copyright (c) 2006-2007 The Written Word, Inc.
- * Copyright (c) 2007 Eli Fant <elifantu@mail.ru>
- * Copyright (c) 2009-2021 Daniel Stenberg
- * Copyright (C) 2008, 2009 Simon Josefsson
- * Copyright (c) 2000 Markus Friedl
- * Copyright (c) 2015 Microsoft Corp.
+/* Copyright (C) Xaver Loppenstedt <xaver@loppenstedt.de>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms,
@@ -40,5 +33,13 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#ifndef LIBSSH2_USERAUTH_KBD_PACKET_H
+#define LIBSSH2_USERAUTH_KBD_PACKET_H
+
+int userauth_keyboard_interactive_decode_info_request(LIBSSH2_SESSION *);
+
+#endif /* LIBSSH2_USERAUTH_KBD_PACKET_H */
