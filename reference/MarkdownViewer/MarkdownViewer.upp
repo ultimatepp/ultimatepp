@@ -2,7 +2,6 @@ description "A simple markdown viewer with image displaying capability.\377";
 
 uses
 	CtrlLib,
-	Core/SSL,
 	Painter,
 	plugin/jpg,
 	plugin/md;
