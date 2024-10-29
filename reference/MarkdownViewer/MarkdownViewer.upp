@@ -7,7 +7,9 @@ uses
 	plugin/md;
 
 file
-	main.cpp;
+	main.cpp,
+	Resources readonly separator,
+	example.md;
 
 mainconfig
 	"" = "GUI";

@@ -31,7 +31,7 @@ struct MarkdownViewer : TopWindow {
 						.Key(K_CTRL_Q);
 			});
 		});
-	
+		ParseFile(GetDataFile("example.md"));
 	}
 	
 	void OpenFile()
