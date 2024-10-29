@@ -7,7 +7,6 @@
 using namespace Upp;
 
 struct MarkdownViewer : TopWindow {
-	typedef MarkdownViewer CLASSNAME;
 	RichTextView view;
 	MenuBar menubar;
 	Array<QtfRichObject> images;
@@ -18,20 +17,21 @@ struct MarkdownViewer : TopWindow {
 		Sizeable().Zoomable().SetRect(0, 0, 800, 600);
 		Add(view.SizePos());
 		AddFrame(menubar);
-		menubar.Set(THISFN(MainMenu));
-	}
+		menubar.Set([this](Bar& menu)
+		{
+			menu.Sub(t_("File"), [this](Bar& menu)
+			{
+					menu.Add(t_("Open"), [this] { OpenFile(); })
+						.Key(K_CTRL_O);
+					menu.Add(t_("Copy to clipboard (as qtf)"),[this] { CopyAsQtf(); })
+						.Key(K_CTRL_C)
+						.Enable(!IsNull(~view));
+					menu.Separator();
+					menu.Add(t_("Exit"),   THISFN(Close))
+						.Key(K_CTRL_Q);
+			});
+		});
 	
-	void MainMenu(Bar& menu)
-	{
-		menu.Sub(t_("File"), THISFN(FileMenu));
-	}
-	
-	void FileMenu(Bar& menu)
-	{
-		menu.Add(t_("Open"), THISFN(OpenFile)).Key(K_CTRL_O);
-		menu.Add(!IsNull(~view), t_("Copy to clipboard (as qtf)"), THISFN(CopyAsQtf)).Key(K_CTRL_C);
-		menu.Separator();
-		menu.Add(t_("Exit"),   THISFN(Close)).Key(K_CTRL_Q);
 	}
 	
 	void OpenFile()
