@@ -111,7 +111,7 @@ Rect  Ctrl::GetVisibleScreenRect() const
 	}
 	else
 		GuiPlatformGetTopRect(r);
-	return r & GetVirtualScreenArea();
+	return r;
 }
 
 Rect  Ctrl::GetVisibleScreenView() const
@@ -155,6 +155,7 @@ void Ctrl::SyncLayout(int force)
 	if(destroying)
 		return;
 	LLOG("SyncLayout " << Name() << " size: " << GetSize());
+	fullrefresh = false;
 	bool refresh = false;
 	Rect oview = GetView();
 	Rect view = GetRect().Size();

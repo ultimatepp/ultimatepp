@@ -2361,24 +2361,14 @@ system. Ctrl must be open.&]
 event in input queue.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:ProcessEvent`(bool`*`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* ProcessEven
-t]([@(0.0.255) bool]_`*[*@3 quit]_`=_NULL)&]
-[s2;b17;a17; Processes single event from input queue. When there 
-is no pending event, returns immediately. (Processing event involves 
-usually involves dispatching it via virtual methods to proper 
-Ctrls).&]
-[s7;i1120;a17; [%-*C@3 quit]-|Assigned true when WM`_QUIT message is 
-intercepted (Win32 specific).&]
-[s7;i1120;a17; [*/ Return value]-|True indicates that event was processed, 
-false that queue was empty.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:ProcessEvents`(bool`*`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* ProcessEve
 nts]([@(0.0.255) bool]_`*[*@3 quit]_`=_NULL)&]
 [s2;b17;a17; Processes all events from input queue. When there is 
 no pending event, returns immediately. (Processing event involves 
 usually involves dispatching it via virtual methods to proper 
-Ctrls).&]
+Ctrls). Additionally, after all input events are processed, all 
+pending timer events are processed and all Refreshed areas of 
+windows are repainted.&]
 [s7;i1120;a17; [%-*C@3 quit]-|Assigned true when WM`_QUIT message is 
 intercepted (Win32 specific).&]
 [s7;i1120;a17; [*/ Return value]-|True indicates that one or more events 

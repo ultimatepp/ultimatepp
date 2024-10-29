@@ -330,8 +330,12 @@ void InstantSetup()
 
 				String& myinc = incs.At(ii++);
 				if(IsNull(myinc) || ToLower(myinc).Find("mysql") >= 0)
-					myinc = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
-
+					myinc = GetExeDirFile("bin/mysql/include");
+				
+				String& llvminc = incs.At(ii++);
+				if(IsNull(llvminc) || ToLower(llvminc).Find("llvm") >= 0)
+					llvminc = GetExeDirFile("bin/llvm");
+				
 				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
@@ -356,6 +360,10 @@ void InstantSetup()
 				String& mylib = libs.At(ii++);
 				if(IsNull(mylib) || ToLower(mylib).Find("mysql") >= 0)
 					mylib = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
+				
+				String& llvmlib = libs.At(ii++);
+				if(IsNull(llvmlib) || ToLower(llvmlib).Find("llvm") >= 0)
+					llvmlib = GetExeDirFile("bin/llvm");
 
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");

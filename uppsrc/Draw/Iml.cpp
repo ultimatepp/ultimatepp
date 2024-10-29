@@ -49,18 +49,30 @@ void Iml::Init(int n)
 
 void Iml::Reset()
 {
-	int n = map.GetCount();
-	map.Clear();
-	Init(n);
+	for(IImage& m : map)
+		m.loaded = false;
 }
 
+static StaticMutex sImlLock;
+
 void Iml::Set(int i, const Image& img)
-{
+{ // TODO: MT
 	map[i].image = img;
 	map[i].loaded = true;
 }
 
-static StaticMutex sImlLock;
+Image Iml::Get(int i)
+{
+	IImage& m = map[i];
+	if(!m.loaded) {
+		Mutex::Lock __(sImlLock);
+		if(!m.loaded) {
+			m.image = MakeImlImage(GetId(i), [&](int mode, const String& id) { return GetRaw(mode, id); }, global_flags);
+			m.loaded = true;
+		}
+	}
+	return m.image;
+}
 
 ImageIml Iml::GetRaw(int mode, int i)
 {
@@ -139,19 +151,6 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 	ScanOpaque(im.image);
 	
 	return im.image;
-}
-
-Image Iml::Get(int i)
-{
-	IImage& m = map[i];
-	if(!m.loaded) {
-		Mutex::Lock __(sImlLock);
-		if(!m.loaded) {
-			m.image = MakeImlImage(GetId(i), [&](int mode, const String& id) { return GetRaw(mode, id); }, global_flags);
-			m.loaded = true;
-		}
-	}
-	return m.image;
 }
 
 Iml::Iml(const char **name, int n)

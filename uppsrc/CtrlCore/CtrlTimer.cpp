@@ -112,7 +112,7 @@ void Ctrl::TimerProc(dword time)
 	for(;;) {
 		TimeEvent *todo = NULL;
 		int maxtm = -1;
-		
+
 		for(Link<> *le = list->GetNext(); le != list; le = le->GetNext()) {
 			TimeEvent *e = (TimeEvent *)le;
 			int tm = (int)(time - e->time);
@@ -154,6 +154,7 @@ void Ctrl::TimerProc(dword time)
 	}
 	LLOG("----");
 	sTimerLock.Leave();
+	FullRefreshCleanup();
 }
 
 void  Ctrl::InitTimer()

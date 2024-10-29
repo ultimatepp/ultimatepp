@@ -178,7 +178,7 @@ void LayDes::OptionBar(Bar& bar)
 {
 	bar.Add("Zoom " + AsString(GetScale() * 100) + "%", MakeZoomIcon(GetScale()),
 		[=] {
-	          Zoom = Zoom < 5 ? 5 : Zoom < 10 ? 10 : 0;
+	          layout_zoom = layout_zoom < 5 ? 5 : layout_zoom < 10 ? 10 : 0;
 		      Refresh();
 		      SetBar();
 		      SetSb();
@@ -265,7 +265,7 @@ void LayDes::Serialize(Stream& s)
 		s % sizespring;
 	s % lsplit % isplit % rsplit;
 	if(version >= 2)
-		s % Zoom;
+		s % layout_zoom;
 	item.SerializeHeader(s);
 	SetBar();
 }
