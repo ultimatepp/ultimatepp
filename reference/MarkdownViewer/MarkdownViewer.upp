@@ -1,0 +1,16 @@
+description "A simple markdown viewer with image displaying capability.\377";
+
+uses
+	CtrlLib,
+	Painter,
+	plugin/jpg,
+	plugin/md;
+
+file
+	main.cpp,
+	Resources readonly separator,
+	example.md;
+
+mainconfig
+	"" = "GUI";
+
