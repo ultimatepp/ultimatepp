@@ -8,6 +8,8 @@ namespace Upp {
 bool Ctrl::globalbackpaint;
 bool Ctrl::globalbackbuffer;
 
+bool Ctrl::was_fullrefresh;
+
 static void sCheckGuiLock()
 {
 	ASSERT_(ThreadHasGuiLock(), "Using GUI in non-main thread without GuiLock");
@@ -53,8 +55,11 @@ void Ctrl::Refresh() {
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
+	Rect r = Rect(GetSize()).Inflated(OverPaint());
+	if(r.IsEmpty())
+		return;
 	if(!GuiPlatformSetFullRefreshSpecial())
-		fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
+		was_fullrefresh = fullrefresh = true; // Needs to be set ahead because of possible MT ICall that can cause repaint during Refresh0
 	Refresh0(Rect(GetSize()).Inflated(OverPaint()));
 }
 
@@ -562,6 +567,16 @@ void Ctrl::RemoveFullRefresh()
 		q->RemoveFullRefresh();
 }
 
+void Ctrl::FullRefreshCleanup()
+{ // remove any potentially stuck fullrefresh
+	GuiLock __;
+	if(was_fullrefresh) {
+		for(Ctrl *q : GetTopCtrls())
+			q->RemoveFullRefresh();
+		was_fullrefresh = false;
+	}
+}
+
 Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe, bool clip)
 {
 	GuiLock __;
@@ -637,13 +652,13 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 {
 	GuiLock __;
 	w.Offset(x, y);
-	
+
 	SystemDraw *ws = dynamic_cast<SystemDraw *>(&w);
 	if(ws)
 		UpdateArea(*ws, GetRect().GetSize());
 
 //	CtrlPaint(w, GetSize()); _DBG_
-		
+
 	w.End();
 }
 

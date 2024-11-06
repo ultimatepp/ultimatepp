@@ -83,7 +83,7 @@ void Ide::MakeTitle()
 		if(findarg(branch, "", "master", "main") >= 0)
 			editor.BarText(branch, GrayColor(IsDarkTheme() ? 100 : 220));
 		else {
-			dword h = GetHashValue(branch);
+			auto h = GetHashValue(branch);
 			int r = h & 31; h >>= 5;
 			int g = h & 15; h >>= 4;
 			int b = h & 63;

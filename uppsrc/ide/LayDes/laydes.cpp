@@ -285,7 +285,7 @@ void LayDes::Paint2(Draw& w)
 void LayDes::MouseWheel(Point p, int zdelta, dword keyflags)
 {
 	if(keyflags & K_CTRL) {
-        Zoom = clamp(Zoom - sgn(zdelta), 0, 15);
+        layout_zoom = clamp(layout_zoom - sgn(zdelta), 0, 15);
 		Refresh();
 		SetBar();
 		SetSb();
@@ -304,7 +304,7 @@ void LayDes::HorzMouseWheel(Point, int zdelta, dword)
 
 double LayDes::GetScale()
 {
-	return (20 - Zoom) / 20.0;
+	return (20 - layout_zoom) / 20.0;
 }
 
 void LayDes::Paint(Draw& w)
@@ -318,7 +318,7 @@ void LayDes::Paint(Draw& w)
 	if(IsNull(currentlayout))
 		return;
 
-	if(Zoom) {
+	if(layout_zoom) {
 		DrawPainter sw(w, sz);
 		sw.Co();
 		sw.Clear(SColorPaper());

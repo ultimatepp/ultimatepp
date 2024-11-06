@@ -47,13 +47,8 @@ DisplayPopup::Pop::~Pop()
 		all().Remove(q);
 }
 
-void DisplayPopup::Pop::Sync()
+Rect DisplayPopup::Check(Ctrl *ctrl, const Rect& item, const Value& value, const Display *display, int margin)
 {
-	if(!IsMainThread()) {
-		Ptr<Pop> p;
-		PostCallback([=] { if(p) p->Sync(); });
-		return;
-	}
 	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())) {
 		Ctrl *top = ctrl->GetTopCtrl();
 		if(top && top->HasFocusDeep()) {
@@ -61,21 +56,36 @@ void DisplayPopup::Pop::Sync()
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
 				Rect vw = ctrl->GetScreenView();
 				Rect r = (item + vw.TopLeft()) & vw;
-				if(r.Contains(GetMousePos())) {
-					Rect wa = top->GetScreenRect();
-					r.right = min(wa.right, r.left + sz.cx + 2 * margin);
-					r.bottom = max(r.bottom, r.top + sz.cy);
-					r.Inflate(1, 1);
-					view.SetRect(r - top->GetScreenView().TopLeft());
-					frame.SetFrameRect(r - wa.TopLeft());
-					if(!frame.GetParent())
-						*top << view << frame;
-					return;
-				}
+				if(r.Contains(GetMousePos()))
+					return r;
 			}
 		}
 	}
-	WhenClose();
+	return Null;
+}
+
+void DisplayPopup::Pop::Sync()
+{
+	if(!IsMainThread()) {
+		Ptr<Pop> p;
+		PostCallback([=] { if(p) p->Sync(); });
+		return;
+	}
+	Rect r = Check(ctrl, item, value, display, margin);
+	if(IsNull(r))
+		WhenClose();
+	else {
+		Ctrl *top = ctrl->GetTopCtrl();
+		Size sz = display->GetStdSize(value);
+		Rect wa = top->GetScreenRect();
+		r.right = min(wa.right, r.left + sz.cx + 2 * margin);
+		r.bottom = max(r.bottom, r.top + sz.cy);
+		r.Inflate(1, 1);
+		view.SetRect(r - top->GetScreenView().TopLeft());
+		frame.SetFrameRect(r - wa.TopLeft());
+		if(!frame.GetParent())
+			*top << view << frame;
+	}
 }
 
 DisplayPopup::DisplayPopup()
@@ -136,6 +146,8 @@ void DisplayPopup::Pop::Set(Ctrl *_ctrl, const Rect& _item,
 
 void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display, Color ink, Color paper, dword style, int margin)
 {
+	if(IsNull(Check(ctrl, item, v, display, margin)))
+		return; // precheck to avoid creating / deleting popup too often, avoid flooding timer with PostCallback
 	if(!popup) {
 		popup.Create();
 		popup->usedisplaystdsize = usedisplaystdsize;

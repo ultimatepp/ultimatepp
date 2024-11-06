@@ -44,7 +44,7 @@
 			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif
-	
+
 #endif
 
 #define GUI_APP_MAIN_HOOK
@@ -269,7 +269,7 @@ enum {
 	DND_MOVE = 2,
 
 	DND_ALL  = 3,
-	
+
 	DND_EXACTIMAGE = 0x80000000,
 };
 
@@ -499,11 +499,11 @@ private:
 			MultiFrame multi;
 			Rect16_    view;
 		};
-		
+
 		void SetView(const Rect& r) { view.left = r.left; view.right = r.right; view.top = r.top; view.bottom = r.bottom; }
 		Rect GetView() const        { return Rect16(view.left, view.top, view.right, view.bottom); }
 	};
-	
+
 	struct Scroll : Moveable<Scroll> {
 		Rect rect;
 		int  dx;
@@ -568,7 +568,9 @@ private:
 	bool         layout_id_literal:1; // info_ptr points to layout char * literal, no heap involved
 	bool         multi_frame:1; // there is more than single frame, they are stored in heap
 	bool         top:1;
-	bool         megarect:1; // support for large virtual screen area - SetRect > 16000
+	bool         megarect:1; // support for large virtual screen area - SetRect.TopLeft > 16000
+
+	static  bool      was_fullrefresh; // indicates that some widgets might have fullrefresh true
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -598,7 +600,7 @@ private:
 
 	static  Ptr<Ctrl> repeatTopCtrl;
 	static  Point     repeatMousePos;
-	
+
 	static  PenInfo   pen;
 	static  bool      is_pen_event;
 
@@ -691,6 +693,7 @@ private:
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	void    RemoveFullRefresh();
+	static void FullRefreshCleanup();
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
 	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
@@ -747,11 +750,11 @@ private:
 	void SysEndLoop();
 
 	String Name0() const;
-	
+
 	Top         *GetTop()               { return top ? utop : NULL; }
 	const Top   *GetTop() const         { return top ? utop : NULL; }
 	void         DeleteTop();
-	
+
 	void         SetTop(Top *t)         { utop = t; top = true; }
 	void         SetParent(Ctrl *parent);
 
@@ -759,10 +762,10 @@ private:
 	const Frame& GetFrame0(int i) const { ASSERT(i < GetFrameCount()); return multi_frame ? frame.frames[i] : frame; }
 	void         FreeFrames()           { if(multi_frame) MemoryFree(frame.frames); }
 	Frame        AllocFrames(int alloc);
-	
+
 	Rect         OffsetMegaRect(Rect r) const;
 	void         MegaRect(Rect& r);
-	
+
 	PackedData& Attrs();
 
 
@@ -776,7 +779,7 @@ private:
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
 	static void (*skin)();
-	
+
 	static void (*cancel_preedit)();
 
 	friend void  InitRichTextZoom();
@@ -811,9 +814,9 @@ private:
 #endif
 
 	static void InstallPanicBox();
-	
+
 	bool IsDHCtrl() const;
-	
+
 	struct EventLevelDo {
 		EventLevelDo() { EventLevel++; };
 		~EventLevelDo() { EventLevel--; };
@@ -828,7 +831,7 @@ protected:
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
 
 	Rect StdGetWorkArea() const;
-			
+
 	enum {
 		ATTR_LAYOUT_ID,
 		ATTR_TIP,
@@ -839,35 +842,35 @@ protected:
 		ATTR_MEGARECT_Y,
 		ATTR_LAST
 	};
-	
+
 	void   SetTextAttr(int ii, const char *s);
 	void   SetTextAttr(int ii, const String& s);
 	String GetTextAttr(int ii) const;
-	
+
 	void   SetColorAttr(int ii, Color c);
 	Color  GetColorAttr(int ii) const;
-	
+
 	void   SetFontAttr(int ii, Font fnt);
 	Font   GetFontAttr(int ii) const;
-	
+
 	void   SetIntAttr(int ii, int val);
 	int    GetIntAttr(int ii, int def = Null) const;
 
 	void   SetInt64Attr(int ii, int64 val);
 	int64  GetInt64Attr(int ii, int64 def = Null) const;
-	
+
 	void   SetVoidPtrAttr(int ii, const void *ptr);
 	void  *GetVoidPtrAttr(int ii) const;
-	
+
 	template <class T>
 	void  DeleteAttr(int ii)      { void *p = GetVoidPtrAttr(ii); if(p) { delete (T *)p; SetVoidPtrAttr(ii, nullptr); }; }
 
 	template <class T>
 	T&    CreateAttr(int ii)      { DeleteAttr<T>(ii); T *q = new T; SetVoidPtrAttr(ii, q); return *q; }
-	
+
 	template <class T>
 	T     GetAttr(int ii) const   { void *p = GetVoidPtrAttr(ii); return p ? *(T *)p : T(); }
-	
+
 public:
 	enum StateReason {
 		FOCUS      = 10,
@@ -947,7 +950,7 @@ public:
 
 	static  void   InstallStateHook(StateHook hook);
 	static  void   DeinstallStateHook(StateHook hook);
-	
+
 	static  int    RegisterSystemHotKey(dword key, Function<void ()> cb);
 	static  void   UnregisterSystemHotKey(int id);
 
@@ -999,9 +1002,9 @@ public:
 	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   HorzMouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void   MouseLeave();
-	
+
 	virtual void   Pen(Point p, const PenInfo& pen, dword keyflags);
-	
+
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 
@@ -1148,7 +1151,7 @@ public:
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
 	void        RefreshParentLayout();
-	
+
 	void        UpdateLayout()                           { SyncLayout(); }
 	void        UpdateParentLayout();
 
@@ -1194,7 +1197,7 @@ public:
 	void        RefreshFrame(const Rect& r);
 	void        RefreshFrame(int x, int y, int cx, int cy);
 	void        RefreshFrame();
-	
+
 	static bool IsPainting()                             { return painting; }
 
 	void        ScrollView(const Rect& r, int dx, int dy);
@@ -1250,7 +1253,7 @@ public:
 	void    CancelModeDeep();
 
 	static void  CancelPreedit();
-	
+
 	void   CancelMyPreedit()                   { if(HasFocus()) CancelPreedit(); }
 
 	static Ctrl *GetFocusCtrl()                { return FocusCtrl(); }
@@ -1332,7 +1335,7 @@ public:
 	bool    ExistsTimeCallback(int id = 0) const;
 	void    PostCallback(Function<void ()> cb, int id = 0);
 	void    KillPostCallback(Function<void ()> cb, int id);
-	
+
 	enum { TIMEID_COUNT = 1 };
 
 	static Ctrl *GetActiveCtrl();
@@ -1366,7 +1369,7 @@ public:
 	static PasteClip& Selection();
 
 	void   SetSelectionSource(const char *fmts);
-	
+
 	static void RegisterDropFormats(const char *fmts); // MacOS requires drop formats to be registered
 
 	int    DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
@@ -1379,9 +1382,9 @@ public:
 	bool   IsDragAndDropSource()    { return this == GetDragAndDropSource(); }
 	bool   IsDragAndDropTarget()    { return this == GetDragAndDropTarget(); }
 	static Size  StdSampleSize()    { return Size(DPI(126), DPI(106)); }
-	
+
 	static PenInfo GetPenInfo()     { return pen; }
-	
+
 public:
 	static void SetSkin(void (*skin)());
 
@@ -1394,10 +1397,10 @@ public:
 	static Size LayoutZoom(Size sz);
 	static void NoLayoutZoom();
 	static void GetZoomRatio(Size& m, Size& d);
-	
+
 	static void SetUHDEnabled(bool set = true);
 	static bool IsUHDEnabled();
-	
+
 	static void SetDarkThemeEnabled(bool set = true);
 	static bool IsDarkThemeEnabled();
 
@@ -1433,7 +1436,7 @@ public:
 	virtual void   Dump(Stream& s) const;
 
 	static bool LogMessages;
-	
+
 	void    SetTitle(const char *s);
 #endif
 
@@ -1449,7 +1452,7 @@ public:
 
 	static bool IsShutdownThreads()                     { return Thread::IsShutdownThreads(); }
 	static void ShutdownThreads();
-	
+
 	static int64 GetEventId()                           { return eventid; }
 
 	Ctrl();
@@ -1460,16 +1463,16 @@ private: // support for for(Ctrl& q : *this)
 	protected:
 		friend class Ctrl;
 		const Ctrl *q;
-	
+
 	public:
 		void operator++()                           { q = q->GetNext(); }
 		bool operator!=(CtrlConstIterator& b) const { return q != b.q; }
 		const Ctrl& operator*() const               { return *q; }
 	};
-	
+
 	class CtrlIterator : public CtrlConstIterator { // support for(Ctrl *q : *this)
 		friend class Ctrl;
-	
+
 	public:
 		Ctrl& operator*()                           { return *const_cast<Ctrl *>(q); }
 	};
