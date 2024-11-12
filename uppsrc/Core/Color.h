@@ -42,7 +42,10 @@ class Color : public ValueType<Color, COLOR_V, Moveable<Color> > {
 protected:
 	dword    color;
 
-	dword Get() const;
+	dword    Get() const;
+	void     SetSpecial(int n)         { color = 0x80000000 | n; }
+	
+	enum { LOGICAL_COLOR = 0x40000000 };
 
 public:
 	dword    GetRaw() const            { return color; }
@@ -76,7 +79,7 @@ public:
 	Color(Color (*fn)())               { color = (*fn)().color; }
 
 	static Color FromRaw(dword co)     { Color c; c.color = co; return c; }
-	static Color Special(int n)        { Color c; c.color = 0x80000000 | n; return c; }
+	static Color Special(int n)        { Color c; c.SetSpecial(n); return c; }
 	
 	int  GetSpecial() const            { return color & 0x80000000 ? color & 0x7fffffff : -1; }
 
@@ -89,6 +92,12 @@ public:
 
 private:
 	Color(int);
+};
+
+struct LogicalColor : Color { // this is supposed to be static / global
+	LogicalColor(Color (*fn)());
+	
+	static void Refresh();
 };
 
 RGBA operator*(int alpha, Color c);

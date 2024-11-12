@@ -957,9 +957,23 @@ void Ctrl::ReSkin()
 	Vector<Ctrl *> ctrl = GetTopCtrls();
 	for(int i = 0; i < ctrl.GetCount(); i++) {
 		ctrl[i]->RefreshLayoutDeep();
+		ctrl[i]->DoSkin();
 		ctrl[i]->RefreshFrame();
 	}
 	lock--;
+}
+
+void Ctrl::PostReSkin()
+{ // use timer so that it is done just once if there are multiple windows
+	static TimeCallback tm;
+	tm.KillPost([=] { ReSkin(); });
+}
+
+void Ctrl::DoSkin()
+{
+	for(Ctrl& q : *this)
+		q.DoSkin();
+	Skin();
 }
 
 CH_INT(GUI_GlobalStyle, GUISTYLE_CLASSIC);

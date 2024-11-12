@@ -23,6 +23,7 @@ class UWord : public TopWindow {
 public:
 	virtual void DragAndDrop(Point, PasteClip& d);
 	virtual void FrameDragAndDrop(Point, PasteClip& d);
+	virtual void Skin();
 
 protected:
 	RichEdit   editor;
@@ -238,6 +239,11 @@ void UWord::MainBar(Bar& bar)
 void UWord::SetBar()
 {
 	toolbar.Set(THISBACK(MainBar));
+}
+
+void UWord::Skin()
+{
+	SetBar();
 }
 
 UWord::UWord()

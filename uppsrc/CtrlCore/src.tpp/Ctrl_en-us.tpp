@@ -2513,6 +2513,14 @@ be statically overloaded to receive minimal size of layout.&]
 [s7;i1120;a17; [%-*C@3 sz]-|Minimal size of layout.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:Skin`(`):%- [@(0.0.255) void] [* Skin]()&]
+[s2; Called when the application skin (e.g. widget appearance, system 
+colors or dark / light theme switch) changes. It is called in 
+children first order. Application should use this to adjust colors, 
+which might actually include resetting some widgets and data 
+content.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:Csizeinit`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* Csizeinit]()&]
 [s2;b17;a17; Sets zoom factor used to scale layouts (to scale zoomed 
 positioning methods like LeftPosZ). Horizontal distances are 

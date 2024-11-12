@@ -94,9 +94,39 @@ double ContrastRatio(Color c1, Color c2) {
 	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
 }
 
+static std::atomic<int> s_logical_color_ii;
+static Color s_logical_color[1024];
+static Color (*s_logical_color_fn[1024])();
+
+LogicalColor::LogicalColor(Color (*fn)())
+{
+	int ii = s_logical_color_ii++;
+	ASSERT(ii < 1024);
+	ii = min(ii, 1023);
+	s_logical_color_fn[ii] = fn;
+	s_logical_color[ii] = (*fn)();
+	SetSpecial(ii + LOGICAL_COLOR);
+}
+
+void LogicalColor::Refresh()
+{
+	int n = min((int)s_logical_color_ii, 1024);
+	for(int i = 0; i < n; i++)
+		s_logical_color[i] = (*s_logical_color_fn[i])();
+}
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
+	int ii = GetSpecial();
+	if(ii >= 0) {
+		if(ii >= LOGICAL_COLOR) {
+			ii -= LOGICAL_COLOR;
+			if(ii < 1024)
+				return s_logical_color[ii];
+		}
+		return 0;
+	}
 	dword c = color;
 	return c & 0xffffff;
 }

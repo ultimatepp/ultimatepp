@@ -1057,6 +1057,8 @@ public:
 	virtual String GetDesc() const;
 
 	virtual void   SetMinSize(Size sz) {}
+	
+	virtual void   Skin() {}
 
 	Event<>          WhenAction;
 
@@ -1424,6 +1426,8 @@ public:
 	static void   GlobalBackBuffer(bool b = true);
 
 	static void   ReSkin();
+	static void   PostReSkin();
+	       void   DoSkin();
 
 	String        Name() const;
 	static String Name(Ctrl *ctrl);
