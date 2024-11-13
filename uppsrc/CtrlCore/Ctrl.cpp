@@ -958,10 +958,18 @@ void Ctrl::ReSkin()
 	lock--;
 }
 
+static bool s_skin_change_sensitive;
+
+void Ctrl::SkinChangeSensitive()
+{
+	s_skin_change_sensitive = true;
+}
+
 void Ctrl::PostReSkin()
 { // use timer so that it is done just once if there are multiple windows
 	static TimeCallback tm;
-	tm.KillPost([=] { ReSkin(); });
+	if(s_skin_change_sensitive)
+		tm.KillPost([=] { ReSkin(); });
 }
 
 void Ctrl::DoSkin()
