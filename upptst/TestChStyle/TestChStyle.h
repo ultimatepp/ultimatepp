@@ -14,6 +14,8 @@ struct Sample : public Ctrl {
 
 class TestChStyle : public WithTestChStyleLayout<TopWindow> {
 public:
+	virtual void Skin();
+
 	typedef TestChStyle CLASSNAME;
 	
 	ToolBar bar;

@@ -24,7 +24,7 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 		Function l;
 		F        fn;
 
-		virtual Res Execute(ArgTypes... args) { l(args...); return fn(args...); }
+		virtual Res Execute(ArgTypes... args) { F f = fn; l(args...); return f(args...); }
 
 		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
 		Wrapper2(const Function& l, const F& fn) : l(l), fn(fn) {}
@@ -74,7 +74,7 @@ public:
 	                                             WrapperBase *b = ptr; ptr = new Wrapper2<Function>(*this, pick(fn)); Free(b); return *this; }
 
 	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
-	
+
 	operator bool() const                      { return ptr; }
 	void Clear()                               { Free(ptr); ptr = NULL; }
 

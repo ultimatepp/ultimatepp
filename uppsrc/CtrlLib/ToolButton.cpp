@@ -324,8 +324,10 @@ void  ToolButton::LeftRepeat(Point, dword)
 void  ToolButton::LeftUp(Point, dword)
 {
 	Refresh();
+	DLOG("A");
 	if(!repeat)
 		WhenAction();
+	DLOG("B");
 }
 
 bool  ToolButton::HotKey(dword key)

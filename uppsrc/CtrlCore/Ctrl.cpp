@@ -209,6 +209,7 @@ void Ctrl::StateH(int reason)
 		if((*statehook()[i])(this, reason))
 			return;
 	StateDeep(reason);
+	DoSkin();
 	FullRefreshCleanup();
 }
 
@@ -699,13 +700,6 @@ Size Ctrl::Dsize;
 Size Ctrl::Csize;
 bool Ctrl::IsNoLayoutZoom;
 
-/*
-void InitRichTextZoom()
-{
-	SetRichTextStdScreenZoom(96 * GetTextSize(sZoomText, StdFont()).cy / 13, 600);
-	Ctrl::ReSkin();
-}
-*/
 void InitRichTextZoom()
 {
 	Size h = 96 * Ctrl::Bsize / Ctrl::Dsize;
@@ -925,9 +919,10 @@ INITBLOCK {
 	whenSetStdFont = &Ctrl::ReSkin;
 }
 
-void (*Ctrl::skin)();
+void (**Ctrl::skin)();
+int Ctrl::skini;
 
-void CtrlSetDefaultSkin(void (*_skin)())
+void CtrlSetDefaultSkin(void (**_skin)())
 {
 	Ctrl::skin = _skin;
 }
@@ -935,7 +930,7 @@ void CtrlSetDefaultSkin(void (*_skin)())
 void Ctrl::SetSkin(void (*_skin)())
 {
 	GuiLock __;
-	skin = _skin;
+	skin[0] = _skin;
 	ReSkin();
 }
 
@@ -949,8 +944,8 @@ void Ctrl::ReSkin()
 	ChReset();
 	Iml::ResetAll();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
-	if(skin)
-		(*skin)();
+	if(skin[skini])
+		(*skin[skini])();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();

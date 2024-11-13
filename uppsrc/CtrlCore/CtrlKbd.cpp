@@ -48,6 +48,12 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 	LLOG("DispatchKey " << keycode << " (0x" << Sprintf("%08x", keycode)
 		<< ", " << GetKeyDesc(keycode) << "), count:" << count
 		<< " focusCtrl:" << UPP::Name(focusCtrl) << " focusCtrlWnd:" << UPP::Name(focusCtrlWnd));
+#if defined(_DEBUG) || defined(flagDEBUGCODE)
+	if(keycode == (K_SHIFT|K_ALT|K_CTRL|K_F12)) {
+		skini = skini ? 0 : IsDarkTheme() ? 1 : 2;
+		ReSkin();
+	}
+#endif
 	if((keycode & K_KEYUP) && ignorekeyup)
 	{
 		ignorekeyup = false;
