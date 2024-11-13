@@ -94,25 +94,38 @@ double ContrastRatio(Color c1, Color c2) {
 	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
 }
 
-static std::atomic<int> s_logical_color_ii;
-static Color s_logical_color[1024];
-static Color (*s_logical_color_fn[1024])();
+static const int s_Max = 4096;
+static std::atomic<int> s_color_ii;
+static Color s_color[s_Max];
+static Color (*s_color_fn[s_Max])();
 
-LogicalColor::LogicalColor(Color (*fn)())
+SColor::SColor(Color (*fn)())
 {
-	int ii = s_logical_color_ii++;
-	ASSERT(ii < 1024);
-	ii = min(ii, 1023);
-	s_logical_color_fn[ii] = fn;
-	s_logical_color[ii] = (*fn)();
-	SetSpecial(ii + LOGICAL_COLOR);
+	int ii = s_color_ii++;
+	ASSERT(ii < s_Max);
+	ii = min(ii, s_Max - 1);
+	s_color_fn[ii] = fn;
+	if(fn)
+		s_color[ii] = (*fn)();
+	SetSpecial(ii + SCOLOR);
 }
 
-void LogicalColor::Refresh()
+void SColor::Refresh()
 {
-	int n = min((int)s_logical_color_ii, 1024);
+	int n = min((int)s_color_ii, s_Max - 1);
 	for(int i = 0; i < n; i++)
-		s_logical_color[i] = (*s_logical_color_fn[i])();
+		if(s_color_fn[i])
+			s_color[i] = (*s_color_fn[i])();
+}
+
+void SColor::Write(Color c, Color val)
+{
+	int ii = c.GetSpecial() - SCOLOR;
+	ASSERT(ii >= 0 && ii < s_Max);
+	if(ii >= 0 && ii < s_Max) {
+		ASSERT(!s_color_fn[ii]);
+		s_color[ii] = val;
+	}
 }
 
 dword Color::Get() const
@@ -120,15 +133,27 @@ dword Color::Get() const
 	if(IsNullInstance()) return 0;
 	int ii = GetSpecial();
 	if(ii >= 0) {
-		if(ii >= LOGICAL_COLOR) {
-			ii -= LOGICAL_COLOR;
-			if(ii < 1024)
-				return s_logical_color[ii];
+		if(ii >= SCOLOR) {
+			ii -= SCOLOR;
+			if(ii < s_Max)
+				return s_color[ii];
 		}
 		return 0;
 	}
 	dword c = color;
 	return c & 0xffffff;
+}
+
+String Color::ToString() const {
+	if(IsNull(*this))
+		return "Color(Null)";
+	int ii = GetSpecial();
+	if(ii >= 0) {
+		if(ii >= SCOLOR && ii < SCOLOR + s_Max)
+			return Format("SColor(%d) -> Color(%d, %d, %d)", ii - SCOLOR, GetR(), GetG(), GetB());
+		return Format("Color::Special(%d)", ii);
+	}
+	return Format("Color(%d, %d, %d)", GetR(), GetG(), GetB());
 }
 
 template <>
@@ -214,15 +239,6 @@ RGBA operator*(int alpha, Color c)
 	r.g = (alpha * c.GetG()) >> 8;
 	r.b = (alpha * c.GetB()) >> 8;
 	return r;
-}
-
-template<>
-String AsString(const Color& c) {
-	if(IsNull(c))
-		return "Color(Null)";
-	if(c.GetRaw() & 0x80000000)
-		return Format("Color(%d, 0)", int(c.GetRaw() & ~0x80000000));
-	return Format("Color(%d, %d, %d)", c.GetR(), c.GetG(), c.GetB());
 }
 
 String ColorToHtml(Color color)

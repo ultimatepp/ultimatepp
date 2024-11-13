@@ -45,7 +45,7 @@ protected:
 	dword    Get() const;
 	void     SetSpecial(int n)         { color = 0x80000000 | n; }
 	
-	enum { LOGICAL_COLOR = 0x40000000 };
+	enum { SCOLOR = 0x40000000 };
 
 public:
 	dword    GetRaw() const            { return color; }
@@ -78,6 +78,8 @@ public:
 
 	Color(Color (*fn)())               { color = (*fn)().color; }
 
+	String ToString() const;
+
 	static Color FromRaw(dword co)     { Color c; c.color = co; return c; }
 	static Color Special(int n)        { Color c; c.SetSpecial(n); return c; }
 	
@@ -94,10 +96,13 @@ private:
 	Color(int);
 };
 
-struct LogicalColor : Color { // this is supposed to be static / global
-	LogicalColor(Color (*fn)());
-	
+struct SColor : Color { // this is supposed to be static / global
 	static void Refresh();
+	static void Write(Color c, Color val);
+
+	SColor(Color (*fn)() = NULL);
+	explicit SColor(Color c) : SColor() { Write(*this, c); }
+	void operator=(Color c)             { Write(*this, c); }
 };
 
 RGBA operator*(int alpha, Color c);
@@ -108,10 +113,6 @@ typedef Color (*ColorF)();
 
 inline hash_t   GetHashValue(Color c)  { return c.GetHashValue(); }
 inline Color    Nvl(Color a, Color b)  { return IsNull(a) ? b : a; }
-
-template<>
-String AsString(const Color& c);
-
 
 inline Color GrayColor(int a = 128)    { return Color(a, a, a); }
 
