@@ -61,9 +61,9 @@ bool   RunningOnWayland()
 	return running_on_wayland;
 }
 
-void sTheme(void *)
+void Ctrl::ThemeChanged(void *)
 {
-	DDUMP(GetSysTime());
+	PostReSkin();
 }
 
 void InitGtkApp(int argc, char **argv, const char **envptr)
@@ -98,8 +98,8 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 #endif
 	GtkSettings *settings = gtk_settings_get_default ();
 	if(settings) {
-		g_signal_connect_swapped(settings, "notify::gtk-theme-name", G_CALLBACK(sTheme), NULL);
-		g_signal_connect_swapped(settings, "notify::gtk-application-prefer-dark-theme", G_CALLBACK(sTheme), NULL);
+		g_signal_connect_swapped(settings, "notify::gtk-theme-name", G_CALLBACK(Ctrl::ThemeChanged), NULL);
+		g_signal_connect_swapped(settings, "notify::gtk-application-prefer-dark-theme", G_CALLBACK(Ctrl::ThemeChanged), NULL);
 	}
 }
 

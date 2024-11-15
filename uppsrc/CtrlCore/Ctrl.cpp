@@ -463,12 +463,12 @@ String Desc(const Ctrl *ctrl)
 	  s << " \"" << q << '\"';
 	const Ctrl *top = ctrl->GetTopWindow();
 	if(top && top != ctrl) {
- 		String q = top->GetDesc();
- 		if(IsNull(q))
- 			s << " (" << typeid(*top).name() << ")";
- 		else
-	 		s << " (\"" << q << "\")";
- 	}
+		String q = top->GetDesc();
+		if(IsNull(q))
+			s << " (" << typeid(*top).name() << ")";
+		else
+			s << " (\"" << q << "\")";
+	}
 	return s;
 }
 
