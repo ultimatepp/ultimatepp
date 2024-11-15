@@ -1060,12 +1060,9 @@ bool AssistEditor::Key(dword key, int count)
 				return true;
 			}
 		}
-		if(key == K_ENTER && assist.IsCursor()) {
-			AssistInsert();
-			return true;
-		}
-		if(key == K_TAB && !assist.IsCursor() && assist.GetCount()) {
-			assist.GoBegin();
+		if(findarg(key, K_ENTER, K_TAB) >= 0 && assist.GetCount()) {
+			if(!assist.IsCursor())
+				assist.GoBegin();
 			AssistInsert();
 			return true;
 		}

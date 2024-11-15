@@ -123,9 +123,12 @@ UppHub conceptually is very similar to the package manager concept known from ot
 
 ### Repository layout
 
-The U++ repository is divided into several directories. The most important ones are:
+The U++ repository is divided into several directories. Some of them are:
 * **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
 * **tutorial** - exemplary code from our tutorials
 * **uppsrc** - main sources of the framework
+* **benchmarks** - code for benchmarking purposes
+* **rainbow** - area for new GUI backends development
+* **upptst** - manual testing code for the framework
