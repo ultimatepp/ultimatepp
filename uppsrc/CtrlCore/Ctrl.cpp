@@ -209,7 +209,8 @@ void Ctrl::StateH(int reason)
 		if((*statehook()[i])(this, reason))
 			return;
 	StateDeep(reason);
-	DoSkin();
+	if(reason == OPEN)
+		DoSkin();
 	FullRefreshCleanup();
 }
 
