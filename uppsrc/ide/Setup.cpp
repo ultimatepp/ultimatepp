@@ -464,6 +464,8 @@ void Ide::SetupFormat() {
 	
 	for(auto sk : GetAllChSkins())
 		ide.chstyle.Add(ide.chstyle.GetCount(), sk.b);
+	
+	ide.chstyle << dlg.Breaker(336);
 
 	String usc_path = GetHomeDirFile("usc.path");
 	ide.uscpath <<= LoadFile(usc_path);
@@ -543,11 +545,17 @@ void Ide::SetupFormat() {
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
 		}
+		if(c == 336) {
+			auto v = GetAllChSkins();
+			Ctrl::SetSkin(v[clamp((int)~ide.chstyle, 0, v.GetCount() - 1)].a);
+		}
 	}
 	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
 	FinishConfig();
 	SaveConfig();
 	
+	auto v = GetAllChSkins();
+	Ctrl::SetSkin(v[clamp(chstyle, 0, v.GetCount() - 1)].a);
 	
 	if(HasLibClang()) {
 		for(int cpp = 0; cpp < 2; cpp++) {

@@ -4,6 +4,11 @@
 #define IMAGEFILE  <ide/ide.iml>
 #include <Draw/iml_source.h>
 
+void Ide::Skin()
+{
+	SetToolBar();
+}
+
 void Ide::ToggleVerboseBuild() {
 	console.verbosebuild = !console.verbosebuild;
 	

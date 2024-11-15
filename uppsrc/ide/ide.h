@@ -380,6 +380,7 @@ public:
 	virtual   void   DeactivateBy(Ctrl *new_focus);
 	virtual   void   Activate();
 	virtual   void   Layout();
+	virtual   void   Skin();
 
 	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);
