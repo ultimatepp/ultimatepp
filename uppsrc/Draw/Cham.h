@@ -65,7 +65,7 @@ void COMBINE5(klass, __, type, __, style)::InitIt() { \
 \
 const klass::type& klass::style() \
 { \
-	static COMBINE5(klass, __, type, __, style) b, standard; \
+	static COMBINE5(klass, __, type, __, style) b; \
 	if(b.status == 0) { \
 		ChRegisterStyle__(b.status, b.registered, COMBINE5(klass, __, type, __, style)::InitIt); \
 		b.Init(); \
@@ -75,10 +75,6 @@ const klass::type& klass::style() \
 } \
 \
 void COMBINE5(klass, __, type, __, style)::Init()
-
-//		standard = b; \
-//		standard.standard = b.standard = &standard; \
-
 
 // CH_VAR0 allows inserting action into _Write (missing ending '}')
 #define CH_VAR0(chtype, type, name, init) \

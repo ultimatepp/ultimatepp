@@ -381,6 +381,7 @@ void Ide::SetupFormat() {
 		(hlt.thousands_separator, thousands_separator)
 		(hlt.hline, hline)
 		(hlt.vline, vline)
+		(hlt.hl_custom, hl_custom)
 
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
@@ -457,6 +458,7 @@ void Ide::SetupFormat() {
 	edt.tabsize.WhenAction = rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
+	hlt.hlstyle.WhenCtrlsAction << [&] { hlt.hl_custom <<= true; };
 	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	hlt.hl_restore_white <<= dlg.Breaker(334);
@@ -532,18 +534,21 @@ void Ide::SetupFormat() {
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = true;
+			hlt.hl_custom <<= true;
 		}
 		if(c == 334 && PromptYesNo("Set white theme?")) {
 			editor.WhiteTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
+			hlt.hl_custom <<= true;
 		}
 		if(c == 335 && PromptYesNo("Set dark theme?")) {
 			editor.DarkTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
+			hlt.hl_custom <<= true;
 		}
 		if(c == 336) {
 			auto v = GetAllChSkins();

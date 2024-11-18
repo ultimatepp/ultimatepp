@@ -7,6 +7,11 @@
 void Ide::Skin()
 {
 	SetToolBar();
+	ScanWorkspace();
+	if(!hl_custom) {
+		editor.DefaultHlStyles();
+		SetupEditor();
+	}
 }
 
 void Ide::ToggleVerboseBuild() {

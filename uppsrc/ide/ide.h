@@ -673,6 +673,7 @@ public:
 	byte      hilite_scope;
 	int       hilite_bracket;
 	int       hilite_ifdef;
+	bool      hl_custom = false;
 	bool      barline;
 	bool      qtfsel;
 

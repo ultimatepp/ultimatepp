@@ -49,8 +49,9 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		<< ", " << GetKeyDesc(keycode) << "), count:" << count
 		<< " focusCtrl:" << UPP::Name(focusCtrl) << " focusCtrlWnd:" << UPP::Name(focusCtrlWnd));
 #if defined(_DEBUG) || defined(flagDEBUGCODE)
-	if(keycode == (K_SHIFT|K_CTRL|K_SUBTRACT)) {
+	if(keycode == (K_SHIFT|K_ALT|K_SUBTRACT)) {
 		skini = skini ? 0 : IsDarkTheme() ? 1 : 2;
+		DLOG("---- reskin");
 		ReSkin();
 	}
 #endif

@@ -417,6 +417,7 @@ void ChReset()
 
 void ChFinish()
 {
+	DLOG("-- chFinish");
 	sChInvalid = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		sChStyle()[i].init();
