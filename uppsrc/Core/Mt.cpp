@@ -94,6 +94,10 @@ sThreadRoutine(void *arg)
 	}
 	catch(sThreadExitExc__) {}
 	catch(Upp::ExitExc) {}
+	catch(std::bad_alloc) {
+		extern char out_of_memory_message[200];
+		Panic(out_of_memory_message);
+	}
 	if(!p->noshutdown)
 		AtomicDec(sThreadCount);
 	delete p;
