@@ -444,11 +444,8 @@ Color DarkThemeCached(Color c)
 	} cache;
 	
 	int i = FoldHash32(c.GetRaw()) & (N - 1);
-	if(cache.icolor[i] == c) {
-		DHITCOUNT("Cache hit");
+	if(cache.icolor[i] == c)
 		return cache.ocolor[i];
-	}
-	DHITCOUNT("Cache miss");
 	cache.icolor[i] = c;
 	return cache.ocolor[i] = DarkTheme(cache.icolor[i]);
 }
