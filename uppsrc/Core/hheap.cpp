@@ -130,7 +130,8 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 			AddChunk((BlkHeader *)ptr, HPAGE);
 		}
 	}
-	Panic("Out of memory");
+	void OutOfMemoryPanic(size_t size);
+	OutOfMemoryPanic(count * 4096);
 	return NULL;
 }
 

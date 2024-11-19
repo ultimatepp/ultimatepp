@@ -10,13 +10,6 @@ namespace Upp {
 
 #include "HeapImp.h"
 
-void OutOfMemoryPanic(size_t size)
-{
-	char h[200];
-	snprintf(h, 200, "Out of memory!\nU++ allocated memory: %d KB", MemoryUsedKb());
-	Panic(h);
-}
-
 size_t Heap::huge_4KB_count;
 int    Heap::free_4KB;
 size_t Heap::big_size;
@@ -25,6 +18,15 @@ size_t Heap::sys_size;
 size_t Heap::sys_count;
 size_t Heap::huge_chunks;
 size_t Heap::huge_4KB_count_max;
+
+char out_of_memory_message[200];
+
+void OutOfMemoryPanic(size_t size)
+{
+	snprintf(out_of_memory_message, 200, "Out of memory!\nTrying to allocate: %d KB",
+	         (int)(min(size >> 10, (size_t)INT_MAX)));
+	throw std::bad_alloc();
+}
 
 int MemoryUsedKb()
 {

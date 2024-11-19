@@ -482,6 +482,10 @@ void AppExecute__(void (*app)())
 	catch(ExitExc) {
 		return;
 	}
+	catch(std::bad_alloc) {
+		extern char out_of_memory_message[200];
+		Panic(out_of_memory_message);
+	}
 }
 
 #ifdef PLATFORM_POSIX
