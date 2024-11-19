@@ -227,7 +227,7 @@ void Color::Xmlize(XmlIO& xio)
 	if(IsNull(r))
 		*this = Null;
 	else
-		*this = Color(r, g, b);	
+		*this = Color(r, g, b);
 }
 
 RGBA operator*(int alpha, Color c)
@@ -426,6 +426,33 @@ Color DarkTheme(Color color)
 
 #endif
 
+#if 1
+Color DarkThemeCached(Color c)
+{
+	const int N = 256; // must be 2^N
+	thread_local struct Cache {
+		Color icolor[N];
+		Color ocolor[N];
+		int   ii = 0;
+		
+		Cache() {
+			for(int i = 0; i < N; i++) {
+				icolor[i] = Color(0, 0, 0);
+				ocolor[i] = Color(255, 255, 255);
+			}
+		}
+	} cache;
+	
+	int i = FoldHash32(c.GetRaw()) & (N - 1);
+	if(cache.icolor[i] == c) {
+		DHITCOUNT("Cache hit");
+		return cache.ocolor[i];
+	}
+	DHITCOUNT("Cache miss");
+	cache.icolor[i] = c;
+	return cache.ocolor[i] = DarkTheme(cache.icolor[i]);
+}
+#else
 Color DarkThemeCached(Color c)
 {
 	const int N = 8;
@@ -449,5 +476,6 @@ Color DarkThemeCached(Color c)
 	cache.ocolor[cache.ii] = c;
 	return c;
 }
+#endif
 
 }
