@@ -10,7 +10,7 @@ void Ide::Skin()
 	ScanWorkspace();
 	if(!hl_custom) {
 		editor.DefaultHlStyles();
-		SetupEditor();
+		UpdateFormat();
 	}
 }
 
