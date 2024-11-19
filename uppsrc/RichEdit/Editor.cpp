@@ -768,6 +768,11 @@ void RichEditWithToolBar::RefreshBar()
 	toolbar.Set(THISBACK(TheBar));
 }
 
+void RichEditWithToolBar::Skin()
+{
+	RefreshBar();
+}
+
 void RichEdit::EvaluateFields()
 {
 	WhenStartEvaluating();

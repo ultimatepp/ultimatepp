@@ -855,6 +855,10 @@ public:
 };
 
 class RichEditWithToolBar : public RichEdit {
+public:
+	virtual void Skin();
+
+private:
 	ToolBar  toolbar;
 	bool     extended;
 	void RefreshBar();

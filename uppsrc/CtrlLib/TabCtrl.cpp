@@ -4,7 +4,6 @@ namespace Upp {
 
 CH_STYLE(TabCtrl, Style, StyleDefault)
 {
-	DLOG("TabCtrl style");
 	font = StdFont();
 	tabheight = font.Info().GetHeight() + 8;
 	margin = 2;
