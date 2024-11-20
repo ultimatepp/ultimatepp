@@ -226,6 +226,7 @@ public:
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 	virtual Rect   GetCaret() const;
+	virtual void   Skin();
 
 private:
 	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }
