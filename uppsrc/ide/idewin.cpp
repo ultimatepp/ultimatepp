@@ -579,7 +579,6 @@ Ide::Ide()
 	editor.NoCutLine();
 
 	bordercolumn = 96;
-	bordercolor = SColorFace();
 
 	state_icon = -1;
 

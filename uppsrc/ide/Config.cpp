@@ -295,7 +295,8 @@ void Ide::Serialize(Stream& s)
 	}
 	s % editor.commentdp;
 	s % bordercolumn;
-	s % bordercolor;
+	Color dummy_color;
+	s % dummy_color;
 	if(version >= 20)
 		s % find_pick_sel % find_pick_text % deactivate_save;
 	s % hydra1_threads;

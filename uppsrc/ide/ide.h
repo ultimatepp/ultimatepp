@@ -641,7 +641,6 @@ public:
 	bool      deactivate_save;
 	int       insert_include;
 	int       bordercolumn;
-	Color     bordercolor;
 	bool      persistent_find_replace;
 	bool      find_replace_restore_pos;
 	int       spellcheck_comments;

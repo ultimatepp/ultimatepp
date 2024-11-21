@@ -158,7 +158,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.LineNumbers(line_numbers);
 	editor.AutoEnclose(auto_enclose);
 	editor.MarkLines(mark_lines);
-	editor.BorderColumn(bordercolumn, bordercolor);
+	editor.BorderColumn(bordercolumn, this->editor.GetHlStyle(CodeEditor::SHOW_BORDER).color);
 	editor.PersistentFindReplace(persistent_find_replace);
 	editor.FindReplaceRestorePos(find_replace_restore_pos);
 	editor.Refresh();
@@ -381,6 +381,7 @@ void Ide::SetupFormat() {
 		(hlt.thousands_separator, thousands_separator)
 		(hlt.hline, hline)
 		(hlt.vline, vline)
+		(hlt.bordercolumn, bordercolumn)
 		(hlt.hl_custom, hl_custom)
 
 		(edt.indent_spaces, indent_spaces)
@@ -391,8 +392,6 @@ void Ide::SetupFormat() {
 		(edt.lineends, line_endings)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
-		(edt.bordercolumn, bordercolumn)
-		(edt.bordercolor, bordercolor)
 		(edt.findpicksel, find_pick_sel)
 		(edt.findpicktext, find_pick_text)
 		(edt.deactivate_save, deactivate_save)

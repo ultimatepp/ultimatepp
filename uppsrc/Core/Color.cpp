@@ -352,7 +352,6 @@ Color DarkThemeCached(Color c)
 	thread_local struct Cache {
 		Color icolor[N];
 		Color ocolor[N];
-		int   ii = 0;
 		
 		Cache() {
 			for(int i = 0; i < N; i++) {
