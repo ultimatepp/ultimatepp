@@ -1,6 +1,5 @@
 #include "gif.h"
 
-
 namespace Upp {
 
 struct GifGlobalInfo // information about gif file
