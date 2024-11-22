@@ -943,13 +943,13 @@ void Ctrl::ReSkin()
 		return;
 	lock++;
 	ChReset();
-	Iml::ResetAll();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	if(skin[skini])
 		(*skin[skini])();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
+	Iml::SkinAll();
 	Vector<Ctrl *> ctrl = GetTopCtrls();
 	for(int i = 0; i < ctrl.GetCount(); i++) {
 		ctrl[i]->RefreshLayoutDeep();

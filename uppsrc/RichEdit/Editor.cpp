@@ -617,6 +617,7 @@ void RichEdit::Skin()
 	paper.ColorImage(RichEditImg::PaperColor())
 	     .NullImage(RichEditImg::NullPaperColor())
 	     .StaticImage(RichEditImg::ColorA());
+	DoRefreshBar();
 }
 
 RichEdit::RichEdit()
