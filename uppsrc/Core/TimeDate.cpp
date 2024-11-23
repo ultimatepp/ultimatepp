@@ -437,11 +437,15 @@ void Time::Serialize(Stream& s)
 #ifdef PLATFORM_WIN32
 Time::Time(FileTime filetime)
 {
-	SYSTEMTIME tm, tml;
-	FileTime ft;
-	FileTimeToSystemTime(&filetime, &tm);
-	SystemTimeToTzSpecificLocalTime(NULL, &tm, &tml);
-	*this = Time(tml.wYear, tml.wMonth, tml.wDay, tml.wHour, tml.wMinute, tml.wSecond);
+	if(filetime) {
+		SYSTEMTIME tm, tml;
+		FileTime ft;
+		FileTimeToSystemTime(&filetime, &tm);
+		SystemTimeToTzSpecificLocalTime(NULL, &tm, &tml);
+		*this = Time(tml.wYear, tml.wMonth, tml.wDay, tml.wHour, tml.wMinute, tml.wSecond);
+	}
+	else
+		*this = Null;
 }
 
 FileTime Time::AsFileTime() const
