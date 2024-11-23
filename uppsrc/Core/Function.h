@@ -24,7 +24,17 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 		Function l;
 		F        fn;
 
-		virtual Res Execute(ArgTypes... args) { F f = fn; l(args...); return f(args...); }
+		virtual Res Execute(ArgTypes... args) {
+			struct AtExit { // to void problems with returning the value
+				Wrapper2 *ptr;
+				~AtExit() { if(--ptr->refcount == 0) delete ptr; };
+			};
+			AtExit exit;
+			exit.ptr = this;
+			++WrapperBase::refcount; // prevent deletion of self
+			l(args...);
+			return fn(args...); // after this, AtExit does cleanup
+		}
 
 		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
 		Wrapper2(const Function& l, const F& fn) : l(l), fn(fn) {}

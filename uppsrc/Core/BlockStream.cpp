@@ -28,6 +28,11 @@ void BlockStream::SetBufferSize(dword size)
 		Seek(p);
 }
 
+void BlockStream::Reset()
+{
+	streamsize = pos = 0;
+}
+
 BlockStream::BlockStream()
 {
 	buffer = NULL;
@@ -40,13 +45,13 @@ BlockStream::~BlockStream()
 }
 
 int64 BlockStream::GetSize() const {
-	if(IsError()) return 0;
+	if(IsError() || !ptr) return 0;
 	return max(streamsize, ptr - buffer + pos);
 }
 
 void BlockStream::SyncSize()
 {
-	streamsize = max(streamsize, ptr - buffer + pos);
+	streamsize = ptr ? max(streamsize, ptr - buffer + pos) : 0;
 }
 
 void BlockStream::Flush() {
@@ -367,6 +372,7 @@ void FileStream::Close() {
 		SetLastError();
 	}
 	handle = INVALID_HANDLE_VALUE;
+	Reset();
 }
 
 bool FileStream::IsOpen() const {
