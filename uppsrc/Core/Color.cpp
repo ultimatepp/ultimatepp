@@ -94,7 +94,7 @@ double ContrastRatio(Color c1, Color c2) {
 	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
 }
 
-static const int s_Max = 4096;
+static const int s_Max = 1024;
 static std::atomic<int> s_color_ii;
 static Color s_color[s_Max];
 static Color (*s_color_fn[s_Max])();
@@ -107,7 +107,7 @@ SColor::SColor(Color (*fn)())
 	s_color_fn[ii] = fn;
 	if(fn)
 		s_color[ii] = (*fn)();
-	color = ii + SCOLOR;
+	color = ii | SCOLOR;
 }
 
 void SColor::Refresh()
@@ -120,11 +120,13 @@ void SColor::Refresh()
 
 void SColor::Write(Color c, Color val)
 {
-	int ii = c.GetSpecial() - SCOLOR;
-	ASSERT(ii >= 0 && ii < s_Max);
+	int ii = c.GetRaw() & VBITS;
+	if(ii == 3)
+		DDUMP(val);
+	ASSERT((c.GetRaw() & SCOLOR) && ii >= 0 && ii < s_Max);
 	if(ii >= 0 && ii < s_Max) {
 		ASSERT(!s_color_fn[ii]);
-		s_color[ii] = val;
+		s_color[ii] = val.Resolved();
 	}
 }
 
@@ -133,28 +135,25 @@ bool AColor_dark_mode__;
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
-	int ii = GetSpecial();
-	if(color & ACOLOR) {
-		Color c = FromRaw(color & 0xffffff);
-		if(AColor_dark_mode__)
-			return DarkThemeCached(c);
-		return c;
-	}
-	if(color & SCOLOR) {
-		ii -= SCOLOR;
-		if(ii < s_Max)
-			return s_color[ii];
-	}
 	if(color & SPECIAL)
 		return 0;
-	return color & 0xffffff;
+	dword val = color & VBITS;
+	if(color & ACOLOR) {
+		Color c = FromRaw(val);
+		if(AColor_dark_mode__)
+			return DarkThemeCached(c).color;
+		return val;
+	}
+	if(color & SCOLOR)
+		return val < s_Max ? s_color[val].color : 0;
+	return color & VBITS;
 }
 
 String Color::ToString() const {
 	if(IsNull(*this))
 		return "Color(Null)";
 	if(color & SCOLOR)
-		return Format("SColor(%d) -> Color(%d, %d, %d)", int(color & 0xffffff), GetR(), GetG(), GetB());
+		return Format("SColor(%d) -> Color(%d, %d, %d)", int(color & VBITS), GetR(), GetG(), GetB());
 	int ii = GetSpecial();
 	if(ii >= 0)
 		return Format("Color::Special(%d)", ii);
