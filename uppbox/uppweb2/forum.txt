@@ -1,0 +1,798 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html lang="en-us">
+<head>
+<title>{GVAR: FORUM_TITLE}{VAR: TITLE_EXTRA}</title>
+<META NAME="keywords" CONTENT="framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"><meta name="robots" content="index,follow"></HEAD>
+
+<BASE HREF="{FULL_ROOT}">
+<script language="javascript" src="lib.js" type="text/javascript"></script>
+<link rel="StyleSheet" href="{THEME_ROOT}/forum.css" type="text/css" media="screen" title="Default FUDforum Theme">
+<LINK rel="shortcut icon" type="image/png" href="favicon.png" />
+</head>
+<body BGCOLOR="#D2D9D2" ALINK="#800000" LINK="#000000" VLINK="#000080">
+
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%"><TR><TD COLSPAN="3"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFFFF" style="border: 1px solid #6E89AE;padding-left: 10px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;"><TR><TD><A HREF="../index.html"><IMG SRC="{THEME_IMAGE_ROOT}/1i.png" ALT="" BORDER="0"></A>
+</TD>
+<TD ALIGN="RIGHT" VALIGN="BOTTOM" STYLE="padding-bottom: 5px; background-image: url('{THEME_IMAGE_ROOT}/0i.png')"><span style="font-size: 14pt; font-family: sans-serif;"><script type="text/javascript"><!--
+google_ad_client = "pub-1082147624384270";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+&nbsp;&nbsp;</span>
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%"><TR><TD COLSPAN="3" BGCOLOR="#D2D9D2" HEIGHT="6"></TD>
+</TR>
+<TR><TD VALIGN="TOP" ALIGN="CENTER"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="160"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFFFF" style="border-style: solid; border-width: 1px; border-color: #6E89AE;padding: 0px"><TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px;"><A HREF="../www$uppweb2$overview$en-us.html" CLASS="l1">Overview</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$examples$en-us.html" CLASS="l1">Examples</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$ss$en-us.html" CLASS="l1">Screenshots</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$comparison$en-us.html" CLASS="l1">Comparisons</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$apps$en-us.html" CLASS="l1">Applications</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$download$en-us.html" CLASS="l1">Download</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$documentation$en-us.html" CLASS="l1">Manual</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$Roadmap$en-us.html" CLASS="l1">Status & Roadmap</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$FAQ$en-us.html" CLASS="l1">FAQ</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../app$ide$About$en-us.html" CLASS="l1">Authors & License</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="http://www.ultimatepp.org/forum" CLASS="l1">Forums</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="http://upp.wikispaces.com/" CLASS="l1">Wiki</A>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:12px; padding-right:0px; padding-top:6px; padding-bottom:6px; border-top: 1px solid #6E89AE;"><A HREF="../www$uppweb2$Funding$en-us.html" CLASS="l1">Funding U++</A>
+</TD>
+</TR>
+</TABLE>
+<TABLE BORDER="0" WIDTH="100%"><TR><TD></TD>
+</TR>
+</TABLE>
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFFFF" style="border-style: solid; border-width: 1px; border-color: #6E89AE;padding: 0px"><TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/3i.png'); border: 0px solid black;padding-left:12px; padding-right:0px; padding-top:1px; padding-bottom:1px;color:#FFFFFF;"><B><span style="font-size: 8pt; font-family: sans-serif;">Search on this site</span>
+</B>
+</TD>
+</TR>
+<TR><TD WIDTH="100%" VALIGN="MIDDLE" STYLE="background-image: url('{THEME_IMAGE_ROOT}/2i.png'); border: 0px solid black; padding-left:6px; padding-right:0px; padding-top:4px; padding-bottom:4px;"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%"><TR><TD><IMG SRC="../4i.png" ALT="" BORDER="0"></TD>
+<TD><FORM ACTION="http://www.google.com/search" METHOD="GET" STYLE="margin:0px;padding:0px;"><INPUT TYPE="HIDDEN" NAME="ie" VALUE="UTF-8"><INPUT TYPE="HIDDEN" NAME="oe" VALUE="UTF-8"><INPUT TYPE="TEXT" NAME="q" SIZE="15" MAXLENGTH="256"><INPUT TYPE="HIDDEN" NAME="domains" VALUE="www.ultimatepp.org"><INPUT TYPE="HIDDEN" NAME="sitesearch" VALUE="www.ultimatepp.org"></FORM>
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+<br><script type="text/javascript"><!--
+google_ad_client = "pub-1082147624384270";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script><br><br><script type="text/javascript"><!--
+google_ad_client = "pub-1082147624384270";
+google_ad_width = 160;
+google_ad_height = 90;
+google_ad_format = "160x90_0ads_al_s";
+google_ad_channel = "";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+<br><br><br><br><br><br><A HREF="http://sourceforge.net/projects/upp/"><IMG SRC="http://sourceforge.net/sflogo.php?group_id=93970&amp;type=2" ALT="SourceForge.net Logo" BORDER="0" WIDTH="125" HEIGHT="37"></A>
+<br><br><A HREF="http://www.sdjournal.org/en/"><IMG SRC="{THEME_IMAGE_ROOT}/5i.png" ALT="" BORDER="0"></A>
+<br><br><IMG SRC="http://www.vol.cz/cgi-bin/wc/upp" ALT="" WIDTH="1" HEIGHT="1"></TD>
+</TR>
+</TABLE>
+</TD>
+<TD VALIGN="TOP" BGCOLOR="#D2D9D2"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="6"><TR><TD></TD>
+</TR>
+</TABLE>
+</TD>
+<TD VALIGN="TOP" WIDTH="100%" BGCOLOR="#D2D9D2"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" BGCOLOR="#FFFFFF" WIDTH="100%" style="border-style: solid; border-width: 1px; border-color: #6E89AE;padding: 10px;;"><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%"><TR><TD>
+
+#####################
+
+<div class="ForumBackground ac foot">
+<b>.::</b> <a href="mailto:{GVAR: ADMIN_EMAIL}">{MSG: forum_contact}</a> <b>::</b> <a href="{TEMPLATE: footer_lnk}">{MSG: forum_home}</a> <b>::.</b>
+<p>
+<span class="SmallText">Powered by: FUDforum {GVAR: FORUM_VERSION}.<br />Copyright &copy;2001-2006 <a href="http://fudforum.org/">FUD Forum Bulletin Board Software</a><br><br><img src="http://pocitadlo.servery.cz/counter.php?id=4911" alt="counter" /></span>
+</div></TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+</TD>
+</TR>
+</TABLE>
+</BODY>
+
+
+######################
+body {
+	background: #E5E5E5;
+	color: #000000;
+	/*margin: 2px;*/
+	font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+	font-size: 9pt;
+}
+
+text,	.ForumBackground, a:link, a:visited, a:active, a.CatLink, .CatDesc, a.UserControlPanel, .CatLockedName, .GenText,
+	.GenTextRed, .ErrorText, .SmallText, .DateText, .TopBy, th, a.thLnk:link, a.thLnk:active, a.thLnk:visited,
+	a.thLnk:active, .RowStyleA, .RowStyleB, .RowStyleC, .MsgToolBar, .PollTable, .MsgIg, td.miniMH,
+	.ContentTable, .MsgTable, .DialogTable, .PreviewTable, .AnnonTable, .AnnText, td.NoAvatar, td.Av1, td.Av2, td.tabA,
+	.AnnSubjText, a.PagerLink, .LevelText, .MsgSubText, .MsgBodyText, th.SelTS, th.SelFS, legend, td.tabH, div.tabT,
+	.FormattingToolsBG, .FormattingToolsCLR, .MiniTable, .quote, .dashed, .adminColor, .modsColor, td.tabI, td.tabA:hover,
+	.brdrNormal, .brdrSelected, input.button, form, img, .StClr, .AnClr, td.msgot, td.msgud, div.ctags, td.mvTc, td.pmNav,
+	.ModOpt, .MsgR1, .MsgR2, .MsgR3, .mnavMsg, .mnavWarnTbl, .manvNoRes, font.lg, td.tt, table.tt, tr.tab, table.tab,
+	a.big:link, a.big:active, a.big:visited, .small, a.small:link, a.small:active, a.small:visited, td.rpasswdE, .curtime,
+	font.anon, font.reg, td.permYES, td.permNO, td.repI, div.UserControlPanel, font.selmsgInd, fieldset
+{
+	font-family: Tahoma, Verdana, "Myriad Web", Syntax, sans-serif;
+	font-size: 9pt;
+}
+
+text, .GenText {
+	color: black;
+}
+
+.ForumBackground {
+	background: #FFFFFF;
+	border: 1px solid #AEBDC4;
+}
+
+a:link, a:visited, a:active, a.PagerLink {
+	color: #006699;
+	text-decoration: underline;
+}
+
+a.CatLink {
+	font-size: 10pt;
+	font-weight: bold;
+	text-decoration: none;
+	color: #000000;
+}
+
+.CatDesc {
+	color: #000000;
+	height: 23px;
+	background: url("images/tableHeaderbg2.png");
+}
+
+a.UserControlPanel, a.UserControlPanel:visited {
+	color: #006699;
+	text-decoration: none;
+}
+
+div.UserControlPanel {
+	margin-bottom: 5px;
+	text-align: right;
+}
+
+.CatLockedName {
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+.CatLockPad {
+	padding-left: 20px;
+}
+
+.GenText, .MsgIg, td.repI {
+	color: #000000;
+}
+
+.GenTextRed, .ErrorText {
+	color: red;
+}
+
+.ErrorText, td.rpasswdE {
+	font-weight: bold;
+}
+
+.SmallText, .DateText, .TopBy, td.msgud, td.msgot, td.permYES, td.permNO {
+	color: #000000;
+	font-size: 8pt;
+}
+
+th {
+	font-size: 9pt;
+	text-align: left;
+	color: #FFFFFF;
+	font-weight: bold;
+	height: 23px;
+	vertical-align: middle;
+	background: url("images/tableHeaderbg.png");
+}
+
+a.thLnk:link, a.thLnk:active, a.thLnk:visited {
+	font-size: 9pt;
+	text-decoration: underline;
+	color: #EEEEEE;
+}
+
+a.thLnk:visited {
+	color: #C2CDD6;
+}
+
+.RowStyleA, td.tt {
+	background: #eeeeee;
+}
+
+.RowStyleB, .curtime, fieldset {
+	background: #dee2e6;
+}
+
+.RowStyleC {
+	background: #c2cdd6;
+}
+
+.MsgToolBar {
+	background: #DEE2E6;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.MsgSpacer {
+	padding-bottom: 2px;
+	padding-top: 2px;
+}
+
+.PollTable, .ContentTable, .MsgTable, .DialogTable, .PreviewTable, .AnnonTable {
+	background : #FFFFFF;
+	border : 0px;
+	padding : 0px;
+	margin : 0px;
+}
+
+font.ptp { /* space between poll title & number of votes */
+	font-size: smaller;
+	padding-left: 10px;
+}
+
+.ContentTable, .AnnonTable, .MsgTable, table.pad {
+	width : 100%;
+}
+
+.MsgTable {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border: 1px solid black;
+}
+
+.DialogTable {
+	width : 50%;
+}
+
+.PreviewTable {
+	width: 75%;
+}
+
+.AnnText {
+	color: #000000;
+	background: #f5d300;
+}
+
+.AnnSubjText {
+	font-weight: bold;
+}
+
+.LevelText, div.ctags {
+	color: #000000;
+	text-decoration: none;
+}
+
+.MsgSubText {
+	font-weight: bold;
+}
+
+.MsgBodyText {
+	font-size: 9pt;
+}
+
+.FormattingToolsBG {
+	background: #000000;
+}
+
+.FormattingToolsCLR {
+	background: #FFFFFF;
+}
+
+.MiniTable {
+	background: #FFFFFF;
+	border : 0px;
+	padding : 0px;
+	margin : 0px;
+}
+
+.quote {
+	color: #444444;
+	background: #FAFAFA;
+	border: 1px solid #c2cdd6;
+}
+
+.dashed {
+	border: 1px dashed #1B7CAD;
+}
+
+.adminColor {
+	font-weight: bold;
+	color: #FF0000;
+}
+
+.modsColor {
+	color: #00BB00;
+	font-weight: bold;
+}
+
+.brdrNormal, td.tabItop, td.tabImid, td.tabIbot {
+	border: #000000;
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+	background-repeat: repeat;
+	background-position: top;
+}
+
+.brdrSelected, td.tabAmid, td.tabAmid, td.tabAbot {
+	border: #000000;
+	border-style: solid;
+	border-left-width: 0px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	background-repeat: repeat;
+	background-position: top;
+}
+
+input.button {
+        background: #EEEEEE;
+	color: #000000;
+	font-weight: normal;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #B4B2B4 #444444 #444444 #B4B2B4;
+
+}
+
+form {
+	padding: 0px;
+	margin: 0px;
+}
+
+img {
+	border: 0px;
+}
+
+.StClr {
+	font-weight: bold;
+	color: green;
+}
+
+.AnClr {
+	font-weight: bold;
+	color: red;
+}
+
+.ModOpt {
+	margin-top: 2px;
+	font-size: 9pt;
+	text-align: right;
+}
+
+.TopBy {
+	margin-top: 3px;
+	margin-bottom: 0px;
+	padding-right: 2px;
+	text-align: right;
+}
+
+.MsgR2, .MsgR1, .MsgR3, .MsgIg {
+	background: #DEE2E6;
+	border-bottom: 1px solid #AAAAAA;
+	padding: 1px;
+}
+
+.MsgIg {
+	border: 0px;
+}
+
+.MsgR1 {
+	background: #DEE2E6;
+}
+
+.MsgR3 {
+	background: #F4F4F4;
+	padding: 1ex;
+	padding-top: 2ex;
+}
+
+.mnavMsg {
+	border-bottom: 1px solid black;
+	width : 100%;
+}
+
+.mnavWarnTbl {
+	border: 1px dashed red;
+}
+
+.manvNoRes {
+	border: 1px dashed blue;
+}
+
+font.lg {
+	font-size: 9pt;
+}
+
+td.tt {
+	text-align: left;
+	width: 100%;
+	border-bottom: 1px solid white;
+}
+
+table.tt {
+	width: 100%;
+	padding: 1px;
+	margin: 0px;
+	text-align: center;
+	border: 1px solid black;
+}
+
+a.big:link, a.big:active, a.big:visited {
+	color: #006699;
+	font-size: 10pt;
+}
+
+.small, a.small:link, a.small:active, a.small:visited {
+	font-size: 8pt;
+	font-weight: normal;
+}
+
+a.small:link, a.small:active, a.small:visited {
+	color: #006699;
+}
+
+td.msgot, td.msgud {
+	text-align: right;
+	vertical-align: top;
+	width: 33%;
+	white-space: nowrap;
+}
+
+td.msgud {
+	padding-right: 10px;
+	text-align: left;
+	width: 33%;
+}
+
+div.ctags {
+	overflow: auto;
+	white-space: nowrap;
+	margin: 0px;
+	padding: 2px;
+	width: 100%;
+	height: 36px;
+}
+
+legend {
+	font-size: 11pt;
+	font-weight: bold;
+	background-color: white;
+	border: 1px solid black;
+}
+
+th.SelTS, th.SelFS {
+	padding: 2px;
+	color: #FFFFFF;
+}
+
+th.SelFS {
+	 border-bottom: 1px solid white;
+	 color: #FFFFFF;
+}
+
+td.NoAvatar {
+	background: #f4f4f4;
+	text-align: center;
+}
+
+td.Av1, td.Av2 {
+	text-align: center;
+	background: #f4f4f4;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+td.Av2 {
+	background: #fefefe;
+}
+
+td.tabI, td.tabA, td.tabI:hover, td.tabOVER, td.tabON {
+	border: 1px solid black;
+	background: #dee7f7;
+        padding: 2px;
+}
+
+td.tabOVER, td.tabI:hover, td.tabI:active {
+	background: white;
+}
+
+td.tabON {
+	background: #5279bd;
+}
+
+a.tabON:link, a.tabON:active, a.tabON:visited, a.tabON:hover {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+div.tabT {
+	padding: 1px;
+        padding-left: 10px;
+        padding-right: 10px;
+}
+
+table.tab {
+	border-bottom: 1px solid black;
+}
+
+.curtime {
+        border: 1px solid black;
+	vertical-align: middle;
+	padding: 1px 3px 1px 3px;
+}
+
+td.rpasswdE {
+	background: #ffffff;
+	text-align: center;
+}
+
+td.pmSn {
+	background: white;
+}
+
+td.pmSa {
+	background: #fffa00;
+}
+
+td.pmSf {
+	background: red;
+}
+
+table.pmDu {
+	width: 175px;
+	background-color: #FFFFFF;
+	border: 1px #c2cdd6 solid;
+}
+
+td.mvTc {
+	background: #e5ffe7;
+}
+
+td.pmNav {
+	background: white;
+	text-align: right;
+}
+
+td.miniMH {
+	text-align: center;
+}
+
+tr.mnavH {
+	background: #eeeeee;
+}
+
+tr.mnavM {
+	background: #dee2e6;
+}
+
+table.regConf {
+	width: 80%;
+	border: 1px dashed #ff0000;
+}
+
+font.anon, font.reg {
+	color: #00AA00;
+}
+
+td.permYES, td.permNO {
+	text-align: center;
+	color: red;
+	white-space: nowrap;
+}
+
+td.permNO {
+	color: blue;
+}
+
+font.regEW {
+	font-size: xx-small;
+	color: #005500;
+	font-weight: bold;
+}
+
+td.repI {
+	padding: 5px;
+	padding-left: 20px;
+}
+
+table.pad {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+font.selmsgInd {
+	font-size: xx-small;
+	font-weight: bold;
+	text-decoration: none;
+}
+td.avatarPad {
+	padding-right: 3px;
+	vertical-align: top;
+}
+
+div.pre {
+	font-family: monospace;
+        padding: 5px;
+        border: 1px blue dashed;
+        font-size: 9pt;
+        white-space: pre;
+        background: #FAFAFA;
+	overflow: auto;
+	margin: 5px;
+}
+
+a.big:active, a.big:hover, a:active, a:hover, a.CatLink:active, a.CatLink:hover,
+a.UserControlPanel:active, a.UserControlPanel:hover, a.thLnk:active,
+a.thLnk:hover, a.small:active, a.small:hover, a.PagerLink:active, a.PagerLink:hover {
+	color: #DC143C;
+}
+
+img.l {
+	float: left;
+	clear: right;
+	margin: 3px;
+}
+
+img.r {
+	float: right;
+	clear: left;
+	margin: 3px;
+}
+
+.AttachmentsList {
+	margin-left: 0px;
+	list-style: none;
+	margin-top: 10px;
+	padding: 0px;
+}
+
+hr.sig {
+	color: black;
+	background-color: black;
+	height: 1px;
+	width: 175px;
+	border: 0px;
+	text-align: left;
+	padding: 0px;
+	margin: 0px;
+}
+
+/* The following are partial elements that are used to save space */
+.wo { width:		1px; }
+.wa { width:		100%; }
+.al { text-align:	left; }
+.ar { text-align:	right; }
+.ac { text-align:	center; }
+.vb { vertical-align:	bottom; }
+.vt { vertical-align:	top; }
+.vm { vertical-align:	middle; }
+.nw { white-space: 	nowrap; }
+.fb { font-weight:	bold; }
+
+img.at { float: left; clear: left; }
+
+div.sr { float: left; padding: 5px; }
+
+div.ctb {text-align: center;}
+div.ctb table {margin: 0 auto; text-align: left;}
+div.foot { padding: 3px; margin: 3px;}
+div.ip { overflow: auto; margin: 0px; padding: 2px; width: 600px; height: 400px; }
+span.vt { padding-left: 20px; }
+table.icqCP { font-family: arial, sans-serif; font-size: smaller; border: 0px; }
+div.pmL { padding-top: 2px; }
+table.ucPW { width: 175px; }
+
+.st0 { background-color: #ffff66; }
+.st1 { background-color: #A0FFFF; }
+.st2 { background-color: #99ff99; }
+.st3 { background-color: #ff9999; }
+.st4 { background-color: #ff66ff; }
+.st5 { background-color: #880000; }
+.st6 { background-color: #00aa00; }
+.st7 { background-color: #886800; }
+.st8 { background-color: #004699; }
+.st9 { background-color: #990099; }
+
+.A{margin:0 0 16 0;text-indent:0;text-align:left;color:#000000;font-family:serif;font-size:24pt;font-weight:bold;font-style:normal;text-decoration:none;}
+.B{margin:0 0 0 0;text-indent:0;text-align:left;color:#000000;font-family:sans-serif;font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.C{color:#008000;font-weight:bold;}
+.D{margin:0 0 0 0;text-indent:0;text-align:left;color:#000000;font-family:sans-serif;font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.E{margin:0 0 5 0;text-indent:0;text-align:left;color:#404040;font-family:sans-serif;font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;}
+.F{color:#0000ff;}
+.G{color:#008000;}
+.H{color:#000000;}
+.I{color:#008000;font-family:monospace;font-weight:bold;}
+.J{font-weight:bold;font-style:italic;}
+.K{font-family:monospace;font-weight:bold;}
+.L{font-weight:bold;}
+.M{font-family:monospace;}
+.N{margin:0 0 0 0;text-indent:0;text-align:left;color:#000000;font-family:sans-serif;font-size:9pt;font-weight:normal;font-style:italic;text-decoration:none;}
+.O{font-family:monospace;font-style:normal;}
+.P{font-family:monospace;font-weight:bold;font-style:normal;}
+.Q{color:#800000;font-family:monospace;font-weight:bold;font-style:normal;}
+.R{font-style:normal;}
+.S{margin:0 0 0 0;text-indent:0;text-align:left;color:#000000;font-family:monospace;font-size:9pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.T{margin:0 0 0 57;text-indent:0;text-align:left;color:#000000;font-family:sans-serif;font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;}
+.U{margin:0 0 3 57;text-indent:0;text-align:left;color:#000000;font-family:sans-serif;font-size:8pt;font-weight:bold;font-style:normal;text-decoration:none;}
+.V{color:#800000;font-weight:bold;}
+.W{color:#800000;font-family:monospace;font-weight:bold;}
+.X{color:#800000;}
+a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; font-weight: normal; }
+a.l1:link    { color:#000000; }
+a.l1:visited { color:#000080; }
+a.l1:hover   { color:#9933CC; }
+a.l1:active  { color:#000000; }
+a.l2         { text-decoration:none; font-size: 12pt; font-family: sans-serif; font-variant: small-caps; }
+a.l2:link    { color:#0066FF; }
+a.l2:visited { color:#FF6600; }
+a.l2:hover   { color:#BC0624; }
+a.l2:active  { color:#BC0024; }

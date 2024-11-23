@@ -8,8 +8,6 @@ NAMESPACE_UPP
 #define LDUMP(x) //DDUMP(x)
 
 static Point fbmousepos;
-static dword mouseb = 0;
-static dword modkeys = 0;
 
 Point GetMousePos() {
 	return fbmousepos;
@@ -100,7 +98,6 @@ void Ctrl::CursorSync()
 {
 	LLOG("@ CursorSync");
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
-	Rect cr = Null;
 	if(fbCursorPos != p) {
 		fbCursorPos = p;
 		if(!(VirtualGuiPtr->GetOptions() & GUI_SETMOUSECURSOR))

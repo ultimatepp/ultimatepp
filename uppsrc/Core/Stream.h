@@ -383,6 +383,7 @@ public:
 	virtual ~BlockStream();
 
 protected:
+	void     Reset();
 	void     OpenInit(dword mode, int64 file_size);
 };
 

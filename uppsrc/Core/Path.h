@@ -51,7 +51,8 @@ int Compare_FileTime(const FileTime& fa, const FileTime& fb);
 #ifdef PLATFORM_WIN32
 
 struct FileTime : FILETIME, CompareRelOps<const FileTime&, &Compare_FileTime> {
-	FileTime()                          {}
+	operator bool() const               { return dwLowDateTime || dwHighDateTime; }
+	FileTime()                          { dwLowDateTime = 0; dwHighDateTime = 0; }
 	FileTime(const FILETIME& ft)        { dwLowDateTime = ft.dwLowDateTime;
 	                                      dwHighDateTime = ft.dwHighDateTime; }
 };
