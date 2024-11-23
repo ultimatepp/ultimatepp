@@ -3,7 +3,7 @@ uses
 
 file
 	InvalidFile.cpp,
-	etalon.log;
+	Etalon.log;
 
 mainconfig
 	"" = "";
