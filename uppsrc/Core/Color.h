@@ -45,7 +45,11 @@ protected:
 	dword    Get() const;
 	void     SetSpecial(int n)         { color = 0x80000000 | n; }
 	
-	enum { SCOLOR = 0x40000000 };
+	enum {
+		SPECIAL = 0x80000000, // special "non-colors"
+		SCOLOR =  0x40000000, // SColor - colors defined by function
+	    ACOLOR =  0x20000000, // light colors that get automatically converted in dark mode
+	};
 
 public:
 	dword    GetRaw() const            { return color; }
@@ -103,6 +107,10 @@ struct SColor : Color { // this is supposed to be static / global
 	SColor(Color (*fn)() = NULL);
 	explicit SColor(Color c) : SColor() { Write(*this, c); }
 	void operator=(Color c)             { Write(*this, c); }
+};
+
+struct AColor : Color {
+	AColor(Color c) { color = c.GetRaw() | ACOLOR; }
 };
 
 RGBA operator*(int alpha, Color c);

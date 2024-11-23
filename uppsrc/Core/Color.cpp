@@ -107,7 +107,7 @@ SColor::SColor(Color (*fn)())
 	s_color_fn[ii] = fn;
 	if(fn)
 		s_color[ii] = (*fn)();
-	SetSpecial(ii + SCOLOR);
+	color = ii + SCOLOR;
 }
 
 void SColor::Refresh()
@@ -128,31 +128,36 @@ void SColor::Write(Color c, Color val)
 	}
 }
 
+bool AColor_dark_mode__;
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
 	int ii = GetSpecial();
-	if(ii >= 0) {
-		if(ii >= SCOLOR) {
-			ii -= SCOLOR;
-			if(ii < s_Max)
-				return s_color[ii];
-		}
-		return 0;
+	if(color & ACOLOR) {
+		Color c = FromRaw(color & 0xffffff);
+		if(AColor_dark_mode__)
+			return DarkThemeCached(c);
+		return c;
 	}
-	dword c = color;
-	return c & 0xffffff;
+	if(color & SCOLOR) {
+		ii -= SCOLOR;
+		if(ii < s_Max)
+			return s_color[ii];
+	}
+	if(color & SPECIAL)
+		return 0;
+	return color & 0xffffff;
 }
 
 String Color::ToString() const {
 	if(IsNull(*this))
 		return "Color(Null)";
+	if(color & SCOLOR)
+		return Format("SColor(%d) -> Color(%d, %d, %d)", int(color & 0xffffff), GetR(), GetG(), GetB());
 	int ii = GetSpecial();
-	if(ii >= 0) {
-		if(ii >= SCOLOR && ii < SCOLOR + s_Max)
-			return Format("SColor(%d) -> Color(%d, %d, %d)", ii - SCOLOR, GetR(), GetG(), GetB());
+	if(ii >= 0)
 		return Format("Color::Special(%d)", ii);
-	}
 	return Format("Color(%d, %d, %d)", GetR(), GetG(), GetB());
 }
 
