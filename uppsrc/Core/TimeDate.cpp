@@ -467,11 +467,15 @@ FileTime Time::AsFileTime() const
 
 #ifdef PLATFORM_POSIX
 Time::Time(FileTime filetime) {
-	struct tm time_r;
-	struct tm *time = localtime_r(&filetime.ft, &time_r);
-	if(time)
-		*this = Time(time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
-	                 time->tm_hour, time->tm_min, time->tm_sec);
+	if(filetime) {
+		struct tm time_r;
+		struct tm *time = localtime_r(&filetime.ft, &time_r);
+		if(time)
+			*this = Time(time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
+		                 time->tm_hour, time->tm_min, time->tm_sec);
+	}
+	else
+		*this = Null;
 }
 
 FileTime Time::AsFileTime() const {
