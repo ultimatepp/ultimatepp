@@ -12,8 +12,18 @@ bool      Ctrl::ignorekeyup;
 Ptr<Ctrl>           Ctrl::defferedSetFocus;
 Vector< Ptr<Ctrl> > Ctrl::defferedChildLostFocus;
 
+static dword s_swapdarklight_key
+#ifdef _DEBUG
+= K_CTRL|K_MULTIPLY
+#endif
+;
 
 static bool s_hotkey;
+
+void Ctrl::SwapDarkLightKey(dword key)
+{
+	s_swapdarklight_key = key;
+}
 
 void Ctrl::RefreshAccessKeys()
 {
@@ -49,10 +59,8 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 		<< ", " << GetKeyDesc(keycode) << "), count:" << count
 		<< " focusCtrl:" << UPP::Name(focusCtrl) << " focusCtrlWnd:" << UPP::Name(focusCtrlWnd));
 #if defined(_DEBUG) || defined(flagDEBUGCODE)
-	if(keycode == (K_CTRL|K_MULTIPLY)) {
-		skini = skini ? 0 : IsDarkTheme() ? 1 : 2;
-		ReSkin();
-	}
+	if(s_swapdarklight_key && keycode == s_swapdarklight_key)
+		SwapDarkLight();
 #endif
 	if((keycode & K_KEYUP) && ignorekeyup)
 	{

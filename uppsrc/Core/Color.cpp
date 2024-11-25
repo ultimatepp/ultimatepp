@@ -102,13 +102,20 @@ static Color (*s_color_fn[s_Max])();
 SColor::SColor(Color (*fn)())
 {
 	int ii = s_color_ii++;
-	ASSERT(ii < s_Max);
+	ASSERT(ii < s_Max); // number of SColors is limited
 	ii = min(ii, s_Max - 1);
 	s_color_fn[ii] = fn;
 	if(fn)
 		s_color[ii] = (*fn)();
 	color = ii | SCOLOR;
 }
+
+#ifdef _DEBUG
+SColor::~SColor()
+{
+	ASSERT(!IsMainRunning()); // SColor cannot be stack variable
+}
+#endif
 
 void SColor::Refresh()
 {

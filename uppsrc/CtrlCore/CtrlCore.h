@@ -1406,6 +1406,8 @@ public:
 
 	static void SkinChangeSensitive();
 
+	static void SwapDarkLight();
+	static void SwapDarkLightKey(dword key);
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);
