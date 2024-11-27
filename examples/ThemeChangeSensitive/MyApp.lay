@@ -1,7 +1,0 @@
-LAYOUT(MyAppLayout, 644, 160)
-	ITEM(Upp::ArrayCtrl, list1, LeftPosZ(4, 156).TopPosZ(4, 148))
-	ITEM(Upp::ArrayCtrl, list2, LeftPosZ(164, 156).TopPosZ(4, 148))
-	ITEM(Upp::ArrayCtrl, list3, LeftPosZ(324, 156).TopPosZ(4, 148))
-	ITEM(Upp::ArrayCtrl, list4, LeftPosZ(484, 156).TopPosZ(4, 148))
-END_LAYOUT
-
