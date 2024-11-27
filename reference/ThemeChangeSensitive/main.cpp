@@ -26,7 +26,7 @@ Image MyApp::MakeImage()
 	ImageDraw iw(sz.cx, sz.cy);
 	iw.DrawRect(sz, SColorFace());
 	iw.DrawImage(0, 0, CtrlImg::HandCursor()); // HandCursor is adjusted wrt dark/light
-	iw.DrawRect(sz.cx / 2, sz.cy / 2, 5, 5, SColorHighlight()); // SColorHighlight is adjusted wrt dark/light
+	iw.DrawRect(sz.cx / 2, sz.cy / 2, DPI(5), DPI(5), SColorHighlight()); // SColorHighlight is adjusted wrt dark/light
 	return iw;
 }
 

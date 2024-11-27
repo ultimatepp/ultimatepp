@@ -1404,7 +1404,7 @@ public:
 	static void SetDarkThemeEnabled(bool set = true);
 	static bool IsDarkThemeEnabled();
 
-	static void SkinChangeSensitive();
+	static void SkinChangeSensitive(bool b = true);
 
 	static void SwapDarkLight();
 	static void SwapDarkLightKey(dword key);

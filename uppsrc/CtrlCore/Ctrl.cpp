@@ -944,12 +944,12 @@ void Ctrl::ReSkin()
 	lock++;
 	ChReset();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
+	Iml::SkinAll();
 	if(skin[skini])
 		(*skin[skini])();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
-	Iml::SkinAll();
 	Vector<Ctrl *> ctrl = GetTopCtrls();
 	for(int i = 0; i < ctrl.GetCount(); i++) {
 		ctrl[i]->RefreshLayoutDeep();
@@ -961,9 +961,9 @@ void Ctrl::ReSkin()
 
 static bool s_skin_change_sensitive;
 
-void Ctrl::SkinChangeSensitive()
+void Ctrl::SkinChangeSensitive(bool b)
 {
-	s_skin_change_sensitive = true;
+	s_skin_change_sensitive = b;
 }
 
 void Ctrl::PostReSkin()
