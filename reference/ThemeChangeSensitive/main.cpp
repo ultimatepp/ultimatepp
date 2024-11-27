@@ -83,8 +83,9 @@ MyApp::MyApp()
 GUI_APP_MAIN
 {
 #ifndef _DEBUG
-	Ctrl::SwapDarkLightKey(K_SPACE);
+	Ctrl::SwapDarkLightKey(K_SPACE); // just to demonstrate that toggle key can be activated in Release mode too and/or different
 #endif
+
 	Ctrl::SkinChangeSensitive(); // activate changes of skin (theme) when host theme changes
 	MyApp().Run();
 }
