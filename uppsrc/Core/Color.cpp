@@ -128,8 +128,6 @@ void SColor::Refresh()
 void SColor::Write(Color c, Color val)
 {
 	int ii = c.GetRaw() & VBITS;
-	if(ii == 3)
-		DDUMP(val);
 	ASSERT((c.GetRaw() & SCOLOR) && ii >= 0 && ii < s_Max);
 	if(ii >= 0 && ii < s_Max) {
 		ASSERT(!s_color_fn[ii]);
