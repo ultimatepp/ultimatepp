@@ -147,7 +147,7 @@ F_[*@3 cr])&]
 [s2; Creates Color from COLORREF.&]
 [s7; [%-*C@3 cr]-|COLORREF.&]
 [s7; [*/ Return value]-|Color.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Color`:`:operator dword`(`)const:%- [* operator_dword]()_[@(0.0.255) const]&]
 [s6;%- Not available on Win32&]
@@ -162,13 +162,50 @@ etRaw]().&]
 [s5;:Upp`:`:Color`:`:ToString`(`)const:%- String [* ToString]() [@(0.0.255) const]&]
 [s2; Converts Color to textual form.&]
 [s0; &]
+[ {{10000@(113.42.0) [s0; [*@(229)4 SColor]]}}&]
+[s3;%- &]
+[s1;:Upp`:`:SColor:%- [@(0.0.255) struct ][*3 SColor][3  ][@(0.0.255)3 :][3  
+Color]&]
+[s2; This creates special kind of `"logical`" color constant that 
+is defined by function which is reevaluated on GUI theme change, 
+thus allowing color to react to the new theme. Instances of this 
+class must have static storage duration (cannot be stack nor 
+thread variables). Number of SColor definitions is limited for 
+performance reasons to about 1000. The SColor instances can be 
+copied to normal Color while maintaining its dynamic feature.&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:Upp`:`:SColor`:`:SColor`(Color`(`*`)`(`)`):%- [* SColor](Color 
+([@(0.0.255) `*]fn)() [@(0.0.255) `=] [@3 0])&]
+[s2; Creates SColor with color definition function.&]
+[s0; &]
+[ {{10000@(113.42.0) [s0; [*@(229)4 AColor]]}}&]
+[s3;%- &]
+[s3;%- &]
+[s1;:Upp`:`:AColor:%- [@(0.0.255) struct ][*3 AColor][3  ][@(0.0.255)3 :][3  
+Color]&]
+[s2; This special kind of Color logical constant is created from 
+normal color. In light theme, color is used unchanged. In dark 
+theme, color is adjusted using [%-* DarkThemeCached] function. 
+The AColor instances can be copied to normal Color while maintaining 
+its dynamic feature. [/ (Unlike SColor there are no limitations 
+with respect to storage duration).]&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:Upp`:`:AColor`:`:AColor`(Color`):%- [* AColor](Color [*@3 c])&]
+[s5;:Upp`:`:AColor`:`:AColor`(int`,int`,int`):%- [* AColor]([@(0.0.255) int] 
+[*@3 r], [@(0.0.255) int] [*@3 g], [@(0.0.255) int] [*@3 b])&]
+[s2; Creates AColor.&]
+[s0; &]
 [ {{10000@(113.42.0) [s0; [*@(229)4 Utility functions]]}}&]
 [s3;%- &]
 [s5;:GetRValue`(dword`):%- [@(0.0.255) int]_[* GetRValue]([_^dword^ dword]_[*@3 c])&]
 [s2; Returns red component from a platform specific value.&]
 [s7; [%-*C@3 c]-|Platform specific value.&]
 [s7; [*/ Return value]-|Red component.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:GetGValue`(dword`):%- [@(0.0.255) int]_[* GetGValue]([_^dword^ dword]_[*@3 c])&]
 [s2; Returns green component from a platform specific value.&]

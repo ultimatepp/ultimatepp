@@ -116,7 +116,7 @@ struct SColor : Color { // this is supposed to be static / global
 };
 
 struct AColor : Color {
-	AColor(Color c) { color = c.GetRaw() | ACOLOR; } // works for Null as well...
+	AColor(Color c) { color = c.Resolved().GetRaw() | ACOLOR; } // works for Null as well...
 	AColor(int r, int g, int b) : AColor(Color(r, g, b)) {}
 };
 
