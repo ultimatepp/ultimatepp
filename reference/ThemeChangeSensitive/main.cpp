@@ -46,7 +46,7 @@ MyApp::MyApp()
 	list1.AddColumn("Ignoring skin change");
 	list1.NoCursor();
 	list1.Add(AttrText("Blend(Red, Yellow)").NormalInk(Blend(SRed(), SYellow())).Bold());
-	list1.Add(AttrText("LtBlue").NormalInk(SBlue().Resolved()).Bold()); // Resolved converts SBlue to normal color, just as does Blend, for testing
+	list1.Add(AttrText("SBlue").NormalInk(SBlue().Resolved()).Bold()); // Resolved converts SBlue to normal color, just as does Blend, for testing
 	list1.Add(AttrText("Blend(Red, LtBlue)").NormalInk(Blend(SRed(), SLtBlue())).Bold());
 	
 	list2.AddColumn("Using AColor");
