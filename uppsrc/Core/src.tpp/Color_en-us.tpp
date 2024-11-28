@@ -182,7 +182,6 @@ copied to normal Color while maintaining its dynamic feature.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0; [*@(229)4 AColor]]}}&]
 [s3;%- &]
-[s3;%- &]
 [s1;:Upp`:`:AColor:%- [@(0.0.255) struct ][*3 AColor][3  ][@(0.0.255)3 :][3  
 Color]&]
 [s2; This special kind of Color logical constant is created from 
