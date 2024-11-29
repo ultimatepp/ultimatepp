@@ -1096,15 +1096,15 @@ bool   TextCtrl::RemoveSelection() {
 	int64 l, h;
 	if(anchor < 0) return false;
 	if(IsRectSelection())
-		l = RemoveRectSelection();
+		RemoveRectSelection();
 	else {
 		if(!GetSelection(l, h))
 			return false;
 		Remove((int)l, int(h - l));
+		anchor = -1;
+		Refresh();
+		PlaceCaret(l);
 	}
-	anchor = -1;
-	Refresh();
-	PlaceCaret(l);
 	Action();
 	return true;
 }

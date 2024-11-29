@@ -349,6 +349,7 @@ protected:
 	int              vlinex;
 	Scroller         scroller;
 	Point            caretpos;
+	int              caretlines = 1;
 	bool             nohbar;
 	bool             showtabs;
 	bool             cutline;
@@ -366,7 +367,7 @@ protected:
 
 	void   MovePage(int dir, bool sel);
 
-	void   PlaceCaret0(Point p);
+	void   PlaceCaret0();
 	int    PlaceCaretNoG(int64 newcursor, bool sel = false);
 
 	void   Scroll();
@@ -376,6 +377,7 @@ protected:
 	void   DoPasteColumn() { PasteColumn(); }
 	void   SyncFont();
 	bool   IsDoubleChar(int ch) const;
+	void   RectSelectionChar(int c);
 
 	struct RefreshDraw;
 	friend class TextCtrl;

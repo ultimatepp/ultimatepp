@@ -61,7 +61,7 @@ void   LineEdit::Clear() {
 
 LineEdit& LineEdit::TabSize(int n) {
 	tabsize = n;
-	PlaceCaret0(GetColumnLine(cursor));
+	PlaceCaret0();
 	Refresh();
 	return *this;
 }
@@ -132,6 +132,32 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int64& l, int64& h)
 	return false;
 }
 
+void LineEdit::RectSelectionChar(int c)
+{
+	Rect rect = GetRectSelection();
+	if(rect.GetWidth())
+		RemoveRectSelection();
+	WString txt;
+	for(int i = rect.top; i <= rect.bottom; i++) {
+		int64 l, h;
+		CacheLinePos(i);
+		GetRectSelection(rect, i, l, h);
+		WString s = GetWLine(i);
+		s.Insert(int(l - GetPos64(i)), c);
+		txt.Cat(s);
+		txt.Cat('\n');
+	}
+	int l = GetPos32(rect.top);
+	int h = GetPos32(rect.bottom) + GetLineLength(rect.bottom);
+	if(h < GetLength32())
+		h++;
+	Remove((int)l, int(h - l));
+	Insert((int)l, txt);
+	anchor = (int)GetGPos(rect.top, rect.left + 1);
+	cursor = (int)GetGPos(rect.bottom, rect.left + 1);
+	PlaceCaret0();
+}
+
 int LineEdit::RemoveRectSelection()
 {
 	Rect rect = GetRectSelection();
@@ -151,7 +177,10 @@ int LineEdit::RemoveRectSelection()
 		h++;
 	Remove((int)l, int(h - l));
 	Insert((int)l, txt);
-	return (int)GetGPos(rect.bottom, rect.left);
+	anchor = (int)GetGPos(rect.top, rect.left);
+	cursor = (int)GetGPos(rect.bottom, rect.left);
+	PlaceCaret0();
+	return cursor;
 }
 
 WString LineEdit::CopyRectSelection()
@@ -814,15 +843,24 @@ void LineEdit::AlignChar() {
 
 Rect LineEdit::GetCaret() const
 {
-	if(overwrite)
+	if(overwrite && !IsRectSelection())
 		return RectC(caretpos.x, caretpos.y + fsz.cy - 2, fsz.cx, 2);
 	else
-		return RectC(caretpos.x, caretpos.y, block_caret? fsz.cx : 2, fsz.cy);
+		return RectC(caretpos.x, caretpos.y, block_caret? fsz.cx : 2, fsz.cy * caretlines);
 }
 
-void LineEdit::PlaceCaret0(Point p) {
+void LineEdit::PlaceCaret0()
+{
+	Point p = GetColumnLine(cursor);
 	Size fsz = GetFontSize();
 	p -= sb;
+	caretlines = 1;
+	if(IsRectSelection()) {
+		Point ap = GetColumnLine(anchor);
+		if(ap.y < p.y)
+			Swap(ap.y, p.y);
+		caretlines = ap.y - p.y + 1;
+	}
 	caretpos = Point(p.x * fsz.cx, p.y * fsz.cy);
 }
 
@@ -853,7 +891,7 @@ int LineEdit::PlaceCaretNoG(int64 newcursor, bool sel) {
 	RefreshLine(p.y);
 	cursor = newcursor;
 	ScrollIntoCursor();
-	PlaceCaret0(p);
+	PlaceCaret0();
 	SelectionChanged();
 	WhenSel();
 	if(IsAnySelection())
@@ -882,7 +920,7 @@ void LineEdit::CenterCursor() {
 }
 
 void LineEdit::Scroll() {
-	PlaceCaret0(GetColumnLine(cursor));
+	PlaceCaret0();
 	scroller.Scroll(*this, GetSize(), sb.Get(), GetFontSize());
 	SetHBar();
 	NewScrollPos();
@@ -1047,6 +1085,10 @@ bool LineEdit::InsertChar(dword key, int count, bool canow) {
 		if(key >= 128 && key < K_CHAR_LIM && (charset != CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
 		   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 			return true;
+		if(IsRectSelection()) {
+			RectSelectionChar(key);
+			return true;
+		}
 		if(!RemoveSelection() && overwrite && key != '\n' && key != K_ENTER && canow) {
 			int64 q = cursor;
 			int i = GetLinePos64(q);
