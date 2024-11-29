@@ -168,19 +168,18 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 		String description;
 		String nest;
 		Image  icon;
-		bool   main;
-		bool   upphub;
+		bool   main = false;
+		bool   upphub = false;
 
 		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
-		
-		PkInfo() { main = false; }
 	};
 	
 	struct PkData : PkInfo {
-		bool   ispackage;
-		Time   tm, itm;
+		bool   ispackage = true;
+		Time   tm = Null;
+		Time   itm = Null;
 		
-		void Serialize(Stream& s)  { s % package % description % nest % icon % main % ispackage % tm % itm; }
+		void Serialize(Stream& s)  { s % package % description % nest % icon % main % ispackage % tm % itm % upphub; }
 		PkData()                   { tm = itm = Null; ispackage = true; }
 	};
 
