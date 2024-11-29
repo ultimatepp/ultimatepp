@@ -286,7 +286,9 @@ Image StreamRaster::LoadAny(Stream& s, Gate<int, int> progress)
 Image StreamRaster::LoadFileAny(const char *fn, Gate<int, int> progress)
 {
 	FileIn in(fn);
-	return LoadAny(in, progress);
+	if(in)
+		return LoadAny(in, progress);
+	return Null;
 }
 
 Image StreamRaster::LoadStringAny(const String& s, Gate<int, int> progress)

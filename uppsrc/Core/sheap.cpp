@@ -399,12 +399,15 @@ Heap *MakeHeap()
 {
 	if(heap_closed__)
 		return &Heap::aux;
-
-	static thread_local HeapExitThreadGuard __;
-	__.Used(); // "odr-used", register allocator to be shutdown at thread exit
+	
+	if(heap_tls__)
+		return heap_tls__;
 
 	static thread_local byte sHeap__[sizeof(Heap)]; // zero initialization is fine for us
 	heap_tls__ = (Heap *)sHeap__;
+
+	static thread_local HeapExitThreadGuard __;
+	__.Used(); // "odr-used", register allocator to be shutdown at thread exit
 
 	return heap_tls__;
 }
