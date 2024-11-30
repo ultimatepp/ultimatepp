@@ -642,7 +642,6 @@ private:
 
 	void UserAction();
 	Event<>  User(Event<>  cb);
-	Event<>  WhenLeftUp;
 
 	static void   SpellerAdd(const WString& w, int lang);
 	static int    CompareStyle(const Value& a, const Value& b);
@@ -849,6 +848,8 @@ public:
 	void     SetFooter(const String& s)                   { footer = s; }
 	void     PrintNoLinks(bool b = true)                  { nolinks = b; }
 
+	Event<>  WhenLeftUp;
+	
 	typedef RichEdit CLASSNAME;
 
 	RichEdit();
