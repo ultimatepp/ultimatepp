@@ -137,6 +137,7 @@ void RichEdit::LeftDown(Point p, dword flags)
 
 void RichEdit::LeftUp(Point p, dword flags)
 {
+	WhenLeftUp();
 	useraction = true;
 	NextUndo();
 	int c = GetMousePos(p);
