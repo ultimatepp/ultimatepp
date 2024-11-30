@@ -1,0 +1,32 @@
+* C:\upp\out\upptst\CLANGx64.Debug.Debug_Full\InvalidFile.exe 23.11.2024 11:51:22, user: cxl
+
+FileGetTime("asfasdfasdfasdf") = 
+IsNull(FileGetTime("asfasdfasdfasdf")) = true
+================
+(bool)in = false
+in.IsEof() = true
+in.IsError() = false
+in.GetPos() = 0
+in.GetSize() = 0
+in.Get() = -1
+--- Seek 0
+(bool)in = false
+in.IsEof() = true
+in.IsError() = false
+in.GetPos() = 0
+in.GetSize() = 0
+in.Get() = -1
+==== Opening nonexistent file
+(bool)in = false
+in.IsEof() = true
+in.IsError() = true
+in.GetPos() = 0
+in.GetSize() = 0
+in.Get() = -1
+--- Seek 0
+(bool)in = false
+in.IsEof() = true
+in.IsError() = true
+in.GetPos() = 0
+in.GetSize() = 0
+in.Get() = -1

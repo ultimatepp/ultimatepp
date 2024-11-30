@@ -1,0 +1,47 @@
+General improvements:
+
+MacOS X support
+Improved support for UHD displays
+Improved support for dark themes
+
+Core:
+
+Core/SSH: SSH protocol support
+XMLRPC improvements (protocol version, support for i8 type)
+WebSockets improvements
+ToAscii, ToUpperAscii, ToLowerAscii functions optimized
+New CoWork variant CoWorkNX solves an compilation problem when using CoWork as member variable
+DarkTheme function inverts Color luminosity for dark themes support (dark colors become light, light colors dark, but color remains)
+MakeOne is now changed to function
+LocalProcess now allows setting current directory for started process
+
+Ide:
+
+Various improvements of Image designer
+'Disable UHD mode' option for testing applications
+GDB interface improvements: Now possible to stop running application and to set breakpoints while application runs
+Compare with clipboard function
+Initial setup improved
+New dialog for setting up project assemblies
+PDB debugger improvements: now displays INF and NAN for floats, fixed termination issues
+Selfupgrade feature (ide compiles itself and replaces the binary)
+
+Other:
+
+Improved jpeg EXIF support
+RichText now suggests corrections for misspelled words.
+RichText now supports .svg images
+GLCtrl refactored, changed to use single context per application (allows sharing resources, e.g. textures, between widgets), support for GTK fixed, MSAA supported in Win32
+VirtualGui is a new package to implement working 'fullscreen' GUI by implementing a SystemDraw and a dozen of virtual methods, intended for use with e.g. games. VirtualGUI/SDL2GL is an implementation with SDL2.
+Painter is heavily optimized for multithreaded rendering.
+PostgreSQL now supports RETURNING clause in SqlExp.
+New plugin/tess2 package (tesselation) and plugin/glm (OpenGL maths support).
+
+
+Release:
+
+U++ now ships with speller files for multiple languages
+
+Win32 Release:
+
+Now ships with SDL2, MySQL and PostgreSQL client libraries
