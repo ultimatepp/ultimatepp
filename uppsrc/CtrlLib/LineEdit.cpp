@@ -132,33 +132,8 @@ bool LineEdit::GetRectSelection(const Rect& rect, int line, int64& l, int64& h)
 	return false;
 }
 
-void LineEdit::RectSelectionChar(int c)
-{
-	Rect rect = GetRectSelection();
-	if(rect.GetWidth())
-		RemoveRectSelection();
-	WString txt;
-	for(int i = rect.top; i <= rect.bottom; i++) {
-		int64 l, h;
-		CacheLinePos(i);
-		GetRectSelection(rect, i, l, h);
-		WString s = GetWLine(i);
-		s.Insert(int(l - GetPos64(i)), c);
-		txt.Cat(s);
-		txt.Cat('\n');
-	}
-	int l = GetPos32(rect.top);
-	int h = GetPos32(rect.bottom) + GetLineLength(rect.bottom);
-	if(h < GetLength32())
-		h++;
-	Remove((int)l, int(h - l));
-	Insert((int)l, txt);
-	anchor = (int)GetGPos(rect.top, rect.left + 1);
-	cursor = (int)GetGPos(rect.bottom, rect.left + 1);
-	PlaceCaret0();
-}
 
-int LineEdit::RemoveRectSelection()
+int LineEdit::RectSelectionOp(Event<int, Rect, int64, int64, WString&> op, Event<Rect&> changesel)
 {
 	Rect rect = GetRectSelection();
 	WString txt;
@@ -167,7 +142,7 @@ int LineEdit::RemoveRectSelection()
 		CacheLinePos(i);
 		GetRectSelection(rect, i, l, h);
 		WString s = GetWLine(i);
-		s.Remove(int(l - GetPos64(i)), int(h - l));
+		op(i, rect, l, h, s);
 		txt.Cat(s);
 		txt.Cat('\n');
 	}
@@ -177,10 +152,61 @@ int LineEdit::RemoveRectSelection()
 		h++;
 	Remove((int)l, int(h - l));
 	Insert((int)l, txt);
+	changesel(rect);
 	anchor = (int)GetGPos(rect.top, rect.left);
 	cursor = (int)GetGPos(rect.bottom, rect.left);
 	PlaceCaret0();
 	return cursor;
+}
+
+void LineEdit::RectSelectionChar(int c)
+{
+	if(GetRectSelection().GetWidth())
+		RemoveRectSelection();
+	int p = -1; // position after insertion, because of '\t' and double size chars cannot do just left+1
+	RectSelectionOp(
+		[&](int i, Rect rect, int64 l, int64 h, WString& s) {
+			int x = GetColumnLine(l).x;
+			int cursor;
+			if(x < rect.left) {
+				s.Cat(' ', rect.left - x);
+				s.Cat(c);
+				if(p < 0)
+					p = GetPos(i) + s.GetCount();
+			}
+			else {
+				s.Insert(int(l - GetPos64(i)), c);
+				if(p < 0) // first time the position is unchanged after whole text is replaced
+					p = l + 1;
+			}
+			
+		},
+		[&](Rect& r) { r.left = GetColumnLine(p).x; }
+	);
+}
+
+void LineEdit::RectSelectionBackspace()
+{
+	Rect r = GetRectSelection();
+	if(r.GetWidth())
+		RemoveRectSelection();
+	else
+	if(r.left > 0)
+		RectSelectionOp(
+			[&](int i, Rect rect, int64 l, int64 h, WString& s) {
+				int p = int(l - GetPos64(i));
+				if(GetColumnLine(l).x == rect.left && p - 1 < s.GetCount())
+					s.Remove(p - 1, 1);
+			},
+			[&](Rect& r) { r.left--; }
+		);
+}
+
+int LineEdit::RemoveRectSelection()
+{
+	return RectSelectionOp(
+		[&](int i, Rect, int64 l, int64 h, WString& s) { s.Remove(int(l - GetPos64(i)), int(h - l)); }
+	);
 }
 
 WString LineEdit::CopyRectSelection()
@@ -204,20 +230,23 @@ WString LineEdit::CopyRectSelection()
 int LineEdit::PasteRectSelection(const WString& s)
 {
 	Vector<WString> cl = Split(s, '\n', false);
-	Rect rect = GetRectSelection();
-	int64 pos = cursor;
-	int n = 0;
-	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) {
-		int64 l, h;
-		CacheLinePos(i);
-		GetRectSelection(rect, i + rect.top, l, h);
-		Remove((int)l, int(h - l));
-		int nn = Insert((int)l, cl[i]);
-		n += nn;
-		pos = l + nn;
+	int cursor0 = cursor;
+	if(cl.GetCount() == 1)
+		PasteColumn(cl[0]);
+	else {
+		Rect rect = GetRectSelection();
+		int64 pos = cursor;
+		for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) {
+			int64 l, h;
+			CacheLinePos(i);
+			GetRectSelection(rect, i + rect.top, l, h);
+			Remove((int)l, int(h - l));
+			int nn = Insert((int)l, cl[i]);
+			pos = l + nn;
+		}
+		PlaceCaret(pos);
 	}
-	PlaceCaret(pos);
-	return n;
+	return cursor - cursor0;
 }
 
 void LineEdit::PasteColumn(const WString& text)
@@ -655,8 +684,8 @@ void   LineEdit::Paint0(Draw& w)
 						if(!IsNull(vline))
 							rw.DrawRect(caretpos.x, y, 1, fsz.cy, vline);
 					}
-					if(rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
-						rw.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
+			//		if(rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
+			//			rw.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
 				}
 			}
 		}
@@ -1078,6 +1107,8 @@ void LineEdit::MoveTextEnd(bool sel) {
 bool LineEdit::InsertChar(dword key, int count, bool canow) {
 	if(key == K_TAB && !processtab)
 		return false;
+	if(findarg(key, '\n', K_ENTER) >= 0 && IsRectSelection())
+		return true;
 	if(filter && key >= 32 && key < K_CHAR_LIM)
 		key = (*filter)(key);
 	if(!IsReadOnly() && (key >= 32 && key < K_CHAR_LIM || key == '\t' || key == '\n' ||
@@ -1273,6 +1304,8 @@ bool LineEdit::Key(dword key, int count) {
 	case K_CTRL_A:
 		SelectAll();
 		break;
+	case K_ALT_KEY|K_KEYUP:
+		return IsRectSelection(); // prevent opening menu on Alt+Click
 	default:
 		dorectsel = false;
 		if(IsReadOnly())
@@ -1282,6 +1315,10 @@ bool LineEdit::Key(dword key, int count) {
 			DeleteChar();
 			break;
 		case K_BACKSPACE:
+			if(IsRectSelection()) {
+				RectSelectionBackspace();
+				break;
+			}
 		case K_SHIFT|K_BACKSPACE:
 			Backspace();
 			break;
