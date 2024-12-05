@@ -885,7 +885,7 @@ void LineEdit::PlaceCaret0()
 	p -= sb;
 	caretlines = 1;
 	if(IsRectSelection()) {
-		Point ap = GetColumnLine(anchor);
+		Point ap = GetColumnLine(anchor) - sb;
 		if(ap.y < p.y)
 			Swap(ap.y, p.y);
 		caretlines = ap.y - p.y + 1;
