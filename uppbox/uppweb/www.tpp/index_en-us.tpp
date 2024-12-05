@@ -114,8 +114,8 @@ topics]]
 (Slack)]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/UppHub`_en`-us^ UppHub]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^ Authors `& License]&]
-[s4;i150;O0;%% [^https`:`/`/www`.ultimatepp`.org`/dev`/^ Development 
-version web]]
+[s4;i150;O0;%% [^https`:`/`/www`.ultimatepp`.org`/dev`/www`$uppweb`$documentation`$en`-us`.html^ D
+evelopment version documentation]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^ Download]&]
