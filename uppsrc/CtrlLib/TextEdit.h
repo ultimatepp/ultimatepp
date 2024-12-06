@@ -84,6 +84,7 @@ protected:
 	int              undoserial;
 	bool             rectsel;
 	bool             incundoserial;
+	bool             column_typing = false; // group undos for column typing
 	int              undosteps;
 	BiArray<UndoRec> undo;
 	BiArray<UndoRec> redo;

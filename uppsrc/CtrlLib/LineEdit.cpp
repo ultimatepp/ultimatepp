@@ -183,6 +183,7 @@ void LineEdit::RectSelectionChar(int c)
 		},
 		[&](Rect& r) { r.left = GetColumnLine(p).x; }
 	);
+	column_typing = true;
 }
 
 void LineEdit::RectSelectionBackspace()
