@@ -849,6 +849,7 @@ LAYOUT(BaseSetupLayout, 608, 136)
 	ITEM(Upp::Button, setup_nest, SetLabel(t_("..")).LeftPosZ(584, 20).TopPosZ(4, 19))
 	ITEM(Upp::Button, output_sel, LeftPosZ(584, 20).TopPosZ(28, 19))
 	ITEM(Upp::Button, upv_sel, LeftPosZ(584, 20).TopPosZ(76, 19))
+	ITEM(Upp::Option, all, SetLabel(t_("Preselect All instead of the first nest")).LeftPosZ(4, 464).TopPosZ(108, 16))
 END_LAYOUT
 
 LAYOUT(NestEditorLayout, 420, 388)
