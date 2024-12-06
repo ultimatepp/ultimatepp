@@ -223,6 +223,7 @@ void AppMain___()
 
 	Ctrl::SetUHDEnabled();
 	Ctrl::SetDarkThemeEnabled();
+	Ctrl::SkinChangeSensitive();
 	Ctrl::SetAppName("TheIDE");
 
 	SetLanguage(LNG_ENGLISH);

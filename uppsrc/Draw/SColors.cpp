@@ -22,12 +22,13 @@ CH_COLOR(SLtMagenta, AdjustIfDark(LtMagenta()));
 CH_COLOR(SLtCyan, AdjustIfDark(LtCyan()));
 
 bool dark_theme__;
+extern bool AColor_dark_mode__;
 
 #define CH_END } // to avoid } highlighting problem
 
 CH_VAR0(ChColor, Color, SColorPaper, White())
-	dark_theme__ = IsDark(SColorPaper());
-	Iml::ResetAll();
+	AColor_dark_mode__ = dark_theme__ = IsDark(SColorPaper());
+	Iml::SkinAll();
 CH_END
 
 CH_COLOR(SColorFace, SLtGray());

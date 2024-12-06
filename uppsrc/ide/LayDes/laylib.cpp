@@ -43,7 +43,7 @@ EscValue EscColor(Color c)
 {
 	EscValue v;
 	if(c.GetSpecial() >= 0)
-		c = AdjustIfDark(RealizeColor(c));
+		c = AColor(RealizeColor(c));
 	if(!IsNull(c)) {
 		v.MapSet("r", c.GetR());
 		v.MapSet("g", c.GetG());
