@@ -129,6 +129,5 @@ file
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,
-	appdoc.tpp,
 	Copying;
 

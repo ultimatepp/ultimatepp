@@ -61,6 +61,11 @@ bool   RunningOnWayland()
 	return running_on_wayland;
 }
 
+void Ctrl::ThemeChanged(void *)
+{
+	PostReSkin();
+}
+
 void InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
@@ -91,6 +96,11 @@ void InitGtkApp(int argc, char **argv, const char **envptr)
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);
 #endif
+	GtkSettings *settings = gtk_settings_get_default ();
+	if(settings) {
+		g_signal_connect_swapped(settings, "notify::gtk-theme-name", G_CALLBACK(Ctrl::ThemeChanged), NULL);
+		g_signal_connect_swapped(settings, "notify::gtk-application-prefer-dark-theme", G_CALLBACK(Ctrl::ThemeChanged), NULL);
+	}
 }
 
 void ExitGtkApp()

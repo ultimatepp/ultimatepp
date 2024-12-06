@@ -181,7 +181,7 @@ performance in certain contexts. Default is false.&]
 ge][*@(0.0.255) `&][* _][*@3 img][* )]&]
 [s5;:ImageBuffer`:`:operator`=`(ImageBuffer`&`): [*@(0.0.255) void][* _operator`=(][*_^ImageBuffer^ I
 mageBuffer][*@(0.0.255) `&][* _][*@3 img][* )]&]
-[s2;%% Assigns pixels of [%-*@3 img] to ImageBuffer. [%-*@3 img] is cleared 
+[s2;%% Moves pixels of [%-*@3 img] to ImageBuffer. [%-*@3 img] is cleared 
 and empty after this operation, price paid for low`-cost constant 
 time operation.&]
 [s3; &]

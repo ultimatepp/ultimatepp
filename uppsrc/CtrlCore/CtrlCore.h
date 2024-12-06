@@ -775,14 +775,15 @@ private:
 	static Size Csize;
 	static bool IsNoLayoutZoom;
 	static void Csizeinit();
-	static void (*skin)();
+	static void (**skin)(); // [0] - default, [1] - std light, [2] - std dark (1, 2 for debug mode testing)
+	static int  skini; // normally 0, allows changing skin in debug mode (to test dark skin), with Ctrl-Alt-Shift-F12
 
 	static void (*cancel_preedit)();
 
 	friend void  InitRichTextZoom();
 	friend void  AvoidPaintingCheck__();
 	friend dword GetKeyStateSafe(dword what);
-	friend void  CtrlSetDefaultSkin(void (*_skin)());
+	friend void  CtrlSetDefaultSkin(void (**_skin)());
 	friend class DHCtrl;
 	friend class TopFrameDraw;
 	friend class ViewDraw;
@@ -1057,6 +1058,8 @@ public:
 	virtual String GetDesc() const;
 
 	virtual void   SetMinSize(Size sz) {}
+	
+	virtual void   Skin() {}
 
 	Event<>          WhenAction;
 
@@ -1397,9 +1400,14 @@ public:
 
 	static void SetUHDEnabled(bool set = true);
 	static bool IsUHDEnabled();
-
+	
 	static void SetDarkThemeEnabled(bool set = true);
 	static bool IsDarkThemeEnabled();
+
+	static void SkinChangeSensitive(bool b = true);
+
+	static void SwapDarkLight();
+	static void SwapDarkLightKey(dword key);
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);
@@ -1424,6 +1432,8 @@ public:
 	static void   GlobalBackBuffer(bool b = true);
 
 	static void   ReSkin();
+	static void   PostReSkin();
+	       void   DoSkin();
 
 	String        Name() const;
 	static String Name(Ctrl *ctrl);

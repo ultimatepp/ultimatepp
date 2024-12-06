@@ -1,7 +1,7 @@
 topic "Supporting UHD displays and Dark theme";
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;m`.;N1;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -34,7 +34,7 @@ adjustment]&]
 [s0; [^topic`:`/`/Draw`/srcdoc`/UhdAndDarkTheme`_en`-us`#4^ 4. Iml 
 files]&]
 [s0; &]
-[s3;:1: 1. GUI mode detection&]
+[s3;:1: GUI mode detection&]
 [s5; UHD mode is activated when standard GUI font is larger than 
 24 pixels. Dark theme mode is activated if [* IsDark]([* SColorPaper]()), 
 which means that grayscale value of default background is less 
@@ -44,7 +44,7 @@ with dark theme, UHD resolution with light theme, UHD resolution
 with dark theme.&]
 [s5; [* IsUHDMode() ]and [* IsDarkTheme() ]functions return respective 
 current GUI status.&]
-[s3;:2: 2. Scaling GUI for actual GUI font and UHD resolution&]
+[s3;:2: Scaling GUI for actual GUI font and UHD resolution&]
 [s5; U`+`+ coordinates in drawing operations are always in real pixels 
 for screen targets. U`+`+ provides various functions to adjust 
 GUI elements metrics to host platform font size and UHD mode. 
@@ -82,7 +82,7 @@ by 2, otherwise returns it unchanged.]
 :: [s5; Returns [* b] if UHD is active, [* a] otherwise.]}}&]
 [s5; Usually [* DPI ]functions are used if the value is Image related, 
 `'Z`' functions if it is text size related.&]
-[s3;:3: 3. Color adjustment&]
+[s3;:3: Color adjustment&]
 [s5; If application is specifying any colors, these colors need to 
 be adjusted for dark theme. This can be often done by using [^topic`:`/`/Draw`/src`/Colors`_en`-us^ p
 redefined colors]. Sometimes only the light theme color is available 
@@ -90,7 +90,7 @@ that needs to be converted to the dark theme `- this can be done
 using [* DarkTheme ]function. Alternatively [* AdjustIfDark] converts 
 the color with [* DarkTheme] only if dark theme mode is currently 
 active.&]
-[s3;:4: 4. Iml files&]
+[s3;:4: Iml files&]
 [s5; Iml files most often contain images that are used in GUI interface. 
 Obviously, these images must be usually different for any of 
 4 GUI modes.&]
@@ -138,4 +138,47 @@ macros:&]
 [s7; #define [* FIXED`_SIZE]&]
 [s7; &]
 [s7; #include <Draw/iml`_source.h>&]
-[s0; ]]
+[s0; &]
+[s3;:4: Reacting to theme changes&]
+[s5; Before 2025.1 U`+`+ release, the application skin was loaded 
+from host platform just once at the start of execution and any 
+if user changed host platform theme, this was not reflected in 
+the application. Also changing to user defined or some predefined 
+skin required restart of application to work properly.&]
+[s5; Since 2025.1, application can be made to react to host platform 
+changes and can change skins without restart with a call to Ctrl`::SkinChangeSensi
+tive() (e.g. in GUI`_APP`_MAIN). However, this poses development 
+challenges with switching between light theme and dark theme.&]
+[s5; While application can easily react in Paint to current mode, 
+situation is much more complicated when colors or images are 
+used as attributes of widgets or widget contents. For example 
+ArrayCtrl`::EvenRowColor can be called by developer to define 
+some color that is appropriate for light theme, theme but when 
+the theme is switched can be no longer viable.&]
+[s5; U`+`+ provides several tools to handle this problem:&]
+[s5;i150;O0; All .iml images are now considered `"special logical 
+constants`" whose appearance changes according to current theme 
+(dark / light) `- this applies to all copies as well.&]
+[s5;i150;O0; [^topic`:`/`/Draw`/src`/Colors`_en`-us^ Predefined colors] 
+constants are also `"special logical constants`" that are interpreted 
+differently after theme switch.&]
+[s5;i150;O0; Special logical type of Color `- SColor `- that is defined 
+by function that is reevaluated after theme switch, e.g.&]
+[s7; static SColor light`_highlight(`[`] `{ return Blend(SColorHighlight(), 
+SColorPaper()) `});&]
+[s0; &]
+[s5;i150;O0; Another special logical type of Color `- AColor `- which 
+should be defined as light theme color value, but when in dark 
+theme, adjusts its value to the dark theme (with DarkThemeCached 
+function)&]
+[s5;i150;O0; RichText / QTF can use DarkThemeCached to adjust colors, 
+which is automatically done e.g. in Labels or RichTextCtrl when 
+rendered on dark backgrounds&]
+[s5;i150;O0; If everything else fails, Ctrl`::Skin virtual function 
+is always called on widget opening and on theme changes giving 
+developer chance to alter colors are required&]
+[s5; To simplify testing, in debug mode Ctrl `+ Num`[`*`] toggles 
+quickly between light and dark theme `- that way developer can 
+check whether colors adjust correctly to the situation.&]
+[s5; Demonstration of these features is in reference/ThemeChangeSensitive 
+example.]]

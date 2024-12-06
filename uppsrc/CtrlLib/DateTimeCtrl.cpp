@@ -1531,13 +1531,13 @@ CH_STYLE(Calendar, Style, StyleDefault)
 
 	bgmain        = SColorPaper;
 	bgtoday       = SColorPaper;
-	bgselect      = AdjustIfDark(Color(255, 254, 220));
+	bgselect      = AColor(255, 254, 220);
 
 	fgmain        = SColorText;
 	fgtoday       = SBlack;
 	fgselect      = SBlack;
 
-	outofmonth    = AdjustIfDark(Color(180, 180, 180));
+	outofmonth    = AColor(180, 180, 180);
 	curdate       = SWhite;
 	today         = SColorText;
 	selecttoday   = SColorMark;

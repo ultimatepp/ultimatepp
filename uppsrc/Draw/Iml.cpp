@@ -41,6 +41,16 @@ Vector<ImageIml> UnpackImlData(const String& d)
 	return UnpackImlData(~d, d.GetLength());
 }
 
+void iml_ReplaceAll(Image& tgt, Image& src)
+{ // this very special function replaces all unmodified instances of Image with new content
+	if(tgt.GetSize() == src.GetSize() && tgt.data) {
+		tgt.data->buffer = src.data->buffer;
+		tgt.data->NewSerial();
+	}
+	else
+		tgt = src;
+}
+
 void Iml::Init(int n)
 {
 	for(int i = 0; i < n; i++)
@@ -53,11 +63,23 @@ void Iml::Reset()
 		m.loaded = false;
 }
 
+void Iml::Skin()
+{
+	for(int i = 0; i < map.GetCount(); i++)
+		if(map[i].loaded) {
+			map[i].loaded = false;
+			Get(i);
+		}
+}
+
 static StaticMutex sImlLock;
 
 void Iml::Set(int i, const Image& img)
 { // TODO: MT
-	map[i].image = img;
+	Image h = img; // make sure h has refcount 1, basically 'clone'
+	ImageBuffer ib = h;
+	h = ib;
+	iml_ReplaceAll(map[i].image, h);
 	map[i].loaded = true;
 }
 
@@ -67,7 +89,8 @@ Image Iml::Get(int i)
 	if(!m.loaded) {
 		Mutex::Lock __(sImlLock);
 		if(!m.loaded) {
-			m.image = MakeImlImage(GetId(i), [&](int mode, const String& id) { return GetRaw(mode, id); }, global_flags);
+			Image h = MakeImlImage(GetId(i), [&](int mode, const String& id) { return GetRaw(mode, id); }, global_flags);
+			iml_ReplaceAll(m.image, h);
 			m.loaded = true;
 		}
 	}
@@ -178,6 +201,12 @@ void Iml::ResetAll()
 {
 	for(int i = 0; i < GetImlCount(); i++)
 		GetIml(i).Reset();
+}
+
+void Iml::SkinAll()
+{
+	for(int i = 0; i < GetImlCount(); i++)
+		GetIml(i).Skin();
 }
 
 static StaticCriticalSection sImgMapLock;
