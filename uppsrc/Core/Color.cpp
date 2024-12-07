@@ -96,8 +96,9 @@ double ContrastRatio(Color c1, Color c2) {
 
 static const int s_Max = 1024;
 static std::atomic<int> s_color_ii;
-static Color s_color[s_Max];
+static std::atomic<dword> s_color[s_Max];
 static Color (*s_color_fn[s_Max])();
+static Mutex sColorMutex;
 
 SColor::SColor(Color (*fn)())
 {
@@ -105,8 +106,10 @@ SColor::SColor(Color (*fn)())
 	ASSERT(ii < s_Max); // number of SColors is limited
 	ii = min(ii, s_Max - 1);
 	s_color_fn[ii] = fn;
-	if(fn)
+	if(fn) {
+		Mutex::Lock __(sColorMutex);
 		s_color[ii] = (*fn)();
+	}
 	color = ii | SCOLOR;
 }
 
@@ -119,10 +122,11 @@ SColor::~SColor()
 
 void SColor::Refresh()
 {
+	Mutex::Lock __(sColorMutex);
 	int n = min((int)s_color_ii, s_Max - 1);
 	for(int i = 0; i < n; i++)
 		if(s_color_fn[i])
-			s_color[i] = (*s_color_fn[i])();
+			s_color[i] = SCOLOR;
 }
 
 void SColor::Write(Color c, Color val)
@@ -149,8 +153,20 @@ dword Color::Get() const
 			return DarkThemeCached(c).color;
 		return val;
 	}
-	if(color & SCOLOR)
-		return val < s_Max ? s_color[val].color : 0;
+	if(color & SCOLOR) {
+		if(val < s_Max) {
+			std::atomic<dword>& r = s_color[val];
+			if(r & SCOLOR) {
+				Mutex::Lock __(sColorMutex);
+				if(s_color_fn[val])
+					r = (*s_color_fn[val])() & VBITS;
+				else
+					r = 0;
+			}
+			return r;
+		}
+		return 0;
+	}
 	return color & VBITS;
 }
 
