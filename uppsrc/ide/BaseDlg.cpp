@@ -211,6 +211,7 @@ bool BaseSetupDlg::Run(String& vars)
 	upp     <<= GetVar("UPP");
 	output  <<= GetUppOut();
 	upv     <<= GetVar("UPPHUB");
+	all     <<= GetVar("_all") == "1";
 	base    <<= vars;
 	new_base = IsNull(vars);
 	
@@ -231,6 +232,7 @@ bool BaseSetupDlg::Run(String& vars)
 		SetVar("UPP", ~upp);
 		SetVar("OUTPUT", ~output);
 		SetVar("UPPHUB", ~upv);
+		SetVar("_all", all ? "1" : "0");
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)
 			RealizeDirectory(paths[i]);

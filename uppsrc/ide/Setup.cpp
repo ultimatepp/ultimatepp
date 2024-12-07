@@ -158,7 +158,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 	editor.LineNumbers(line_numbers);
 	editor.AutoEnclose(auto_enclose);
 	editor.MarkLines(mark_lines);
-	editor.BorderColumn(bordercolumn, bordercolor);
+	editor.BorderColumn(bordercolumn, this->editor.GetHlStyle(CodeEditor::SHOW_BORDER).color);
 	editor.PersistentFindReplace(persistent_find_replace);
 	editor.FindReplaceRestorePos(find_replace_restore_pos);
 	editor.Refresh();
@@ -381,6 +381,8 @@ void Ide::SetupFormat() {
 		(hlt.thousands_separator, thousands_separator)
 		(hlt.hline, hline)
 		(hlt.vline, vline)
+		(hlt.bordercolumn, bordercolumn)
+		(hlt.hl_custom, hl_custom)
 
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
@@ -390,8 +392,6 @@ void Ide::SetupFormat() {
 		(edt.lineends, line_endings)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
-		(edt.bordercolumn, bordercolumn)
-		(edt.bordercolor, bordercolor)
 		(edt.findpicksel, find_pick_sel)
 		(edt.findpicktext, find_pick_text)
 		(edt.deactivate_save, deactivate_save)
@@ -457,6 +457,7 @@ void Ide::SetupFormat() {
 	edt.tabsize.WhenAction = rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
+	hlt.hlstyle.WhenCtrlsAction << [&] { hlt.hl_custom <<= true; };
 	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	hlt.hl_restore_white <<= dlg.Breaker(334);
@@ -464,6 +465,8 @@ void Ide::SetupFormat() {
 	
 	for(auto sk : GetAllChSkins())
 		ide.chstyle.Add(ide.chstyle.GetCount(), sk.b);
+	
+	ide.chstyle << dlg.Breaker(336);
 
 	String usc_path = GetHomeDirFile("usc.path");
 	ide.uscpath <<= LoadFile(usc_path);
@@ -530,24 +533,33 @@ void Ide::SetupFormat() {
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = true;
+			hlt.hl_custom <<= true;
 		}
 		if(c == 334 && PromptYesNo("Set white theme?")) {
 			editor.WhiteTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
+			hlt.hl_custom <<= true;
 		}
 		if(c == 335 && PromptYesNo("Set dark theme?")) {
 			editor.DarkTheme(false);
 			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 			hlstyle_is_default = false;
+			hlt.hl_custom <<= true;
+		}
+		if(c == 336) {
+			auto v = GetAllChSkins();
+			Ctrl::SetSkin(v[clamp((int)~ide.chstyle, 0, v.GetCount() - 1)].a);
 		}
 	}
 	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
 	FinishConfig();
 	SaveConfig();
 	
+	auto v = GetAllChSkins();
+	Ctrl::SetSkin(v[clamp(chstyle, 0, v.GetCount() - 1)].a);
 	
 	if(HasLibClang()) {
 		for(int cpp = 0; cpp < 2; cpp++) {

@@ -736,6 +736,8 @@ void SelectPackageDlg::Load(const String& find)
 			if(!base.IsCursor())
 				return;
 			LoadVars(assembly);
+			if(GetVar("_all") == "1")
+				nest <<= ALL;
 			SyncFilter();
 		}
 		Vector<String> upp = GetUppDirsRaw();

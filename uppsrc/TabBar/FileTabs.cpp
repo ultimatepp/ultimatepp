@@ -175,10 +175,10 @@ FileTabs& FileTabs::operator<<(const FileTabs &src)
 FileTabs::FileTabs() :
 stackedicons(false), 
 greyedicons(true),
-filecolor(SColorLabel),
-extcolor(IsDark(SColorFace()) ? Blend(White, LtBlue) : LtBlue)
+filecolor(SColorLabel)
 {
-
+	static SColor se([] { return IsDark(SColorFace()) ? Blend(White, LtBlue) : LtBlue; });
+	extcolor = se;
 }
 
 }
