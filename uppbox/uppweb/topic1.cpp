@@ -61,7 +61,7 @@ Topic ReadTopic0(const char *text)
 
 void InitWwwTpp()
 {
-	String wwwtpp = AppendFileName(uppbox, "uppweb2/www.tpp");
+	String wwwtpp = GetHomeDirFile("upp.src/uppbox/uppweb/www.tpp");
 	FindFile ff(AppendFileName(wwwtpp, "*"));
 	static Vector<String> data;
 	while(ff) {

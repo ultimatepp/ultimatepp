@@ -266,7 +266,7 @@ void Gdb::Cpu()
 	while(!ss.IsEof()) {
 		String ln = ss.GetLine();
 		cpu.Add(AttrText(ln).SetFont(Courier(Ctrl::HorzLayoutZoom(12)))
-		        .Paper(even ? Blend(SColorMark, SColorPaper, 220) : SColorPaper)
+		        .Paper(even ? SColorEvenRow() : SColorPaper())
 		        .Ink(SColorText));
 		even = !even;
 	}
