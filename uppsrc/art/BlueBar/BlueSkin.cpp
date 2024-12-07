@@ -9,7 +9,7 @@ namespace Upp {
 void InstallBlueToolBar()
 {
 	ToolBar::Style& s = ToolBar::StyleDefault().Write();
-	s = s.Standard();
+	s = ToolBar::StyleDefault();
 	s.buttonstyle.look[CTRL_NORMAL] = Null;
 	s.buttonstyle.look[CTRL_HOT] = BlueImg::BH();
 	s.buttonstyle.look[CTRL_PRESSED] = BlueImg::BP();
@@ -29,7 +29,7 @@ void InstallBlueToolBar()
 void InstallBlueMenuBar()
 {
 	MenuBar::Style& s = MenuBar::StyleDefault().Write();
-	s = s.Standard();
+	s = MenuBar::StyleDefault();
 	s.arealook = Null;
 	s.look = BlueImg::LK();
 	s.topitem[1] = s.item = BlueImg::BH();

@@ -1151,7 +1151,7 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	bool ac = (n == active && enable);
 	bool hl = (n == highlight && enable) || (stacking && highlight >= 0 && tabs[highlight].stack == t.stack);
 
-	int c = align == LEFT ? cnt - n : n;	
+	int c = align == LEFT ? cnt - n : n;
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() - lx + s.margin;
 	
@@ -2696,7 +2696,7 @@ TabBar::Style& TabBar::Style::GroupSeparators(Value horz, Value vert)
 
 TabBar::Style& TabBar::Style::DefaultGroupSeparators()
 {
-	return GroupSeparators(TabBarImg::SEP(), TabBarImg::SEPV());	
+	return GroupSeparators(TabBarImg::SEP(), TabBarImg::SEPV());
 }
 
 Vector<Value> TabBar::GetKeys() const
@@ -2723,7 +2723,7 @@ TabBar& TabBar::CopyBaseSettings(const TabBar& src)
 	crosses_side = src.crosses_side;
 	grouping = src.grouping;
 	contextmenu = src.contextmenu;
-	autoscrollhide = src.autoscrollhide;		
+	autoscrollhide = src.autoscrollhide;
 	nosel = src.nosel;
 	nohl = src.nohl;
 	inactivedisabled = src.inactivedisabled;

@@ -10,6 +10,8 @@
 	static void     AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *event);
 	static void     FetchEvents(bool may_block);
 
+	static void     ThemeChanged(void *);
+
 /*
 _DBG_
 	static void     AddEvent(gpointer user_data, int type, const Value& value);

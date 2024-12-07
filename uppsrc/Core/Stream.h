@@ -1,7 +1,3 @@
-#ifdef  _DEBUG
-#define NEWBLOCKSTREAM
-#endif
-
 enum {
 	STRM_ERROR   =  0x20,
 	STRM_READ    =  0x10,

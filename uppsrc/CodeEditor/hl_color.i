@@ -62,6 +62,7 @@ HL_COLOR(PAPER_ERROR_FILE, t_("Current file errors"), 0)
 HL_COLOR(PAPER_WARNING, t_("Warning in compiler messages"), 0)
 HL_COLOR(SHOW_LINE, t_("Current line highlight"), 0)
 HL_COLOR(SHOW_COLUMN, t_("Current column highlight"), 0)
+HL_COLOR(SHOW_BORDER, t_("Border column highlight"), 0)
 
 HL_COLOR(WHITESPACE, t_("Whitespaces"), 1)
 HL_COLOR(WARN_WHITESPACE, t_("Misplaced tabs and spaces"), 1)

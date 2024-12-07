@@ -12,41 +12,66 @@
 
 #define LLOG(x)  // LOG(x)
 
-#ifdef PLATFORM_WIN32 
-String rootdir =   "d:\\devweb\\upp.src";
-String uppbox =    rootdir + "uppbox";
-String uppsrc =    rootdir + "uppsrc";
-String reference = rootdir + "reference";
-String examples =  rootdir + "examples";
-String targetdir = "u:\\devweb\\uppwww";
-String pdfdir    = "u:\\devweb\\pdf";
-#else
-
+String devdir   = GetHomeDirFile("upp.src");
+String rootdir   = GetHomeDirFile("upp.stable");
+String uppbox    = rootdir + "/uppbox";
+String uppsrc    = rootdir + "/uppsrc";
+String devsrc    = devdir + "/uppsrc";
+String reference = rootdir + "/reference";
+String examples  = rootdir + "/examples";
 #ifdef _DEBUG
-String rootdir   = GetHomeDirFile("upp.src");
-String uppbox    = rootdir + "uppbox";
-String uppsrc    = rootdir + "uppsrc";
-String reference = rootdir + "reference";
-String examples  = rootdir + "examples";
 String targetdir = GetHomeDirFile("www");
-String diffdir   = GetHomeDirFile("wwwd");
-String pdfdir    = GetHomeDirFile("www");
 #else
-String rootdir = "/root/upp.src";
-String uppbox =    rootdir + "uppbox";
-String uppsrc =    rootdir + "uppsrc";
-String reference = rootdir + "reference";
-String examples =  rootdir + "examples";
 String targetdir = "/var/www";
-String diffdir   = "/root/wwwupp";
-String pdfdir    = "/var/www";
 #endif
 
-#endif
-String bazaar;
-bool outPdf;
-bool outHtml;
-bool doGit;
+VectorMap<String, String> escape;
+
+ArrayMap<String, Topic> tt;
+Vector<int> ttId;
+Vector<String> ttFullIds;
+
+VectorMap<String, String> links;
+VectorMap<String, String> labels;
+Htmls header, lastUpdate;
+
+Array <Htmls> bar;
+Array <int> languages;
+
+typedef Image (*ImageFn)();
+
+Index<ImageFn> il;
+
+namespace Upp {
+
+struct TopicData__ : Moveable<TopicData__> {
+	String      title;
+	const byte *data;
+	int         len;
+};
+
+VectorMap<String, VectorMap<String, VectorMap<String, TopicData__ > > >& Topics__();
+
+};
+
+void ClearGlobals()
+{
+	reflink.Clear();
+
+	escape.Clear();
+	
+	tt.Clear();
+	ttId.Clear();
+	ttFullIds.Clear();
+	
+	links.Clear();
+	labels.Clear();
+	
+	bar.Clear();
+	languages.Clear();
+	
+	il.Clear();
+}
 
 String GetRcFile(const char *s)
 {
@@ -87,7 +112,6 @@ hash_t GetHashValue(const ::ImageFn& fn) { return (unsigned)(uintptr_t) fn; }
 
 String GetImageSrc(ImageFn img)
 {
-	static Index<ImageFn> il;
 	int q = il.Find(img);
 	if(il.Find(img) < 0) {
 		q = il.GetCount();
@@ -203,8 +227,6 @@ HtmlTag HtmlPadding(int p)
 		   HtmlLine();
 }
 
-VectorMap<String, String> escape;
-
 String QtfAsHtml(const char *qtf, Index<String>& css,
                  const VectorMap<String, String>& links,
                  const VectorMap<String, String>& labels,
@@ -242,17 +264,13 @@ String FormatDateRFC822(const Time& t) {
 	              tz>0?"+":"",tz/60*100+(tz+1440)%60);
 }
 
-ArrayMap<String, Topic> tt;
-Vector<int> ttId;
-Vector<String> ttFullIds;
-
 String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/www/")
 {
 	String strLang = ToLower(LNGAsText(lang));
-	String www = GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << strLang, "");
+	String www = GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << strLang, "", false);
 	if (www != "index.html")
 		return www;
-	return GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << "en-us", "");
+	return GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << "en-us", "", false);
 }
 
 struct Title {
@@ -269,7 +287,7 @@ struct Title {
 				str.Cat(*val);
 			for (; *valOther != '\0' && *valOther != '.' && *valOther != ' '; ++valOther)
 				strOther.Cat(*valOther);
-			
+
 			int num = ScanInt(str);
 			int numOther = ScanInt(strOther);
 			if (IsNull(num) && IsNull(numOther))
@@ -295,7 +313,7 @@ String FolderLinks(String package, String group, int lang, int level, String par
 			if (ff.GetName().Find("en-us") >= 0) {
 				String title;
 				String tl = "topic://" + package + '/' + group + '/' + GetFileTitle(ff.GetName());
-				GatherTopics(tt, ttFullIds, tl, title, parentIds);
+				GatherTopics(tt, ttFullIds, tl, title, parentIds, false);
 				titles.Add(Title(DeQtf(Nvl(title, tl)), tl));
 				//qtf << "________[^" << tl << "^ " << DeQtf(Nvl(title, tl)) << "]&";
 			}
@@ -348,7 +366,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		int q = tt.GetCount() - 1;
 		String fullIds = parentIds + "/" + FormatInt(q);
 		ttFullIds.Add(fullIds);
-		
+
 		String fn = AppendFileName(
 						AppendFileName(
 							AppendFileName(uppbox, "uppweb"),
@@ -395,7 +413,7 @@ public:
 		: m_prefix(prefix)
 	{
 	}
-	
+
 	bool IsFirst() const  { return m_number == 1; }
 	int GetNumber() const { return m_number; }
 	String GenNext()      { return m_prefix + IntStr(m_number++); }
@@ -410,9 +428,9 @@ public:
 	PackageDocsGenerator()
 		: m_hnumber("4.")
 	{}
-	
+
 	const Vector<String>& GetHeaders() { return m_headers; }
-	
+
 	void Generate(Index<String>& x, String& qtf, const char* folder, int lang, int level,
 	              String parent)
 	{
@@ -442,7 +460,7 @@ public:
 			qtf << "\n";
 		}
 	}
-	
+
 private:
 	HeaderNumber m_hnumber;
 	Vector<String> m_headers;
@@ -461,13 +479,6 @@ void QtfAsPdf(PdfDraw &pdf, const char *qtf)
 	UPP::Print(pdf, txt, page);
 }
 
-VectorMap<String, String> links;
-VectorMap<String, String> labels;
-Htmls header, lastUpdate;
-
-Array <Htmls> bar;
-Array <int> languages;
-
 int GetLinkLanguage(const String &link) {
 	int pos = link.ReverseFind('$');
 	if (pos < 0)
@@ -484,29 +495,29 @@ String TrimDescription(String description)
 {
 	description.Replace("\"", "");
 	description.Replace(":", ".");
-	
+
 	constexpr int DESCRIPTION_SIZE_LIMIT = 158;
 	if (description.GetLength() <= DESCRIPTION_SIZE_LIMIT) {
 		return description;
 	}
-	
+
 	description.Trim(DESCRIPTION_SIZE_LIMIT);
-	
+
 	int trim_idx = -1;
 	for (int i = description.GetCount() - 1; i >= 0; i--)
 	{
 		if (description[i] != '.' && description[i] != '?') {
 			continue;
 		}
-		
+
 		trim_idx = i + 1;
 		break;
 	}
-	
+
 	if (trim_idx == -1 || trim_idx == 0) {
 		return description;
 	}
-	
+
 	description.Trim(trim_idx);
 	return description;
 }
@@ -521,7 +532,7 @@ String FindPageDescription(const RichText& qtf)
 			if (!qtf.IsPara(i)) {
 				continue;
 			}
-			
+
 			RichPara para = qtf.Get(i);
 			if (style_id == qtf.GetParaStyle(i)) {
 				description = para.GetText().ToString();
@@ -529,8 +540,44 @@ String FindPageDescription(const RichText& qtf)
 			}
 		}
 	}
-	
+
 	return TrimDescription(description);
+}
+
+String AdSense3()
+{
+#ifdef _DEBUG
+	return Null;
+#else
+	return LoadFile(GetRcFile("adsense3.txt"));
+#endif
+}
+
+String AdSense2()
+{
+#ifdef _DEBUG
+	return Null;
+#else
+	return LoadFile(GetRcFile("adsense2.txt"));
+#endif
+}
+
+String AdSense()
+{
+#ifdef _DEBUG
+	return Null;
+#else
+	return LoadFile(GetRcFile("adsense.txt"));
+#endif
+}
+
+String AdLinks()
+{
+#ifdef _DEBUG
+	return Null;
+#else
+	return LoadFile(GetRcFile("adlinks.txt"));
+#endif
 }
 
 void ExportPage(int i)
@@ -538,25 +585,14 @@ void ExportPage(int i)
 	Index<String> css;
 	String path = links.GetKey(i);
 	RLOG("Exporting " << path);
-	
+
 	int ilang = GetLinkLanguage(path);
 	SetLanguage(languages[ilang]);
 	String text = GetText(path);
 	RichText qtf = ParseQTF(tt[i].text);
 	int h = qtf.GetHeight(1000);
-	
-	int isvn = svndata.Find(tt.GetKey(i));
+
 	String qtflangs;
-	String googleFile;
-	if (isvn > -1) {
-		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";
-		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
-		googleFile = svndata[isvn].fullPath;
-		if (googleFile.GetCount() > rootdir.GetCount())
-			googleFile = UnixPath(googleFile.Mid(rootdir.GetCount()));
-		else
-			googleFile = "";
-	}
 	String strlang;
 	String jslang;
 	Array <String> arrLangs;
@@ -584,14 +620,11 @@ void ExportPage(int i)
 				strlang << ", ";
 			strlang << arrLangs[i];
 		}
-	}	
-//	if (!strlang.IsEmpty())
-//		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
+	}
+
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
-		if (googleFile != "")
-			qtflangs += ". [^https`:`/`/raw`.githubusercontent`.com`/ultimatepp`/mirror`/master" + DeQtf(UrlEncode(googleFile)) + "^/1 " + "T`+`+" + "]";
 	}
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
@@ -610,34 +643,16 @@ void ExportPage(int i)
 		html0.Replace("`", "");
 		htmlrep.Add(html0);
 		int posEE = page.Find("]&]", posE) + (int)strlen("]&]");
-		
+
 		page = page.Left(pos0) + "QTFHTMLTEXT" + FormatInt(htmlrep.GetCount()-1) + page.Mid(posEE+1);
 	}
-	
+
 	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml)
 		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
-	
-	Color paper = SWhite;
+
 	if(path == "topic://uppweb/www/download$en-us")
-		page << LoadFile(GetRcFile("adsense3.txt"));
-/*		if(path == "topic://uppweb/www/index$en-us") {
-		for(int q = 0; q < news.GetCount(); q++) {
-			String n = GetText("uppweb/www_news/" + news[q]);
-			String h = news[q];
-			int i = h.Find('$');
-			if(i >= 0)
-				h = h.Mid(0, i);
-			if(h.GetLength() == 8)
-				h = h.Mid(0, 4) + '-' + h.Mid(4, 2) + '-' + h.Mid(6, 2);
-			page << "<br>";
-			page << "<div style='font-family:sans-serif; font-weight: bold; "
-			        "font-height: 12px; color: White; background: #2020d0'>&nbsp;&nbsp;"
-			     << h << "</div><br>";
-			page << QtfAsHtml(n, css, links, targetdir, FormatIntAlpha(q) + "_n");
-			page << "<br>";
-		}
-	}*/
+		page << AdSense3();
 	Color bg = Color(210, 217, 210);
 	Htmls footer;
 	footer << HtmlTable().Border(0).Width(-100) / HtmlLine() +
@@ -655,17 +670,11 @@ void ExportPage(int i)
 					LoadFile(GetRcFile("facebook.txt")) +
 					"<br><br>" +
 //						"<p align=\"center\">" +
-					LoadFile(GetRcFile("adsense2.txt")) +
+					AdSense2() +
 					"<br><br>" +
-					LoadFile(GetRcFile("adlinks.txt")) +
-					(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
-					                                : "") +
+					AdLinks() +
+					(h > 25000 ? "<br><br>" + AdSense2() : "") +
 					"<br><br><br>" +
-//						LoadFile(GetRcFile("referral.txt")) +
-//						LoadFile(GetRcFile("referral2.txt")) +
-//						LoadFile(GetRcFile("donations.txt")) +
-//						"<br><br>" +
-//						amazon[i % amazon.GetCount()] +
 					"<br><br><br>" +
 					~(HtmlLink("https://sourceforge.net/projects/upp/") /
 					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
@@ -713,11 +722,11 @@ void ExportPage(int i)
 		pageTitle = "Demos / " + pageTitle;
 	else if(StartsWith(topicTitle, "reference"))
 		pageTitle = "Examples / " + pageTitle;
-	
+
 	bool is_index = path == "topic://uppweb/www/index$en-us";
 	if(pageTitle != "U++" && !is_index)
 		pageTitle << " :: U++";
-	
+
 	auto htmlHeader = HtmlHeader()
 		.Title(pageTitle)
 		.Description(FindPageDescription(qtf))
@@ -744,7 +753,7 @@ void ExportPage(int i)
             "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">\n"
             "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\">\n")
 		.Create();
-	
+
 	Htmls content =
 	    //"<!DOCTYPE html>" +
 	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
@@ -788,7 +797,7 @@ String Downloads()
 		}
 		ff.Next();
 	}
-	
+
 	auto FindDown = [](Array<DownloadItem>& a, const char* arch) -> String {
 		String r;
 		for(int i = 0; i < a.GetCount(); i++) {
@@ -801,9 +810,9 @@ String Downloads()
 		}
 		return r;
 	};
-	
+
 	Date d = GetSysDate();
-	
+
 	for(int i = 0; i < 14; i++, d--) {
 		Array<DownloadItem>& a = downs.GetAdd(d);
 		r << "::@W " << FormatDate(d, "YYYY-MM-DD") << ":: "
@@ -811,7 +820,7 @@ String Downloads()
 		  << FindDown(a, "posix");
 	}
 	r << "}}";
-	
+
 	for(int i = 14; i < downs.GetCount(); i++) {
 		if(downs.GetKey(i) < d)
 			for(int j = 0; j < downs[i].GetCount(); j++)
@@ -821,145 +830,72 @@ String Downloads()
 	return r;
 }
 
-struct ProgramData {
-	String rootdir;
-	String targetdir;
-	String diffdir;
-	String pdfdir;
-	bool ftpUpload;
-	bool outPdf;
-	bool outHtml;
-	bool doGit;
-	void Xmlize(XmlIO xml)	{
-		xml
-			("rootdir", rootdir)
-			("targetdir", targetdir)
-			("diffdir", diffdir)
-			("pdfdir", pdfdir)
-			("ftpUpload", ftpUpload)
-			("outPdf", outPdf)
-			("doGit", doGit)
-			("outHtml", outHtml)
-		;
-	}
-};
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-#ifdef PLATFORM_POSIX
-	rootdir = GetHomeDirFile("upp.src");
-	targetdir = GetHomeDirFile("uppwww");
-	diffdir   = GetHomeDirFile("wwwupp");
-	pdfdir   = GetHomeDirFile("pdf");
-#endif
-	outPdf = true;
-	outHtml = true;
-	doGit = true;
-
 
 	RLOG("--- uppweb started at " << GetSysTime());
-	
-	ProgramData data;
-	
-	String configFile = GetHomeDirFile("uppweb.xml");
-	const Vector<String>& cmd = CommandLine();
-	if(cmd.GetCount() && FileExists(cmd[0]))
-		configFile = cmd[0];
-	
-	Cout() << "ConfigFile: " << configFile << "\n";
-	bool cfgloaded = false;
-	if (FileExists(configFile)) {
-		if (LoadFromXMLFile(data, configFile)) {
-			rootdir   = data.rootdir;
-			targetdir = data.targetdir;
-//			diffdir   = data.diffdir;
-			pdfdir    = data.pdfdir;	
-//			ftpupload = data.ftpUpload;
-			outPdf    = data.outPdf;
-			outHtml   = data.outHtml;
-			doGit     = data.doGit;
-			cfgloaded = true;
-		}
-	}
-	if (!cfgloaded) {
-		data.rootdir   = rootdir;
-		data.targetdir = targetdir;
-//		data.diffdir   = diffdir;
-		data.pdfdir    = pdfdir;
-//		data.ftpUpload = ftpupload;
-		data.outPdf    = outPdf;
-		data.outHtml   = outHtml;
-		data.doGit	   = doGit;
-		StoreAsXMLFile(data, NULL, configFile);
-	}
-	Cout() << "RootDir: " << rootdir << "\n";
-	Cout() << "OutHtml: " << outHtml << "\n";
-	Cout() << "TargetDir: " << targetdir << "\n";
-	Cout() << "OutPdf: " << outPdf << "\n";
-	Cout() << "PdfDir: " << pdfdir << "\n";
 
-#ifdef _DEBUG
-	outPdf = false;
-#endif
+	const Vector<String>& cmd = CommandLine();
+	
+	if(cmd.GetCount() < 3) {
+		RLOG("Usage: uppweb rootdir targetdir [0|1]");
+		Exit(1);
+	}
+	
+	rootdir = cmd[0];
+	targetdir = cmd[1];
+	
+	if(!DirectoryExists(rootdir)) {
+		RLOG(rootdir << " does not exist");
+		Exit(1);
+	}
+
+	if(!DirectoryExists(targetdir)) {
+		RLOG(targetdir << " does not exist");
+		Exit(1);
+	}
+	
+	bool isdev = cmd[2] == "1";
+
+	uppsrc = AppendFileName(rootdir, "uppsrc");
+
+	RealizeDirectory(targetdir);
+
+	RLOG("RootDir: " << rootdir);
+	RLOG("TargetDir: " << targetdir);
 
 	String downloads = Downloads();
-	
+
 	if (!DirectoryExists(rootdir)) {
 		Cout() << ("Directory " + DeQtf(rootdir) + " does not exist\n");
 		return;
 	}
 
 	uppbox =    AppendFileName(rootdir, "uppbox");
-	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
-	bazaar =    AppendFileName(rootdir, "bazaar");
 
-	Cout() << "Loading www.tpp\n";
 	InitWwwTpp();
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
-#if 0
-#ifndef _DEBUG // too slow to have them all while developing
-	languages.Add(LNG_('C','A','E','S'));
-	languages.Add(LNG_('C','S','C','Z'));
-	languages.Add(LNG_('D','E','D','E'));
-	languages.Add(LNG_('E','S','E','S'));
-	languages.Add(LNG_('E','U','E','S'));
-	languages.Add(LNG_('F','R','F','R'));
-	languages.Add(LNG_('R','O','R','O'));
-	languages.Add(LNG_('R','U','R','U'));
-	languages.Add(LNG_('Z','H','C','N'));
-	languages.Add(LNG_('Z','H','T','W'));
+
+	RealizeDirectory(targetdir);
+
+	RLOG("Gather ref links " << uppsrc);
+	GatherRefLinks(uppsrc, false);
+
+	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
+
+#ifdef bmGIT_REVCOUNT
+	auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
+	escape.Add("LATESTGIT", version);
 #endif
-#endif
-	if (outHtml)
-		RealizeDirectory(targetdir);
-	
-	if (outPdf)
-		RealizeDirectory(pdfdir);
-	
-	Cout() << "Gather ref links " << uppsrc << "\n";
-	GatherRefLinks(uppsrc);
-	Cout() << "Gather ref links " << AppendFileName(rootdir, "bazaar") << "\n";
-	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
-	
-	if (outHtml)
-		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
-	
+
 	String release = "17045";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
-	
-	if (doGit) {
-		Cout() << "Processing git\n";
-		#ifdef bmGIT_REVCOUNT
-			auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
-			escape.Add("LATESTGIT", version);
-		#endif
-	}
 
 	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
 
@@ -974,20 +910,19 @@ CONSOLE_APP_MAIN
 			    HtmlCell().Right().Bottom()
 			              .Style("padding-bottom: 5px; "
 			                     "background-image: url('" + GetImageSrc(WWW::HB) + "')")
-			    / HtmlArial(14) / (LoadFile(GetRcFile("adsense.txt")) + "&nbsp;&nbsp;"/* + "<br>..harnessing the real power of C++&nbsp;&nbsp;"*/)
+			    / HtmlArial(14) / (AdSense() + "&nbsp;&nbsp;" + (isdev ? "<br>development version (master branch)" : ""))
 			);
-	
+
 	bar.SetCount(languages.GetCount());
 
 	int currentLang = GetCurrentLanguage();
-	int di;
 	for (int i = 0; i < languages.GetCount(); ++i) {
 		Cout() << "Language " << LNGAsText(languages[i]);
 		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
 		int lang = languages[i];
-		
+
 		SetLanguage(lang);
-	
+
 		Www("index", lang);
 		Www("contribweb", lang);
 	//	bi << BarLink("index.html", "Home", false);
@@ -995,10 +930,10 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
 			IGNORE_RESULT(Www("reference", lang));
-			
+
 			int ri = tt.Find("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang)));
 			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
-			
+
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
 			tt[di].text << tt[ri].text << '\n';
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
@@ -1017,7 +952,7 @@ CONSOLE_APP_MAIN
 				x.Clear();
 				String qtf;
 				PackageDocsGenerator dgen;
-				
+
 				dgen.Generate(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
 				dgen.Generate(x, qtf, "Core/POP3", lang, 2, String("/") + FormatInt(di) + "/[Core/POP3]");
 				dgen.Generate(x, qtf, "Core/SMTP", lang, 2, String("/") + FormatInt(di) + "/[Core/SMTP]");
@@ -1028,6 +963,7 @@ CONSOLE_APP_MAIN
 				dgen.Generate(x, qtf, "RichText", lang, 2, String("/") + FormatInt(di) + "/[RichText]");
 				dgen.Generate(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
 				dgen.Generate(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
+
 				String d = AppendFileName(uppsrc, "*.*");
 				String p;
 				for(int pass = 0; pass < 2; pass++) {
@@ -1047,7 +983,7 @@ CONSOLE_APP_MAIN
 					p = "plugin/";
 				}
 				tt[di].text.Replace("[s5; <#packages#>]", qtf);
-				
+
 				String toc_qtf;
 				const auto& headers = dgen.GetHeaders();
 				for (int i = 0; i < headers.GetCount(); i++) {
@@ -1064,31 +1000,17 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
 		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
-	
+
 		bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
 	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
 		bi << BarLink(Www("Funding", lang), t_("Funding U++"));
 	//	bcom << BarLink(Www("helpus"), "Getting involved");
 	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
-		
+
 		bsearch << BarCaption(t_("Search on this site"));
 		bsearch << SearchBar("ultimatepp.org");
 
-#if 0	
-		blang << BarCaption(t_("Language"));
-		blang << Htmls("<div id=\"langbox\" style=\"display:none;\">") + 
-		         BarItem(HtmlPackedTable().Width(-100)
-		           / HtmlRow() / (
-		               HtmlCell() / Wimg(WWW::Language) +
-		               HtmlCell() / Htmls("<div id=\"langs\">"+GetNativeLangName(lang)+"</div>")
-		            ),"border: 0px solid black;"
-		              "padding-left:6px; padding-right:0px;"
-		              "padding-top:4px; padding-bottom:4px;"
-		         ) + Htmls("</div>");
-#endif
-
-		
 		HtmlTag bf = HtmlPackedTable()
 		       .Width(-100)
 		       .BgColor(White)
@@ -1108,28 +1030,10 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
-		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
+		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic, false));
 	}
-	
-	String svntableStr = DeQtf("[svntable]");
+
 	for(int i = 0; i < tt.GetCount(); i++) {
-		if (tt[i].title == "Svn releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, ""));
-		else if (tt[i].title == "Svn Web releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb"));
-		else if (tt[i].title == "Svn Bazaar releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar"));
-		else if (tt[i].title == "Svn Upp releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));
-		else if (tt[i].title == "Svn major releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, "", true));
-		else if (tt[i].title == "Svn Web major releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb", true));
-		else if (tt[i].title == "Svn Bazaar major releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
-		else if (tt[i].title == "Svn Upp major releases")
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));
-		else
 		if(tt[i].title == "Nightly builds" || tt[i].title.Find("Download") >= 0)
 			tt[i].text.Replace(String("<#downloads#>"), downloads);
 		else if (links[i].Find("index") >= 0) {
@@ -1143,7 +1047,6 @@ CONSOLE_APP_MAIN
 			tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
 		}
 	}
-
 	for(int i = 0; i < reflink.GetCount(); i++) {
 		String l = reflink.GetKey(i);
 		String lbl = Filter(l, CharFilterLbl);
@@ -1158,155 +1061,20 @@ CONSOLE_APP_MAIN
 		}
 		labels.Add(l, lbl);
 	}
-	
-	Date d = GetSysDate();
+
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
 	                   (String().Cat() << "Last update " << GetSysDate());
 
-//	Vector<String> amazon = Split(LoadFile(GetRcFile("amazon.txt")), '\n');//440
+	RLOG("Creating htmls");
 
-	Vector <SvnBazaarItems> bazaarItems = SvnBazaarList(bazaar, svnlog);
+	for(int i = 0; i < tt.GetCount(); i++)
+		ExportPage(i);
+	SetLanguage(currentLang);
 
-	// To fill Bazaar page with real release dates and size
-	for(int i = 0; i < tt.GetCount(); i++) {
-		if (tt[i].title == "Bazaar") {
-			String page = tt[i];
-			for (int j = 0; j < bazaarItems.GetCount(); ++j) {
-				int pos = page.Find("2 " + DeQtf(bazaarItems[j].name) + "]]");
-				if (pos < 0)
-					pos = page.Find("2 " + DeQtf(bazaarItems[j].name) + "\r\n]]");
-				if (pos >= 0) {
-					pos = page.Find("::", pos);	
-					pos = page.Find("::", pos);
-					pos = page.Find(":: [s0;=2", pos);
-					if (pos >= 0)
-						pos += (int)strlen(":: [s0;=2");
-					String strDate;
-					if (pos >= 0) {
-						Time t = bazaarItems[j].lastChange;
-						if (IsNull(t))
-							strDate = "Not in Svn log";
-						else 
-							strDate = Format("%Mon", t.month) + " " + FormatInt(t.year);
-						page.Insert(pos, " " + strDate);
-					}
-					pos = page.Find(":: [s0;=2", pos);
-					if (pos >= 0)
-						pos += (int)strlen(":: [s0;=2");
-					String strSz;
-					if (pos >= 0) {
-						if (bazaarItems[j].size == 0)
-							strSz = "Not in Svn log";
-						else 
-							strSz = BytesToString(bazaarItems[j].size);
-		
-						page.Insert(pos, " " + strSz);
-					}
-				}
-			}
-			tt[i].text = page;
-		}
-	}
-
-	Vector <int> ttPdfId;
-	for (int i = 0; i < ttFullIds.GetCount(); ++i) {
-		Vector<int> ids;
-		ids.Clear();
-		String sid, fullTitle;
-		sid.Clear();
-		fullTitle.Clear();
-		int level = 0;
-		for (const char *idStr = ttFullIds[i].Begin() + 1; *idStr; idStr++) {
-			if (*idStr != '/')
-				sid.Cat(*idStr);
-			else {
-				int id = ScanInt(sid);
-				if (IsNull(id))
-					fullTitle << "/" << sid;
-				else {
-					if (id < 0 || id >= tt.GetCount()) {
-						Cout() << "Problem in documentation";
-						return;
-					}
-					fullTitle << "/" << tt[id].title;
-					level++;
-					ids.Add(id);
-				}
-				sid.Clear();
-			}
-		}
-		int id = ScanInt(sid);
-		if (IsNull(id))
-			fullTitle << "/" << sid;
-		else {
-			if (id < 0 || id >= tt.GetCount()) {
-				Cout() << "Problem in documentation";
-				return;
-			}
-			fullTitle << "/" << tt[id].title;
-			level++;
-		}
-		String com = "";
-		for (int iid = 0; iid < ids.GetCount(); ++iid) {
-			if (ids[iid] == id) {
-				com = "END LINK";
-				break;
-			}
-			if (tt[id].text == tt[ids[iid]].text) {
-				com = "DUPLICATED";
-				break;
-			}
-		}
-		if (fullTitle.Find("/Documentation") >= 0 && level <= 2 && com != "DUPLICATED") {
-			Cout() << i << "\t(" << level << ")\t" << com << "\n";
-			Cout() << ttFullIds[i] << "\n";
-			Cout() << fullTitle << "\n";
-			ttPdfId << id;
-		}
-	}
-
-	LLOG("G: " << MemoryUsedKb());
-
-	if (outPdf) {
-		Cout() << "\nCreating pdf (" << tt.GetCount() << " items)\n";
-		PdfDraw pdf;
-		//for(int i = 0; i < tt.GetCount(); i++)
-		for(int i = 0; i < ttPdfId.GetCount(); i++)
-			QtfAsPdf(pdf, tt[ttPdfId[i]]);
-		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
-	}
-
-	LLOG("H: " << MemoryUsedKb());
-
-	if (outHtml) {
-		Cout() << "\nCreating htmls\n";
-		
-		for(int i = 0; i < tt.GetCount(); i++)
-			ExportPage(i);
-		SetLanguage(currentLang);
+	FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
 	
-		LLOG("I: " << MemoryUsedKb());
-	
-		FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
-		//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
-		SaveFile(AppendFileName(targetdir, "stats.html"),
-		         HtmlLink("https://www.mygooglepagerank.com", "_blank") /
-			         "<img src=\"https://www.mygooglepagerank.com/PRimage.php?url=http://upp.sf.net\" "
-			         "border=\"0\" width=\"66\" height=\"13\" "
-			         "alt=\"Google PageRank&trade; - Post your PR with MyGooglePageRank.com\">" +
-		         "<noscript>" +
-		         HtmlLink("https://www.mygooglepagerank.com").Title("My Google Page Rank") /
-		           "My Google Page Rank" +
-		         "</noscript>" +
-		         HtmlLink("https://www.mygooglepagerank.com", "_blank") /
-			         "<img src=\"http://www.mygooglepagerank.com/PRimage.php?url=http://www.ultimatepp.org\" "
-			         "border=\"0\" width=\"66\" height=\"13\" "
-			         "alt=\"Google PageRank&trade; - Post your PR with MyGooglePageRank.com\">" +
-		         "<noscript>" +
-		         HtmlLink("https://www.mygooglepagerank.com").Title("My Google Page Rank") /
-		           "My Google Page Rank" +
-		         "</noscript>"
-		);
-	}
-	Cout() << "Finished OK\n";
+	uppsrc = AppendFileName(devdir, "uppsrc");
+
+	RLOG("Finished OK");
 }
+

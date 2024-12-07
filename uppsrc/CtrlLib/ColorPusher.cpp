@@ -18,7 +18,7 @@ void ColorPusher::Paint(Draw& w)
 		           voidtext, StdFont(), SColorText());
 	else {
 		auto DrawColor = [&](int x, int y, int cx, int cy) {
-			if(color.GetSpecial() >= 0) {
+			if(color.GetSpecial() >= 0 && color.GetSpecial() < 18) {
 				Color c = RealizeColor(color);
 				w.DrawRect(x, y, cx / 2, cy, c);
 				w.DrawRect(x + cx / 2, y, cx - cx / 2, cy, DarkTheme(c));

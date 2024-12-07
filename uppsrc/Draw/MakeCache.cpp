@@ -12,6 +12,7 @@ struct scImageMaker : ValueMaker {
 		StringBuffer s;
 		s.Cat(typeid(*m).name());
 		RawCat(s, paintonly);
+		RawCat(s, IsDarkTheme());
 		s.Cat(m->Key());
 		return String(s);
 	}

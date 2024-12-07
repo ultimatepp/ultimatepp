@@ -422,6 +422,8 @@ void ChFinish()
 		sChStyle()[i].init();
 	sIsDarkColorFace = IsDark(SColorFace());
 	sLabelTextColorMismatch = IsDark(SColorText()) != IsDark(SColorLabel());
+	for(int i = 0; i < 5; i++) // repeat to propagate changes
+		SColor::Refresh();
 }
 
 Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink)

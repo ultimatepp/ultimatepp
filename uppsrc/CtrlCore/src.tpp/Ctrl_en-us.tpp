@@ -2513,6 +2513,14 @@ be statically overloaded to receive minimal size of layout.&]
 [s7;i1120;a17; [%-*C@3 sz]-|Minimal size of layout.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:Skin`(`):%- [@(0.0.255) void] [* Skin]()&]
+[s2; Called when the application skin (e.g. widget appearance, system 
+colors or dark / light theme switch) changes. It is called in 
+children first order. Application should use this to adjust colors, 
+which might actually include resetting some widgets and data 
+content.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:Csizeinit`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* Csizeinit]()&]
 [s2;b17;a17; Sets zoom factor used to scale layouts (to scale zoomed 
 positioning methods like LeftPosZ). Horizontal distances are 
@@ -2561,7 +2569,40 @@ ize]_[*@3 sz])&]
 [s5;:Ctrl`:`:NoLayoutZoom`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* NoLayoutZoom]()&]
 [s2;b17;a17; Sets scaling factor to (1, 1). Same as SetZoomSize(Size(1, 
 1), Size(1, 1)).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SetSkin`(void`(`*`)`(`)`):%- [@(0.0.255) static] 
+[@(0.0.255) void] [* SetSkin]([@(0.0.255) void] ([@(0.0.255) `*][*@3 skin])())&]
+[s2; Sets the GUI theme. [%-*@3 skin] is routine that sets appearance 
+of everything, by altering predefined SColors, changing images 
+and changing widget appearance through `::StyleDefault().Write(). 
+See CtrlLib/Ch.cpp for example.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SkinChangeSensitive`(bool`):%- [@(0.0.255) static] 
+[@(0.0.255) void] [* SkinChangeSensitive]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
+[s2; If not active (which is default), the appearance of U`+`+ application 
+is established once at the start and does not change if user 
+switches host platform theme. If active, U`+`+ changes appearance 
+when host platform theme changes. Note that activating this feature 
+requires additional work and thorough testing to make sure that 
+all colors adequately react to changes between light and dark 
+modes.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SwapDarkLight`(`):%- [@(0.0.255) static] [@(0.0.255) void] 
+[* SwapDarkLight]()&]
+[s2; This debugging feature toggles between dark and light mode to 
+make skin change sensitive application development easier.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SwapDarkLightKey`(dword`):%- [@(0.0.255) static] 
+[@(0.0.255) void] [* SwapDarkLightKey](dword [*@3 key])&]
+[s2; This sets a special key that when presses calls SwapDarkLight. 
+0 means no key. Normally, in debug mode Ctrl`+Num`[`*`] is the 
+default key, in release mode default is 0.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:SetUHDEnabled`(bool`):%- [@(0.0.255) void]_[* SetUHDEnabled]([@(0.0.255) b
 ool]_[*@3 set])&]

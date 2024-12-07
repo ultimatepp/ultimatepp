@@ -14,26 +14,8 @@ void Dc(WithDropChoice<EditString>& dc)
 	dc <<= "Case1";
 }
 
-TestChStyle::TestChStyle()
+void TestChStyle::Skin()
 {
-	AddFrame(menu);
-	menu.Sub("Something", [=](Bar& bar) {
-		bar.Add("Open..", [] { SelectFileOpen("*"); });
-		bar.Add("Information..", [] { PromptOK("information."); });
-		bar.Add("Exclamation..", [] { Exclamation("exclamation!"); });
-		bar.Add("Question..", [] { PromptYesNo("question?"); });
-		bar.Add("Error..", [] { ErrorYesNo("error?"); });
-		bar.Add(false, "Disabled", [] {});
-		static bool check;
-		bar.Add("Check", [] { check = !check; }).Check(check);
-		bar.Add("Check", CtrlImg::open(), [] { check = !check; }).Check(check);
-		static bool radio;
-		bar.Add("Radio", [] { radio = !radio; }).Radio(radio);
-		bar.Separator();
-		bar.Sub("Submenu", [](Bar& bar) { bar.Add("Something", []{}); });
-	});
-
-	AddFrame(bar);
 	bar.Set([](Bar& bar) {
 		bar.Add(CtrlImg::open(), [] {
 			FileSelNative fs;
@@ -65,6 +47,28 @@ TestChStyle::TestChStyle()
 				PromptOK(~fs);
 		}).Tip("This is test");
 	});
+}
+
+TestChStyle::TestChStyle()
+{
+	AddFrame(menu);
+	menu.Sub("Something", [=](Bar& bar) {
+		bar.Add("Open..", [] { SelectFileOpen("*"); });
+		bar.Add("Information..", [] { PromptOK("information."); });
+		bar.Add("Exclamation..", [] { Exclamation("exclamation!"); });
+		bar.Add("Question..", [] { PromptYesNo("question?"); });
+		bar.Add("Error..", [] { ErrorYesNo("error?"); });
+		bar.Add(false, "Disabled", [] {});
+		static bool check;
+		bar.Add("Check", [] { check = !check; }).Check(check);
+		bar.Add("Check", CtrlImg::open(), [] { check = !check; }).Check(check);
+		static bool radio;
+		bar.Add("Radio", [] { radio = !radio; }).Radio(radio);
+		bar.Separator();
+		bar.Sub("Submenu", [](Bar& bar) { bar.Add("Something", []{}); });
+	});
+
+	AddFrame(bar);
 	
 	CtrlLayoutOKCancel(*this, "Window title");
 	
@@ -127,6 +131,7 @@ TestChStyle::TestChStyle()
 	pi5.Percent();
 	
 	list.HeaderObject().Absolute();
+	list.OddRowColor();
 	list.AddColumn("Col", 50).Sorting();
 	list.AddColumn("Col", 50).Sorting();
 	list.AddColumn("Col", 50).Sorting();
@@ -135,6 +140,12 @@ TestChStyle::TestChStyle()
 	list.Add("Some very very very long text to invoke DisplayPopup");
 	for(int i = 0; i < 50; i++)
 		list.Add(i);
+
+	list2.AddColumn("Col");
+	list2.EvenRowColor();
+	list2.OddRowColor();
+	for(int i = 0; i < 50; i++)
+		list2.Add(i);
 	
 	es_error.Error();
 	es_error.NullText(CtrlImg::Computer());

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	MyApp.h,
+	main.cpp,
+	MyApp.lay;
+
+mainconfig
+	"" = "GUI";
+

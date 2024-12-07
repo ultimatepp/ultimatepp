@@ -9,6 +9,11 @@ void ChFlatSkin();
 void ChFlatDarkSkin();
 void ChFlatGraySkin();
 
+#ifdef PLATFORM_WIN32
+void ChHostSkinLight();
+void ChHostSkinDark();
+#endif
+
 Vector<Tuple<void (*)(), String>> GetAllChSkins();
 
 enum {

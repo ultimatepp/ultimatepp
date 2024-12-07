@@ -280,6 +280,8 @@ GUI_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
+	
+	Ctrl::SkinChangeSensitive();
 
 	UWordFs().Type("QTF files", "*.qtf")
 	         .Type("RTF files", "*.rtf")

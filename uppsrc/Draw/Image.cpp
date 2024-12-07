@@ -323,6 +323,14 @@ String Image::ToString() const
 	return String("Image ").Cat() << GetSize();
 }
 
+void Image::Data::NewSerial()
+{
+	INTERLOCKED {
+		static int64 gserial;
+		serial = ++gserial;
+	}
+}
+
 Image::Data::Data(ImageBuffer& b)
 :	buffer(b)
 {
@@ -330,10 +338,7 @@ Image::Data::Data(ImageBuffer& b)
 	paintonly = false;
 	refcount = 1;
 	aux_data = 0;
-	INTERLOCKED {
-		static int64 gserial;
-		serial = ++gserial;
-	}
+	NewSerial();
 }
 
 void Image::SetAuxData(uint64 adata)

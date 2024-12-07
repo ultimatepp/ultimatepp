@@ -1,9 +1,0 @@
-<div class="ForumBackground ac foot">
-<b>.::</b> <a href="mailto:{GVAR: ADMIN_EMAIL}">{MSG: forum_contact}</a> <b>::</b> <a href="{TEMPLATE: footer_lnk}">{MSG: forum_home}</a> <b>::.</b>
-<p>
-<span class="SmallText">Powered by: FUDforum {GVAR: FORUM_VERSION}.<br />Copyright &copy;2001-2006 <a href="http://fudforum.org/">FUD Forum Bulletin Board Software</a><br><br><img src="http://pocitadlo.servery.cz/counter.php?id=4911" alt="counter" /></span>
-</div>
-
-</td></tr></table>
-
-</body></html>

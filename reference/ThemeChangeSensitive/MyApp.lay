@@ -1,0 +1,18 @@
+LAYOUT(MyAppLayout, 644, 348)
+	ITEM(Upp::ArrayCtrl, list1, LeftPosZ(4, 156).TopPosZ(4, 148))
+	ITEM(Upp::ArrayCtrl, list2, LeftPosZ(164, 156).TopPosZ(4, 148))
+	ITEM(Upp::ArrayCtrl, list3, LeftPosZ(324, 156).TopPosZ(4, 148))
+	ITEM(Upp::ArrayCtrl, list4, LeftPosZ(484, 156).TopPosZ(4, 148))
+	ITEM(Upp::Button, std, SetLabel(t_("Set Standard skin")).LeftPosZ(4, 112).TopPosZ(284, 24))
+	ITEM(Upp::Button, dark, SetLabel(t_("Set Standard dark skin")).LeftPosZ(120, 140).TopPosZ(284, 24))
+	ITEM(Upp::Button, host, SetLabel(t_("Set Host platform skin")).LeftPosZ(264, 140).TopPosZ(284, 24))
+	ITEM(Upp::Button, toggle, SetLabel(t_("Toggle dark")).LeftPosZ(4, 104).TopPosZ(316, 24))
+	ITEM(Upp::Label, info, SetLabel(t_("In debug mode, the prefined key for Toggle dark is Ctrl+Num[*]")).LeftPosZ(112, 328).TopPosZ(316, 24))
+	ITEM(Upp::ImageCtrl, img1, LeftPosZ(4, 60).TopPosZ(156, 36))
+	ITEM(Upp::ImageCtrl, img2, LeftPosZ(4, 60).TopPosZ(196, 36))
+	ITEM(Upp::ImageCtrl, img3, LeftPosZ(4, 60).TopPosZ(236, 36))
+	ITEM(Upp::Label, dv___12, SetLabel(t_("This image is sourced as iml constant and automatically adjusts to theme changes")).LeftPosZ(68, 452).TopPosZ(156, 36))
+	ITEM(Upp::Label, dv___13, SetLabel(t_("This image is created and does not change when theme changes")).LeftPosZ(68, 452).TopPosZ(196, 36))
+	ITEM(Upp::Label, dv___14, SetLabel(t_("This image is created but is changed by Skin method")).LeftPosZ(68, 452).TopPosZ(236, 36))
+END_LAYOUT
+

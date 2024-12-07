@@ -175,6 +175,7 @@ class FileSel : public WithFileSelectorLayout<TopWindow> {
 public:
 	virtual bool Key(dword key, int count);
 	virtual void Activate();
+	virtual void Skin();
 
 private:
 	SizeGrip    sizegrip;

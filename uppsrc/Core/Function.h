@@ -84,7 +84,7 @@ public:
 	                                             WrapperBase *b = ptr; ptr = new Wrapper2<Function>(*this, pick(fn)); Free(b); return *this; }
 
 	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
-	
+
 	operator bool() const                      { return ptr; }
 	void Clear()                               { Free(ptr); ptr = NULL; }
 

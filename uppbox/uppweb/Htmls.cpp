@@ -37,8 +37,11 @@ Htmls& Htmls::Color(class Color color)             { Quote(ColorToHtml(color)); 
 Htmls& Htmls::Percent(double d)                    { return Quote(UPP::Format("%g%%", d)); }
 
 Htmls& Htmls::Color(const char *nm, class Color c) {
-	if(!UPP::IsNull(c))
-		Attr(nm); Cat('='); return Color(c);
+	if(UPP::IsNull(c))
+		return *this;
+	Attr(nm);
+	Cat('=');
+	return Color(c);
 }
 
 Htmls& Htmls::Percent(const char *nm, double d)    { Attr(nm); Cat('='); return Percent(d); }

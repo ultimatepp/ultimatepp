@@ -15,5 +15,5 @@ GUI_APP_MAIN
 	win.Add(edit.SizePos());
 	win.Run();
 	
-	DDUMP(AsCString(edit.GetQTF()));
+	RDUMP(AsCString(edit.GetQTF()));
 }

@@ -209,6 +209,8 @@ void Ctrl::StateH(int reason)
 		if((*statehook()[i])(this, reason))
 			return;
 	StateDeep(reason);
+	if(reason == OPEN)
+		DoSkin();
 	FullRefreshCleanup();
 }
 
@@ -462,12 +464,12 @@ String Desc(const Ctrl *ctrl)
 	  s << " \"" << q << '\"';
 	const Ctrl *top = ctrl->GetTopWindow();
 	if(top && top != ctrl) {
- 		String q = top->GetDesc();
- 		if(IsNull(q))
- 			s << " (" << typeid(*top).name() << ")";
- 		else
-	 		s << " (\"" << q << "\")";
- 	}
+		String q = top->GetDesc();
+		if(IsNull(q))
+			s << " (" << typeid(*top).name() << ")";
+		else
+			s << " (\"" << q << "\")";
+	}
 	return s;
 }
 
@@ -699,13 +701,6 @@ Size Ctrl::Dsize;
 Size Ctrl::Csize;
 bool Ctrl::IsNoLayoutZoom;
 
-/*
-void InitRichTextZoom()
-{
-	SetRichTextStdScreenZoom(96 * GetTextSize(sZoomText, StdFont()).cy / 13, 600);
-	Ctrl::ReSkin();
-}
-*/
 void InitRichTextZoom()
 {
 	Size h = 96 * Ctrl::Bsize / Ctrl::Dsize;
@@ -925,9 +920,10 @@ INITBLOCK {
 	whenSetStdFont = &Ctrl::ReSkin;
 }
 
-void (*Ctrl::skin)();
+void (**Ctrl::skin)();
+int Ctrl::skini;
 
-void CtrlSetDefaultSkin(void (*_skin)())
+void CtrlSetDefaultSkin(void (**_skin)())
 {
 	Ctrl::skin = _skin;
 }
@@ -935,7 +931,7 @@ void CtrlSetDefaultSkin(void (*_skin)())
 void Ctrl::SetSkin(void (*_skin)())
 {
 	GuiLock __;
-	skin = _skin;
+	skin[0] = _skin;
 	ReSkin();
 }
 
@@ -947,19 +943,47 @@ void Ctrl::ReSkin()
 		return;
 	lock++;
 	ChReset();
-	Iml::ResetAll();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
-	if(skin)
-		(*skin)();
+	Iml::SkinAll();
+	if(skin[skini])
+		(*skin[skini])();
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
 	Vector<Ctrl *> ctrl = GetTopCtrls();
 	for(int i = 0; i < ctrl.GetCount(); i++) {
 		ctrl[i]->RefreshLayoutDeep();
+		ctrl[i]->DoSkin();
 		ctrl[i]->RefreshFrame();
 	}
 	lock--;
+}
+
+static bool s_skin_change_sensitive;
+
+void Ctrl::SkinChangeSensitive(bool b)
+{
+	s_skin_change_sensitive = b;
+}
+
+void Ctrl::PostReSkin()
+{ // use timer so that it is done just once if there are multiple windows
+	static TimeCallback tm;
+	if(s_skin_change_sensitive)
+		tm.KillPost([=] { ReSkin(); });
+}
+
+void Ctrl::DoSkin()
+{
+	for(Ctrl& q : *this)
+		q.DoSkin();
+	Skin();
+}
+
+void Ctrl::SwapDarkLight()
+{
+	skini = skini ? 0 : IsDarkTheme() ? 1 : 2;
+	ReSkin();
 }
 
 CH_INT(GUI_GlobalStyle, GUISTYLE_CLASSIC);

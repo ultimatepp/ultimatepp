@@ -46,15 +46,11 @@ bool   IsDarkColorFace();
 
 template <class T>
 struct ChStyle {
-	byte status;
-	byte registered;
-	T   *standard;
+	byte status = 0; // 0 - has to be initialised or written, 1 - initialised, 2 - was written
+	byte registered = 0; // 0 - not yet registered
 
-	const T& Standard() const      { return *standard; }
 	T&       Write() const         { T& x = *(T *)this; x.status = 2; ChInvalidate(); return x; }
 	void     Assign(const T& src)  { *(T *)this = src; }
-
-	ChStyle()                      { status = 0; registered = 0; standard = NULL; }
 };
 
 #define CH_STYLE(klass, type, style) \
@@ -69,19 +65,16 @@ void COMBINE5(klass, __, type, __, style)::InitIt() { \
 \
 const klass::type& klass::style() \
 { \
-	static COMBINE5(klass, __, type, __, style) b, standard; \
+	static COMBINE5(klass, __, type, __, style) b; \
 	if(b.status == 0) { \
 		ChRegisterStyle__(b.status, b.registered, COMBINE5(klass, __, type, __, style)::InitIt); \
 		b.Init(); \
 		b.status = 1; \
-		standard = b; \
-		standard.standard = b.standard = &standard; \
 	} \
 	return b; \
 } \
 \
 void COMBINE5(klass, __, type, __, style)::Init()
-
 
 // CH_VAR0 allows inserting action into _Write (missing ending '}')
 #define CH_VAR0(chtype, type, name, init) \
@@ -105,7 +98,7 @@ void COMBINE(name, _Write)(type v) { COMBINE(ch_var__, name)().Write().value = v
 
 #define CH_VAR(chtype, type, name, init) CH_VAR0(chtype, type, name, init) }
 
-struct ChColor : ChStyle<ChColor> { Color value; };
+struct ChColor : ChStyle<ChColor> { SColor value; };
 #define CH_COLOR(name, init) CH_VAR(ChColor, Color, name, init)
 
 struct ChInt : ChStyle<ChInt> { int value; };

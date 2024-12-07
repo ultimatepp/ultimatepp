@@ -155,6 +155,7 @@ private:
 		uint64 aux_data;
 		int    paintcount;
 
+		void   NewSerial();
 		void   Retain()  { AtomicInc(refcount); }
 		void   Release() { if(AtomicDec(refcount) == 0) delete this; }
 		
@@ -178,6 +179,7 @@ private:
 	friend struct scImageMaker;
 
 	void         SetAuxData(uint64 data);
+	friend void  iml_ReplaceAll(Image& tgt, Image& src);
 
 public:
 	Size   GetSize() const                     { return data ? data->buffer.GetSize() : Size(0, 0); }
@@ -313,6 +315,7 @@ class Iml {
 
 public:
 	void   Reset();
+	void   Skin();
 	int    GetCount() const                  { return map.GetCount(); }
 	String GetId(int i) const                { return map.GetKey(i); }
 	Image  Get(int i);
@@ -330,6 +333,7 @@ public:
 	void GlobalFlag(dword f)               { global_flags |= f; }
 	
 	static void ResetAll(); // clears all .iml caches
+	static void SkinAll(); // reskins all .iml caches
 };
 
 void   Register(const char *imageclass, Iml& iml);

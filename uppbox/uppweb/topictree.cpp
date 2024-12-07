@@ -9,30 +9,36 @@ int GetMaxDocLevel();
 
 struct ScanTopicIterator : RichText::Iterator {
 	String         link;
+	String         prefix;
 
 	virtual bool operator()(int pos, const RichPara& para)
 	{
 		if(!IsNull(para.format.label)) {
 			LLOG("label: " << para.format.label);
 			INTERLOCKED_(reflink_lock)
-				reflink.Add(para.format.label, link);
+				reflink.Add(prefix + para.format.label, link);
 		}
 		return false;
 	}
 };
 
-static void sDoFile(const char *path, const char *link)
+static void sDoFile(const char *path, const char *link, bool dev)
 {
 	ScanTopicIterator sti;
 	sti.link = link;
 	ParseQTF(ReadTopic(LoadFile(path))).Iterate(sti);
 }
 
-void GatherRefLinks(const char *upp)
+String TopicLinkString(TopicLink tl, bool dev)
 {
-#ifdef MTC
+	if(dev)
+		tl.topic << "$dev";
+	return TopicLinkString(tl);
+}
+
+void GatherRefLinks(const char *upp, bool dev)
+{
 	CoWork work;
-#endif
 	for(FindFile pff(AppendFileName(upp, "*.*")); pff; pff.Next()) {
 		if(pff.IsFolder()) {
 			String package = pff.GetName();
@@ -49,15 +55,12 @@ void GatherRefLinks(const char *upp)
 							if(ft.IsFile()) {
 								String path = AppendFileName(dir, ft.GetName());
 								tl.topic = GetFileTitle(ft.GetName());
-								String link = TopicLinkString(tl);
-	#ifdef MTC
-								work & callback2(sDoFile, path, link);
-	#else
+								String link = TopicLinkString(tl, dev);
+								work & callback3(sDoFile, path, link, dev);
 								ScanTopicIterator sti;
 								sti.link = link;
 								LLOG("Indexing topic " << path << " link: " << link);
 								ParseQTF(ReadTopic(LoadFile(path))).Iterate(sti);
-	#endif
 							}
 						}
 					}
@@ -97,13 +100,13 @@ struct GatherLinkIterator : RichText::Iterator {
 	}
 };
 
-String TopicFileName(const char *dir, const char *topic)
+String TopicFileName(String dir, String topic)
 {
 	TopicLink tl = ParseTopicLink(topic);
 	return AppendFileName(dir, AppendFileName(tl.package, AppendFileName(tl.group + ".tpp", tl.topic + ".tpp")));
 }
 
-String TopicFileName(String topic)
+String TopicFileName2(String topic, bool dev)
 {
 	int q = topic.ReverseFind('$');
 	if(q >= 0)
@@ -111,29 +114,28 @@ String TopicFileName(String topic)
 	String p = TopicFileName(uppbox, topic);
 	if(FileExists(p))
 		return p;
-	p = TopicFileName(bazaar, topic);
-	if(FileExists(p))
-		return p;
-	return TopicFileName(uppsrc, topic);
+	return TopicFileName(dev ? devsrc : uppsrc, topic);
 }
 
-String TopicFileNameHtml(const char *topic)
+String TopicFileNameHtml(const char *topic, bool dev)
 {
 	TopicLink tl = ParseTopicLink(topic);
 	tl.package.Replace("/","$");
 	tl.package.Replace("\\","$");
+	if(dev)
+		return tl.group + "$" + tl.package+ "$" + tl.topic + "$dev.html";
 	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 
-static void sGatherTopics(ArrayMap<String, Topic> *map, Vector<String> *ttFullIds, const char *topic, String parentIds)
+static void sGatherTopics(ArrayMap<String, Topic> *map, Vector<String> *ttFullIds, const char *topic, String parentIds, bool dev)
 {
-	GatherTopics(*map, *ttFullIds, topic, parentIds);
+	GatherTopics(*map, *ttFullIds, topic, parentIds, dev);
 }
 	
 String ChangeTopicLanguage(const String &topic, int lang);
 String GetTopicLanguage(const String &topic);
 
-String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds)
+String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds, bool dev)
 {
 	static StaticCriticalSection mapl;
 	LLOG("Gather topics: " << topic);
@@ -142,13 +144,13 @@ String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, cons
 		q = tt.Find(topic);
 	if(q < 0) {
 		LLOG("GatherTopics " << topic);
-		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
+		Topic p = ReadTopic(LoadFile(TopicFileName2(topic, dev)));
 		title = p.title;
 				
 		String t = p;
 		if(IsNull(t)) {
 			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));
-			p = ReadTopic(LoadFile(TopicFileName(topicEng)));
+			p = ReadTopic(LoadFile(TopicFileName2(topicEng, dev)));
 			String tt = p;
 			if(IsNull(tt))
 				return "index.html";
@@ -174,18 +176,18 @@ String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, cons
 			work & callback2(sGatherTopics, &tt, ti.link[i]);
 #else*/
 		for(int i = 0; i < ti.link.GetCount(); i++)
-			sGatherTopics(&tt, &ttFullIds, ti.link[i], newParentIds);
+			sGatherTopics(&tt, &ttFullIds, ti.link[i], newParentIds, dev);
 //#endif
 	} else {
 		INTERLOCKED_(mapl)
 			title = tt[q].title;
 			ttFullIds.Add(parentIds + "/" + FormatInt(q));
 	}
-	return TopicFileNameHtml(topic);
+	return TopicFileNameHtml(topic, dev);
 }
 
-String GatherTopics(ArrayMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds)
+String GatherTopics(ArrayMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds, bool dev)
 {
 	String dummy;
-	return GatherTopics(map, ttFullIds, topic, dummy, parentIds);
+	return GatherTopics(map, ttFullIds, topic, dummy, parentIds, dev);
 }

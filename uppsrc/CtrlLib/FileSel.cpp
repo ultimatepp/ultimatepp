@@ -1449,6 +1449,11 @@ void FileSel::Activate()
 	TopWindow::Activate();
 }
 
+void FileSel::Skin()
+{
+	Reload();
+}
+
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
 	case K_F9:

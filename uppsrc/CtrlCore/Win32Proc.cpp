@@ -593,9 +593,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_ACTIVATE:
 		LLOG("WM_ACTIVATE " << Name() << ", wParam = " << (int)wParam << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		ignorekeyup = true;
-	case 0x031A: // WM_THEMECHANGED
-		XpClear();
-		break;
 	case WM_SETFOCUS:
 		LLOG("WM_SETFOCUS " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		if(this != focusCtrlWnd || focusCtrl && focusCtrlWnd != focusCtrl->GetTopCtrl()) { // second condition fixes popup issue when clicking dialog parent
@@ -664,13 +661,10 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		return 0L;
 #endif
-/*	case WM_SETTINGCHANGE:
+	case WM_SETTINGCHANGE:
 	case 0x031A: // WM_THEMECHANGED
-		ReSkin();
-		RefreshLayoutDeep();
-		RefreshFrame();
+		PostReSkin();
 		break;
-*/
 /*
     case WM_IME_COMPOSITION:
 		HIMC himc = ImmGetContext(hwnd);
