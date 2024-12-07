@@ -4,6 +4,12 @@ namespace Upp {
 
 #define LTIMING(x)  // DTIMING(x)
 
+Color SColorEvenRow()
+{
+	static SColor s([] { return Blend(SColorMark, SColorPaper, 220); });
+	return s;
+}
+
 ArrayCtrl::Column::Column() {
 	convert = NULL;
 	edit = NULL;

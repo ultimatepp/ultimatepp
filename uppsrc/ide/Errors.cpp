@@ -493,8 +493,9 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		if(assist)
 			f.kind = 1;
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
-			Color paper = HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
-			                                                     : HighlightSetup::PAPER_WARNING).color;
+			static SColor serror([] { return HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color; });
+			static SColor swarning([] { return HighlightSetup::GetHlStyle(HighlightSetup::PAPER_WARNING).color; });
+			Color paper = f.kind == 1 ? serror : swarning;
 			if(f.kind == 1)
 				error_count++;
 			else

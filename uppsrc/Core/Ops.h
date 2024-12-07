@@ -161,6 +161,11 @@ inline dword FoldHash(dword h)
 
 #endif
 
+inline dword FoldHash32(dword h)
+{
+	return SwapEndian32(0x8e86671b * h);
+}
+
 inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x >> 8) >> 24)) & 0xff); }
 
 force_inline

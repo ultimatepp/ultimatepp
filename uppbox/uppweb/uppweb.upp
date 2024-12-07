@@ -20,7 +20,6 @@ file
 	www.h,
 	Htmls.h,
 	Htmls.cpp,
-	svn.cpp,
 	topictree.cpp,
 	cpp.cpp tabsize 4,
 	topic1.cpp,

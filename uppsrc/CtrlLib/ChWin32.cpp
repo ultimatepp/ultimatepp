@@ -380,7 +380,7 @@ bool IsSystemThemeDark()
 	return GetEnv("UPP_DARKMODE__") == "1" ? !b : b;
 }
 
-void ChHostSkin()
+void ChHostSkin0()
 {
 	if(Ctrl::IsUHDEnabled()) {
 		HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
@@ -394,8 +394,6 @@ void ChHostSkin()
 				(*SetProcessDPIAware)();
 		}
 	}
-
-	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
 
 	NONCLIENTMETRICSW ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
@@ -740,6 +738,24 @@ void ChHostSkin()
 	}
 	else
 		ChClassicSkin();
+}
+
+void ChHostSkin()
+{
+	sEmulateDarkTheme = Ctrl::IsDarkThemeEnabled() && IsSystemThemeDark() && !IsDark(Color::FromCR(GetSysColor(COLOR_WINDOW)));
+	ChHostSkin0();
+}
+
+void ChHostSkinLight()
+{
+	sEmulateDarkTheme = false;
+	ChHostSkin0();
+}
+
+void ChHostSkinDark()
+{
+	sEmulateDarkTheme = true;
+	ChHostSkin0();
 }
 
 }

@@ -226,6 +226,7 @@ public:
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 	virtual Rect   GetCaret() const;
+	virtual void   Skin();
 
 private:
 	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }
@@ -855,6 +856,10 @@ public:
 };
 
 class RichEditWithToolBar : public RichEdit {
+public:
+	virtual void Skin();
+
+private:
 	ToolBar  toolbar;
 	bool     extended;
 	void RefreshBar();
