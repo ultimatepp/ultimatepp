@@ -1,0 +1,11 @@
+description "Demonstrates the linear interpolation templates.\377";
+
+uses
+	Core;
+
+file
+	LinearInterpolation.cpp;
+
+mainconfig
+	"" = "";
+
