@@ -720,14 +720,6 @@ Pointf Normalize(const Pointf& p);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
 
-// Linear interopolation templates
-
-template <typename T>
-inline T Lerp(T a, T b, double t)
-{
-    return a + t * (b - a);
-}
-
 template <typename T>
 inline Point_<T> Lerp(Point_<T> a, Point_<T> b, double t)
 {
