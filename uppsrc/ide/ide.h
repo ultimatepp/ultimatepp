@@ -380,6 +380,7 @@ public:
 	virtual   void   DeactivateBy(Ctrl *new_focus);
 	virtual   void   Activate();
 	virtual   void   Layout();
+	virtual   void   Skin();
 
 	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);
@@ -640,7 +641,6 @@ public:
 	bool      deactivate_save;
 	int       insert_include;
 	int       bordercolumn;
-	Color     bordercolor;
 	bool      persistent_find_replace;
 	bool      find_replace_restore_pos;
 	int       spellcheck_comments;
@@ -672,6 +672,7 @@ public:
 	byte      hilite_scope;
 	int       hilite_bracket;
 	int       hilite_ifdef;
+	bool      hl_custom = false;
 	bool      barline;
 	bool      qtfsel;
 

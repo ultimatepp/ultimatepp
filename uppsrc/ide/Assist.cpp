@@ -121,6 +121,7 @@ void AssistEditor::CloseAssist()
 		popup.Close();
 	if(annotation_popup.IsOpen())
 		annotation_popup.Close();
+	assist_item_ndx.Clear();
 	assist_item.Clear();
 	CloseTip();
 }

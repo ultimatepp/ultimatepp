@@ -14,6 +14,7 @@ bool IsWin2K();
 bool IsWinXP();
 bool IsWinVista();
 bool IsWin7();
+bool IsWin11();
 #endif
 
 HINSTANCE AppGetHandle();

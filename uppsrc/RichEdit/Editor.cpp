@@ -608,6 +608,18 @@ void StdIndexEntryDlg(String& s)
 	EditText(s, t_("Index Entry"), t_("Index entry"), CharFilterAscii128, 1000);
 }
 
+void RichEdit::Skin()
+{
+	adjustunits.Image(RichEditImg::AdjustUnits());
+	ink.ColorImage(RichEditImg::InkColor())
+	   .NullImage(RichEditImg::NullInkColor())
+	   .StaticImage(RichEditImg::ColorA());
+	paper.ColorImage(RichEditImg::PaperColor())
+	     .NullImage(RichEditImg::NullPaperColor())
+	     .StaticImage(RichEditImg::ColorA());
+	DoRefreshBar();
+}
+
 RichEdit::RichEdit()
 {
 	floating_zoom = Null;
@@ -651,7 +663,6 @@ RichEdit::RichEdit()
 	Layout();
 	SetSb();
 
-	adjustunits.Image(RichEditImg::AdjustUnits());
 	adjustunits <<= THISBACK(SetupUnits);
 	ruler.Add(adjustunits.RightPosZ(4, 16).VSizePosZ(2, 2));
 
@@ -710,13 +721,7 @@ RichEdit::RichEdit()
 
 	gototable.WhenSelect = THISBACK(Goto);
 
-	ink.ColorImage(RichEditImg::InkColor())
-	   .NullImage(RichEditImg::NullInkColor())
-	   .StaticImage(RichEditImg::ColorA());
 	ink.NotNull();
-	paper.ColorImage(RichEditImg::PaperColor())
-	     .NullImage(RichEditImg::NullPaperColor())
-	     .StaticImage(RichEditImg::ColorA());
 	ink <<= THISBACK(SetInk);
 	ink.Tip(t_("Text color"));
 	paper <<= THISBACK(SetPaper);
@@ -766,6 +771,11 @@ void RichEditWithToolBar::TheBar(Bar& bar)
 void RichEditWithToolBar::RefreshBar()
 {
 	toolbar.Set(THISBACK(TheBar));
+}
+
+void RichEditWithToolBar::Skin()
+{
+	RefreshBar();
 }
 
 void RichEdit::EvaluateFields()

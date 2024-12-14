@@ -94,11 +94,91 @@ double ContrastRatio(Color c1, Color c2) {
 	return (max(rl1, rl2) + 0.05) / (min(rl1, rl2) + 0.05);
 }
 
+static const int s_Max = 1024;
+static std::atomic<int> s_color_ii;
+static std::atomic<dword> s_color[s_Max];
+static Color (*s_color_fn[s_Max])();
+static Mutex sColorMutex;
+
+SColor::SColor(Color (*fn)())
+{
+	int ii = s_color_ii++;
+	ASSERT(ii < s_Max); // number of SColors is limited
+	ii = min(ii, s_Max - 1);
+	s_color_fn[ii] = fn;
+	if(fn) {
+		Mutex::Lock __(sColorMutex);
+		s_color[ii] = (*fn)();
+	}
+	color = ii | SCOLOR;
+}
+
+#ifdef _DEBUG
+SColor::~SColor()
+{
+	ASSERT(!IsMainRunning()); // SColor cannot be stack variable
+}
+#endif
+
+void SColor::Refresh()
+{
+	Mutex::Lock __(sColorMutex);
+	int n = min((int)s_color_ii, s_Max - 1);
+	for(int i = 0; i < n; i++)
+		if(s_color_fn[i])
+			s_color[i] = SCOLOR;
+}
+
+void SColor::Write(Color c, Color val)
+{
+	int ii = c.GetRaw() & VBITS;
+	ASSERT((c.GetRaw() & SCOLOR) && ii >= 0 && ii < s_Max);
+	if(ii >= 0 && ii < s_Max) {
+		ASSERT(!s_color_fn[ii]);
+		s_color[ii] = val.Resolved();
+	}
+}
+
+bool AColor_dark_mode__;
+
 dword Color::Get() const
 {
 	if(IsNullInstance()) return 0;
-	dword c = color;
-	return c & 0xffffff;
+	if(color & SPECIAL)
+		return 0;
+	dword val = color & VBITS;
+	if(color & ACOLOR) {
+		Color c = FromRaw(val);
+		if(AColor_dark_mode__)
+			return DarkThemeCached(c).color;
+		return val;
+	}
+	if(color & SCOLOR) {
+		if(val < s_Max) {
+			std::atomic<dword>& r = s_color[val];
+			if(r & SCOLOR) {
+				Mutex::Lock __(sColorMutex);
+				if(s_color_fn[val])
+					r = (*s_color_fn[val])() & VBITS;
+				else
+					r = 0;
+			}
+			return r;
+		}
+		return 0;
+	}
+	return color & VBITS;
+}
+
+String Color::ToString() const {
+	if(IsNull(*this))
+		return "Color(Null)";
+	if(color & SCOLOR)
+		return Format("SColor(%d) -> Color(%d, %d, %d)", int(color & VBITS), GetR(), GetG(), GetB());
+	int ii = GetSpecial();
+	if(ii >= 0)
+		return Format("Color::Special(%d)", ii);
+	return Format("Color(%d, %d, %d)", GetR(), GetG(), GetB());
 }
 
 template <>
@@ -172,7 +252,7 @@ void Color::Xmlize(XmlIO& xio)
 	if(IsNull(r))
 		*this = Null;
 	else
-		*this = Color(r, g, b);	
+		*this = Color(r, g, b);
 }
 
 RGBA operator*(int alpha, Color c)
@@ -184,15 +264,6 @@ RGBA operator*(int alpha, Color c)
 	r.g = (alpha * c.GetG()) >> 8;
 	r.b = (alpha * c.GetB()) >> 8;
 	return r;
-}
-
-template<>
-String AsString(const Color& c) {
-	if(IsNull(c))
-		return "Color(Null)";
-	if(c.GetRaw() & 0x80000000)
-		return Format("Color(%d, 0)", int(c.GetRaw() & ~0x80000000));
-	return Format("Color(%d, %d, %d)", c.GetR(), c.GetG(), c.GetB());
 }
 
 String ColorToHtml(Color color)
@@ -236,6 +307,14 @@ Color Blend(Color c1, Color c2, int alpha)
 	             min(((a * (c2.GetB() - c1.GetB())) >> 8) + c1.GetB(), 255));
 }
 
+Color Lerp(Color a, Color b, double t)
+{
+	auto Ch = [&](byte a, byte b) {
+		return (byte)clamp(Lerp((double)a, (double)b, t), 0., 255.);
+	};
+	return Color(Ch(a.GetR(), b.GetR()), Ch(a.GetG(), b.GetG()), Ch(a.GetB(), b.GetB()));
+}
+
 INITBLOCK {
 	Value::SvoRegister<Color>("Color");
 }
@@ -259,8 +338,6 @@ int  Grayscale2(const Color& c)
 {
 	return (c.GetR() + c.GetG() + c.GetB()) / 3;
 }
-
-#if 1
 
 double C_R = 0.32;
 double C_G = 0.5;
@@ -302,91 +379,12 @@ Color DarkTheme(Color color)
 	             Saturate255(int(b + saturation)));
 }
 
-
-#else // older worse algorithm
-
-double DarkTheme_c[3] = { 0.3, 0.5, 0.2 };
-int    DarkTheme_middle = 155;
-
-Color DarkTheme(Color color)
-{
-	if(IsNull(color))
-		return Null;
-	
-	double v[3];
-	v[0] = color.GetR();
-	v[1] = color.GetG();
-	v[2] = color.GetB();
-
-// this represent physiological perception of brightness of R,G,B. Sum = 1
-	static double *c = DarkTheme_c; // with this set, blues and reds are more pronounced
-
-	double m0 = c[0] * v[0] + c[1] * v[1] + c[2] * v[2]; // base brightness
-	
-	const int middle = DarkTheme_middle; // this value represents gamma-like feature, imbalance of perception of dark vs bright
-	const double up = (256.0 - middle) / middle;
-	const double down = 1 / up;
-
-	double m; // target brightness
-	if(m0 < middle)
-		m = middle + (middle - m0) * up;
-	else
-		m = middle - (m0 - middle) * down;
-	
-	int i0 = 0;
-	int i1 = 1;
-	int i2 = 2;
-	
-	if(v[i0] > v[i1])
-		Swap(i0, i1);
-	if(v[i1] > v[i2])
-		Swap(i1, i2);
-	if(v[i0] > v[i1])
-		Swap(i0, i1);
-
-	if(m0 < m) {
-		m -= m0;
-		double a = min(v[i2] + m, 255.0) - v[i2];
-		v[i0] += a;
-		v[i1] += a;
-		v[i2] += a;
-		m -= a;
-
-		a = min(v[i1] + m / (c[i0] + c[i1]), 255.0) - v[i1];
-		v[i0] += a;
-		v[i1] += a;
-		m -= (c[i0] + c[i1]) * a;
-
-		v[i0] = min(v[i0] + m / c[i1], 255.0);
-	}
-	else {
-		m = m0 - m;
-		double a = v[i0] - max(v[i0] - m, 0.0);
-		v[i0] -= a;
-		v[i1] -= a;
-		v[i2] -= a;
-		m -= a;
-
-		a = v[i1] - max(v[i1] - m / (c[i1] + c[i2]), 0.0);
-		v[i1] -= a;
-		v[i2] -= a;
-		m -= (c[i1] + c[i2]) * a;
-
-		v[i2] = max(v[i2] - m / c[i2], 0.0);
-	}
-	
-	return Color((int)v[0], (int)v[1], (int)v[2]);
-}
-
-#endif
-
 Color DarkThemeCached(Color c)
 {
-	const int N = 8;
+	const int N = 256; // must be 2^N
 	thread_local struct Cache {
 		Color icolor[N];
 		Color ocolor[N];
-		int   ii = 0;
 		
 		Cache() {
 			for(int i = 0; i < N; i++) {
@@ -395,13 +393,12 @@ Color DarkThemeCached(Color c)
 			}
 		}
 	} cache;
-	#define DO(i) if(cache.icolor[i] == c) return cache.ocolor[i];
-	DO(0); DO(1); DO(2); DO(3); DO(4); DO(5); DO(6); DO(7);
-	cache.ii = (cache.ii + 1) & (N - 1);
-	cache.icolor[cache.ii] = c;
-	c = DarkTheme(c);
-	cache.ocolor[cache.ii] = c;
-	return c;
+	
+	int i = FoldHash32(c.GetRaw()) & (N - 1);
+	if(cache.icolor[i] == c)
+		return cache.ocolor[i];
+	cache.icolor[i] = c;
+	return cache.ocolor[i] = DarkTheme(cache.icolor[i]);
 }
 
 }
