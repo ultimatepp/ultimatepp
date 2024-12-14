@@ -161,23 +161,28 @@ int LineEdit::RectSelectionOp(Event<int, Rect, int64, int64, WString&> op, Event
 
 void LineEdit::RectSelectionChar(int c)
 {
+	RectSelectionText(WString(c, 1));
+}
+
+void LineEdit::RectSelectionText(const WString& text)
+{
 	if(GetRectSelection().GetWidth())
 		RemoveRectSelection();
-	int p = -1; // position after insertion, because of '\t' and double size chars cannot do just left+1
+	int p = -1; // position after insertion, because of '\t' and double size chars cannot do just left+text.GetCount()
 	RectSelectionOp(
 		[&](int i, Rect rect, int64 l, int64 h, WString& s) {
 			int x = GetColumnLine(l).x;
 			int cursor;
 			if(x < rect.left) {
 				s.Cat(' ', rect.left - x);
-				s.Cat(c);
+				s.Cat(text);
 				if(p < 0)
 					p = GetPos(i) + s.GetCount();
 			}
 			else {
-				s.Insert(int(l - GetPos64(i)), c);
+				s.Insert(int(l - GetPos64(i)), text);
 				if(p < 0) // first time the position is unchanged after whole text is replaced
-					p = l + 1;
+					p = l + text.GetCount();
 			}
 			
 		},
@@ -188,19 +193,67 @@ void LineEdit::RectSelectionChar(int c)
 
 void LineEdit::RectSelectionBackspace()
 {
+	if(GetRectSelection().GetWidth())
+		RectSelectionDelete();
+	else {
+		int a = anchor;
+		RectSelectionLeftRight(-1, false);
+		if(a != anchor)
+			RectSelectionDelete();
+	}
+}
+
+void LineEdit::RectSelectionDelete()
+{
 	Rect r = GetRectSelection();
 	if(r.GetWidth())
 		RemoveRectSelection();
 	else
-	if(r.left > 0)
 		RectSelectionOp(
 			[&](int i, Rect rect, int64 l, int64 h, WString& s) {
 				int p = int(l - GetPos64(i));
-				if(GetColumnLine(l).x == rect.left && p - 1 < s.GetCount())
-					s.Remove(p - 1, 1);
+				if(GetColumnLine(l).x == rect.left && p < s.GetCount())
+					s.Remove(p, 1);
 			},
-			[&](Rect& r) { r.left--; }
+			[&](Rect& r) {}
 		);
+}
+
+void LineEdit::RectSelectionLeftRight(int dir, bool homeend)
+{
+	Rect rect = GetRectSelection();
+	
+	if(rect.left != rect.right) {
+		if(dir > 0)
+			rect.left = rect.right;
+		anchor = (int)GetGPos(rect.top, rect.left);
+		cursor = (int)GetGPos(rect.bottom, rect.left);
+		PlaceCaret0();
+		Refresh();
+		return;
+	}
+
+	auto Try = [&](int64& anchor, int64& cursor) {
+		Point a0 = GetColumnLine(anchor);
+		int64 a = clamp(anchor + dir, (int64)0, GetLength64());
+		Point a1 = GetColumnLine(a);
+		
+		if(a1.y != a0.y)
+			return false;
+		int c = (int)GetGPos(GetColumnLine(cursor).y, a1.x);
+		if(GetColumnLine(c).x == a1.x) {
+			anchor = a;
+			cursor = c;
+			PlaceCaret0();
+			return true;
+		}
+		return false;
+	};
+	
+	int n = homeend ? 1000 : 1;
+	
+	while(n > 0 && (Try(anchor, cursor) || Try(cursor, anchor)))
+		n--;
 }
 
 int LineEdit::RemoveRectSelection()
@@ -233,7 +286,7 @@ int LineEdit::PasteRectSelection(const WString& s)
 	Vector<WString> cl = Split(s, '\n', false);
 	int cursor0 = cursor;
 	if(cl.GetCount() == 1)
-		PasteColumn(cl[0]);
+		RectSelectionText(cl[0]);
 	else {
 		Rect rect = GetRectSelection();
 		int64 pos = cursor;
@@ -278,10 +331,10 @@ void LineEdit::PasteColumn(const WString& text)
 			int li = p.y + i;
 			if(li < GetLineCount()) {
 				int l = (int)GetGPos(i + p.y, p.x);
-				pos = l + Insert(l, cl[i]);
+				pos = l + Insert(l, WString(' ', max(p.x - GetColumnLine(l).x, 0)) + cl[i]);
 			}
 			else {
-				Insert(GetLength32(), cl[i] + "\n");
+				Insert(GetLength32(), "\n" + WString(' ', p.x) + cl[i]);
 				pos = GetLength32();
 			}
 		}
@@ -1252,6 +1305,8 @@ bool LineEdit::Key(dword key, int count) {
 	}
 	bool sel = key & K_SHIFT;
 	dorectsel = key & K_ALT;
+	if(IsRectSelection() && sel)
+		dorectsel = true;
 	dword k = key & ~K_SHIFT;
 	if((key & (K_SHIFT|K_ALT)) == (K_SHIFT|K_ALT))
 		k &= ~K_ALT;
@@ -1267,15 +1322,31 @@ bool LineEdit::Key(dword key, int count) {
 			break;
 		}
 	case K_LEFT:
+		if(IsRectSelection() && !dorectsel) {
+			RectSelectionLeftRight(-1, false);
+			break;
+		}
 		MoveLeft(sel);
 		break;
 	case K_RIGHT:
+		if(IsRectSelection() && !dorectsel) {
+			RectSelectionLeftRight(1, false);
+			break;
+		}
 		MoveRight(sel);
 		break;
 	case K_HOME:
+		if(IsRectSelection() && !dorectsel) {
+			RectSelectionLeftRight(-1, true);
+			break;
+		}
 		MoveHome(sel);
 		break;
 	case K_END:
+		if(IsRectSelection() && !dorectsel) {
+			RectSelectionLeftRight(1, true);
+			break;
+		}
 		MoveEnd(sel);
 		break;
 	case K_UP:
@@ -1313,10 +1384,14 @@ bool LineEdit::Key(dword key, int count) {
 			return MenuBar::Scan(WhenBar, key);
 		switch(key) {
 		case K_DELETE:
+			if(IsRectSelection() && !dorectsel) {
+				RectSelectionDelete();
+				break;
+			}
 			DeleteChar();
 			break;
 		case K_BACKSPACE:
-			if(IsRectSelection()) {
+			if(IsRectSelection() && !dorectsel) {
 				RectSelectionBackspace();
 				break;
 			}

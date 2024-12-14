@@ -379,7 +379,10 @@ protected:
 	void   SyncFont();
 	bool   IsDoubleChar(int ch) const;
 	void   RectSelectionChar(int c);
+	void   RectSelectionText(const WString& text);
 	void   RectSelectionBackspace();
+	void   RectSelectionDelete();
+	void   RectSelectionLeftRight(int dir, bool homeend);
 	int    RectSelectionOp(Event<int, Rect, int64, int64, WString&> op, Event<Rect&> changesel = Null);
 
 	struct RefreshDraw;
