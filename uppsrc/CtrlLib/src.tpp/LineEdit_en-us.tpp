@@ -64,8 +64,8 @@ t]_[*@3 p])_[@(0.0.255) const]&]
 [s2;%% Get the the offset of character placed at [%-*@3 p].&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:GetColumnLine`(int`)const: [_^Point^ Point]_[* GetColumnLine]([@(0.0.255) i
-nt]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:LineEdit`:`:GetColumnLine`(int64`)const: Point [* GetColumnLine](int64 
+[*@3 pos]) [@(0.0.255) const]&]
 [s2;%% Returns the line and column for the character at [%-*@3 pos] 
 accounting for any tabulators. Column is x member of resulting 
 Point, line is y.&]
@@ -77,8 +77,8 @@ oint]_[*@3 pos])_[@(0.0.255) const]&]
 Does account for tabulators.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:GetIndexLine`(int`)const: [_^Point^ Point]_[* GetIndexLine]([@(0.0.255) in
-t]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:LineEdit`:`:GetIndexLine`(int64`)const: Point [* GetIndexLine](int64 
+[*@3 pos]) [@(0.0.255) const]&]
 [s2;%% Returns the line and index of character in the line for the 
 given [%-*@3 pos]. Does not account for tabulators.&]
 [s3; &]
@@ -89,8 +89,8 @@ oint]_[*@3 pos])_[@(0.0.255) const]&]
 Does not account for tabulators.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:SetRectSelection`(int`,int`): [@(0.0.255) void]_[* SetRectSelection]([@(0.0.255) i
-nt]_[*@3 l], [@(0.0.255) int]_[*@3 h])&]
+[s5;:Upp`:`:LineEdit`:`:SetRectSelection`(int64`,int64`): [@(0.0.255) void] 
+[* SetRectSelection](int64 [*@3 l], int64 [*@3 h])&]
 [s2;%% Sets rectangular selection.&]
 [s3;%% &]
 [s4; &]
@@ -105,9 +105,10 @@ onst]&]
 [s2;%% Returns rectangular selection (as `"graphical`").&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:GetRectSelection`(const Rect`&`,int`,int`&`,int`&`): [@(0.0.255) bool]_
-[* GetRectSelection]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], 
-[@(0.0.255) int]_[*@3 line], [@(0.0.255) int`&]_[*@3 l], [@(0.0.255) int]_`&[*@3 h])&]
+[s5;:Upp`:`:LineEdit`:`:GetRectSelection`(const Rect`&`,int`,int64`&`,int64`&`): [@(0.0.255) b
+ool] [* GetRectSelection]([@(0.0.255) const] Rect[@(0.0.255) `&] [*@3 rect], 
+[@(0.0.255) int] [*@3 line], int64[@(0.0.255) `&] [*@3 l], int64[@(0.0.255) `&] 
+[*@3 h])&]
 [s2;%% Returns lower and upper limits [%-*@3 l] [%-*@3 h] of characters 
 of [%-*@3 line] that are in rectangular selection [%-*@3 rect]. Returns 
 false when line is not in selection.&]
@@ -217,7 +218,7 @@ the text).&]
 [s5;:LineEdit`:`:PasteColumn`(const WString`&`): [@(0.0.255) void]_[* PasteColumn]([@(0.0.255) c
 onst]_[_^WString^ WString][@(0.0.255) `&]_[*@3 text])&]
 [s2;%% Pastes lines of [%-*@3 text] into actual graphical column of 
-text.&]
+text. Returns final cursor position.&]
 [s3;%% &]
 [s4; &]
 [s5;:LineEdit`:`:PasteColumn`(`): [@(0.0.255) void]_[* PasteColumn]()&]
