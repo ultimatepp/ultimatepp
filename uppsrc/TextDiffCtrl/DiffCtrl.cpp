@@ -21,6 +21,21 @@ TextDiffCtrl::TextDiffCtrl()
 	right.HideSb();
 	left.WhenLeftDouble = THISBACK(GetLeftLine);
 	right.WhenLeftDouble = THISBACK(GetRightLine);
+	left.WhenCursor = [=] {
+		if(!cl) {
+			cl++;
+			right.SetLine(left.GetLine());
+			cl--;
+		}
+	};
+	
+	right.WhenCursor =  [=] {
+		if(!cl) {
+			cl++;
+			left.SetLine(right.GetLine());
+			cl--;
+		}
+	};
 }
 
 void TextDiffCtrl::GetLeftLine(int number, int line)

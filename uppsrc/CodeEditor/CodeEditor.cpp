@@ -1093,6 +1093,8 @@ bool CodeEditor::Key(dword code, int count) {
 		Replace();
 		return true;
 	}
+	if(IsRectSelection())
+		return LineEdit::Key(code, count);
 	switch(code) {
 	case K_SHIFT_CTRL_UP:
 		SwapUpDown(true);
@@ -1137,7 +1139,8 @@ bool CodeEditor::Key(dword code, int count) {
 	case K_SHIFT_CTRL_TAB:
 		return LineEdit::Key(K_TAB, count);
 	case K_ENTER:
-		IndentInsert('\n', count);
+		if(!IsRectSelection())
+			IndentInsert('\n', count);
 		return true;
 	}
 	bool sel = code & K_SHIFT;

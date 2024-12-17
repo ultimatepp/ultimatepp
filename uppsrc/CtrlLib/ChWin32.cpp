@@ -665,6 +665,8 @@ void ChHostSkin0()
 				s.hthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERHORZ, 1));
 				e.part = SBP_THUMBBTNVERT;
 				s.vthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERVERT, 1));
+				if(IsWin11())
+					s.arrowsize = 0;
 			}
 			Color paper = i == 3 ? SColorFace : SColorPaper;
 			Image m = XpImage(XP_COMBOBOX, CP_DROPDOWNBUTTON, CBXS_NORMAL + i, paper, Size(32, 32));

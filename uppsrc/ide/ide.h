@@ -1008,7 +1008,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
-		void  RunRepoDiff(const String& filepath);
+		void  RunRepoDiff(const String& filepath, int cursor = -1);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);

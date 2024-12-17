@@ -58,6 +58,7 @@ void TextCtrl::MiddleDown(Point p, dword flags)
 void TextCtrl::CancelMode()
 {
 	selclick = false;
+	column_typing = false;
 	dropcaret = Null;
 	isdrag = false;
 }
@@ -903,7 +904,10 @@ void TextCtrl::Undodo()
 
 void TextCtrl::NextUndo()
 {
-	undoserial += incundoserial;
+	if(column_typing)
+		column_typing = false;
+	else
+		undoserial += incundoserial;
 	incundoserial = false;
 }
 
@@ -934,7 +938,7 @@ void TextCtrl::DecDirty() {
 int TextCtrl::InsertU(int pos, const WString& txt, bool typing) {
 	int sz = Insert0(pos, txt);
 	if(undosteps) {
-		if(undo.GetCount() > 1 && typing && *txt != '\n' && IsDirty()) {
+		if(undo.GetCount() && typing && *txt != '\n' && IsDirty()) {
 			UndoRec& u = undo.Tail();
 			if(u.typing && u.pos + u.size == pos) {
 				u.size += txt.GetLength();
@@ -1096,15 +1100,15 @@ bool   TextCtrl::RemoveSelection() {
 	int64 l, h;
 	if(anchor < 0) return false;
 	if(IsRectSelection())
-		l = RemoveRectSelection();
+		RemoveRectSelection();
 	else {
 		if(!GetSelection(l, h))
 			return false;
 		Remove((int)l, int(h - l));
+		anchor = -1;
+		Refresh();
+		PlaceCaret(l);
 	}
-	anchor = -1;
-	Refresh();
-	PlaceCaret(l);
 	Action();
 	return true;
 }

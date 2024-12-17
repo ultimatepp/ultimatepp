@@ -204,21 +204,25 @@ RepoDiff::RepoDiff()
 	SetRect(r);
 }
 
-void RunRepoDiff(const String& filepath)
+void RunRepoDiff(const String& filepath, int line)
 {
 	if(IsNull(filepath))
 		return;
 	RepoDiff dlg;
 	dlg.Set(filepath);
+	if(line >= 0)
+		dlg.diff.left.SetCursor(line + 1);
 	dlg.Execute();
 }
 
-void Ide::RunRepoDiff(const String& filepath)
+void Ide::RunRepoDiff(const String& filepath, int line)
 {
 	if(IsNull(filepath))
 		return;
 	RepoDiff& dlg = CreateNewWindow<RepoDiff>();
 	dlg.Set(filepath);
+	if(line >= 0)
+		dlg.diff.left.SetCursor(line + 1);
 	dlg.diff.WhenRightLine =
 	dlg.diff.WhenLeftLine = [=](int line) {
 		EditFile(filepath);

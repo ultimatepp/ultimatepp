@@ -89,7 +89,7 @@ public:
 bool GetCredentials(const String& url, const String& dir, String& username, String& password);
 void EditCredentials(const Vector<String>& url_hints);
 
-void RunRepoDiff(const String& filepath);
+void RunRepoDiff(const String& filepath, int line = -1);
 
 void LoadBranches(DropList& branch, const String& dir);
 void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file);

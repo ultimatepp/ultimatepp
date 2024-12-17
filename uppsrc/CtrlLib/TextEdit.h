@@ -84,6 +84,7 @@ protected:
 	int              undoserial;
 	bool             rectsel;
 	bool             incundoserial;
+	bool             column_typing = false; // group undos for column typing
 	int              undosteps;
 	BiArray<UndoRec> undo;
 	BiArray<UndoRec> redo;
@@ -349,6 +350,7 @@ protected:
 	int              vlinex;
 	Scroller         scroller;
 	Point            caretpos;
+	int              caretlines = 1;
 	bool             nohbar;
 	bool             showtabs;
 	bool             cutline;
@@ -366,7 +368,7 @@ protected:
 
 	void   MovePage(int dir, bool sel);
 
-	void   PlaceCaret0(Point p);
+	void   PlaceCaret0();
 	int    PlaceCaretNoG(int64 newcursor, bool sel = false);
 
 	void   Scroll();
@@ -376,6 +378,12 @@ protected:
 	void   DoPasteColumn() { PasteColumn(); }
 	void   SyncFont();
 	bool   IsDoubleChar(int ch) const;
+	void   RectSelectionChar(int c);
+	void   RectSelectionText(const WString& text);
+	void   RectSelectionBackspace();
+	void   RectSelectionDelete();
+	void   RectSelectionLeftRight(int dir, bool homeend);
+	int    RectSelectionOp(Event<int, Rect, int64, int64, WString&> op, Event<Rect&> changesel = Null);
 
 	struct RefreshDraw;
 	friend class TextCtrl;

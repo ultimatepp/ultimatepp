@@ -603,7 +603,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
 		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [=] {
 			if(!IsNull(editfile))
-				RunRepoDiff(editfile);
+				RunRepoDiff(editfile, editor.GetCursorLine());
 		}).Text(txt + "file..");
 		if(editfile_repo == GIT_DIR) {
 			String origin = Sys("git -C " + GetFileFolder(editfile) + " remote get-url origin");

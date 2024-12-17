@@ -515,8 +515,18 @@ Image SystemDraw::Win32IconCursor(LPCSTR id, int iconsize, bool cursor)
 		if(iconsize)
 			icon = (HICON)LoadImage(GetModuleHandle(NULL), id,
 			                        IMAGE_ICON, iconsize, iconsize, LR_DEFAULTCOLOR);
-		else
-			icon = LoadIcon(0, id);
+		else {
+			static HRESULT (WINAPI *LoadIconWithScaleDown)(HINSTANCE hinst, PCWSTR pszName, int cx, int cy, HICON *phico);
+			ONCELOCK {
+				DllFn(LoadIconWithScaleDown, "Comctl32.dll", "LoadIconWithScaleDown");
+			}
+
+			icon = NULL;
+			if(LoadIconWithScaleDown)
+				LoadIconWithScaleDown(0, (PCWSTR) id, GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), &icon);
+			else
+				icon = LoadIcon(0, id);
+		}
 	Image img = sWin32Icon(icon, cursor);
 	if(cursor)
 		img.SetAuxData(reinterpret_cast<uint64>(id));

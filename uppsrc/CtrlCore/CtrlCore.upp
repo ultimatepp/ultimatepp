@@ -62,6 +62,7 @@ file
 	TopWin32.cpp,
 	DHCtrl.cpp,
 	Win32Msg.i,
+	manifest.xml,
 	X11 readonly separator,
 	X11Gui.h,
 	X11GuiA.h,

@@ -149,7 +149,7 @@ String CppText(const String& name, const String& pretty)
 void AssistEditor::AssistDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
 	int ii = q;
-	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount()) {
+	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount() && editor->assist_item_ndx[ii] < editor->assist_item.GetCount()) {
 		AutoCompleteItem& m = editor->assist_item[editor->assist_item_ndx[ii]];
 
 		w.DrawRect(r, paper);
