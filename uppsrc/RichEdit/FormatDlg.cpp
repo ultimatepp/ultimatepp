@@ -174,6 +174,8 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo, bool 
 	if(RichText::TABS & formatinfo.paravalid)
 		for(int i = 0; i < formatinfo.tab.GetCount(); i++)
 			tabs.Add(formatinfo.tab[i].pos, formatinfo.tab[i].align, formatinfo.tab[i].fillchar);
+	if(unit == UNIT_PIXELMODE)
+		tabs.Disable();
 	tabsize.Set(unit, RichText::TABSIZE & formatinfo.paravalid ? formatinfo.tabsize : Null);
 	keepindent = formatinfo.indent != ComputeIndent();
 	SetupIndent();
@@ -355,7 +357,7 @@ void StyleManager::EnterStyle()
 	const RichStyle& s = style.Get(list.GetKey());
 	f.Set(s.format);
 	para.Set(unit, f);
-	height <<= RichEdit::DotToPt(s.format.GetHeight());
+	height <<= RichEdit::DotToPt(s.format.GetHeight(), unit);
 	face <<= s.format.GetFace();
 	bold = s.format.IsBold();
 	italic = s.format.IsItalic();
@@ -375,7 +377,7 @@ void StyleManager::GetFont(Font& font)
 	if(!IsNull(face))
 		font.Face(~face);
 	if(!IsNull(height))
-		font.Height(RichEdit::PtToDot(~height));
+		font.Height(RichEdit::PtToDot(~height, unit));
 	font.Bold(bold);
 	font.Italic(italic);
 	font.Underline(underline);

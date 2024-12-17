@@ -15,13 +15,17 @@ bool FontHeight::Key(dword key, int count)
 	return WithDropChoice<EditDouble>::Key(key, count);
 }
 
-double RichEdit::DotToPt(int dt)
+double RichEdit::DotToPt(int dot, int unit)
 {
-	return 7200 * minmax(dt, 8, 8000) / 600 / 10 / 10.0;
+	if(unit == UNIT_PIXELMODE)
+		return dot / 8.0;
+	return 7200 * minmax(dot, 8, 8000) / 600 / 10 / 10.0;
 }
 
-int RichEdit::PtToDot(double pt)
+int RichEdit::PtToDot(double pt, int unit)
 {
+	if(unit == UNIT_PIXELMODE)
+		return pt * 8;
 	return int((600 * pt + 71) / 72);
 }
 
@@ -221,9 +225,37 @@ RichEdit& RichEdit::Floating(double zoomlevel_)
 	return *this;
 }
 
+RichEdit& RichEdit::PixelMode()
+{
+	NoRuler();
+	ShowCodes(Blend(SColorHighlight(), SColorPaper()));
+	ViewBorder(0);
+
+	RichPara::Format f;
+	f.language = LNG_('C','S','C','Z');
+	(Font&)f = Arial(StdFont().GetHeight() * 8 / DPI(1));
+	f.tabsize = f['W'] * 8;
+	RichText::FormatInfo fi;
+	fi.Set(f);
+	ApplyFormatInfo(fi);
+
+	pixel_mode = true;
+	RefreshLayoutDeep();
+	
+	height.SetFilter(CharFilterDigit);
+	
+	unit = UNIT_PIXELMODE;
+	
+	return *this;
+}
+
 void RichEdit::Layout()
 {
 	Size sz = GetTextRect().GetSize();
+	if(pixel_mode) {
+		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8, INT_MAX));
+	}
+	else
 	if(!IsNull(floating_zoom)) {
 		Zoom m = GetRichTextStdScreenZoom();
 		SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
@@ -233,7 +265,7 @@ void RichEdit::Layout()
 	SetSb();
 	sb = zsc * GetZoom();
 	PlaceCaret();
-	if(GetSize() != p_size) {
+	if(GetSize() != p_size && !pixel_mode) {
 		sizetracking = true;
 		KillSetTimeCallback(250, THISBACK(EndSizeTracking), TIMEID_ENDSIZETRACKING);
 	}
