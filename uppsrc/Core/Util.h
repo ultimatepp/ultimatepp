@@ -260,6 +260,12 @@ void  SeedRandom();
 
 // Math utils
 
+template <typename T>
+inline T Lerp(T a, T b, double t)
+{
+	return T(a * (1.0 - t) + b * t);
+}
+
 inline double  sqr          (double a)                      { return a * a; }
 inline double  argsinh      (double s)                      { return log(s + sqrt(s * s + 1)); }
 inline double  argcosh      (double c)                      { ASSERT(c >= 1); return log(c + sqrt(c * c - 1)); }

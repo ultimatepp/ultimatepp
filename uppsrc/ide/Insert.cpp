@@ -192,7 +192,7 @@ void Ide::InsertAs(const String& data)
 	f[5] = LZMACompress(data);
 	for(int i = 0; i < 6; i++)
 		dlg.format.SetLabel(i, dlg.format.GetLabel(i) + " (" + AsString(f[i].GetCount()) + ")");
-	
+	dlg.format <<= 0;
 	if(dlg.Execute() != IDOK)
 		return;
 	int i = ~dlg.format;

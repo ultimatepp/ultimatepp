@@ -30,6 +30,22 @@ int TextCompareCtrl::GetLineNo(int y, int& ii)
 	return ii >= 0 && ii < lines.GetCount() ? lines[ii].number : Null;
 }
 
+bool TextCompareCtrl::SetCursor(int c)
+{
+	int ii = GetLine(c);
+	if(ii >= 0) {
+		cursor = anchor = c;
+		Refresh();
+		scroll.SetY(max(ii - scroll.GetReducedViewSize().cy / letter.cy / 2, 0));
+		scroll.ScrollIntoY(ii);
+		WhenSel();
+		WhenCursor();
+		return true;
+	}
+	cursor = anchor = Null;
+	return false;
+}
+
 void TextCompareCtrl::DoSelection(int y, bool shift)
 {
 	int ii;
@@ -42,7 +58,30 @@ void TextCompareCtrl::DoSelection(int y, bool shift)
 		Refresh();
 		scroll.ScrollIntoY(ii);
 		WhenSel();
+		if(!shift)
+			WhenCursor();
 	}
+}
+
+
+int TextCompareCtrl::GetLine(int cursor) const
+{
+	if(cursor >= 0)
+		for(int i = 0; i < lines.GetCount(); i++)
+			if(lines[i].number == cursor)
+				return i;
+	return -1;
+}
+
+int TextCompareCtrl::GetLine() const
+{
+	return GetLine(cursor);
+}
+
+void TextCompareCtrl::SetLine(int ii)
+{
+	if(ii >= 0)
+		DoSelection((ii - scroll.Get().y) * letter.cy, false);
 }
 
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
@@ -549,7 +588,7 @@ Point TextCompareCtrl::GetPos() const
 
 void TextCompareCtrl::SetPos(Point pos)
 {
-	int l = FindFieldIndex(lines, &Line::number,pos.x);
+	int l = FindFieldIndex(lines, &Line::number, pos.x);
 	if(l < 0)
 		l = 0;
 	SetSb(l + pos.y);

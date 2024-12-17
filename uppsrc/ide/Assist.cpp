@@ -121,6 +121,7 @@ void AssistEditor::CloseAssist()
 		popup.Close();
 	if(annotation_popup.IsOpen())
 		annotation_popup.Close();
+	assist_item_ndx.Clear();
 	assist_item.Clear();
 	CloseTip();
 }
@@ -1073,7 +1074,7 @@ bool AssistEditor::Key(dword key, int count)
 	bool b = CodeEditor::Key(key, count);
 	if(b && search.HasFocus())
 		SetFocus();
-	if(IsReadOnly())
+	if(IsReadOnly() || IsRectSelection())
 		return b;
 	if(assist.IsOpen()) {
 		bool (*test)(int c) = include_assist ? isincludefnchar : isaid;

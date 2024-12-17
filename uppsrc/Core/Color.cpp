@@ -307,6 +307,14 @@ Color Blend(Color c1, Color c2, int alpha)
 	             min(((a * (c2.GetB() - c1.GetB())) >> 8) + c1.GetB(), 255));
 }
 
+Color Lerp(Color a, Color b, double t)
+{
+	auto Ch = [&](byte a, byte b) {
+		return (byte)clamp(Lerp((double)a, (double)b, t), 0., 255.);
+	};
+	return Color(Ch(a.GetR(), b.GetR()), Ch(a.GetG(), b.GetG()), Ch(a.GetB(), b.GetB()));
+}
+
 INITBLOCK {
 	Value::SvoRegister<Color>("Color");
 }
