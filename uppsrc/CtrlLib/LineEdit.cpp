@@ -172,7 +172,6 @@ void LineEdit::RectSelectionText(const WString& text)
 	RectSelectionOp(
 		[&](int i, Rect rect, int64 l, int64 h, WString& s) {
 			int x = GetColumnLine(l).x;
-			int cursor;
 			if(x < rect.left) {
 				s.Cat(' ', rect.left - x);
 				s.Cat(text);
