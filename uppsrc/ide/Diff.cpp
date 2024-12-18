@@ -3,6 +3,7 @@
 struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
+	Button   copy_hash;
 	
 	String repo_dir;
 	int    kind;
@@ -65,7 +66,16 @@ void RepoDiff::Set(const String& f)
 
 	if(kind == GIT_DIR) {
 		pane << branch.LeftPos(0, Zx(100)).VSizePos()
-		     << r.HSizePos(Zx(100) + DPI(2), 0).VSizePos();
+		     << r.HSizePos(Zx(100) + DPI(2), Zx(80) + DPI(2)).VSizePos()
+		     << copy_hash.RightPos(0, Zx(80)).VSizePos();
+		copy_hash.SetLabel("Copy Hash");
+		
+		copy_hash << [=] {
+			String h = ~~r;
+			String commit, path;
+			SplitTo(h, ':', commit, path);
+			WriteClipboardText(commit);
+		};
 
 		LoadBranches(branch, GetFileFolder(f));
 		LoadGit();
