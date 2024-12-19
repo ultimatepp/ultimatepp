@@ -7,12 +7,12 @@ inline Color HistoryBg() { return Color(255, 255, 0); }
 TextCompareCtrl::TextCompareCtrl()
 :	sbi(*this) {
 	letter = Size(1, 1);
-	number_width = 0;
+	blame_width = number_width = 0;
 	number_yshift = 0;
 	number_bg = WhiteGray();
 	SetFrame(FieldFrame());
 	AddFrame(scroll);
-	SetFont(CourierZ(10), CourierZ(10));
+	SetFont(CourierZ(12), CourierZ(12));
 	scroll.NoAutoHide();
 	scroll.WhenScroll = THISBACK(SelfScroll);
 	maxwidth = 0;
@@ -84,8 +84,34 @@ void TextCompareCtrl::SetLine(int ii)
 		DoSelection((ii - scroll.Get().y) * letter.cy, false);
 }
 
+const TextCompareCtrl::Blame *TextCompareCtrl::GetBlame(Point p)
+{
+	if(blame.GetCount() && p.x > number_width && p.x < number_width + blame_width) {
+		int ii;
+		GetLineNo(p.y, ii);
+		if(ii >= 0 && ii < lines.GetCount()) {
+			const Line& l = lines[ii];
+			if(!IsNull(l.number) && l.number >= 0 && l.number <= blame.GetCount())
+				return &blame[l.number - 1];
+		}
+	}
+	return nullptr;
+}
+
+Image TextCompareCtrl::CursorImage(Point p, dword keyflags)
+{
+	if(GetBlame(p))
+		return Image::Hand();
+	return Image::Arrow();
+}
+
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 {
+	const Blame *b = GetBlame(pt);
+	if(b) {
+		WhenBlame(b->hash);
+		return;
+	}
 	DoSelection(pt.y, keyflags & K_SHIFT);
 	SetCapture();
 	SetWantFocus();
@@ -95,14 +121,26 @@ void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 {
 	int ii;
 	int i = GetLineNo(pt.y, ii);
-	if(!IsNull(i))
+	if(!IsNull(i) && !GetBlame(pt))
 		WhenLeftDouble(i - 1, ii);
 }
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
-	if(HasCapture())
+	if(HasCapture()) {
 		DoSelection(pt.y, true);
+		Tip("");
+	}
+	else {
+		const Blame *b = GetBlame(pt);
+		if(b)
+			Tip("\1[g@b " + Format("%04d-%02d-%02d %02d:%02d:%02d ",
+			                       b->time.year, b->time.month, b->time.day,
+			                       b->time.hour, b->time.minute, b->time.second) +
+	               "[@r \1" + b->author + "\1&" +
+	               "[@k* \1" + b->summary + "\1]&"
+	               "[@g " + b->hash);
+	}
 }
 
 void TextCompareCtrl::LeftRepeat(Point pt, dword keyflags)
@@ -310,19 +348,69 @@ void TextCompareCtrl::Paint(Draw& draw)
 	Color diffpaper = IsDark(paper_color) ? Magenta() : Yellow();
 	Color missingpaper = IsDark(paper_color) ? Gray() : LtGray();
 
-	int n_width = show_line_number ? number_width : 0;
+	int n_width = 0;
 	if(show_line_number) {
+		n_width = number_width;
 		for(int i = first_line; i <= last_line; i++) {
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
 			Color paper = IsNull(l.number) ? missingpaper : l.diff ? diffpaper : SColorPaper();
 			Color ink = l.diff ? SRed(): SGray();
 			draw.DrawRect(0, y, n_width, letter.cy, paper);
-			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
 			if(!IsNull(l.number))
 				draw.DrawText(0, y + number_yshift, FormatInt(l.number_diff), number_font, ink);
+			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
 		}
 	}
+	
+	if(blame.GetCount()) {
+		int  ty = (letter.cy - blame_font.GetCy()) / 2;
+		Date now = GetSysDate();
+		String last_hash;
+		int    bli = 0;
+		for(int i = first_line; i <= last_line; i++) {
+			const Line& l = lines[i];
+			int y = i * letter.cy - offset.cy;
+			Color paper =  missingpaper;
+			Date dt;
+			String date, author, hash, summary;
+			if(!IsNull(l.number) && l.number >= 0 && l.number <= blame.GetCount()) {
+				Blame& m = blame[l.number - 1];
+				dt = m.time;
+				date = Format("%04d-%02d-%02d ", m.time.year, m.time.month, m.time.day);
+				author = m.author;
+				hash = m.hash;
+				summary = m.summary;
+				auto h = GetHashValue(hash);
+				int r = h & 15; h >>= 8;
+				int g = h & 7; h >>= 8;
+				int b = h & 31;
+				paper = AColor(255 - r, 255 - g, 255 - b);
+			}
+			Color ink = l.diff ? SRed(): SGray();
+			draw.DrawRect(n_width, y, blame_width, letter.cy, paper);
+			draw.Clip(n_width, y, blame_width - 2, letter.cy);
+			if(hash != last_hash)
+				bli = 0;
+			if(bli == 0) {
+				if(i != first_line)
+					draw.DrawRect(n_width, y, blame_width, 1, SLtGray());
+				int age = now - dt;
+				draw.DrawText(n_width, y + ty, date, blame_font, age < 14 ? SLtBlue() : age < 365 ? SBlue() : SGray());
+				draw.DrawText(n_width + GetTextSize(date, blame_font).cx, y + ty, author, blame_font, SRed());
+				last_hash = hash;
+			}
+			if(bli == 1)
+				draw.DrawText(n_width, y + ty, summary, blame_font);
+			if(bli == 2 && hash.GetCount() > 6)
+				draw.DrawText(n_width, y + ty, hash.Mid(0, 6), blame_font, SGreen());
+			draw.End();
+			draw.DrawRect(n_width + blame_width - 1, y, 1, letter.cy, Gray());
+			bli++;
+		}
+		n_width += blame_width;
+	}
+	
 	draw.Clip(n_width, 0, sz.cx - n_width, sz.cy);
 
 	for(int i = first_line; i <= last_line; i++) {
@@ -447,6 +535,14 @@ void TextCompareCtrl::SetFont(Font f, Font nf)
 	letter.cy = f.GetCy();
 	letter.cx = f.GetMonoWidth();
 	number_width = 5 * nf.GetMonoWidth();
+	
+	for(int i = 0; i < font.GetHeight(); i++) {
+		blame_font = StdFont(font.GetHeight() - i);
+		if(blame_font.GetCy() <= font.GetCy())
+			break;
+	}
+	
+	blame_width = GetTextSize("2025-10-10 Dear User Name", blame_font).cx;
 	number_yshift = (f.GetCy() - nf.GetCy() + 2) >> 1;
 	Layout();
 }
@@ -459,7 +555,8 @@ void TextCompareCtrl::SetFont(Font f)
 void TextCompareCtrl::Layout()
 {
 	int n_width = show_line_number ? number_width : 0;
-
+	if(blame.GetCount())
+		n_width += Zx(8 * 40);
 	scroll.Set(scroll, (scroll.GetReducedViewSize() - Size(n_width, 0)) / letter, Size(maxwidth, lines.GetCount()));
 	Refresh();
 }
