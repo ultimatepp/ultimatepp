@@ -206,6 +206,11 @@ with respect to storage duration).]&]
 [s7; [*/ Return value]-|Red component.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:operator`*`(int`,Color`):%- RGBA operator[@(0.0.255) `*]([@(0.0.255) int] 
+alpha, Color c)&]
+[s2; Returns RGBA value (premultiplied color with alpha).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:GetGValue`(dword`):%- [@(0.0.255) int]_[* GetGValue]([_^dword^ dword]_[*@3 c])&]
 [s2; Returns green component from a platform specific value.&]
 [s7; [%-*C@3 c]-|Platform specific value.&]
@@ -319,6 +324,18 @@ ykColorf]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) 
 `[0..1`] range).&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:RelativeLuminance`(Color`):%- [@(0.0.255) double] [* RelativeLuminance](Color
+ [*@3 color])&]
+[s2; Computes [^https`:`/`/www`.w3`.org`/TR`/2008`/REC`-WCAG20`-20081211`/`#relativeluminancedef^ r
+elative luminance].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ContrastRatio`(Color`,Color`):%- [@(0.0.255) double] [* ContrastRatio](Color 
+[*@3 c1], Color [*@3 c2])&]
+[s2; Computes [^https`:`/`/www`.w3`.org`/TR`/2008`/REC`-WCAG20`-20081211`/`#contrast`-ratiodef^ c
+ontrast ration].&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Upp`:`:CmyColorf`(double`,double`,double`):%- [_^Upp`:`:Color^ Color]_[* CmyColorf](
 [@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) double]_[*@3 y])&]
 [s2; Converts CMY color definition to RGB (all components are in 
@@ -327,20 +344,23 @@ ykColorf]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) 
 [s4;%- &]
 [s5;:Blend`(Color`,Color`,int`):%- [_^Color^ Color]_[* Blend]([_^Color^ Color]_[*@3 c1], 
 [_^Color^ Color]_[*@3 c2], [@(0.0.255) int]_[*@3 alpha]_`=_[@3 128])&]
-[s2; Blends two colors.&]
-[s7; [%-*C@3 c1]-|First color.&]
-[s7; [%-*C@3 c2]-|Second color.&]
-[s7; [%-*C@3 alpha]-|Blending factor in the range 0..255.&]
-[s7; [*/ Return value]-|Blended color `- (255 `- alpha) / 255.0 `* c1 
-`+ alpha / 255.0 `* c2.&]
+[s2; Blends two colors `- computes  (255 `- [%-*@3 alpha]) / 255.0 
+`* [%-*@3 c1] `+ [%-*@3 alpha ]/ 255.0 `* [%-*@3 c2].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Lerp`(Color`,Color`,double`):%- Color [* Lerp](Color [*@3 a], 
+Color [*@3 b], [@(0.0.255) double] [*@3 t])&]
+[s2;%- Computes the linear interpolation (basically blend) between 
+[*@3 a] and [*@3 b], if the parameter [*@3 t] is inside `[0,1`], the 
+linear extrapolation otherwise. Extrapolation is clamped at valid 
+channel values 0..255. This is similar to blend except [*@3 t] 
+range is `[0,1`] and extrapolation works.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:ColorToHtml`(Color`):%- [_^String^ String]_[* ColorToHtml]([_^Color^ Color]_[*@3 color])
 &]
-[s2; Converts Color to the textual format used in HTML (into hexadecimal 
+[s7; Converts Color to the textual format used in HTML (into hexadecimal 
 form like #ffffff for white).&]
-[s7; [%-*C@3 color]-|Color.&]
-[s7; [*/ Return value]-|HTML text.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ColorFromText`(const char`*`):%- [_^Upp`:`:Color^ Color]_[* ColorFromText]([@(0.0.255) c
