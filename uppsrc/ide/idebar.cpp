@@ -602,7 +602,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
 		if(editfile_repo == GIT_DIR) {
-			String origin = Sys("git -C " + GetFileFolder(editfile) + " remote get-url origin");
+			String origin = HostSys("git -C " + GetFileFolder(editfile) + " remote get-url origin");
 			if(origin.StartsWith("https://github.com/")) {
 				origin.TrimEnd("\n");
 				origin.TrimEnd("\r");
