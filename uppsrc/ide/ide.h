@@ -1183,6 +1183,7 @@ public:
 	const Workspace& AssistWorkspace() const;
 
 	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
+	String    GetExternalIncludePath();
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();
