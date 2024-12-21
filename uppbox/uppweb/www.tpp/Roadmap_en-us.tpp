@@ -26,7 +26,7 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2024 (rev. >17373) (Sep 2024)&]
+[s3; 2024.1.1 (rev. 17490) (Dec 2024)&]
 [s0;*/ &]
 [s0; [*/ Upcoming release]&]
 [s0;*/ &]
