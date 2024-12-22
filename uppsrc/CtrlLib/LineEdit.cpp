@@ -156,7 +156,7 @@ int LineEdit::RectSelectionOp(Event<int, Rect, int64, int64, WString&> op, Event
 	anchor = (int)GetGPos(rect.top, rect.left);
 	cursor = (int)GetGPos(rect.bottom, rect.left);
 	PlaceCaret0();
-	return cursor;
+	return (int)cursor;
 }
 
 void LineEdit::RectSelectionChar(int c)
@@ -168,7 +168,7 @@ void LineEdit::RectSelectionText(const WString& text)
 {
 	if(GetRectSelection().GetWidth())
 		RemoveRectSelection();
-	int p = -1; // position after insertion, because of '\t' and double size chars cannot do just left+text.GetCount()
+	int64 p = -1; // position after insertion, because of '\t' and double size chars cannot do just left+text.GetCount()
 	RectSelectionOp(
 		[&](int i, Rect rect, int64 l, int64 h, WString& s) {
 			int x = GetColumnLine(l).x;
@@ -195,7 +195,7 @@ void LineEdit::RectSelectionBackspace()
 	if(GetRectSelection().GetWidth())
 		RectSelectionDelete();
 	else {
-		int a = anchor;
+		int64 a = anchor;
 		RectSelectionLeftRight(-1, false);
 		if(a != anchor)
 			RectSelectionDelete();
@@ -283,7 +283,7 @@ WString LineEdit::CopyRectSelection()
 int LineEdit::PasteRectSelection(const WString& s)
 {
 	Vector<WString> cl = Split(s, '\n', false);
-	int cursor0 = cursor;
+	int64 cursor0 = cursor;
 	if(cl.GetCount() == 1)
 		RectSelectionText(cl[0]);
 	else {
@@ -299,7 +299,7 @@ int LineEdit::PasteRectSelection(const WString& s)
 		}
 		PlaceCaret(pos);
 	}
-	return cursor - cursor0;
+	return int(cursor - cursor0);
 }
 
 void LineEdit::PasteColumn(const WString& text)

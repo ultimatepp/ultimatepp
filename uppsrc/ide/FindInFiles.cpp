@@ -249,17 +249,25 @@ void Ide::FindInFiles(bool replace) {
 		if(!IsNull(ff.recent))
 			since = ToTime(GetSysDate() - (int)~ff.recent);
 		int where = ~ff.where;
+		Vector<String> dirs;
 		if(where == 0) {
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++)
-				SearchForFiles(files, GetFileFolder(PackagePath(wspc[i])), ~ff.files, ~ff.readonly, since, pi);
+				dirs << GetFileFolder(PackagePath(wspc[i]));
 		}
 		if(where == 1)
+			dirs.Append(GetUppDirsRaw());
+		if(where == 2 || where == 4)
 			for(String h : GetAllNests())
-				SearchForFiles(files, NormalizePath(h), ~ff.files, ~ff.readonly, since, pi);
-		else
-			SearchForFiles(files, NormalizePath(~~ff.folder, GetUppDir()), ~ff.files,
-			               ~ff.readonly, since, pi);
+				dirs << NormalizePath(h);
+		if(where == 3 || where == 4)
+			dirs.Append(Split(GetExternalIncludePath(), ';'));
+		if(where == 5)
+			dirs << NormalizePath(~~ff.folder, GetUppDir());
+
+		for(String d : dirs)
+			SearchForFiles(files, d, ~ff.files, ~ff.readonly, since, pi);
+
 		if(!pi.Canceled()) {
 			String pattern;
 			RegExp rx, *regexp = NULL;

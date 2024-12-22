@@ -80,7 +80,7 @@ HANDLE XpWidget(int widget)
 	return xp_widget_handle[widget];
 }
 
-Image XpImage0(int widget, int part, int state, Color color, Size sz)
+Image XpImage0(int widget, int part, int state, Color color, Size sz, int margin = 0)
 {
 	HANDLE theme = XpWidget(widget);
 	if(!theme)
@@ -91,10 +91,11 @@ Image XpImage0(int widget, int part, int state, Color color, Size sz)
 	Color c = White;
 	Image m[2];
 	for(int q = 0; q < 2; q++) {
-		ImageDraw iw(sz);
+		ImageDraw iw(sz + 2 * margin);
 		iw.DrawRect(sz, Nvl(color, c));
 		HDC hdc = iw.BeginGdi();
 		Rect r(sz);
+		r.Offset(margin, margin);
 		XpTheme().DrawThemeBackground(theme, hdc, part, state, r, NULL);
 		iw.EndGdi();
 		m[q] = iw;

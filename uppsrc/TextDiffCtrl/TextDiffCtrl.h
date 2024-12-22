@@ -40,8 +40,16 @@ public:
 	virtual void   LeftUp(Point pt, dword keyflags);
 	virtual void   LeftRepeat(Point pt, dword keyflags);
 	virtual void   RightDown(Point p, dword keyflags);
+	virtual Image  CursorImage(Point p, dword keyflags);
 	virtual bool   Key(dword key, int repcnt);
 	virtual void   LostFocus();
+
+	struct Blame : Moveable<Blame> {
+		String hash;
+		String author;
+		String summary;
+		Time   time;
+	};
 
 private:
 	void           SelfScroll();
@@ -58,6 +66,8 @@ private:
 	                        const wchar *s1, int l1, int h1,
 	                        const wchar *s2, int l2, int h2, int depth);
 
+	const TextCompareCtrl::Blame *GetBlame(Point p);
+
 private:
 	struct Line {
 		Line() : number(Null), level(0) {}
@@ -69,14 +79,17 @@ private:
 		int    number_diff;
 	};
 	Array<Line>    lines;
+	Vector<Blame>  blame;
 	int            maxwidth;
 	ScrollBars     scroll;
 	Font           font;
 	Font           number_font;
+	Font           blame_font;
 	Color          number_bg;
 	Size           letter;
 	int            tabsize;
 	int            number_width;
+	int            blame_width;
 	int            number_yshift;
 	int            cursor;
 	int            anchor;
@@ -108,6 +121,7 @@ public:
 	Event<>         WhenScroll;
 	Event<int, int> WhenLeftDouble;
 	Event<Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
+	Event<String>   WhenBlame;
 
 	void           SetCount(int c);
 	void           AddCount(int c);
@@ -168,7 +182,9 @@ public:
 	String         RemoveSelected(bool cr);
 
 	Event<>        ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
-
+	
+	void           PickBlame(Vector<Blame>&& b)      { blame = pick(b); Refresh(); }
+	
 	TextCompareCtrl();
 };
 
@@ -220,6 +236,7 @@ struct DiffDlg : public TopWindow {
 	String               editfile;
 	String               backup;
 	String               extfile;
+	bool                 serialize_placement = true;
 
 	typedef DiffDlg CLASSNAME;
 

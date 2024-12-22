@@ -13,7 +13,7 @@ uses(WIN32 | NOSO) plugin/z;
 
 library(POSIX) "crypto ssl z";
 
-library(WIN32) "ssl crypto";
+library(WIN32) "ssl crypto crypt32";
 
 library(WIN32) "usp10 gdi32 ws2_32";
 
