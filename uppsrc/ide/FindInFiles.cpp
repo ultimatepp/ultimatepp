@@ -440,7 +440,7 @@ void FindInFilesDlg::Sync()
 	wildcards.Enable(b);
 	ignorecase.Enable(b);
 	wholeword.Enable(b);
-	folder.Enable((int)~where == 2);
+	folder.Enable((int)~where == 5);
 	samecase.Enable(ignorecase && b);
 }
 
