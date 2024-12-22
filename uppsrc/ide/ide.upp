@@ -65,6 +65,7 @@ file
 	Print.cpp,
 	InsertImage.cpp,
 	Insert.cpp,
+	Sequence.cpp,
 	idetool.cpp,
 	Install.cpp,
 	Android.cpp,
