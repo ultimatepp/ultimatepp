@@ -124,6 +124,13 @@ Usually used for testing.&]
 Random after seeding it with fixed value.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:Lerp`(T`,T`,double`): [@(0.0.255) template] <[@(0.0.255) typename] 
+T> T [* Lerp](T [*@3 a], T [*@3 b], [@(0.0.255) double] [*@3 t])&]
+[s2; Computes the linear interpolation between [*@3 a] and [*@3 b], if 
+the parameter [*@3 t] is inside `[0,1`] (the linear extrapolation 
+otherwise).&]
+[s3; &]
+[s4; &]
 [s5;:ZeroArray`(x`): [* ZeroArray]([*@3 x])&]
 [s2;%% Fills C array [%-*@3 x] with zeros.&]
 [s3; &]

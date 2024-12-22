@@ -190,10 +190,12 @@ bool DiffDlg::Key(dword key, int count)
 
 void DiffDlg::Close()
 {
-	StringStream ss;
-	SerializePlacement(ss);
-	String h = ss;
-	StoreToGlobal(h, "diff");
+	if(serialize_placement) {
+		StringStream ss;
+		SerializePlacement(ss);
+		String h = ss;
+		StoreToGlobal(h, "diff");
+	}
 	TopWindow::Close();
 }
 
@@ -202,10 +204,12 @@ void DiffDlg::Set(const String& f)
 	editfile = f;
 	l <<= editfile;
 	Title(editfile);
-	String h;
-	LoadFromGlobal(h, "diff");
-	StringStream ss(h);
-	SerializePlacement(ss);
+	if(serialize_placement) {
+		String h;
+		LoadFromGlobal(h, "diff");
+		StringStream ss(h);
+		SerializePlacement(ss);
+	}
 }
 
 void DiffDlg::Refresh()

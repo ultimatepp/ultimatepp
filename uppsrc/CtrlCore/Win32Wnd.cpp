@@ -467,15 +467,14 @@ void Ctrl::UseImmersiveDarkModeForWindowBorder()
 	ONCELOCK {
 		DllFn(DwmSetWindowAttribute, "dwmapi.dll", "DwmSetWindowAttribute");
 	}
-	if (!DwmSetWindowAttribute) {
-		return;
+	if(DwmSetWindowAttribute) {
+		const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+		
+		BOOL useDarkTheme = IsDarkTheme();
+		DwmSetWindowAttribute(
+			utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
+			&useDarkTheme, sizeof(useDarkTheme));
 	}
-	const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-	
-	BOOL useDarkTheme = IsDarkTheme();
-	DwmSetWindowAttribute(
-		utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
-		&useDarkTheme, sizeof(useDarkTheme));
 }
 
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)

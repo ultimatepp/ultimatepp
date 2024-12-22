@@ -796,13 +796,13 @@ void ExtractIncludes(Index<String>& r, String h)
 	}
 }
 
-String Ide::GetIncludePath()
-{ // this is 'real' include path defined by current build method, for Alt+J and #include assist
-	if(include_path.GetCount())
-		return include_path;
+String Ide::GetExternalIncludePath()
+{
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+
+	String include_path = bm.Get("INCLUDE", "");
+
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
@@ -853,7 +853,22 @@ String Ide::GetIncludePath()
 			}
 		}
 	}
+	return include_path;
+}
 	
+String Ide::GetIncludePath()
+{
+ // this is 'real' include path defined by current build method, for Alt+J and #include assist
+	if(include_path.GetCount())
+		return include_path;
+
+	SetupDefaultMethod();
+	VectorMap<String, String> bm = GetMethodVars(method);
+	include_path = Join(GetUppDirs(), ";");
+
+	MergeWith(include_path, ";", GetExternalIncludePath());
+
+	String include_path = GetExternalIncludePath();
 	IncludeAddPkgConfig(include_path, Null);
 
 	return include_path;

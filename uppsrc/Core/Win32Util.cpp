@@ -49,7 +49,7 @@ bool IsWin7()
 
 dword GetWindowsBuildVersion()
 {
-	NTSTATUS(WINAPI *RtlGetVersion)(LPOSVERSIONINFOEXW);
+	LONG(WINAPI *RtlGetVersion)(LPOSVERSIONINFOEXW);
     DllFn(RtlGetVersion, "ntdll", "RtlGetVersion");
 
 	if(!RtlGetVersion)

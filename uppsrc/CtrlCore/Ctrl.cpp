@@ -950,11 +950,13 @@ void Ctrl::ReSkin()
 	Csize.cx = Dsize.cx = IsNoLayoutZoom;
 	Csizeinit();
 	ChFinish();
-	Vector<Ctrl *> ctrl = GetTopCtrls();
-	for(int i = 0; i < ctrl.GetCount(); i++) {
-		ctrl[i]->RefreshLayoutDeep();
-		ctrl[i]->DoSkin();
-		ctrl[i]->RefreshFrame();
+	for(Ctrl *win : GetTopCtrls()) {
+		win->RefreshLayoutDeep();
+		win->DoSkin();
+		win->RefreshFrame();
+#ifdef PLATFORM_WIN32
+		win->UseImmersiveDarkModeForWindowBorder();
+#endif
 	}
 	lock--;
 }
