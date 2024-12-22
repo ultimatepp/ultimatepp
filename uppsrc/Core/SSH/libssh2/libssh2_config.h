@@ -42,9 +42,9 @@
 #define PACKAGE           "Upp::SSH"
 #define PACKAGE_BUGREPORT "https://github.com/ultimatepp/ultimatepp/issues"
 #define PACKAGE_NAME      "U++ SSH package"
-#define PACKAGE_STRING    "U++ SSH package, a libssh2 wrapper, (ver. 2024.1b)"
+#define PACKAGE_STRING    "U++ SSH package, a libssh2 wrapper, (ver. 2024.1)"
 #define PACKAGE_URL       "https://github.com/ultimatepp/ultimatepp"
-#define PACKAGE_VERSION   "2024.1b (libssh2 v.1.11.0)"
+#define PACKAGE_VERSION   "2024.1b (libssh2 v.1.11.1)"
 
 /* Headers */
 #define HAVE_INTTYPES_H
