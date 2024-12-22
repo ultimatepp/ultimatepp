@@ -156,6 +156,8 @@ bool SaveVars(const char *name)
 String GetDefaultUppOut()
 {
 	String out;
+	
+#ifndef FLATPAK
 	String p = GetExeFolder();
 	while(p.GetCount() > 1 && DirectoryExists(p)) {
 		String h = AppendFileName(p, ".cache");
@@ -165,6 +167,7 @@ String GetDefaultUppOut()
 		}
 		p = GetFileFolder(p);
 	}
+#endif
 	
 	out = Nvl(out, GetHomeDirFile(".cache")) + "/upp.out";
 	
