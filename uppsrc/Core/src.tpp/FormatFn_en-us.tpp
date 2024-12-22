@@ -32,18 +32,17 @@ int64]_[*@3 w])&]
 [s2; Returns integer as decimal string. If argument is Null, returns 
 empty string.&]
 [s3; &]
-[s4; &]
-[s5;:FormatIntBase`(int`,int`,int`,char`,int`,bool`):%- String_[* FormatIntBase]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) int]_[*@3 radix], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
-[@(0.0.255) char]_[*@3 lpad]_`=_`'_`', [@(0.0.255) int]_[*@3 sign]_`=_[@3 0], 
-[@(0.0.255) bool]_[*@3 upper]_`=_[@(0.0.255) false])&]
+[s4;%- &]
+[s5;:Upp`:`:FormatIntBase`(int64`,int`,int`,char`,int`,bool`):%- String 
+[* FormatIntBase](int64 [*@3 i], [@(0.0.255) int] [*@3 base], [@(0.0.255) int] 
+[*@3 width], [@(0.0.255) char] [*@3 lpad], [@(0.0.255) int] [*@3 sign], 
+[@(0.0.255) bool] [*@3 upper])&]
 [s2; Formats a signed or unsigned integer [%-*@3 i] in a given [%-*@3 radix] 
 with left padding to given [%-*@3 width] with a given [%-*@3 lpad] 
 character. If [*@3 sign ]is `+1 `= always prepend `'`+`'/`-, if 
 0 `= auto (`'`-`' only), if `-1, format as unsigned. If [%-*@3 upper] 
 is true, letters for base > 10 are uppercase. If [%-*@3 i] is Null, 
 returns empty String.&]
-[s3; &]
 [s3; &]
 [s4;%- &]
 [s5;:FormatIntDec`(int`,int`,char`,bool`):%- [_^String^ String]_[* FormatIntDec]([@(0.0.255) i
