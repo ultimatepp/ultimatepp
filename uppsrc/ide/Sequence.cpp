@@ -117,7 +117,7 @@ INITBLOCK {
 
 InsertSequenceDlg::InsertSequenceDlg()
 {
-	CtrlLayoutOKCancel(*this, "Window title");
+	CtrlLayoutOKCancel(*this, "Insert sequence");
 
 	list.SetReadOnly();
 	
@@ -173,6 +173,19 @@ InsertSequenceDlg::InsertSequenceDlg()
 		
 	copy.SetImage(CtrlImg::copy());
 	copy << [=] { WriteClipboardText(~list); };
+	
+	clear << [=] {
+		first <<= Null;
+		next <<= Null;
+		count <<= Null;
+		prefix <<= Null;
+		format <<= Null;
+		width <<= Null;
+		postfix <<= Null;
+		line <<= false;
+		separator <<= ", ";
+		Sync();
+	};
 	
 	LoadFromGlobal(*this, "ins-seq");
 
