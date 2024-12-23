@@ -205,7 +205,6 @@ void Ide::InsertSequence()
 			editor.Paste(~dlg.list);
 		else {
 			int64 lp = editor.GetPos(editor.GetCurrentLine(), 0);
-			DDUMP(editor.Get(lp, editor.GetCursor() - lp));
 			WString indent = editor.GetW(lp, editor.GetCursor() - lp); // try to maintain the indent
 			indent = Filter(indent, [](int c)->int { return c == '\t' ? '\t' : ' '; });
 			WString txt = Filter(dlg.list.GetW(), [](int c) { return c == '\r' ? 0 : c; });
