@@ -18,6 +18,8 @@ public:
 	virtual void  MouseMove(Point pt, dword keyflags);
 
 	Event<>       WhenLeftDouble;
+	
+	void          DarkContent(bool b = true)     { dark = b; }
 
 private:
 	void          SetColor(Color color, bool set_norm, bool set_hsv);
@@ -31,6 +33,7 @@ private:
 
 private:
 	bool          ramp;
+	bool          dark = false;
 	Color         color;
 	Color         normalized_color;
 	int           h16, s16, v16;
@@ -170,6 +173,7 @@ private:
 	bool     hints;
 	bool     open;
 	bool     withvoid;
+	bool     dark;
 	String   nulltext;
 	String   voidtext;
 	Color    color;
@@ -201,6 +205,7 @@ public:
 	ColorPopUp& VoidText(const char *s)              { voidtext = s; Refresh(); return *this; }
 	ColorPopUp& NoRampWheel(bool b = true)           { norampwheel = b; return *this; }
 	ColorPopUp& Hints(bool b = true)                 { hints = b; return *this; }
+	ColorPopUp& DarkContent(bool b = true);
 
 	ColorPopUp();
 	virtual ~ColorPopUp();
@@ -244,6 +249,7 @@ public:
 	ColorPusher& Track(bool b = true)       { track = b; return *this; }
 	ColorPusher& NoTrack()                  { return Track(false); }
 	ColorPusher& NoRampWheel(bool b = true) { colors.NoRampWheel(b); return *this; }
+	ColorPusher& DarkContent(bool b = true) { colors.DarkContent(b); return *this; }
 
 	ColorPusher();
 	virtual ~ColorPusher();

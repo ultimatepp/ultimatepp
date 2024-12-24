@@ -467,6 +467,7 @@ enum { PREC = 64 };
 
 Image WheelRampCtrl::PaintRamp(Size size)
 {
+	DTIMING("Ramp");
 	ImageDraw iw(size);
 	ImageBuffer ib(PREC, PREC);
 	for(int y = 0; y < PREC; y++) {
@@ -475,6 +476,8 @@ Image WheelRampCtrl::PaintRamp(Size size)
 		for(int x = 0; x < PREC; x++) {
 			int s16 = iscale(x, 65535, PREC - 1);
 			Color c = HSV16toRGB(h16, s16, v16);
+			if(dark)
+				c = DarkTheme(c);
 			scan->r = GetRRaw(c);
 			scan->g = GetGRaw(c);
 			scan->b = GetBRaw(c);
@@ -489,6 +492,7 @@ Image WheelRampCtrl::PaintRamp(Size size)
 
 Image WheelRampCtrl::PaintWheel(Size size)
 {
+	DTIMING("Wheel");
 	ImageBuffer ib(PREC, PREC);
 	static WheelBuff wb[PREC * PREC];
 	ONCELOCK {
@@ -510,16 +514,22 @@ Image WheelRampCtrl::PaintWheel(Size size)
 	for(int y = 0; y < PREC; y++) {
 		RGBA *scan = ib[y];
 		for(int x = 0; x < PREC; x++) {
-			*scan++ = HSV16toRGB(cwb->arg, cwb->l, v16);
+			Color c = HSV16toRGB(cwb->arg, cwb->l, v16);
+			if(dark)
+				c = DarkTheme(c);
+			*scan++ = c;
 			cwb++;
 		}
 	}
 
-	ImageDraw iw(size);
+	ImagePainter iw(size);
+	iw.Clear();
+	Sizef s2 = (Sizef)(size) / 2;
+	iw.Begin();
+	iw.Ellipse(s2.cx, s2.cy, s2.cx, s2.cy).Clip();
 	iw.DrawImage(size, Rescale(ib, size));
-	iw.DrawEllipse(size, Null, 0, Black);
-	iw.Alpha().DrawRect(size, GrayColor(0));
-	iw.Alpha().DrawEllipse(size, GrayColor(255), 0, GrayColor(255));
+	iw.End();
+	iw.Ellipse(s2.cx, s2.cy, s2.cx - 1, s2.cy - 1).Stroke(1, SBlack());
 	return iw;
 }
 
@@ -539,7 +549,7 @@ void WheelRampCtrl::PaintColumn(Draw& draw)
 		int factor = ClientToLevel(i);
 		Color c = ramp ? HSV16toRGB(factor, 65535, 65535) : HSV16toRGB(h16, s16, factor);
 //			: Color(iscale(nr, factor, 65536), iscale(ng, factor, 65536), iscale(nb, factor, 65536));
-		draw.DrawRect(column_rect.left, i, size.cx, 1, c);
+		draw.DrawRect(column_rect.left, i, size.cx, 1, dark ? DarkThemeCached(c) : c);
 	}
 }
 
