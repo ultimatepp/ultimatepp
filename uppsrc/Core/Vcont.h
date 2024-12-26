@@ -14,7 +14,7 @@ class Buffer : Moveable< Buffer<T> > {
 	T *ptr;
 	
 	void Malloc(size_t size) {
-		if(std::is_trivially_destructible<T>::value)
+		if constexpr(std::is_trivially_destructible<T>::value)
 			ptr = (T *)MemoryAlloc(size * sizeof(T));
 		else {
 			void *p = MemoryAlloc(size * sizeof(T) + 16);
@@ -32,7 +32,7 @@ class Buffer : Moveable< Buffer<T> > {
 	}
 	void Free() {
 		if(ptr) {
-			if(std::is_trivially_destructible<T>::value)
+			if constexpr(std::is_trivially_destructible<T>::value)
 				MemoryFree(ptr);
 			else {
 				void *p = (byte *)ptr - 16;
