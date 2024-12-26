@@ -84,6 +84,8 @@ enum {
 	UNIT_INCH,
 	UNIT_MM,
 	UNIT_CM,
+	
+	UNIT_PIXELMODE,
 };
 
 class UnitEdit : public EditField, public Convert {
@@ -103,9 +105,10 @@ private:
 	static String DotAsText(int dot, int unit);
 	void Spin(int delta);
 	void Read(double& q, int& u) const;
+	void SyncFilter();
 
 public:
-	UnitEdit& SetUnit(int _unit)                        { unit = _unit; return *this; }
+	UnitEdit& SetUnit(int _unit)                        { unit = _unit; SyncFilter(); return *this; }
 	void      Set(int _unit, int d)                     { unit = _unit; SetData(d); }
 	UnitEdit& WithSgn(bool b = true);
 
@@ -124,6 +127,8 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 #include <CtrlCore/lay.h>
 
 bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf);
+
+class RichEdit;
 
 class ParaFormatting : public WithParaLayout<StaticRect> {
 public:
@@ -156,7 +161,7 @@ public:
 	void  NewHdrFtr();
 	void  SyncHdrFtr();
 
-	ParaFormatting();
+	ParaFormatting(const RichEdit& e);
 };
 
 class StyleManager : public WithStylesLayout<TopWindow> {
@@ -194,7 +199,7 @@ public:
 	
 	void     Setup(const Vector<int>& faces, int aunit = UNIT_DOT);
 
-	StyleManager();
+	StyleManager(const RichEdit& e);
 };
 
 void SetupFaceList(DropList& face);
@@ -303,6 +308,10 @@ private:
 	
 	PaintInfo                paint_info;
 	bool                     ignore_physical_size;
+	
+	bool                     pixel_mode = false;
+	bool                     dark_content = false;
+	bool                     allow_dark_content = false;
 
 	static int fh[];
 
@@ -623,7 +632,9 @@ private:
 	void     ZoomClip(RichText& text) const;
 	
 	void     InsertImage();
-	
+
+	RichObject Adjust(RichObject o);
+
 	void     StyleKeys();
 	void     ApplyStyleKey(int i);
 	
@@ -663,8 +674,8 @@ public:
 	virtual void  PasteFilter(RichText& txt, const String& fmt);
 	virtual void  Filter(RichText& txt);
 
-	static double DotToPt(int dot);
-	static int    PtToDot(double pt);
+	static double DotToPt(int dot, int unit = UNIT_DOT);
+	static int    PtToDot(double pt, int unit = UNIT_DOT);
 	static Bits   SpellParagraph(const RichPara& p);
 	static void   FixedLang(int lang)              { fixedlang = lang; }
 
@@ -802,6 +813,8 @@ public:
 	void            ApplyStylesheet(const RichText& r);
 	void            SetPage(const Size& sz)                { pagesz = sz; Finish(); }
 	Size            GetPage()                              { return pagesz; }
+	bool            IsDarkContent() const;
+	void            SetupDark(ColorPusher& c) const;
 
 	RichEdit&       NoRuler()                              { RemoveFrame(ruler); return *this; }
 	RichEdit&       SingleLine(bool b = true)              { singleline = b; return *this; }
@@ -819,9 +832,12 @@ public:
 	RichEdit&       BulletIndent(int i)                    { bullet_indent = i; return *this; }
 	RichEdit&       PersistentFindReplace(bool b = true)   { persistent_findreplace = b; return *this; }
 	RichEdit&       Floating(double zoomlevel_ = 1);
-	RichEdit&       NoFloating(double zoomlevel_ = 1)      { return Floating(Null); }
+	RichEdit&       NoFloating()                           { return Floating(Null); }
 	RichEdit&       SetPaintInfo(const PaintInfo& pi)      { paint_info = pi; return *this; }
 	RichEdit&       IgnorePhysicalObjectSize(bool b = true){ ignore_physical_size = b; return *this; }
+	RichEdit&       PixelMode();
+	RichEdit&       DarkContent(bool b = true);
+	RichEdit&       AllowDarkContent(bool b = true);
 
 	struct UndoInfo {
 		int              undoserial;

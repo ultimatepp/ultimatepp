@@ -4,6 +4,8 @@ namespace Upp {
 
 Size RichEdit::GetPhysicalSize(const RichObject& obj)
 {
+	if(pixel_mode)
+		return obj.GetPixelSize() * 8;
 	if(ignore_physical_size)
 		return 600 * obj.GetPixelSize() / 96;
 	return obj.GetPhysicalSize();
@@ -238,6 +240,7 @@ void RichEdit::StdBar(Bar& menu)
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
 			menu.Separator();
 			menu.Add(b, "20 %", THISBACK1(SetObjectPercent, 20)).Check(IsObjectPercent(percent, 20));
+			menu.Add(b, "25 %", THISBACK1(SetObjectPercent, 25)).Check(IsObjectPercent(percent, 20));
 			menu.Add(b, "30 %", THISBACK1(SetObjectPercent, 30)).Check(IsObjectPercent(percent, 30));
 			menu.Add(b, "40 %", THISBACK1(SetObjectPercent, 40)).Check(IsObjectPercent(percent, 40));
 			menu.Add(b, "50 %", THISBACK1(SetObjectPercent, 50)).Check(IsObjectPercent(percent, 50));
@@ -248,13 +251,18 @@ void RichEdit::StdBar(Bar& menu)
 			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100)).Check(IsObjectPercent(percent, 100));
 			menu.Break();
 			int delta = bar_object.GetYDelta();
-			menu.Add(t_("3 pt up"), THISBACK1(SetObjectYDelta, -3)).Check(IsObjectDelta(delta, -3));
-			menu.Add(t_("2 pt up"), THISBACK1(SetObjectYDelta, -2)).Check(IsObjectDelta(delta, -2));
-			menu.Add(t_("1 pt up"), THISBACK1(SetObjectYDelta, -1)).Check(IsObjectDelta(delta, -1));
+			auto pma = [=](String s) {
+				if(pixel_mode)
+					s.Replace(" pt", "");
+				return s;
+			};
+			menu.Add(pma(t_("3 pt up")), THISBACK1(SetObjectYDelta, -3)).Check(IsObjectDelta(delta, -3));
+			menu.Add(pma(t_("2 pt up")), THISBACK1(SetObjectYDelta, -2)).Check(IsObjectDelta(delta, -2));
+			menu.Add(pma(t_("1 pt up")), THISBACK1(SetObjectYDelta, -1)).Check(IsObjectDelta(delta, -1));
 			menu.Add(t_("Baseline"), THISBACK1(SetObjectYDelta, 0)).Check(IsObjectDelta(delta, 0));
-			menu.Add(t_("1 pt down"), THISBACK1(SetObjectYDelta, 1)).Check(IsObjectDelta(delta, 1));
-			menu.Add(t_("2 pt down"), THISBACK1(SetObjectYDelta, 2)).Check(IsObjectDelta(delta, 2));
-			menu.Add(t_("3 pt down"), THISBACK1(SetObjectYDelta, 3)).Check(IsObjectDelta(delta, 3));
+			menu.Add(pma(t_("1 pt down")), THISBACK1(SetObjectYDelta, 1)).Check(IsObjectDelta(delta, 1));
+			menu.Add(pma(t_("2 pt down")), THISBACK1(SetObjectYDelta, 2)).Check(IsObjectDelta(delta, 2));
+			menu.Add(pma(t_("3 pt down")), THISBACK1(SetObjectYDelta, 3)).Check(IsObjectDelta(delta, 3));
 			menu.Separator();
 			CopyTool(menu);
 			CutTool(menu);

@@ -361,7 +361,7 @@ Color DarkTheme(Color color)
 	
 	double target = 255 - Saturate255(int(Val() + saturation));
 	if(target < 30)
-		target *= (1 + (30 - target) / 30) * 1.5;
+		target *= (1 / 1.5 + (29 - target) / 29) * 1.5;
 	double ratio = target / 128;
 	
 	double m = max(r, g, b);

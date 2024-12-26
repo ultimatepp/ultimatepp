@@ -48,6 +48,22 @@ s_colors[] = {
 
 Color ColorPopUp::hint[18];
 
+ColorPopUp& ColorPopUp::DarkContent(bool b)
+{
+	wheel.DarkContent(b);
+	ramp.DarkContent(b);
+	Refresh();
+	return *this;
+}
+
+ColorPopUp& ColorPopUp::AllowDarkContent(bool b)
+{
+	wheel.AllowDarkContent(b);
+	ramp.AllowDarkContent(b);
+	Refresh();
+	return *this;
+}
+
 void ColorPopUp_InitHint()
 {
 	for(int i = 0; i < 18; i++)
@@ -193,12 +209,13 @@ void ColorPopUp::Paint(Draw& w)
 	}
 
 	int i = 0;
+	bool dark = IsDarkContent();
 	for(;;) {
 		for(int x = 0; x < 18 * DPI(16); x += DPI(16)) {
 			if(i >= GetColorCount()) {
 				if(!norampwheel) {
 					Rect r(DPI(8 * 16 + 1), cy + DPI(4), DPI(10 * 16 - 1), sz.cy - DPI(4) - DPI(24));
-					DrawFilledFrame(w, r, SColorText, color);
+					DrawFilledFrame(w, r, SColorText, dark ? DarkThemeCached(color) : color);
 
 					r.Inflate(1);
 					if(colori == 999) {
@@ -212,9 +229,9 @@ void ColorPopUp::Paint(Draw& w)
 			}
 
 			Color c = RealizeColor(GetColor(i));
-			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, c);
+			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, dark ? DarkThemeCached(c) : c);
 			if(i < 18 && scolors)
-				w.DrawRect(x + DPI(2) + DPI(6), y + DPI(1), DPI(6), DPI(12), DarkThemeCached(c));
+				w.DrawRect(x + DPI(2) + DPI(6), y + DPI(1), DPI(6), DPI(12), dark ? c : DarkThemeCached(c));
 
 			if(i == colori) {
 				if(GetMouseLeft())

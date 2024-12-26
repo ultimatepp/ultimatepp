@@ -25,6 +25,10 @@ void RichEdit::InsertTable()
 	if(dlg.Run() != IDOK)
 		return;
 	RichTable::Format fmt;
+	if(pixel_mode) {
+		fmt.grid = 1;
+		fmt.frame = 2;
+	}
 	int nx = minmax((int)~dlg.columns, 1, 20);
 	for(int q = nx; q--;)
 		fmt.column.Add(1);
@@ -42,6 +46,12 @@ void RichEdit::InsertTable()
 			p.format.label.Clear();
 			h.Cat(p);
 			table.SetPick(i, j, pick(h));
+			if(pixel_mode) {
+				RichCell::Format fmt;
+				fmt.margin.left = fmt.margin.right = 4;
+				fmt.margin.top = fmt.margin.bottom = 3;
+				table.SetFormat(i, j, fmt);
+			}
 		}
 	NextUndo();
 	if(cursorp.posinpara)
@@ -123,6 +133,8 @@ void RichEdit::TableProps()
 	if(IsSelection() || cursorp.table == 0)
 		return;
 	RichEditTableProperties dlg;
+	SetupDark(dlg.framecolor);
+	SetupDark(dlg.gridcolor);
 	dlg.Breaker(dlg.destroy, IDNO);
 	RichTable::Format fmt = text.GetTableFormat(cursorp.table);
 	String ratios;
@@ -327,6 +339,8 @@ void RichEdit::CellProperties()
 		return;
 	WithCellPropertiesLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, t_("Cell properties"));
+	SetupDark(dlg.color);
+	SetupDark(dlg.border);
 	int  tab;
 	Rect a;
 	if(tablesel) {
