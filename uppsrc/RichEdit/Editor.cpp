@@ -102,8 +102,9 @@ void RichEdit::Paint(Draw& w)
 	p_size = sz;
 	Rect tr = GetTextRect();
 	Zoom zoom = GetZoom();
-	w.DrawRect(sz, White);
+	w.DrawRect(sz, IsDarkContent() ? SColorPaper() : White());
 	PageY py = text.GetHeight(pagesz);
+	Color showcodesa = IsDarkContent() ? DarkTheme(showcodes) : showcodes;
 	{
 		EditPageDraw pw(w);
 		pw.x = tr.left;
@@ -126,9 +127,10 @@ void RichEdit::Paint(Draw& w)
 		pi.bottom = GetPageY(sb + sz.cy);
 		pi.usecache = true;
 		pi.sizetracking = sizetracking;
-		pi.showcodes = showcodes;
+		pi.showcodes = showcodesa;
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
-		pi.hyperlink = LtBlue; // because we have white paper even in dark mode
+		pi.hyperlink = IsDarkContent() ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
+		pi.darktheme = IsDarkContent();
 		
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
@@ -144,7 +146,7 @@ void RichEdit::Paint(Draw& w)
 		}
 		text.Paint(pw, pagesz, pi);
 	}
-	w.DrawRect(tr.left, GetPosY(py) - sb, 20, 3, showcodes);
+	w.DrawRect(tr.left, GetPosY(py) - sb, 20, 3, showcodesa);
 	if(objectpos >= 0) {
 		Rect r = objectrect;
 		r.Offset(tr.left, -sb);
@@ -336,6 +338,12 @@ void RichEdit::SetupRuler()
 	                zoom, q.grid, q.numbers, q.numbermul, q.marks);
 }
 
+void RichEdit::SetupDark(ColorPusher& c) const
+{
+	c.AllowDarkContent(allow_dark_content);
+	c.DarkContent(dark_content);
+}
+
 void RichEdit::SetupUnits()
 {
 	WithUnitLayout<TopWindow> d;
@@ -344,6 +352,7 @@ void RichEdit::SetupUnits()
 	for(int i = 1; i <= 10; i++)
 		d.zoom.Add(10 * i, Format(t_("%d%% of width"), 10 * i));
 	CtrlRetriever r;
+	SetupDark(d.showcodes);
 	r(d.unit, unit)(d.showcodes, showcodes)(d.zoom, zoom);
 	if(d.Execute() == IDOK) {
 		r.Retrieve();
@@ -822,6 +831,27 @@ RichEditWithToolBar::RichEditWithToolBar()
 	InsertFrame(0, toolbar);
 	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
 	extended = true;
+}
+
+bool RichEdit::IsDarkContent() const
+{
+	return dark_content || allow_dark_content && IsDarkTheme();
+}
+
+RichEdit& RichEdit::DarkContent(bool b)
+{
+	dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::AllowDarkContent(bool b)
+{
+	allow_dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
 }
 
 }

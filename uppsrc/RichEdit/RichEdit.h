@@ -128,6 +128,8 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 
 bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf);
 
+class RichEdit;
+
 class ParaFormatting : public WithParaLayout<StaticRect> {
 public:
 	DropList n[8];
@@ -159,7 +161,7 @@ public:
 	void  NewHdrFtr();
 	void  SyncHdrFtr();
 
-	ParaFormatting();
+	ParaFormatting(const RichEdit& e);
 };
 
 class StyleManager : public WithStylesLayout<TopWindow> {
@@ -197,7 +199,7 @@ public:
 	
 	void     Setup(const Vector<int>& faces, int aunit = UNIT_DOT);
 
-	StyleManager();
+	StyleManager(const RichEdit& e);
 };
 
 void SetupFaceList(DropList& face);
@@ -308,6 +310,8 @@ private:
 	bool                     ignore_physical_size;
 	
 	bool                     pixel_mode = false;
+	bool                     dark_content = false;
+	bool                     allow_dark_content = false;
 
 	static int fh[];
 
@@ -809,6 +813,8 @@ public:
 	void            ApplyStylesheet(const RichText& r);
 	void            SetPage(const Size& sz)                { pagesz = sz; Finish(); }
 	Size            GetPage()                              { return pagesz; }
+	bool            IsDarkContent() const;
+	void            SetupDark(ColorPusher& c) const;
 
 	RichEdit&       NoRuler()                              { RemoveFrame(ruler); return *this; }
 	RichEdit&       SingleLine(bool b = true)              { singleline = b; return *this; }
@@ -830,6 +836,8 @@ public:
 	RichEdit&       SetPaintInfo(const PaintInfo& pi)      { paint_info = pi; return *this; }
 	RichEdit&       IgnorePhysicalObjectSize(bool b = true){ ignore_physical_size = b; return *this; }
 	RichEdit&       PixelMode();
+	RichEdit&       DarkContent(bool b = true);
+	RichEdit&       AllowDarkContent(bool b = true);
 
 	struct UndoInfo {
 		int              undoserial;

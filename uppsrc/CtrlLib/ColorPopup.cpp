@@ -50,9 +50,17 @@ Color ColorPopUp::hint[18];
 
 ColorPopUp& ColorPopUp::DarkContent(bool b)
 {
-	dark = b;
 	wheel.DarkContent(b);
 	ramp.DarkContent(b);
+	Refresh();
+	return *this;
+}
+
+ColorPopUp& ColorPopUp::AllowDarkContent(bool b)
+{
+	wheel.AllowDarkContent(b);
+	ramp.AllowDarkContent(b);
+	Refresh();
 	return *this;
 }
 
@@ -201,6 +209,7 @@ void ColorPopUp::Paint(Draw& w)
 	}
 
 	int i = 0;
+	bool dark = IsDarkContent();
 	for(;;) {
 		for(int x = 0; x < 18 * DPI(16); x += DPI(16)) {
 			if(i >= GetColorCount()) {

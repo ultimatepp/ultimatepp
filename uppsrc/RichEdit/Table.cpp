@@ -133,6 +133,8 @@ void RichEdit::TableProps()
 	if(IsSelection() || cursorp.table == 0)
 		return;
 	RichEditTableProperties dlg;
+	SetupDark(dlg.framecolor);
+	SetupDark(dlg.gridcolor);
 	dlg.Breaker(dlg.destroy, IDNO);
 	RichTable::Format fmt = text.GetTableFormat(cursorp.table);
 	String ratios;
@@ -337,6 +339,8 @@ void RichEdit::CellProperties()
 		return;
 	WithCellPropertiesLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, t_("Cell properties"));
+	SetupDark(dlg.color);
+	SetupDark(dlg.border);
 	int  tab;
 	Rect a;
 	if(tablesel) {

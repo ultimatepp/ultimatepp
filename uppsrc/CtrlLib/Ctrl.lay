@@ -65,41 +65,6 @@ LAYOUT(FileSelectorLayout, 652, 488)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 68).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(PaletteLayout, 216, 332)
-	ITEM(Upp::TabCtrl, palette_tab, HSizePosZ(4, 4).VSizePosZ(4, 82))
-	ITEM(Upp::Label, dv___1, SetLabel(t_("Color:")).LeftPosZ(4, 36).BottomPosZ(52, 24))
-	ITEM(Upp::DataPusher, color, HSizePosZ(68, 32).BottomPosZ(54, 22))
-	ITEM(Upp::Button, set_transparent, RightPosZ(4, 18).BottomPosZ(56, 18))
-	UNTYPED(fetch_color, RightPosZ(4, 18).BottomPosZ(30, 18))
-	ITEM(Upp::Label, dv___5, SetLabel(t_("R:")).LeftPosZ(4, 12).BottomPosZ(29, 19))
-	ITEM(Upp::EditIntSpin, r, LeftPosZ(16, 44).BottomPosZ(29, 19))
-	ITEM(Upp::Label, dv___7, SetLabel(t_("G:")).LeftPosZ(72, 12).BottomPosZ(29, 19))
-	ITEM(Upp::EditIntSpin, g, LeftPosZ(84, 44).BottomPosZ(29, 19))
-	ITEM(Upp::Label, dv___9, SetLabel(t_("B:")).LeftPosZ(136, 12).BottomPosZ(29, 19))
-	ITEM(Upp::EditIntSpin, b, LeftPosZ(150, 42).BottomPosZ(29, 19))
-	ITEM(Upp::Label, dv___11, SetLabel(t_("H:")).LeftPosZ(4, 12).BottomPosZ(5, 19))
-	ITEM(Upp::EditIntSpin, h, LeftPosZ(16, 44).BottomPosZ(5, 19))
-	ITEM(Upp::Label, dv___13, SetLabel(t_("S:")).LeftPosZ(72, 12).BottomPosZ(5, 19))
-	ITEM(Upp::EditIntSpin, s, LeftPosZ(84, 44).BottomPosZ(5, 19))
-	ITEM(Upp::Label, dv___15, SetLabel(t_("V:")).LeftPosZ(136, 12).BottomPosZ(5, 19))
-	ITEM(Upp::EditIntSpin, v, LeftPosZ(148, 44).BottomPosZ(5, 19))
-END_LAYOUT
-
-LAYOUT(PaletteSelectorLayout, 248, 320)
-	ITEM(Ctrl, palette, HSizePosZ(4, 4).VSizePosZ(4, 32))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
-END_LAYOUT
-
-LAYOUT(PalCtrlSizeLayout, 206, 60)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("&Rows:")).LeftPosZ(4, 44).TopPosZ(4, 19))
-	ITEM(Upp::EditIntSpin, rows, LeftPosZ(48, 50).TopPosZ(4, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("&Columns:")).LeftPosZ(108, 44).TopPosZ(4, 19))
-	ITEM(Upp::EditIntSpin, columns, LeftPosZ(152, 50).TopPosZ(4, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
-END_LAYOUT
-
 LAYOUT(KeysLayout, 604, 500)
 	ITEM(Upp::ArrayCtrl, group, LeftPosZ(8, 116).TopPosZ(8, 452))
 	ITEM(Upp::ArrayCtrl, keys, LeftPosZ(132, 464).TopPosZ(8, 452))

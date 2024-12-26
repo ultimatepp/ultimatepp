@@ -293,7 +293,7 @@ struct RulerStyleDisplay : Display {
 	}
 };
 
-ParaFormatting::ParaFormatting()
+ParaFormatting::ParaFormatting(const RichEdit& e)
 {
 	CtrlLayout(*this);
 	tabtype.Add(ALIGN_LEFT, t_("Left"));
@@ -349,6 +349,8 @@ ParaFormatting::ParaFormatting()
 	rulerstyle.Add(RichPara::RULER_SOLID);
 	rulerstyle.Add(RichPara::RULER_DOT);
 	rulerstyle.Add(RichPara::RULER_DASH);
+
+	e.SetupDark(rulerink);
 }
 
 void StyleManager::EnterStyle()
@@ -533,7 +535,8 @@ void StyleManager::Setup(const Vector<int>& faces, int aunit)
 		face.Add(faces[i]);
 }
 
-StyleManager::StyleManager()
+StyleManager::StyleManager(const RichEdit& e)
+:	para(e)
 {
 	CtrlLayoutOKCancel(*this, t_("Styles"));
 	list.NoHeader().NoGrid();
@@ -544,6 +547,8 @@ StyleManager::StyleManager()
 	list.WhenBar = THISBACK(Menu);
 	list.WhenAcceptEdit = THISBACK(ReloadNextStyles);
 	ink.NotNull();
+	e.SetupDark(ink);
+	e.SetupDark(paper);
 	face <<= height <<= italic <<= bold <<= underline <<= strikeout <<= THISBACK(SetupFont);
 	Vector<int> ffs;
 	Vector<int> ff;
