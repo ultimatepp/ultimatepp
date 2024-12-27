@@ -67,7 +67,7 @@ void ParaFormatting::SetupIndent()
 
 void ParaFormatting::EditHdrFtr()
 {
-	if(EditRichHeaderFooter(header_qtf, footer_qtf))
+	if(EditRichHeaderFooter(header_qtf, footer_qtf, allow_dark, dark))
 		modified = true;
 }
 
@@ -351,6 +351,8 @@ ParaFormatting::ParaFormatting(const RichEdit& e)
 	rulerstyle.Add(RichPara::RULER_DASH);
 
 	e.SetupDark(rulerink);
+	allow_dark = e.allow_dark_content;
+	dark = e.dark_content;
 }
 
 void StyleManager::EnterStyle()

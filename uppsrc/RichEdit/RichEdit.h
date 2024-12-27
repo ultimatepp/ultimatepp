@@ -126,7 +126,7 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 #define LAYOUTFILE <RichEdit/RichEdit.lay>
 #include <CtrlCore/lay.h>
 
-bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf);
+bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf, bool allow_dark, bool dark);
 
 class RichEdit;
 
@@ -142,6 +142,8 @@ private:
 	Font     font;
 	bool     modified;
 	String   header_qtf, footer_qtf;
+	bool     dark = false;
+	bool     allow_dark = false;
 
 	RichPara::NumberFormat GetNumbering();
 	bool                   IsNumbering();
@@ -660,6 +662,7 @@ private:
 
 	friend class StyleKeysDlg;
 	friend class StyleManager;
+	friend class ParaFormatting;
 
 	using Ctrl::Accept;
 

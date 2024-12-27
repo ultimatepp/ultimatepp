@@ -100,10 +100,12 @@ int CharFilterEqualize(int c)
 
 struct RichEditTableProperties : WithTablePropertiesLayout<TopWindow> {
 	String header_qtf, footer_qtf;
+	bool     dark = false;
+	bool     allow_dark = false;
 
 	void EditHdrFtr()
 	{
-		EditRichHeaderFooter(header_qtf, footer_qtf);
+		EditRichHeaderFooter(header_qtf, footer_qtf, allow_dark, dark);
 	}
 	
 	void NewHdrFtr()
@@ -135,6 +137,8 @@ void RichEdit::TableProps()
 	RichEditTableProperties dlg;
 	SetupDark(dlg.framecolor);
 	SetupDark(dlg.gridcolor);
+	dlg.allow_dark = allow_dark_content;
+	dlg.dark = dark_content;
 	dlg.Breaker(dlg.destroy, IDNO);
 	RichTable::Format fmt = text.GetTableFormat(cursorp.table);
 	String ratios;
