@@ -269,28 +269,6 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 	return true;
 }
 
-static void PutOctalString(Stream& out, const char *b, const char *e, const String& eol, bool split = false)
-{
-	out.Put('\"');
-	int64 start = out.GetPos();
-	while(b < e) {
-		if(split && out.GetPos() >= start + 200u) {
-			out << "\"" << eol << "\t\"";
-			start = out.GetPos();
-		}
-		if((byte)*b >= ' ' && *b != '\x7F' && *b != '\xFF') {
-			if(*b == '\\' || *b == '\"' || *b == '\'')
-				out.Put('\\');
-			out.Put(*b++);
-		}
-		else if(IsDigit(b[1]))
-			out.Put(Sprintf("\\%03o", (byte)*b++));
-		else
-			out.Put(Sprintf("\\%o", (byte)*b++));
-	}
-	out.Put('\"');
-}
-
 String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 	StringStream out;
 	out << "PREMULTIPLIED" << eol;
