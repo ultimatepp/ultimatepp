@@ -39,7 +39,6 @@ NSMenu *Cocoa_DockMenu();
 - (void)themeChanged:(NSNotification *)aNotification
 {
 	Upp::Ctrl::PostReSkin();
-	DLOG("RESKIN");
 }
 
 

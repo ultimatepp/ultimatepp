@@ -149,7 +149,7 @@ void ChHostSkin()
 		s.arrowsize = 0;
 		Image track = CocoImg(COCO_SCROLLTRACK);
 		Image thumb = CocoImg(COCO_SCROLLTHUMB);
-		
+
 		s.barsize = track.GetHeight();
 		s.thumbwidth = thumb.GetHeight();
 		s.thumbmin = 2 * s.barsize;
@@ -185,7 +185,7 @@ void ChHostSkin()
 		MultiButton::Style& s = MultiButton::StyleDefault().Write();
 		s.paper = field(COCO_POPUPBUTTON);
 	}
-	
+
 	{ // U++ menu should not be used MacOS apps, but adjust some values anyway
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;
@@ -217,10 +217,10 @@ void ChHostSkin()
 	CtrlImg::Set(CtrlImg::I_question, nsimg(0));
 	CtrlImg::Set(CtrlImg::I_exclamation, nsimg(0));
 	CtrlImg::Set(CtrlImg::I_error, nsimg(0));
-	
+
 	Image button100x100[8];
 	Color text[8];
-	
+
 	for(int i = 0; i < 8; i++) {
 		ImageDraw iw(100, 100);
 		const Button::Style& s = i < 4 ? Button::StyleNormal() : Button::StyleOk();
@@ -228,7 +228,7 @@ void ChHostSkin()
 		button100x100[i] = iw;
 		text[i] = s.monocolor[i & 3];
 	}
-	
+
 	ChSynthetic(button100x100, text, true);
 }
 
