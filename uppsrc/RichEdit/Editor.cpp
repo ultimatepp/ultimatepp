@@ -25,7 +25,7 @@ double RichEdit::DotToPt(int dot, int unit)
 int RichEdit::PtToDot(double pt, int unit)
 {
 	if(unit == UNIT_PIXELMODE)
-		return pt * 8;
+		return int(pt * 8);
 	return int((600 * pt + 71) / 72);
 }
 
