@@ -334,7 +334,7 @@ struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 	void Load();
 	void Save();
-	bool EditDlg(String& name, String& uri, String& zico);
+	bool EditDlg(String& name, String& uri, String& ico16, String& ico32);
 	void Add();
 	void Sync();
 	void Edit();
