@@ -223,7 +223,7 @@ void ChHostSkin()
 
 	for(int i = 0; i < 8; i++) {
 		ImageDraw iw(100, 100);
-		const Button::Style& s = i < 4 ? Button::StyleNormal() : Button::StyleOk();
+		const Button::Style& s = i < 4 ? Button::StyleNormal() : Button::StyleEdge();
 		ChPaint(iw, 0, 0, 100, 100, s.look[i & 3]);
 		button100x100[i] = iw;
 		text[i] = s.monocolor[i & 3];
