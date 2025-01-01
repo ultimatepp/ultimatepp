@@ -315,8 +315,12 @@ void Esc::Term(SRVal& r)
 		return;
 	}
 	if(IsNumber()) {
-		// TODO: int64 !
-		r = ReadDouble();
+		Pos p = GetPos();
+		r = ReadInt64();
+		if(Char('.')) {
+			SetPos(p);
+			r = ReadDouble();
+		}
 		return;
 	}
 	if(IsString()) {

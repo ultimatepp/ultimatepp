@@ -120,7 +120,6 @@ file
 	ChGtk3.cpp,
 	ChCocoMM.h,
 	ChCocoMM.mm,
-	ChCoco.h,
 	ChCoco.cpp,
 	Meta readonly separator,
 	Normal.upt,

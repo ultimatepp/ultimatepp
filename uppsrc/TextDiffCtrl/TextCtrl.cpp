@@ -387,7 +387,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 				int b = h & 31;
 				paper = AColor(255 - r, 255 - g, 255 - b);
 			}
-			Color ink = l.diff ? SRed(): SGray();
 			draw.DrawRect(n_width, y, blame_width, letter.cy, paper);
 			draw.Clip(n_width, y, blame_width - 2, letter.cy);
 			if(hash != last_hash)

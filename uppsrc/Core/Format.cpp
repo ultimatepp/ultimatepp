@@ -171,18 +171,17 @@ String FormatInt64(int64 i)
 	return String::Make(20, [&](char *s) { return utoa64(i, s); });
 }
 
-String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper)
+String FormatIntBase(int64 i, int base, int width, char lpad, int sign, bool upper)
 {
-	enum { BUFFER = sizeof(int) * 8 + 1 };
+	enum { BUFFER = sizeof(int64) * 8 + 1 };
 	if(base < 2 || base > 36)
 		return "<invalid base>";
 	char buffer[BUFFER];
 	char *const e = buffer + (int)BUFFER;
 	char *p = e;
 	const char *itoc = upper ? "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "0123456789abcdefghijklmnopqrstuvwxyz";
-	if(sign < 0 || !IsNull(i))
-	{
-		unsigned x = i;
+	if(sign < 0 || !IsNull(i)) {
+		uint64 x = i;
 		if(sign >= 0 && i < 0)
 			x = -i;
 		do
@@ -193,8 +192,7 @@ String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper
 	bool do_sign = (sign > 0 || sign >= 0 && minus);
 	if(do_sign && lpad != '0')
 		*--p = (minus ? '-' : '+');
-	if(width > e - p)
-	{
+	if(width > e - p) {
 		char *b = e - min<int>(width, BUFFER);
 		while(p > b)
 			*--p = lpad;

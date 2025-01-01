@@ -84,7 +84,6 @@ Size   RichImage::GetPhysicalSize(const Value& data) const
 void   RichImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 {
 	Image x = LoadImageFromString(data);
-//	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
 	w.DrawImage(0, 0, sz.cx, sz.cy, x);
 }
 
@@ -242,7 +241,7 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 	if(r) {
 		Size isz = r->GetSize();
 		if(GetIsJPGFn() && GetIsJPGFn()(~r) && GetPdfDrawJPEGFn())
-			GetPdfDrawJPEGFn()(w, 0, 0, sz.cx, sz.cy, data);
+			GetPdfDrawJPEGFn()(w, 0, 0, sz.cx, sz.cy, data); // make sure we export jpg to pdf without reprocessing
 		else
 		if(isz.cx * isz.cy > sz.cx * sz.cy) { // conserve memory by scaling down from source
 			ImageEncoder m;

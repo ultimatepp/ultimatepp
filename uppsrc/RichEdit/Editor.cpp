@@ -15,13 +15,17 @@ bool FontHeight::Key(dword key, int count)
 	return WithDropChoice<EditDouble>::Key(key, count);
 }
 
-double RichEdit::DotToPt(int dt)
+double RichEdit::DotToPt(int dot, int unit)
 {
-	return 7200 * minmax(dt, 8, 8000) / 600 / 10 / 10.0;
+	if(unit == UNIT_PIXELMODE)
+		return dot / 8.0;
+	return 7200 * minmax(dot, 8, 8000) / 600 / 10 / 10.0;
 }
 
-int RichEdit::PtToDot(double pt)
+int RichEdit::PtToDot(double pt, int unit)
 {
+	if(unit == UNIT_PIXELMODE)
+		return int(pt * 8);
 	return int((600 * pt + 71) / 72);
 }
 
@@ -98,8 +102,9 @@ void RichEdit::Paint(Draw& w)
 	p_size = sz;
 	Rect tr = GetTextRect();
 	Zoom zoom = GetZoom();
-	w.DrawRect(sz, White);
+	w.DrawRect(sz, IsDarkContent() ? SColorPaper() : White());
 	PageY py = text.GetHeight(pagesz);
+	Color showcodesa = IsDarkContent() ? DarkTheme(showcodes) : showcodes;
 	{
 		EditPageDraw pw(w);
 		pw.x = tr.left;
@@ -122,9 +127,10 @@ void RichEdit::Paint(Draw& w)
 		pi.bottom = GetPageY(sb + sz.cy);
 		pi.usecache = true;
 		pi.sizetracking = sizetracking;
-		pi.showcodes = showcodes;
+		pi.showcodes = showcodesa;
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
-		pi.hyperlink = LtBlue; // because we have white paper even in dark mode
+		pi.hyperlink = IsDarkContent() ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
+		pi.darktheme = IsDarkContent();
 		
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
@@ -140,7 +146,7 @@ void RichEdit::Paint(Draw& w)
 		}
 		text.Paint(pw, pagesz, pi);
 	}
-	w.DrawRect(tr.left, GetPosY(py) - sb, 20, 3, showcodes);
+	w.DrawRect(tr.left, GetPosY(py) - sb, 20, 3, showcodesa);
 	if(objectpos >= 0) {
 		Rect r = objectrect;
 		r.Offset(tr.left, -sb);
@@ -221,9 +227,37 @@ RichEdit& RichEdit::Floating(double zoomlevel_)
 	return *this;
 }
 
+RichEdit& RichEdit::PixelMode()
+{
+	NoRuler();
+	ShowCodes(Blend(SColorHighlight(), SColorPaper()));
+	ViewBorder(0);
+
+	RichPara::Format f;
+	f.language = LNG_('C','S','C','Z');
+	(Font&)f = Arial(StdFont().GetHeight() * 8 / DPI(1));
+	f.tabsize = f['W'] * 8;
+	RichText::FormatInfo fi;
+	fi.Set(f);
+	ApplyFormatInfo(fi);
+
+	pixel_mode = true;
+	RefreshLayoutDeep();
+	
+	height.SetFilter(CharFilterDigit);
+	
+	unit = UNIT_PIXELMODE;
+	
+	return *this;
+}
+
 void RichEdit::Layout()
 {
 	Size sz = GetTextRect().GetSize();
+	if(pixel_mode) {
+		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8, INT_MAX));
+	}
+	else
 	if(!IsNull(floating_zoom)) {
 		Zoom m = GetRichTextStdScreenZoom();
 		SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
@@ -233,7 +267,7 @@ void RichEdit::Layout()
 	SetSb();
 	sb = zsc * GetZoom();
 	PlaceCaret();
-	if(GetSize() != p_size) {
+	if(GetSize() != p_size && !pixel_mode) {
 		sizetracking = true;
 		KillSetTimeCallback(250, THISBACK(EndSizeTracking), TIMEID_ENDSIZETRACKING);
 	}
@@ -304,6 +338,12 @@ void RichEdit::SetupRuler()
 	                zoom, q.grid, q.numbers, q.numbermul, q.marks);
 }
 
+void RichEdit::SetupDark(ColorPusher& c) const
+{
+	c.AllowDarkContent(allow_dark_content);
+	c.DarkContent(dark_content);
+}
+
 void RichEdit::SetupUnits()
 {
 	WithUnitLayout<TopWindow> d;
@@ -312,6 +352,7 @@ void RichEdit::SetupUnits()
 	for(int i = 1; i <= 10; i++)
 		d.zoom.Add(10 * i, Format(t_("%d%% of width"), 10 * i));
 	CtrlRetriever r;
+	SetupDark(d.showcodes);
 	r(d.unit, unit)(d.showcodes, showcodes)(d.zoom, zoom);
 	if(d.Execute() == IDOK) {
 		r.Retrieve();
@@ -790,6 +831,27 @@ RichEditWithToolBar::RichEditWithToolBar()
 	InsertFrame(0, toolbar);
 	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
 	extended = true;
+}
+
+bool RichEdit::IsDarkContent() const
+{
+	return dark_content || allow_dark_content && IsDarkTheme();
+}
+
+RichEdit& RichEdit::DarkContent(bool b)
+{
+	dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::AllowDarkContent(bool b)
+{
+	allow_dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
 }
 
 }

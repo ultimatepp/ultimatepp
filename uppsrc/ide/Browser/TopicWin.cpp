@@ -35,6 +35,7 @@ TopicEditor::TopicEditor()
 	topics_search.SetFilter(CharFilterToUpper);
 	
 	editor.SetPage(TopicPage());
+	editor.AllowDarkContent();
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	editor.WhenHyperlink = THISBACK(Hyperlink);
 

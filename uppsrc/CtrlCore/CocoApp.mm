@@ -18,6 +18,30 @@ NSMenu *Cocoa_DockMenu();
 {
 	return Upp::Cocoa_DockMenu();
 }
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(themeChanged:)
+                                                     name:@"AppleColorPreferencesChangedNotification"
+                                                     object:nil];
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(themeChanged:)
+                                                     name: @"AppleInterfaceThemeChangedNotification"
+                                                     object:nil];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+    [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)themeChanged:(NSNotification *)aNotification
+{
+	Upp::Ctrl::PostReSkin();
+}
+
+
 @end
 
 namespace Upp {

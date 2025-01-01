@@ -9,22 +9,22 @@
 
 ## Introduction
 
-U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), and an integrated development environment.
+U++ is a C++ cross-platform rapid application development framework focused on programmers productivity. It includes a set of libraries (GUI, SQL, Network, etc.), with an integrated development environment.
 
 Rapid development is achieved by the [smart and aggressive use of C++](https://www.ultimatepp.org/www$uppweb$overview$en-us.html) rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.
 
-The U++ integrated development environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual designers for U++ libraries, a [Topic++](https://www.ultimatepp.org/app$ide$Topic$en-us.html) system for documenting code and creating rich text resources for applications (like help and code documentation) and [Assist++](https://www.ultimatepp.org/app$ide$Assist$en-us.html) - a powerful C++ code analyzer that provides features like code completion, navigation and transformation.
+The U++ integrated development environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds by up to 4 times, Visual designers for U++ libraries, [Topic++](https://www.ultimatepp.org/app$ide$Topic$en-us.html) for documenting code and creating rich text resources for the applications (code documentation and examples) and [Assist++](https://www.ultimatepp.org/app$ide$Assist$en-us.html) - a powerful C++ code analyzer that provides features like code completion, abbreviation, navigation and conversion.
 
-TheIDE can work with GCC, Clang, MinGW and Visual C++ and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
+TheIDE can work with GCC, Clang, MinGW and Visual C++ while containing a fully featured debugger. It can also be used for developing non-U++ applications.
 
 U++ supports following platforms on the production level: **Windows**, **macOS**, **GNU/Linux** & **FreeBSD**.
 
 ## What you can get with U++?
 
-* A very effective C++ library for cross-platform development in source form.
-* A good integrated development environment, designed for developing large C++ applications.
+* Out of the box C++ libraries for cross-platform GUI development
+* Fully featured IDE designed to develop complex and high performance applications.
 
-You can use both, or you can use whichever you need.
+It can be used for any work of your needs.
 
 ## License
 U++ uses the BSD-2 Clause license. The license applies to all source code in this repository except for the situation when the directory contains the "Copying" file. In this case, the license contained in this file is valid for source codes within the directory in which it is present. Moreover, the new license stored in the "Copying" file applies to source files in child directories.
@@ -64,7 +64,7 @@ public:
     void Paint(Upp::Draw& w) override
     {
         w.DrawRect(GetSize(), Upp::SWhite);
-        w.DrawText(10, 10, "Hello, world!", Upp::Arial(30), Upp::Magenta);
+        w.DrawText(10, 10, "Hello, world!", Upp::Arial(50), Upp::Magenta);
     }
 };
 
@@ -111,7 +111,7 @@ If the above list is not enough, please visit a dedicated [website](https://www.
 ### Books
 
 If you are looking for books about the U++ framework, here is a list of books we recommend:
-- [**Getting started with the U++ Framework**](https://www.amazon.com/dp/B0CQHX84VZ/) - the book written by Frederik Dumarey and reviewed by the main authors of U++. It is an excellent starting point for anyone new to the framework. Also, if you are an experienced U++ developer, you will find much valuable content, including a deep dive into Skylark and Turtle.
+- [**Getting started with the U++ Framework**](https://www.amazon.com/dp/B0CQHX84VZ/) - the book written by Frederik Dumarey and reviewed by the main authors of U++. It is an excellent starting point for anyone new to the framework. Also, if you are an experienced U++ developer, you will find much valuable content, including a deep dive into Skylark (web framework) and Turtle (HTML, JS client).
 
 ## Extensibility
 

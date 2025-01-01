@@ -6,7 +6,7 @@ String FormatInt(int i);
 String FormatUInt64(uint64 w);
 String FormatInt64(int64 i);
 
-String         FormatIntBase(int i, int base, int width = 0, char lpad = ' ', int sign = 0, bool upper = false);
+String         FormatIntBase(int64 i, int base, int width = 0, char lpad = ' ', int sign = 0, bool upper = false);
 String         FormatIntDec(int i, int width, char lpad = ' ', bool always_sign = false);
 String         FormatIntHex(int i, int width = 8, char lpad = '0');
 String         FormatIntHexUpper(int i, int width = 8, char lpad = '0');
@@ -134,3 +134,4 @@ inline String         Format64(uint64 a)                    { return FormatUInt6
 
 inline String         FormatDoubleFix(double x, int digits) { return FormatF(x, digits); }
 inline String         FormatDoubleExp(double x, int digits) { return FormatE(x, digits); }
+

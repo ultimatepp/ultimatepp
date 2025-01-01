@@ -5,13 +5,14 @@ namespace Upp {
 double UnitMultiplier(int unit) {
 	static double m[] =
 	{
-		1,
-		72.0 / 600,
-		1.0 / 600,
-		25.4 / 600,
-		2.54 / 600,
+		1, // DOT
+		72.0 / 600, // POINT
+		1.0 / 600, // INCH
+		25.4 / 600, // mm
+		2.54 / 600, // cm
+		1 / 8.0, // PIXELMODE
 	};
-	ASSERT(unit >= UNIT_DOT && unit <= UNIT_CM);
+	ASSERT(unit >= UNIT_DOT && unit <= UNIT_PIXELMODE);
 	return m[unit];
 }
 
@@ -23,6 +24,7 @@ const char *UnitText(int unit) {
 		"\"",
 		"mm",
 		"cm"
+		"",
 	};
 	return txt[unit];
 }
@@ -78,6 +80,8 @@ String UnitEdit::AsText(double d, int unit)
 {
 	if(IsNull(d))
 		return Null;
+	if(unit == UNIT_PIXELMODE)
+		return AsString(d);
 	String utxt = UnitText(unit);
 	if(unit == UNIT_POINT)
 		d = floor(10 * d + 0.5) / 10;
@@ -127,6 +131,7 @@ void UnitEdit::Spin(int delta)
 		case UNIT_MM:    h = 0.5; break;
 		case UNIT_CM:
 		case UNIT_INCH:  h = 0.05; break;
+		case UNIT_PIXELMODE: h = 1; break;
 		default:         NEVER();
 		}
 		h *= delta;
@@ -148,10 +153,28 @@ int CharFilterUnitEditSgn(int c)
 	return c == '-' ? c : CharFilterUnitEdit(c);
 }
 
+int CharFilterUnitEditPx(int c)
+{
+	return IsDigit(c) || c == '.' ? c : 0;
+}
+
+int CharFilterUnitEditSgnPx(int c)
+{
+	return c == '-' ? c : CharFilterUnitEditPx(c);
+}
+
+void UnitEdit::SyncFilter()
+{
+	if(unit == UNIT_PIXELMODE)
+		SetFilter(sgn ? CharFilterUnitEditSgnPx : CharFilterUnitEditPx);
+	else
+		SetFilter(sgn ? CharFilterUnitEditSgn : CharFilterUnitEdit);
+}
+
 UnitEdit& UnitEdit::WithSgn(bool b)
 {
 	sgn = b;
-	SetFilter(b ? CharFilterUnitEditSgn : CharFilterUnitEdit);
+	SyncFilter();
 	return *this;
 }
 

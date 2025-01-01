@@ -18,7 +18,6 @@ namespace Upp {
 	
 extern id menubar;
 
-
 bool  GetShift() { return coco_flags & NSEventModifierFlagShift; }
 bool  GetCtrl() { return coco_flags & NSEventModifierFlagCommand; }
 bool  GetAlt() { return coco_flags & NSEventModifierFlagControl; }

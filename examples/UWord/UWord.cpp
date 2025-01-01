@@ -258,6 +258,7 @@ UWord::UWord()
 	static int doc;
 	Title(Format("Document%d", ++doc));
 	Icon(CtrlImg::File());
+	editor.AllowDarkContent();
 	editor.ClearModify();
 	SetBar();
 	editor.WhenRefreshBar = THISBACK(SetBar);
