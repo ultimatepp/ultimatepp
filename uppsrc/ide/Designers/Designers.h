@@ -81,7 +81,7 @@ struct IdeQtfDes : IdeDesigner, RichEditWithToolBar {
 
 	typedef IdeQtfDes CLASSNAME;
 	
-	IdeQtfDes() { Extended(); }
+	IdeQtfDes() { Extended(); AllowDarkContent(); }
 };
 
 INITIALIZE(Qtf)

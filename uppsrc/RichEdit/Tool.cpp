@@ -115,11 +115,13 @@ void RichEdit::FontTools(Bar& bar)
 
 void RichEdit::InkTool(Bar& bar)
 {
+	ink.DarkContent(IsDarkContent());
 	bar.Add(!IsReadOnly(), ink);
 }
 
 void RichEdit::PaperTool(Bar& bar)
 {
+	paper.DarkContent(IsDarkContent());
 	bar.Add(!IsReadOnly(), paper);
 }
 
