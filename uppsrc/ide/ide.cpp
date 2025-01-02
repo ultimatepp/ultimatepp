@@ -635,10 +635,8 @@ void Ide::MakeIcon() {
 void Ide::SetIcon()
 {
 	int new_state_icon = 0;
-	if((bool)debugger && !IdeIsDebugLock()) {
+	if((bool)debugger && !IdeIsDebugLock())
 		new_state_icon = 1;
-		return;
-	}
 	else
 	if((GetTimeClick() / 800) & 1) {
 		if(debugger)
