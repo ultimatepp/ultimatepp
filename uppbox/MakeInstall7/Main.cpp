@@ -86,7 +86,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 void Make(String pkg, String exe)
 {
-	Syx("wine " + home + "/upp.win32/umk.exe u:/upp.src/uppsrc " + pkg + " u:/upp.src/uppbox/MakeInstall7/CLANGx64.bm" + " -arv "
+	Syx("wine " + home + "/upp.win32/umk.exe u:/upp.tmp/upp/uppsrc " + pkg + " u:/upp.src/uppbox/MakeInstall7/CLANGx64.bm" + " -arv "
 	    + "u:/upp.tmp/upp/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
 }
