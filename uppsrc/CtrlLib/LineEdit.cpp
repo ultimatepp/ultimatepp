@@ -249,7 +249,7 @@ void LineEdit::RectSelectionLeftRight(int dir, bool homeend)
 		return false;
 	};
 	
-	int n = homeend ? 1000 : 1;
+	int n = homeend ? 2000 : 1;
 	
 	while(n > 0 && (Try(anchor, cursor) || Try(cursor, anchor)))
 		n--;
