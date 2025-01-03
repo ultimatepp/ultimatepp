@@ -434,6 +434,8 @@ int Pdb::FindType(adr_t modbase, const String& name)
 		{ "wchar_t", UINT2 },
 		{ "int", SINT4 },
 		{ "unsigned int", UINT4 },
+		{ "long", SINT4 },
+		{ "unsigned long", UINT4 },
 		{ "float", FLT },
 		{ "double", DBL },
 		{ "int64", SINT8 },

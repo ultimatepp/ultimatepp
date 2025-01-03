@@ -479,6 +479,59 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	return cc;
 }
 
+bool IsWin32Manifest(const String& s)
+{
+	return s == "manifest.xml";
+}
+
+void CppBuilder::DoRc(Vector<String>& sfile, Vector<String>& soptions, const Package& pkg, const String& package)
+{
+	if(!HasFlag("MAIN") || !HasFlag("WIN32") || !HasFlag("GUI"))
+		return;
+	for(int i = 0; i < sfile.GetCount(); i++)
+		if(sfile[i].EndsWith(".rc"))
+			return;
+	String icon_path;
+	String manifest_path;
+	
+	auto DoManifest = [&](const Package& pkg, const String& package) {
+		for(int i = 0; i < pkg.GetCount(); i++)
+			if(IsWin32Manifest(pkg[i]))
+				manifest_path = SourcePath(package, pkg[i]);
+	};
+	
+	for(int i = 0; i < wspc.GetCount(); i++)
+		DoManifest(wspc.GetPackage(i), wspc[i]);
+	DoManifest(pkg, package); // main package manifest has priority
+	String d = GetFileFolder(PackagePath(package));
+	for(FindFile ff(d + "/*.*"); ff; ff.Next()) {
+		String p = ff.GetPath();
+		String n = GetFileName(p);
+		if(n == "icon.ico")
+			icon_path = p;
+	}
+	
+	String rc_file = CatAnyPath(outdir, "main.rc");
+	
+	String rc;
+	
+	if(manifest_path.GetCount()) {
+		SaveChangedFile(CatAnyPath(outdir, "manifest.xml"), LoadFile(manifest_path));
+		rc << "1 24 \"manifest.xml\"\r\n";
+	}
+	if(icon_path.GetCount()) {
+		SaveChangedFile(CatAnyPath(outdir, "icon.ico"), LoadFile(icon_path));
+		rc << "2 ICON DISCARDABLE \"icon.ico\"\r\n";
+	}
+
+	if(IsNull(rc))
+		return;
+
+	SaveChangedFile(rc_file, rc);
+	sfile.Add(rc_file);
+	soptions.Add();
+}
+
 Vector<String> RepoInfo(const String& package)
 {
 	Vector<String> info;

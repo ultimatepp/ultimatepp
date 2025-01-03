@@ -706,7 +706,7 @@ Size        GetRatioSize(Size stdsize, int cx, int cy);
 Size        GetFitSize(Size objsize, int cx, int cy);
 inline Size GetFitSize(Size objsize, Size intosize) { return GetFitSize(objsize, intosize.cx, intosize.cy); }
 
-Sizef GetFitSize(Sizef sz, double cx, double cy);
+Sizef  GetFitSize(Sizef sz, double cx, double cy);
 inline Sizef GetFitSize(Sizef objsize, Sizef intosize) { return GetFitSize(objsize, intosize.cx, intosize.cy); }
 
 double Squared(const Pointf& p);
@@ -720,6 +720,28 @@ Pointf Normalize(const Pointf& p);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
 
+template <typename T>
+inline Point_<T> Lerp(Point_<T> a, Point_<T> b, double t)
+{
+    return Point_<T>(Lerp(a.x, b.x, t), Lerp(a.y, b.y, t));
+}
+
+template <typename T>
+inline Size_<T> Lerp(Size_<T> a, Size_<T> b, double t)
+{
+    return Size_<T>(Lerp(a.cx, b.cx, t), Lerp(a.cy, b.cy, t));
+}
+
+template <typename T>
+inline Rect_<T> Lerp(Rect_<T> a, Rect_<T> b, double t)
+{
+    return Rect_<T>(
+        Lerp(a.left, b.left, t),
+        Lerp(a.top, b.top, t),
+        Lerp(a.right, b.right, t),
+        Lerp(a.bottom, b.bottom, t)
+    );
+}
 
 // deprecated because of confusing name:
 	

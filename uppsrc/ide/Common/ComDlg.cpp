@@ -310,6 +310,7 @@ QtfDlgEditor::QtfDlgEditor()
     SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
     SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 100)));
     Title("Editor");
+    editor.AllowDarkContent();
 }
 
 void QTFEdit(String& text)

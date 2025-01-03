@@ -67,7 +67,7 @@ void ParaFormatting::SetupIndent()
 
 void ParaFormatting::EditHdrFtr()
 {
-	if(EditRichHeaderFooter(header_qtf, footer_qtf))
+	if(EditRichHeaderFooter(header_qtf, footer_qtf, allow_dark, dark))
 		modified = true;
 }
 
@@ -174,6 +174,8 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo, bool 
 	if(RichText::TABS & formatinfo.paravalid)
 		for(int i = 0; i < formatinfo.tab.GetCount(); i++)
 			tabs.Add(formatinfo.tab[i].pos, formatinfo.tab[i].align, formatinfo.tab[i].fillchar);
+	if(unit == UNIT_PIXELMODE)
+		tabs.Disable();
 	tabsize.Set(unit, RichText::TABSIZE & formatinfo.paravalid ? formatinfo.tabsize : Null);
 	keepindent = formatinfo.indent != ComputeIndent();
 	SetupIndent();
@@ -291,7 +293,7 @@ struct RulerStyleDisplay : Display {
 	}
 };
 
-ParaFormatting::ParaFormatting()
+ParaFormatting::ParaFormatting(const RichEdit& e)
 {
 	CtrlLayout(*this);
 	tabtype.Add(ALIGN_LEFT, t_("Left"));
@@ -347,6 +349,10 @@ ParaFormatting::ParaFormatting()
 	rulerstyle.Add(RichPara::RULER_SOLID);
 	rulerstyle.Add(RichPara::RULER_DOT);
 	rulerstyle.Add(RichPara::RULER_DASH);
+
+	e.SetupDark(rulerink);
+	allow_dark = e.allow_dark_content;
+	dark = e.dark_content;
 }
 
 void StyleManager::EnterStyle()
@@ -355,7 +361,7 @@ void StyleManager::EnterStyle()
 	const RichStyle& s = style.Get(list.GetKey());
 	f.Set(s.format);
 	para.Set(unit, f);
-	height <<= RichEdit::DotToPt(s.format.GetHeight());
+	height <<= RichEdit::DotToPt(s.format.GetHeight(), unit);
 	face <<= s.format.GetFace();
 	bold = s.format.IsBold();
 	italic = s.format.IsItalic();
@@ -375,7 +381,7 @@ void StyleManager::GetFont(Font& font)
 	if(!IsNull(face))
 		font.Face(~face);
 	if(!IsNull(height))
-		font.Height(RichEdit::PtToDot(~height));
+		font.Height(RichEdit::PtToDot(~height, unit));
 	font.Bold(bold);
 	font.Italic(italic);
 	font.Underline(underline);
@@ -531,7 +537,8 @@ void StyleManager::Setup(const Vector<int>& faces, int aunit)
 		face.Add(faces[i]);
 }
 
-StyleManager::StyleManager()
+StyleManager::StyleManager(const RichEdit& e)
+:	para(e)
 {
 	CtrlLayoutOKCancel(*this, t_("Styles"));
 	list.NoHeader().NoGrid();
@@ -542,6 +549,8 @@ StyleManager::StyleManager()
 	list.WhenBar = THISBACK(Menu);
 	list.WhenAcceptEdit = THISBACK(ReloadNextStyles);
 	ink.NotNull();
+	e.SetupDark(ink);
+	e.SetupDark(paper);
 	face <<= height <<= italic <<= bold <<= underline <<= strikeout <<= THISBACK(SetupFont);
 	Vector<int> ffs;
 	Vector<int> ff;

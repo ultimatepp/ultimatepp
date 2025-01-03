@@ -96,8 +96,9 @@ double ContrastRatio(Color c1, Color c2) {
 
 static const int s_Max = 1024;
 static std::atomic<int> s_color_ii;
-static Color s_color[s_Max];
+static std::atomic<dword> s_color[s_Max];
 static Color (*s_color_fn[s_Max])();
+static Mutex sColorMutex;
 
 SColor::SColor(Color (*fn)())
 {
@@ -105,8 +106,10 @@ SColor::SColor(Color (*fn)())
 	ASSERT(ii < s_Max); // number of SColors is limited
 	ii = min(ii, s_Max - 1);
 	s_color_fn[ii] = fn;
-	if(fn)
+	if(fn) {
+		Mutex::Lock __(sColorMutex);
 		s_color[ii] = (*fn)();
+	}
 	color = ii | SCOLOR;
 }
 
@@ -119,10 +122,11 @@ SColor::~SColor()
 
 void SColor::Refresh()
 {
+	Mutex::Lock __(sColorMutex);
 	int n = min((int)s_color_ii, s_Max - 1);
 	for(int i = 0; i < n; i++)
 		if(s_color_fn[i])
-			s_color[i] = (*s_color_fn[i])();
+			s_color[i] = SCOLOR;
 }
 
 void SColor::Write(Color c, Color val)
@@ -149,8 +153,20 @@ dword Color::Get() const
 			return DarkThemeCached(c).color;
 		return val;
 	}
-	if(color & SCOLOR)
-		return val < s_Max ? s_color[val].color : 0;
+	if(color & SCOLOR) {
+		if(val < s_Max) {
+			std::atomic<dword>& r = s_color[val];
+			if(r & SCOLOR) {
+				Mutex::Lock __(sColorMutex);
+				if(s_color_fn[val])
+					r = (*s_color_fn[val])() & VBITS;
+				else
+					r = 0;
+			}
+			return r;
+		}
+		return 0;
+	}
 	return color & VBITS;
 }
 
@@ -291,6 +307,14 @@ Color Blend(Color c1, Color c2, int alpha)
 	             min(((a * (c2.GetB() - c1.GetB())) >> 8) + c1.GetB(), 255));
 }
 
+Color Lerp(Color a, Color b, double t)
+{
+	auto Ch = [&](byte a, byte b) {
+		return (byte)clamp(Lerp((double)a, (double)b, t), 0., 255.);
+	};
+	return Color(Ch(a.GetR(), b.GetR()), Ch(a.GetG(), b.GetG()), Ch(a.GetB(), b.GetB()));
+}
+
 INITBLOCK {
 	Value::SvoRegister<Color>("Color");
 }
@@ -336,8 +360,18 @@ Color DarkTheme(Color color)
 	};
 	
 	double target = 255 - Saturate255(int(Val() + saturation));
-	if(target < 30)
-		target *= (1 + (30 - target) / 30) * 1.5;
+	if(target < 30 && target >= 0) { // increase luminance of near black colors
+		static const double tab[] = { // 29 * log(target + 1) / log(30)
+			0, 5.91005636562468, 9.36721771666348, 11.8201127312494, 13.7227259177118,
+			15.2772740822882, 16.5916258276743, 17.730169096874, 18.734435433327,
+			19.6327822833365, 20.4454358591706, 21.1873304479128, 21.8698073118102,
+			22.501682193299, 23.0899436343753, 23.6402254624987, 24.1571357841859,
+			24.6444917989516, 25.1054910415395, 25.5428386489612, 25.9588435443378,
+			26.3554922247953, 26.7345061336924, 27.0973868135375, 27.4454518354237,
+			27.7798636774348, 28.1016531499904, 28.4117385589237, 28.7109415043374, 29 };
+		target = tab[(int)target];
+	}
+		//target *= (1 / 1.5 + (29 - target) / 29) * 1.5;
 	double ratio = target / 128;
 	
 	double m = max(r, g, b);

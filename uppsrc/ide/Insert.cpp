@@ -192,7 +192,7 @@ void Ide::InsertAs(const String& data)
 	f[5] = LZMACompress(data);
 	for(int i = 0; i < 6; i++)
 		dlg.format.SetLabel(i, dlg.format.GetLabel(i) + " (" + AsString(f[i].GetCount()) + ")");
-	
+	dlg.format <<= 0;
 	if(dlg.Execute() != IDOK)
 		return;
 	int i = ~dlg.format;
@@ -274,6 +274,7 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Separator();
 	bar.Add("Insert color..", THISBACK(InsertColor));
 	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
+	bar.Add("Insert sequence..", THISBACK(InsertSequence));
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });

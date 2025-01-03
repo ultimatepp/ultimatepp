@@ -2,7 +2,7 @@
 
 String SearchEnginesFile()
 {
-	return ConfigFile("search_engines.json");
+	return ConfigFile("web_search_engines.json");
 }
 
 Value  LoadSearchEngines()
@@ -10,7 +10,7 @@ Value  LoadSearchEngines()
 	return ParseJSON(LoadFile(SearchEnginesFile()));
 }
 
-String GetWebsiteIconAsPNG(const String& uri, Progress& pi)
+String GetWebsiteIconAsPNG(const String& uri, Progress& pi, bool uhd)
 {
 	String ico;
 	int q = uri.Find('/', max(0, uri.FindAfter("//")));
@@ -18,7 +18,7 @@ String GetWebsiteIconAsPNG(const String& uri, Progress& pi)
 		q = uri.GetCount();
 
 	Image r;
-	Size wanted = DPI(16, 16);
+	Size wanted = uhd ? Size(32, 32) : Size(16, 16);
 	pi.SetText("Setting up " + uri.Mid(0, q));
 	HttpRequest http(uri.Mid(0, q) + "/favicon.ico");
 	http.WhenWait = [&] {
@@ -59,8 +59,10 @@ void SearchEnginesDefaultSetup()
 	for(int i = 0; i < __countof(defs); i++)
 		ja << Upp::Json("Name", defs[i].a)
 		               ("URI", defs[i].b)
-		               ("Icon", Encode64(i == 0 ? PNGEncoder().SaveString(IdeImg::Google())
-		                                        : GetWebsiteIconAsPNG(defs[i].b, pi)));
+		               ("Icon16", Encode64(i == 0 ? PNGEncoder().SaveString(IdeImg::Google16())
+		                                          : GetWebsiteIconAsPNG(defs[i].b, pi, false)))
+		               ("Icon32", Encode64(i == 0 ? PNGEncoder().SaveString(IdeImg::Google32())
+		                                          : GetWebsiteIconAsPNG(defs[i].b, pi, true)));
 
 	SaveChangedFile(SearchEnginesFile(), ja);
 }
@@ -80,7 +82,11 @@ WebSearchTab::WebSearchTab()
 {
 	list.AddColumn("Name", 5);
 	list.AddColumn("URI", 5);
+	if(IsUHDMode())
+		list.AddIndex();
 	list.AddColumn("Icon").SetDisplay(Single<IconDisplay>());
+	if(!IsUHDMode())
+		list.AddIndex();
 	list.Moving().RowName("search engine").Removing();
 	list.WhenLeftDouble = [=] { Edit(); };
 	list.SetLineCy(max(GetStdFontSize().cy, DPI(18)));
@@ -113,7 +119,7 @@ WebSearchTab::WebSearchTab()
 	down.SetImage(IdeImg::arrow_down()) << [=] { list.SwapDown(); Sync(); };
 }
 
-bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
+bool WebSearchTab::EditDlg(String& name, String& uri, String& ico16, String& ico32)
 {
 	WithSetupWebSearchEngineLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Web search engine setup");
@@ -122,7 +128,8 @@ bool WebSearchTab::EditDlg(String& name, String& uri, String& ico)
 	if(dlg.Execute() == IDOK) {
 		v.Retrieve();
 		Progress pi;
-		ico = GetWebsiteIconAsPNG(uri, pi);
+		ico16 = GetWebsiteIconAsPNG(uri, pi, false);
+		ico32 = GetWebsiteIconAsPNG(uri, pi, true);
 		return true;
 	}
 	return false;
@@ -145,9 +152,9 @@ void WebSearchTab::Sync()
 
 void WebSearchTab::Add()
 {
-	String name, uri, zico;
-	if(EditDlg(name, uri, zico))
-		list.Add(name, uri, zico);
+	String name, uri, zico16, zico32;
+	if(EditDlg(name, uri, zico16, zico32))
+		list.Add(name, uri, zico16, zico32);
 	Sync();
 }
 
@@ -157,11 +164,13 @@ void WebSearchTab::Edit()
 		return;
 	String name = list.Get(0);
 	String uri = list.Get(1);
-	String zico = list.Get(2);
-	if(EditDlg(name, uri, zico)) {
+	String zico16 = list.Get(2);
+	String zico32 = list.Get(3);
+	if(EditDlg(name, uri, zico16, zico32)) {
 		list.Set(0, name);
 		list.Set(1, uri);
-		list.Set(2, zico);
+		list.Set(2, zico16);
+		list.Set(3, zico32);
 	}
 	Sync();
 }
@@ -181,7 +190,7 @@ void WebSearchTab::Load()
 {
 	list.Clear();
 	for(Value se : LoadSearchEngines())
-		list.Add(se["Name"], se["URI"], Decode64(se["Icon"]));
+		list.Add(se["Name"], se["URI"], Decode64(se["Icon16"]), Decode64(se["Icon32"]));
 	Sync();
 }
 
@@ -189,7 +198,10 @@ void WebSearchTab::Save()
 {
 	JsonArray ja;
 	for(int i = 0; i < list.GetCount(); i++)
-		ja << Upp::Json("Name", list.Get(i, 0))("URI", list.Get(i, 1))("Icon", Encode64(list.Get(i, 2)));
+		ja << Upp::Json("Name", list.Get(i, 0))
+		               ("URI", list.Get(i, 1))
+		               ("Icon16", Encode64(list.Get(i, 2)))
+		               ("Icon32", Encode64(list.Get(i, 3)));
 	
 	SaveChangedFile(SearchEnginesFile(), ja);
 }
@@ -226,7 +238,7 @@ void Ide::OnlineSearchMenu(Bar& menu)
 		Image& m = search_icon.At(i);
 		if(!b) {
 			b = true;
-			m = StreamRaster::LoadStringAny(Decode64(search_engines[i]["Icon"]));
+			m = StreamRaster::LoadStringAny(Decode64(search_engines[i][IsUHDMode() ? "Icon32" : "Icon16"]));
 		}
 		return m;
 	};

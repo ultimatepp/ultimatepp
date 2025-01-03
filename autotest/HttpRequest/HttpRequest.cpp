@@ -69,7 +69,7 @@ CONSOLE_APP_MAIN
 		String s = h.Execute();
 		DUMP(h.GetReasonPhrase());
 		DUMP(h.GetContent());
-		ASSERT(s.Find("<script type=\"text/javascript\" src=\"//c.imedia.cz/js/retargeting.js\"></script>") >= 0);
+		ASSERT(s.Find("Journeyman CZ") >= 0);
 	}
 
 	{
@@ -78,7 +78,7 @@ CONSOLE_APP_MAIN
 		String s = h.Execute();
 		DUMP(h.GetReasonPhrase());
 		DUMP(h.GetContent());
-		ASSERT(s.Find("<script type=\"text/javascript\" src=\"//c.imedia.cz/js/retargeting.js\"></script>") >= 0);
+		ASSERT(s.Find("Journeyman CZ") >= 0);
 	}
 
 	LLOG("*********** Everything is OK");

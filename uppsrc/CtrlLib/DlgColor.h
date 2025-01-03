@@ -18,6 +18,10 @@ public:
 	virtual void  MouseMove(Point pt, dword keyflags);
 
 	Event<>       WhenLeftDouble;
+	
+	WheelRampCtrl& DarkContent(bool b = true)       { dark_content = b; return *this; }
+	WheelRampCtrl& AllowDarkContent(bool b = true)  { allow_dark_content = b; return *this; }
+	bool           IsDarkContent() const            { return dark_content || allow_dark_content && IsDarkTheme(); }
 
 private:
 	void          SetColor(Color color, bool set_norm, bool set_hsv);
@@ -31,6 +35,8 @@ private:
 
 private:
 	bool          ramp;
+	bool          dark_content = false;
+	bool          allow_dark_content = false;
 	Color         color;
 	Color         normalized_color;
 	int           h16, s16, v16;
@@ -60,74 +66,6 @@ struct ColorRampCtrl : public WheelRampCtrl {
 	ColorRampCtrl() : WheelRampCtrl(true) {}
 };
 
-class ColorSelector : public Ctrl
-{
-public:
-	ColorSelector(bool not_null = true);
-
-	ColorSelector& NotNull(bool nn = true)                  { impl->NotNull(nn); return *this; }
-	ColorSelector& NoNotNull()                              { return NotNull(false); }
-	bool           IsNotNull() const                        { return impl->IsNotNull(); }
-
-	Color          Get() const                              { return impl->Get(); }
-	void           Set(Color c)                             { impl->Set(c); }
-
-	Vector<Color>  GetPalette() const                       { return impl->GetPalette(); }
-	void           SetPalette(const Vector<Color>& palette) { impl->SetPalette(palette); }
-
-	void           SerializeConfig(Stream& stream)          { impl->SerializeConfig(stream); }
-
-	virtual void   SetData(const Value& color)              { Set(color); }
-	virtual Value  GetData() const                          { return Get(); }
-
-	Ctrl&          GetImplCtrl()                            { return impl->GetCtrl(); }
-
-public:
-	Event<>        WhenSetColor;
-
-public:
-	class Impl
-	{
-	public:
-		virtual ~Impl() {}
-
-		virtual void          Set(Color c) = 0;
-		virtual Color         Get() const = 0;
-		virtual void          NotNull(bool nn) = 0;
-		virtual bool          IsNotNull() const = 0;
-		virtual Vector<Color> GetPalette() const = 0;
-		virtual void          SetPalette(const Vector<Color>& pal) = 0;
-		virtual void          SerializeConfig(Stream& stream) = 0;
-		virtual Ctrl&         GetCtrl() = 0;
-
-	protected:
-		Impl() {}
-	};
-
-protected:
-	One<Impl>      impl;
-};
-
-class ColorCtrl : public DataPusher
-{
-public:
-	typedef ColorCtrl CLASSNAME;
-	ColorCtrl(bool not_null = true);
-	virtual ~ColorCtrl();
-
-	ColorCtrl&     NotNull(bool _nn = true) { empty.Show(!_nn); return *this; }
-	ColorCtrl&     NoNotNull()              { return NotNull(false); }
-	bool           IsNotNull() const        { return !empty.IsVisible(); }
-
-protected:
-	virtual void   DoAction();
-	void           OnClear()                { SetDataAction(Null); }
-
-protected:
-	FrameRight<Button> empty;
-};
-
-Color RunDlgSelectColor(Color init_color = Black, bool not_null = true, const char *title = 0, bool *ok = 0);
 const Display& StdColorDisplayNull();
 
 class ColorPopUp : public Ctrl {
@@ -201,6 +139,9 @@ public:
 	ColorPopUp& VoidText(const char *s)              { voidtext = s; Refresh(); return *this; }
 	ColorPopUp& NoRampWheel(bool b = true)           { norampwheel = b; return *this; }
 	ColorPopUp& Hints(bool b = true)                 { hints = b; return *this; }
+	ColorPopUp& DarkContent(bool b = true);
+	ColorPopUp& AllowDarkContent(bool b = true);
+	bool        IsDarkContent() const                { return wheel.IsDarkContent(); }
 
 	ColorPopUp();
 	virtual ~ColorPopUp();
@@ -244,6 +185,8 @@ public:
 	ColorPusher& Track(bool b = true)       { track = b; return *this; }
 	ColorPusher& NoTrack()                  { return Track(false); }
 	ColorPusher& NoRampWheel(bool b = true) { colors.NoRampWheel(b); return *this; }
+	ColorPusher& DarkContent(bool b = true) { colors.DarkContent(b); Refresh(); return *this; }
+	ColorPusher& AllowDarkContent(bool b = true) { colors.AllowDarkContent(b); Refresh(); return *this; }
 
 	ColorPusher();
 	virtual ~ColorPusher();

@@ -112,7 +112,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(IsUHDMode())
 		h << "UHD mode\n";
 	v1 = h;
-	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 5);
+	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 6);
 	v1.SetFont(Arial(DPI(10)));
 	v1.SetInk(SColorText());
 	l.Add(v1);

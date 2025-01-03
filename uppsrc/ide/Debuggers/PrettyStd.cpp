@@ -50,7 +50,7 @@ void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from
 		end = DeRef(GetAttr(q, "_Mylast"));
 	}
 	int sz = SizeOfType(tparam[0]);
-	p.data_count = (end.address - begin.address) / sz;
+	p.data_count = sz ? (end.address - begin.address) / sz : 0;
 	for(int i = 0; i < count; i++)
 		p.data_ptr.Add(begin.address + (i + from) * sz);
 }
@@ -225,7 +225,7 @@ void Pdb::PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from,
 	adr_t map;
 	if(HasAttr(val, "__size_")) {
 		p.data_count = GetIntAttr(GetAttr(val, "__size_"), "__value_");
-		block_size = sz < 256 ? 4096 / sz : 16;
+		block_size = sz && sz < 256 ? 4096 / sz : 16;
 		start = GetIntAttr(val, "__start_");
 		map = DeRef(GetAttr(GetAttr(val, "__map_"), "__begin_")).address;
 	}

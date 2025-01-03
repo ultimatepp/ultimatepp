@@ -132,6 +132,10 @@ void HeaderFooterDlg::Save(RichText& text)
 void RichEdit::HeaderFooter()
 {
 	HeaderFooterDlg dlg;
+	dlg.header_editor.AllowDarkContent(allow_dark_content);
+	dlg.footer_editor.AllowDarkContent(allow_dark_content);
+	dlg.header_editor.DarkContent(dark_content);
+	dlg.footer_editor.DarkContent(dark_content);
 	dlg.Load(text);
 	dlg.SetRect(0, 0, GetSize().cx, dlg.GetLayoutSize().cy);
 	if(dlg.Execute() == IDOK) {
@@ -141,9 +145,13 @@ void RichEdit::HeaderFooter()
 	}
 }
 
-bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf)
+bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf, bool allow_dark, bool dark)
 {
 	HeaderFooterDlg dlg;
+	dlg.header_editor.AllowDarkContent(allow_dark);
+	dlg.footer_editor.AllowDarkContent(allow_dark);
+	dlg.header_editor.DarkContent(dark);
+	dlg.footer_editor.DarkContent(dark);
 	dlg.Set(header_qtf, footer_qtf);
 	if(dlg.Execute() == IDOK) {
 		dlg.Get(header_qtf, footer_qtf);

@@ -127,7 +127,7 @@ void RichEdit::SetFace()
 void RichEdit::SetHeight()
 {
 	NextUndo();
-	formatinfo.Height(PtToDot(~height));
+	formatinfo.Height(PtToDot(~height, unit));
 	ApplyFormat(RichText::HEIGHT);
 	SetFocus();
 }
@@ -218,7 +218,7 @@ void RichEdit::ShowFormat()
 		face <<= Null;
 
 	if(formatinfo.charvalid & RichText::HEIGHT)
-		height <<= DotToPt(formatinfo.GetHeight());
+		height <<= DotToPt(formatinfo.GetHeight(), unit);
 	else
 		height <<= Null;
 

@@ -177,6 +177,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	if(pkg.nowarnings)
 		cc << " -w";
 
+	DoRc(sfile, soptions, pkg, package);
+
 	int recompile = 0;
 	Blitz b;
 	if(blitz) {

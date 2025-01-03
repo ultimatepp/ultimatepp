@@ -2,6 +2,13 @@
 #include <Painter/Painter.h>
 
 namespace Upp {
+	
+RichObject RichEdit::Adjust(RichObject o)
+{
+	if(pixel_mode)
+		o.SetSize(o.GetPixelSize() * 8 / DPI(1));
+	return o;
+}
 
 void RichEdit::InsertImage()
 {
@@ -20,7 +27,7 @@ void RichEdit::InsertImage()
 	}
 	RichText clip;
 	RichPara p;
-	p.Cat(CreateRawImageObject(data), formatinfo);
+	p.Cat(Adjust(CreateRawImageObject(data)), formatinfo);
 	clip.Cat(p);
 	ClipPaste(clip, "image/raw");
 }
@@ -40,7 +47,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 					StringStream ss(data);
 					if(StreamRaster::OpenAny(ss) || ext == ".svg" && IsSVG(LoadFile(fn))) {
 						RichPara p;
-						p.Cat(CreateRawImageObject(data), formatinfo);
+						p.Cat(Adjust(CreateRawImageObject(data)), formatinfo);
 						clip.Cat(p);
 						fmt = "files";
 					}
@@ -90,7 +97,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 			Value data = rt.Read(d);
 			if(!IsNull(data)) {
 				RichPara p;
-				RichObject o = RichObject(&rt, data, pagesz);
+				RichObject o = Adjust(RichObject(&rt, data, pagesz));
 				p.Cat(o, formatinfo);
 				clip.Cat(p);
 				fmt = o.GetTypeName();

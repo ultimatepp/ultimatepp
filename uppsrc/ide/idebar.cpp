@@ -601,12 +601,8 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	});
 	if(editfile_repo) {
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of ";
-		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [=] {
-			if(!IsNull(editfile))
-				RunRepoDiff(editfile);
-		}).Text(txt + "file..");
 		if(editfile_repo == GIT_DIR) {
-			String origin = Sys("git -C " + GetFileFolder(editfile) + " remote get-url origin");
+			String origin = HostSys("git -C " + GetFileFolder(editfile) + " remote get-url origin");
 			if(origin.StartsWith("https://github.com/")) {
 				origin.TrimEnd("\n");
 				origin.TrimEnd("\r");
@@ -620,6 +616,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 				});
 			}
 		}
+		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [=] {
+			if(!IsNull(editfile))
+				RunRepoDiff(editfile, editor.GetCursorLine());
+		}).Text(txt + "file..");
 		if(editfile.GetCount()) {
 			String mine;
 			String theirs;
