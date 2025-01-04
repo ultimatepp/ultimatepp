@@ -680,10 +680,14 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 */
 	}
 	if(hwnd) {
-		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
-			return DefWindowProcW(hwnd, message, wParam, lParam);
+		LRESULT r;
+		int level = LeaveGuiMutexAll();
+		if(IsWindowUnicode(hwnd))
+			r = DefWindowProcW(hwnd, message, wParam, lParam);
 		else
-			return DefWindowProc(hwnd, message, wParam, lParam);
+			r = DefWindowProc(hwnd, message, wParam, lParam);
+		EnterGuiMutex(level);
+		return r;
 	}
 	return 0L;
 }
