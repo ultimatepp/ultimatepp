@@ -158,7 +158,9 @@ CONSOLE_APP_MAIN
 						n = 10 * n + s[1] - '0';
 						s++;
 					}
-					n = minmax(n, 1, 32);
+					if(!n)
+						n = CPU_Cores();
+					n = minmax(n, 1, 256);
 					PutVerbose("Hydra threads: " + AsString(n));
 					ide.console.SetSlots(n);
 					break;
