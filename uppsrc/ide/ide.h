@@ -656,6 +656,14 @@ public:
 	bool      win_deactivated = false;
 	bool      block_caret = false;
 	bool      bar_branch = true;
+	bool      search_downloads =
+#ifdef PLATFORM_MACOS
+		false
+#else
+		true
+#endif
+	;
+		
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
