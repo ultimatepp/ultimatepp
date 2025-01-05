@@ -815,6 +815,9 @@ String GetShellFolder(const char *local, const char *users)
 		return ret;
 }
 
+String GetProgramsFolder()    { return String("/usr/bin"); }
+String GetAppDataFolder()     { return GetHomeDirectory(); }
+#ifndef PLATFORM_MACOS // in MacOS, we need objective-c and AppKit to get these, we do not want to do that in Core
 String GetDesktopFolder()
 {
 	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
@@ -824,14 +827,13 @@ String GetDesktopFolder()
 		return ret;
 }
 
-String GetProgramsFolder()    { return String("/usr/bin"); }
-String GetAppDataFolder()     { return GetHomeDirectory(); }
 String GetMusicFolder()	      { return GetShellFolder("XDG_MUSIC_DIR", "MUSIC"); }
 String GetPicturesFolder()    { return GetShellFolder("XDG_PICTURES_DIR", "PICTURES"); }
 String GetVideoFolder()       { return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS"); }
 String GetDocumentsFolder()   { return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS"); }
 String GetTemplatesFolder()   { return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR"); }
 String GetDownloadFolder()    { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR"); }
+#endif
 String GetProgramDataFolder() { return String("/var/opt"); }
 
 #endif

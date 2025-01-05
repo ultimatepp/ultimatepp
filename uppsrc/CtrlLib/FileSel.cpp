@@ -2239,21 +2239,12 @@ void FileSel::AddSystemPlaces(int row)
 FileSel& FileSel::AddStandardPlaces()
 {
 	AddPlace(GetHomeDirectory(), t_("Home"), "PLACES:FOLDER");
-#ifdef GUI_COCOA
-	AddPlace(GetSpecialDirectory(SF_NSDesktopDirectory), t_("Desktop"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSMusicDirectory), t_("Music"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSPicturesDirectory), t_("Pictures"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSMoviesDirectory), t_("Videos"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSDocumentDirectory), t_("Documents"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSDownloadsDirectory), t_("Downloads"), "PLACES:FOLDER");
-#else
 	AddPlace(GetDesktopFolder(), t_("Desktop"), "PLACES:FOLDER");
 	AddPlace(GetMusicFolder(), t_("Music"), "PLACES:FOLDER");
 	AddPlace(GetPicturesFolder(), t_("Pictures"), "PLACES:FOLDER");
 	AddPlace(GetVideoFolder(), t_("Videos"), "PLACES:FOLDER");
 	AddPlace(GetDocumentsFolder(), t_("Documents"), "PLACES:FOLDER");
 	AddPlace(GetDownloadFolder(), t_("Downloads"), "PLACES:FOLDER");
-#endif
 	AddPlaceSeparator();
 	AddSystemPlaces();
 #ifdef PLATFORM_WIN32
