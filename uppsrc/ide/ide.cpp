@@ -610,7 +610,7 @@ void Ide::MakeIcon() {
 		int fh = 112;
 		Size sz(0, 0);
 		Font font;
-		while(fh > 64) {
+		while(fh > (IsUHDMode() ? 64 : 80)) {
 			font = StdFont(fh);
 			sz = GetTextSize(mp, font) + 8 * Size(4, 2);
 			if(sz.cx <= isz.cx)
