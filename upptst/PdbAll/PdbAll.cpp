@@ -49,4 +49,16 @@ GUI_APP_MAIN
 	std::unordered_multiset<std::string> std_unordered_multiset { "I", "II", "III", "IV", "V" };
 	std::unordered_map<int, std::string> std_unordered_map { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
 	std::unordered_multimap<int, std::string> std_unordered_multimap { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
+
+
+	for(String h : { "Hello world!", "Very very very very very very very long hello world!" }) {
+		std::string sh = h.ToStd();
+		WString wh = h.ToWString();
+		std::wstring swh = wh.ToStd();
+		
+		DDUMP(h);
+		DDUMP(sh);
+		DDUMP(wh);
+		DDUMP(swh);
+	}
 }
