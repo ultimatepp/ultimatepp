@@ -32,7 +32,7 @@ CONSOLE_APP_MAIN
 	Escape(global, "InputNumber()", SIC_InputNumber);
 	StdLib(global);
 	try {
-		Scan(global, LoadFile(GetDataFile("script.esc")));
+		Scan(global, LoadDataFile("script.esc"));
 		Execute(global, "main", INT_MAX);
 	}
 	catch(CParser::Error e) {

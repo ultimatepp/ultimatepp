@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	pretty.dbg,
+	ScriptDbgPretty.cpp;
+
+mainconfig
+	"" = "";
+

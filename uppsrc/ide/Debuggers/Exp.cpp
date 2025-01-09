@@ -106,6 +106,14 @@ dword Pdb::PeekDword(adr_t address)
 	return w;
 }
 
+dword Pdb::Peek64(adr_t address)
+{
+	dword w;
+	if(!Copy(address, &w, 8))
+		ThrowError("??");
+	return w;
+}
+
 Pdb::Val Pdb::GetRVal(Pdb::Val v)
 { // read data from debugee
 	if(v.rvalue)

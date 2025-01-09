@@ -70,7 +70,7 @@ void Ide::SetupEditor(int f, String hl, String path)
 	editor.Highlight(hl);
 
 	editor.WarnWhiteSpace(warnwhitespace &&
-	                      findarg(hl, "cpp", "java", "js", "cs", "json", "css", "lay", "sch", "t", "usc") >= 0);
+	                      findarg(hl, "cpp", "java", "js", "cs", "json", "css", "lay", "sch", "t", "usc", "dbg") >= 0);
 
 	editor.WordwrapComments(wordwrap_comments);
 	editor.WordWrap(wordwrap);

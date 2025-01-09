@@ -94,6 +94,8 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
 	type.Replace("::__1", ""); // CLANG has some weird stuff in names...
+	if(PrettyScript(type, val, type_param, from, count, p))
+		return true;
 
 	int ii = pretty.Find(type);
 	if(ii >= 0) {
@@ -122,6 +124,10 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 			int count = (int)min(p.data_count, (int64)200);
 			Pretty p;
 			PrettyVal(val, 0, count, p);
+			if(p.kind == SINGLE_VALUE) // support script errors
+				for(const VisualPart& vp : p.text.part)
+					result.Cat(vp.text, vp.ink);
+			else
 			if(p.data_type.GetCount()) {
 				String s;
 				WString ws;
@@ -159,31 +165,36 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 			int count = (int)min(p.data_count, (int64)40);
 			Pretty p;
 			PrettyVal(val, 0, count, p);
-
-			ResultCount(p.data_count);
-			if(p.data_type.GetCount()) {
-				Buffer<Val> item(p.data_type.GetCount());
-				for(int i = 0; i < p.data_type.GetCount(); i++) {
-					(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
-					item[i].context = val.context;
-				}
-				int ii = 0;
-				int n = p.data_ptr.GetCount() / p.data_type.GetCount();
-				Color bc = decode(bc_lvl++ & 3, 0, SGray(), 1, SCyan(), 2, SBrown(), SGreen());
-				result.Cat("{", bc);
-				for(int i = 0; i < n; i++) {
-					if(i)
-						result.Cat(", ", SGray);
-					for(int j = 0; j < p.data_type.GetCount(); j++) {
-						if(j)
-							result.Cat(": ", SBlue);
-						item[j].address = p.data_ptr[ii++];
-						if(item[j].type != UNKNOWN)
-							Visualise(result, item[j], flags | MEMBER);
+			
+			if(p.kind == SINGLE_VALUE) // support script errors
+				for(const VisualPart& vp : p.text.part)
+					result.Cat(vp.text, vp.ink);
+			else {
+				ResultCount(p.data_count);
+				if(p.data_type.GetCount()) {
+					Buffer<Val> item(p.data_type.GetCount());
+					for(int i = 0; i < p.data_type.GetCount(); i++) {
+						(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
+						item[i].context = val.context;
 					}
+					int ii = 0;
+					int n = p.data_ptr.GetCount() / p.data_type.GetCount();
+					Color bc = decode(bc_lvl++ & 3, 0, SGray(), 1, SCyan(), 2, SBrown(), SGreen());
+					result.Cat("{", bc);
+					for(int i = 0; i < n; i++) {
+						if(i)
+							result.Cat(", ", SGray);
+						for(int j = 0; j < p.data_type.GetCount(); j++) {
+							if(j)
+								result.Cat(": ", SBlue);
+							item[j].address = p.data_ptr[p.separated_types ? n * j + i : ii++];
+							if(item[j].type != UNKNOWN)
+								Visualise(result, item[j], flags | MEMBER);
+						}
+					}
+					result.Cat("}", bc);
+					bc_lvl--;
 				}
-				result.Cat("}", bc);
-				bc_lvl--;
 			}
 	
 			if(p.data_count > count)

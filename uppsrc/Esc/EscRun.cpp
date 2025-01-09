@@ -47,11 +47,17 @@ void LambdaArgs(CParser& p, EscLambda& l)
 	l.arg.Shrink();
 }
 
-EscValue ReadLambda(CParser& p)
+EscValue ReadLambda(CParser& p, bool args, const char *alt_args)
 {
 	EscValue lambda;
 	EscLambda& l = lambda.CreateLambda();
-	LambdaArgs(p, l);
+	if(args)
+		LambdaArgs(p, l);
+	else
+	if(alt_args) {
+		CParser p(alt_args);
+		LambdaArgs(p, l);
+	}
 	const char *t = p.GetPtr();
 	l.filename = p.GetFileName();
 	l.line = p.GetLine();
@@ -169,7 +175,7 @@ void Scan(ArrayMap<String, EscValue>& global, const char *file, const char *file
 }
 
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
-                 const EscValue& lambda, Vector<EscValue>& arg, int op_limit)
+                 const EscValue& lambda, Vector<EscValue>& arg, int64 op_limit)
 {
 	const EscLambda& l = lambda.GetLambda();
 	if(arg.GetCount() != l.arg.GetCount()) {
@@ -194,7 +200,7 @@ EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
 }
 
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
-                 const char *name, Vector<EscValue>& arg, int op_limit)
+                 const char *name, Vector<EscValue>& arg, int64 op_limit)
 {
 	if(!self->IsMap())
 		return EscValue();
@@ -205,7 +211,7 @@ EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
 	return EscValue();
 }
 
-EscValue Execute(ArrayMap<String, EscValue>& global, const char *name, int op_limit)
+EscValue Execute(ArrayMap<String, EscValue>& global, const char *name, int64 op_limit)
 {
 	int ii = global.Find(String(name));
 	Vector<EscValue> arg;
@@ -214,7 +220,7 @@ EscValue Execute(ArrayMap<String, EscValue>& global, const char *name, int op_li
 	return EscValue();
 }
 
-EscValue Evaluatex(const char *expression, ArrayMap<String, EscValue>& global, int oplimit)
+EscValue Evaluatexl(const char *expression, ArrayMap<String, EscValue>& global, int64& oplimit)
 {
 	Esc sub(global, expression, oplimit, "", 0);
 	for(int i = 0; i < global.GetCount(); i++)
@@ -226,7 +232,12 @@ EscValue Evaluatex(const char *expression, ArrayMap<String, EscValue>& global, i
 	return v;
 }
 
-EscValue Evaluate(const char *expression, ArrayMap<String, EscValue>& global, int oplimit)
+EscValue Evaluatex(const char *expression, ArrayMap<String, EscValue>& global, int64 oplimit)
+{
+	return Evaluatexl(expression, global, oplimit);
+}
+
+EscValue Evaluate(const char *expression, ArrayMap<String, EscValue>& global, int64 oplimit)
 {
 	try {
 		return Evaluatex(expression, global, oplimit);
@@ -236,7 +247,7 @@ EscValue Evaluate(const char *expression, ArrayMap<String, EscValue>& global, in
 }
 
 String   Expand(const String& doc, ArrayMap<String, EscValue>& global,
-                int oplimit, String (*format)(const Value& v))
+                int64 oplimit, String (*format)(const Value& v))
 {
 	String out;
 	const char *term = doc;

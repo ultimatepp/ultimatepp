@@ -426,7 +426,13 @@ void ChHostSkin0()
 	else for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++) // this also resets all imls via SColorPaper_Write!!!
 		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
+	if(IsWin11())
+		NewStyleArrows();
+
 	ChBaseSkin();
+
+	if(IsWin11())
+		NewStyleArrows();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 #ifndef PLATFORM_WINCE
@@ -735,6 +741,9 @@ void ChHostSkin0()
 			                                   paper, Size(40, 40))),
 			                14, 26);
 		}
+
+//		if(IsWin11())
+//			NewStyleArrows();
 
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));

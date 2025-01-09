@@ -116,6 +116,7 @@ struct Pdb : Debugger, ParentCtrl {
 		Val    val;
 		Val    key;
 		int64  from = 0;
+		int64  chunk = 10000;
 		bool   exp = false;
 	};
 
@@ -154,6 +155,7 @@ struct Pdb : Debugger, ParentCtrl {
 	struct Visual {
 		int                length;
 		Vector<VisualPart> part;
+		int                type = 0; // only need for Copy type for .dbg
 
 		void   Cat(const String& text, Color ink = SColorText);
 		void   Cat(const char *text, Color ink = SColorText);
@@ -269,12 +271,14 @@ struct Pdb : Debugger, ParentCtrl {
 	struct LengthLimit {};
 
 	struct Pretty {
-		int            kind; // VARIABLE, TEXT or CONTAINER
+		int            kind; // SINGLE_VALUE, TEXT or CONTAINER
 		int64          data_count = 0; // number of entries
-		Vector<String> data_type; // type of data items (usually type_param)
+		Vector<String> data_type; // type of data items (usually type_param), >1 - display as tuples, usually key : value
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
 		Visual         text;
 		bool           has_data = true; // do display the data for SINGLE_VALUE (false for e.g. void Value)
+		bool           separated_types = false; // item tuples are in consequent arrays
+		int            chunk = 10000; // maximum number of items to be displayed in treeview in single node
 
 		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); has_data = false; }
 		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); has_data = false; }
@@ -289,6 +293,9 @@ struct Pdb : Debugger, ParentCtrl {
 	bool       raw = false;
 	
 	int        bc_lvl = 0; // For coloring { } in pretty container display
+	
+	ArrayMap<String, EscValue> pretty_globals;
+	ArrayMap<String, EscValue> pretty_scripts;
 
 	void       Error(const char *s = NULL);
 
@@ -372,6 +379,7 @@ struct Pdb : Debugger, ParentCtrl {
 	byte       PeekByte(adr_t address);
 	word       PeekWord(adr_t address);
 	dword      PeekDword(adr_t address);
+	dword      Peek64(adr_t address);
 	Val        GetRVal(Val v);
 	Val        DeRef(Val v);
 	Val        Ref(Val v);
@@ -416,6 +424,7 @@ struct Pdb : Debugger, ParentCtrl {
 	bool       VisualisePretty(Visual& result, Pdb::Val val, dword flags);
 
 	bool       PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p);
+
 	void       PrettyString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyWString(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 	void       PrettyVector(Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
@@ -449,6 +458,10 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyStdForwardList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdUnordered(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
+
+	void       LoadPrettyScripts();
+	void       SetVal(EscValue& v, Pdb::Val val);
+	bool       PrettyScript(const String& type, Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pretty& p);
 
 // code
 	Thread&    Current();
@@ -523,6 +536,9 @@ struct Pdb : Debugger, ParentCtrl {
 	void      WatchMenu(Bar& bar, const String& exp);
 	void      WatchesMenu(Bar& bar);
 	
+	void      CopyTypeScript(ArrayCtrl& array);
+	void      CopyTypeScriptType(String& text, int type, const String& tabs, const String& id);
+
 	void      SyncTreeDisas();
 
 	void      Tab();
@@ -530,7 +546,7 @@ struct Pdb : Debugger, ParentCtrl {
 	bool      Create(Host& local, const String& exefile, const String& cmdline, bool clang_);
 
 	void      SerializeSession(Stream& s);
-
+	
 	typedef Pdb CLASSNAME;
 
 	Pdb();

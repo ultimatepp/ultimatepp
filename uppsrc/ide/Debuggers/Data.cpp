@@ -240,6 +240,51 @@ void Pdb::CopyMenu(ArrayCtrl& array, Bar& bar)
 	bar.Separator();
 	bar.Add("Show type", [=] { show_type = !show_type; Data(); }).Check(show_type);
 	bar.Add("No pretty-printing", [=] { raw = !raw; Data(); }).Check(raw);
+	bar.Add("Copy type script (for .dbg file)", [&] { CopyTypeScript(array); });
+}
+
+void Pdb::CopyTypeScriptType(String& text, int type, const String& tabs, const String& id)
+{
+	if(type <= 0)
+		return;
+	const Type& t = GetType(type);
+	for(int i = 0; i < t.member.GetCount(); i++) {
+		String nid = t.member.GetKey(i);
+		text << tabs << nid << " = ";
+		int ref = clamp(t.member[i].ref, 0, 8);
+		for(int j = 0; j < ref; j++)
+			text << "DeRef(";
+		text << "Field(" << id << ", " << AsCString(nid) << ")";
+		for(int j = 0; j < ref; j++)
+			text << ")";
+		text << ";\n";
+		CopyTypeScriptType(text, t.member[i].type, tabs + '\t', nid);
+	}
+	for(int i = 0; i < t.base.GetCount(); i++)
+		CopyTypeScriptType(text, t.base[i].type, tabs, id);
+}
+
+void Pdb::CopyTypeScript(ArrayCtrl& array)
+{
+	if(array.IsCursor()) {
+		Value q = array.Get(1);
+		if(IsType<Visual>(q))
+			try {
+				int type = ValueTo<Visual>(q).type;
+				const Type& t = GetType(type);
+				String tname = t.name;
+				tname.Replace("::__1", ""); // CLANG has some weird stuff in names...
+				int q = tname.Find('<');
+				if(q >= 0)
+					tname.Trim(q);
+				String text;
+				text << "typename " << tname << " {\n";
+				CopyTypeScriptType(text, type, "\t", "value");
+				text << "}\n";
+				WriteClipboardText(text);
+			}
+			catch(CParser::Error) {}
+	}
 }
 
 void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)

@@ -9,6 +9,24 @@ namespace Upp {
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_source.h>
 
+void NewStyleArrows()
+{
+	return;
+	// TODO
+	CtrlImg::Set(CtrlImg::I_smallup, CtrlImg::smallup_n());
+	CtrlImg::Set(CtrlImg::I_smalldown, MirrorVert(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_smallleft, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_smallright, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_UA, CtrlImg::smallup_n());
+	CtrlImg::Set(CtrlsImg::I_DA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_LA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_RA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_kUA, CtrlImg::smallup_n());
+	CtrlImg::Set(CtrlsImg::I_kDA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_kLA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlsImg::I_kRA, RotateClockwise(CtrlImg::smallup_n()));
+}
+
 Color AdjustColor(Color c, int adj)
 {
 	return Color(clamp(c.GetR() + adj, 0, 255),
