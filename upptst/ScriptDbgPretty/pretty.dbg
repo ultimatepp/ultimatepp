@@ -1,5 +1,5 @@
 typename MyStruct {
-	TEXT("My struct: ");
+	TEXT("My struct: ", 7);
 	TEXT(Peek32(Field(value, "second").address));
 }
 

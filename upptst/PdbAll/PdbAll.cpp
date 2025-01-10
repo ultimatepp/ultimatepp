@@ -34,6 +34,9 @@ GUI_APP_MAIN
 	ValueArray valuearray { "I", "II", "III", "IV", "V" };
 	ValueMap valuemap { { 1 , "I"}, { 2, "II" }, { 3, "III"}, { 4, "IV"}, { 5, "V" } };
 	Value value = valuemap;
+	Value text_value = "Test";
+	Value error_value = ErrorValue("Test");
+	Value void_value;
 
 	std::string std_string = "Hello world!";
 	std::wstring std_wstring = wstring.ToStd();

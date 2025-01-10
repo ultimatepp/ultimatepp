@@ -71,7 +71,9 @@ void Pdb::LoadPrettyScripts()
 	Escape(pretty_globals, "TypeName(x)", [=](EscEscape& e) {
 		e = GetType(Type(e)).name;
 	});
-
+	Escape(pretty_globals, "TypeNo(s)", [=](EscEscape& e) {
+		e = GetTypeInfo((String)e[0]).type;
+	});
 	Escape(pretty_globals, "PeekPtr(x)", [=](EscEscape& e) {
 		e = (int64)PeekPtr(Adr(e));
 	});
@@ -104,13 +106,22 @@ void Pdb::LoadPrettyScripts()
 			txt = e[0].ToString();
 		PutConsole("dbg! " + txt);
 	});
-
 	Escape(pretty_globals, "DeRef(x)", [=](EscEscape& e) {
 		EscValue v = e[0];
 		if(!v.IsMap())
 			e.ThrowError("paramater must be :value structure");
 		v.MapSet("address", (int64)PeekPtr(v.MapGet("address").GetInt64()));
 		e = v;
+	});
+	Escape(pretty_globals, "NestedType(x, id)", [=](EscEscape& e) {
+		const auto& t = GetType(Type(e));
+		String id = (String)e[1];
+		for(int st : t.member_type)
+			if(GetType(st).name == id) {
+				e = st;
+				return;
+			}
+		e = 0;
 	});
 	Escape(pretty_globals, "Field(x, id)", [=](EscEscape& e) {
 		EscValue v = e[0];
@@ -150,14 +161,19 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 	bool ret = false;
 	p.kind = CONTAINER;
 	p.separated_types = true;
-	Escape(g, "TEXT(x)", [&](EscEscape& e) {
+	Escape(g, "TEXT(x, color = 0)", [&](EscEscape& e) {
 		ret = true;
-		p.kind = SINGLE_VALUE;
+		static Color col[] = {
+            SBlack(), SRed(), SGreen(), SBrown(), SBlue(), SMagenta(), SCyan(), SGray(),
+            SLtGray(), SLtRed(), SLtGreen(), SLtYellow(), SLtBlue(), SLtMagenta(),
+            SLtCyan(), SYellow(), SWhiteGray(), SWhite()
+		};
+		Color c = col[clamp((int)e[1].GetInt(), 0, __countof(col))];
 		if(e[0].IsArray())
-			p.Text((String) e[0]);
+			p.Text((String) e[0], c);
 		else
 		if(e[0].IsNumber())
-			p.Text(AsString(e[0].GetNumber()));
+			p.Text(AsString(e[0].GetNumber()), c);
 		else
 			e.ThrowError("invalid argument to 'Text'");
 	});
@@ -197,10 +213,6 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 		p.kind = TEXT;
 		ret = true;
 	});
-	Escape(g, "HAS_DATA()", [&](EscEscape& e) {
-		p.has_data = true;
-		ret = true;
-	});
 	Escape(g, "CHUNK(x)", [&](EscEscape& e) {
 		p.chunk = clamp(e[0].GetInt(), 1, 10000);
 		ret = true;
@@ -208,6 +220,10 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 
 	try {
 		Execute(g, NULL, pretty_scripts[ii], args, 2000);
+		DDUMP(type);
+		DDUMP(p.data_count);
+		if(p.data_count == 0 && p.kind == CONTAINER)
+			p.kind = SINGLE_VALUE;
 	}
 	catch(CParser::Error e) {
 		p.kind = SINGLE_VALUE;

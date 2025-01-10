@@ -134,6 +134,7 @@ struct Pdb : Debugger, ParentCtrl {
 		Vector<Val>            base;
 		VectorMap<String, Val> member;
 		VectorMap<String, Val> static_member;
+		Vector<int>            member_type;
 	};
 
 	struct Frame : Moveable<Frame> {
@@ -276,13 +277,12 @@ struct Pdb : Debugger, ParentCtrl {
 		Vector<String> data_type; // type of data items (usually type_param), >1 - display as tuples, usually key : value
 		Vector<adr_t>  data_ptr; // pointer to items (data_count.GetCount() * data_type.GetCount() items)
 		Visual         text;
-		bool           has_data = true; // do display the data for SINGLE_VALUE (false for e.g. void Value)
 		bool           separated_types = false; // item tuples are in consequent arrays
 		int            chunk = 10000; // maximum number of items to be displayed in treeview in single node
 
-		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); has_data = false; }
-		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); has_data = false; }
-		void           SetNull()                                 { Text("Null", SCyan); has_data = false; }
+		void           Text(const char *s, Color color = SRed)   { text.Cat(s, color); }
+		void           Text(const String& s, Color color = SRed) { text.Cat(s, color); }
+		void           SetNull()                                 { Text("Null", SCyan); }
 	};
 
 	VectorMap<String, Tuple<int, Event<Val, const Vector<String>&, int64, int, Pdb::Pretty&>>> pretty;

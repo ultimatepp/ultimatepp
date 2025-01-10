@@ -18,8 +18,7 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		return false;
 
 	const Type& t = GetType(val.type);
-	
-	
+
 	current_modbase = t.modbase; // so that we do not need to pass it as parameter in Pretty routines
 
 	String type = t.name;
@@ -120,14 +119,12 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 	
 	Pretty p;
 	if(PrettyVal(val, 0, 0, p)) {
+		for(const VisualPart& vp : p.text.part)
+			result.Cat(vp.text, vp.ink);
 		if(p.kind == TEXT) {
 			int count = (int)min(p.data_count, (int64)200);
 			Pretty p;
 			PrettyVal(val, 0, count, p);
-			if(p.kind == SINGLE_VALUE) // support script errors
-				for(const VisualPart& vp : p.text.part)
-					result.Cat(vp.text, vp.ink);
-			else
 			if(p.data_type.GetCount()) {
 				String s;
 				WString ws;
@@ -150,51 +147,38 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 		}
 		else
 		if(p.kind == SINGLE_VALUE) {
-			Pretty p;
-			PrettyVal(val, 0, 1, p);
-			for(const VisualPart& vp : p.text.part)
-				result.Cat(vp.text, vp.ink);
-			if(p.has_data) {
-				if(p.data_type.GetCount() && p.data_ptr.GetCount())
-					Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
-				else
-					Visualise(result, val, flags | RAW);
-			}
+			if(p.data_type.GetCount() && p.data_ptr.GetCount())
+				Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
 		}
 		else { // CONTAINER
 			int count = (int)min(p.data_count, (int64)40);
 			Pretty p;
 			PrettyVal(val, 0, count, p);
 			
-			if(p.kind == SINGLE_VALUE) // support script errors
-				for(const VisualPart& vp : p.text.part)
-					result.Cat(vp.text, vp.ink);
-			else {
-				ResultCount(p.data_count);
-				if(p.data_type.GetCount()) {
-					Buffer<Val> item(p.data_type.GetCount());
-					for(int i = 0; i < p.data_type.GetCount(); i++) {
-						(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
-						item[i].context = val.context;
-					}
-					int ii = 0;
-					int n = p.data_ptr.GetCount() / p.data_type.GetCount();
-					Color bc = decode(bc_lvl++ & 3, 0, SGray(), 1, SCyan(), 2, SBrown(), SGreen());
-					result.Cat("{", bc);
-					for(int i = 0; i < n; i++) {
-						if(i)
-							result.Cat(", ", SGray);
-						for(int j = 0; j < p.data_type.GetCount(); j++) {
-							if(j)
-								result.Cat(": ", SBlue);
-							item[j].address = p.data_ptr[p.separated_types ? n * j + i : ii++];
-							if(item[j].type != UNKNOWN)
-								Visualise(result, item[j], flags | MEMBER);
-						}
-					}
-					result.Cat("}", bc);
-					bc_lvl--;
+			ResultCount(p.data_count);
+			if(p.data_type.GetCount()) {
+				Buffer<Val> item(p.data_type.GetCount());
+				for(int i = 0; i < p.data_type.GetCount(); i++) {
+					(TypeInfo &)item[i] = GetTypeInfo(p.data_type[i]);
+					item[i].context = val.context;
 				}
+				int ii = 0;
+				int n = p.data_ptr.GetCount() / p.data_type.GetCount();
+				Color bc = decode(bc_lvl++ & 3, 0, SGray(), 1, SCyan(), 2, SBrown(), SGreen());
+				result.Cat("{", bc);
+				for(int i = 0; i < n; i++) {
+					if(i)
+						result.Cat(", ", SGray);
+					for(int j = 0; j < p.data_type.GetCount(); j++) {
+						if(j)
+							result.Cat(": ", SBlue);
+						item[j].address = p.data_ptr[p.separated_types ? n * j + i : ii++];
+						if(item[j].type != UNKNOWN)
+							Visualise(result, item[j], flags | MEMBER);
+					}
+				}
+				result.Cat("}", bc);
+				bc_lvl--;
 			}
 	
 			if(p.data_count > count)

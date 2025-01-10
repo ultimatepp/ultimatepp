@@ -110,7 +110,7 @@ void CSyntax::InitKeywords()
 		"default", "break", "return", "switch", "operator", "for",
 		"fn", "typename",
 		"value", "from", "items", "template_param",
-		"TEXT", "HAS_DATA", "ITEM_COUNT", "ITEM_TYPE", "STRING",
+		"TEXT", "ITEM_COUNT", "ITEM_TYPE", "STRING",
 		"ITEM_PTR", "ITEM_PTRS", "ITEM_DEREF_PTRS", "CHUNK",
 		NULL
 	};
@@ -119,9 +119,9 @@ void CSyntax::InitKeywords()
 		"count", "keys", "values", "rand", "reverse", "sort", "order", "replace",
 		"ToUpper", "ToLower", "len", "mid", "exists",
 
-		"SizeOf", "TypeName", "DeRef", "Field",
+		"SizeOf", "TypeName", "TypeNo", "DeRef", "Field", "NestedType",
 		"PeekPtr", "Peek8", "Peek16", "Peek32", "Peek64", "Peek32f", "Peek64f",
-		"SizeOfPtr",
+		"SizeOfPtr", "Offset",
 		
 		"LOG",
 
