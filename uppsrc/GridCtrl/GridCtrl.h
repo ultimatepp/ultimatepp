@@ -1850,6 +1850,8 @@ class GridCtrl : public Ctrl
 		Event<> WhenSort;
 		Event<> WhenSorted;
 		
+		Event<> WhenSelectAction;
+
 		Event<Value&> ProcessSummaryValue;
 
 		Event<int, int, Value&> WhenPasteCell;
