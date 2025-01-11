@@ -29,11 +29,12 @@ topic "Debugger pretty printing scripts";
 packages, to display user defined types nicely in the debugger. 
 Scripts from .dbg files are loaded at the start of debugging.&]
 [s0; &]
-[s0; Scripts are based on Esc scripting language.&]
+[s0; Scripts are based on [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us^ Esc] 
+scripting language.&]
 [s0; &]
-[s0; Scripts can contain two top`-level elements&]
+[s0; Scripts can contain two kinds top`-level elements&]
 [s0; &]
-[s0; [*@(0.0.255) fn ][/ function ]`{ .. `}&]
+[s0; [*@(0.0.255) fn ][/ function(params) ]`{ .. `}&]
 [s0; &]
 [s0; defines Esc function.&]
 [s0; &]
@@ -55,9 +56,9 @@ to return (e.g. with ITEM`_PTR)]
 :: [s0; If there are multiple values (ITEM`_COUNT was used), number 
 of values to return.]}}&]
 [s0; &]
-[s0; Functions&]
+[s0; Data and type manipulation functions&]
 [s0; &]
-[ {{3462:6538 [s0; [*@(0.0.255) SizeOf](x)]
+[ {{3462:6538^ [s0; [*@(0.0.255) SizeOf](x)]
 :: [s0; Returns the size of type. Parameter can be string, type number 
 or map with `"type`" number attribute]
 :: [s0; [*@(0.0.255) TypeName](x)]
@@ -68,35 +69,35 @@ with `"type`" number attribute.]
 :: [s0; [*@(0.0.255) PeekPtr](x)]
 :: [s0; Reads a pointer value from debugee. Parameter is either number 
 or map with `"address`".]
-:: [s0; Peek8(x)]
+:: [s0; [*@(0.0.255) Peek8](x)]
 :: [s0; Reads a byte from debugee. Parameter is either number or map 
 with `"address`".]
-:: [s0; Peek16(x)]
+:: [s0; [*@(0.0.255) Peek16](x)]
 :: [s0; Reads 16`-bit integer from debugee. Parameter is either number 
 or map with `"address`".]
-:: [s0; Peek32(x)]
+:: [s0; [*@(0.0.255) Peek32](x)]
 :: [s0; Reads 32`-bit integer from debugee. Parameter is either number 
 or map with `"address`".]
-:: [s0; Peek64(x)]
+:: [s0; [*@(0.0.255) Peek64](x)]
 :: [s0; Reads 64`-bit integer from debugee. Parameter is either number 
 or map with `"address`".]
-:: [s0; Peek32f(x)]
+:: [s0; [*@(0.0.255) Peek32f](x)]
 :: [s0; Reads 32`-bit FP number (float) from debugee. Parameter is either 
 number or map with `"address`".]
-:: [s0; Peek64f(x)]
+:: [s0; [*@(0.0.255) Peek64f](x)]
 :: [s0; Reads 64`-bit FP number (double) from debugee. Parameter is 
 either number or map with `"address`".]
-:: [s0; SizeOfPtr()]
+:: [s0; [*@(0.0.255) SizeOfPtr]()]
 :: [s0; Returns the size of pointer (in bytes) in debugee. 4 for 32`-bit 
 mode, 8 for 64`-bit.]
-:: [s0; NestedType(t, id)]
+:: [s0; [*@(0.0.255) NestedType](t, id)]
 :: [s0; Returns type number of nested type id. t can be type number 
 or map with `"type`".]
-:: [s0; DeRef(x)]
+:: [s0; [*@(0.0.255) DeRef](x)]
 :: [s0; Parameter must be map with `"address`". Returns the same with 
 `"address`" replaced with pointer value read from debugee. Similar 
 to x.address `= PeekPtr(x.address).]
-:: [s0; Field(x, id)]
+:: [s0; [*@(0.0.255) Field](x, id)]
 :: [s0; Parameter must be map with `"address`" and `"type`". id should 
 be the name of member variable of `"type`". Returns new map with 
 `"address`" and `"type`" corresponding to the given member variable.]}}&]
@@ -104,7 +105,7 @@ be the name of member variable of `"type`". Returns new map with
 [s0; &]
 [s0; Output functions&]
 [s0; &]
-[ {{3472:6528 [s0; TEXT(x, color `= 1)]
+[ {{3472:6528^ [s0; [*@(0.0.255) TEXT](x, color `= 1)]
 :: [s0; Adds text output to pretty printing. x can be string or number. 
 color is specified by number from the following set:&]
 [ {{625:625:625:625:625:625:625:625:625:625:625:625:625:625:625:625 [s0;= 0]
@@ -139,37 +140,37 @@ color is specified by number from the following set:&]
 ::@8 [s0; ]
 ::@7 [s0; ]
 ::@2 [s0; ]}}]
-:: [s0; ITEM`_COUNT(x)]
+:: [s0; [*@(0.0.255) ITEM`_COUNT](x)]
 :: [s0; Reports the number of items in the container. If not called, 
 the value is displayed as `"single`" (no number of elements and 
 no list of elements). However, even single value [/ can] contain 
 ITEM`_TYPE and ITEM`_PTR, which designate single value to be 
 displayed in debugger.]
-:: [s0; ITEM`_TYPE(x)]
+:: [s0; [*@(0.0.255) ITEM`_TYPE](x)]
 :: [s0; Returns the type of value whose address is returned with one 
 of ITEM`_PTR variants. Can be called multiple times (debugger 
 then displays tuples `- useful for maps).]
-:: [s0; ITEM`_PTR(adr)]
+:: [s0; [*@(0.0.255) ITEM`_PTR](adr)]
 :: [s0; Adds a value address to be displayed in the debugger. Printing 
 script should call this exactly [*@(0.0.255) items] times for each 
 ITEM`_TYPE. As Esc scripting language is not exactly fast, it 
 is better to use ITEM`_PTRS or ITEM`_DEREF`_PTRS instead.]
-:: [s0; ITEM`_PTRS(adr, sz, from, items)]
+:: [s0; [*@(0.0.255) ITEM`_PTRS](adr, sz, from, items)]
 :: [s0; Adds multiple value addresses `- much faster variant of script 
 code&]
 [s7;l0; for(i `= 0; i < items; i`+`+)&]
 [s7;l0;      ITEM`_PTR(address `+ (i `+ from) `* sz)]
-:: [s0; ITEM`_DEREF`_PTRS(adr, from, items)]
+:: [s0; [*@(0.0.255) ITEM`_DEREF`_PTRS](adr, from, items)]
 :: [s0; Adds multiple value addresses by derefencing pointers`- much 
 faster variant of script code&]
 [s7;l0; sz `= SizeOfPtr();&]
 [s7;l0; for(i `= 0; i < items; i`+`+)&]
 [s7;l0;      ITEM`_PTR(PeekPtr(address `+ (i `+ from) `* sz));]
-:: [s0; STRING()]
+:: [s0; [*@(0.0.255) STRING]()]
 :: [s0; Signals to debugger that value should be displayed as string. 
 ITEM`_TYPE must be some kind of integer type that is then interpreted 
 as UNICODE characters.]
-:: [s0; CHUNK(x)]
+:: [s0; [*@(0.0.255) CHUNK](x)]
 :: [s0; Debugger normally tries to load and display value items by 10000 
 chunks, which might be hard for scripts to manage at reasonable 
 speed and with set processing steps limit, especially if using 
@@ -179,4 +180,6 @@ more manageable.]}}&]
 [s0; Debugger helper function to create script skeleton&]
 [s0; &]
 [s0; There is a special menu entry that helps with creating pretty 
-printing scripts:]]
+printing scripts:&]
+[s0; &]
+[s0; ]]

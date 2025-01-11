@@ -220,8 +220,6 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 
 	try {
 		Execute(g, NULL, pretty_scripts[ii], args, 2000);
-		DDUMP(type);
-		DDUMP(p.data_count);
 		if(p.data_count == 0 && p.kind == CONTAINER)
 			p.kind = SINGLE_VALUE;
 	}

@@ -279,6 +279,7 @@ void TopicEditor::FormatMenu(Bar& bar)
 	bar.Separator();
 	editor.InkTool(bar);
 	editor.PaperTool(bar);
+	editor.LastFormatTool(bar);
 	bar.Separator();
 	editor.LanguageTool(bar);
 	editor.SpellCheckTool(bar);

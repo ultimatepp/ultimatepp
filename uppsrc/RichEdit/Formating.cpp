@@ -247,7 +247,8 @@ void RichEdit::LastCharFormat()
 {
 	RichText::FormatInfo fi;
 	(RichPara::CharFormat&)fi = last_format;
-	fi.paravalid =
+	fi.paravalid = 0;
+	fi.charvalid =
 		RichText::BOLD|
 		RichText::ITALIC|
 		RichText::UNDERLINE|

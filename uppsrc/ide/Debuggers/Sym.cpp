@@ -353,7 +353,6 @@ const Pdb::Type& Pdb::GetType(int ti)
 	int typeindex = type.GetKey(ti);
 	if(t.size < 0) {
 		t.name = GetSymName(t.modbase, typeindex);
-		DDUMP(t.name);
 		type_name.GetAdd(t.name) = ti;
 		ULONG64 sz = 0;
 		SymGetTypeInfo(hProcess, t.modbase, typeindex, TI_GET_LENGTH, &sz);
@@ -369,7 +368,6 @@ const Pdb::Type& Pdb::GetType(int ti)
 					dword ch = children->ChildId[i];
 					dword tag = GetSymInfo(t.modbase, ch, TI_GET_SYMTAG);
 					dword kind = GetSymInfo(t.modbase, ch, TI_GET_DATAKIND);
-					DDUMP(SymTagAsString(tag));
 					if(tag == SymTagUDT)
 						t.member_type << GetTypeIndex(t.modbase, ch);
 					else
