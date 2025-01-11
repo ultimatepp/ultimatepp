@@ -161,7 +161,7 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 	bool ret = false;
 	p.kind = CONTAINER;
 	p.separated_types = true;
-	Escape(g, "TEXT(x, color = 0)", [&](EscEscape& e) {
+	Escape(g, "TEXT(x, color = 1)", [&](EscEscape& e) {
 		ret = true;
 		static Color col[] = {
             SBlack(), SRed(), SGreen(), SBrown(), SBlue(), SMagenta(), SCyan(), SGray(),
