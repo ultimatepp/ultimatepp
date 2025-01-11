@@ -659,6 +659,7 @@ void RichEdit::Skin()
 	     .NullImage(RichEditImg::NullPaperColor())
 	     .StaticImage(RichEditImg::ColorA());
 	DoRefreshBar();
+	SetLastCharFormat(last_format);
 }
 
 RichEdit::RichEdit()
@@ -800,6 +801,8 @@ RichEdit::RichEdit()
 	persistent_findreplace = true;
 	
 	ignore_physical_size = false;
+
+	SetLastCharFormat();
 }
 
 RichEdit::~RichEdit() {}
@@ -816,6 +819,7 @@ void RichEditWithToolBar::RefreshBar()
 
 void RichEditWithToolBar::Skin()
 {
+	RichEdit::Skin();
 	RefreshBar();
 }
 
