@@ -100,7 +100,10 @@ to x.address `= PeekPtr(x.address).]
 :: [s0; [*@(0.0.255) Field](x, id)]
 :: [s0; Parameter must be map with `"address`" and `"type`". id should 
 be the name of member variable of `"type`". Returns new map with 
-`"address`" and `"type`" corresponding to the given member variable.]}}&]
+`"address`" and `"type`" corresponding to the given member variable.]
+:: [s0; [*@(0.0.255) Align](address, size)]
+:: [s0; Adjusts [*@(0.0.255) address ]for proper standard alignment for 
+element with [*@(0.0.255) size].]}}&]
 [s0; &]
 [s0; &]
 [s0; Output functions&]

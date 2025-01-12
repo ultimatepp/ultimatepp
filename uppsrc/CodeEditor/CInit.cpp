@@ -121,7 +121,7 @@ void CSyntax::InitKeywords()
 
 		"SizeOf", "TypeName", "TypeNo", "DeRef", "Field", "NestedType",
 		"PeekPtr", "Peek8", "Peek16", "Peek32", "Peek64", "Peek32f", "Peek64f",
-		"SizeOfPtr", "Offset",
+		"SizeOfPtr", "Offset", "Align",
 		
 		"LOG",
 

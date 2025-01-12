@@ -134,6 +134,9 @@ void Pdb::LoadPrettyScripts()
 		SetVal(v, val);
 		e = v;
 	});
+	Escape(pretty_globals, "Align(adr, sz)", [=](EscEscape& e) {
+		e = (int64)Align(e[0].GetInt64(), e[1].GetInt64());
+	});
 }
 
 void Pdb::SetVal(EscValue& v, Pdb::Val val)

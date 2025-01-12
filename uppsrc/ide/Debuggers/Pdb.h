@@ -375,6 +375,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       ThrowError(const char *s);
 	int        SizeOfType(int ti);
 	int        SizeOfType(const String& name);
+	adr_t      Align(adr_t adr, int type);
 	adr_t      PeekPtr(adr_t address);
 	byte       PeekByte(adr_t address);
 	word       PeekWord(adr_t address);
@@ -403,7 +404,7 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Comparison(CParser& p);
 	Val        Exp0(CParser& p);
 	Val        Exp(CParser& p);
-
+	
 	bool       HasAttr(Pdb::Val record, const String& id);
 	Val        GetAttr(Pdb::Val record, int i);
 	Val        GetAttr(Pdb::Val record, const String& id);
@@ -451,7 +452,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void       PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       TraverseTree(bool set, Val head, Val node, int64& from, int& count, Pdb::Pretty& p, int depth);
-	void       TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth, int key_size);
+	void       TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth, int key_size, int value_size);
 	void       PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
 	void       PrettyStdListM(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p, bool map = false);
 	void       PrettyStdList(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p);
