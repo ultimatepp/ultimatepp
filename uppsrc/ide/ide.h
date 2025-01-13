@@ -523,6 +523,8 @@ public:
 
 	String    editfile2;
 
+	String    scratch_back; // to get back from Alt-M scratchfile
+
 	Vector<String> tablru;
 	int            tabi;
 	bool           blocktabs;
