@@ -798,7 +798,7 @@ RichEdit::RichEdit()
 	
 	bullet_indent = 150;
 	
-	persistent_findreplace = true;
+	persistent_findreplace = false;
 	
 	ignore_physical_size = false;
 
