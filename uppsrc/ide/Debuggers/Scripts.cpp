@@ -204,6 +204,16 @@ bool Pdb::PrettyScript(const String& type, Pdb::Val val, const Vector<String>& t
 		for(int64 i = 0; i < items; i++)
 			p.data_ptr << PeekPtr(adr + (i + from) * sz);
 	});
+	Escape(g, "ITEM_DEREF_PTRSZ(adr, sz, from, items)", [&](EscEscape& e) {
+		ret = true;
+		adr_t adr = e[0].GetInt64();
+		int64 sz = e[1].GetInt64();
+		int64 from = e[2].GetInt();
+		int64 items = e[3].GetInt();
+
+		for(int64 i = 0; i < items; i++)
+			p.data_ptr << PeekPtr(adr + (i + from) * sz);
+	});
 	Escape(g, "ITEM_COUNT(x)", [&](EscEscape& e) {
 		ret = true;
 		p.data_count = e[0].GetInt64();

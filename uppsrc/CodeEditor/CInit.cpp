@@ -111,7 +111,7 @@ void CSyntax::InitKeywords()
 		"fn", "typename",
 		"value", "from", "items", "template_param",
 		"TEXT", "ITEM_COUNT", "ITEM_TYPE", "STRING",
-		"ITEM_PTR", "ITEM_PTRS", "ITEM_DEREF_PTRS", "CHUNK",
+		"ITEM_PTR", "ITEM_PTRS", "ITEM_DEREF_PTRS", "ITEM_DEREF_PTRSZ", "CHUNK",
 		NULL
 	};
 	static const char *dbglib[] = {

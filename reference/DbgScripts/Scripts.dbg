@@ -1,0 +1,47 @@
+typename MyString {
+	length = Peek32(Field(value, "len"));
+	STRING();
+	ITEM_COUNT(length);
+	ITEM_TYPE("char");
+	if(length < 16)
+		ITEM_PTRS(Field(value, "data").address, 1, from, items);
+	else
+		ITEM_PTRS(DeRef(Field(value, "ptr")).address, 1, from, items);
+}
+
+typename MyArray {
+	begin = DeRef(Field(value, "begin"));
+	end = DeRef(Field(value, "end"));
+	sz = SizeOf(begin.type);
+
+	ITEM_COUNT((end.address - begin.address) / sz);
+	ITEM_TYPE(template_param[0]);
+	ITEM_PTRS(begin.address, sz, from, items);
+}
+
+typename MyIndirectArray {
+	a = Field(value, "a");
+	begin = DeRef(Field(a, "begin"));
+	end = DeRef(Field(a, "end"));
+	ITEM_COUNT((end.address - begin.address) / SizeOfPtr());
+	ITEM_TYPE(template_param[0]);
+	ITEM_DEREF_PTRS(begin.address, from, items);
+}
+
+typename MyMap {
+	k = Field(value, "keys");
+	begin = DeRef(Field(k, "begin"));
+	end = DeRef(Field(k, "end"));
+	sz = SizeOf(begin.type);
+	ITEM_COUNT((end.address - begin.address) / sz);
+	ITEM_TYPE(template_param[0]);
+	ITEM_PTRS(begin.address, sz, from, items);
+
+	v = Field(value, "values");
+	begin = DeRef(Field(v, "begin"));
+	end = DeRef(Field(v, "end"));
+	sz = SizeOf(begin.type);
+	ITEM_COUNT((end.address - begin.address) / sz);
+	ITEM_TYPE(template_param[1]);
+	ITEM_PTRS(begin.address, sz, from, items);
+}
