@@ -922,7 +922,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		menu.Add("Open all groups", THISBACK(OpenAllGroups));
 		menu.Add("Close all groups", THISBACK(CloseAllGroups));
 		menu.Separator();
-		BuildFileMenu(menu);
+		menu.Sub("Build", [=] (Bar& menu) { BuildFileMenu(menu); });
 		menu.Separator();
 	}
 	menu.Add("Rename...", THISBACK(RenameFile))
@@ -932,11 +932,6 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		.Help("Remove file / separator / topic group from package");
 	menu.Add(filelist.IsCursor(), "Delete", sel ? THISBACK(RemoveFile) : THISBACK(DelFile))
 		.Help("Remove file / topic group reference from package & delete file / folder on disk");
-	menu.Separator();
-	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
-	menu.Add("Copy File Path", callback1(WriteClipboardText, GetActiveFilePath()));
-	menu.Add("Terminal at File Directory", [=] { LaunchTerminal(GetFileDirectory(GetActiveFilePath())); });
-	menu.Separator();
 	menu.Add(filelist.GetCursor() > 0, "Move up", THISBACK1(MoveFile, -1))
 		.Key(organizer ? K_CTRL_UP : K_ALT|K_CTRL_UP)
 		.Help("Move current file one position towards package beginning");
@@ -944,6 +939,10 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	         THISBACK1(MoveFile, 1))
 		.Key(organizer ? K_CTRL_DOWN : K_ALT|K_CTRL_DOWN)
 		.Help("Move current file one position towards package end");
+	menu.Separator();
+	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
+	menu.Add("Copy File Path", callback1(WriteClipboardText, GetActiveFilePath()));
+	menu.Add("Terminal at File Directory", [=] { LaunchTerminal(GetFileDirectory(GetActiveFilePath())); });
 	if(IsActiveFile()) {
 		menu.Separator();
 		String p = GetActiveFilePath();
