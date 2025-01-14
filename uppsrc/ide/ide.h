@@ -358,6 +358,8 @@ String SearchEnginesFile();
 
 int ApplyChanges(LineEdit& editor, const String& new_content);
 
+struct RepoDiff;
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -1015,7 +1017,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
-		void  RunRepoDiff(const String& filepath, int cursor = -1);
+		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);
