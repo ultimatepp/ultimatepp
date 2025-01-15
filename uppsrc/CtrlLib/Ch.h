@@ -50,7 +50,9 @@ Color FaceColor(int adj);
 // Creates synthetic style based on SColors and basic button face
 void ChSynthetic(Image *button100x100, Color *text, bool macos = false, int dpi = DPI(1));
 
-void NewStyleArrows();
+void  NewStyleArrows();
+
+Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke = 0, Color pen = Gray());
 
 // for diagnostics purposes
 #ifdef _DEBUG

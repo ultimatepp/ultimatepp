@@ -665,15 +665,22 @@ void ChHostSkin0()
 		for(int i = 0; i < 4; i++) {
 			{
 				ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
-				e.widget = XP_SCROLLBAR;
-				e.state = 1 + i;
-				e.contentm = false;
-				e.part = SBP_THUMBBTNHORZ;
-				s.hthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERHORZ, 1));
-				e.part = SBP_THUMBBTNVERT;
-				s.vthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERVERT, 1));
-				if(IsWin11())
+				if(IsWin11()) {
 					s.arrowsize = 0;
+					int g = IsDarkTheme() ? get_i(i, 80, 100, 70, 70)
+					                      : get_i(i, 192, 200, 128, 128);
+					s.vthumb[i] = MakeRoundScrollbarThumb(DPI(16), DPI(4), GrayColor(g));
+					s.hthumb[i] = RotateClockwise(s.vthumb[i]);
+				}
+				else {
+					e.widget = XP_SCROLLBAR;
+					e.state = 1 + i;
+					e.contentm = false;
+					e.part = SBP_THUMBBTNHORZ;
+					s.hthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERHORZ, 1));
+					e.part = SBP_THUMBBTNVERT;
+					s.vthumb[i] = ChLookWith(RawToValue(e), XpImage(XP_SCROLLBAR, SBP_GRIPPERVERT, 1));
+				}
 			}
 			Color paper = i == 3 ? SColorFace : SColorPaper;
 			Image m = XpImage(XP_COMBOBOX, CP_DROPDOWNBUTTON, CBXS_NORMAL + i, paper, Size(32, 32));
