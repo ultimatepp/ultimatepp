@@ -222,7 +222,7 @@ struct Esc : public CParser {
 
 	ArrayMap<String, EscValue>& global;
 	EscValue                    self;
-	VectorMap<String, EscValue> var;
+	ArrayMap<String, EscValue>  var;
 
 	int      skipexp;
 	int      loop;
@@ -290,7 +290,7 @@ struct Esc : public CParser {
 struct EscEscape {
 	Esc&              esc;
 	EscValue          self;
-	Vector<EscValue>& arg;
+	Array<EscValue>& arg;
 	EscValue          ret_val;
 	String            id;
 
@@ -310,7 +310,7 @@ struct EscEscape {
 	double       Number(int i);
 	int          Int(int i);
 
-	EscEscape(Esc& esc, EscValue self, Vector<EscValue>& arg)
+	EscEscape(Esc& esc, EscValue self, Array<EscValue>& arg)
 	  : esc(esc), self(self), arg(arg) {}
 };
 

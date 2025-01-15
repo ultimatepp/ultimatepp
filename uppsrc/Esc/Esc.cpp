@@ -167,7 +167,7 @@ EscValue Esc::ExecuteLambda(const String& id, EscValue lambda, SRVal self, Vecto
 		Limit();
 	}
 	EscValue retval;
-	Vector<EscValue> argvar;
+	Array<EscValue> argvar;
 	if(l.escape) {
 		argvar = sub.var.PickValues();
 		for(int i = l.arg.GetCount(); i < arg.GetCount(); i++) {
