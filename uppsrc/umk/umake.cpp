@@ -88,6 +88,8 @@ void SetupUmkUppHub()
 
 CONSOLE_APP_MAIN
 {
+	SetConfigName("theide");
+
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
 	CreateBuildMethods();

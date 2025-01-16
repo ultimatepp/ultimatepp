@@ -117,6 +117,12 @@ rectory]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Overrides the directory where configuration files are stored.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:SetConfigName`(const String`&`): [@(0.0.255) void] [* SetConfigName]([@(0.0.255) c
+onst] String[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Sets the name of configuration directory if applicable. If 
+not specified, GetAppName() is used.&]
+[s3; &]
+[s4; &]
 [s5;:ConfigFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file])&]
 [s2;%% Returns the absolute path of a configuration file. The directory 
