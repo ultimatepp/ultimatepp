@@ -63,7 +63,14 @@ void Ide::File(Bar& menu)
 	if(findarg(ToLower(fn), ".cpp", ".c", ".cxx", ".h", ".cc", ".hpp") >= 0)
 		fn = ".cpp";
 	fn = "scratchpad" + fn;
-	menu.AddMenu(AK_SCRATCHPAD, CtrlImg::open(), [=] { EditFile(ConfigFile(fn)); })
+	menu.AddMenu(AK_SCRATCHPAD, CtrlImg::open(), [=] {
+			String path = ConfigFile(fn);
+			if(editfile == path && scratch_back.GetCount())
+				path = scratch_back;
+			else
+				scratch_back = editfile;
+			EditFile(path);
+		})
 	    .Text(fn)
 		.Help("Open scratchpad file");
 	menu.AddMenu(AK_SAVEFILE, CtrlImg::save(), THISBACK(DoSaveFile))

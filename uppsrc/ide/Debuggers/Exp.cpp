@@ -51,6 +51,17 @@ int Pdb::SizeOfType(const String& name)
 	return SizeOfType(f.type);
 }
 
+adr_t Pdb::Align(adr_t adr, int type)
+{
+	if(type == 1)
+		return adr;
+	if(type == 2)
+		return (adr + 1) & ~1;
+	if(type <= 4)
+		return (adr + 3) & ~3;
+	return (adr + 7) & ~7;
+}
+
 #define READINT0(type) { \
 	type x; \
 	if(v.address < 10000) \
@@ -102,6 +113,14 @@ dword Pdb::PeekDword(adr_t address)
 {
 	dword w;
 	if(!Copy(address, &w, 4))
+		ThrowError("??");
+	return w;
+}
+
+dword Pdb::Peek64(adr_t address)
+{
+	dword w;
+	if(!Copy(address, &w, 8))
 		ThrowError("??");
 	return w;
 }

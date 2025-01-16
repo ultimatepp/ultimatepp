@@ -76,11 +76,12 @@ static StaticMutex sImlLock;
 
 void Iml::Set(int i, const Image& img)
 { // TODO: MT
+	IImage& m = map[i];
 	Image h = img; // make sure h has refcount 1, basically 'clone'
 	ImageBuffer ib = h;
 	h = ib;
-	iml_ReplaceAll(map[i].image, h);
-	map[i].loaded = true;
+	iml_ReplaceAll(m.image, h);
+	m.loaded = true;
 }
 
 Image Iml::Get(int i)

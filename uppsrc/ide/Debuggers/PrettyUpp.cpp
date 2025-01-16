@@ -176,7 +176,6 @@ void Pdb::PrettyValue(Pdb::Val val, const Vector<String>&, int64 from, int count
 			}
 			if(st == 6) { // ERROR_V
 				p.Text("ErrorValue ", SLtRed());
-				p.has_data = true;
 				a = PeekPtr(a);
 				Val v = GetAttr(MakeVal("Upp::RawValueRep<Upp::String>", a), "v");
 				p.data_type << "Upp::String";

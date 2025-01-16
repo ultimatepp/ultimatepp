@@ -167,12 +167,14 @@ struct XmlViewDes : TreeViewDes {
 
 INITIALIZE(XmlViewDes)
 
+void   SetupJsonTree(TreeCtrl& tree);
+void   CopyJsonPath(TreeCtrl& tree);
+String LoadJson(TreeCtrl& tree, const String& json);
+
 struct JsonViewDes : TreeViewDes {
 	virtual String GetId() { return "JSON"; }
 	virtual String Load0(const String& json);
 	virtual void   CopyPath();
-	
-	int AddNode(int parent_id, const Value& id, const String& name, const Value& v);
 	
 	JsonViewDes();
 };

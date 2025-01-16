@@ -175,6 +175,8 @@ TestChStyle::TestChStyle()
 	};
 	
 	FillTree(droptree.TreeObject());
+	
+	Sizeable();
 }
 
 GUI_APP_MAIN

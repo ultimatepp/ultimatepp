@@ -14,13 +14,7 @@ VectorMap<EscValue, EscValue>& EscValue::CloneMap()
 		map->Release();
 		map = c;
 	}
-	hash = 0;
-	return map->map;
-}
-
-const VectorMap<EscValue, EscValue>& EscValue::GetMap() const
-{
-	ASSERT(IsMap());
+	map->cached_hash = 0;
 	return map->map;
 }
 
@@ -28,14 +22,7 @@ void  EscValue::SetEmptyMap()
 {
 	Free();
 	type = ESC_MAP;
-	hash = 0;
 	map = new EscMap;
-}
-
-EscValue EscValue::MapGet(EscValue key) const
-{
-	LTIMING("MapGet");
-	return GetMap().Get(key, EscValue());
 }
 
 void EscValue::MapSet(EscValue key, EscValue value)

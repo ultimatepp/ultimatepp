@@ -25,6 +25,9 @@ CONSOLE_APP_MAIN
 #ifdef bmGIT_HASH
 	LOG("Git hash " << bmGIT_HASH);
 #endif
+#ifdef bmGIT_BRANCH
+	LOG("Git branch " << bmGIT_BRANCH);
+#endif
 #ifdef bmSVN_URL
 	LOG("Svn url " << bmSVN_URL);
 #endif

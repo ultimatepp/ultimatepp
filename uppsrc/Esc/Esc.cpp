@@ -10,19 +10,12 @@ namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 
-void Esc::OutOfMemory()
+force_inline void Esc::Limit(int64 count)
 {
-	ThrowError("Out of memory");
-}
-
-void Esc::TestLimit()
-{
-	LTIMING("TestLimit");
-	if(!IsNull(op_limit))
-		if(op_limit < 0)
-			ThrowError("out of operations limit - considered frozen");
-	if(EscValue::GetTotalCount() >= EscValue::GetMaxTotalCount())
-		OutOfMemory();
+	LTIMING("Limit");
+	if(count > op_limit)
+		ThrowError("out of operations limit");
+	op_limit -= count;
 }
 
 EscValue Esc::Get(const SRVal& val)
@@ -31,99 +24,92 @@ EscValue Esc::Get(const SRVal& val)
 	if(skipexp)
 		return (int64)1;
 	EscValue v = val.lval ? *val.lval : val.rval;
-	if(val.sbs.IsArray()) {
-		const Vector<EscValue>& sbs = val.sbs.GetArray();
-		for(int i = 0; i < sbs.GetCount(); i++) {
-			const EscValue& ss = sbs[i];
-			if(v.IsMap()) //!!!! (problem with a[1, 2]
-				v = v.MapGet(ss);
-			else
-			if(v.IsArray()) {
-				int count = v.GetCount();
-				if(ss.IsArray() && ss.GetArray().GetCount() >= 2) {
-					EscValue v1 = ss.ArrayGet(0);
-					EscValue v2 = ss.ArrayGet(1);
-					int i = v1.GetInt();
-					int n = count - i;
-					if(ss.GetCount() == 2)
-						n = v2.IsInt() ? v2.GetInt() : n;
-					else {
-						if(v2.IsInt()) {
-							n = v2.GetInt();
-							if(n < 0)
-								n += count;
-							n -= i;
-						}
-					}
-					if(i >= 0 && n >= 0 && i + n <= count)
-						v = v.ArrayGet(i, n);
-					else
-						ThrowError("slice out of range");
-				}
+	for(const auto& ss : val.subscript) {
+		if(v.IsMap() && ss.slice == 0)
+			v = v.MapGet(ss.i1);
+		else
+		if(v.IsArray()) {
+			int count = v.GetCount();
+			if(ss.slice) {
+				int i = ss.i1.GetInt();
+				int n = count - i;
+				if(ss.slice == 1)
+					n = ss.i2.IsInt() ? ss.i2.GetInt() : n;
 				else {
-					int64 i = Int(ss, "index");
-					if(i < 0)
-						i += count;
-					if(i >= 0 && i < count)
-						v = v.ArrayGet((int)i);
-					else
-						ThrowError("index out of range");
+					if(ss.i2.IsInt()) {
+						n = ss.i2.GetInt();
+						if(n < 0)
+							n += count;
+						n -= i;
+					}
 				}
+				if(i >= 0 && n >= 0 && i + n <= count)
+					v = v.ArrayGet(i, n);
+				else
+					ThrowError("slice out of range");
 			}
-			else
-				ThrowError("invalid indirection");
-			TestLimit();
+			else {
+				int64 i = Int(ss.i1, "index");
+				if(i < 0)
+					i += count;
+				if(i >= 0 && i < count)
+					v = v.ArrayGet((int)i);
+				else
+					ThrowError("index out of range");
+			}
 		}
+		else
+			ThrowError("invalid indirection");
 	}
 	return v;
 }
 
-void Esc::Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscValue& src)
+void Esc::Assign(EscValue& val, const Vector<SRVal::Subscript>& subscript, int si, const EscValue& src)
 {
-	LTIMING("Assign");
-	const EscValue& ss = sbs[si++];
+	LTIMING("Assign with subscript");
+	const auto& ss = subscript[si++];
 	if(val.IsVoid())
 		val.SetEmptyMap();
 	if(val.IsMap()) {
-		if(si < sbs.GetCount()) {
-			EscValue x = val.MapGet(ss);
-			val.MapSet(ss, 0.0);
-			Assign(x, sbs, si, src);
-			val.MapSet(ss, x);
+		if(ss.slice)
+			ThrowError("invalid indirection");
+		if(si < subscript.GetCount()) {
+			EscValue x = val.MapGet(ss.i1);
+			val.MapSet(ss.i1, 0.0);
+			Assign(x, subscript, si, src);
+			val.MapSet(ss.i1, x);
 		}
 		else
-			val.MapSet(ss, src);
+			val.MapSet(ss.i1, src);
 		return;
 	}
 	else
 	if(val.IsArray()) {
-		if(si < sbs.GetCount()) {
-			if(ss.IsArray())
-				ThrowError("slice must be last subscript");
-			int64 i = Int(ss, "index");
+		if(si < subscript.GetCount()) {
+			if(ss.slice)
+				ThrowError("slice must be the last subscript");
+			int64 i = Int(ss.i1, "index");
 			if(i >= 0 && i < val.GetCount()) {
 				EscValue x = val.ArrayGet((int)i);
 				val.ArraySet((int)i, 0.0);
-				Assign(x, sbs, si, src);
-				if(!val.ArraySet((int)i, x))
-					OutOfMemory();
+				Assign(x, subscript, si, src);
+				val.ArraySet((int)i, x);
 				return;
 			}
 		}
 		else {
 			int count = val.GetCount();
-			if(ss.IsArray()) {
-				if(!src.IsArray() || ss.GetArray().GetCount() < 2)
+			if(ss.slice) {
+				if(!src.IsArray())
 					ThrowError("only array can be assigned to the slice");
-				EscValue v1 = ss.ArrayGet(0);
-				EscValue v2 = ss.ArrayGet(1);
-				int i = v1.IsInt() ? v1.GetInt() : 0;
+				Limit(src.GetCount());
+				int i = ss.i1.IsInt() ? ss.i1.GetInt() : 0;
 				int n = count - i;
-				if(ss.GetCount() == 2)
-					n = v2.IsInt() ? v2.GetInt() : n;
+				if(ss.slice == 1)
+					n = ss.i2.IsInt() ? ss.i2.GetInt() : n;
 				else {
-					if(v2.IsInt()) {
-						n = v2.GetInt();
+					if(ss.i2.IsInt()) {
+						n = ss.i2.GetInt();
 						if(n < 0)
 							n += count;
 						n -= i;
@@ -137,12 +123,12 @@ void Esc::Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscVa
 					ThrowError("slice out of range");
 			}
 			else {
-				int64 i = ss.IsVoid() ? val.GetCount() : Int(ss, "index");
+				int64 i = ss.i1.IsVoid() ? val.GetCount() : Int(ss.i1, "index");
 				if(i < 0)
 					i = count + i;
 				if(i >= 0 && i < INT_MAX) {
-					if(!val.ArraySet((int)i, src))
-						ThrowError("out of memory");
+					Limit(max(i - val.GetCount(), (int64)0));
+					val.ArraySet((int)i, src);
 					return;
 				}
 			}
@@ -157,8 +143,8 @@ void Esc::Assign(const SRVal& val, const EscValue& src)
 		return;
 	if(!val.lval)
 		ThrowError("l-value required");
-	if(val.sbs.IsArray() && val.sbs.GetCount())
-		Assign(*val.lval, val.sbs.GetArray(), 0, src);
+	if(val.subscript.GetCount())
+		Assign(*val.lval, val.subscript, 0, src);
 	else
 		*val.lval = src;
 }
@@ -177,8 +163,8 @@ EscValue Esc::ExecuteLambda(const String& id, EscValue lambda, SRVal self, Vecto
 	for(int i = 0; i < l.arg.GetCount(); i++) {
 		sub.var.GetAdd(l.arg[i]) =
 			i < arg.GetCount() ? Get(arg[i])
-		                       : Evaluatex(l.def[i - (l.arg.GetCount() - l.def.GetCount())], global, op_limit);
-		TestLimit();
+		                       : Evaluatexl(l.def[i - (l.arg.GetCount() - l.def.GetCount())], global, op_limit);
+		Limit();
 	}
 	EscValue retval;
 	Array<EscValue> argvar;
@@ -217,40 +203,28 @@ void Esc::Subscript(Esc::SRVal& r, Esc::SRVal _self, String id)
 {
 	LTIMING("Subscript");
 	for(;;) {
-		TestLimit();
-		if(Char('['))
-			if(Char(']'))
-				r.sbs.ArrayAdd(EscValue());
-			else {
-				EscValue v1, v2;
-				if(!IsChar(',') && !IsChar(':'))
-					v1 = GetExp();
-				if(Char(',')) {
-					if(!IsChar(']'))
-						v2 = GetExp();
-					EscValue x;
-					x.ArrayAdd(v1);
-					x.ArrayAdd(v2);
-					r.sbs.ArrayAdd(x);
-				}
-				else
-				if(Char(':')) {
-					if(!IsChar(']'))
-						v2 = GetExp();
-					EscValue x;
-					x.ArrayAdd(v1);
-					x.ArrayAdd(v2);
-					x.ArrayAdd(EscValue());
-					r.sbs.ArrayAdd(x);
-				}
-				else
-					r.sbs.ArrayAdd(v1);
-				PassChar(']');
+		if(Char('[')) {
+			auto& ss = r.subscript.Add();
+			if(!IsChar(',') && !IsChar(':') && !IsChar(']'))
+				ss.i1 = GetExp(); // otherwise void EscValue
+			if(Char(',')) {
+				ss.slice = 1;
+				if(!IsChar(']'))
+					ss.i2 = GetExp(); // otherwise void EscValue
 			}
+			else
+			if(Char(':')) {
+				ss.slice = 2;
+				if(!IsChar(']'))
+					ss.i2 = GetExp(); // otherwise void EscValue
+			}
+			PassChar(']');
+		}
 		else
 		if(Char('.')) {
+			LTIMING("ID");
 			_self = r;
-			r.sbs.ArrayAdd(id = ReadId());
+			r.subscript.Add().i1 = id = ReadId();
 		}
 		else
 		if(Char('(')) {
@@ -294,10 +268,8 @@ void Esc::Subscript(Esc::SRVal& r)
 
 void Esc::Term(SRVal& r)
 {
-	r.sbs = EscValue();
+	r.subscript.Clear();
 
-	op_limit--;
-	TestLimit();
 	if(Char2('0', 'x') || Char2('0', 'X')) {
 		r = ReadNumber64(16);
 		return;
@@ -354,7 +326,6 @@ void Esc::Term(SRVal& r)
 				if(Char('}'))
 					break;
 				PassChar(',');
-				TestLimit();
 			}
 		r = map;
 		Subscript(r);
@@ -369,7 +340,6 @@ void Esc::Term(SRVal& r)
 				if(Char(']'))
 					break;
 				PassChar(',');
-				TestLimit();
 			}
 		r = array;
 		Subscript(r);
@@ -418,7 +388,7 @@ void Esc::Term(SRVal& r)
 		else
 		if(_self.lval) {
 			r = _self;
-			r.sbs.ArrayAdd(id);
+			r.subscript.Add().i1 = id;
 		}
 		else
 		if(_global)
@@ -538,13 +508,12 @@ EscValue Esc::MulArray(EscValue array, EscValue times)
 {
 	EscValue r;
 	r.SetEmptyArray();
-	for(int n = times.GetInt(); n > 0; n >>= 1) {
+	int n = times.GetInt();
+	Limit(n);
+	for(; n > 0; n >>= 1) {
 		if(n & 1)
-			if(!r.Append(array))
-				OutOfMemory();
-		if(!array.Append(array))
-			OutOfMemory();
-		TestLimit();
+			r.Append(array);
+		array.Append(array);
 	}
 	return r;
 }
@@ -603,8 +572,8 @@ void Esc::Add(Esc::SRVal& r)
 			Mul(w);
 			EscValue b = Get(w);
 			if(v.IsArray() && b.IsArray()) {
-				if(!v.Replace(v.GetCount(), 0, b))
-					OutOfMemory();
+				Limit(b.GetCount());
+				v.Replace(v.GetCount(), 0, b);
 				r = v;
 			}
 			else
@@ -640,8 +609,8 @@ void Esc::Shift(Esc::SRVal& r)
 			Add(w);
 			EscValue b = Get(w);
 			if(v.IsArray() && b.IsArray()) {
-				if(!v.Replace(v.GetCount(), 0, b))
-					OutOfMemory();
+				Limit(b.GetCount());
+				v.Replace(v.GetCount(), 0, b);
 				Assign(r, v);
 			}
 			else
@@ -844,8 +813,8 @@ void Esc::Assign(Esc::SRVal& r)
 		Cond(w);
 		EscValue b = Get(w);
 		if(v.IsArray() && b.IsArray()) {
-			if(!v.Replace(v.GetCount(), 0, b))
-				OutOfMemory();
+			Limit(b.GetCount());
+			v.Replace(v.GetCount(), 0, b);
 			Assign(r, v);
 		}
 		else
@@ -1043,8 +1012,7 @@ void Esc::FinishSwitch()
 
 void  Esc::DoStatement()
 {
-	op_limit--;
-	TestLimit();
+	Limit();
 	if(Id("if"))
 		if(PCond()) {
 			DoStatement();
