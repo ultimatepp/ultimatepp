@@ -240,6 +240,14 @@ void SetConfigDirectory(const String& s)
 	SyncLogPath__();
 }
 
+static char sConfigName[_MAX_PATH + 1];
+
+void SetConfigName(const String& s)
+{
+	strcpy(sConfigName, s);
+	SyncLogPath__();
+}
+
 void CopyFolder(const char *dst, const char *src)
 {
 	RealizeDirectory(dst);
@@ -262,9 +270,10 @@ void CopyFolder(const char *dst, const char *src)
 String  ConfigFile(const char *file) {
 	if(*sConfigFolder)
 		return AppendFileName(sConfigFolder, file);
+	String name = *sConfigName ? sConfigName : GetAppName();
 #if defined(PLATFORM_WIN32)
 	if(sHomecfg) {
-		String p = GetHomeDirFile(GetAppName());
+		String p = GetHomeDirFile(name);
 		ONCELOCK
 			RealizeDirectory(p);
 		return AppendFileName(p, file);
@@ -296,7 +305,7 @@ String  ConfigFile(const char *file) {
 			cfgdir = AppendFileName(cfgdir, GetConfigGroup());
 		strcpy(cfgd, cfgdir);
 	}
-	String pp = AppendFileName(cfgd, GetAppName());
+	String pp = AppendFileName(cfgd, name);
 	bool exists = DirectoryExists(pp);
 	RealizeDirectory(pp);
 	if(!exists && !sandboxed) { // migrate config files from the old path

@@ -27,6 +27,8 @@ String  GetConfigFolder();
 String  ConfigFile(const char *file);
 String  ConfigFile();
 
+void    SetConfigName(const String& s);
+
 void    SetConfigGroup(const char *group);
 String  GetConfigGroup();
 
