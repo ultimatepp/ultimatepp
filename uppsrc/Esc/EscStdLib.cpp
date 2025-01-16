@@ -12,6 +12,7 @@ void ESC_count(EscEscape& e)
 
 void ESC_is_void(EscEscape& e)
 {
+	DDUMP(e[0]);
 	e = e[0].IsVoid();
 }
 
