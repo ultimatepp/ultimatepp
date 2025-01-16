@@ -427,13 +427,10 @@ void ChHostSkin0()
 		(*s->set)(sAdjust(Color::FromCR(GetSysColor(s->syscolor))));
 
 	if(IsWin11())
-		NewStyleArrows();
+		RoundStyleArrows();
 
 	ChBaseSkin();
-
-	if(IsWin11())
-		NewStyleArrows();
-
+	
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 #ifndef PLATFORM_WINCE
 	GUI_DragFullWindow_Write(IsSysFlag(SPI_GETDRAGFULLWINDOWS));
@@ -567,17 +564,6 @@ void ChHostSkin0()
 			}
 		}
 		{
-			SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
-			Win32Look(s.inc.look, 4, XP_SPIN, SPNP_UP);
-			Win32Look(s.dec.look, 4, XP_SPIN, SPNP_DOWN);
-			s.width = FrameButtonWidth();
-		}
-		{
-			SpinButtons::Style& s = SpinButtons::StyleOnSides().Write();
-			Win32Look(s.inc.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
-			Win32Look(s.dec.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
-		}
-		{
 			MultiButton::Style& s = MultiButton::StyleDefault().Write();
 			s.usetrivial = true;
 			if(vista_aero) {
@@ -667,6 +653,7 @@ void ChHostSkin0()
 				ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 				if(IsWin11()) {
 					s.arrowsize = 0;
+					s.thumbmin = DPI(24);
 					int g = IsDarkTheme() ? get_i(i, 80, 100, 70, 70)
 					                      : get_i(i, 192, 200, 128, 128);
 					s.vthumb[i] = MakeRoundScrollbarThumb(DPI(16), DPI(4), GrayColor(g));
@@ -749,8 +736,19 @@ void ChHostSkin0()
 			                14, 26);
 		}
 
-//		if(IsWin11())
-//			NewStyleArrows();
+		{
+			SpinButtons::Style& s = SpinButtons::StyleDefault().Write();
+			if(!IsWin11()) {
+				Win32Look(s.inc.look, 4, XP_SPIN, SPNP_UP);
+				Win32Look(s.dec.look, 4, XP_SPIN, SPNP_DOWN);
+			}
+			s.width = FrameButtonWidth();
+		}
+		{
+			SpinButtons::Style& s = SpinButtons::StyleOnSides().Write();
+			Win32Look(s.inc.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
+			Win32Look(s.dec.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
+		}
 
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));

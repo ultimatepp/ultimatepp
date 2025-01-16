@@ -9,22 +9,33 @@ namespace Upp {
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_source.h>
 
-void NewStyleArrows()
+void RoundStyleArrows()
 {
-	return;
-	// TODO
 	CtrlImg::Set(CtrlImg::I_smallup, CtrlImg::smallup_n());
 	CtrlImg::Set(CtrlImg::I_smalldown, MirrorVert(CtrlImg::smallup_n()));
 	CtrlImg::Set(CtrlImg::I_smallleft, RotateAntiClockwise(CtrlImg::smallup_n()));
 	CtrlImg::Set(CtrlImg::I_smallright, RotateClockwise(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_UA, CtrlImg::smallup_n());
-	CtrlImg::Set(CtrlsImg::I_DA, MirrorVert(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_LA, RotateAntiClockwise(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_RA, RotateClockwise(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_kUA, CtrlImg::smallup_n());
-	CtrlImg::Set(CtrlsImg::I_kDA, MirrorVert(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_kLA, RotateAntiClockwise(CtrlImg::smallup_n()));
-	CtrlImg::Set(CtrlsImg::I_kRA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_spinup, CtrlImg::spinup_n());
+	CtrlImg::Set(CtrlImg::I_spindown, MirrorVert(CtrlImg::spinup_n()));
+
+	CtrlsImg::Set(CtrlsImg::I_UA, CtrlImg::smallup_n());
+	CtrlsImg::Set(CtrlsImg::I_DA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_LA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_RA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_SpU, CtrlImg::spinup_n());
+	CtrlsImg::Set(CtrlsImg::I_SpD, MirrorVert(CtrlImg::spinup_n()));
+
+	CtrlsImg::Set(CtrlsImg::I_kUA, CtrlImg::smallup_n());
+	CtrlsImg::Set(CtrlsImg::I_kDA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kLA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kRA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kSpU, CtrlImg::spinup_n());
+	CtrlsImg::Set(CtrlsImg::I_kSpD, MirrorVert(CtrlImg::spinup_n()));
+	
+	Image h = CtrlImg::spinup_n();
+	h = CtrlsImg::kSpU();
+	h = CtrlsImg::SpU();
+	
 }
 
 Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke, Color pen)
@@ -734,9 +745,10 @@ void ChMakeSkin(int roundness, Color button_face, Color thumb, int *adj)
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		s.arrowsize = 0;
+		s.thumbmin = DPI(24);
 
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
-			s.hupper[status] = s.hlower[status] = 
+			s.hupper[status] = s.hlower[status] =
 			s.vupper[status] = s.vlower[status] = button_face;
 			static int adj[] = { 0, 10, -10, -20 };
 			s.hthumb[status] = s.vthumb[status] = AdjustColor(thumb, adj[status]);
@@ -767,6 +779,7 @@ void RoundScrollbar(int *g)
 void ChStdSkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 10, 80, -5, -10 };
 	SColorFace_Write(Color(240, 240, 240));
 	SColorMenu_Write(Color(240, 240, 240));
@@ -779,6 +792,7 @@ void ChStdSkin()
 void ChGraySkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 0, 70, -15, -20 };
 	SColorHighlight_Write(Gray());
 	ChMakeSkin(3, SWhiteGray(), SLtGray(), adj);
@@ -789,6 +803,7 @@ void ChGraySkin()
 void ChDarkSkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 10, 80, -5, -10 };
 	SColorPaper_Write(Black());
 	SColorHighlight_Write(Gray());
