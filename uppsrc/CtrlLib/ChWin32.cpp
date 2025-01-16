@@ -554,13 +554,9 @@ void ChHostSkin0()
 				Win32Look(s.body, XP_TAB, TABP_PANE);
 				ToImageIfDark(s.body);
 			}
-			else{
-				s.normal[0] = s.first[0] = s.last[0] = s.both[0] = FaceColor(0x10);
-				s.normal[1] = s.first[1] = s.last[1] = s.both[1] = FaceColor(0x20);
-				s.normal[2] = s.first[2] = s.last[2] = s.both[2] = FaceColor(0x30);
-				s.normal[3] = s.first[3] = s.last[3] = s.both[3] = FaceColor(0x20);
-				s.text_color[3] = SColorDisabled();
-				s.body = SColorShadow();
+			else {
+				for(int i = 0; i < 4; i++)
+					SyntheticTab(i, IsWin11() ? 2 : 0, Gray(), 1);
 			}
 		}
 		{
@@ -670,6 +666,8 @@ void ChHostSkin0()
 				}
 			}
 			Color paper = i == 3 ? SColorFace : SColorPaper;
+			if(IsWin11())
+				paper = Null;
 			Image m = XpImage(XP_COMBOBOX, CP_DROPDOWNBUTTON, CBXS_NORMAL + i, paper, Size(32, 32));
 			Image mm = m;
 			Size isz = m.GetSize();

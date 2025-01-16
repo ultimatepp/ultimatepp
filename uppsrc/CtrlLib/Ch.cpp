@@ -31,11 +31,6 @@ void RoundStyleArrows()
 	CtrlsImg::Set(CtrlsImg::I_kRA, RotateClockwise(CtrlImg::smallup_n()));
 	CtrlsImg::Set(CtrlsImg::I_kSpU, CtrlImg::spinup_n());
 	CtrlsImg::Set(CtrlsImg::I_kSpD, MirrorVert(CtrlImg::spinup_n()));
-	
-	Image h = CtrlImg::spinup_n();
-	h = CtrlsImg::kSpU();
-	h = CtrlsImg::SpU();
-	
 }
 
 Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke, Color pen)
@@ -70,13 +65,13 @@ Color FaceColor(int adj)
 void SyntheticTab(int i, int roundness, Color ink, int pen)
 {
 	TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-	s.body = MakeButton(0, FaceColor(8), DPI(1), ink);
+	s.body = MakeButton(0, FaceColor(8), pen, ink);
 	Image t = MakeButton(roundness, FaceColor(decode(i, CTRL_NORMAL, -20,
 	                                                    CTRL_HOT, 2,
 	                                                    CTRL_PRESSED, 8,
-	                                                    -8)), DPI(1), ink,
+	                                                    -8)), pen, ink,
 	                                                    CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
-	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
+	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - max(pen, roundness)), DPI(3));
 	s.margin = 0;
 	s.sel = Rect(0, pen, 0, pen);
 	s.extendleft = 2 * pen;
