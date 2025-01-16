@@ -499,7 +499,7 @@ Image WithBottomLine(const Image& m, Color c, int w)
 	return WithRect(m, 0, m.GetHeight() - w, m.GetWidth(), w, c);
 }
 
-void ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
+int ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 {
 	auto DPI = [&](int i) { return dpi * i; };
 	int roundness = DPI(3);
@@ -656,6 +656,8 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 			SyntheticTab(i, roundness, ink);
 		}
 	}
+	
+	return roundness;
 }
 
 void ChBaseSkin()
