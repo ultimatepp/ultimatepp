@@ -8,6 +8,8 @@ bool SilentMode;
 
 String GetUmkFile(const char *fn)
 {
+	if(FileExists(fn))
+		return NormalizePath(fn);
 	if(DirectoryExists(fn) || *fn == '.')
 		return Null;
 	String h = ConfigFile(fn);
