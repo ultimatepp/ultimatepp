@@ -54,6 +54,9 @@ void  RoundStyleArrows();
 
 Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke = 0, Color pen = Gray());
 
+void SyntheticTab(int i, int roundness, Color ink, int pen);
+void SyntheticTab(int i, int roundness, Color ink);
+
 // for diagnostics purposes
 #ifdef _DEBUG
 void  SetChameleonSample(const Value& m, bool once = true);
