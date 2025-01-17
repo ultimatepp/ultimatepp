@@ -621,7 +621,7 @@ void Ide::MakeIcon() {
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
-		idraw.DrawText(x + 2, y + 1, mp, font, Black);
+		idraw.DrawText(x + 12, y + 1, mp, font, Black);
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		if(state_icon)
 			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge256(),
