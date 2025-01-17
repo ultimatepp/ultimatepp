@@ -922,8 +922,10 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		menu.Add("Open all groups", THISBACK(OpenAllGroups));
 		menu.Add("Close all groups", THISBACK(CloseAllGroups));
 		menu.Separator();
-		menu.Sub("Build", [=] (Bar& menu) { BuildFileMenu(menu); });
-		menu.Separator();
+		if(!isaux) {
+			menu.Sub("Build", [=] (Bar& menu) { BuildFileMenu(menu); });
+			menu.Separator();
+		}
 	}
 	menu.Add("Rename...", THISBACK(RenameFile))
 	    .Help("Rename file / separator / topic group");
@@ -939,6 +941,13 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	         THISBACK1(MoveFile, 1))
 		.Key(organizer ? K_CTRL_DOWN : K_ALT|K_CTRL_DOWN)
 		.Help("Move current file one position towards package end");
+	if(isaux)
+		menu.Add(actual.file.GetCount(), "Remove all", [=] {
+			if(PromptYesNo("Remove all?")) {
+				actual.file.Clear();
+				SaveLoadPackageNS(false);
+			}
+		});
 	menu.Separator();
 	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
 	menu.Add("Copy File Path", callback1(WriteClipboardText, GetActiveFilePath()));

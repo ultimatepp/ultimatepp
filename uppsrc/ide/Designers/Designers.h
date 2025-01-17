@@ -175,6 +175,7 @@ struct JsonViewDes : TreeViewDes {
 	virtual String GetId() { return "JSON"; }
 	virtual String Load0(const String& json);
 	virtual void   CopyPath();
+	virtual void   EditMenu(Bar& menu);
 	
 	JsonViewDes();
 };
