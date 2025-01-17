@@ -59,7 +59,7 @@ void Pdb::LoadPrettyScripts()
 		return 0;
 	};
 	
-	auto Type = [=](EscEscape& e) { return ValGet(e, "type"); };
+	auto Type = [=](EscEscape& e) { return (int)ValGet(e, "type"); };
 	auto Adr = [=](EscEscape& e) { return ValGet(e, "address"); };
 	
 	Escape(pretty_globals, "SizeOf(x)", [=](EscEscape& e) {
@@ -135,7 +135,7 @@ void Pdb::LoadPrettyScripts()
 		e = v;
 	});
 	Escape(pretty_globals, "Align(adr, sz)", [=](EscEscape& e) {
-		e = (int64)Align(e[0].GetInt64(), e[1].GetInt64());
+		e = (int64)Align(e[0].GetInt64(), e[1].GetInt());
 	});
 }
 
