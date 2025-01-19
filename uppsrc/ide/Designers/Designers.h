@@ -4,7 +4,6 @@
 #include <ide/ide.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
-	Size   img_sz;
 	Image  img;
 	String filename;
 	
