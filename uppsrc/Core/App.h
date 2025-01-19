@@ -23,6 +23,10 @@ void    UseHomeDirectoryConfig(bool b = true);
 String  GetTempDirectory();
 String  TempFile(const char *filename);
 
+#ifdef PLATFORM_POSIX
+String GetUserConfigDir(bool *sandboxed = NULL);
+#endif
+
 String  GetConfigFolder();
 String  ConfigFile(const char *file);
 String  ConfigFile();
