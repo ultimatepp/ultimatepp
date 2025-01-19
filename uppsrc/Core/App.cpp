@@ -267,6 +267,33 @@ void CopyFolder(const char *dst, const char *src)
 	}
 }
 
+#ifdef PLATFORM_POSIX
+String GetUserConfigDir(bool *sandboxed)
+{
+	String cfgdir;
+	String h = GetExeFolder();
+	if(!sHomecfg)
+		while(h.GetCount() > 1 && DirectoryExists(h)) {
+			String pp = AppendFileName(h, ".config");
+			FindFile ff(pp);
+			if(ff && ff.IsFolder() && ff.CanWrite()) {
+				cfgdir = pp;
+				break;
+			}
+			h = GetFileFolder(h);
+		}
+	if(IsNull(cfgdir)) {
+		if(sandboxed)
+			*sandboxed = false;
+		cfgdir = GetEnv("XDG_CONFIG_HOME");
+	}
+	if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
+		cfgdir = GetHomeDirFile(".config");
+	
+	return cfgdir;
+}
+#endif
+
 String  ConfigFile(const char *file) {
 	if(*sConfigFolder)
 		return AppendFileName(sConfigFolder, file);
@@ -283,24 +310,7 @@ String  ConfigFile(const char *file) {
 	static char cfgd[_MAX_PATH + 1];
 	static bool sandboxed = true;
 	ONCELOCK {
-		String cfgdir;
-		String h = GetExeFolder();
-		if(!sHomecfg)
-			while(h.GetCount() > 1 && DirectoryExists(h)) {
-				String pp = AppendFileName(h, ".config");
-				FindFile ff(pp);
-				if(ff && ff.IsFolder() && ff.CanWrite()) {
-					cfgdir = pp;
-					break;
-				}
-				h = GetFileFolder(h);
-			}
-		if(IsNull(cfgdir)) {
-			sandboxed = false;
-			cfgdir = GetEnv("XDG_CONFIG_HOME");
-		}
-		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
-			cfgdir = GetHomeDirFile(".config");
+		String cfgdir = GetUserConfigDir(&sandboxed);
 		if(*sConfigGroup)
 			cfgdir = AppendFileName(cfgdir, GetConfigGroup());
 		strcpy(cfgd, cfgdir);
