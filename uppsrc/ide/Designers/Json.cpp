@@ -20,7 +20,7 @@ void CopyJsonPath(TreeCtrl& tree)
 void CopyJsonNode(TreeCtrl& tree)
 {
 	int id = tree.GetCursor();
-	if(id)
+	if(id >= 0)
 		WriteClipboardText(ParseQTF(~tree.GetValue(id)).GetPlainText().ToString());
 }
 
