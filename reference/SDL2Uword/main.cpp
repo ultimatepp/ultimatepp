@@ -34,11 +34,9 @@ protected:
 	void Save();
 	void SaveAs();
 	void Print();
-	void About();
 	void Destroy(bool shutdown);
 	void SetBar();
 	void FileBar(Bar& bar);
-	void AboutMenu(Bar& bar);
 	void MainMenu(Bar& bar);
 	void MainBar(Bar& bar);
 
@@ -52,40 +50,39 @@ public:
 
 void UWord::FileBar(Bar& bar)
 {
-	bar.Add("New", CtrlImg::new_doc(), THISBACK(New))
+	bar.Add("New", CtrlImg::new_doc(), THISFN(New))
 	   .Key(K_CTRL_N)
 	   .Help("Open new window");
-	bar.Add("Open..", CtrlImg::open(), THISBACK(Open))
+	bar.Add("Open..", CtrlImg::open(), THISFN(Open))
 	   .Key(K_CTRL_O)
 	   .Help("Open existing document");
-	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), THISBACK(Save))
+	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), THISFN(Save))
 	   .Key(K_CTRL_S)
 	   .Help("Save current document");
-	bar.Add("SaveAs", CtrlImg::save_as(), THISBACK(SaveAs))
+	bar.Add("SaveAs", CtrlImg::save_as(), THISFN(SaveAs))
 	   .Help("Save current document with a new name");
 	bar.ToolGap();
 	bar.MenuSeparator();
-	bar.Add("Print..", CtrlImg::print(), THISBACK(Print))
+	bar.Add("Print..", CtrlImg::print(), THISFN(Print))
 	   .Key(K_CTRL_P)
 	   .Help("Print document");
 	if(bar.IsMenuBar()) {
 		if(lrufile().GetCount())
-			lrufile()(bar, THISBACK(OpenFile));
+			lrufile()(bar, THISFN(OpenFile));
 		bar.Separator();
-		bar.Add("Exit", THISBACK1(Destroy, false));
+		bar.Add("Exit", [=] { Destroy(false); });
 	}
-}
-
-void UWord::AboutMenu(Bar& bar)
-{
-	bar.Add("About..", THISBACK(About));
 }
 
 void UWord::MainMenu(Bar& bar)
 {
-	bar.Add("File", THISBACK(FileBar));
-	bar.Add("Window", callback(WindowsMenu));
-	bar.Add("Help", THISBACK(AboutMenu));
+	bar.Sub("File", THISFN(FileBar));
+	bar.Sub("Window", [=](Bar& bar) { WindowsMenu(bar); });
+	bar.Sub("Help", [=](Bar& bar) {
+		bar.Add("About..", [=] {
+			PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ Ultimate`+`+] technology.");
+		});
+	});
 }
 
 void UWord::New()
@@ -169,11 +166,6 @@ void UWord::Print()
 	editor.Print();
 }
 
-void UWord::About()
-{
-	PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ Ultimate`+`+] technology.");
-}
-
 void UWord::Destroy(bool shutdown)
 {
 	if(editor.IsModified()) {
@@ -212,9 +204,9 @@ UWord::UWord()
 	AddFrame(toolbar);
 	AddFrame(statusbar);
 	Add(editor.SizePos());
-	menubar.Set(THISBACK(MainMenu));
+	menubar.Set(THISFN(MainMenu));
 	Sizeable().Zoomable();
-	WhenClose = THISBACK1(Destroy, false);
+	WhenClose = [=] { Destroy(false); };
 	menubar.WhenHelp = toolbar.WhenHelp = statusbar;
 	static int doc;
 	Title(Format("Document%d", ++doc));

@@ -5,18 +5,12 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	typedef MyApp CLASSNAME;
 
-	bool check;
-
-	void Check() { check = !check; }
+	bool check = false;
 
 	void RightDown(Point p, dword) {
 		MenuBar bar;
-		bar.Add("Check", THISBACK(Check)).Check(check);
+		bar.Add("Check", [=] { check = !check; }).Check(check);
 		bar.Execute();
-	}
-	
-	MyApp() {
-		check = false;
 	}
 };
 

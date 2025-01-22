@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	Scripts.dbg,
+	DbgScripts.cpp;
+
+mainconfig
+	"" = "";
+

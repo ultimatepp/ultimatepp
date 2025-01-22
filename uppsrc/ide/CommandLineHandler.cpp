@@ -34,7 +34,7 @@ bool BaseCommandLineHandler::HandleVersion() const
 	if(args.IsEmpty() || findarg(args[0], "-v", "--version") < 0)
 		return false;
 	
-	Cout() << SplashCtrl::GenerateVersionInfo(' ') << "\n";
+	Cout() << SplashCtrl::GenerateVersionInfo(false) << "\n";
 	
 	return true;
 }

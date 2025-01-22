@@ -444,6 +444,7 @@ void Ide::SetupFormat() {
 		(ide.output_per_assembly, output_per_assembly)
 		(ide.setmain_newide, setmain_newide)
 		(ide.gui_font, gui_font_override)
+		(ide.search_downloads, search_downloads)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);

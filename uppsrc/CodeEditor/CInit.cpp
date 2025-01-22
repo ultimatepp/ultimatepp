@@ -105,6 +105,28 @@ void CSyntax::InitKeywords()
 		"GetMinSize", "GetStdSize",
 		NULL
 	};
+	static const char *dbg[] = {
+		"void", "self", "if", "else", "while", "do", "case",
+		"default", "break", "return", "switch", "operator", "for",
+		"fn", "typename",
+		"value", "from", "items", "template_param",
+		"TEXT", "ITEM_COUNT", "ITEM_TYPE", "STRING",
+		"ITEM_PTR", "ITEM_PTRS", "ITEM_DEREF_PTRS", "ITEM_DEREF_PTRSZ", "CHUNK",
+		NULL
+	};
+	static const char *dbglib[] = {
+		"is_number", "is_array", "is_map", "is_void", "int", "to_string", "to_number",
+		"count", "keys", "values", "rand", "reverse", "sort", "order", "replace",
+		"ToUpper", "ToLower", "len", "mid", "exists",
+
+		"SizeOf", "TypeName", "TypeNo", "DeRef", "Field", "NestedType",
+		"PeekPtr", "Peek8", "Peek16", "Peek32", "Peek64", "Peek32f", "Peek64f",
+		"SizeOfPtr", "Offset", "Align",
+		
+		"LOG",
+
+		NULL
+	};
 	static const char *java[] = {
 		"abstract", "assert", "boolean", "byte", "case",
 		"catch", "char", "class", "const",
@@ -337,6 +359,7 @@ void CSyntax::InitKeywords()
 	LoadSyntax(css, cssn);
 	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
 	LoadSyntax(php, php2);
+	LoadSyntax(dbg, dbglib);
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);

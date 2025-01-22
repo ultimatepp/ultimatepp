@@ -75,7 +75,8 @@ void RichEdit::CapitalsTool(Bar& bar, dword key)
 	        formatinfo.charvalid & RichText::CAPITALS  ? RichEditImg::Capitals()
 	                                               : RichEditImg::CapitalsMixed(),
 	        USERBACK(Capitals))
-	   .Check(formatinfo.capitals && (formatinfo.charvalid & RichText::CAPITALS));
+	   .Check(formatinfo.capitals && (formatinfo.charvalid & RichText::CAPITALS))
+	   .Key(key);
 }
 
 void RichEdit::SuperscriptTool(Bar& bar, dword key)
@@ -85,7 +86,8 @@ void RichEdit::SuperscriptTool(Bar& bar, dword key)
 	        formatinfo.charvalid & RichText::SSCRIPT ? RichEditImg::SuperScript()
 	                                             : RichEditImg::SuperScriptMixed(),
 			USERBACK1(SetScript, i == 1 ? 0 : 1))
-	   .Check(i == 1);
+	   .Check(i == 1)
+	   .Key(key);
 }
 
 void RichEdit::SubscriptTool(Bar& bar, dword key)
@@ -95,7 +97,8 @@ void RichEdit::SubscriptTool(Bar& bar, dword key)
 	        formatinfo.charvalid & RichText::SSCRIPT ? RichEditImg::SubScript()
 	                                             : RichEditImg::SubScriptMixed(),
 			USERBACK1(SetScript, i == 2 ? 0 : 2))
-	   .Check(i == 2);
+	   .Check(i == 2)
+	   .Key(key);
 }
 
 void RichEdit::FontTools(Bar& bar)
@@ -123,6 +126,13 @@ void RichEdit::PaperTool(Bar& bar)
 {
 	paper.DarkContent(IsDarkContent());
 	bar.Add(!IsReadOnly(), paper);
+}
+
+void RichEdit::LastFormatTool(Bar& bar, dword key)
+{
+	bar.Add(!IsReadOnly(), t_("Set recent character format"), last_format_img,
+	        USERBACK(LastCharFormat))
+	   .Key(key);
 }
 
 void RichEdit::LanguageTool(Bar& bar, int width)
@@ -466,6 +476,7 @@ void RichEdit::DefaultBar(Bar& bar, bool extended)
 	bar.Gap();
 	InkTool(bar);
 	PaperTool(bar);
+	LastFormatTool(bar);
 	bar.Gap();
 	LanguageTool(bar);
 	SpellCheckTool(bar);

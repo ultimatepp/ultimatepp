@@ -18,9 +18,9 @@ struct App : TrayIcon {
 	}
 
 	virtual void Menu(Bar& bar) {
-		bar.Add("Info..", THISBACK(LeftDouble));
+		bar.Add("Info..", THISFN(LeftDouble));
 		bar.Separator();
-		bar.Add("Exit", THISBACK(Break));
+		bar.Add("Exit", [=] { Break(); });
 	}
 
 	typedef App CLASSNAME;

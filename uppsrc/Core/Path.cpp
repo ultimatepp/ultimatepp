@@ -578,6 +578,20 @@ bool FindFile::Next() {
 }
 
 bool FindFile::Search(const char *fn) {
+#if 0 // useful to debug jailbreak violations
+_DBG_	INTERLOCKED {
+		static int lock;
+		if(lock == 0) {
+			lock++;
+			static Index<String> path;
+			if(path.Find(fn) < 0) {
+				DDUMP(fn);
+				path.Add(fn);
+			}
+			lock--;
+		}
+	}
+#endif
 	Close();
 	path = NormalizePath(GetFileDirectory(fn));
 	statis = false;

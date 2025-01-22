@@ -117,6 +117,8 @@ void Pdb::CatInt(Visual& result, int64 val, dword flags)
 void Pdb::Visualise(Visual& result, Pdb::Val val, dword flags)
 {
 	DR_LOG("Visualise");
+	if(!result.type)
+		result.type = val.type;
 	const int maxlen = 300;
 	if(result.length > maxlen)
 		return;

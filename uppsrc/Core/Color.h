@@ -166,6 +166,8 @@ double ContrastRatio(Color c1, Color c2);
 
 Color  Blend(Color c1, Color c2, int alpha = 128);
 
+double Difference(Color c1, Color c2);
+
 Color Lerp(Color a, Color b, double t);
 
 String ColorToHtml(Color color);

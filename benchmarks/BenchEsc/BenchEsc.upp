@@ -3,6 +3,7 @@ uses
 	Esc;
 
 file
+	test2.esc,
 	test.esc,
 	Esc.cpp;
 

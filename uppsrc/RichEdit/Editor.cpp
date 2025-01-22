@@ -659,6 +659,7 @@ void RichEdit::Skin()
 	     .NullImage(RichEditImg::NullPaperColor())
 	     .StaticImage(RichEditImg::ColorA());
 	DoRefreshBar();
+	SetLastCharFormat(last_format);
 }
 
 RichEdit::RichEdit()
@@ -797,9 +798,11 @@ RichEdit::RichEdit()
 	
 	bullet_indent = 150;
 	
-	persistent_findreplace = true;
+	persistent_findreplace = false;
 	
 	ignore_physical_size = false;
+
+	SetLastCharFormat();
 }
 
 RichEdit::~RichEdit() {}
@@ -816,6 +819,7 @@ void RichEditWithToolBar::RefreshBar()
 
 void RichEditWithToolBar::Skin()
 {
+	RichEdit::Skin();
 	RefreshBar();
 }
 

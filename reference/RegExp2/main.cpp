@@ -12,11 +12,9 @@ class mainwindowDlg : public Withmainwindow<TopWindow> {
 public:
 	mainwindowDlg();
 	void RunRegExp();
-	void clear_output(){t4.Clear();}
-	void d1_callback(){ Set_Examples((int)d1.GetData()); }
 	void Set_Examples(int i);
 	
-	void match_callback_fun(Vector<String>& v){	
+	void match_callback_fun(Vector<String>& v) {
 		for(int i=0, i1=v.GetCount(); i<i1; i++)
 			v[i]=Format("Match%d",i+1);
 	}
@@ -37,13 +35,13 @@ mainwindowDlg::mainwindowDlg()
 	  .Add(3, "Use Callback Function");
 	
 	
-	d1<<=THISBACK(d1_callback);
-	b1<<=THISBACK(RunRegExp);
-	b2<<=THISBACK(clear_output);
+	d1 << [=] { Set_Examples((int)~d1); };
+	b1 << THISFN(RunRegExp);
+	b2 << [=] { t4.Clear(); };
 
 	d1.SetData(4);
-	d1_callback();
-
+	
+	Set_Examples(4);
 }
 
 void mainwindowDlg::RunRegExp()
@@ -83,10 +81,10 @@ void mainwindowDlg::RunRegExp()
 			regx.SetPattern(t2.GetData());
 			
 			if((int)o1.GetData() == 0)
-				 n=regx.Replace(t, THISBACK(match_callback_fun));
-			else n=regx.ReplaceGlobal(t, THISBACK(match_callback_fun));
+				 n=regx.Replace(t, THISFN(match_callback_fun));
+			else n=regx.ReplaceGlobal(t, THISFN(match_callback_fun));
 			
-		break;			
+		break;
 	};
 		
 	
@@ -126,14 +124,14 @@ void mainwindowDlg::Set_Examples(int i)
 		case 3:
 			t1.SetData("A QUICK BROWN FOX JUMPS OVER THE LAZY DOG");
 			t2.SetData("(QUICK)");
-			t3.SetData("(SLOW)");		
+			t3.SetData("(SLOW)");
 			d2.SetData(1);
-		break;		
+		break;
 		
 		case 4:
 			t1.SetData("A QUICK BROWN FOX JUMPS OVER THE LAZY DOG");
 			t2.SetData("(QUICK)\\s+(BROWN)");
-			t3.SetData("(\\2ISH)(\\1)");		
+			t3.SetData("(\\2ISH)(\\1)");
 			d2.SetData(2);
 		break;
 					
@@ -141,8 +139,8 @@ void mainwindowDlg::Set_Examples(int i)
 		case 5:
 			t1.SetData("A QUICK BROWN FOX JUMPS OVER THE LAZY DOG");
 			t2.SetData("(\\w+)");
-			t3.SetData("THIS IS EXAMPLE OF THE USE OF CALLBACK FUNCTION");		
-			d2.SetData(3);				
+			t3.SetData("THIS IS EXAMPLE OF THE USE OF CALLBACK FUNCTION");
+			d2.SetData(3);
 		break;
 	}
 
@@ -155,5 +153,4 @@ GUI_APP_MAIN
 	mainwindowDlg w;
 	
 	w.Run();
-	
 }

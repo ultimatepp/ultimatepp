@@ -35,6 +35,7 @@ file
 	Exp.cpp,
 	PrettyUpp.cpp,
 	PrettyStd.cpp,
+	Scripts.cpp,
 	Pretty.cpp,
 	Visualise.cpp,
 	Data.cpp,

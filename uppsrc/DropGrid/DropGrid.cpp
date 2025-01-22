@@ -592,7 +592,7 @@ GridCtrl::ItemRect& DropGrid::AddIndex(Id id)
 	return list.AddIndex(id);
 }
 
-MultiButton::SubButton& DropGrid::AddButton(int type, const Callback &cb)
+MultiButton::SubButton& DropGrid::AddButton(int type, const Event<> &cb)
 {
 	MultiButton::SubButton& btn = drop.InsertButton(1);
 	
@@ -627,17 +627,17 @@ MultiButton::SubButton& DropGrid::AddButton(int type, const Callback &cb)
 	return btn;
 }
 
-MultiButton::SubButton& DropGrid::AddSelect(const Callback &cb)
+MultiButton::SubButton& DropGrid::AddSelect(const Event<> &cb)
 {
 	return AddButton(BTN_SELECT, cb);
 }
 
-MultiButton::SubButton& DropGrid::AddPlus(const Callback &cb)
+MultiButton::SubButton& DropGrid::AddPlus(const Event<> &cb)
 {
 	return AddButton(BTN_PLUS, cb);
 }
 
-MultiButton::SubButton& DropGrid::AddEdit(const Callback &cb)
+MultiButton::SubButton& DropGrid::AddEdit(const Event<> &cb)
 {
 	return AddButton(BTN_RIGHT, cb);
 }
@@ -647,7 +647,7 @@ MultiButton::SubButton& DropGrid::AddClear()
 	return AddButton(BTN_CLEAN, THISBACK(ClearValue));
 }
 
-MultiButton::SubButton& DropGrid::AddText(const char* label, const Callback& cb)
+MultiButton::SubButton& DropGrid::AddText(const char* label, const Event<>& cb)
 {
 	MultiButton::SubButton& btn = drop.InsertButton(1);
 	btn.SetLabel(label);

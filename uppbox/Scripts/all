@@ -14,7 +14,7 @@ mkdir ~/upp.tmp || true
 # bash ~/Scripts/www
 
 cd ~/upp.src
-git rev-list --count master >~/upp-revision
+git rev-list --count HEAD >~/upp-revision
 cd ~
 
 echo ------------------------- Win32

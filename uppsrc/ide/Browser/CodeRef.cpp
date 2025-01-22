@@ -118,6 +118,7 @@ void TopicEditor::MainTool(Bar& bar)
 	bar.Gap();
 	editor.InkTool(bar);
 	editor.PaperTool(bar);
+	editor.LastFormatTool(bar);
 	bar.Gap();
 	editor.LanguageTool(bar);
 	editor.SpellCheckTool(bar);

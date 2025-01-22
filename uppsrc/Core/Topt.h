@@ -165,8 +165,8 @@ template <class T> // backward compatiblity
 struct Moveable_ : TriviallyRelocatable<T> {};
 
 template <class T>
-inline constexpr bool is_trivially_relocatable = std::is_trivially_copyable_v<T> ||
-                                                 std::is_base_of_v<TriviallyRelocatable<T>, T>;
+inline constexpr bool is_trivially_relocatable = std::is_base_of_v<TriviallyRelocatable<T>, T> ||
+                                                 std::is_trivially_copyable_v<T>;
 
 template <class T>
 inline constexpr bool is_upp_guest = false;
@@ -180,6 +180,7 @@ inline typename std::enable_if_t<is_trivially_relocatable<T>> Relocate(T *dst, T
 template <class T>
 inline typename std::enable_if_t<!is_trivially_relocatable<T>> Relocate(T *dst, T *src)
 {
+	static_assert(is_upp_guest<T>);
 	new(dst) T(pick(*src));
 	Destruct(src);
 }
@@ -187,9 +188,10 @@ inline typename std::enable_if_t<!is_trivially_relocatable<T>> Relocate(T *dst, 
 template <class T>
 inline void InsertRelocate(T *dst, T *src, int n)
 {
-	if(is_trivially_relocatable<T>)
+	if constexpr(is_trivially_relocatable<T>)
 		memmove(dst, src, n * sizeof(T));
 	else {
+		static_assert(is_upp_guest<T>);
 		if(n <= 0)
 			return;
 		dst += n - 1;
@@ -206,9 +208,10 @@ inline void InsertRelocate(T *dst, T *src, int n)
 template <class T>
 inline void RemoveRelocate(T *dst, T *src, int n)
 {
-	if(is_trivially_relocatable<T>)
+	if constexpr(is_trivially_relocatable<T>)
 		memmove(dst, src, n * sizeof(T));
 	else {
+		static_assert(is_upp_guest<T>);
 		T *lim = src + n;
 		while(src != lim)
 			Relocate(dst++, src++);
@@ -218,9 +221,10 @@ inline void RemoveRelocate(T *dst, T *src, int n)
 template <class T>
 inline void Relocate(T *dst, T *src, int n)
 {
-	if(is_trivially_relocatable<T>)
+	if constexpr(is_trivially_relocatable<T>)
 		memcpy_t(dst, src, n);
 	else {
+		static_assert(is_upp_guest<T>);
 		T *lim = src + n;
 		while(src != lim)
 			Relocate(dst++, src++);

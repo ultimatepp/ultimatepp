@@ -167,9 +167,11 @@ CONSOLE_APP_MAIN
 		Execute(global, "main", INT_MAX);
 	}
 	catch(CParser::Error e) {
+		DDUMP(e);
 		Cout() << "ERROR: " << e << "\n";
 	}
 	
+	DDUMP(global);
 	DDUMP(global.Get("out"));
 	DDUMP(global.Get("out2"));
 	DDUMP(global.Get("out3"));

@@ -79,10 +79,11 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 name])&]
 [s5;:Upp`:`:SetConfigGroup`(const char`*`): [@(0.0.255) void]_[* SetConfigGroup]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 group])&]
 [s2;%% In POSIX systems, ConfigFile function default path is inside 
-`".cache`" directory. This function allows to set a name of subdirectory 
-of this directory where the another subdirectory named GetAppName() 
-specific to the application will store the configuration. Setting 
-group empty just removes whole level. Default value is `"u`+`+`".&]
+`".config`" directory. This function allows to set a name of 
+subdirectory of this directory where the another subdirectory 
+named GetAppName() specific to the application will store the 
+configuration. Setting group empty just removes whole level. 
+Default value is `"u`+`+`".&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:GetConfigGroup`(`): [_^Upp`:`:String^ String]_[* GetConfigGroup]()&]
@@ -105,8 +106,8 @@ tring]_[* GetExeFolder]()&]
 [s4; &]
 [s5;:UseHomeDirectoryConfig`(bool`): [@(0.0.255) void]_[* UseHomeDirectoryConfig]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;%% Sets the search path for configuration to either the current 
-users`' home folder or to the folder where the application`'s 
+[s2;%% In Win32 sets the search path for configuration to either 
+the current users`' home folder or to the folder where the application`'s 
 binary resides.&]
 [s2;%% [*@(129.0.0) b]...................................................use 
 home folder (true) or application folder (false)&]
@@ -116,6 +117,12 @@ home folder (true) or application folder (false)&]
 rectory]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Overrides the directory where configuration files are stored.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:SetConfigName`(const String`&`): [@(0.0.255) void] [* SetConfigName]([@(0.0.255) c
+onst] String[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Sets the name of configuration directory if applicable. If 
+not specified, GetAppName() is used.&]
+[s3; &]
 [s4; &]
 [s5;:ConfigFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file])&]

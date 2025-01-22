@@ -32,7 +32,7 @@ void  Crop(RasterEncoder& tgt, Raster& img, const Rect& rc);
 Image Crop(const Image& img, const Rect& rc);
 Image Crop(const Image& img, int x, int y, int cx, int cy);
 
-Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color);
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color = RGBAZero());
 
 Rect  FindBounds(const Image& m, RGBA bg = RGBAZero());
 Image AutoCrop(const Image& m, RGBA bg = RGBAZero());
@@ -218,7 +218,7 @@ struct ImageFilterKernel {
 
 	void Init(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
 	void Init(int filter, int src_sz, int tgt_sz);
-	
+
 	ImageFilterKernel() {}
 	ImageFilterKernel(double (*kfn)(double x), int a, int src_sz, int tgt_sz);
 };

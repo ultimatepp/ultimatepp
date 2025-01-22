@@ -370,6 +370,8 @@ Pdb::Pdb()
 	}
 	StringStream ss(WorkspaceConfigData("pdb-debugger"));
 	Load(callback(this, &Pdb::SerializeSession), ss);
+	
+	LoadPrettyScripts();
 }
 
 void Pdb::CopyStack()

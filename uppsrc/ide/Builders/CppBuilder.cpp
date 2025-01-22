@@ -560,6 +560,9 @@ Vector<String> RepoInfo(const String& package)
 		v = HostSys("git rev-parse HEAD");
 		if(v.GetCount())
 			info.Add("#define bmGIT_HASH " + AsCString(TrimBoth(v)));
+		v = HostSys("git rev-parse --abbrev-ref HEAD");
+		if(v.GetCount())
+			info.Add("#define bmGIT_BRANCH " + AsCString(TrimBoth(v)));
 		SetCurrentDirectory(h);
 	}
 	return info;

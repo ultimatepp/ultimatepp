@@ -409,7 +409,8 @@ void ChHostSkin()
 			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
-		ChSynthetic(button, text);
+		if(ChSynthetic(button, text))
+			RoundStyleArrows();
 
 		{
 			auto& s = ToolButton::StyleDefault().Write();

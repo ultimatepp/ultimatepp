@@ -78,7 +78,7 @@ PersonsDlg::PersonsDlg()
 	list.AddColumn(NAME, "Name");
 	list.AddColumn(LASTNAME, "Last Name");
 	list.AddColumn(AGE, "Age");
-	list.WhenLeftDouble = THISBACK(Edit);
+	list.WhenLeftDouble = THISFN(Edit);
 	list.SetOrderBy(AGE, NAME);
 	list.Query();
 }

@@ -89,7 +89,7 @@ struct RichPara {
 		Color   ink, paper;
 		String  link;
 		WString indexentry;
-		dword   sscript:2;
+		dword   sscript:2; // 1 superscript, 2 subscript
 		bool    capitals;
 		bool    dashed;
 

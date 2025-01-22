@@ -207,12 +207,12 @@ int RichTable::GetWidth(const RichStyles& st) const
 	
 	int sum = 0;
 	for(int i = 0; i < sz.cx; i++)
-		sum += format.column[i];
+		sum += format.column[i]; // sum of column ratios
 
 	int maxcx = 0;
 	for(int i = 0; i < sz.cx; i++)
 		maxcx = max(maxcx, (col[i] * sum + format.column[i] - 1) / format.column[i]);
-	
+	                                     //^^^^ round it up
 	return maxcx + (sz.cx + 1) * format.grid + format.lm + format.rm;
 }
 

@@ -305,12 +305,12 @@ is undefined (ASSERT in debug mode fails).&]
 [s4;%- &]
 [s5;:Value`:`:operator`(`)`(const char`*`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()
 ]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key])&]
-[s2; Save as GetAdd([%-*@3 key]).&]
+[s2; Same as GetAdd([%-*@3 key]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Value`:`:operator`(`)`(const Id`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator()](
 [@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 key])&]
-[s2; Save as GetAdd([%-*@3 key]).&]
+[s2; Same as GetAdd([%-*@3 key]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Value`:`:operator`=`(const Value`&`):%- [_^Value^ Value][@(0.0.255) `&]_[* operator`=](

@@ -171,7 +171,8 @@ with RGBAZero().&]
 [s5;:CanvasSize`(const Image`&`,int`,int`): [_^Image^ Image]_[* CanvasSize]([@(0.0.255) con
 st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 cy])&]
-[s2;%%  [%-*@3 img] [%-*@3 cx] [%-*@3 cy].&]
+[s2;%% Changes the size of [%-*@3 img]. If any areas have to be added, 
+they are filled with RGBAZero().&]
 [s3;%% &]
 [s4; &]
 [s5;:AssignAlpha`(const Image`&`,const Image`&`): [_^Image^ Image]_[* AssignAlpha]([@(0.0.255) c

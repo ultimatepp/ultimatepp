@@ -1,6 +1,6 @@
 #include "Designers.h"
 
-void XmlViewDes::CopyPath()
+void CopyXmlPath(TreeCtrl& tree)
 {
 	String path;
 	int id = tree.GetCursor();
@@ -13,26 +13,19 @@ void XmlViewDes::CopyPath()
 	WriteClipboardText(path);
 }
 
-String XmlViewDes::Load0(const String& data) {
-	XmlParser p(data);
-
-	String parsingError;
-	
-	try {
-		while(!p.IsEof())
-			Load0(0, p);
-	}
-	catch(const XmlError& e) {
-		parsingError = e;
-	}
-	
-	if(!parsingError.GetCount() && !tree.GetChildCount(0))
-		parsingError = "Not found any XML tags";
-	
-	return parsingError;
+void CopyXmlNode(TreeCtrl& tree)
+{
+	int id = tree.GetCursor();
+	if(id >= 0)
+		WriteClipboardText(~tree.GetValue(id));
 }
 
-void XmlViewDes::Load0(int parent, XmlParser& p)
+void XmlViewDes::CopyPath()
+{
+	CopyXmlPath(tree);
+}
+
+void XmlLoadTree(TreeCtrl& tree, int parent, XmlParser& p)
 {
 	if(p.IsTag()) {
 		String tag = p.ReadTag();
@@ -43,7 +36,7 @@ void XmlViewDes::Load0(int parent, XmlParser& p)
 		while(!p.End()) {
 			if(p.IsEof())
 				throw XmlError("Unexpected end of text");
-			Load0(parent, p);
+			XmlLoadTree(tree, parent, p);
 		}
 	}
 	else
@@ -60,6 +53,60 @@ void XmlViewDes::Load0(int parent, XmlParser& p)
 		tree.Add(parent, IdeCommonImg::XmlComment(), Null, NormalizeSpaces(p.ReadComment()));
 	else
 		throw XmlError("Unexpected input");
+}
+
+String XmlLoadTree(TreeCtrl& tree, XmlParser& p) {
+	String parsingError;
+	
+	try {
+		while(!p.IsEof())
+			XmlLoadTree(tree, 0, p);
+	}
+	catch(const XmlError& e) {
+		parsingError = e;
+	}
+	
+	if(!parsingError.GetCount() && !tree.GetChildCount(0))
+		parsingError = "Not found any XML tags";
+	
+	return parsingError;
+}
+
+String XmlLoadTree(TreeCtrl& tree, const String& data) {
+	XmlParser p(data);
+	return XmlLoadTree(tree, p);
+}
+
+String XmlViewDes::Load0(const String& data) {
+	return XmlLoadTree(tree, data);
+}
+
+void XmlViewDes::Load0(int parent, XmlParser& p)
+{
+	XmlLoadTree(tree, parent, p);
+}
+
+void XmlTreeMenu(Bar& bar, TreeCtrl& tree)
+{
+	bar.Add(CtrlImg::copy(), "Copy", [=, &tree] { CopyXmlNode(tree); }).Key(K_CTRL_C);
+	bar.Add("Copy path\t[double-click]", [=, &tree] { CopyXmlPath(tree); });
+}
+
+void SetupXmlTree(TreeCtrl& tree)
+{
+	tree.NoRoot();
+	tree.WhenLeftDouble = [=, &tree] { CopyJsonPath(tree); };
+	tree.WhenBar = [=, &tree](Bar& bar) { XmlTreeMenu(bar, tree); };
+}
+
+void XmlViewDes::EditMenu(Bar& menu)
+{
+	XmlTreeMenu(menu, tree);
+}
+
+XmlViewDes::XmlViewDes()
+{
+	SetupXmlTree(tree);
 }
 
 struct XmlDesModule : public IdeModule {

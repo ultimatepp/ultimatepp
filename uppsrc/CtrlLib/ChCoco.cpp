@@ -48,12 +48,17 @@ Image CocoImg(Color bg, int type, int value, int state)
 	return iw;
 }
 
-Image CocoImg(int type, int value = 0, int state = 0)
+Image CocoImg0(int type, int value = 0, int state = 0)
 {
 	Image m[2];
 	for(int i = 0; i < 2; i++)
 		m[i] = CocoImg(i ? Black() : White(), type, value, state);
-	Image h = CocoCrop(RecreateAlpha(m[0], m[1]));
+	return RecreateAlpha(m[0], m[1]);
+}
+
+Image CocoImg(int type, int value = 0, int state = 0)
+{
+	Image h = CocoCrop(CocoImg0(type, value, state));
 	int q = h.GetSize().cy / 4;
 	SetHotSpots(h, Point(q, q));
 	return h;
@@ -64,15 +69,33 @@ Color CocoColor(int k, Color bg = SColorFace())
 	return AvgColor(CocoImg(bg, COCO_NSCOLOR, k, 0));
 }
 
+static Vector<int>   s_so_ids;
+static Vector<Image> s_so_images;
+
 void SOImages(int imli, int type, int value)
 {
 	Image h[4];
-	h[0] = CocoImg(type, value, CTRL_NORMAL);
-	h[1] = CocoImg(type, value, CTRL_HOT); // same as Normal
-	h[2] = CocoImg(type, value, CTRL_PRESSED);
-	h[3] = CocoImg(type, value, CTRL_DISABLED);
-	for(int i = 0; i < 4; i++)
-		CtrlsImg::Set(imli++, Hot3(h[i]));
+	h[0] = CocoImg0(type, value, CTRL_NORMAL);
+	h[1] = CocoImg0(type, value, CTRL_HOT); // same as Normal
+	h[2] = CocoImg0(type, value, CTRL_PRESSED);
+	h[3] = CocoImg0(type, value, CTRL_DISABLED);
+	for(int i = 0; i < 4; i++) {
+		s_so_ids << imli++;
+		s_so_images << h[i];
+	}
+}
+
+void FinishSOImages()
+{ // make sure we are using the same bounds everywhere
+	Rect bounds = FindCocoBounds(s_so_images[0]);
+	for(int i = 1; i < s_so_images.GetCount(); i++)
+		bounds.Union(FindCocoBounds(s_so_images[0]));
+	
+	for(int i = 0; i < s_so_images.GetCount(); i++)
+		CtrlsImg::Set(s_so_ids[i], Hot3(Crop(s_so_images[i], bounds)));
+
+	s_so_ids.Clear();
+	s_so_images.Clear();
 }
 
 void CocoButton(Image *h, int type, int value)
@@ -122,9 +145,11 @@ void ChHostSkin()
 
 	SOImages(CtrlsImg::I_S0, COCO_RADIOBUTTON, 0);
 	SOImages(CtrlsImg::I_S1, COCO_RADIOBUTTON, 1);
+	FinishSOImages();
 	SOImages(CtrlsImg::I_O0, COCO_CHECKBOX, 0);
 	SOImages(CtrlsImg::I_O1, COCO_CHECKBOX, 1);
 	SOImages(CtrlsImg::I_O2, COCO_CHECKBOX, 2);
+	FinishSOImages();
 
 	CocoButton(Button::StyleNormal().Write(), COCO_BUTTON, 0);
 	CocoButton(Button::StyleOk().Write(), COCO_BUTTON, 1);
@@ -223,7 +248,7 @@ void ChHostSkin()
 
 	for(int i = 0; i < 8; i++) {
 		ImageDraw iw(100, 100);
-		const Button::Style& s = i < 4 ? Button::StyleNormal() : Button::StyleOk();
+		const Button::Style& s = i < 4 ? Button::StyleNormal() : Button::StyleEdge();
 		ChPaint(iw, 0, 0, 100, 100, s.look[i & 3]);
 		button100x100[i] = iw;
 		text[i] = s.monocolor[i & 3];

@@ -176,7 +176,7 @@ Image Crop(const Image& img, const Rect& rc)
 	return tgt;
 }
 
-Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color, bool co)
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color)
 {
 	Size sz = img.GetSize();
 	ImageBuffer ib(sz.cx + left + right, sz.cy + top + bottom);

@@ -4,7 +4,6 @@
 #include <ide/ide.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
-	Size   img_sz;
 	Image  img;
 	String filename;
 	
@@ -157,22 +156,33 @@ struct TreeViewDes : IdeDesigner, Ctrl {
 
 INITIALIZE(TreeViewDes)
 
+void   CopyXmlPath(TreeCtrl& tree);
+String XmlLoadTree(TreeCtrl& tree, XmlParser& p);
+String XmlLoadTree(TreeCtrl& tree, const String& data);
+void   SetupXmlTree(TreeCtrl& tree);
+
 struct XmlViewDes : TreeViewDes {
 	virtual String GetId() { return "XML"; }
 	virtual void   CopyPath();
 	virtual String Load0(const String& data);
+	virtual void   EditMenu(Bar& menu);
 
 	void   Load0(int parent, XmlParser& p);
+	
+	XmlViewDes();
 };
 
 INITIALIZE(XmlViewDes)
+
+void   SetupJsonTree(TreeCtrl& tree);
+void   CopyJsonPath(TreeCtrl& tree);
+String LoadJson(TreeCtrl& tree, const String& json);
 
 struct JsonViewDes : TreeViewDes {
 	virtual String GetId() { return "JSON"; }
 	virtual String Load0(const String& json);
 	virtual void   CopyPath();
-	
-	int AddNode(int parent_id, const Value& id, const String& name, const Value& v);
+	virtual void   EditMenu(Bar& menu);
 	
 	JsonViewDes();
 };

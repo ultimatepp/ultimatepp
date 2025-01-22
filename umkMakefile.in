@@ -1,9 +1,10 @@
 UPPDIR1 = ./uppsrc/
-UPPDIR2 = /home/cxl/.config/u++/umk/UppHub/gdal/
-UPPDIR3 = /home/cxl/.config/u++/umk/UppHub/eigen/
+UPPDIR2 = /home/cxl/.config/u++/theide/UppHub/gdal/
+UPPDIR3 = /home/cxl/.config/u++/theide/UppHub/eigen/
+UPPDIR4 = /home/cxl/.config/u++/theide/UppHub/Functions4U/
 
 UPPOUT = .cache/upp.out/
-CINC   =  -I$(UPPDIR1) -I$(UPPDIR2) -I$(UPPDIR3) `pkg-config --cflags libpng` `pkg-config --cflags freetype2` `pkg-config --cflags fontconfig` `pkg-config --cflags x11` `pkg-config --cflags xcb` `pkg-config --cflags expat` -I./ -I$(UPPOUT)
+CINC   =  -I$(UPPDIR1) -I$(UPPDIR2) -I$(UPPDIR3) -I$(UPPDIR4) `pkg-config --cflags libpng` `pkg-config --cflags freetype2` `pkg-config --cflags fontconfig` `pkg-config --cflags x11` `pkg-config --cflags xcb` `pkg-config --cflags expat` -I./ -I$(UPPOUT)
 Macro  =  -DflagGCC -DflagSHARED -DflagPOSIX -DflagLINUX
 CXX = c++
 LINKER = $(CXX)

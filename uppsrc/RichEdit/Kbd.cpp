@@ -64,12 +64,15 @@ bool RichEdit::Key(dword key, int count)
 				break;
 			}
 		}
+		SetLastCharFormat();
 		Remove(cursor, 1);
 		break;
 	case K_DELETE:
 		if(RemoveSelection()) return true;
-		if(cursor < text.GetLength() && !RemoveSpecial(cursor, cursor + 1, false))
+		if(cursor < text.GetLength() && !RemoveSpecial(cursor, cursor + 1, false)) {
+			SetLastCharFormat();
 			Remove(cursor, 1, true);
+		}
 		break;
 	case K_INSERT:
 		overwrite = !overwrite;
@@ -210,6 +213,7 @@ bool RichEdit::Key(dword key, int count)
 			Filter(txt);
 			Insert(cursor, txt, true);
 			Move(cursor + count, false);
+			SetLastCharFormat(f);
 			break;
 		}
 		return false;

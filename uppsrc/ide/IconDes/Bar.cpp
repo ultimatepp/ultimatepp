@@ -279,12 +279,12 @@ struct CachedIconImage : public Display {
 			return;
 		Size rsz = r.GetSize();
 		Size isz = m.GetSize();
-		if(isz.cx > 200 || isz.cy > 200)
+		if(isz.cx > 260 || isz.cy > 260)
 			m = IconDesImg::LargeImage();
 		else
 		if(2 * isz.cx <= rsz.cx && 2 * isz.cy <= rsz.cy) {
 			int n = min(rsz.cx / isz.cx, rsz.cy / isz.cy);
-			m = Magnify(m, n, n); // TODO: Cached!
+			m = Magnify(m, n, n);
 		}
 		else
 		if(isz.cx > r.GetWidth() || isz.cy > r.GetHeight())

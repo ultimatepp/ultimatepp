@@ -27,7 +27,7 @@ void RichPara::Smh(Lines& lines, HeightInfo *th, int cx) const
 	l.xpos = format.lm;
 	cx -= format.lm + format.rm;
 	l.xpos += lines.GetCount() == 1 ? lines.first_indent : lines.next_indent;
-	if(!l.withtabs)
+	if(!l.withtabs && cx != INT_MAX)
 		switch(format.align) {
 		case ALIGN_RIGHT:
 			l.xpos += cx - l.cx;

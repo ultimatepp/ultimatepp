@@ -21,9 +21,6 @@ public:
 	void Serialize(Stream& s);
 
 private:
-	String Load0(XmlParser& p);
-	void   Load0(int parent, XmlParser& p);
-	
 	void   Reset();
 };
 
@@ -51,16 +48,16 @@ XmlView::XmlView()
 
 	Add(xml.SizePos());
 	Add(view.SizePos());
-
-	xml.WhenLeftDouble = THISBACK(CopyPath);
+	
+	SetupXmlTree(xml);
 }
 
 void XmlView::Load(const String& txt)
 {
 	Reset();
-	
+
 	XmlParser p(txt);
-	String parsingError = Load0(p);
+	String parsingError = XmlLoadTree(xml, txt);
 	if(parsingError.GetCount() > 0) {
 		parsingError.Set(0, ToLower(parsingError[0]));
 		
@@ -86,68 +83,13 @@ void XmlView::Serialize(Stream& s)
 
 void XmlView::CopyPath()
 {
-	String path;
-	int id = xml.GetCursor();
-	while(id >= 0) {
-		String tag = xml.Get(id);
-		if(tag.GetCount())
-			path = "[" + AsCString(tag) + "]" + path;
-		id = xml.GetParent(id);
-	}
-	WriteClipboardText(path);
+	CopyXmlPath(xml);
 }
 
 void XmlView::Close()
 {
 	StoreToGlobal(*this, "XML view");
 	TopWindow::Close();
-}
-
-String XmlView::Load0(XmlParser& p) {
-	String parsingError;
-	
-	try {
-		while(!p.IsEof())
-			Load0(0, p);
-	}
-	catch(const XmlError& e) {
-		parsingError = e;
-	}
-	
-	if(!parsingError.GetCount() && !xml.GetChildCount(0))
-		parsingError = "Not found any XML tags";
-	
-	return parsingError;
-}
-
-void XmlView::Load0(int parent, XmlParser& p)
-{
-	if(p.IsTag()) {
-		String tag = p.ReadTag();
-		String txt = tag;
-		for(int i = 0; i < p.GetAttrCount(); i++)
-			txt << ' ' << p.GetAttr(i) << "=\"" << p[i] << "\"";
-		parent = xml.Add(parent, IdeCommonImg::XmlTag(), tag, txt);
-		while(!p.End()) {
-			if(p.IsEof())
-				throw XmlError("Unexpected end of text");
-			Load0(parent, p);
-		}
-	}
-	else
-	if(p.IsText())
-		xml.Add(parent, IdeCommonImg::XmlText(), Null, NormalizeSpaces(p.ReadText()));
-	else
-	if(p.IsPI())
-		xml.Add(parent, IdeCommonImg::XmlPI(), Null, NormalizeSpaces(p.ReadPI()));
-	else
-	if(p.IsDecl())
-		xml.Add(parent, IdeCommonImg::XmlDecl(), Null, NormalizeSpaces(p.ReadDecl()));
-	else
-	if(p.IsComment())
-		xml.Add(parent, IdeCommonImg::XmlComment(), Null, NormalizeSpaces(p.ReadComment()));
-	else
-		throw XmlError("Unexpected input");
 }
 
 void XmlView::Reset()

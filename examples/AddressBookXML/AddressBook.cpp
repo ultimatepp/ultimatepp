@@ -41,34 +41,34 @@ AddressBook::AddressBook()
 	tab.Add(search, "Search");
 	ActiveFocus(search.name);
 	search.oname = true;
-	search.oname <<= search.osurname <<= search.oaddress
-	             <<= search.oemail <<= THISBACK(SetupSearch);
+	search.oname ^= search.osurname ^= search.oaddress
+	             ^= search.oemail ^= THISFN(SetupSearch);
 	array.AddColumn("Name");
 	array.AddColumn("Surname");
 	array.AddColumn("Address");
 	array.AddColumn("Email");
-	modify.add <<= THISBACK(Add);
-	modify.change <<= THISBACK(Change);
-	search.search <<= THISBACK(Search);
+	modify.add << THISFN(Add);
+	modify.change << THISFN(Change);
+	search.search << THISFN(Search);
 	SetupSearch();
 	fs.AllFilesType();
-	menu.Set(THISBACK(MainMenu));
+	menu.Set(THISFN(MainMenu));
 }
 
 void AddressBook::FileMenu(Bar& bar)
 {
-	bar.Add("Open..", CtrlImg::open(), THISBACK(Open));
-	bar.Add("Save", CtrlImg::save(), THISBACK(Save));
-	bar.Add("Save as..", CtrlImg::save_as(), THISBACK(SaveAs));
+	bar.Add("Open..", CtrlImg::open(), THISFN(Open));
+	bar.Add("Save", CtrlImg::save(), THISFN(Save));
+	bar.Add("Save as..", CtrlImg::save_as(), THISFN(SaveAs));
 	bar.Separator();
-	bar.Add("Print", CtrlImg::print(), THISBACK(Print));
+	bar.Add("Print", CtrlImg::print(), THISFN(Print));
 	bar.Separator();
-	bar.Add("Quit", THISBACK(Quit));
+	bar.Add("Quit", THISFN(Quit));
 }
 
 void AddressBook::MainMenu(Bar& bar)
 {
-	bar.Add("File", THISBACK(FileMenu));
+	bar.Sub("File", THISFN(FileMenu));
 }
 
 void AddressBook::SetupSearch()

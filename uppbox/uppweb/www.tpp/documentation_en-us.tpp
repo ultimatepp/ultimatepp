@@ -90,6 +90,8 @@ Find and Replace]&]
 file in project (Find File)]&]
 [s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
 libraries in source form]&]
+[s0;l160; [^topic`:`/`/ide`/app`/dbg`_en`-us^ Debugger pretty printing 
+scripts]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
 templates]&]

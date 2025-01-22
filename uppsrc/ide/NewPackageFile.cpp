@@ -23,6 +23,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("iml", "Image file (icons)");
 	Type("icpp", "Initialization C++ source file");
 	Type("usc", "Escape script file (scripting TheIDE)");
+	Type("dbg", "Debugger pretty printing script file");
 	Type("witz", "Skylark template file (web framework files)");
 	Type("qtf", "U++ rich text file");
 	Type("t", "Translation file");

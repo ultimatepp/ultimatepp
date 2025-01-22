@@ -7,15 +7,33 @@ struct RepoDiff : DiffDlg {
 	
 	String repo_dir;
 	int    kind;
+	bool   modal = false;
+	int    line = 0;
 	
 	void LoadGit();
 	void Load();
 	void Set(const String& f);
+	void SyncTitle();
 	
 	typedef RepoDiff CLASSNAME;
 	
 	RepoDiff();
 };
+
+
+void RepoDiff::SyncTitle()
+{
+	String h = GetFileName(editfile);
+	String m = ~r.GetValue();
+	int q = m.FindAfter("@b \1");
+	if(q >= 0) {
+		m = m.Mid(q);
+		q = m.Find('\1');
+		if(q >= 0)
+			h << " " << m.Mid(0, q);
+	}
+	Title(h);
+}
 
 void RepoDiff::Set(const String& f)
 {
@@ -82,6 +100,8 @@ void RepoDiff::Set(const String& f)
 	}
 
 	DiffDlg::Set(f);
+	
+	SyncTitle();
 }
 
 void LoadBranches(DropList& branch, const String& dir)
@@ -232,19 +252,29 @@ void RepoDiff::Load()
 	if(bl.GetCount()) {
 		diff.SetPos(4700);
 		diff.right.WhenBlame = [=](const String& hash) {
-			for(int i = 0; i < r.GetCount(); i++) {
-				String h = r.GetKey(i);
-				String commit, path;
-				SplitTo(h, ':', commit, path);
-				if(commit == hash) {
-					r.SetIndex(i);
-					Load();
-					break;
+			auto FindHash = [&](RepoDiff& d) {
+				for(int i = 0; i < d.r.GetCount(); i++) {
+					String h = d.r.GetKey(i);
+					String commit, path;
+					SplitTo(h, ':', commit, path);
+					if(commit == hash) {
+						d.r.SetIndex(i);
+						d.Load();
+						break;
+					}
 				}
+			};
+			if(modal)
+				FindHash(*this);
+			else {
+				RepoDiff *rd = TheIde()->RunRepoDiff(editfile, line);
+				if(rd)
+					FindHash(*rd);
 			}
 		};
 	}
 	diff.right.PickBlame(pick(bl));
+	SyncTitle();
 }
 
 RepoDiff::RepoDiff()
@@ -268,17 +298,19 @@ void RunRepoDiff(const String& filepath, int line)
 	if(IsNull(filepath))
 		return;
 	RepoDiff dlg;
+	dlg.modal = true;
 	dlg.Set(filepath);
 	if(line >= 0)
 		dlg.diff.left.SetCursor(line + 1);
 	dlg.Execute();
 }
 
-void Ide::RunRepoDiff(const String& filepath, int line)
+RepoDiff *Ide::RunRepoDiff(const String& filepath, int line)
 {
 	if(IsNull(filepath))
-		return;
+		return nullptr;
 	RepoDiff& dlg = CreateNewWindow<RepoDiff>();
+	dlg.line = line;
 	dlg.Set(filepath);
 	if(line >= 0)
 		dlg.diff.left.SetCursor(line + 1);
@@ -289,4 +321,5 @@ void Ide::RunRepoDiff(const String& filepath, int line)
 		editor.SetFocus();
 	};
 	dlg.OpenMain();
+	return &dlg;
 }

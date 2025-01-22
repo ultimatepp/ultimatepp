@@ -173,7 +173,7 @@ void Ide::BTabs()
 	btabs.Add(IdeImg::errors, "Errors");
 	btabs.Add(IdeImg::calc, "Calculator");
 	if(bottomctrl)
-		btabs.Add(IdeImg::debug, "Debug");
+		btabs.Add(IdeCommonImg::Debugger, "Debug");
 	for(int i = 0; i < __countof(ffound); i++) {
 		if(!ffound[i])
 			break;

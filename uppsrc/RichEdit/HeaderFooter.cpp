@@ -26,6 +26,7 @@ void RichEditHdrFtr::TheBar(Bar& bar)
 	bar.Gap();
 	InkTool(bar);
 	PaperTool(bar);
+	LastFormatTool(bar);
 	bar.Gap();
 	LanguageTool(bar);
 	SpellCheckTool(bar);

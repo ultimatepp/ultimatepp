@@ -21,7 +21,10 @@ INITIALIZER(CtrlLib) {
 	
 	extGetSmartTextSize = GetSmartTextSize;
 
-	extDrawSmartText = DrawSmartText;
+	extDrawSmartText = [](Draw& draw, int x, int y, int cx, const char *text, Font font,
+                          Color ink, int accesskey, Color qtf_ink) {
+		DrawSmartText(draw, x, y, cx, text, font, ink, accesskey, qtf_ink);
+	};
 };
 
 }

@@ -203,7 +203,7 @@ BaseSetupDlg::BaseSetupDlg()
 	DirSelect(output, output_sel);
 	DirSelect(upv, upv_sel);
 	upv.NullText(GetHubDir());
-	output.NullText(GetUppOut());
+	output.NullText(GetDefaultUppOut());
 }
 
 bool BaseSetupDlg::Run(String& vars)

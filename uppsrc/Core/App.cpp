@@ -240,6 +240,14 @@ void SetConfigDirectory(const String& s)
 	SyncLogPath__();
 }
 
+static char sConfigName[_MAX_PATH + 1];
+
+void SetConfigName(const String& s)
+{
+	strcpy(sConfigName, s);
+	SyncLogPath__();
+}
+
 void CopyFolder(const char *dst, const char *src)
 {
 	RealizeDirectory(dst);
@@ -259,12 +267,40 @@ void CopyFolder(const char *dst, const char *src)
 	}
 }
 
+#ifdef PLATFORM_POSIX
+String GetUserConfigDir(bool *sandboxed)
+{
+	String cfgdir;
+	String h = GetExeFolder();
+	if(!sHomecfg)
+		while(h.GetCount() > 1 && DirectoryExists(h)) {
+			String pp = AppendFileName(h, ".config");
+			FindFile ff(pp);
+			if(ff && ff.IsFolder() && ff.CanWrite()) {
+				cfgdir = pp;
+				break;
+			}
+			h = GetFileFolder(h);
+		}
+	if(IsNull(cfgdir)) {
+		if(sandboxed)
+			*sandboxed = false;
+		cfgdir = GetEnv("XDG_CONFIG_HOME");
+	}
+	if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
+		cfgdir = GetHomeDirFile(".config");
+	
+	return cfgdir;
+}
+#endif
+
 String  ConfigFile(const char *file) {
 	if(*sConfigFolder)
 		return AppendFileName(sConfigFolder, file);
+	String name = *sConfigName ? sConfigName : GetAppName();
 #if defined(PLATFORM_WIN32)
 	if(sHomecfg) {
-		String p = GetHomeDirFile(GetAppName());
+		String p = GetHomeDirFile(name);
 		ONCELOCK
 			RealizeDirectory(p);
 		return AppendFileName(p, file);
@@ -274,29 +310,12 @@ String  ConfigFile(const char *file) {
 	static char cfgd[_MAX_PATH + 1];
 	static bool sandboxed = true;
 	ONCELOCK {
-		String cfgdir;
-		String h = GetExeFolder();
-		if(!sHomecfg)
-			while(h.GetCount() > 1 && DirectoryExists(h)) {
-				String pp = AppendFileName(h, ".config");
-				FindFile ff(pp);
-				if(ff && ff.IsFolder() && ff.CanWrite()) {
-					cfgdir = pp;
-					break;
-				}
-				h = GetFileFolder(h);
-			}
-		if(IsNull(cfgdir)) {
-			sandboxed = false;
-			cfgdir = GetEnv("XDG_CONFIG_HOME");
-		}
-		if(IsNull(cfgdir) || !DirectoryExists(cfgdir))
-			cfgdir = GetHomeDirFile(".config");
+		String cfgdir = GetUserConfigDir(&sandboxed);
 		if(*sConfigGroup)
 			cfgdir = AppendFileName(cfgdir, GetConfigGroup());
 		strcpy(cfgd, cfgdir);
 	}
-	String pp = AppendFileName(cfgd, GetAppName());
+	String pp = AppendFileName(cfgd, name);
 	bool exists = DirectoryExists(pp);
 	RealizeDirectory(pp);
 	if(!exists && !sandboxed) { // migrate config files from the old path
@@ -815,6 +834,9 @@ String GetShellFolder(const char *local, const char *users)
 		return ret;
 }
 
+String GetProgramsFolder()    { return String("/usr/bin"); }
+String GetAppDataFolder()     { return GetHomeDirectory(); }
+#ifndef PLATFORM_MACOS // in MacOS, we need objective-c and AppKit to get these, we do not want to do that in Core
 String GetDesktopFolder()
 {
 	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
@@ -824,14 +846,13 @@ String GetDesktopFolder()
 		return ret;
 }
 
-String GetProgramsFolder()    { return String("/usr/bin"); }
-String GetAppDataFolder()     { return GetHomeDirectory(); }
 String GetMusicFolder()	      { return GetShellFolder("XDG_MUSIC_DIR", "MUSIC"); }
 String GetPicturesFolder()    { return GetShellFolder("XDG_PICTURES_DIR", "PICTURES"); }
 String GetVideoFolder()       { return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS"); }
 String GetDocumentsFolder()   { return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS"); }
 String GetTemplatesFolder()   { return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR"); }
 String GetDownloadFolder()    { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR"); }
+#endif
 String GetProgramDataFolder() { return String("/var/opt"); }
 
 #endif

@@ -14,19 +14,8 @@ Vector<EscValue>& EscValue::CloneArray()
 		array->Release();
 		array = c;
 	}
-	hash = 0;
+	array->cached_hash = 0;
 	return array->array;
-}
-
-const Vector<EscValue>& EscValue::GetArray() const
-{
-	ASSERT(IsArray());
-	return array->array;
-}
-
-EscValue EscValue::ArrayGet(int i) const
-{
-	return GetArray()[i];
 }
 
 EscValue EscValue::ArrayGet(int i, int n) const
@@ -44,18 +33,13 @@ void EscValue::SetEmptyArray()
 {
 	Free();
 	type = ESC_ARRAY;
-	hash = 0;
 	array = new EscArray;
 }
 
-bool EscValue::ArraySet(int i, EscValue val)
+void EscValue::ArraySet(int i, EscValue val)
 {
 	LTIMING("ArraySet");
-	Vector<EscValue>& ta = CloneArray();
-	if(i > max_total || i - ta.GetCount() + total > max_total)
-		return false;
 	CloneArray().At(i) = val;
-	return true;
 }
 
 void EscValue::ArrayAdd(EscValue val)
@@ -66,13 +50,11 @@ void EscValue::ArrayAdd(EscValue val)
 	CloneArray().Add(val);
 }
 
-bool EscValue::Replace(int i, int n, EscValue a)
+void EscValue::Replace(int i, int n, EscValue a)
 {
 	LTIMING("Array Replace");
 	ASSERT(i >= 0);
 	Vector<EscValue>& ta = CloneArray();
-	if(i > max_total || i + n > max_total || i + n - ta.GetCount() + total > max_total)
-		return false;
 	if(i > 0)
 		ta.At(i - 1);
 	const Vector<EscValue>& sa = a.GetArray();
@@ -83,14 +65,13 @@ bool EscValue::Replace(int i, int n, EscValue a)
 		ta.Remove(i, -q);
 	for(q = 0; q < sa.GetCount(); q++)
 		ta[q + i] = sa[q];
-	return true;
 }
 
-bool EscValue::Append(EscValue a)
+void EscValue::Append(EscValue a)
 {
 	if(IsVoid())
 		SetEmptyArray();
-	return Replace(GetCount(), 0, a);
+	Replace(GetCount(), 0, a);
 }
 
 EscValue::operator WString() const
@@ -112,57 +93,11 @@ EscValue::operator WString() const
 void EscValue::InitString(const WString& s)
 {
 	type = ESC_ARRAY;
-	array = new EscArray();
-	hash = 0;
+	array = new EscArray;
 	Vector<EscValue>& a = array->array;
 	a.SetCount(s.GetCount());
 	for(int i = 0; i < s.GetCount(); i++)
 		a[i] = (int64)s[i];
-	total++;
-}
-
-int   EscValue::GetTotalCount()
-{
-	return total;
-}
-
-void  EscValue::SetMaxTotalCount(int n)
-{
-	max_total = n;
-}
-
-int   EscValue::GetMaxTotalCount()
-{
-	return max_total;
-}
-
-EscValue::EscValue()
-{
-	type = ESC_VOID; hash = 0; total++;
-}
-
-EscValue::EscValue(double n)
-{
-	number = n;
-	type = ESC_DOUBLE;
-	hash = 0;
-	total++;
-}
-
-EscValue::EscValue(int64 n)
-{
-	i64 = n;
-	type = ESC_INT64;
-	hash = 0;
-	total++;
-}
-
-EscValue::EscValue(int n)
-{
-	i64 = n;
-	type = ESC_INT64;
-	hash = 0;
-	total++;
 }
 
 }
