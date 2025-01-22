@@ -29,6 +29,8 @@ public:
 	virtual void  MouseMove(Point pos, dword keyflags);
 	virtual void  GotFocus();
 	virtual void  LostFocus();
+	virtual void  MouseEnter(Point p, dword keyflags);
+	virtual void  MouseLeave();
 
 	virtual void  SetData(const Value& value);
 	virtual Value GetData() const;
