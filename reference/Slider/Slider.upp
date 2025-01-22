@@ -1,10 +1,10 @@
-description "SliderCtrl example\377";
-
 uses
 	CtrlLib;
 
 file
-	main.cpp;
+	Slider.h,
+	main.cpp,
+	Slider.lay;
 
 mainconfig
 	"" = "GUI";

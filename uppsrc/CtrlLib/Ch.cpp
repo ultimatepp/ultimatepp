@@ -644,7 +644,7 @@ int ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 			 .Close();
 		});
 		CtrlImg::Set(CtrlImg::I_hthumb + i, sm);
-//		CtrlImg::Set(i == CTRL_PRESSED ? CtrlImg::I_vthumb1 : CtrlImg::I_vthumb, RotateClockwise(sm));
+		CtrlImg::Set(CtrlImg::I_vthumb + i, RotateClockwise(sm));
 		{
 			SyntheticTab(i, roundness, ink);
 		}
