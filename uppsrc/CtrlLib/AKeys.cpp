@@ -301,7 +301,7 @@ dword ParseKeyDesc(CParser& p)
 	ONCELOCK  {
 		extern Tuple<dword, const char *> KeyNames__[];
 		for(int i = 0; KeyNames__[i].a; i++) {
-			String n = KeyNames__[i].b;
+			String n = Filter(KeyNames__[i].b, CharFilterNoSpace);
 			int q = n.Find('\v');
 			if(q)
 				n = n.Mid(q + 1);
