@@ -28,10 +28,10 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 				void CloseData();
 
 			public:
-				Callback WhenPopDown;
-				Callback WhenClose;
-				Callback WhenCloseData;
-				Callback WhenCloseNoData;
+				Event<> WhenPopDown;
+				Event<> WhenClose;
+				Event<> WhenCloseData;
+				Event<> WhenCloseNoData;
 
 				typedef PopUpGrid CLASSNAME;
 
@@ -129,12 +129,12 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		GridCtrl::ItemRect& AddIndex(const char *name = "");
 		GridCtrl::ItemRect& AddIndex(Id id);
 
-		MultiButton::SubButton& AddButton(int type, const Callback &cb);
-		MultiButton::SubButton& AddSelect(const Callback &cb);
-		MultiButton::SubButton& AddPlus(const Callback &cb);
-		MultiButton::SubButton& AddEdit(const Callback &cb);
+		MultiButton::SubButton& AddButton(int type, const Event<> &cb);
+		MultiButton::SubButton& AddSelect(const Event<> &cb);
+		MultiButton::SubButton& AddPlus(const Event<> &cb);
+		MultiButton::SubButton& AddEdit(const Event<> &cb);
 		MultiButton::SubButton& AddClear();
-		MultiButton::SubButton& AddText(const char* label, const Callback& cb);
+		MultiButton::SubButton& AddText(const char* label, const Event<>& cb);
 		MultiButton::SubButton& GetButton(int n);
 		
 		int AddColumns(int cnt);
@@ -213,8 +213,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 
 		virtual Value Format(const Value& q) const;
 		
-		Callback WhenLeftDown;
-		Callback WhenDrop;
+		Event<> WhenLeftDown;
+		Event<> WhenDrop;
 
 		GridCtrl::ItemRect& AddRow(int n = 1, int size = -1);
 		DropGrid& Add() { AddRow(); return *this; }
