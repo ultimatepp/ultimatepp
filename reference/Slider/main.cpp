@@ -1,37 +1,36 @@
-#include <CtrlLib/CtrlLib.h>
+#include "Slider.h"
 
-using namespace Upp;
+Slider::Slider()
+{
+	CtrlLayout(*this, "Slider example");
+	
+	auto Show = [=] {
+		vslider_val = ~~vslider;
+		vslider_val2 = ~~vslider2;
+		hslider_val = ~~hslider;
+		hslider_val2 = ~~hslider2;
+	};
 
-struct App : TopWindow {
-	StaticRect        dynarect;
-	SliderCtrl        slider;
-	Label             text;
+	vslider.Range(100);
+	vslider << [=] { Show(); };
+	vslider <<= 0;
 
-	typedef App CLASSNAME;
+	vslider2.MinMax(100, 0);
+	vslider2 << [=] { Show(); };
+	vslider2 <<= 0;
 
-	App() {
-		Sizeable().Zoomable();
+	hslider.Range(100);
+	hslider << [=] { Show(); };
+	hslider <<= 0;
 
-		slider << [=] {
-			dynarect.SetRectX(50, ~slider);
-			text = "\1[C6*/@b " + AsString(~slider);
-		};
-
-		slider.Range(700);
-		slider <<= 250;
-
-		Add(slider.BottomPosZ(5, 30).HSizePos(10, 10));
-
-		dynarect.Color(SRed);
-		Add(dynarect.VSizePosZ(40, 40));
-
-		Add(text.LeftPosZ(0, 200).TopPosZ(0, 40));
-
-		slider.WhenAction();
-	}
-};
+	hslider2.MinMax(100, 0);
+	hslider2 << [=] { Show(); };
+	hslider2 <<= 0;
+	
+	Show();
+}
 
 GUI_APP_MAIN
 {
-	App().Run();
+	Slider().Run();
 }

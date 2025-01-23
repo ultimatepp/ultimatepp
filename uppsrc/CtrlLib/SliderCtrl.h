@@ -8,10 +8,11 @@ class SliderCtrl : public Ctrl {
 	int           ClientToSlider(int x) const;
 
 	int           HoVe(int  x, int  y) const;
-	int&          HoVeR(int& x, int& y) const;
 
 	int           Min() const     { return Upp::min(min, max); };
 	int           Max() const     { return Upp::max(min, max); };
+	int           ThumbSz() const;
+	int           SliderSz() const;
 
 public:
 	typedef SliderCtrl CLASSNAME;

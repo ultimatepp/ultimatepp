@@ -326,7 +326,7 @@ int  Grayscale(const Color& c)
 
 double Difference(Color c1, Color c2)
 {
-	return 2.75 * abs(c2.GetR() - c1.GetR()) + 5.4 * (c2.GetG() - c1.GetG()) + abs(c2.GetB() - c1.GetB());
+	return 2.75 * abs(c2.GetR() - c1.GetR()) + 5.4 * abs(c2.GetG() - c1.GetG()) + abs(c2.GetB() - c1.GetB());
 }
 
 bool IsDark(Color c)

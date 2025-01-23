@@ -19,14 +19,32 @@ bool SliderCtrl::IsVert() const
 	return GetSize().cx < GetSize().cy;
 }
 
-int  SliderCtrl::HoVe(int  x, int  y) const
+int  SliderCtrl::HoVe(int x, int y) const
 {
 	return IsVert() ? y : x;
 }
 
-int& SliderCtrl::HoVeR(int& x, int& y) const
+int SliderCtrl::ThumbSz() const
 {
-	return IsVert() ? y : x;
+	return HoVe(CtrlImg::hthumb().GetSize().cx, CtrlImg::vthumb().GetSize().cy);
+}
+
+int SliderCtrl::SliderSz() const
+{
+	Size sz = GetSize();
+	return HoVe(sz.cx, sz.cy) - ThumbSz();
+}
+
+int SliderCtrl::SliderToClient(int v) const
+{
+	if(IsNull(v))
+		return Null;
+
+	int sz = SliderSz();
+
+	v = iscale(clamp(v, Min(), Max()) - min, sz, max - min);
+
+	return HoVe(v, sz - v) + ThumbSz() / 2;
 }
 
 void SliderCtrl::Paint(Draw& w)
@@ -37,29 +55,41 @@ void SliderCtrl::Paint(Draw& w)
                                                                    : CTRL_NORMAL
                          : CTRL_DISABLED;
     int l = SliderToClient(min);
-    int t = Nvl(SliderToClient(value));
-    int h = SliderToClient(max) - l;
-    Color hl = SColorHighlight();
-    if(Difference(hl, Gray()) < 16)
-        hl = SBlack();
+    int t = Nvl(SliderToClient(value), l);
+    int h = SliderToClient(max);
+    Color c1 = SColorHighlight();
+    if(Difference(c1, Gray()) < 16)
+        c1 = SBlack();
+    Color c2 = Gray();
+    if(max < min)
+        Swap(c1, c2);
 	if(IsVert()) {
 		int half = size.cx >> 1;
-		w.DrawRect(half - DPI(1), l, DPI(2), t - l, hl);
-		w.DrawRect(half - DPI(1), t, DPI(2), h - t, Gray());
+		w.DrawRect(half - DPI(1), l, DPI(2), t - l, c1);
+		w.DrawRect(half - DPI(1), t, DPI(2), h - t, c2);
 		if(!IsNull(value))
-			w.DrawImage((size.cx - CtrlImg::vthumb().GetSize().cx) >> 1, t,
+			w.DrawImage((size.cx - CtrlImg::vthumb().GetSize().cx) >> 1, t - ThumbSz() / 2,
 			            CtrlImg::Get(CtrlImg::I_vthumb + ii));
 	}
 	else {
 		int half = size.cy >> 1;
-		w.DrawRect(l, half - DPI(1), t - l, DPI(2), hl);
-		w.DrawRect(t, half - DPI(1), h - t, DPI(2), Gray());
+		w.DrawRect(l, half - DPI(1), t - l, DPI(2), c1);
+		w.DrawRect(t, half - DPI(1), h - t, DPI(2), c2);
 		if(!IsNull(value))
-			w.DrawImage(t, (size.cy - CtrlImg::hthumb().GetSize().cy) >> 1,
+			w.DrawImage(t - ThumbSz() / 2, (size.cy - CtrlImg::hthumb().GetSize().cy) >> 1,
 			            CtrlImg::Get(CtrlImg::I_hthumb + ii));
 	}
 	if(HasFocus())
 		DrawFocus(w, size);
+}
+
+int SliderCtrl::ClientToSlider(int p) const
+{
+	int sz = SliderSz();
+	p -= ThumbSz() / 2;
+	if(IsVert())
+		p = sz - p;
+	return clamp(min + iscale(p, max - min, sz), Min(), Max());
 }
 
 bool SliderCtrl::Key(dword key, int repcnt)
@@ -91,7 +121,7 @@ void SliderCtrl::LeftDown(Point pos, dword keyflags)
 		UpdateActionRefresh();
 	}
 	else
-	if(p >= thumb && p < thumb + HoVe(CtrlImg::hthumb().GetSize().cx, CtrlImg::vthumb().GetSize().cy))
+	if(abs(p - thumb) <= ThumbSz() / 2)
 		SetCapture();
 	else
 	if(jump) {
@@ -100,7 +130,7 @@ void SliderCtrl::LeftDown(Point pos, dword keyflags)
 		UpdateActionRefresh();
 	}
 	else {
-		if( ( ( p < thumb) && (min == Min() ) ) || ( (p > thumb) && ( min == Max() ) ) )
+		if((min < max) != IsVert() ? p < thumb : p > thumb)
 			Dec();
 		else
 			Inc();
@@ -176,26 +206,6 @@ SliderCtrl& SliderCtrl::MinMax(int _min, int _max)
 		Refresh();
 	}
 	return *this;
-}
-
-int SliderCtrl::SliderToClient(int v) const
-{
-	if(IsNull(v))
-		return Null;
-	v = minmax(v, Min(), Max());
-
-	v = iscale(v - min, HoVe(GetSize().cx - CtrlImg::hthumb().GetSize().cx,
-		                     GetSize().cy - CtrlImg::vthumb().GetSize().cy), max - min);
-	return v;
-}
-
-int SliderCtrl::ClientToSlider(int p) const
-{
-	Size hsz = CtrlImg::hthumb().GetSize();
-	Size vsz = CtrlImg::vthumb().GetSize();
-	p -= HoVe(hsz.cx / 2, vsz.cy / 2);
-	return minmax(min + iscale(p, max - min,
-	                           HoVe(GetSize().cx - hsz.cx, GetSize().cy - vsz.cy)), Min(), Max());
 }
 
 void SliderCtrl::Dec()
