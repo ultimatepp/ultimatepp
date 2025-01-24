@@ -54,15 +54,15 @@ void SliderCtrl::Paint(Draw& w)
                                                       : HasMouse() ? CTRL_HOT
                                                                    : CTRL_NORMAL
                          : CTRL_DISABLED;
-    int l = SliderToClient(min);
-    int t = Nvl(SliderToClient(value), l);
-    int h = SliderToClient(max);
-    Color c1 = SColorHighlight();
-    if(Difference(c1, Gray()) < 16)
-        c1 = SBlack();
-    Color c2 = Gray();
-    if(max < min)
-        Swap(c1, c2);
+	int l = SliderToClient(min);
+	int t = Nvl(SliderToClient(value), l);
+	int h = SliderToClient(max);
+	Color c1 = SColorHighlight();
+	if(Difference(c1, Gray()) < 16)
+		c1 = SBlack();
+	Color c2 = Gray();
+	if(max < min)
+		Swap(c1, c2);
 	if(IsVert()) {
 		int half = size.cx >> 1;
 		w.DrawRect(half - DPI(1), l, DPI(2), t - l, c1);
