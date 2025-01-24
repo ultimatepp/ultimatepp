@@ -93,12 +93,13 @@ two convenience template aliases:&]
 [s0;%- &]
 [s5;:Upp`:`:Event:%- [@(0.0.255) template <typename... ][*@4 ArgTypes][@(0.0.255) > 
 using]_[* Event]_`=_Function<[@(0.0.255) void]_(ArgTypes[@(0.0.255) ...])>&]
-[s2; Creates alias for Function returning void. For example, [*C@5 Event<int, 
-String>] is equivalent of [*C@5 Function<void (int, String)>].&]
+[s2; Creates alias for Function returning [@(0.0.255) void]. For example, 
+[*C@5 Event<int, String>] is equivalent of [*C@5 Function<void (int, 
+String)>].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Gate`:`:typedef:%- [@(0.0.255) template <typename... ][*@4 ArgTypes][@(0.0.255) >
- using]_[* Gate]_`=_Function<[@(0.0.255) bool]_(ArgTypes[@(0.0.255) ...])>&]
+[s5;:Upp`:`:Gate:%- [@(0.0.255) template <typename... ][*@4 ArgTypes][@(0.0.255) > 
+using]_[* Gate]_`=_Function<[@(0.0.255) bool]_(ArgTypes[@(0.0.255) ...])>&]
 [s2; Creates alias for Function returning bool. For example, [*C@5 Gate<int, 
 String>] is equivalent of [*C@5 Function<bool (int, String)>]. 
 Note that empty Gate returns false (because empty Function returns 

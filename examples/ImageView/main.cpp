@@ -19,8 +19,6 @@ private:
 	void DirUp();
 
 public:
-	typedef ImageView CLASSNAME;
-
 	void Serialize(Stream& s);
 	void LoadDir(const char *d);
 	void LoadDir()                      { LoadDir(dir); }
@@ -115,12 +113,12 @@ ImageView::ImageView()
 	splitter.SetPos(2700);
 	Add(splitter.SizePos());
 
-	files.WhenEnterItem = THISBACK(Enter);
-	files.WhenLeftDouble = THISBACK(DoDir);
+	files.WhenEnterItem = [=] { Enter(); };
+	files.WhenLeftDouble = [=] { DoDir(); };
 	dirup.Height(max(CtrlImg::DirUp().GetSize().cy, Draw::GetStdFontCy() + 6));
 	dirup.SetImage(CtrlImg::DirUp());
 	dirup.NormalStyle();
-	dirup <<= THISBACK(DirUp);
+	dirup << [=] { DirUp(); };
 	files.AddFrame(dirup);
 
 	Sizeable().Zoomable();
