@@ -26,7 +26,8 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 				PrettyTreeNode(parent, MakeVal(p.data_type[0], p.data_ptr[0]), from);
 		}
 		if(pp.kind == CONTAINER) {
-			int n = int(min(pp.data_count, from + 10000) - from);
+			int chunk = pp.chunk;
+			int n = int(min(pp.data_count, from + chunk) - from);
 			Pretty p;
 			PrettyVal(val, from, n, p);
 
@@ -49,7 +50,7 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 						for(int j = 0; j < p.data_type.GetCount(); j++) {
 							if(j)
 								result.Cat(": ");
-							item[j].address = p.data_ptr[ii++];
+							item[j].address = p.data_ptr[p.separated_types ? j * n + i : ii++];
 							nv.val = item[j];
 							if(p.data_type.GetCount() > 1 && j == 0)
 								nv.key = item[0];
@@ -70,10 +71,11 @@ void Pdb::PrettyTreeNode(int parent, Pdb::Val val, int64 from)
 					int64 ii = n;
 					while(ii < pp.data_count) {
 						nv.from = ii;
+						nv.chunk = chunk;
 						Visual v;
-						v.Cat(String() << "[" << ii << ".." << min(pp.data_count - 1, ii + 9999) << "]", SGray);
+						v.Cat(String() << "[" << ii << ".." << min(pp.data_count - 1, ii + chunk - 1) << "]", SGray);
 						tree.Add(parent, Null, RawToValue(nv), RawPickToValue(pick(v)), true);
-						ii += 10000;
+						ii += chunk;
 					}
 				}
 			}
@@ -136,14 +138,14 @@ void Pdb::TreeExpand(int node)
 			if(val.type < 0 || val.ref > 0) {
 				int sz = SizeOfType(val.type);
 				val.address += sz * nv.from;
-				for(int i = 0; i < (nv.from ? 10000 : 40); i++) {
+				for(int i = 0; i < (nv.from ? nv.chunk : 40); i++) {
 					if(!TreeNodeExp(node, String() << "[" << i + nv.from << "]" , val, 0, SLtMagenta())) {
 						SaveTree();
 						return;
 					}
 					val.address += sz;
 				}
-				TreeNode(node, "[more]", val0, nv.from ? nv.from + 10000 : 40);
+				TreeNode(node, "[more]", val0, nv.from ? nv.from + nv.chunk : 40);
 				SaveTree();
 				return;
 			}

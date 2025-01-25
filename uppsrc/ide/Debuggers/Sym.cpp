@@ -368,6 +368,9 @@ const Pdb::Type& Pdb::GetType(int ti)
 					dword ch = children->ChildId[i];
 					dword tag = GetSymInfo(t.modbase, ch, TI_GET_SYMTAG);
 					dword kind = GetSymInfo(t.modbase, ch, TI_GET_DATAKIND);
+					if(tag == SymTagUDT)
+						t.member_type << GetTypeIndex(t.modbase, ch);
+					else
 					if(tag == SymTagData) {
 						String name = GetSymName(t.modbase, ch);
 						if(kind == DataIsMember) {

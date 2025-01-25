@@ -358,6 +358,8 @@ String SearchEnginesFile();
 
 int ApplyChanges(LineEdit& editor, const String& new_content);
 
+struct RepoDiff;
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -523,6 +525,8 @@ public:
 
 	String    editfile2;
 
+	String    scratch_back; // to get back from Alt-M scratchfile
+
 	Vector<String> tablru;
 	int            tabi;
 	bool           blocktabs;
@@ -656,6 +660,14 @@ public:
 	bool      win_deactivated = false;
 	bool      block_caret = false;
 	bool      bar_branch = true;
+	bool      search_downloads =
+#ifdef PLATFORM_MACOS
+		false
+#else
+		true
+#endif
+	;
+		
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -1005,7 +1017,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
-		void  RunRepoDiff(const String& filepath, int cursor = -1);
+		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);

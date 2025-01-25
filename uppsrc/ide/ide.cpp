@@ -610,7 +610,7 @@ void Ide::MakeIcon() {
 		int fh = 112;
 		Size sz(0, 0);
 		Font font;
-		while(fh > 64) {
+		while(fh > (IsUHDMode() ? 64 : 80)) {
 			font = StdFont(fh);
 			sz = GetTextSize(mp, font) + 8 * Size(4, 2);
 			if(sz.cx <= isz.cx)
@@ -621,7 +621,7 @@ void Ide::MakeIcon() {
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
-		idraw.DrawText(x + 2, y + 1, mp, font, Black);
+		idraw.DrawText(x + 12, y + 1, mp, font, Black);
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		if(state_icon)
 			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge256(),

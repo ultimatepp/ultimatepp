@@ -129,7 +129,7 @@ static GtkStateFlags sFlags;
 void Gtk_Free()
 {
 	if(sCtx)
-		g_object_unref(sCtx);
+		g_object_ref_sink(sCtx);
 	sCtx = NULL;
 }
 
@@ -258,7 +258,7 @@ Image Gtk_Icon(const char *icon_name, int size)
 		
 		Size sz = m.GetSize();
 		
-		g_object_unref(pixbuf);
+		g_object_ref_sink(pixbuf);
 	
 		return sz.cy > size && sz.cy ? Rescale(m, sz.cx * size / sz.cy, size) : m;
 	}
@@ -409,7 +409,8 @@ void ChHostSkin()
 			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
-		ChSynthetic(button, text);
+		if(ChSynthetic(button, text))
+			RoundStyleArrows();
 
 		{
 			auto& s = ToolButton::StyleDefault().Write();
@@ -447,7 +448,7 @@ void ChHostSkin()
 		gint minslider;
 		GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
 		gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
-		g_object_unref(proto);
+		g_object_ref_sink(proto);
 		if(!stepper)
 			s.arrowsize = 0;
 		Gtk_New("scrollbar.horizontal.bottom");
@@ -568,7 +569,7 @@ Image Gtk_Icon(const char *icon_name, int size)
 		
 		Size sz = m.GetSize();
 		
-		g_object_unref(pixbuf);
+		g_object_ref_sink(pixbuf);
 	
 		return sz.cy > size && sz.cy ? Rescale(m, sz.cx * size / sz.cy, size) : m;
 	}

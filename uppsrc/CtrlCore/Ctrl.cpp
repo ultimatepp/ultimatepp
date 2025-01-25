@@ -954,7 +954,7 @@ void Ctrl::ReSkin()
 		win->RefreshLayoutDeep();
 		win->DoSkin();
 		win->RefreshFrame();
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN32
 		win->UseImmersiveDarkModeForWindowBorder();
 #endif
 	}

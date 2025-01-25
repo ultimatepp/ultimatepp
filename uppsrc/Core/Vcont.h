@@ -138,8 +138,6 @@ template <class U> class Index;
 
 template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
-	static_assert(is_trivially_relocatable<T> || is_upp_guest<T>);
-	
 	T       *vector;
 	int      items;
 	int      alloc;

@@ -518,6 +518,7 @@ public:
 		};
 	}
 
+	virtual void Skin()      { drop.GetButton(0).SetMonoImage(Grayscale(CtrlsImg::DA())); }
 	virtual void GotFocus()  { T::GotFocus(); drop.RefreshFrame(); }
 	virtual void LostFocus() { T::LostFocus(); drop.RefreshFrame(); }
 	virtual Size GetMinSize() const { return drop.GetMinSize(); }

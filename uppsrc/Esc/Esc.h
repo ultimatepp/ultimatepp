@@ -21,9 +21,6 @@ class EscValue : Moveable<EscValue> {
 		RefCount()              { refcount = 1; }
 	};
 
-	int              type;
-	mutable hash_t   hash;
-
 	struct EscMap;
 	struct EscArray;
 
@@ -35,6 +32,8 @@ class EscValue : Moveable<EscValue> {
 		EscLambda     *lambda;
 	};
 
+	int                   type;
+
 	void                  Free();
 	void                  Assign(const EscValue& s);
 
@@ -43,16 +42,9 @@ class EscValue : Moveable<EscValue> {
 
 	VectorMap<EscValue, EscValue>& CloneMap();
 
-	static int             total;
-	static int             max_total;
-
 public:
-	static int             GetTotalCount();
-	static void            SetMaxTotalCount(int n);
-	static int             GetMaxTotalCount();
-
 	bool IsVoid() const                          { return type == ESC_VOID; }
-	EscValue();
+	EscValue()                                   { type = ESC_VOID; }
 
 	bool                   IsNumber() const      { return findarg(type, ESC_DOUBLE, ESC_INT64) >= 0; }
 	double                 GetNumber() const;
@@ -60,19 +52,19 @@ public:
 	int64                  GetInt64() const;
 	bool                   IsInt() const;
 	int                    GetInt() const;
-	EscValue(double n);
-	EscValue(int64 n);
-	EscValue(int n);
+	EscValue(double n)                           { number = n; type = ESC_DOUBLE; }
+	EscValue(int64 n)                            { i64 = n; type = ESC_INT64; }
+	EscValue(int n)                              { i64 = n; type = ESC_INT64; }
 
 	bool                    IsArray() const      { return type == ESC_ARRAY; }
 	const Vector<EscValue>& GetArray() const;
 	EscValue                ArrayGet(int i) const;
 	EscValue                ArrayGet(int i, int n) const;
-	bool                    ArraySet(int i, EscValue val);
-	bool                    Replace(int i, int n, EscValue a);
+	void                    ArraySet(int i, EscValue val);
+	void                    Replace(int i, int n, EscValue a);
 	void                    SetEmptyArray();
 	void                    ArrayAdd(EscValue val);
-	bool                    Append(EscValue a);
+	void                    Append(EscValue a);
 
 	operator WString() const;
 	operator String() const                     { return operator WString().ToString(); }
@@ -116,20 +108,48 @@ public:
 
 struct EscValue::EscArray : EscValue::RefCount {
 	Vector<EscValue> array;
+	mutable hash_t   cached_hash = 0;
 
 	void     Retain()        { AtomicInc(refcount); }
 	void     Release()       { if(AtomicDec(refcount) == 0) delete this; }
 };
 
+inline
+const Vector<EscValue>& EscValue::GetArray() const
+{
+	ASSERT(IsArray());
+	return array->array;
+}
+
+inline
+EscValue EscValue::ArrayGet(int i) const
+{
+	return GetArray()[i];
+}
+
 struct EscValue::EscMap : EscValue::RefCount {
 	VectorMap<EscValue, EscValue> map;
 	int                           count;
+	mutable hash_t                cached_hash = 0;
 
 	void     Retain()        { AtomicInc(refcount); }
 	void     Release()       { if(AtomicDec(refcount) == 0) delete this; }
 
 	EscMap()                 { count = 0; }
 };
+
+inline
+const VectorMap<EscValue, EscValue>& EscValue::GetMap() const
+{
+	ASSERT(IsMap());
+	return map->map;
+}
+
+inline
+EscValue EscValue::MapGet(EscValue key) const
+{
+	return GetMap().Get(key, EscValue());
+}
 
 struct EscHandle {
 	Atomic   refcount;
@@ -177,14 +197,20 @@ inline hash_t GetHashValue(const EscValue& v)
 bool     IsTrue(const EscValue& a);
 
 void     SkipBlock(CParser& p);
-EscValue ReadLambda(CParser& p);
+EscValue ReadLambda(CParser& p, bool args = true, const char *alt_args = nullptr);
 EscValue ReadLambda(const char *s);
 
 struct Esc : public CParser {
 	struct SRVal : Moveable<SRVal> {
 		EscValue *lval;
 		EscValue  rval;
-		EscValue  sbs;
+		struct Subscript : Moveable<Subscript> {
+			EscValue i1;
+			EscValue i2;
+			int      slice = 0; // 0 - simple index, 1 - ',' slice, 2 - ':' slice
+		};
+		WithDeepCopy<Vector<Subscript>> subscript;
+//		EscValue  sbs;
 
 		SRVal()                    { lval = NULL; }
 		SRVal(const EscValue& v)   { lval = NULL; rval = v; }
@@ -201,21 +227,19 @@ struct Esc : public CParser {
 	int      skipexp;
 	int      loop;
 	bool     no_break, no_return, no_continue;
-	int&     op_limit;
+	int64&   op_limit;
 	int      r_stack_level;
 	EscValue return_value;
 
 	static int stack_level;
 
-	void       OutOfMemory();
-
-	void       TestLimit();
+	void       Limit(int64 count = 1);
 	double     DoCompare(const EscValue& a, const EscValue& b, const char *op);
 	double     DoCompare(const SRVal& a, const char *op);
 	String     ReadName();
 	EscValue   ExecuteLambda(const String& id, EscValue lambda, SRVal self, Vector<SRVal>& arg);
 
-	void       Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscValue& src);
+	void       Assign(EscValue& val, const Vector<SRVal::Subscript>& sbs, int si, const EscValue& src);
 
 	EscValue   Get(const SRVal& val);
 	void       Assign(const SRVal& val, const EscValue& src);
@@ -256,7 +280,7 @@ struct Esc : public CParser {
 
 	void  Run();
 
-	Esc(ArrayMap<String, EscValue>& global, const char *s, int& oplimit,
+	Esc(ArrayMap<String, EscValue>& global, const char *s, int64& oplimit,
 	    const String& fn, int line = 1)
 	: CParser(s, fn, line), global(global), op_limit(oplimit)
 	{ r_stack_level = stack_level;  skipexp = false; }
@@ -264,11 +288,11 @@ struct Esc : public CParser {
 };
 
 struct EscEscape {
-	Esc&             esc;
-	EscValue         self;
+	Esc&              esc;
+	EscValue          self;
 	Array<EscValue>& arg;
-	EscValue         ret_val;
-	String           id;
+	EscValue          ret_val;
+	String            id;
 
 	EscValue&    operator[](int i)             { return arg[i]; }
 	int          GetCount() const              { return arg.GetCount(); }
@@ -307,13 +331,14 @@ void StdLib(ArrayMap<String, EscValue>& global);
 void     LambdaArgs(CParser& p, EscLambda& l);
 
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
-                 const EscValue& lambda, Vector<EscValue>& arg, int oplimit = 50000);
+                 const EscValue& lambda, Vector<EscValue>& arg, int64 oplimit = 50000);
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
-                 const char *name, Vector<EscValue>& arg, int oplimit = 50000);
-EscValue Execute(ArrayMap<String, EscValue>& global, const char *name, int oplimit = 50000);
+                 const char *name, Vector<EscValue>& arg, int64 oplimit = 50000);
+EscValue Execute(ArrayMap<String, EscValue>& global, const char *name, int64 oplimit = 50000);
 
-EscValue Evaluatex(const char *expression, ArrayMap<String, EscValue>& global, int oplimit = 50000);
-EscValue Evaluate(const char *expression, ArrayMap<String, EscValue>& global, int oplimit = 50000);
+EscValue Evaluatexl(const char *expression, ArrayMap<String, EscValue>& global, int64& oplimit);
+EscValue Evaluatex(const char *expression, ArrayMap<String, EscValue>& global, int64 oplimit = 50000);
+EscValue Evaluate(const char *expression, ArrayMap<String, EscValue>& global, int64 oplimit = 50000);
 
 EscValue EscFromStdValue(const Value& v);
 Value    StdValueFromEsc(const EscValue& v);
@@ -323,7 +348,7 @@ bool     IsDate(const EscValue& v);
 bool     IsTime(const EscValue& v);
 
 String   Expand(const String& doc, ArrayMap<String, EscValue>& global,
-                int oplimit = 50000, String (*format)(const Value& v) = StdFormat);
+                int64 oplimit64 = 50000, String (*format)(const Value& v) = StdFormat);
 
 }
 

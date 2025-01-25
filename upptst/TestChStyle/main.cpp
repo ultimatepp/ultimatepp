@@ -175,6 +175,20 @@ TestChStyle::TestChStyle()
 	};
 	
 	FillTree(droptree.TreeObject());
+	
+	vslider.Range(100);
+	vslider << [=] { vslider_val = ~~vslider; };
+
+	vslider2.MinMax(100, 0);
+	vslider2 << [=] { vslider_val2 = ~~vslider2; };
+
+	hslider.Range(100);
+	hslider << [=] { hslider_val = ~~hslider; };
+
+	hslider2.MinMax(100, 0);
+	hslider2 << [=] { hslider_val2 = ~~hslider2; };
+	
+	Sizeable();
 }
 
 GUI_APP_MAIN

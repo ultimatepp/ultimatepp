@@ -11,54 +11,75 @@
 #include <build_info.h>
 #endif
 
-String SplashCtrl::GenerateVersionInfo(char separator)
+String SplashCtrl::GenerateVersionInfo(bool qtf)
 {
 	String h;
 	
-	h << "Version: " << GenerateVersionNumber();
+	char separator = qtf ? '\n' : ' ';
+
+#ifdef bmGIT_HASH
+	String rev = bmGIT_HASH;
+	String dr = rev;
+	if(dr.GetCount() > 8)
+		dr.Trim(8);
+	h << "Revision: ";
+	if(qtf)
+		h << "\1[^https://github.com/ultimatepp/ultimatepp/commit/" << rev << "^ ";
+	h << dr;
+	if(qtf)
+		h << "]\1";
 	h << separator;
+#endif
+
+	h << "Build: " << GenerateVersionNumber();
+#ifdef bmGIT_BRANCH
+	h << " " << bmGIT_BRANCH;
+	h << separator;
+#endif
+
 	if(sizeof(void *) == 8)
-		h << "(64 bit)";
+		h << "64 bit";
 	else
-		h << "(32 bit)";
+		h << "32 bit";
 #ifdef _MSC_VER
-	h << " (MSC)";
+	h << " MSC";
 #endif
 #if __GNUC__
 #if __clang__
-	h << " (CLANG)";
+	h << " CLANG";
 #else
-	h << " (GCC)";
+	h << " GCC";
 #endif
 #endif
 
 #if __cplusplus >= 202300
-	h << " (C++23)";
+	h << " C++23";
 #elif __cplusplus >= 202000
-	h << " (C++20)";
+	h << " C++20";
 #elif __cplusplus >= 201700
-	h << " (C++17)";
+	h << " C++17";
 #elif __cplusplus >= 201400
-	h << " (C++14)";
+	h << " C++14";
 #elif __cplusplus >= 201100
-	h << " (C++11)";
+	h << " C++11";
 #endif
 
 #if CPU_ARM
-	h << " (ARM)";
+	h << " ARM";
 #endif
 
 #if CPU_SIMD
-	h << " (SIMD)";
+	h << " SIMD";
 #endif
 
 #ifdef GUI_GTK
-	h << " (Gtk::" << ToString(GdkBackend::Get()) << ")";
+	h << " Gtk::" << ToString(GdkBackend::Get());
 #endif
 #ifdef FLATPAK
-	h << " (Flatpak)";
+	h << " Flatpak";
 #endif
 	h << separator;
+
 #ifdef bmTIME
 	h << "Compiled: " << bmTIME;
 #endif
@@ -85,7 +106,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Image logo = IdeImg::logo();
 	Size  isz = logo.GetSize();
 	ImageCtrl& l = ctrl.Create<ImageCtrl>();
-	Label& v1 = ctrl.Create<Label>();
+	RichTextCtrl& v1 = ctrl.Create<RichTextCtrl>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
 
@@ -100,7 +121,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		}
 
 	String h;
-	h << GenerateVersionInfo() << "\n";
+	h << "[A+60 \1" << GenerateVersionInfo(true) << "\n";
 	h << "Using: " << MemoryUsedKb()
 #ifdef PLATFORM_COCOA
 		<< " KB of U++ heap\n";
@@ -112,9 +133,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(IsUHDMode())
 		h << "UHD mode\n";
 	v1 = h;
-	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 6);
-	v1.SetFont(Arial(DPI(10)));
-	v1.SetInk(SColorText());
+	v1.HSizePos(DPI(250), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 8);
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
 	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));

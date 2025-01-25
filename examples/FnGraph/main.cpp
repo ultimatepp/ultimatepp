@@ -139,10 +139,6 @@ struct FnGraph : public TopWindow {
 	int        zoom = 9;
 	EditString expression; // function to display
 	
-	void RefreshExpression() { Refresh(); }
-	
-	typedef FnGraph CLASSNAME;
-	
 	FnGraph();
 };
 
@@ -150,7 +146,7 @@ FnGraph::FnGraph()
 {
 	Title("Graph of a function");
 	Add(expression.TopPos(0).HSizePos()); // place widget to the top, horizontally fill the window
-	expression << THISBACK(RefreshExpression); // when expression changes, repaint the graph
+	expression << [=] { Refresh(); }; // when expression changes, repaint the graph
 	Sizeable().Zoomable(); // make the window resizable
 }
 

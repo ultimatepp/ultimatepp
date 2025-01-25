@@ -153,8 +153,8 @@ String SelectInsertFile()
 	return SelectFileOpen(
 		"All files (*.*)\t*.*\n"
 		"Graphics files (*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg)\t*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg\n"
-		"Source files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js)\t"
-			"*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js\n"
+		"Source files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.dbg *.rc *.brc *.upt *.witz *.js)\t"
+			"*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.dbg *.rc *.brc *.upt *.witz *.js\n"
 		"Web files (*.js *.css *.html *.htm *.htmls)\t*.js *.css *.html *.htm *.htmls\n"
 		"Data files (*.csv *.xml *.json)\t*.csv *.xml *.json\n"
 		"Text files (*.txt *.log *.info)\t*.txt *.log *.info\n"

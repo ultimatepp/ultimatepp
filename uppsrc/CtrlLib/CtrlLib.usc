@@ -1,5 +1,4 @@
 namespace Upp;
-namespace Upp;
 
 enum_property Frame {
 	"NullFrame()",

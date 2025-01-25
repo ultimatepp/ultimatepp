@@ -18,7 +18,7 @@ void ToolTip::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	w.DrawRect(sz, SColorInfo);
-	DrawSmartText(w, 2, 2, sz.cx - 4, text, StdFont(), SColorInfoText());
+	DrawSmartText(w, 2, 2, sz.cx - 4, text, StdFont(), SColorInfoText(), 0, Null, IsDark(SColorInfo()));
 }
 
 void ToolTip::PopUp(Ctrl *owner, Point p, bool effect)

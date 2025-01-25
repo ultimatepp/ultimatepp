@@ -120,9 +120,9 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	}
 
 	makefile.config << outdir << " = $(UPPOUT)"
-		<< GetMakePath(AdjustMakePath(String().Cat() << package << '/' << method << '-' << Join(x, "-") << '/')) << "\n"
+		<< GetMakePath(AdjustMakePath(String().Cat() << package << '/' << GetFileTitle(method) << '-' << Join(x, "-") << '/')) << "\n"
 		<< macros << " = " << macdef << "\n";
-
+		
 	makefile.install << " \\\n\t$(" << outdir << ")";
 	makefile.rules << "$(" << outdir << "):\n\tmkdir -p $(" << outdir << ")\n\n";
 

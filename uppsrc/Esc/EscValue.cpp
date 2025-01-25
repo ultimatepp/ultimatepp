@@ -1,6 +1,5 @@
 #include <Esc/Esc.h>
 
-
 namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
@@ -19,9 +18,6 @@ String EscTypeName(int sv_type)
 	}
 }
 
-int EscValue::total;
-int EscValue::max_total = 1000000;
-
 void EscValue::Free()
 {
 	LTIMING("Free");
@@ -32,13 +28,11 @@ void EscValue::Free()
 	if(type == ESC_LAMBDA)
 		lambda->Release();
 	type = ESC_VOID;
-	hash = 0;
 }
 
 EscValue::~EscValue()
 {
 	LTIMING("~EscValue");
-	total--;
 	Free();
 }
 
@@ -46,7 +40,6 @@ void EscValue::Assign(const EscValue& s)
 {
 	LTIMING("Assign");
 	type = s.type;
-	hash = s.hash;
 	switch(type) {
 	case ESC_ARRAY:
 		array = s.array;
@@ -81,7 +74,6 @@ EscValue::EscValue(const EscValue& s)
 {
 	LTIMING("Sval(Sval)");
 	Assign(s);
-	total++;
 }
 
 EscLambda& EscValue::CreateLambda()
@@ -89,7 +81,6 @@ EscLambda& EscValue::CreateLambda()
 	Free();
 	lambda = new EscLambda;
 	type = ESC_LAMBDA;
-	hash = 0;
 	return *lambda;
 }
 
@@ -115,34 +106,33 @@ int EscValue::GetCount() const
 hash_t EscValue::GetHashValue() const
 {
 	LTIMING("GetHashValue");
-	if(hash == 0) {
-		switch(type) {
-		case ESC_VOID:
-			hash = 1;
-			break;
-		case ESC_DOUBLE:
-			hash = UPP::GetHashValue(number) | 0x80000;
-			break;
-		case ESC_INT64:
-			hash = UPP::GetHashValue(i64) | 0x80000;
-			break;
-		case ESC_ARRAY:
+	switch(type) {
+	case ESC_VOID:
+		return 1;
+	case ESC_DOUBLE:
+		return Upp::GetHashValue(number);
+	case ESC_INT64:
+		return Upp::GetHashValue(i64);
+	case ESC_ARRAY:
+		if(!array->cached_hash) {
+			CombineHash h;
 			for(int i = 0; i < array->array.GetCount(); i++)
-				hash = hash ^ array->array[i].GetHashValue();
-			hash |= 0x40000;
-			break;
-		case ESC_MAP:
-			for(int i = 0; i < map->map.GetCount(); i++)
-				if(!map->map[i].IsVoid())
-					hash ^= map->map.GetKey(i).GetHashValue() ^ map->map[i].GetHashValue();
-			hash |= 0x8000000;
-			break;
-		case ESC_LAMBDA:
-			hash = UPP::GetHashValue(lambda->code) | 0x4000000;
-			break;
+				h << array->array[i].GetHashValue();
+			array->cached_hash = h | 0x4000000;
 		}
+		return array->cached_hash;
+	case ESC_MAP:
+		if(!map->cached_hash) {
+			CombineHash h;
+			for(int i = 0; i < map->map.GetCount(); i++)
+				h << map->map.GetKey(i).GetHashValue() << map->map[i].GetHashValue();
+			map->cached_hash = h | 0x4000000;
+		}
+		return map->cached_hash;
+	case ESC_LAMBDA:
+		return Upp::GetHashValue(lambda->code);
 	}
-	return hash;
+	return 0;
 }
 
 template <class T>

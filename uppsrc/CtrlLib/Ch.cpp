@@ -9,28 +9,69 @@ namespace Upp {
 #define IMAGEFILE <CtrlLib/Ctrls.iml>
 #include <Draw/iml_source.h>
 
+void RoundStyleArrows()
+{
+	CtrlImg::Set(CtrlImg::I_smallup, CtrlImg::smallup_n());
+	CtrlImg::Set(CtrlImg::I_smalldown, MirrorVert(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_smallleft, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_smallright, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlImg::Set(CtrlImg::I_spinup, CtrlImg::spinup_n());
+	CtrlImg::Set(CtrlImg::I_spindown, MirrorVert(CtrlImg::spinup_n()));
+
+	CtrlsImg::Set(CtrlsImg::I_UA, CtrlImg::smallup_n());
+	CtrlsImg::Set(CtrlsImg::I_DA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_LA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_RA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_SpU, CtrlImg::spinup_n());
+	CtrlsImg::Set(CtrlsImg::I_SpD, MirrorVert(CtrlImg::spinup_n()));
+
+	CtrlsImg::Set(CtrlsImg::I_kUA, CtrlImg::smallup_n());
+	CtrlsImg::Set(CtrlsImg::I_kDA, MirrorVert(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kLA, RotateAntiClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kRA, RotateClockwise(CtrlImg::smallup_n()));
+	CtrlsImg::Set(CtrlsImg::I_kSpU, CtrlImg::spinup_n());
+	CtrlsImg::Set(CtrlsImg::I_kSpD, MirrorVert(CtrlImg::spinup_n()));
+}
+
+Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke, Color pen)
+{
+	int radius = (width - 2 * margin) / 2;
+	int cx = width / 2;
+	
+	ImagePainter sw(width, width + 1);
+	
+	sw.Clear();
+	sw.Move(margin, radius + margin)
+	  .Arc(cx, radius + margin, radius, radius, -M_PI, M_PI)
+	  .Arc(cx, radius + margin + 1, radius, radius, 0, M_PI)
+	  .Fill(fill)
+	  .Stroke(stroke, pen);
+
+	return WithHotSpots(sw.GetResult(), margin, radius + margin, width - margin - 1, radius + margin + 1);
+}
+
 Color AdjustColor(Color c, int adj)
 {
 	return Color(clamp(c.GetR() + adj, 0, 255),
 	             clamp(c.GetG() + adj, 0, 255),
 	             clamp(c.GetB() + adj, 0, 255));
-};
+}
 
 Color FaceColor(int adj)
 {
 	return AdjustColor(SColorFace(), adj);
-};
+}
 
 void SyntheticTab(int i, int roundness, Color ink, int pen)
 {
 	TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
-	s.body = MakeButton(0, FaceColor(8), DPI(1), ink);
+	s.body = MakeButton(0, FaceColor(8), pen, ink);
 	Image t = MakeButton(roundness, FaceColor(decode(i, CTRL_NORMAL, -20,
 	                                                    CTRL_HOT, 2,
 	                                                    CTRL_PRESSED, 8,
-	                                                    -8)), DPI(1), ink,
+	                                                    -8)), pen, ink,
 	                                                    CORNER_TOP_LEFT|CORNER_TOP_RIGHT);
-	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - DPI(3)), DPI(3));
+	s.first[i] = s.last[i] = s.both[i] = s.normal[i] = ChHot(Crop(t, 0, 0, t.GetWidth(), t.GetHeight() - max(pen, roundness)), DPI(3));
 	s.margin = 0;
 	s.sel = Rect(0, pen, 0, pen);
 	s.extendleft = 2 * pen;
@@ -453,7 +494,7 @@ Image WithBottomLine(const Image& m, Color c, int w)
 	return WithRect(m, 0, m.GetHeight() - w, m.GetWidth(), w, c);
 }
 
-void ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
+int ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 {
 	auto DPI = [&](int i) { return dpi * i; };
 	int roundness = DPI(3);
@@ -587,29 +628,29 @@ void ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 			s.bound = true;
 			s.nomargins = true;
 		}
-		if(i == CTRL_NORMAL || i == CTRL_PRESSED) {
-			Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness,
-			                       CreateImage(Size(10, 10), GrayColor(224 - 20 * i)),
-			                       lw, ink, [&](Painter& w, const Rectf& r) {
-				double cx = r.GetWidth();
-				double cy = r.GetHeight();
-				double uy = 0.4 * cy;
-				double by = 0.85 * cy;
-				double uq = 0.5 * uy;
-				w.Move(r.left, r.top + by)
-				 .Line(r.left, r.top + uy)
-				 .Quadratic(r.left, r.top + uq, r.left + cx / 2, r.top)
-				 .Quadratic(r.left + cx, r.top + uq, r.left + cx, r.top + uy)
-				 .Line(r.left + cx, r.top + by)
-				 .Close();
-			});
-			CtrlImg::Set(i == CTRL_PRESSED ? CtrlImg::I_hthumb1 : CtrlImg::I_hthumb, sm);
-			CtrlImg::Set(i == CTRL_PRESSED ? CtrlImg::I_vthumb1 : CtrlImg::I_vthumb, RotateClockwise(sm));
-		}
+		Image sm = MakeElement(Size(DPI(10), DPI(20)), roundness,
+		                       CreateImage(Size(10, 10), GrayColor(224 - 20 * i)),
+		                       lw, ink, [&](Painter& w, const Rectf& r) {
+			double cx = r.GetWidth();
+			double cy = r.GetHeight();
+			double uy = 0.4 * cy;
+			double by = 0.85 * cy;
+			double uq = 0.5 * uy;
+			w.Move(r.left, r.top + by)
+			 .Line(r.left, r.top + uy)
+			 .Quadratic(r.left, r.top + uq, r.left + cx / 2, r.top)
+			 .Quadratic(r.left + cx, r.top + uq, r.left + cx, r.top + uy)
+			 .Line(r.left + cx, r.top + by)
+			 .Close();
+		});
+		CtrlImg::Set(CtrlImg::I_hthumb + i, sm);
+		CtrlImg::Set(CtrlImg::I_vthumb + i, RotateClockwise(sm));
 		{
 			SyntheticTab(i, roundness, ink);
 		}
 	}
+	
+	return roundness;
 }
 
 void ChBaseSkin()
@@ -698,13 +739,12 @@ void ChMakeSkin(int roundness, Color button_face, Color thumb, int *adj)
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
-		ImagePainter p(c, c);
-		p.Rectangle(0, 0, c, c).Fill(0, 0, IsDarkTheme() ? SColorFace() : AdjustColor(thumb, 40), c, 0, IsDarkTheme() ? LtGray() : SColorPaper());
-		Image vtrough = p;
+		s.arrowsize = 0;
+		s.thumbmin = DPI(24);
 
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
-			s.hupper[status] = s.hlower[status] = ChHot(RotateClockwise(vtrough));
-			s.vupper[status] = s.vlower[status] = ChHot(vtrough);
+			s.hupper[status] = s.hlower[status] =
+			s.vupper[status] = s.vlower[status] = button_face;
 			static int adj[] = { 0, 10, -10, -20 };
 			s.hthumb[status] = s.vthumb[status] = AdjustColor(thumb, adj[status]);
 		}
@@ -720,32 +760,52 @@ void ChMakeSkin(int roundness, Color button_face, Color thumb, int *adj)
 	MakeDialogIcons();
 }
 
+void RoundScrollbar(int *g)
+{
+	ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+	for(int i = 0; i < 4; i++) {
+		s.hupper[i] = s.hlower[i] = s.vupper[i] = s.vlower[i] = GrayColor(g[4]);
+		s.arrowsize = 0;
+		s.vthumb[i] = MakeRoundScrollbarThumb(DPI(16), DPI(4), GrayColor(g[i]));
+		s.hthumb[i] = RotateClockwise(s.vthumb[i]);
+	}
+}
+
 void ChStdSkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 10, 80, -5, -10 };
 	SColorFace_Write(Color(240, 240, 240));
 	SColorMenu_Write(Color(240, 240, 240));
 	SColorHighlight_Write(Color(50, 50, 250));
 	ChMakeSkin(3, SColorFace(), SLtGray(), adj);
+	static int g[] = { 192, 200, 128, 128, 240 };
+	RoundScrollbar(g);
 }
 
 void ChGraySkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 0, 70, -15, -20 };
 	SColorHighlight_Write(Gray());
 	ChMakeSkin(3, SWhiteGray(), SLtGray(), adj);
+	static int g[] = { 150, 190, 100, 100, 224 };
+	RoundScrollbar(g);
 }
 
 void ChDarkSkin()
 {
 	ChReset();
+	RoundStyleArrows();
 	static int adj[] = { 10, 80, -5, -10 };
 	SColorPaper_Write(Black());
 	SColorHighlight_Write(Gray());
 	SColorHighlightText_Write(White());
 	ChMakeSkin(3, SWhiteGray(), SWhiteGray(), adj);
+	static int g[] = { 80, 100, 70, 70, 30 };
+	RoundScrollbar(g);
 }
 
 void ChFlatSkin()
@@ -773,7 +833,7 @@ void ChFlatDarkSkin()
 	SColorPaper_Write(Black());
 	SColorHighlight_Write(Gray());
 	SColorHighlightText_Write(White());
-	ChMakeSkin(0, SWhiteGray(), SWhiteGray(), adj);
+	ChMakeSkin(0, SWhiteGray(), SGray(), adj);
 }
 
 #ifdef GUI_X11

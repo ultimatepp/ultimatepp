@@ -25,14 +25,22 @@ CONSOLE_APP_MAIN
 		RLOG(e);
 	}
 
+	code = LoadFile(GetDataFile("test2.esc"));
+
+	try {
+		Scan(global, code);
+		EscValue data_ptr;
+		for(int i = 0; i < 100; i++)
+		{
+			RTIMING("run test 2");
+			data_ptr = Execute(global, "test", INT_MAX);
+		}
+		RDUMP(data_ptr);
+	}
+	catch(CParser::Error e) {
+		RLOG(e);
+	}
+
 	RLOG("");
 	RLOG("-----------------------");
-
-	DUMP(global.GetAdd("result"));
-
-//	EscValue v;
-//	v.SetArray().Add(123);
-//	EscValue v2 = v;
-//	v.SetArray().Add(v);
-//	DUMP(v);
 }

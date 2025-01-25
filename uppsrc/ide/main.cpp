@@ -179,6 +179,7 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
+	SetConfigName("theide");
 #ifdef DYNAMIC_LIBCLANG
 	if(FindIndex(CommandLine(), "--noclang") < 0) {
 		String wfile = ConfigFile(".nolibclang");
@@ -219,7 +220,7 @@ void AppMain___()
 	PeakMemoryProfile();
 #endif
 
-	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
+	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(false);
 
 	Ctrl::SetUHDEnabled();
 	Ctrl::SetDarkThemeEnabled();

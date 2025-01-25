@@ -3,7 +3,7 @@
 using namespace Upp;
 
 struct ColorTest : TopWindow {
-	ColorSelector color;
+	ColorPusher color;
 	
 	void Paint(Draw& w) override {
 		Size sz = GetSize();

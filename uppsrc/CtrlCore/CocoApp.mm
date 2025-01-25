@@ -419,6 +419,14 @@ String GetSpecialDirectory(int i)
 	return Null;
 };
 
+String GetMusicFolder()	      { return GetSpecialDirectory(SF_NSMusicDirectory); }
+String GetPicturesFolder()    { return GetSpecialDirectory(SF_NSPicturesDirectory); }
+String GetVideoFolder()       { return GetSpecialDirectory(SF_NSMoviesDirectory); }
+String GetDocumentsFolder()   { return GetSpecialDirectory(SF_NSDocumentDirectory); }
+String GetDesktopFolder()     { return GetSpecialDirectory(SF_NSDesktopDirectory); }
+String GetTemplatesFolder()   { return GetHomeDirectory(); }
+String GetDownloadFolder()    { return GetSpecialDirectory(SF_NSDownloadsDirectory); }
+
 void CocoBeep()
 {
 	NSBeep();

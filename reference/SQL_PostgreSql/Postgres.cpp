@@ -8,7 +8,7 @@ using namespace Upp;
 PostgreSQLTest::PostgreSQLTest()
 {
 	CtrlLayout(*this, "PostgreSQL Test");
-	m_refresh <<= THISBACK(ShowTestData);
+	m_refresh <<= THISFN(ShowTestData);
 	m_array.SetTable(TESTPARTNER);
 	m_array.AddKey(TESTPARTNER_ID);
 	m_array.AddColumn(TESTPARTNER_NAME, "Name");

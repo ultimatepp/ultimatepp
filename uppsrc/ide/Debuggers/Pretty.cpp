@@ -18,8 +18,7 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		return false;
 
 	const Type& t = GetType(val.type);
-	
-	
+
 	current_modbase = t.modbase; // so that we do not need to pass it as parameter in Pretty routines
 
 	String type = t.name;
@@ -90,10 +89,13 @@ bool Pdb::PrettyVal(Pdb::Val val, int64 from, int count, Pretty& p)
 		pretty.Add("std::unordered_multiset", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, true, tparam, from, count, p); }});
 		pretty.Add("std::unordered_map", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, false, tparam, from, count, p); }});
 		pretty.Add("std::unordered_multimap", { 2, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdUnordered(val, false, tparam, from, count, p); }});
+		pretty.Add("std::atomic", { 1, [=](Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p) { PrettyStdAtomic(val, tparam, from, count, p); }});
 	}
 	
 	type = Filter(type, [](int c) { return c != ' ' ? c : 0; });
 	type.Replace("::__1", ""); // CLANG has some weird stuff in names...
+	if(PrettyScript(type, val, type_param, from, count, p))
+		return true;
 
 	int ii = pretty.Find(type);
 	if(ii >= 0) {
@@ -118,6 +120,8 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 	
 	Pretty p;
 	if(PrettyVal(val, 0, 0, p)) {
+		for(const VisualPart& vp : p.text.part)
+			result.Cat(vp.text, vp.ink);
 		if(p.kind == TEXT) {
 			int count = (int)min(p.data_count, (int64)200);
 			Pretty p;
@@ -144,22 +148,14 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 		}
 		else
 		if(p.kind == SINGLE_VALUE) {
-			Pretty p;
-			PrettyVal(val, 0, 1, p);
-			for(const VisualPart& vp : p.text.part)
-				result.Cat(vp.text, vp.ink);
-			if(p.has_data) {
-				if(p.data_type.GetCount() && p.data_ptr.GetCount())
-					Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
-				else
-					Visualise(result, val, flags | RAW);
-			}
+			if(p.data_type.GetCount() && p.data_ptr.GetCount())
+				Visualise(result, MakeVal(p.data_type[0], p.data_ptr[0]), flags);
 		}
 		else { // CONTAINER
 			int count = (int)min(p.data_count, (int64)40);
 			Pretty p;
 			PrettyVal(val, 0, count, p);
-
+			
 			ResultCount(p.data_count);
 			if(p.data_type.GetCount()) {
 				Buffer<Val> item(p.data_type.GetCount());
@@ -177,7 +173,7 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 					for(int j = 0; j < p.data_type.GetCount(); j++) {
 						if(j)
 							result.Cat(": ", SBlue);
-						item[j].address = p.data_ptr[ii++];
+						item[j].address = p.data_ptr[p.separated_types ? n * j + i : ii++];
 						if(item[j].type != UNKNOWN)
 							Visualise(result, item[j], flags | MEMBER);
 					}
