@@ -79,14 +79,14 @@ void RichEdit::LeftDown(Point p, dword flags)
 	NextUndo();
 	SetFocus();
 	selclick = false;
-	tabmove = GetHotPos(p);
+	tabmove = GetHotPos(p); // resizing table columns
 	if(tabmove.table && tabmove.column >= -2) {
 		SaveTableFormat(tabmove.table);
 		SetCapture();
 		Move(text.GetCellPos(tabmove.table, 0, max(tabmove.column, 0)).pos);
 		return;
 	}
-	int c = GetHotSpot(p);
+	int c = GetHotSpot(p); // resizing active object
 	if(c >= 0 && objectpos >= 0) {
 		int pos = objectpos;
 		RectTracker tracker(*this);
@@ -123,9 +123,14 @@ void RichEdit::LeftDown(Point p, dword flags)
 	}
 	else {
 		c = GetMousePos(p);
+		RichPos pi = text.GetRichPos(c);
 		if(c >= 0) {
 			if(InSelection(c)) {
 				selclick = true;
+				return;
+			}
+			if((flags & K_CTRL) && WhenIsLink(pi.format.link)) {
+				WhenLink(pi.format.link);
 				return;
 			}
 			Move(c, flags & K_SHIFT);
@@ -422,7 +427,9 @@ Image RichEdit::CursorImage(Point p, dword flags)
 	case 2:
 		return Image::SizeHorz();
 	default:
-		if(text.GetRichPos(GetMousePos(p)).object) {
+		int c = GetMousePos(p);
+		RichPos pi = text.GetRichPos(c);
+		if(pi.object) {
 			return Image::Arrow();
 		}
 		else
@@ -433,8 +440,11 @@ Image RichEdit::CursorImage(Point p, dword flags)
 			if(hp.table > 0)
 				return Image::SizeHorz();
 			else {
-				int c = GetMousePos(p);
-				return InSelection(c) && !HasCapture() ? Image::Arrow() : Image::IBeam();
+				if(InSelection(c) && !HasCapture())
+					return Image::Arrow();
+				if((flags & K_CTRL) && WhenIsLink(pi.format.link))
+					return Image::Hand();
+				return Image::IBeam();
 			}
 		}
 	}
