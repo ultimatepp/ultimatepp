@@ -5,6 +5,8 @@ namespace Upp {
 void Zip::WriteFolder(const char *path, Time tm)
 {
 	String p = UnixPath(path);
+	if(p.GetCount() == 0)
+		return; // LibreOffice refuses xlsx with "/" folder..
 	if(*p.Last() != '/')
 		p.Cat('/');
 	WriteFile(~p, 0, p, Null, tm, false);
