@@ -695,6 +695,8 @@ public:
 	Event<String&>           WhenIndexEntry;
 	Event<Bar&>              WhenBar;
 	Event<>                  WhenSel;
+	Gate<const String&>      WhenIsLink;
+	Event<const String&>     WhenLink;
 
 	void   StdBar(Bar& menu);
 

@@ -662,6 +662,58 @@ void RichEdit::Skin()
 	SetLastCharFormat(last_format);
 }
 
+
+void RichEditWithToolBar::TheBar(Bar& bar)
+{
+	DefaultBar(bar, extended);
+}
+
+void RichEditWithToolBar::RefreshBar()
+{
+	toolbar.Set(THISBACK(TheBar));
+}
+
+void RichEditWithToolBar::Skin()
+{
+	RichEdit::Skin();
+	RefreshBar();
+}
+
+void RichEdit::EvaluateFields()
+{
+	WhenStartEvaluating();
+	text.EvaluateFields(vars);
+	Finish();
+}
+
+RichEditWithToolBar::RichEditWithToolBar()
+{
+	InsertFrame(0, toolbar);
+	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
+	extended = true;
+}
+
+bool RichEdit::IsDarkContent() const
+{
+	return dark_content || allow_dark_content && IsDarkTheme();
+}
+
+RichEdit& RichEdit::DarkContent(bool b)
+{
+	dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::AllowDarkContent(bool b)
+{
+	allow_dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
 RichEdit::RichEdit()
 {
 	floating_zoom = Null;
@@ -803,59 +855,16 @@ RichEdit::RichEdit()
 	ignore_physical_size = false;
 
 	SetLastCharFormat();
+	
+	WhenLink = [](const String& s) {
+		LaunchWebBrowser(s);
+	};
+	
+	WhenIsLink = [](const String& s) {
+		return s.StartsWith("http://") || s.StartsWith("https://");
+	};
 }
 
 RichEdit::~RichEdit() {}
-
-void RichEditWithToolBar::TheBar(Bar& bar)
-{
-	DefaultBar(bar, extended);
-}
-
-void RichEditWithToolBar::RefreshBar()
-{
-	toolbar.Set(THISBACK(TheBar));
-}
-
-void RichEditWithToolBar::Skin()
-{
-	RichEdit::Skin();
-	RefreshBar();
-}
-
-void RichEdit::EvaluateFields()
-{
-	WhenStartEvaluating();
-	text.EvaluateFields(vars);
-	Finish();
-}
-
-RichEditWithToolBar::RichEditWithToolBar()
-{
-	InsertFrame(0, toolbar);
-	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
-	extended = true;
-}
-
-bool RichEdit::IsDarkContent() const
-{
-	return dark_content || allow_dark_content && IsDarkTheme();
-}
-
-RichEdit& RichEdit::DarkContent(bool b)
-{
-	dark_content = b;
-	Refresh();
-	DoRefreshBar();
-	return *this;
-}
-
-RichEdit& RichEdit::AllowDarkContent(bool b)
-{
-	allow_dark_content = b;
-	Refresh();
-	DoRefreshBar();
-	return *this;
-}
 
 }

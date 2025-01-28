@@ -34,13 +34,12 @@ String SplashCtrl::GenerateVersionInfo(bool qtf)
 	h << "Build: " << GenerateVersionNumber();
 #ifdef bmGIT_BRANCH
 	h << " " << bmGIT_BRANCH;
-	h << separator;
 #endif
 
 	if(sizeof(void *) == 8)
-		h << "64 bit";
+		h << " 64 bit";
 	else
-		h << "32 bit";
+		h << " 32 bit";
 #ifdef _MSC_VER
 	h << " MSC";
 #endif
@@ -121,7 +120,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		}
 
 	String h;
-	h << "[A+60 \1" << GenerateVersionInfo(true) << "\n";
+	h << "[A+50 \1" << GenerateVersionInfo(true) << "\n";
 	h << "Using: " << MemoryUsedKb()
 #ifdef PLATFORM_COCOA
 		<< " KB of U++ heap\n";
@@ -129,10 +128,11 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		<< " KB\n";
 #endif
 	if(items.GetCount())
-		h << "CodeBase: " << classes.GetCount() << " classes, " << items.GetCount() << " items\n";
+		h << "CodeBase: " << classes.GetCount() << " classes, " << items.GetCount() << " items";
 	if(IsUHDMode())
-		h << "UHD mode\n";
+		h << "UHD mode";
 	v1 = h;
+	v1.NoSb();
 	v1.HSizePos(DPI(250), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 8);
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
