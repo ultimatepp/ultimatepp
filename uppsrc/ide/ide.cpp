@@ -36,7 +36,7 @@ String GetGitBranch(const String& dir)
 void Ide::MakeTitle()
 {
 	if(replace_in_files) return;
-
+	
 	String title;
 	title << Nvl(main, "TheIDE");
 
