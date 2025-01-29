@@ -945,13 +945,13 @@ to load or input data are invalid.&]
 [* Serialize64]([@(0.0.255) unsigned] [@(0.0.255) long`&] [*@3 d])&]
 [s2; [@(0.0.255) long ]and [@(0.0.255) unsigned long] are 32`-bit in 
 Win32, but can be 64 bit in POSIX. Moreover, [@(0.0.255) int64`_t 
-]/ [@(0.0.255) uint64`_t ]is can be defined as [@(0.0.255) long ]/ 
-[@(0.0.255) unsigned long] causing problems with interaction between 
-Stream serialization and non`-U`+`+ libraries. To make things 
-worse, [@(0.0.255) dword ]is defined as [@(0.0.255) unsigned long] 
-in Win32 to maintain compatibility with Win32 API DWORD. This 
-method serializes these types as 64`-bit values to provide safe 
-serialisation of `"non`-U`+`+`" structures.&]
+]/ [@(0.0.255) uint64`_t ]can be defined as [@(0.0.255) long ]/ [@(0.0.255) unsigned 
+long] causing problems with interaction between Stream serialization 
+and non`-U`+`+ libraries. To make things worse, [@(0.0.255) dword 
+]is defined as [@(0.0.255) unsigned long] in Win32 to maintain 
+compatibility with Win32 API DWORD. This method serializes these 
+types as 64`-bit values to provide safe serialization of `"non`-U`+`+`" 
+structures.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Stream`:`:Magic`(dword`):%- [@(0.0.255) void]_[* Magic]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
