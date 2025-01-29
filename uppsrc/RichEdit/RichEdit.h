@@ -879,6 +879,8 @@ public:
 	void     SetFooter(const String& s)                   { footer = s; }
 	void     PrintNoLinks(bool b = true)                  { nolinks = b; }
 
+	Event<>  WhenLeftUp;
+	
 	typedef RichEdit CLASSNAME;
 
 	RichEdit();
