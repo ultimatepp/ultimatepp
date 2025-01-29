@@ -35,6 +35,10 @@ bool RichEdit::Key(dword key, int count)
 		return true;
 	if(IsReadOnly())
 		return false;
+	if(key == (K_CTRL_KEY|K_KEYUP) && show_zoom) {
+		show_zoom = false;
+		Refresh();
+	}
 	switch(key) {
 	case K_CTRL_BACKSPACE:
 		if(RemoveSelection(true)) return true;

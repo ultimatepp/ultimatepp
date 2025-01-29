@@ -15,16 +15,20 @@ void RichEdit::CancelMode()
 {
 	tabmove.table = 0;
 	selclick = false;
+	show_zoom = false;
 	dropcaret.Clear();
 }
 
 void RichEdit::MouseWheel(Point p, int zdelta, dword keyflags)
 {
 	if(keyflags == K_CTRL) {
+		show_zoom = true;
 		if(IsNull(floating_zoom))
 			ZoomView(sgn(zdelta));
 		else {
-			floating_zoom = minmax(floating_zoom + zdelta / 480.0, 0.5, 10.0);
+			floating_zoom = minmax(floating_zoom + sgn(zdelta) * (floating_zoom >= 2 ? 0.1 : 0.05), 0.1, 4.0);
+			if(floating_zoom > 0.98 && floating_zoom < 1.02) // remove FP inaccuracies
+				floating_zoom = 1;
 			RefreshLayoutDeep();
 		}
 	}

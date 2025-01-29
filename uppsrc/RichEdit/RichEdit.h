@@ -314,6 +314,8 @@ private:
 	bool                     pixel_mode = false;
 	bool                     dark_content = false;
 	bool                     allow_dark_content = false;
+	
+	bool                     show_zoom = false;
 
 	static int fh[];
 

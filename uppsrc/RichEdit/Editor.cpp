@@ -62,7 +62,9 @@ Rect RichEdit::GetTextRect() const
 		sz.cy = Zx(16);
 	if(sz.cx < Zx(80))
 		return RectC(0, 0, Zx(48), max(sz.cy, Zy(16)));
-	int cx = zoom * (sz.cx - 2 * viewborder) / 100;
+	int cx = sz.cx - 2 * viewborder;
+	if(!pixel_mode)
+		cx = zoom * cx / 100;
 	return RectC((sz.cx - cx) / 2, 0, cx, sz.cy);
 }
 
@@ -168,6 +170,14 @@ void RichEdit::Paint(Draw& w)
 	if(!IsNull(dropcaret))
 		DrawTiles(w, dropcaret.OffsetedVert(-sb), CtrlImg::checkers());
 	scroller.Set(sb);
+	if(show_zoom) {
+		String txt = AsString(IsNull(floating_zoom) ? this->zoom : fround(floating_zoom * 100)) + '%';
+		Rect r = Rect(sz).CenterRect(GetTextSize(txt, StdFont()));
+		Rect h = r.Inflated(DPI(3));
+		w.DrawRect(h, SWhiteGray());
+		DrawFrame(w, h, SColorText());
+		w.DrawText(r.left, r.top, txt, StdFont(), SColorText());
+	}
 }
 
 int RichEdit::GetHotSpot(Point p) const
@@ -254,9 +264,8 @@ RichEdit& RichEdit::PixelMode()
 void RichEdit::Layout()
 {
 	Size sz = GetTextRect().GetSize();
-	if(pixel_mode) {
-		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8, INT_MAX));
-	}
+	if(pixel_mode)
+		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8 * 100 / zoom, INT_MAX));
 	else
 	if(!IsNull(floating_zoom)) {
 		Zoom m = GetRichTextStdScreenZoom();
@@ -363,7 +372,8 @@ void RichEdit::SetupUnits()
 
 void RichEdit::ZoomView(int d)
 {
-	zoom = clamp(zoom + d * 10, 10, 100);
+	zoom = clamp(zoom + d * (zoom >= 200 ? 10 : 5), 10, pixel_mode ? 400 : 100);
+	RefreshLayoutDeep();
 	Refresh();
 	FinishNF();
 }

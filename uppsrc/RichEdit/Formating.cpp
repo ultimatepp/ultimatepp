@@ -318,11 +318,12 @@ void RichEdit::ShowFormat()
 	m.image = formatinfo.paravalid & RichText::LM ? RichEditImg::Margin() : RichEditImg::MarginMixed();
 	ruler.Set(0, m);
 
-	m.pos = r;
+	m.pos = pixel_mode || !IsNull(floating_zoom) ? Null : r;
 	m.minpos = max(l + formatinfo.indent + 120, 0);
 	m.maxpos = cursorc.textpage.Width();
 	m.image = formatinfo.paravalid & RichText::RM ? RichEditImg::Margin() : RichEditImg::MarginMixed();
 	ruler.Set(1, m);
+
 	IndentMark();
 
 	int maxpos = 0;
