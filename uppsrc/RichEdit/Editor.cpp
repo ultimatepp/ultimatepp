@@ -372,7 +372,16 @@ void RichEdit::SetupUnits()
 
 void RichEdit::ZoomView(int d)
 {
-	zoom = clamp(zoom + d * (zoom >= 200 ? 10 : 5), 10, pixel_mode ? 400 : 100);
+	if(IsNull(floating_zoom))
+		zoom = clamp(zoom + d * (zoom >= 200 ? 10 : 5), 10, pixel_mode ? 400 : 100);
+	else {
+		floating_zoom = minmax(floating_zoom + d * (floating_zoom >= 2 ? 0.1 : 0.05), 0.1, 4.0);
+		if(floating_zoom > 0.98 && floating_zoom < 1.02) // remove FP inaccuracies
+			floating_zoom = 1;
+	}
+
+	show_zoom = true;
+
 	RefreshLayoutDeep();
 	Refresh();
 	FinishNF();
