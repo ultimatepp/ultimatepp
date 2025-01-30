@@ -36,7 +36,6 @@ static String ExpandTabs(String line, int tabsize = 4)
 
 class DlgCompareDir : public WithCompareDirLayout<TopWindow> {
 public:
-	typedef DlgCompareDir CLASSNAME;
 	DlgCompareDir();
 
 	void Run();
@@ -76,19 +75,19 @@ DlgCompareDir::DlgCompareDir()
 {
 	CtrlLayout(*this, "Compare directories");
 	Sizeable().Zoomable();
-	refresh <<= THISBACK(CmdRefresh);
+	refresh << [=] { CmdRefresh(); };
 	splitter.Vert(tree, editor);
 	editor << lineedit.SizePos() << qtf.SizePos();
 	qtf.Background(White());
 	qtf.SetFrame(InsetFrame());
 	path_a.AddFrame(browse_a);
 	browse_a.SetImage(CtrlImg::right_arrow());
-	browse_a <<= THISBACK1(DoBrowse, &path_a);
+	browse_a << [=] { DoBrowse(&path_a); };
 	path_b.AddFrame(browse_b);
 	browse_b.SetImage(CtrlImg::right_arrow());
-	browse_b <<= THISBACK1(DoBrowse, &path_b);
+	browse_b <<  [=] { DoBrowse(&path_b); };
 	file_mask <<= "*.cpp *.h *.hpp *.c *.C *.cxx *.cc *.lay *.iml *.upp *.sch *.dph";
-	tree.WhenCursor = THISBACK(DoTreeCursor);
+	tree.WhenCursor = [=] { DoTreeCursor(); };
 	lineedit.SetReadOnly();
 	lineedit.SetFont(Courier(14));
 }

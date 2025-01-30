@@ -33,6 +33,10 @@ ont]_[*@3 f])&]
 [s2; Sets the font to be used by widget to [%-*@3 f].&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:DocEdit`:`:WhenLeftUp:%- Event<> [* WhenLeftUp]&]
+[s2; Invoked when left mouse button is released..&]
+[s3;%- &]
+[s4;%- &]
 [s5;:DocEdit`:`:After`(int`):%- [_^DocEdit^ DocEdit][@(0.0.255) `&]_[* After]([@(0.0.255) int
 ]_[*@3 a])&]
 [s2; The height of empty block after the paragraph in pixels. Default 

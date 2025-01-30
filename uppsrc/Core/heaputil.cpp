@@ -231,7 +231,7 @@ String AsString(const MemoryProfile& mem)
 	size_t asize = 0;
 	int fcount = 0;
 	size_t fsize = 0;
-	text << "Memory peak: " << MemoryUsedKbMax() << " KB, current: " << MemoryUsedKb() << "KB \n";
+	text << "Memory peak: " << MemoryUsedKbMax() << " KB, current: " << MemoryUsedKb() << " KB \n";
 	for(int i = 0; i < 1024; i++)
 		if(mem.allocated[i]) {
 			int sz = 4 * i;

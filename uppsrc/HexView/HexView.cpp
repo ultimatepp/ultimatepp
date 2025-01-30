@@ -168,10 +168,11 @@ void HexView::Paint(Draw& w)
 			hex_dx[hexi++] = fsz.cx;
 			hex[hexi] = b < 0 ? '?' : FormatHexDigit(b & 0x0f);
 			hex_dx[hexi++] = 2 * fsz.cx;
-			text[texti] = b >= 32 ? b : ' ';
-			mark[texti++] = b < 32 ? decode(b, '\a', 'a', '\b', 'b', '\t', 't', '\f', 'f',
-			                                   '\r', 'r', '\n', 'n', '\v', 'v', '\0', '0',
-			                                   '\1', '1', '.') : ' ';
+			text[texti] = b >= 32 && b <= 128 ? b : ' ';
+			mark[texti++] = b > 128 ? '.'
+			                        : b < 32 ? decode(b, '\a', 'a', '\b', 'b', '\t', 't', '\f', 'f',
+			                                          '\r', 'r', '\n', 'n', '\v', 'v', '\0', '0',
+			                                          '\1', '1', '.') : ' ';
 		}
 		w.DrawText(x, y, hex, font, SColorText(), hexi, hex_dx);
 		w.DrawText(tx, y, text, font, SColorText(), texti, text_dx);

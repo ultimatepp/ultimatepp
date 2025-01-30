@@ -35,6 +35,10 @@ bool RichEdit::Key(dword key, int count)
 		return true;
 	if(IsReadOnly())
 		return false;
+	if(key == (K_CTRL_KEY|K_KEYUP) && show_zoom) {
+		show_zoom = false;
+		Refresh();
+	}
 	switch(key) {
 	case K_CTRL_BACKSPACE:
 		if(RemoveSelection(true)) return true;
@@ -55,7 +59,8 @@ bool RichEdit::Key(dword key, int count)
 		if(RemoveBullet(true)) break;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
-		anchor = --cursor;
+		Move(cursor - 1);
+		anchor = cursor;
 		begtabsel = false;
 		if(cursor > 0) {
 			RichPos p = text.GetRichPos(cursor - 1);

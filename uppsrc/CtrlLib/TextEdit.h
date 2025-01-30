@@ -392,6 +392,7 @@ protected:
 
 public:
 	Event<> WhenScroll;
+	Event<> WhenLeftUp;
 	
 	Size   GetFontSize() const;
 	int64  GetGPos(int ln, int cl) const;
@@ -571,6 +572,8 @@ protected:
 	int    GetMousePos(Point p);
 
 public:
+	Event<>   WhenLeftUp;
+	
 	DocEdit&  After(int a)                                   { after = a; RefreshStyle(); return *this; }
 	DocEdit&  SetFont(Font f)                                { font = f; RefreshStyle(); return *this; }
 	DocEdit&  SetFilter(int (*f)(int c))                     { filter = f; return *this; }

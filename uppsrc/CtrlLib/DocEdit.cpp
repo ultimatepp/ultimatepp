@@ -281,6 +281,7 @@ void DocEdit::LeftDown(Point p, dword flags) {
 
 void DocEdit::LeftUp(Point p, dword flags)
 {
+	WhenLeftUp();
 	if(!HasCapture() && selclick) {
 		int c = GetMousePos(p);
 		PlaceCaret(c, flags & K_SHIFT);

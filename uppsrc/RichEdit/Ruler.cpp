@@ -33,15 +33,16 @@ void RichRuler::Paint(Draw& w)
 	int cx = zoom * pgcx;
 	w.DrawRect(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6), SColorPaper);
 	int i = 0;
-	for(;;) {
-		int x = fround(++i * grid) * zoom;
-		if(x >= cx) break;
-		int h = (sz.cy - Zy(6)) / 3;
-		if(i % marks == 0)
-			w.DrawRect(x0 + x, Zy(2) + h, Zx(1), h + Zy(2), SColorHighlight);
-		else
-			w.DrawRect(x0 + x, Zy(3) + h, Zx(1), h, SColorHighlight);
-	}
+	if(grid * zoom > 2)
+		for(;;) {
+			int x = fround(++i * grid) * zoom;
+			if(x >= cx) break;
+			int h = (sz.cy - Zy(6)) / 3;
+			if(i % marks == 0)
+				w.DrawRect(x0 + x, Zy(2) + h, Zx(1), h + Zy(2), SColorHighlight);
+			else
+				w.DrawRect(x0 + x, Zy(3) + h, Zx(1), h, SColorHighlight);
+		}
 	i = 0;
 	int xs = 0;
 	for(;;)
@@ -59,12 +60,14 @@ void RichRuler::Paint(Draw& w)
 				xs = px + tsz.cx + Zx(4);
 			}
 		}
-	FieldFrame().FramePaint(w, RectC(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6)));
+	DrawFrame(w, RectC(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6)), SColorText());
+	w.Clip(0, 0, x0 + cx + DPI(1), sz.cy);
 	for(i = marker.GetCount() - 1; i >= 0; --i) {
 		const Marker& m = marker[i];
 		if(!IsNull(m.pos))
 			HotPaint(w, x0 + m.pos * zoom, m.top ? Zy(1) : sz.cy - Zy(4), m.image);
 	}
+	w.End();
 	i = 0;
 	if(tabsize)
 		for(;;) {

@@ -1,4 +1,4 @@
-description "Converts metric units and U.S. units (meters / feets etc..)";
+description "Converts metric units and U.S. units (meters / feets etc..)\377";
 
 uses
 	CtrlLib;

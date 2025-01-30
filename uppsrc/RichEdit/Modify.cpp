@@ -447,6 +447,7 @@ void RichEdit::InsertLine()
 		formatinfo.label = lbl;
 	}
 	anchor = cursor = cursor + 1;
+	gx = 0;
 	begtabsel = false;
 	formatinfo.firstonpage = formatinfo.newpage = formatinfo.newhdrftr = false;
 	if(st) {

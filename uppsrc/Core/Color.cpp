@@ -350,6 +350,9 @@ double C_B = 0.2;
 
 Color DarkTheme(Color color)
 {
+	if(IsNull(color))
+		return Null;
+
 	double r = color.GetR();
 	double g = color.GetG();
 	double b = color.GetB();

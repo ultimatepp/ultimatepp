@@ -8,33 +8,20 @@ using namespace Upp;
 #include <CtrlCore/lay.h>
 
 struct ConverterPane : WithConverterPaneLayout<StaticRect> {
-	ConverterPane *slave;
-	void AdjustSlave()
+	ConverterPane *other;
+	void Sync()
 	{
-		slave->slider <<= slave->value <<=
-			IsNull(value) ? 0.0 : (double)~unit * (double)~value / (double)~slave->unit;
+		other->slider <<= other->value <<= (double)~unit * Nvl((double)~value) / (double)~other->unit;
 	}
-	void ValueChanged()
-	{
-		slider <<= ~value;
-		AdjustSlave();
-	}
-	void SliderChanged()
-	{
-		value <<= ~slider;
-		AdjustSlave();
-	}
-
-	typedef ConverterPane CLASSNAME;
 
 	ConverterPane()
 	{
 		CtrlLayout(*this);
 		slider.Range(10000);
 		slider <<= value <<= 0;
-		value <<= THISBACK(ValueChanged);
-		slider <<= THISBACK(SliderChanged);
-		unit <<= THISBACK(AdjustSlave);
+		value << [=] { slider <<= ~value; Sync(); };
+		slider << [=] { value <<= ~slider; Sync(); };
+		unit << [=] { Sync(); };
 	}
 };
 
@@ -65,10 +52,10 @@ struct Converter : TopWindow
 		us.unit.Add(1613.0, "Miles");
 		us.unit <<= 0.305;
 
-		us.slave = &metric;
-		metric.slave = &us;
+		us.other = &metric;
+		metric.other = &us;
 
-		metric.AdjustSlave();
+		metric.Sync();
 	}
 };
 

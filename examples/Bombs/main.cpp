@@ -1,5 +1,10 @@
 #include <CtrlLib/CtrlLib.h>
 
+
+#define IMAGECLASS BombsImg
+#define IMAGEFILE  <Bombs/bombs.iml>
+#include <Draw/iml.h>
+
 using namespace Upp;
 
 class Bombs : public TopWindow {
@@ -27,21 +32,13 @@ private:
 	
 	int UNIT = 30;
 
-	void About();
-
-	void File(Bar& menu);
-	void Game(Bar& menu);
-	void Menu(Bar& menu);
-
 	void ShowStatus();
-	void Level(Size sz);
 
 	void Uncover(int x, int y);
 	void Generate();
 	void UncoverAll();
 
 public:
-	typedef Bombs CLASSNAME;
 	Bombs();
 };
 
@@ -169,51 +166,29 @@ void Bombs::ShowStatus()
 	status = Format("%d bombs, %d cells remaining", bombs, normal_cells);
 }
 
-void Bombs::Level(Size sz)
-{
-	level = sz;
-}
-
-void Bombs::About()
-{
-	PromptOK("[*A9/ uBombs]&[A5 Ultimate`+`+ example]");
-}
-
-void Bombs::File(Bar& menu)
-{
-	menu.Add("Exit", Breaker(IDOK));
-	menu.Separator();
-	menu.Add("About..", THISBACK(About));
-}
-
-void Bombs::Game(Bar& menu)
-{
-	menu.Add("Restart", THISBACK(Generate));
-	menu.Separator();
-	menu.Add("Easy", THISBACK1(Level, Size(10, 10)))
-	    .Check(level.cx == 10);
-	menu.Add("Medium", THISBACK1(Level, Size(15, 15)))
-	    .Check(level.cx == 15);
-	menu.Add("Difficult", THISBACK1(Level, Size(25, 20)))
-	    .Check(level.cx == 25);
-}
-
-void Bombs::Menu(Bar& menu)
-{
-	menu.Add("File", THISBACK(File));
-	menu.Add("Game", THISBACK(Game));
-}
-
-#define IMAGECLASS BombsImg
-#define IMAGEFILE  <Bombs/bombs.iml>
-#include <Draw/iml.h>
-
 Bombs::Bombs()
 {
 	UNIT = DPI(30);
 	level = Size(10, 10);
 	AddFrame(menu);
-	menu.Set(THISBACK(Menu));
+	menu.Set([=](Bar& bar) {
+		menu.Sub("File", [=](Bar& bar) {
+			bar.Add("Exit", Breaker(IDOK));
+			bar.Separator();
+			bar.Add("About..", [] { PromptOK("[*A9/ uBombs]&[A5 Ultimate`+`+ example]"); });
+		});
+		menu.Sub("Game", [=](Bar& bar) {
+			bar.Add("Restart", [=] { Generate(); });
+			bar.Separator();
+			auto Lvl = [&](const char *txt, int cx, int cy) {
+				bar.Add(txt, [=] { level = Size(cx, cy); })
+				   .Check(level == Size(cx, cy));
+			};
+			Lvl("Easy", 10, 10);
+			Lvl("Medium", 15, 15);
+			Lvl("Difficult", 25, 20);
+		});
+	});
 	AddFrame(status);
 	AddFrame(InsetFrame());
 	Title("uBombs");

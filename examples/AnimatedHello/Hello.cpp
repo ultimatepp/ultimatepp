@@ -13,11 +13,7 @@ public:
 private:
 	String text;
 	
-	void Animate()                        { Refresh(); }
-
 public:
-	typedef HelloWorld CLASSNAME;
-
 	HelloWorld& Text(const String& t)     { text = t; Refresh(); return *this; }
 
 	HelloWorld();
@@ -25,31 +21,29 @@ public:
 
 HelloWorld::HelloWorld()
 {
-	SetTimeCallback(-40, THISBACK(Animate));
+	SetTimeCallback(-40, [=] { Refresh(); });
 	BackPaint();
 	Zoomable().Sizeable();
-	SetRect(0, 0, 260, 80);
+	SetRect(0, 0, 1000, 300);
 }
 
 void HelloWorld::LeftDown(Point, dword)
 {
-	Close();
+	EditText(text, "Text to display", "Text");
 }
 
 void HelloWorld::Paint(Draw& w)
 {
+	Font fnt = Roman(64);
 	Size sz = GetSize();
-    static int sin_tbl[16] = {
-        0, 38, 71, 92, 100, 92, 71, 38, 0, -38, -71, -92, -100, -92, -71, -38
-	};
 	w.DrawRect(sz, White);
-	Size tsz = GetTextSize(text, Roman(32));
+	Size tsz = GetTextSize(text, fnt);
 	Point pos = (sz - tsz) / 2;
 	for(int i = 0; i < text.GetLength(); i++) {
 		int q = (i + GetTickCount() / 40) & 15;
-		w.DrawText(pos.x, pos.y + sin_tbl[q] * (sz.cy - 32) / 200,
-		           ~text + i, Roman(32), HsvColorf(q / 15.0, 1, 0.5), 1);
-		pos.x += Roman(32).Info()[text[i]];
+		w.DrawText(pos.x, pos.y + sin(GetTickCount() / 100.0 + i / 2.0) * (sz.cy - fnt.GetCy()) / 4,
+		           ~text + i, fnt, HsvColorf(q / 15.0, 1, 0.5), 1);
+		pos.x += fnt[text[i]];
 	}
 }
 

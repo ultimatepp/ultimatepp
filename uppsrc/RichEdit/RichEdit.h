@@ -314,6 +314,8 @@ private:
 	bool                     pixel_mode = false;
 	bool                     dark_content = false;
 	bool                     allow_dark_content = false;
+	
+	bool                     show_zoom = false;
 
 	static int fh[];
 
@@ -695,6 +697,8 @@ public:
 	Event<String&>           WhenIndexEntry;
 	Event<Bar&>              WhenBar;
 	Event<>                  WhenSel;
+	Gate<const String&>      WhenIsLink;
+	Event<const String&>     WhenLink;
 
 	void   StdBar(Bar& menu);
 
@@ -875,6 +879,8 @@ public:
 	void     SetFooter(const String& s)                   { footer = s; }
 	void     PrintNoLinks(bool b = true)                  { nolinks = b; }
 
+	Event<>  WhenLeftUp;
+	
 	typedef RichEdit CLASSNAME;
 
 	RichEdit();

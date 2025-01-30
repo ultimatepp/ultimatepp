@@ -132,6 +132,7 @@ Size   TreeCtrl::Item::GetSize(const Display *treedisplay) const
 	sz.cy = max(sz.cy, isz.cy);
 	sz.cx += csz.cx;
 	sz.cy = max(sz.cy, csz.cy);
+	sz.cy = max(sz.cy, CtrlImg::treeminus().GetHeight(), CtrlImg::treeplus().GetHeight());
 	sz += Size(2 * margin, 2 * margin);
 	return sz;
 }
@@ -1126,7 +1127,7 @@ void TreeCtrl::Paint(Draw& w)
 				dri.top++;
 		}
 		if(w.IsPainting(0, y, sz.cx, msz.cy) && msz.cy > 0) {
-			if (multiroot) {
+			if(multiroot) {
 				if(m.canopen || m.child.GetCount()) {
 					Image im = m.isopen ? CtrlImg::treeminus() : CtrlImg::treeplus();
 					op -= im.GetSize() / 2;

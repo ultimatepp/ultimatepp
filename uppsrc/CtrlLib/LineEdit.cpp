@@ -1031,6 +1031,7 @@ void LineEdit::LeftDown(Point p, dword flags) {
 
 void LineEdit::LeftUp(Point p, dword flags)
 {
+	WhenLeftUp();
 	if(!HasCapture() && selclick && !IsDragAndDropSource()) {
 		mpos = GetMousePos(p);
 		PlaceCaret(mpos, flags & K_SHIFT);

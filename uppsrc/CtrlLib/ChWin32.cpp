@@ -592,6 +592,8 @@ void ChHostSkin0()
 					s.activeedge = true;
 					s.sep1 = Null;
 				}
+				if(IsWin11())
+					s.sep1 = SLtGray(); // affects separator line in TheIDE build method
 			}
 			else {
 				Win32Look(s.trivial, 4, XP_COMBOBOX, CP_DROPDOWNBUTTON);
