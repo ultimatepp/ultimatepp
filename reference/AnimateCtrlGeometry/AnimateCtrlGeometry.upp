@@ -1,0 +1,11 @@
+description "Demonstrates the ctrl geometry animation function.\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
