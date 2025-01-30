@@ -59,7 +59,8 @@ bool RichEdit::Key(dword key, int count)
 		if(RemoveBullet(true)) break;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
-		anchor = --cursor;
+		Move(cursor - 1);
+		anchor = cursor;
 		begtabsel = false;
 		if(cursor > 0) {
 			RichPos p = text.GetRichPos(cursor - 1);
