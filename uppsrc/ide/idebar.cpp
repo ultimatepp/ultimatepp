@@ -834,6 +834,9 @@ void Ide::DebugMenu(Bar& menu)
 		#endif
 
 			menu.Separator();
+		#ifdef flagLINTER // Experimental static analyzer tools support.
+			Linter::StdMenu(menu);
+		#endif
 		}
 	}
 	if(menu.IsMenuBar()) {
