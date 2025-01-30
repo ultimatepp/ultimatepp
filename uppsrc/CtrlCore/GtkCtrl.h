@@ -168,7 +168,7 @@ _DBG_
 	                        guint time, gpointer user_data, bool paste);
 	static bool   ProcessInvalids();
 
-	friend void InitGtkApp(int argc, char **argv, const char **envptr);
+	friend bool InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void GuiPlatformGripResize(TopWindow *q);
 
 public: // really private:
@@ -187,7 +187,7 @@ public: // really private:
 	static Gclipboard& gclipboard();
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);
-
+	
 	static Vector<Event<>> hotkey;
 	static Vector<dword>   keyhot;
 	static Vector<dword>   modhot;
