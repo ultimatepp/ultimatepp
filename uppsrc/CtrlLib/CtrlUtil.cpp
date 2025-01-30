@@ -64,6 +64,37 @@ void Animate(Ctrl& c, int x, int y, int cx, int cy, int type)
 	Animate(c, RectC(x, y, cx, cy), type);
 }
 
+void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration)
+{
+    if ((ctrls.GetCount() != targets.GetCount()) || duration < 1)
+        return;
+    
+    Vector<Rect> sources;
+    for(const Ptr<Ctrl>& c : ctrls)
+        sources.Add(Nvl(c->GetRect(), {0, 0, 0, 0}));
+
+    int start = msecs(), elapsed = 0;
+ 
+    while(elapsed <= duration) {
+        elapsed = msecs() - start;
+        double t = min(1.0, (double) elapsed / (double) duration);
+        t = t * t * (3 - 2 * t);  // Ease-in-out (smoother movement).
+        for (int i = 0; i < ctrls.GetCount(); i++) {
+            const Rect& rs = sources[i], rt = targets[i];
+            if(Ptr<Ctrl>& c = ctrls[i]; c && rs != rt && !IsNull(rt)) {
+                c->SetRect(Lerp(rs, rt, t));
+			#ifdef PLATFORM_POSIX
+				c->Sync(); // Doesn't work as expected in Windows...
+				#else
+				c->Refresh();
+			#endif
+			}
+        }
+        Ctrl::ProcessEvents();
+        Ctrl::GuiSleep(0);
+    }
+}
+
 bool CtrlLibDisplayError(const Value& e) {
 	if(!e.IsError())
 		return false;
