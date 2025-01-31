@@ -112,10 +112,10 @@ bool RichEdit::Key(dword key, int count)
 				return true;
 			if(RemoveBullet(false))
 				break;
-			formatinfo.link.Clear();
 			RichText::FormatInfo f = formatinfo;
 			InsertLine();
 			formatinfo = f;
+			formatinfo.link.Clear();
 			ShowFormat();
 			FinishNF();
 		}

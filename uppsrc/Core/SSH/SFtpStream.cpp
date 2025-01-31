@@ -58,7 +58,8 @@ bool SFtpStream::Open(SFtp& sftp_, const char *filename, dword mode, int acm)
 				
 	if(handle) {
 		SFtpAttrs attrs;
-		if(!sftp->GetAttrs(handle, attrs)) {
+		Zero(attrs);
+		if(iomode != CREATE && !sftp->GetAttrs(handle, attrs)) {
 			sftp->Close(handle);
 			handle = nullptr;
 			return false;

@@ -430,6 +430,7 @@ void RichEdit::InsertLine()
 {
 	if(IsReadOnly())
 		return;
+	formatinfo.link.Clear();
 	RichText::FormatInfo b = formatinfo;
 	RichText h;
 	h.SetStyles(text.GetStyles());
@@ -459,7 +460,7 @@ void RichEdit::InsertLine()
 			return;
 		}
 	}
-	ApplyFormat(0, RichText::NEWPAGE|RichText::LABEL|RichText::NEWHDRFTR);
+	ApplyFormat(RichText::LINK, RichText::NEWPAGE|RichText::LABEL|RichText::NEWHDRFTR);
 	objectpos = -1;
 }
 
