@@ -72,13 +72,13 @@ void Animate(Event<double> update, int duration)
         Ctrl::GuiSleep(0);
     }
     update(1);
- }
+}
 
 void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration)
 {
-    Vector<Rect> data;
-    for(const Ptr<Ctrl>& c : ctrls)
-        data.Add(Nvl(c->GetRect(), {0, 0, 0, 0}));
+	Vector<Rect> data;
+	for(const Ptr<Ctrl>& c : ctrls)
+		data.Add(Nvl(c->GetRect(), {0, 0, 0, 0}));
 
 	Animate(data, targets, [&] {
 		for(int i = 0; i < ctrls.GetCount(); i++)
