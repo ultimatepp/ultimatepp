@@ -65,7 +65,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		}
 		if(!IsNull(f.link) && !IsNull(pi.hyperlink) && !(fnt.IsUnderline() || f.dashed)) {
 			fnt.Underline();
-			if(!pi.darktheme && IsNull(pi.textcolor))
+			if(IsNull(pi.textcolor))
 				ink = pi.hyperlink;
 		}
 		x = zx0;
