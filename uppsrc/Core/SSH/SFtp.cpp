@@ -204,7 +204,7 @@ bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 		if(n > 0) {
 			dest.Put(chunk, n);
 			if(dest.IsError()) {
-				LLOG("Stream write error. " + src.GetErrorText());
+				LLOG("Stream write error. " + dest.GetErrorText());
 				return false;
 			}
 			count += n;
