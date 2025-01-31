@@ -11,7 +11,7 @@
 #include <build_info.h>
 #endif
 
-String SplashCtrl::GenerateVersionInfo(bool qtf)
+String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 {
 	String h;
 	
@@ -23,10 +23,10 @@ String SplashCtrl::GenerateVersionInfo(bool qtf)
 	if(dr.GetCount() > 8)
 		dr.Trim(8);
 	h << "Revision: ";
-	if(qtf)
+	if(qtf && about)
 		h << "\1[^https://github.com/ultimatepp/ultimatepp/commit/" << rev << "^ ";
 	h << dr;
-	if(qtf)
+	if(qtf && about)
 		h << "]\1";
 	h << separator;
 #endif
@@ -103,7 +103,7 @@ String SplashCtrl::GenerateVersionNumber()
 	return IDE_VERSION;
 }
 
-Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 {
 	Image logo = IdeImg::logo();
 	Size  isz = logo.GetSize();
@@ -123,7 +123,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		}
 
 	String h;
-	h << "[A+65 \1" << GenerateVersionInfo(true) << "\n";
+	h << "[A+65 \1" << GenerateVersionInfo(true, splash) << "\n";
 	h << "Using: " << MemoryUsedKb()
 #ifdef PLATFORM_COCOA
 		<< " KB of U++ heap\n";
@@ -176,7 +176,7 @@ class AboutDlg : public TopWindow
 public:
 	AboutDlg()
 	{
-		Size isz = SplashCtrl::MakeLogo(*this, ctrl);
+		Size isz = SplashCtrl::MakeLogo(*this, ctrl, true);
 		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
 		SetRect(0, 0, cx, isz.cy);
 		about.SetQTF(GetTopic("ide/app/About_en-us"), Zoom(DPI(120), 1024));
