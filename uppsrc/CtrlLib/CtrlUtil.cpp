@@ -4,8 +4,6 @@ namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 
-// #define SLOWANIMATION
-
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE  <CtrlLib/Ctrl.iml>
 #include <Draw/iml_source.h>
@@ -17,9 +15,6 @@ void Animate(Ctrl& c, const Rect& target, int type)
 	Rect r0 = c.GetRect();
 	dword time0 = msecs();
 	int anitime = 150;
-#ifdef SLOWANIMATION
-	anitime = 1500;
-#endif
 	if(type)
 		for(;;) {
 			int t = int(msecs() - time0);
@@ -48,12 +43,8 @@ void Animate(Ctrl& c, const Rect& target, int type)
 				c.SetAlpha((byte)(255 * t / anitime));
 			else
 				break;
-			c.Sync();
-			c.ProcessEvents();
-			Sleep(0);
-#ifdef SLOWANIMATION
-			Sleep(100);
-#endif
+			Ctrl::ProcessEvents();
+			Ctrl::GuiSleep(0);
 		}
 	c.SetRect(target);
 	c.SetAlpha(255);
@@ -64,29 +55,24 @@ void Animate(Ctrl& c, int x, int y, int cx, int cy, int type)
 	Animate(c, RectC(x, y, cx, cy), type);
 }
 
-template <class T>
-void Animate(Vector<T>& data, const Vector<T>& targets, Event<> update, int duration)
+void Animate(Event<double> update, int duration)
 {
-	if(data.GetCount() != targets.GetCount() || duration < 1)
+	if(duration < 1)
 		return;
 
-    int start = msecs(), elapsed = 0;
-    
-    Vector<T> src = clone(data);
- 
-	while(elapsed <= duration) {
+	int start = msecs();
+	for(;;) {
         int elapsed = msecs() - start;
+        if(elapsed > duration)
+            break;
         double t = min(1.0, (double) elapsed / (double) duration);
         t = t * t * (3 - 2 * t);  // Ease-in-out (smoother movement).
-        for(int i = 0; i < data.GetCount(); i++)
-            data[i] = Lerp(src[i], targets[i], t);
-        update();
+        update(t);
         Ctrl::ProcessEvents();
         Ctrl::GuiSleep(0);
     }
-    data = clone(targets);
-    update();
-}
+    update(1);
+ }
 
 void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration)
 {
