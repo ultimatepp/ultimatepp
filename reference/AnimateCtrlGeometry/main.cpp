@@ -13,7 +13,7 @@ struct AnimateCtrlGeometry : TopWindow {
 		
 		CenterScreen().SetRect(0,0, 400, 200);
 
-		for(int row = 0, i = 0; row < 2; row++) {
+		for(int row = 0; row < 2; row++) {
 			for(int col = 0; col < 4; col++) {
 				ColorPusher& bt = pushers.Add();
 				bt <<= Color(Random(256), Random(256), Random(256));
@@ -25,7 +25,6 @@ struct AnimateCtrlGeometry : TopWindow {
 		}
 		
 		SetTimeCallback(1000, [&]{ Animate(ctrls, targets, 300); });
-
 	}
 };
 
