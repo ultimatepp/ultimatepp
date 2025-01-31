@@ -259,7 +259,7 @@ void IconDes::Paint(Draw& w)
 
 	if(magnify > 8 || IsHotSpot()) {
 		auto PaintHotSpot = [&](Point hotspot, Color c) {
-			if(hotspot.x > 0 || hotspot.y > 0) {
+			if(hotspot.x > 0 || hotspot.y > 0 || tool == &IconDes::HotSpotTool) {
 				hotspot = (hotspot - spos) * magnify;
 				DrawFatFrame(w, hotspot.x, hotspot.y, magnify + 1, magnify + 1, c, max(DPI(1), 1 + magnify / 8));
 			}
