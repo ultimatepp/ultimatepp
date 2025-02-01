@@ -190,6 +190,7 @@ String ResolveHostConsole()
 	
 	#ifdef PLATFORM_BSD
 	static const char *term[] = {
+		"/usr/local/bin/bobcat --",
 		"/usr/local/bin/mate-terminal -x",
 		"/usr/local/bin/gnome-terminal --window -x",
 		"/usr/local/bin/konsole -e",
@@ -200,6 +201,7 @@ String ResolveHostConsole()
 	#else
 		#ifdef FLATPAK
 		static const char *term[] = {
+			"/run/host/bin/bobcat --",
 			"/run/host/bin/mate-terminal -x",
 			"/run/host/bin/gnome-terminal --window -x",
 			"/run/host/bin/konsole -e",
@@ -209,6 +211,7 @@ String ResolveHostConsole()
 		};
 		#else
 		static const char *term[] = {
+			"/usr/bin/bobcat --",
 			"/usr/bin/mate-terminal -x",
 			"/usr/bin/gnome-terminal --window -x",
 			"/usr/bin/konsole -e",
@@ -218,6 +221,7 @@ String ResolveHostConsole()
 		};
 		#endif
 	#endif
+
 	int ii = 0;
 	for(;;) { // If (pre)defined terminal emulator is not available, try to find one
 		int c = HostConsole.Find(' ');
