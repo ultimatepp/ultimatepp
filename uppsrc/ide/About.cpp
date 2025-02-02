@@ -71,9 +71,6 @@ String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 	h << " SIMD";
 #endif
 
-#ifdef GUI_GTK
-	h << " Gtk";
-#endif
 #ifdef FLATPAK
 	h << " Flatpak";
 #endif
@@ -133,7 +130,19 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 	if(items.GetCount())
 		h << classes.GetCount() << " classes, " << items.GetCount() << " items\n";
 	if(IsUHDMode())
-		h << "UHD mode";
+		h << "UHD ";
+
+#ifdef GUI_GTK
+	if(Ctrl::IsXWayland())
+		h << "XWayland";
+	else
+	if(Ctrl::IsWayland())
+		h << "Wayland";
+	else
+	if(Ctrl::IsX11())
+		h << "X11";
+#endif
+
 #if 0
 	h << "\n1\n2\n3\n4\n5\n6"; // for size testing
 #endif

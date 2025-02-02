@@ -2,6 +2,10 @@
 
 #ifdef GUI_GTK
 
+#ifndef PLATFORM_OPENBSD
+#undef CurrentTime
+#endif
+
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
@@ -89,6 +93,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		SystemDraw w(cr);
 		painting = true;
+		
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
@@ -136,7 +141,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		p->CancelPreedit();
 		if(p) {
 			Top *top = p->GetTop();
-			if(top) {
+			if(top && top->im_context) {
 				if(((GdkEventFocus *)event)->in)
 					gtk_im_context_focus_in(top->im_context);
 				else

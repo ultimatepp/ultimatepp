@@ -164,10 +164,27 @@ public:
 	~ImageGdk();
 };
 
+class GtkCSD final : Rect { // wayland client side decoration handling
+	bool enabled = false;
+
+public:
+	static bool IsSSDSupported();
+	
+	void Create(GdkWindowTypeHint hint);
+	
+	bool IsEnabled() const   { return enabled; }
+	
+	int ExtraWidth() const   { return left + right; }
+	int ExtraHeight() const  { return top + bottom; }
+	
+	int LeftMaring() const   { return left; }
+	int RightMargin() const  { return right; }
+	int TopMargin() const    { return top; }
+	int BottomMargin() const { return bottom; }
+};
+
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
-
-bool   RunningOnWayland();
 
 GdkAtom GAtom(const String& id);
 
@@ -183,9 +200,12 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget            *window; \
-	GtkIMContext         *im_context; \
+	GtkWidget            *header = nullptr; \
+	GtkWidget            *drawing_area = nullptr; \
+	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
+	GtkCSD                csd; \
 	int64                 cursor_id; \
 	int                   id; \
 

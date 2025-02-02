@@ -554,13 +554,14 @@ Vector<String> RepoInfo(const String& package)
 	if(repo == GIT_DIR) {
 		String h = GetCurrentDirectory();
 		SetCurrentDirectory(d);
-		String v = HostSys("git rev-list --count HEAD");
+		String gitpath = GetGitPath();
+		String v = HostSys(gitpath + " rev-list --count HEAD");
 		if(IsDigit(*v))
 			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
-		v = HostSys("git rev-parse HEAD");
+		v = HostSys(gitpath + " rev-parse HEAD");
 		if(v.GetCount())
 			info.Add("#define bmGIT_HASH " + AsCString(TrimBoth(v)));
-		v = HostSys("git rev-parse --abbrev-ref HEAD");
+		v = HostSys(gitpath + " rev-parse --abbrev-ref HEAD");
 		if(v.GetCount())
 			info.Add("#define bmGIT_BRANCH " + AsCString(TrimBoth(v)));
 		SetCurrentDirectory(h);
