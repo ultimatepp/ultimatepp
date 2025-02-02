@@ -648,5 +648,6 @@ enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);
 int    GetRepo(String& path);
+String GetGitPath();
 
 #endif
