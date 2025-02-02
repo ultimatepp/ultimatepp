@@ -44,7 +44,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_type_hint(gtk(), type_hint);
 	
 	top->csd.Create(type_hint);
-	if (top->csd->IsEnable()) {
+	if (top->csd.IsEnabled()) {
 		if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
 			top->header = gtk_drawing_area_new();
 			gtk_widget_set_size_request(top->header, 1, 1);
@@ -152,8 +152,8 @@ void Ctrl::WndDestroy()
 	if(q >= 0)
 		wins.Remove(q);
 	if(owner) {
-		if(owner->utop->csd->IsEnable()) {
-			// TODO: This fix the problem with keyboard when backing to original window, but
+		if(owner->utop->csd.IsEnabled()) {
+			// TODO: This fix the problem with keyboard when going back to original window, but
 			// the previous control is not being focused like it should be.
 			gtk_window_set_focus(owner->gtk(), owner->utop->drawing_area);
 		}

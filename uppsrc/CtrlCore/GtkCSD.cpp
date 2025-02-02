@@ -6,7 +6,7 @@ namespace Upp {
 
 bool GtkCSD::IsSSDSupported()
 {
-	if (GdkBackend::IsX11()) {
+	if (Ctrl::IsX11()) {
 		return false;
 	}
 	
@@ -24,28 +24,17 @@ bool GtkCSD::IsSSDSupported()
 	return false;
 }
 
-GtkCSD::GtkCSD(GdkWindowTypeHint hint)
+void GtkCSD::Create(GdkWindowTypeHint hint)
 {
-	if (!GdkBackend::IsWayland())
+	enabled = false;
+	left = right = top = bottom = false;
+	if(!Ctrl::IsWayland())
 		return;
-	if (IsSSDSupported()) {
-		if (hint == GDK_WINDOW_TYPE_HINT_POPUP_MENU) {
-			FindMargins(hint);
-			enable = true;
-		}
-		
+	if(IsSSDSupported() && hint != GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+	   hint == GDK_WINDOW_TYPE_HINT_COMBO)
 		return;
-	}
-	if (hint == GDK_WINDOW_TYPE_HINT_COMBO) {
-		return;
-	}
 	
-	FindMargins(hint);
-	enable = true;
-}
-
-void GtkCSD::FindMargins(GdkWindowTypeHint hint)
-{
+	enabled = true;
 	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	GtkWidget* header;
 	if (findarg(hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
@@ -61,7 +50,7 @@ void GtkCSD::FindMargins(GdkWindowTypeHint hint)
 	gtk_container_add(GTK_CONTAINER(win), drawing_area);
 	gtk_widget_show_all(win);
 	
-	gdk_window_get_origin(gtk_widget_get_window(drawing_area), &left_margin, &top_margin);
+	gdk_window_get_origin(gtk_widget_get_window(drawing_area), &left, &top);
 	
 	gint drawing_area_width = gtk_widget_get_allocated_width(drawing_area);
 	gint drawing_area_height = gtk_widget_get_allocated_height(drawing_area);
@@ -69,14 +58,14 @@ void GtkCSD::FindMargins(GdkWindowTypeHint hint)
 	gint win_width = gtk_widget_get_allocated_width(win);
 	gint win_height = gtk_widget_get_allocated_height(win);
 	
-	right_margin = win_width - left_margin - drawing_area_width;
-	bottom_margin = win_height - top_margin - drawing_area_height;
+	right = win_width - left - drawing_area_width;
+	bottom = win_height - top - drawing_area_height;
 	
 	gtk_widget_destroy(drawing_area);
 	gtk_widget_destroy(header);
 	gtk_widget_destroy(win);
 }
 
-}
+};
 
 #endif

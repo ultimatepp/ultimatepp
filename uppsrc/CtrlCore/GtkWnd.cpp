@@ -111,7 +111,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
-			if(GdkBackend::IsX11() && GdkBackend::IsRunningOnWayland()) // wayland is broken, need some paint to change the cursor...
+			if(IsXWayland()) // xwayland is broken, need some paint to change the cursor...
 				topctrl->Refresh(0, 0, 1, 1);
 			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
@@ -153,22 +153,23 @@ void Ctrl::UnregisterSystemHotKey(int id)
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	if(!IsOpen()) {
+
+	if(!IsOpen())
 		return Null;
-	}
 	
 	gint x, y;
 	gint width, height;
 	
-	if (GdkBackend::IsWayland()) {
-		if(top && utop->csd->IsEnable()) {
+	if(IsWayland()) {
+		if(top && utop->csd.IsEnabled()) {
 			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
 			width = gtk_widget_get_allocated_width(utop->drawing_area);
 			height = gtk_widget_get_allocated_height(utop->drawing_area);
-		} else {
-			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
 		}
-	} else {
+		else
+			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+	}
+	else {
 		gdk_window_get_position(gdk(), &x, &y);
 		width = gdk_window_get_width(gdk());
 		height = gdk_window_get_height(gdk());
@@ -218,11 +219,10 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		auto *pMonitor = gdk_display_get_monitor(s, i);
-		if (GdkBackend::IsWayland()) {
+		if(IsWayland())
 			gdk_monitor_get_geometry(pMonitor, &rr);
-		} else {
+		else
 			gdk_monitor_get_workarea(pMonitor, &rr);
-		}
 		rc.Add(SCL(rr.x, rr.y, rr.width, rr.height));
 	}
 #else
@@ -259,7 +259,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		return Rect();
 	}
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if (GdkBackend::IsWayland()) {
+	if(IsWayland()) {
 		GdkRectangle rr;
 		auto *pDisplay = gdk_display_get_default();
 		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
@@ -271,7 +271,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		return SCL(rr.x, rr.y, rr.width, rr.height);
 	}
 #endif
-	if (GdkBackend::IsWayland()) {
+	if(IsWayland()) {
 		ASSERT("GTK Wayland backend not supported before 3.22 GTK version.");
 		return Rect();
 	}
@@ -284,7 +284,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if (GdkBackend::IsWayland()) {
+	if(IsWayland()) {
 		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
 		// windows.
 		return GetVirtualScreenArea();
@@ -429,7 +429,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	
 	Rect nr = r;
-	if (top && utop->csd->IsEnable()) {
+	if (top && utop->csd.IsEnabled()) {
 		gint x, y;
 		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
 		

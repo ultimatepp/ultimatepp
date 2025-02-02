@@ -4,6 +4,13 @@
 
 #include <X11/Xlib.h>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
+#ifdef GDK_WINDOWING_WAYLAND
+#include <gdk/gdkwayland.h>
+#endif
+
 #define CATCH_ERRORS 1
 
 namespace Upp {
@@ -54,11 +61,28 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 int Ctrl::scale;
 
-bool running_on_wayland;
-
-bool   RunningOnWayland()
+bool Ctrl::IsWayland()
 {
-	return running_on_wayland;
+#ifdef GDK_WINDOWING_WAYLAND
+	static bool wayland = GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default());
+	return wayland;
+#endif
+	return false;
+}
+
+bool Ctrl::IsX11()
+{
+#ifdef GDK_WINDOWING_WAYLAND
+	static bool x11 = GDK_IS_X11_DISPLAY(gdk_display_get_default());
+	return x11;
+#endif
+	return false;
+}
+
+bool Ctrl::IsRunningOnWayland()
+{
+	static bool running = GetEnv("XDG_SESSION_TYPE") == "wayland";
+	return running;
 }
 
 void Ctrl::ThemeChanged(void *)
@@ -82,9 +106,9 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 		Cerr() << t_("Failed to initialized GTK app!") << "\n";
 		return false;
 	}
-	if (GdkBackend::IsX11()) {
-		XInitThreads(); // otherwise there are errors despide GuiLock
-	}
+	if(Ctrl::IsX11())
+		XInitThreads(); // otherwise there are errors despite GuiLock
+
 	EnterGuiMutex();
 	
 	Ctrl::SetUHDEnabled(true);
@@ -98,7 +122,7 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
-	if (GdkBackend::IsX11())
+	if(Ctrl::IsX11())
 		gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);

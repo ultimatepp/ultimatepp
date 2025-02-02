@@ -164,47 +164,24 @@ public:
 	~ImageGdk();
 };
 
-class GtkCSD final {
+class GtkCSD final : Rect { // wayland client side decoration handling
+	bool enabled = false;
+
 public:
 	static bool IsSSDSupported();
 	
-public:
-	GtkCSD(GdkWindowTypeHint hint);
+	void Create(GdkWindowTypeHint hint);
 	
-	bool IsEnable() const      { return enable; }
+	bool IsEnabled() const   { return enabled; }
 	
-	int ExtraWidth() const   { return left_margin + right_margin; }
-	int ExtraHeight() const  { return top_margin + bottom_margin; }
+	int ExtraWidth() const   { return left + right; }
+	int ExtraHeight() const  { return top + bottom; }
 	
-	int LeftMaring() const   { return left_margin; }
-	int RightMargin() const  { return right_margin; }
-	int TopMargin() const    { return top_margin; }
-	int BottomMargin() const { return bottom_margin; }
-	
-private:
-	void FindMargins(GdkWindowTypeHint hint);
-	
-private:
-	int left_margin = 0, right_margin = 0, top_margin = 0, bottom_margin = 0;
-	bool enable = false;
+	int LeftMaring() const   { return left; }
+	int RightMargin() const  { return right; }
+	int TopMargin() const    { return top; }
+	int BottomMargin() const { return bottom; }
 };
-
-namespace GdkBackend {
-
-	enum class Type {
-		X11,
-		WAYLAND,
-		UNKNOWN
-	};
-	
-	Type Get();
-	bool IsX11();
-	bool IsWayland();
-	
-	bool IsRunningOnWayland();
-}
-
-String ToString(GdkBackend::Type b);
 
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
@@ -228,7 +205,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
-	One<GtkCSD>           csd; \
+	GtkCSD                csd; \
 	int64                 cursor_id; \
 	int                   id; \
 

@@ -204,6 +204,11 @@ public:
 	static bool      IsEndSession()            { return false; }
 	static void      PanicMsgBox(const char *title, const char *text);
 	
+	static bool      IsX11();
+	static bool      IsWayland();
+	static bool      IsRunningOnWayland();
+	static bool      IsXWayland()              { return IsX11() && IsRunningOnWayland(); }
+	
 	static Point     CurrentMousePos;
 	static guint     CurrentState;
 	static guint32   CurrentTime;
