@@ -111,7 +111,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		if(c && topctrl->IsOpen()) {
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
-			if(RunningOnWayland()) // wayland is broken, need some paint to change the cursor...
+			if(GdkBackend::IsX11() && GdkBackend::IsRunningOnWayland()) // wayland is broken, need some paint to change the cursor...
 				topctrl->Refresh(0, 0, 1, 1);
 			gdk_display_flush(gdk_display_get_default()); // Make it visible immediately
 		}
@@ -153,14 +153,28 @@ void Ctrl::UnregisterSystemHotKey(int id)
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	if(IsOpen()) {
-		gint x, y;
-		gdk_window_get_position(gdk(), &x, &y);
-		gint width = gdk_window_get_width(gdk());
-		gint height = gdk_window_get_height(gdk());
-		return SCL(x, y, width, height);
+	if(!IsOpen()) {
+		return Null;
 	}
-	return Null;
+	
+	gint x, y;
+	gint width, height;
+	
+	if (GdkBackend::IsWayland()) {
+		if(top && utop->csd->IsEnable()) {
+			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+			width = gtk_widget_get_allocated_width(utop->drawing_area);
+			height = gtk_widget_get_allocated_height(utop->drawing_area);
+		} else {
+			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+		}
+	} else {
+		gdk_window_get_position(gdk(), &x, &y);
+		width = gdk_window_get_width(gdk());
+		height = gdk_window_get_height(gdk());
+	}
+	
+	return SCL(x, y, width, height);
 }
 
 void Ctrl::WndShow(bool b)
@@ -169,7 +183,6 @@ void Ctrl::WndShow(bool b)
 	LLOG("WndShow " << Name() << ", " << b);
 	Top *top = GetTop();
 	if(IsOpen() && top) {
-		
 		if(b)
 			gtk_widget_show_now(top->window);
 		else
@@ -197,20 +210,24 @@ Rect Ctrl::GetWorkArea() const
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
+	rc.Clear();
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDisplay *s = gdk_display_get_default();
 	int n = gdk_display_get_n_monitors(s);
-	rc.Clear();
 	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
-		gdk_monitor_get_workarea(gdk_display_get_monitor(s, i), &rr);
+		auto *pMonitor = gdk_display_get_monitor(s, i);
+		if (GdkBackend::IsWayland()) {
+			gdk_monitor_get_geometry(pMonitor, &rr);
+		} else {
+			gdk_monitor_get_workarea(pMonitor, &rr);
+		}
 		rc.Add(SCL(rr.x, rr.y, rr.width, rr.height));
 	}
 #else
 	GdkScreen *s = gdk_screen_get_default();
 	int n = gdk_screen_get_n_monitors(s);
-	rc.Clear();
 	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
@@ -236,19 +253,45 @@ Rect Ctrl::GetVirtualWorkArea()
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
+	auto pRootWindow = gdk_screen_get_root_window(gdk_screen_get_default());
+	if (!pRootWindow) {
+		ASSERT("Failed to obtain root window!");
+		return Rect();
+	}
+#if GTK_CHECK_VERSION(3, 22, 0)
+	if (GdkBackend::IsWayland()) {
+		GdkRectangle rr;
+		auto *pDisplay = gdk_display_get_default();
+		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
+		if (!pMonitor) {
+			ASSERT("Failed to obtain monitor!");
+			return Rect();
+		}
+		gdk_monitor_get_geometry(pMonitor, &rr);
+		return SCL(rr.x, rr.y, rr.width, rr.height);
+	}
+#endif
+	if (GdkBackend::IsWayland()) {
+		ASSERT("GTK Wayland backend not supported before 3.22 GTK version.");
+		return Rect();
+	}
 	gint x, y, width, height;
-	gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-                            &x, &y, &width, &height);
-    Rect r = SCL(x, y, width, height);
-	return r;
+	gdk_window_get_geometry(pRootWindow, &x, &y, &width, &height);
+    return SCL(x, y, width, height);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
+	if (GdkBackend::IsWayland()) {
+		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
+		// windows.
+		return GetVirtualScreenArea();
+	}
 	GdkRectangle rr;
-	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &rr);
+	auto* display = gdk_display_get_default();
+	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(display), &rr);
 	return SCL(rr.x, rr.y, rr.width, rr.height);
 #else
 	static Rect r;
@@ -384,16 +427,28 @@ void WakeUpGuiThread();
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	LLOG("WndInvalidateRect " << r);
+	
+	Rect nr = r;
+	if (top && utop->csd->IsEnable()) {
+		gint x, y;
+		gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
+		
+		nr.left += x;
+		nr.top += y;
+			
+		nr.right += x;
+		nr.bottom += y;
+	}
+	
 	Rect rr;
 	if(scale > 1) {
-		rr.left = r.left / 2;
-		rr.top = r.top / 2;
-		rr.right = (r.right + 1) / 2;
-		rr.bottom = (r.bottom + 1) / 2;
+		rr.left = nr.left / 2;
+		rr.top = nr.top / 2;
+		rr.right = (nr.right + 1) / 2;
+		rr.bottom = (nr.bottom + 1) / 2;
 	}
 	else
-		rr = r;
+		rr = nr;
 
 	// as gtk3 dropped thread locking, we need to push invalid rectangles onto main loop
 	for(Win& win : wins) {

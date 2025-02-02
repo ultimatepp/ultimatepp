@@ -38,6 +38,9 @@
 			#ifndef flagGTK
 				#define flagGTK
 			#endif
+			#ifdef flagWAYLAND
+				#define GUI_GTK_WAYLAND
+			#endif
 			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif

@@ -72,7 +72,7 @@ String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 #endif
 
 #ifdef GUI_GTK
-	h << " Gtk";
+	h << " Gtk::" << ToString(GdkBackend::Get());
 #endif
 #ifdef FLATPAK
 	h << " Flatpak";
