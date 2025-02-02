@@ -35,6 +35,8 @@ public:
 	InfoCtrl& SetDefault(const String& d) { defaulttext = d; Refresh(); return *this; }
 	InfoCtrl& Left(int w);
 	InfoCtrl& Right(int w);
+	InfoCtrl& LeftZ(int w)                { return Left(Zx(w)); }
+	InfoCtrl& RightZ(int w)               { return Right(Zx(w)); }
 
 	typedef InfoCtrl CLASSNAME;
 
