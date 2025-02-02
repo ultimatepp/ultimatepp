@@ -74264,6 +74264,122 @@ $(OutDir_CtrlCore)GtkDrawImage.o: $(UPPDIR1)CtrlCore/GtkDrawImage.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_CtrlCore)  $(UPPDIR1)CtrlCore/GtkDrawImage.cpp -o $(OutDir_CtrlCore)GtkDrawImage.o
 
+$(OutDir_CtrlCore)GdkBackend.o: $(UPPDIR1)CtrlCore/GdkBackend.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Convert.hpp \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FileMapping.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/HttpStatusCode.i \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Other.hpp \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.iml \
+	$(UPPDIR1)CtrlCore/GdkBackend.cpp \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/DrawImg.iml \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/RichText.iml \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_CtrlCore)  $(UPPDIR1)CtrlCore/GdkBackend.cpp -o $(OutDir_CtrlCore)GdkBackend.o
+
 $(OutDir_CtrlCore)GdkImage.o: $(UPPDIR1)CtrlCore/GdkImage.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
@@ -74495,6 +74611,122 @@ $(OutDir_CtrlCore)GtkUtil.o: $(UPPDIR1)CtrlCore/GtkUtil.cpp \
 	$(UPPDIR1)RichText/Txt.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_CtrlCore)  $(UPPDIR1)CtrlCore/GtkUtil.cpp -o $(OutDir_CtrlCore)GtkUtil.o
+
+$(OutDir_CtrlCore)GtkCSD.o: $(UPPDIR1)CtrlCore/GtkCSD.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Convert.hpp \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FileMapping.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/HttpStatusCode.i \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Other.hpp \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.h \
+	$(UPPDIR1)CtrlCore/CtrlCore.iml \
+	$(UPPDIR1)CtrlCore/GtkCSD.cpp \
+	$(UPPDIR1)CtrlCore/MKeys.h \
+	$(UPPDIR1)CtrlCore/TopWindow.h \
+	$(UPPDIR1)Draw/Cham.h \
+	$(UPPDIR1)Draw/DDARasterizer.h \
+	$(UPPDIR1)Draw/Display.h \
+	$(UPPDIR1)Draw/Draw.h \
+	$(UPPDIR1)Draw/DrawImg.iml \
+	$(UPPDIR1)Draw/FontInt.h \
+	$(UPPDIR1)Draw/Image.h \
+	$(UPPDIR1)Draw/ImageOp.h \
+	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/Raster.h \
+	$(UPPDIR1)Draw/SDraw.h \
+	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)guiplatform.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)RichText/Para.h \
+	$(UPPDIR1)RichText/RichText.h \
+	$(UPPDIR1)RichText/RichText.iml \
+	$(UPPDIR1)RichText/Table.h \
+	$(UPPDIR1)RichText/Text.h \
+	$(UPPDIR1)RichText/Txt.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_CtrlCore)  $(UPPDIR1)CtrlCore/GtkCSD.cpp -o $(OutDir_CtrlCore)GtkCSD.o
 
 $(OutDir_CtrlCore)GtkX11Util.o: $(UPPDIR1)CtrlCore/GtkX11Util.cpp \
 	$(UPPDIR1)Core/Algo.h \
@@ -76401,8 +76633,10 @@ $(OutDir_CtrlCore)CtrlCore.a: \
 	$(OutDir_CtrlCore)GtkDrawOp.o \
 	$(OutDir_CtrlCore)GtkDrawText.o \
 	$(OutDir_CtrlCore)GtkDrawImage.o \
+	$(OutDir_CtrlCore)GdkBackend.o \
 	$(OutDir_CtrlCore)GdkImage.o \
 	$(OutDir_CtrlCore)GtkUtil.o \
+	$(OutDir_CtrlCore)GtkCSD.o \
 	$(OutDir_CtrlCore)GtkX11Util.o \
 	$(OutDir_CtrlCore)GtkCtrl.o \
 	$(OutDir_CtrlCore)GtkCapture.o \
@@ -76467,8 +76701,10 @@ $(OutDir_CtrlCore)CtrlCore.a: \
 		$(OutDir_CtrlCore)GtkDrawOp.o \
 		$(OutDir_CtrlCore)GtkDrawText.o \
 		$(OutDir_CtrlCore)GtkDrawImage.o \
+		$(OutDir_CtrlCore)GdkBackend.o \
 		$(OutDir_CtrlCore)GdkImage.o \
 		$(OutDir_CtrlCore)GtkUtil.o \
+		$(OutDir_CtrlCore)GtkCSD.o \
 		$(OutDir_CtrlCore)GtkX11Util.o \
 		$(OutDir_CtrlCore)GtkCtrl.o \
 		$(OutDir_CtrlCore)GtkCapture.o \
