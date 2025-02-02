@@ -3,6 +3,6 @@ LAYOUT(MacroManagerLayout, 708, 408)
 	ITEM(Upp::Button, close, SetLabel(t_("Close")).RightPosZ(4, 72).BottomPosZ(4, 24))
 	ITEM(ToolBar, tool, HSizePosZ(4, 4).TopPosZ(4, 24))
 	ITEM(Ctrl, dv___3, SetFrame(Upp::BottomSeparatorFrame()).HSizePosZ(4, 4).TopPosZ(32, 2))
-	ITEM(Upp::Button, help, SetLabel(t_("?")).Tip(t_("Learn more about Macro manager..")).RightPosZ(80, 24).BottomPosZ(4, 24))
+	ITEM(Upp::Button, help, SetLabel(t_("?")).RightPosZ(80, 24).BottomPosZ(4, 24))
 END_LAYOUT
 
