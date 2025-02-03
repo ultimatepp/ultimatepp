@@ -61,7 +61,7 @@ void RichRuler::Paint(Draw& w)
 			}
 		}
 	DrawFrame(w, RectC(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6)), SColorText());
-	w.Clip(0, 0, x0 + cx + DPI(1), sz.cy);
+	w.Clip(0, 0, x0 + cx + RichEditImg::Margin().GetWidth() / 2, sz.cy);
 	for(i = marker.GetCount() - 1; i >= 0; --i) {
 		const Marker& m = marker[i];
 		if(!IsNull(m.pos))
