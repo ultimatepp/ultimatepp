@@ -360,6 +360,7 @@ void CSyntax::InitKeywords()
 	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
 	LoadSyntax(php, php2);
 	LoadSyntax(dbg, dbglib);
+	LoadSyntax(cpp, empty); // Order here is important, must be the same as enum
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);

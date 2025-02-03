@@ -39,3 +39,8 @@ String GetGitPath()
 	return "git";
 #endif
 }
+
+bool IsGLSLExt(const String& ext)
+{
+	return findarg(ext, ".vert", ".tesc", ".tese", ".geom", ".frag", ".comp") >= 0;
+}

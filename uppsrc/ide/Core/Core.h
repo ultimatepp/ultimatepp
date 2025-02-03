@@ -636,6 +636,8 @@ public:
 	VectorMap< String, ArrayMap<int, Block> > blocks;
 };
 
+bool IsGLSLExt(const String& ext);
+
 void RegisterPCHFile(const String& pch_file);
 void DeletePCHFiles();
 

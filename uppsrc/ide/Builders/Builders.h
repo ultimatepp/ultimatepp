@@ -79,7 +79,7 @@ struct GccBuilder : CppBuilder {
 
 	virtual String CompilerName() const;
 	String CmdLine(const String& package, const Package& pkg);
-	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
+	void   CToObject(String fo, String objfile, const String& package, const Package& pkg);
 	void   CocoaAppBundle();
 	bool   CreateLib(const String& product, const Vector<String>& obj,
 	                 const Vector<String>& all_uses, const Vector<String>& all_libraries,

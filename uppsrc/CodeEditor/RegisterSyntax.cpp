@@ -51,6 +51,9 @@ void RegisterSyntaxModules()
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	RegisterCSyntax("php", CSyntax::HIGHLIGHT_PHP, "*.php", "PHP");
 	RegisterCSyntax("dbg", CSyntax::HIGHLIGHT_DBG, "*.dbg", "Debugger pretty printing scripts");
+	RegisterCSyntax("glsl", CSyntax::HIGHLIGHT_GLSL,
+	                "*.vert *.tesc *.tese *.geom *.frag *.comp",
+	                "GLSL");
 	
 	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
 	
