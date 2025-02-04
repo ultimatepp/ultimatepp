@@ -106,6 +106,10 @@ bool RichEdit::Key(dword key, int count)
 		Redo();
 		return true;
 	case K_ENTER: {
+			if(findreplace.IsOpen()) {
+				findreplace.ok.PseudoPush();
+				return true;
+			}
 			if(singleline)
 				return false;
 			if(!RemoveSelection() && InsertLineSpecial())

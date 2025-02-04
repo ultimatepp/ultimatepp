@@ -79,6 +79,8 @@ int  RichEdit::FindPos()
 
 void RichEdit::Find()
 {
+	bool bak = persistent_findreplace;
+	persistent_findreplace = true; // keep it open
 	CancelSelection();
 	FindReplaceAddHistory();
 	if(notfoundfw)
@@ -103,9 +105,8 @@ void RichEdit::Find()
 			r.bottom = r.top + sz.cy;
 		}
 		findreplace.SetRect(r);
-		if(!findreplace.IsOpen()) {
+		if(!findreplace.IsOpen())
 			findreplace.Open();
-		}
 		SetFocus();
 	}
 	else {
@@ -113,6 +114,7 @@ void RichEdit::Find()
 		CloseFindReplace();
 		notfoundfw = true;
 	}
+	persistent_findreplace = bak;
 }
 
 RichText RichEdit::ReplaceText()
