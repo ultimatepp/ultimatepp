@@ -298,6 +298,7 @@ String PPInfo::FindIncludeFile(const char *s, const String& filedir)
 	if(q >= 0)
 		return inc_cache[q];
 	String r = FindIncludeFile(s, filedir, includes);
+	DLOG(s << " -> " << r);
 	inc_cache.Add(key, r);
 	return r;
 }
@@ -430,8 +431,13 @@ void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	GatherDependencies(path, result, define_includes, flags, speculative);
 }
 
-Time PPInfo::GetTime(const String& path)
+Time PPInfo::GetTime(const String& path, const String& additional_include_path)
 {
+	int inc_cache_bak = inc_cache.GetCount();
+	int includes_bak = includes.GetCount();
+	
+	includes.Append(Split(additional_include_path, ';'));
+	
 	String p = NormalizePath(path);
 
 	VectorMap<String, Time> result;
@@ -448,6 +454,9 @@ Time PPInfo::GetTime(const String& path)
 				ftm = tm;
 		}
 	}
+
+	inc_cache.Trim(inc_cache_bak);
+	includes.Trim(includes_bak);
 
 	return ftm;
 }
@@ -500,9 +509,9 @@ void HdependAddDependency(const String& file, const String& depends)
 	hdepend.AddDependency(file, depends);
 }
 
-Time HdependGetFileTime(const String& path)
+Time HdependGetFileTime(const String& path, const String& additional_include_path)
 {
-	return hdepend.GetTime(path);
+	return hdepend.GetTime(path, additional_include_path);
 }
 
 Vector<String> HdependGetDependencies(const String& path, bool bydefine_too)

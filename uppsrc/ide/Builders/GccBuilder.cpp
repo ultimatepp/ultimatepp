@@ -92,6 +92,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				String ext = GetSrcType(fn);
 				if(IsGLSLExt(ext)) {
 					PutConsole(GetFileName(fn));
+					// TODO: Use HDepend....
 					String spv = CatAnyPath(outdir, SourceToObjName(package, fn)) + ".spv";
 					if(host->Execute("glslc " + fn + " -o " + spv))
 						error = true;
@@ -102,7 +103,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					c << "};\n";
 					c << "static const uint32_t *pCode = (uint32_t *)spv_data;\n";
 					c << "static const int codeSize = " << m.GetCount() << ";\n";
-					SaveFile(ForceExt(spv, ".i"), c);
+					SaveChangedFile(ForceExt(spv, ""), c);
 				}
 				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".brc", ".s", ".ss") >= 0 ||
 				   objectivec && findarg(ext, ".mm", ".m") >= 0 ||
