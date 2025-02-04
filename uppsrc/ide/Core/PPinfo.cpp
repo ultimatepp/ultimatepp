@@ -298,7 +298,6 @@ String PPInfo::FindIncludeFile(const char *s, const String& filedir)
 	if(q >= 0)
 		return inc_cache[q];
 	String r = FindIncludeFile(s, filedir, includes);
-	DLOG(s << " -> " << r);
 	inc_cache.Add(key, r);
 	return r;
 }
