@@ -150,7 +150,10 @@ bool RichEdit::Key(dword key, int count)
 		EvaluateFields();
 		break;
 	case K_F3:
-		Find();
+		Find(false);
+		break;
+	case K_SHIFT_F3:
+		Find(true);
 		break;
 	case K_CTRL_H:
 		Hyperlink();
