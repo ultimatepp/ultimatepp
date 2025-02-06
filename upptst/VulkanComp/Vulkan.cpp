@@ -31,6 +31,7 @@ const bool enableValidationLayers = false;
 
 /*
 The application launches a compute shader that renders the mandelbrot set,
+The application launches a compute shader that renders the mandelbrot set,
 by rendering it into a storage buffer.
 The storage buffer is then read from the GPU, and saved as .png. 
 */
