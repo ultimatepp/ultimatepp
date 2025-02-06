@@ -87,7 +87,6 @@
 	#elif __i386 || __i386__ || i386
 		#define CPU_X86 1
 		#define CPU_32 1
-		#define CPU_IA32 1
 		#define CPU_SSE2 1
 	#elif __sparc  // ToDo!
 		#define CPU_32 1
@@ -150,17 +149,18 @@
 		#define PLATFORM_WIN64 1
 		#define CPU_AMD64 1
 		#define CPU_SSE2 1
-		#define CPU_IA64 1
 	#else
 		#define CPU_32 1
-		#define CPU_IA32 1
 		#define CPU_SSE2 1
 	#endif
 #endif
 
 #ifdef CPU_BIG_ENDIAN
 #error "Big endian CPUs are not supported anymore"
-#else
+#endif
+
+#define CPU_LITTLE_ENDIAN
+#define CPU_LE
 
 #ifndef CPU_32
 #define CPU_64
