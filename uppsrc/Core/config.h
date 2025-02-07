@@ -121,7 +121,7 @@
 		#define flagUSEMALLOC
 	#else // unknown CPU
 		#ifndef __LP64__
-			#define CPU_32
+			#define CPU_32 1
 		#endif
 		#ifndef __LITTLE_ENDIAN__
 			#define CPU_BIG_ENDIAN 1
@@ -159,11 +159,11 @@
 #error "Big endian CPUs are not supported anymore"
 #endif
 
-#define CPU_LITTLE_ENDIAN
-#define CPU_LE
+#define CPU_LITTLE_ENDIAN 1
+#define CPU_LE 1
 
 #ifndef CPU_32
-#define CPU_64
+#define CPU_64 1
 #endif
 
 #ifndef CPU_ALIGNED
