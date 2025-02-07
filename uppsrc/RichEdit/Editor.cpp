@@ -844,12 +844,7 @@ RichEdit::RichEdit()
 
 	paintcarect = false;
 
-	CtrlLayoutOKCancel(findreplace, t_("Find / Replace"));
-	findreplace.cancel <<= callback(&findreplace, &TopWindow::Close);
-	findreplace.ok <<= THISBACK(Find);
-	findreplace.amend <<= THISBACK(Replace);
-	notfoundfw = found = false;
-	findreplace.NoCenter();
+	SetupFindReplace();
 
 	WhenHyperlink = callback(StdLinkDlg);
 	WhenLabel = callback(StdLabelDlg);

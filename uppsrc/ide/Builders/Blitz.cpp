@@ -51,7 +51,7 @@ void BlitzFile(String& blitz, const String& sourceFile, const Vector<String>& de
 
 BlitzBuilderComponent::BlitzBuilderComponent(Builder* builder)
 	: BuilderComponent(builder)
-	, workingDir(builder->outdir)
+	, outDir(builder->outdir)
 	, blitzFileName("$blitz")
 {
 }
@@ -75,7 +75,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
-	b.object = CatAnyPath(workingDir, blitzFileName + String(objext));
+	b.object = CatAnyPath(outDir, blitzFileName + String(objext));
 	Time blitztime = GetFileTime(b.object);
 	String blitz;
 	if(!IdeGetOneFile().IsEmpty())
@@ -83,7 +83,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 	for(int i = 0; i < sourceFiles.GetCount(); i++) {
 		String sourceFile = sourceFiles[i];
 		String ext = ToLower(GetFileExt(sourceFile));
-		String objfile = CatAnyPath(workingDir, GetFileTitle(sourceFile) + objext);
+		String objfile = CatAnyPath(outDir, GetFileTitle(sourceFile) + objext);
 		Time sourceFileTime = GetFileTime(sourceFile);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
 		   && HdependBlitzApproved(sourceFile) && IsNull(soptions[i])
@@ -101,7 +101,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		}
 	}
 	
-	b.path = CatAnyPath(workingDir, blitzFileName + ".cpp");
+	b.path = CatAnyPath(outDir, blitzFileName + ".cpp");
 	if(b.count > 1) {
 		sourceFiles = pick(excluded);
 		soptions = pick(excludedoptions);

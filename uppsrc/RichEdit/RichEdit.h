@@ -622,11 +622,13 @@ private:
 	void     JoinCell();
 	void     CellProperties();
 
+	void     SetupFindReplace0();
+	void     SetupFindReplace();
 	void     OpenFindReplace();
 	void     CloseFindReplace();
-	int      FindPos();
+	int      FindPos(bool back);
 	RichText ReplaceText();
-	void     Find();
+	void     Find(bool back);
 	void     Replace();
 	void     FindReplaceAddHistory();
 

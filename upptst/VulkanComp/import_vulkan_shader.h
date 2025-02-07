@@ -1,17 +1,16 @@
 #ifndef assist_parser__
 
-#define  SHADER_FN <SHADER.i>
-#include SHADER_FN
+#include SHADER
 
 #ifdef CREATE_INFO
 	CREATE_INFO.pCode = pCode;
 	CREATE_INFO.codeSize = codeSize;
+	#undef CREATE_INFO
 #else
 	createInfo.pCode = pCode;
 	createInfo.codeSize = codeSize;
 #endif
 
-#undef SHADER_FN
 #undef SHADER
 
 #endif

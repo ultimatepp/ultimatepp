@@ -12,8 +12,8 @@
 
 using namespace Upp;
 
-const int WIDTH = 32000; // Size of rendered mandelbrot set.
-const int HEIGHT = 24000; // Size of renderered mandelbrot set.
+const int WIDTH = 3200; // Size of rendered mandelbrot set.
+const int HEIGHT = 2400; // Size of renderered mandelbrot set.
 const int WORKGROUP_SIZE = 32; // Workgroup size in compute shader.
 
 const bool enableValidationLayers = false;
@@ -30,6 +30,7 @@ const bool enableValidationLayers = false;
 }
 
 /*
+The application launches a compute shader that renders the mandelbrot set,
 The application launches a compute shader that renders the mandelbrot set,
 by rendering it into a storage buffer.
 The storage buffer is then read from the GPU, and saved as .png. 
@@ -592,7 +593,7 @@ public:
         createInfo.pCode = pCode;
         createInfo.codeSize = codeSize;
 */        
-       	#define SHADER shader.comp
+       	#define SHADER <shader.comp>
        	#define CREATE_INFO createInfo // if omitted, createInfo is used
        	#include "import_vulkan_shader.h"
         
