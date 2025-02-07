@@ -20,6 +20,8 @@ struct f32x4 {
 	operator __m128()            { return data; }
 };
 
+force_inline int GetMaskf32x4(f32x4 a)            { return _mm_movemask_ps(a.data); }
+
 force_inline f32x4  f32all(double f)              { return _mm_set1_ps((float)f); }
 
 force_inline f32x4  operator+(f32x4 a, f32x4 b)   { return _mm_add_ps(a.data, b.data); }
@@ -69,6 +71,12 @@ struct i16x8 { // 8xint16
 	operator __m128i()           { return data; }
 };
 
+force_inline int GetMaski16x8(i16x8 a)
+{
+    return (_mm_movemask_ps(_mm_castsi128_ps(_mm_srai_epi32(_mm_unpacklo_epi16(a.data, a.data), 16)))
+        |  (_mm_movemask_ps(_mm_castsi128_ps(_mm_srai_epi32(_mm_unpackhi_epi16(a.data, a.data), 16))) << 4));
+}
+
 force_inline i16x8  i16all(int v)                  { return _mm_set1_epi16(v); }
 
 force_inline i16x8  operator+(i16x8 a, i16x8 b)    { return _mm_add_epi16(a.data, b.data); }
@@ -105,6 +113,8 @@ struct i32x4 : i16x8 { // 4xint32
 	operator int()               { return _mm_cvtsi128_si32(data); }
 };
 
+force_inline int GetMaski32x4(i16x8 a)            { return _mm_movemask_ps(_mm_castsi128_ps(a.data)); }
+
 force_inline i32x4  i32all(int v)                 { return _mm_set1_epi32(v); }
 
 force_inline i32x4  operator+(i32x4 a, i32x4 b)   { return _mm_add_epi32(a.data, b.data); }
@@ -139,6 +149,8 @@ struct i8x16 : i16x8 { // 16xint8
 	                             { data = _mm_set_epi8(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p); }
 };
 
+inline int GetMaski8x16(i8x16 a)                  { return _mm_movemask_epi8(a.data); }
+
 force_inline i8x16  i8all(int v)                  { return _mm_set1_epi8(v); }
 
 force_inline i8x16  operator+(i8x16 a, i8x16 b)   { return _mm_add_epi8(a.data, b.data); }
@@ -156,6 +168,7 @@ force_inline i8x16  operator~(i8x16 a)            { return _mm_xor_si128(a.data,
 
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }
+
 // force_inline i32x4 Round(f32x4 a)                 { return _mm_cvtps_epi32(a.data); }
 
 force_inline i16x8 Unpack8L(i16x8 a)              { return _mm_unpacklo_epi8(a.data, _mm_setzero_si128()); }
