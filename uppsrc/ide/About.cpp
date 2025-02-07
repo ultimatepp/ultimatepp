@@ -33,8 +33,9 @@ String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 
 	h << "Build: " << GenerateVersionNumber();
 #ifdef bmGIT_BRANCH
-	h << " " << bmGIT_BRANCH << "\n";
+	h << " " << bmGIT_BRANCH;
 #endif
+	h << "\n";
 
 	if(sizeof(void *) == 8)
 		h << "64 bit";
