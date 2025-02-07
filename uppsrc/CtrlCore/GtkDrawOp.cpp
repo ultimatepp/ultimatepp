@@ -6,6 +6,11 @@ namespace Upp {
 
 #define LLOG(x)
 
+SystemDraw::SystemDraw(cairo_t *cr)
+:	cr(cr)
+{
+}
+
 SystemDraw::~SystemDraw()
 {
 	FlushText();

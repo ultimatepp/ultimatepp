@@ -82,6 +82,7 @@ _DBG_
 		int          id;
 		GtkWidget   *gtk;
 		GdkWindow   *gdk;
+		GtkWidget   *drawing_area;
 		Ptr<Ctrl>    ctrl;
 		Vector<Rect> invalid; // areas invalidated to be processed at next opportunity
 	};

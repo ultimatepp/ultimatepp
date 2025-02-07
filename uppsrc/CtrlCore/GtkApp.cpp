@@ -115,7 +115,16 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	
 	Ctrl::scale = 1;
 #if GTK_CHECK_VERSION(3, 10, 0)
-	Ctrl::scale = gdk_window_get_scale_factor(gdk_screen_get_root_window(gdk_screen_get_default()));
+	if(Ctrl::IsWayland()) {
+	    GtkWidget *window;
+	    window = gtk_window_new(GTK_WINDOW_POPUP);
+	    gtk_window_set_default_size (GTK_WINDOW (window), 1, 1);
+	    gtk_widget_show_all (window);
+		Ctrl::scale = gdk_window_get_scale_factor(gtk_widget_get_window(window));
+		gtk_widget_destroy(window);
+	}
+	else
+		Ctrl::scale = gdk_window_get_scale_factor(gdk_screen_get_root_window(gdk_screen_get_default()));
 #endif
 
 	Ctrl::GlobalBackBuffer();

@@ -82,18 +82,33 @@ Ctrl *Ctrl::GetTopCtrlFromId(int id)
 	return NULL;
 }
 
+bool Ctrl::ProcessInvalids()
+{
+	GuiLock __;
+	if(invalids) {
+		for(Win& win : wins) {
+			for(const Rect& r : win.invalid)
+				if(win.drawing_area && win.ctrl)
+					gdk_window_invalidate_rect(gtk_widget_get_window(win.drawing_area), GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
+			win.invalid.Clear();
+		}
+		invalids = false;
+	}
+	return invalids;
+}
+
 gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
 		p->fullrefresh = false;
-		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
+		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
 
 		SystemDraw w(cr);
 		painting = true;
-		
+
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
@@ -394,21 +409,6 @@ void Ctrl::IMPreeditEnd(GtkIMContext *context, gpointer user_data)
 	Ctrl *w = GetTopCtrlFromId((uint32)(uintptr_t)user_data);
 	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit()))
 		w->HidePreedit();
-}
-
-bool Ctrl::ProcessInvalids()
-{
-	GuiLock __;
-	if(invalids) {
-		for(Win& win : wins) {
-			for(const Rect& r : win.invalid)
-				if(win.gdk && win.ctrl)
-					gdk_window_invalidate_rect(win.gdk, GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
-			win.invalid.Clear();
-		}
-		invalids = false;
-	}
-	return invalids;
 }
 
 void Ctrl::FetchEvents(bool may_block)
