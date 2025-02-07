@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	SIMD3.cpp;
+
+mainconfig
+	"" = "SSE2";
+
