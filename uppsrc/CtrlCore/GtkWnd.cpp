@@ -427,7 +427,8 @@ void WakeUpGuiThread();
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	
+
+#if 0
 	Rect nr = r;
 	if (top && utop->csd.IsEnabled()) {
 		gint x, y;
@@ -439,7 +440,6 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		nr.right += x;
 		nr.bottom += y;
 	}
-	
 	Rect rr;
 	if(scale > 1) {
 		rr.left = nr.left / 2;
@@ -449,6 +449,14 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	}
 	else
 		rr = nr;
+#endif
+	Rect rr;
+	if(scale > 1) {
+		rr.left = r.left / 2;
+		rr.top = r.top / 2;
+		rr.right = (r.right + 1) / 2;
+		rr.bottom = (r.bottom + 1) / 2;
+	}
 
 	// as gtk3 dropped thread locking, we need to push invalid rectangles onto main loop
 	for(Win& win : wins) {

@@ -176,7 +176,7 @@ public:
 	int ExtraWidth() const   { return left + right; }
 	int ExtraHeight() const  { return top + bottom; }
 	
-	int LeftMaring() const   { return left; }
+	int LeftMargin() const   { return left; }
 	int RightMargin() const  { return right; }
 	int TopMargin() const    { return top; }
 	int BottomMargin() const { return bottom; }

@@ -61,6 +61,11 @@ void GtkCSD::Create(GdkWindowTypeHint hint)
 	right = win_width - left - drawing_area_width;
 	bottom = win_height - top - drawing_area_height;
 	
+	left = Ctrl::SCL(left);
+	right = Ctrl::SCL(right);
+	bottom = Ctrl::SCL(bottom);
+	top = Ctrl::SCL(top);
+	
 	gtk_widget_destroy(drawing_area);
 	gtk_widget_destroy(header);
 	gtk_widget_destroy(win);
