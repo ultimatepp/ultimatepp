@@ -264,6 +264,8 @@ force_inline int GetMaski8x16(i8x16 a)
 
 force_inline i8x16  i8all(int v)                  { return vdupq_n_s8(v); }
 
+force_inline i8x16  operator==(i8x16 a, i8x16 b)  { return vreinterpretq_s8_u8(vceqq_s8(a.data, b.data)); }
+
 force_inline i8x16  operator+(i8x16 a, i8x16 b)   { return vaddq_s8(a, b); }
 force_inline i8x16& operator+=(i8x16& a, i8x16 b) { return a = a + b; }
 force_inline i8x16  operator-(i8x16 a, i8x16 b)   { return vsubq_s8(a, b); }

@@ -153,6 +153,8 @@ inline int GetMaski8x16(i8x16 a)                  { return _mm_movemask_epi8(a.d
 
 force_inline i8x16  i8all(int v)                  { return _mm_set1_epi8(v); }
 
+force_inline i8x16  operator==(i8x16 a, i8x16 b)  { return _mm_cmpeq_epi8(a.data, b.data); }
+
 force_inline i8x16  operator+(i8x16 a, i8x16 b)   { return _mm_add_epi8(a.data, b.data); }
 force_inline i8x16& operator+=(i8x16& a, i8x16 b) { return a = a + b; }
 force_inline i8x16  operator-(i8x16 a, i8x16 b)   { return _mm_sub_epi8(a.data, b.data); }
