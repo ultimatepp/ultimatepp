@@ -28,6 +28,15 @@ struct f32x4 {
 	operator float32x4_t()       { return data; }
 };
 
+force_inline int GetMaskf32x4(f32x4 a)
+{
+    uint32x4_t shifted = vshrq_n_u32(vreinterpretq_u32_f32(a.data), 31);
+    return (vgetq_lane_u32(shifted, 0) << 0) |
+           (vgetq_lane_u32(shifted, 1) << 1) |
+           (vgetq_lane_u32(shifted, 2) << 2) |
+           (vgetq_lane_u32(shifted, 3) << 3);
+}
+
 force_inline f32x4  f32all(double f) { return vdupq_n_f32((float)f); }
 
 force_inline f32x4  operator+(f32x4 a, f32x4 b)   { return vaddq_f32(a, b); }
@@ -95,6 +104,18 @@ struct i16x8 { // 8xint16
 	operator int16x8_t()         { return data; }
 };
 
+force_inline int GetMaski16x8(i16x8 a)
+{
+    uint16x8_t shifted = vshrq_n_u16(vreinterpretq_u16_s16(a.data), 15);
+    return (vgetq_lane_u16(shifted, 0) << 0) |
+           (vgetq_lane_u16(shifted, 1) << 1) |
+           (vgetq_lane_u16(shifted, 2) << 2) |
+           (vgetq_lane_u16(shifted, 3) << 3) |
+           (vgetq_lane_u16(shifted, 4) << 4) |
+           (vgetq_lane_u16(shifted, 5) << 5) |
+           (vgetq_lane_u16(shifted, 6) << 6) |
+           (vgetq_lane_u16(shifted, 7) << 7);
+}
 
 force_inline i16x8  i16all(int v)                  { return vdupq_n_s16(v); }
 
@@ -151,6 +172,15 @@ struct i32x4 { // 4xint32
 	operator int()               { return vgetq_lane_s32(data, 0); }
 	operator i16x8() const       { return i16x8(data); }
 };
+
+force_inline int GetMaski32x4(i32x4 a)
+{
+    uint32x4_t shifted = vshrq_n_u32(vreinterpretq_u32_s32(a.data), 31);
+    return (vgetq_lane_u32(shifted, 0) << 0) |
+           (vgetq_lane_u32(shifted, 1) << 1) |
+           (vgetq_lane_u32(shifted, 2) << 2) |
+           (vgetq_lane_u32(shifted, 3) << 3);
+}
 
 force_inline i32x4  i32all(int v)                 { return vdupq_n_s32(v); }
 
@@ -210,6 +240,27 @@ struct i8x16 { // 16*int8
 	operator int8x16_t() const   { return data; }
 	operator i16x8() const       { return i16x8(data); }
 };
+
+force_inline int GetMaski8x16(i8x16 a)
+{
+    uint8x16_t shifted = vshrq_n_u8(vreinterpretq_u8_s8(a.data), 7);
+    return (vgetq_lane_u8(shifted, 0) << 0)   |
+           (vgetq_lane_u8(shifted, 1) << 1)   |
+           (vgetq_lane_u8(shifted, 2) << 2)   |
+           (vgetq_lane_u8(shifted, 3) << 3)   |
+           (vgetq_lane_u8(shifted, 4) << 4)   |
+           (vgetq_lane_u8(shifted, 5) << 5)   |
+           (vgetq_lane_u8(shifted, 6) << 6)   |
+           (vgetq_lane_u8(shifted, 7) << 7)   |
+           (vgetq_lane_u8(shifted, 8) << 8)   |
+           (vgetq_lane_u8(shifted, 9) << 9)   |
+           (vgetq_lane_u8(shifted, 10) << 10) |
+           (vgetq_lane_u8(shifted, 11) << 11) |
+           (vgetq_lane_u8(shifted, 12) << 12) |
+           (vgetq_lane_u8(shifted, 13) << 13) |
+           (vgetq_lane_u8(shifted, 14) << 14) |
+           (vgetq_lane_u8(shifted, 15) << 15);
+}
 
 force_inline i8x16  i8all(int v)                  { return vdupq_n_s8(v); }
 
