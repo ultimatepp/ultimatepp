@@ -88,12 +88,12 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
 		p->fullrefresh = false;
-		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
+		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
 
 		SystemDraw w(cr);
 		painting = true;
-		
+
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));

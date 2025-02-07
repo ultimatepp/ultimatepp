@@ -43,7 +43,7 @@ bool Ctrl::painting = false;
 void   Ctrl::SetData(const Value&) {}
 Value  Ctrl::GetData() const       { return Value(); }
 
-void Ctrl::Paint(Draw& draw)                        {}
+void Ctrl::Paint(Draw& w)                           {}
 int  Ctrl::OverPaint() const                        { return 0; }
 
 void Ctrl::Activate()                               {}

@@ -91,8 +91,7 @@ public:
 	bool     CanSetSurface()          { return true; }
 	static void Flush()               {} // TODO?
 
-//	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; invalid = NULL; }
-	SystemDraw(cairo_t *cr) : cr(cr) {}
+	SystemDraw(cairo_t *cr);
 	~SystemDraw();
 };
 
