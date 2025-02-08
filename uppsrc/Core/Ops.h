@@ -202,7 +202,8 @@ inline bool FitsInInt64(double x)
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
 
-inline int CountBits(dword mask)
+force_inline
+int CountBits(dword mask)
 {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_popcount(mask);
@@ -219,7 +220,8 @@ inline int CountBits(dword mask)
 #endif
 }
 
-inline int CountBits64(uint64 mask)
+force_inline
+int CountBits64(uint64 mask)
 {
 #if defined(__GNUC__) || defined(__clang__)
     return __builtin_popcountll(mask);
