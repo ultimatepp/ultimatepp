@@ -30,7 +30,7 @@ CONSOLE_APP_MAIN
 	DUMPHEX(mask4);
 	ASSERT(mask4 == 0b1010);
 	
-	LOG("==================================");
+	LOG("=================");
 	
 	// Test 2
 	byte p[16] = {0};
@@ -57,6 +57,8 @@ CONSOLE_APP_MAIN
 	s[5] = 0x80;  // Set MSB of 6th byte
 	mask4 = GetMaski8x16(s);
 	LOG(Format("Single bit:  0x%04x (expected: 0x0020)", mask4));
+
+	CheckLogEtalon();
 	
 #else
 	Cout() << "================= NO SIMD\r\n";
