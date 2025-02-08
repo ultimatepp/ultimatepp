@@ -132,6 +132,13 @@ for binary value 1010, this value is 4. For 0, the value is 0.&]
 loosing the precision.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CountBits`(dword`): [@(0.0.255) int] [* CountBits]([_^Upp`:`:dword^ dword] 
+[*@3 mask])&]
+[s5;:Upp`:`:CountBits64`(uint64`): [@(0.0.255) int] [* CountBits64]([_^Upp`:`:uint64^ uint6
+4] [*@3 mask])&]
+[s2;%% Returns the total number of set bits in a given bit [%-*@3 mask].&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:Peek16le`(const void`*`): [@(0.0.255) int]_[* Peek16le]([@(0.0.255) const]_[@(0.0.255) v
 oid]_`*[*@3 ptr])&]
 [s5;:Upp`:`:Peek32le`(const void`*`): [@(0.0.255) int]_[* Peek32le]([@(0.0.255) const]_[@(0.0.255) v
