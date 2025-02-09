@@ -206,12 +206,13 @@ Color GetInkColor()
 
 void SOImages(int imli, dword flags)
 {
+	int n = GetStdFontCy();
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
-		CtrlsImg::Set(imli++, CairoImage(14, 14, [&](cairo_t *cr) {
-			gtk_render_background(sCtx, cr, 0, 0, 14, 14);
-			gtk_render_frame(sCtx, cr,  0, 0, 14, 14);
-			gtk_render_check(sCtx, cr, 0, 0, 14, 14);
+		CtrlsImg::Set(imli++, CairoImage(n, n, [&](cairo_t *cr) {
+			gtk_render_background(sCtx, cr, 0, 0, n, n);
+			gtk_render_frame(sCtx, cr,  0, 0, n, n);
+			gtk_render_check(sCtx, cr, 0, 0, n, n);
 		}));
 	}
 }
