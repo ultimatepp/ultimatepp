@@ -6,7 +6,16 @@ namespace Upp {
 
 Color SColorEvenRow()
 {
-	static SColor s([] { return Blend(SColorMark, SColorPaper, 220); });
+	static SColor s([] {
+		Color c;
+		Color hl = SColorHighlight();
+		for(Color c : { Blend(SColorMark, SColorPaper, 220), AdjustIfDark(GrayColor(245)),
+			            AdjustIfDark(GrayColor(245)), AdjustIfDark(Color(250, 255, 250)),
+			            AdjustIfDark(Color(250, 255, 255)) })
+			if(Difference(c, hl) > 80)
+				return c;
+		return SColorPaper();
+	});
 	return s;
 }
 
