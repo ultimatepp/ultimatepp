@@ -172,6 +172,29 @@ void MenuItemBase::DrawMenuText(Draw& w, int x, int y, const String& s, Font f, 
 	                  color, hlcolor, InOpaqueBar());
 }
 
+bool IsInvisibleOnFace(const Value& v)
+{ // there are cases when applying topitem to transparent background is invisble, detect these here
+	if(!v.Is<Image>())
+		return false;
+	Image img = v;
+	static int64 serial;
+	static bool  invalid;
+	if(serial == img.GetSerialId())
+		return invalid;
+	serial = img.GetSerialId();
+	Color c = SColorFace();
+	Image bk = CreateImage(img.GetSize(), c);
+	Over(bk, img);
+	int a = Grayscale(c);
+	invalid = true;
+	for(const RGBA& x : bk)
+		if(abs(Grayscale(x) - a) > 30) {
+			invalid = false;
+			break;
+		}
+	return invalid;
+}
+
 void MenuItemBase::PaintTopItem(Draw& w, int state) {
 	Size sz = GetSize();
 	String text = GetText();
@@ -181,13 +204,20 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		bool opaque = InOpaqueBar();
 		bool opaque2 = opaque || state;
 		Color bg = SColorFace();
-		if(opaque2)
-			ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
+		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
+		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
+		if(opaque2) {
+			if(!opaque && state == 2 && IsInvisibleOnFace(style->topitem[state])) {
+				w.DrawRect(0, 0, sz.cx, sz.cy, SColorHighlight());
+				bg = SColorHighlight();
+				hltxt = IsDark(bg) ? White() : Black();
+			}
+			else
+				ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
+		}
 		else
 		if(opaque)
 			w.DrawRect(0, 0, sz.cx, sz.cy, bg);
-		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
-		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
 		if(!opaque && state != 2 && style->opaquetest) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)]
 			Color c = state == 1 && !IsNull(style->topitem[0]) ? SColorHighlight() : bg;
 			int g = Grayscale(c);
