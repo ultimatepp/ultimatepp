@@ -195,6 +195,7 @@ String ResolveHostConsole()
 		"/usr/local/bin/gnome-terminal --window -x",
 		"/usr/local/bin/konsole -e",
 		"/usr/local/bin/lxterminal -e",
+		"/usr/local/bin/xfce4-terminal -x",
 		"/usr/local/bin/io.elementary.terminal -n -x",
 		"/usr/local/bin/xterm -e",
 	};
@@ -206,6 +207,7 @@ String ResolveHostConsole()
 			"/run/host/bin/gnome-terminal --window -x",
 			"/run/host/bin/konsole -e",
 			"/run/host/bin/lxterminal -e",
+			"/run/host/bin/xfce4-terminal -x",
 			"/run/host/bin/io.elementary.terminal -n -x",
 			"/run/host/bin/xterm -e",
 		};
@@ -216,6 +218,7 @@ String ResolveHostConsole()
 			"/usr/bin/gnome-terminal --window -x",
 			"/usr/bin/konsole -e",
 			"/usr/bin/lxterminal -e",
+			"/usr/bin/xfce4-terminal -x",
 			"/usr/bin/io.elementary.terminal -n -x",
 			"/usr/bin/xterm -e",
 		};
