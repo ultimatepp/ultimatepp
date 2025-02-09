@@ -14,11 +14,12 @@ uname=`uname`
 if [[ "$uname" == 'Darwin' ]]; then
   DEP=""
   if which brew; then
-    echo "Homebrew is already installed"
+    echo "Homebrew is installed"
   else
-    echo "Installing Homebrew package management system (to obtain openssl libraries required for U++)"
+    echo "Homebrew is not installed"
+    echo "We use Homebrew to obtain OpenSSL libraries and clang-format required for U++"
+    echo "Follow the instructions at https://brew.sh/ to install Homebrew"
     AskContinue
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   brew install openssl clang-format
   if clang++ --version; then
