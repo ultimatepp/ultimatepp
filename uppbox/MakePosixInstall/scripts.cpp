@@ -5,7 +5,7 @@ AskContinue()
 {
   read -p "Continue (Y/n)?" answer
   if [ "$answer" != "${answer//[nN]/x}" ]; then
-	 exit;
+    exit;
   fi
 }
 
@@ -13,14 +13,13 @@ uname=`uname`
 
 if [[ "$uname" == 'Darwin' ]]; then
   DEP=""
-  if which brew; then
-    echo "Homebrew is installed"
-  else
+  if ! which brew; then
     echo "Homebrew is not installed"
     echo "We use Homebrew to obtain OpenSSL libraries and clang-format required for U++"
     echo "Follow the instructions at https://brew.sh/ to install Homebrew"
-    AskContinue
+    exit
   fi
+  echo "Homebrew is installed"
   brew install openssl clang-format
   if clang++ --version; then
     echo "Commandline Development Tools already installed"
