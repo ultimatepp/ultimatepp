@@ -459,7 +459,6 @@ void FixButton(Image& button)
 	Over(m, button);
 	int g1 = Grayscale(SColorFace());
 	int n = 0;
-	int r = GetRoundness(button);
 	for(RGBA c : m) {
 		if(abs(Grayscale(c) - g1) > 30)
 			n++;

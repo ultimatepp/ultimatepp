@@ -377,7 +377,7 @@ void ChHostSkin()
 			auto& s = ToolButton::StyleDefault().Write();
 			s.look[CTRL_NORMAL] = Image();
 			s.look[CTRL_HOT] = button[CTRL_HOT];
-			s.look[CTRL_PRESSED] = button[CTRL_PRESSED]; 
+			s.look[CTRL_PRESSED] = button[CTRL_PRESSED];
 			s.look[CTRL_DISABLED] = Image();
 			s.look[CTRL_CHECKED] = button[CTRL_PRESSED];
 			s.look[CTRL_HOTCHECKED] = button[CTRL_HOT];

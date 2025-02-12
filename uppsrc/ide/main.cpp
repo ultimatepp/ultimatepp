@@ -134,7 +134,7 @@ bool TryLoadLibClang()
 	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
 	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
 		int n = Atoi(s);
-		if(n >= 5 && n < 30) { // update in 10 years...
+		if(n >= 5 && n < 5000) {
 			if(LoadLibClang("/usr/lib/llvm-" + AsString(n) + "/lib"))
 				return true;
 			break;
