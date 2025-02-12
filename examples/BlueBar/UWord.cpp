@@ -61,42 +61,42 @@ public:
 
 void UWord::FileBar(Bar& bar)
 {
-	bar.Add("New", CtrlImg::new_doc(), THISBACK(New))
+	bar.Add("New", CtrlImg::new_doc(), THISFN(New))
 	   .Key(K_CTRL_N)
 	   .Help("Open new window");
-	bar.Add("Open..", CtrlImg::open(), THISBACK(Open))
+	bar.Add("Open..", CtrlImg::open(), THISFN(Open))
 	   .Key(K_CTRL_O)
 	   .Help("Open existing document");
-	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), THISBACK(Save))
+	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), THISFN(Save))
 	   .Key(K_CTRL_S)
 	   .Help("Save current document");
-	bar.Add("SaveAs", CtrlImg::save_as(), THISBACK(SaveAs))
+	bar.Add("SaveAs", CtrlImg::save_as(), THISFN(SaveAs))
 	   .Help("Save current document with a new name");
 	bar.ToolGap();
 	bar.MenuSeparator();
-	bar.Add("Print..", CtrlImg::print(), THISBACK(Print))
+	bar.Add("Print..", CtrlImg::print(), THISFN(Print))
 	   .Key(K_CTRL_P)
 	   .Help("Print document");
-	bar.Add("Export to PDF..", UWordImg::pdf(), THISBACK(Pdf))
+	bar.Add("Export to PDF..", UWordImg::pdf(), THISFN(Pdf))
 	   .Help("Export document to PDF file");
 	if(bar.IsMenuBar()) {
 		if(lrufile().GetCount())
-			lrufile()(bar, THISBACK(OpenFile));
+			lrufile()(bar, THISFN(OpenFile));
 		bar.Separator();
-		bar.Add("Exit", THISBACK(Destroy));
+		bar.Add("Exit", THISFN(Destroy));
 	}
 }
 
 void UWord::AboutMenu(Bar& bar)
 {
-	bar.Add("About..", THISBACK(About));
+	bar.Add("About..", THISFN(About));
 }
 
 void UWord::MainMenu(Bar& bar)
 {
-	bar.Add("File", THISBACK(FileBar));
-	bar.Add("Window", callback(WindowsMenu));
-	bar.Add("Help", THISBACK(AboutMenu));
+	bar.Sub("File", THISFN(FileBar));
+	bar.Sub("Window", [=](Bar& bar) { WindowsMenu(bar); });
+	bar.Sub("Help", THISFN(AboutMenu));
 }
 
 void UWord::New()
@@ -219,7 +219,7 @@ void UWord::MainBar(Bar& bar)
 
 void UWord::SetBar()
 {
-	toolbar.Set(THISBACK(MainBar));
+	toolbar.Set(THISFN(MainBar));
 }
 
 UWord::UWord()
@@ -229,16 +229,16 @@ UWord::UWord()
 	AddFrame(toolbar);
 	AddFrame(statusbar);
 	Add(editor.SizePos());
-	menubar.Set(THISBACK(MainMenu));
+	menubar.Set(THISFN(MainMenu));
 	Sizeable().Zoomable();
-	WhenClose = THISBACK(Destroy);
+	WhenClose = THISFN(Destroy);
 	menubar.WhenHelp = toolbar.WhenHelp = statusbar;
 	static int doc;
 	Title(Format("Document%d", ++doc));
 	Icon(CtrlImg::File());
 	editor.ClearModify();
 	SetBar();
-	editor.WhenRefreshBar = THISBACK(SetBar);
+	editor.WhenRefreshBar = THISFN(SetBar);
 	OpenMain();
 	ActiveFocus(editor);
 }

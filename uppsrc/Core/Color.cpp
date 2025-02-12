@@ -324,6 +324,11 @@ int  Grayscale(const Color& c)
 	return (77 * c.GetR() + 151 * c.GetG() + 28 * c.GetB()) >> 8;
 }
 
+double Difference(Color c1, Color c2)
+{
+	return 2.75 * abs(c2.GetR() - c1.GetR()) + 5.4 * abs(c2.GetG() - c1.GetG()) + abs(c2.GetB() - c1.GetB());
+}
+
 bool IsDark(Color c)
 {
 	return Grayscale(c) < 80;
@@ -345,6 +350,9 @@ double C_B = 0.2;
 
 Color DarkTheme(Color color)
 {
+	if(IsNull(color))
+		return Null;
+
 	double r = color.GetR();
 	double g = color.GetG();
 	double b = color.GetB();

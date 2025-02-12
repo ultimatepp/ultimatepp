@@ -92,11 +92,10 @@ Image XpImage0(int widget, int part, int state, Color color, Size sz, int margin
 	Image m[2];
 	for(int q = 0; q < 2; q++) {
 		ImageDraw iw(sz + 2 * margin);
-		iw.DrawRect(sz, Nvl(color, c));
-		HDC hdc = iw.BeginGdi();
+		iw.DrawRect(sz + 2 * margin, Nvl(color, c));
 		Rect r(sz);
 		r.Offset(margin, margin);
-		XpTheme().DrawThemeBackground(theme, hdc, part, state, r, NULL);
+		XpTheme().DrawThemeBackground(theme, iw.BeginGdi(), part, state, r, NULL);
 		iw.EndGdi();
 		m[q] = iw;
 		if(!IsNull(color))
@@ -113,9 +112,9 @@ Color sAdjust(Color c)
 	return sEmulateDarkTheme ? DarkTheme(c) : c;
 }
 
-Image XpImage(int widget, int part, int state, Color color = Null, Size sz = Null)
+Image XpImage(int widget, int part, int state, Color color = Null, Size sz = Null, int margin = 0)
 {
-	Image m = XpImage0(widget, part, state, color, sz);
+	Image m = XpImage0(widget, part, state, color, sz, margin);
 	return sEmulateDarkTheme ? DarkTheme(m) : m;
 }
 
@@ -472,8 +471,21 @@ void ChHostSkin0()
 		bool vista_aero = IsWinVista() && XpThemeInfo(L"ThemeName") == "Aero";
 
 		if(vista_aero) {
-			int efp = 6;
+			if(IsWin11()) {
+				for(int i = 0; i < 4; i++) {
+					ImagePainter sw(9, 9);
+					sw.Clear(RGBAZero());
+					sw.RoundedRectangle(0.5, 0.5, 8, 8, DPI(1))
+						.Fill(i == CTRL_DISABLED ? SColorFace() : SColorPaper())
+						.Stroke(1, i == CTRL_PRESSED ? SColorHighlight() : Gray());
+					EditField::Style& s = EditField::StyleDefault().Write();
+					s.activeedge = true;
+					s.edge[i] = WithHotSpot(sw.GetResult(), DPI(1), DPI(1));
+				}
+			}
+			else
 			for(int i = 0; i < 4; i++) {
+				int efp = 6;
 				int efs = i + 1;
 				int ebsx = max(2, XpInt(XP_EDIT, efp, efs, 2403/*TMT_BORDERSIZE*/));
 				int ebsy = max(1, XpInt(XP_EDIT, efp, efs, 2403/*TMT_BORDERSIZE*/));
@@ -580,6 +592,8 @@ void ChHostSkin0()
 					s.activeedge = true;
 					s.sep1 = Null;
 				}
+				if(IsWin11())
+					s.sep1 = SLtGray(); // affects separator line in TheIDE build method
 			}
 			else {
 				Win32Look(s.trivial, 4, XP_COMBOBOX, CP_DROPDOWNBUTTON);
@@ -742,11 +756,11 @@ void ChHostSkin0()
 			}
 			s.width = FrameButtonWidth();
 		}
-		{
-			SpinButtons::Style& s = SpinButtons::StyleOnSides().Write();
-			Win32Look(s.inc.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
-			Win32Look(s.dec.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
-		}
+	//	{
+	//		SpinButtons::Style& s = SpinButtons::StyleOnSides().Write();
+	//		Win32Look(s.inc.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_UPNORMAL);
+	//		Win32Look(s.dec.look, 4, XP_SCROLLBAR, SBP_ARROWBTN, ABS_DOWNNORMAL);
+	//	}
 
 //		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
 //		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));

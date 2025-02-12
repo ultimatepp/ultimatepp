@@ -35,6 +35,10 @@ bool RichEdit::Key(dword key, int count)
 		return true;
 	if(IsReadOnly())
 		return false;
+	if(key == (K_CTRL_KEY|K_KEYUP) && show_zoom) {
+		show_zoom = false;
+		Refresh();
+	}
 	switch(key) {
 	case K_CTRL_BACKSPACE:
 		if(RemoveSelection(true)) return true;
@@ -55,7 +59,8 @@ bool RichEdit::Key(dword key, int count)
 		if(RemoveBullet(true)) break;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
-		anchor = --cursor;
+		Move(cursor - 1);
+		anchor = cursor;
 		begtabsel = false;
 		if(cursor > 0) {
 			RichPos p = text.GetRichPos(cursor - 1);
@@ -101,6 +106,10 @@ bool RichEdit::Key(dword key, int count)
 		Redo();
 		return true;
 	case K_ENTER: {
+			if(findreplace.IsOpen()) {
+				findreplace.ok.PseudoPush();
+				return true;
+			}
 			if(singleline)
 				return false;
 			if(!RemoveSelection() && InsertLineSpecial())
@@ -110,6 +119,7 @@ bool RichEdit::Key(dword key, int count)
 			RichText::FormatInfo f = formatinfo;
 			InsertLine();
 			formatinfo = f;
+			formatinfo.link.Clear();
 			ShowFormat();
 			FinishNF();
 		}
@@ -140,7 +150,10 @@ bool RichEdit::Key(dword key, int count)
 		EvaluateFields();
 		break;
 	case K_F3:
-		Find();
+		Find(false);
+		break;
+	case K_SHIFT_F3:
+		Find(true);
 		break;
 	case K_CTRL_H:
 		Hyperlink();

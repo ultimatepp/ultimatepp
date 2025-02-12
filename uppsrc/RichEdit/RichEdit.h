@@ -314,6 +314,8 @@ private:
 	bool                     pixel_mode = false;
 	bool                     dark_content = false;
 	bool                     allow_dark_content = false;
+	
+	bool                     show_zoom = false;
 
 	static int fh[];
 
@@ -620,11 +622,13 @@ private:
 	void     JoinCell();
 	void     CellProperties();
 
+	void     SetupFindReplace0();
+	void     SetupFindReplace();
 	void     OpenFindReplace();
 	void     CloseFindReplace();
-	int      FindPos();
+	int      FindPos(bool back);
 	RichText ReplaceText();
-	void     Find();
+	void     Find(bool back);
 	void     Replace();
 	void     FindReplaceAddHistory();
 
@@ -695,6 +699,8 @@ public:
 	Event<String&>           WhenIndexEntry;
 	Event<Bar&>              WhenBar;
 	Event<>                  WhenSel;
+	Gate<const String&>      WhenIsLink;
+	Event<const String&>     WhenLink;
 
 	void   StdBar(Bar& menu);
 
@@ -875,6 +881,8 @@ public:
 	void     SetFooter(const String& s)                   { footer = s; }
 	void     PrintNoLinks(bool b = true)                  { nolinks = b; }
 
+	Event<>  WhenLeftUp;
+	
 	typedef RichEdit CLASSNAME;
 
 	RichEdit();

@@ -62,7 +62,9 @@ Rect RichEdit::GetTextRect() const
 		sz.cy = Zx(16);
 	if(sz.cx < Zx(80))
 		return RectC(0, 0, Zx(48), max(sz.cy, Zy(16)));
-	int cx = zoom * (sz.cx - 2 * viewborder) / 100;
+	int cx = sz.cx - 2 * viewborder;
+	if(!pixel_mode)
+		cx = zoom * cx / 100;
 	return RectC((sz.cx - cx) / 2, 0, cx, sz.cy);
 }
 
@@ -168,6 +170,14 @@ void RichEdit::Paint(Draw& w)
 	if(!IsNull(dropcaret))
 		DrawTiles(w, dropcaret.OffsetedVert(-sb), CtrlImg::checkers());
 	scroller.Set(sb);
+	if(show_zoom) {
+		String txt = AsString(IsNull(floating_zoom) ? this->zoom : fround(floating_zoom * 100)) + '%';
+		Rect r = Rect(sz).CenterRect(GetTextSize(txt, StdFont()));
+		Rect h = r.Inflated(DPI(3));
+		w.DrawRect(h, SWhiteGray());
+		DrawFrame(w, h, SColorText());
+		w.DrawText(r.left, r.top, txt, StdFont(), SColorText());
+	}
 }
 
 int RichEdit::GetHotSpot(Point p) const
@@ -254,9 +264,8 @@ RichEdit& RichEdit::PixelMode()
 void RichEdit::Layout()
 {
 	Size sz = GetTextRect().GetSize();
-	if(pixel_mode) {
-		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8, INT_MAX));
-	}
+	if(pixel_mode)
+		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8 * 100 / zoom, INT_MAX));
 	else
 	if(!IsNull(floating_zoom)) {
 		Zoom m = GetRichTextStdScreenZoom();
@@ -363,7 +372,17 @@ void RichEdit::SetupUnits()
 
 void RichEdit::ZoomView(int d)
 {
-	zoom = clamp(zoom + d * 10, 10, 100);
+	if(IsNull(floating_zoom))
+		zoom = clamp(zoom + d * (zoom >= 200 ? 10 : 5), 10, pixel_mode ? 400 : 100);
+	else {
+		floating_zoom = minmax(floating_zoom + d * (floating_zoom >= 2 ? 0.1 : 0.05), 0.1, 4.0);
+		if(floating_zoom > 0.98 && floating_zoom < 1.02) // remove FP inaccuracies
+			floating_zoom = 1;
+	}
+
+	show_zoom = true;
+
+	RefreshLayoutDeep();
 	Refresh();
 	FinishNF();
 }
@@ -662,6 +681,58 @@ void RichEdit::Skin()
 	SetLastCharFormat(last_format);
 }
 
+
+void RichEditWithToolBar::TheBar(Bar& bar)
+{
+	DefaultBar(bar, extended);
+}
+
+void RichEditWithToolBar::RefreshBar()
+{
+	toolbar.Set(THISBACK(TheBar));
+}
+
+void RichEditWithToolBar::Skin()
+{
+	RichEdit::Skin();
+	RefreshBar();
+}
+
+void RichEdit::EvaluateFields()
+{
+	WhenStartEvaluating();
+	text.EvaluateFields(vars);
+	Finish();
+}
+
+RichEditWithToolBar::RichEditWithToolBar()
+{
+	InsertFrame(0, toolbar);
+	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
+	extended = true;
+}
+
+bool RichEdit::IsDarkContent() const
+{
+	return dark_content || allow_dark_content && IsDarkTheme();
+}
+
+RichEdit& RichEdit::DarkContent(bool b)
+{
+	dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::AllowDarkContent(bool b)
+{
+	allow_dark_content = b;
+	Refresh();
+	DoRefreshBar();
+	return *this;
+}
+
 RichEdit::RichEdit()
 {
 	floating_zoom = Null;
@@ -773,12 +844,7 @@ RichEdit::RichEdit()
 
 	paintcarect = false;
 
-	CtrlLayoutOKCancel(findreplace, t_("Find / Replace"));
-	findreplace.cancel <<= callback(&findreplace, &TopWindow::Close);
-	findreplace.ok <<= THISBACK(Find);
-	findreplace.amend <<= THISBACK(Replace);
-	notfoundfw = found = false;
-	findreplace.NoCenter();
+	SetupFindReplace();
 
 	WhenHyperlink = callback(StdLinkDlg);
 	WhenLabel = callback(StdLabelDlg);
@@ -803,59 +869,16 @@ RichEdit::RichEdit()
 	ignore_physical_size = false;
 
 	SetLastCharFormat();
+	
+	WhenLink = [](const String& s) {
+		LaunchWebBrowser(s);
+	};
+	
+	WhenIsLink = [](const String& s) {
+		return s.StartsWith("http://") || s.StartsWith("https://");
+	};
 }
 
 RichEdit::~RichEdit() {}
-
-void RichEditWithToolBar::TheBar(Bar& bar)
-{
-	DefaultBar(bar, extended);
-}
-
-void RichEditWithToolBar::RefreshBar()
-{
-	toolbar.Set(THISBACK(TheBar));
-}
-
-void RichEditWithToolBar::Skin()
-{
-	RichEdit::Skin();
-	RefreshBar();
-}
-
-void RichEdit::EvaluateFields()
-{
-	WhenStartEvaluating();
-	text.EvaluateFields(vars);
-	Finish();
-}
-
-RichEditWithToolBar::RichEditWithToolBar()
-{
-	InsertFrame(0, toolbar);
-	WhenRefreshBar = callback(this, &RichEditWithToolBar::RefreshBar);
-	extended = true;
-}
-
-bool RichEdit::IsDarkContent() const
-{
-	return dark_content || allow_dark_content && IsDarkTheme();
-}
-
-RichEdit& RichEdit::DarkContent(bool b)
-{
-	dark_content = b;
-	Refresh();
-	DoRefreshBar();
-	return *this;
-}
-
-RichEdit& RichEdit::AllowDarkContent(bool b)
-{
-	allow_dark_content = b;
-	Refresh();
-	DoRefreshBar();
-	return *this;
-}
 
 }

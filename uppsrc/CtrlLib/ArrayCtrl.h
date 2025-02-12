@@ -687,7 +687,7 @@ public:
 	ArrayCtrl& NoGrid()                                { return Grid(false); }
 	ArrayCtrl& GridColor(Color c)                      { gridcolor = c; return *this; }
 	ArrayCtrl& EvenRowColor(Color paper = SColorEvenRow(), Color ink = SColorText);
-	ArrayCtrl& OddRowColor(Color paper = SColorInfo(), Color ink = SColorText);
+	ArrayCtrl& OddRowColor(Color paper = SLtYellow(), Color ink = SColorText);
 	ArrayCtrl& NoCursor(bool b = true)                 { nocursor = b; return *this; }
 	ArrayCtrl& MouseMoveCursor(bool b = true)          { mousemove = b; return *this; }
 	ArrayCtrl& NoMouseMoveCursor()                     { return MouseMoveCursor(false); }

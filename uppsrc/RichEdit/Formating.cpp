@@ -202,8 +202,14 @@ void RichEdit::ReadFormat()
 			formatinfo = text.GetFormatInfo(min(cursor, anchor), abs(cursor - anchor));
 	else {
 		RichPos p = cursorp;
-		if(cursor && p.posinpara)
+		String l1 = p.format.link;
+		bool clearlink = p.posinpara == 0 || p.posinpara == p.paralen;
+		if(cursor && p.posinpara) {
 			p = text.GetRichPos(cursor - 1);
+			clearlink = clearlink || p.format.link.GetCount() && p.format.link != l1;
+		}
+		if(clearlink)
+			p.format.link.Clear();
 		formatinfo.Set(p.format);
 	}
 	ShowFormat();
@@ -318,11 +324,12 @@ void RichEdit::ShowFormat()
 	m.image = formatinfo.paravalid & RichText::LM ? RichEditImg::Margin() : RichEditImg::MarginMixed();
 	ruler.Set(0, m);
 
-	m.pos = r;
+	m.pos = pixel_mode || !IsNull(floating_zoom) ? Null : r;
 	m.minpos = max(l + formatinfo.indent + 120, 0);
 	m.maxpos = cursorc.textpage.Width();
 	m.image = formatinfo.paravalid & RichText::RM ? RichEditImg::Margin() : RichEditImg::MarginMixed();
 	ruler.Set(1, m);
+
 	IndentMark();
 
 	int maxpos = 0;

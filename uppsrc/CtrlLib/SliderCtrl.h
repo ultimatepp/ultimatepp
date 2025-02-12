@@ -8,10 +8,11 @@ class SliderCtrl : public Ctrl {
 	int           ClientToSlider(int x) const;
 
 	int           HoVe(int  x, int  y) const;
-	int&          HoVeR(int& x, int& y) const;
 
 	int           Min() const     { return Upp::min(min, max); };
 	int           Max() const     { return Upp::max(min, max); };
+	int           ThumbSz() const;
+	int           SliderSz() const;
 
 public:
 	typedef SliderCtrl CLASSNAME;
@@ -29,6 +30,8 @@ public:
 	virtual void  MouseMove(Point pos, dword keyflags);
 	virtual void  GotFocus();
 	virtual void  LostFocus();
+	virtual void  MouseEnter(Point p, dword keyflags);
+	virtual void  MouseLeave();
 
 	virtual void  SetData(const Value& value);
 	virtual Value GetData() const;

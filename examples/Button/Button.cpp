@@ -5,7 +5,7 @@
 using namespace Upp;
 
 struct ButtonApp : TopWindow {
-	int    count;
+	int    count = 0;
 	Button button;
 	Label  label;
 
@@ -13,21 +13,14 @@ struct ButtonApp : TopWindow {
 	{
 		label = Format("Number of button clicks %d", count);
 	}
-	void Click()
-	{
-		++count;
-		RefreshLabel();
-	}
-
-	typedef ButtonApp CLASSNAME;
 
 	ButtonApp()
 	{
-		count = 0;
-		button <<= THISBACK(Click);
-		button.SetLabel("&I'm an U++ button!");
-		Add(button.VCenterPos(20).HCenterPos(200));
-		Add(label.BottomPos(0, 20).HCenterPos(200));
+		Title("Button example");
+		button << [=] { ++count; RefreshLabel(); };
+		button.SetLabel("Click me!");
+		Add(button.VCenterPosZ(30).HCenterPosZ(200));
+		Add(label.BottomPosZ(0, 20).HCenterPosZ(200));
 		label.SetAlign(ALIGN_CENTER);
 		Sizeable().Zoomable();
 		RefreshLabel();

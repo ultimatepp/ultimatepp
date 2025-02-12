@@ -328,12 +328,14 @@ void Ide::SetupFormat() {
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/local/bin/mate-terminal -x");
 	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/local/bin/xterm -e");
+	ide.xfce <<= callback2(SetConsole, &ide.console, "/usr//local/bin/xfce4-terminal -x");
 	#else
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
 	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
+	ide.xfce <<= callback2(SetConsole, &ide.console, "/usr/bin/xfce4-terminal -x");
 	#endif
 #endif
 

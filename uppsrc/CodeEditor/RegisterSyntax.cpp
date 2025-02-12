@@ -50,7 +50,10 @@ void RegisterSyntaxModules()
 	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions");
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	RegisterCSyntax("php", CSyntax::HIGHLIGHT_PHP, "*.php", "PHP");
-	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_DBG, "*.dbg", "Debugger pretty printing scripts");
+	RegisterCSyntax("dbg", CSyntax::HIGHLIGHT_DBG, "*.dbg", "Debugger pretty printing scripts");
+	RegisterCSyntax("glsl", CSyntax::HIGHLIGHT_GLSL,
+	                "*.vert *.tesc *.tese *.geom *.frag *.comp",
+	                "GLSL");
 	
 	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
 	

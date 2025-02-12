@@ -1,4 +1,4 @@
-description "Combined Slider and Progress example";
+description "Combined Slider and Progress example\377";
 
 uses
 	CtrlLib;

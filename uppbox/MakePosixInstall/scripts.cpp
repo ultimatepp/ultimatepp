@@ -104,12 +104,12 @@ fi
 
 if clang++ --version >/dev/null; then
 	echo $UMK ./uppsrc ide CLANG -brs ./theide
-	$UMK ./uppsrc ide CLANG -brs ./theide
-	$UMK ./uppsrc umk CLANG -brs ./umk
+	$UMK ./uppsrc ide CLANG -brsH ./theide
+	$UMK ./uppsrc umk CLANG -brsH ./umk
 else
 	echo $UMK ./uppsrc ide GCC -brs ./theide
-	$UMK ./uppsrc ide GCC -brs ./theide
-	$UMK ./uppsrc umk GCC -brs ./umk
+	$UMK ./uppsrc ide GCC -brsH ./theide
+	$UMK ./uppsrc umk GCC -brsH ./umk
 fi
 
 theide=./theide

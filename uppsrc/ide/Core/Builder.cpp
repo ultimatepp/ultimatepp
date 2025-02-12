@@ -37,7 +37,7 @@ VectorMap<String, String> Builder::cmdx_cache;
 Time Builder::HdependFileTime(const String& path)
 {
 	return onefile.GetCount() ? path == onefile ? GetSysTime() : Time::Low()
-	                          : HdependGetFileTime(path);
+	                          : HdependGetFileTime(path, outdir);
 }
 
 String Builder::CmdX(const char *s)

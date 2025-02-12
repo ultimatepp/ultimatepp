@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-linux:
     docker:
-      - image: cimg/base:2024.06
+      - image: cimg/base:2025.02
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
@@ -16,7 +16,7 @@ jobs:
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
   build-mac:
     macos:
-      xcode: 15.3.0
+      xcode: 16.2.0
     environment:
       NUMBER_OF_CPUS: 4
     steps:

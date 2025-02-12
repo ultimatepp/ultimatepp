@@ -1,0 +1,11 @@
+LAYOUT(SliderLayout, 204, 252)
+	ITEM(Upp::SliderCtrl, hslider, LeftPosZ(4, 148).TopPosZ(8, 24))
+	ITEM(Upp::SliderCtrl, vslider, LeftPosZ(4, 20).VCenterPosZ(160, 18))
+	ITEM(Upp::Label, vslider_val, LeftPosZ(4, 40).TopPosZ(228, 19))
+	ITEM(Upp::SliderCtrl, vslider2, LeftPosZ(56, 20).VCenterPosZ(160, 18))
+	ITEM(Upp::Label, vslider_val2, LeftPosZ(56, 40).VCenterPosZ(19, 112))
+	ITEM(Upp::Label, hslider_val, LeftPosZ(156, 40).TopPosZ(8, 19))
+	ITEM(Upp::SliderCtrl, hslider2, LeftPosZ(4, 148).TopPosZ(36, 24))
+	ITEM(Upp::Label, hslider_val2, LeftPosZ(156, 40).TopPosZ(36, 19))
+END_LAYOUT
+

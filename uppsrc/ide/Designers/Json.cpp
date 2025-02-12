@@ -20,7 +20,7 @@ void CopyJsonPath(TreeCtrl& tree)
 void CopyJsonNode(TreeCtrl& tree)
 {
 	int id = tree.GetCursor();
-	if(id)
+	if(id >= 0)
 		WriteClipboardText(ParseQTF(~tree.GetValue(id)).GetPlainText().ToString());
 }
 
@@ -84,14 +84,22 @@ String LoadJson(TreeCtrl& tree, const String& json)
 	return parsingError;
 }
 
+void JsonTreeMenu(Bar& bar, TreeCtrl& tree)
+{
+	bar.Add(CtrlImg::copy(), "Copy", [=, &tree] { CopyJsonNode(tree); }).Key(K_CTRL_C);
+	bar.Add("Copy path\t[double-click]", [=, &tree] { CopyJsonPath(tree); });
+}
+
 void SetupJsonTree(TreeCtrl& tree)
 {
 	tree.SetDisplay(QTFDisplay());
 	tree.WhenLeftDouble = [=, &tree] { CopyJsonPath(tree); };
-	tree.WhenBar = [=, &tree](Bar& bar) {
-		bar.Add(CtrlImg::copy(), "Copy", [=, &tree] { CopyJsonNode(tree); }).Key(K_CTRL_C);
-		bar.Add("Copy path\t[double-click]", [=, &tree] { CopyJsonPath(tree); });
-	};
+	tree.WhenBar = [=, &tree](Bar& bar) { JsonTreeMenu(bar, tree); };
+}
+
+void JsonViewDes::EditMenu(Bar& bar)
+{
+	JsonTreeMenu(bar, tree);
 }
 
 JsonViewDes::JsonViewDes()

@@ -109,7 +109,7 @@ public:
 	                                         ArrayMap<String, Index<String>>& define_includes,
 	                                         bool speculative = true);
 
-	Time                  GetTime(const String& path);
+	Time                  GetTime(const String& path, const String& additional_include_path);
 	
 	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).all_defines; }
 	const Vector<Tuple<String, int>>& GetFileFlags(const String& path)  { return File(NormalizePath(path)).flags; }
@@ -121,7 +121,7 @@ void                  HdependSetDirs(Vector<String>&& id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
 void                  HdependAddDependency(const String& file, const String& depends);
-Time                  HdependGetFileTime(const String& path);
+Time                  HdependGetFileTime(const String& path, const String& additional_include_path);
 Vector<String>        HdependGetDependencies(const String& file, bool bydefine_too = true);
 bool                  HdependBlitzApproved(const String& path);
 const Vector<String>& HdependGetDefines(const String& path);
@@ -636,6 +636,8 @@ public:
 	VectorMap< String, ArrayMap<int, Block> > blocks;
 };
 
+bool IsGLSLExt(const String& ext);
+
 void RegisterPCHFile(const String& pch_file);
 void DeletePCHFiles();
 
@@ -648,5 +650,6 @@ enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);
 int    GetRepo(String& path);
+String GetGitPath();
 
 #endif

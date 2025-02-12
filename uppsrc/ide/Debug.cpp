@@ -199,8 +199,13 @@ void Ide::LaunchTerminal(const char *dir)
 	int q = c.ReverseFind(' ');
 	if(q >= 0)
 		c.Trim(q);
-	if(c.Find("io.elementary.terminal") >= 0) // elementary seems to ignore current dir
+	if(c.Find("io.elementary.terminal") >= 0) { // elementary seems to ignore current dir
 		c <<  " -w \"" << dir << "\"";
+	}
+	else
+	if(int i = c.FindAfter("bobcat"); i >= 0) { // so does Bobcat.
+		c.Insert(i, String() << " -d \"" << dir << "\" ");
+	}
 	h.Launch(Nvl(c, "/usr/bin/xterm"), false);
 #endif
 }

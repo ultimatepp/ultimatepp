@@ -220,7 +220,7 @@ void AppMain___()
 	PeakMemoryProfile();
 #endif
 
-	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
+	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(false);
 
 	Ctrl::SetUHDEnabled();
 	Ctrl::SetDarkThemeEnabled();

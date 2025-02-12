@@ -25,3 +25,22 @@ int GetRepoKind(const String& p)
 	String pp = p;
 	return GetRepo(pp);
 }
+
+String GetGitPath()
+{
+#ifdef PLATFORM_WIN32
+	static String path;
+	ONCELOCK {
+		path = AppendFileName(GetExeFolder(), "\\bin\\mingit\\cmd\\git.exe");
+		path = FileExists(path) ? "\"" + path + "\"" : "git";
+	}
+	return path;
+#else
+	return "git";
+#endif
+}
+
+bool IsGLSLExt(const String& ext)
+{
+	return findarg(ext, ".vert", ".tesc", ".tese", ".geom", ".frag", ".comp") >= 0;
+}
