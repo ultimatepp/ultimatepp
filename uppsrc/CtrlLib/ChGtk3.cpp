@@ -206,7 +206,9 @@ Color GetInkColor()
 
 void SOImages(int imli, dword flags)
 {
-	int n = GetStdFontCy();
+	int n = (GetStdFontCy() - 2) / DPI(1);
+	if(n < 18) // sometimes it gets too small relative to text..
+		n = 14;
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
 		CtrlsImg::Set(imli++, CairoImage(n, n, [&](cairo_t *cr) {
