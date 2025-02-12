@@ -452,6 +452,22 @@ int GetRoundness(const Image& m)
 	return max(di - hi, 0);
 }
 
+void FixButton(Image& button)
+{
+	Size isz = button.GetSize();
+	Image m = CreateImage(isz, SColorFace());
+	Over(m, button);
+	int g1 = Grayscale(SColorFace());
+	int n = 0;
+	int r = GetRoundness(button);
+	for(RGBA c : m) {
+		if(abs(Grayscale(c) - g1) > 30)
+			n++;
+	}
+	if(n < 2 * isz.cx)
+		button = MakeButton(2, AvgColor(button, 10), 1, Gray());
+}
+
 static Value sSample;
 
 void SetChameleonSample(const Value& m, bool once)

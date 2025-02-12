@@ -9,9 +9,11 @@ Color SColorEvenRow()
 	static SColor s([] {
 		Color c;
 		Color hl = SColorHighlight();
-		for(Color c : { Blend(SColorMark, SColorPaper, 220), AdjustIfDark(GrayColor(245)),
-			            AdjustIfDark(GrayColor(245)), AdjustIfDark(Color(250, 255, 250)),
-			            AdjustIfDark(Color(250, 255, 255)) })
+		for(Color c : { Blend(SColorMark, SColorPaper, 220),
+			            AdjustIfDark(Color(220, 255, 220)),
+			            AdjustIfDark(Color(220, 220, 255)),
+						AdjustIfDark(GrayColor(240))
+		}) // Make sure there is enough contrast between cursor and even lines
 			if(Difference(c, hl) > 80)
 				return c;
 		return SColorPaper();
