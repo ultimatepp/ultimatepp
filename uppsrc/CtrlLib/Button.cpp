@@ -163,6 +163,10 @@ void Pusher::CancelMode() {
 
 int Pusher::GetVisualState() const
 {
+	DLOG("=== GetVisualState ===");
+	DDUMP(HasMouse());
+	DDUMP(GetMousePos());
+	DDUMP(GetScreenRect());
 	return !IsShowEnabled() ? CTRL_DISABLED :
 	       IsPush() ? CTRL_PRESSED :
 	       HasMouse() ? CTRL_HOT :

@@ -166,8 +166,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			AddEvent(user_data, EVENT_FOCUS_CHANGE, value, event);
 		}
 		return false;
-	case GDK_MOTION_NOTIFY:
 	case GDK_LEAVE_NOTIFY:
+	case GDK_MOTION_NOTIFY:
 		break;
 	case GDK_BUTTON_PRESS:
 		p->CancelPreedit();
@@ -323,6 +323,10 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
+		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+	}
+	if(event && event->type == GDK_LEAVE_NOTIFY){
+		GdkEventCrossing *mevent = (GdkEventCrossing *)event;
 		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 	}
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
