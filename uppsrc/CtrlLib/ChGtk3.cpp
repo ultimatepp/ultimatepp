@@ -421,7 +421,7 @@ void ChHostSkin()
 		Gtk_New("scrollbar.horizontal.bottom contents trough slider");
 		GtkSize(sz);
 
-		s.barsize = s.thumbwidth = DPI(sz.cy);
+		s.barsize = s.thumbwidth = Ctrl::SCL(sz.cy);
 		s.thumbmin = max(minslider, 2 * s.barsize);
 
 		sz.cx = 4 * sz.cy;
