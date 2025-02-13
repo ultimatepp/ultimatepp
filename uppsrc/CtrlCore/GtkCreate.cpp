@@ -48,16 +48,14 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	
 	top->csd.Create(type_hint);
 	if(top->csd.IsEnabled()) {
-		if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0) {
-			top->header = gtk_drawing_area_new();
+		top->header = gtk_header_bar_new();
+		if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0)
 			gtk_widget_set_size_request(top->header, 1, 1);
-			gtk_window_set_titlebar(gtk(), top->header);
-		}
-		else {
-			top->header = gtk_header_bar_new();
+		else
 			gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
-			gtk_window_set_titlebar(gtk(), top->header);
-		}
+
+		gtk_window_set_titlebar(gtk(), top->header);
+		gtk_header_bar_set_has_subtitle(GTK_HEADER_BAR(top->header), false);
 		
 		top->drawing_area = gtk_drawing_area_new();
 		gtk_widget_set_can_focus(top->drawing_area, TRUE);
