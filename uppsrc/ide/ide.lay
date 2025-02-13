@@ -619,7 +619,7 @@ LAYOUT(SetupAssistLayout, 544, 368)
 	ITEM(Upp::DropList, std_cpp, LeftPosZ(116, 80).TopPosZ(288, 19))
 END_LAYOUT
 
-LAYOUT(SetupIdeLayout, 512, 352)
+LAYOUT(SetupIdeLayout, 512, 376)
 	ITEM(Upp::Option, mute_sounds, SetLabel(t_("Mute sounds")).LeftPosZ(4, 160).TopPosZ(4, 16))
 	ITEM(Upp::Label, dv___1, SetLabel(t_("HYDRA threads")).LeftPosZ(212, 80).TopPosZ(4, 19))
 	ITEM(Upp::EditIntSpin, hydra1_threads, Min(1).Max(64).LeftPosZ(344, 48).TopPosZ(4, 19))
@@ -655,6 +655,7 @@ LAYOUT(SetupIdeLayout, 512, 352)
 	ITEM(Upp::Label, dv___32, SetLabel(t_("Default UppHub folder")).LeftPosZ(4, 192).TopPosZ(328, 20))
 	ITEM(Upp::EditString, upphub, HSizePosZ(172, 28).TopPosZ(328, 19))
 	ITEM(Upp::Button, upphub_sel, RightPosZ(4, 20).TopPosZ(328, 19))
+	ITEM(Upp::Option, wayland, SetLabel(t_("Use Wayland (experimental, needs restart)")).LeftPosZ(4, 408).TopPosZ(352, 16))
 END_LAYOUT
 
 LAYOUT(SetupWebSearchEngineLayout, 564, 84)

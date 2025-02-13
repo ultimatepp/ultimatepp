@@ -171,6 +171,7 @@ void OnCrash()
 
 INITBLOCK { // libclang does not work in Linux unless this is set
 	SetEnv("LC_CTYPE", "en_US.UTF-8");
+	SetConfigName("theide");
 }
 
 #ifdef flagMAIN
@@ -179,7 +180,6 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-	SetConfigName("theide");
 #ifdef DYNAMIC_LIBCLANG
 	if(FindIndex(CommandLine(), "--noclang") < 0) {
 		String wfile = ConfigFile(".nolibclang");
