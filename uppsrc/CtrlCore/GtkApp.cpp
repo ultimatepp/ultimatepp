@@ -96,9 +96,11 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	
 #if GTK_CHECK_VERSION(3, 10, 0)
 	String backends = "x11,wayland";
-#ifdef GUI_GTK_WAYLAND
+#ifdef flagWAYLAND
 	backends = "wayland,x11";
 #endif
+	if(FileExists(ConfigFile("USE_WAYLAND")))
+		backends = "wayland,x11";
 	gdk_set_allowed_backends(backends);
 #endif
 

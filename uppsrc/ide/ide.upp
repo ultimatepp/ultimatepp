@@ -134,7 +134,6 @@ mainconfig
 	"" = "GUI PEAKMEM",
 	"" = "GUI HEAPLOG",
 	"" = "GUI X11",
-	"" = "GUI GTK WAYLAND",
 	"" = "GUI DEBUGCODE";
 
 custom() "",
