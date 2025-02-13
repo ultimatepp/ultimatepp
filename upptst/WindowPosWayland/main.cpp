@@ -2,6 +2,10 @@
 
 using namespace Upp;
 
+INITBLOCK {
+	Ctrl::UseWayland();
+}
+
 struct MyApp : TopWindow {
 	TimeCallback tm;
 	virtual void Paint(Draw& w) {
@@ -10,6 +14,7 @@ struct MyApp : TopWindow {
 		int y = 0;
 		String txt;
 		#define DMP(x)  txt << #x << " " << x << "\n";
+		DMP(Ctrl::IsWayland());
 		DMP(GetScreenRect());
 		DMP(GetVirtualScreenArea());
 		DMP(GetVirtualWorkArea());
