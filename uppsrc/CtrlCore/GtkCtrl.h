@@ -210,6 +210,8 @@ public:
 	static bool      IsRunningOnWayland();
 	static bool      IsXWayland()              { return IsX11() && IsRunningOnWayland(); }
 	
+	static void      UseWayland();
+	
 	static Point     CurrentMousePos;
 	static guint     CurrentState;
 	static guint32   CurrentTime;

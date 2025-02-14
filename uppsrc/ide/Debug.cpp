@@ -324,6 +324,10 @@ One<Debugger> PdbCreate(Host& host, const String& exefile, const String& cmdline
 
 void Ide::BuildAndDebug(bool runto)
 {
+#ifdef PLATFORM_COCOA
+	BuildAndExtDebug();
+	return;
+#endif
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "");
 	

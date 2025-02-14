@@ -435,6 +435,9 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		rr.right = (r.right + 1) / 2;
 		rr.bottom = (r.bottom + 1) / 2;
 	}
+	
+	if(IsWayland())
+		rr.Inflate(2, 2); // TODO: This is temporary fix
 
 	// as gtk3 dropped thread locking, we need to push invalid rectangles onto main loop
 	for(Win& win : wins) {

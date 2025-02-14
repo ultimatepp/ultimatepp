@@ -436,7 +436,6 @@ Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
 { // Gathers all uses, including subpackages, to support SO builds
 	String package = wspc[f];
 	Index<String> all_uses;
-	bool warn = true;
 	int n = 0;
 	while(f >= 0) {
 		const Package& p = wspc.package[f];
@@ -445,10 +444,6 @@ Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
 			if(MatchWhen(p.uses[fu].when, config.GetKeys())) {
 				if(p.uses[fu].text != package)
 					all_uses.FindAdd(p.uses[fu].text);
-				else if(warn) {
-					PutConsole(Format("%s: circular 'uses' chain", package));
-					warn = false;
-				}
 			}
 		}
 		f = -1;

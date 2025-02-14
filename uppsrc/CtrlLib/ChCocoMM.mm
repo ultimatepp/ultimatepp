@@ -57,6 +57,7 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 			    scroller.floatValue = 0;
 			    scroller.knobProportion = 1;
 				scroller.knobStyle = NSScrollerKnobStyleDefault;
+//				scroller.knobStyle = Upp::IsDarkTheme() ? NSScrollerKnobStyleDark : NSScrollerKnobStyleLight;
 				scroller.scrollerStyle = NSScrollerStyleLegacy;
 				scroller.frame = cr;
 				if(type == COCO_SCROLLTHUMB)
