@@ -36,7 +36,7 @@ void CreateLogSyntax(One<EditorSyntax>& e)
 void RegisterSyntaxModules()
 {
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
-	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",
+	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf *.cu",
 	                "C/C++");
 	RegisterCSyntax("java", CSyntax::HIGHLIGHT_JAVA, "*.java", "Java");
 	RegisterCSyntax("js", CSyntax::HIGHLIGHT_JAVASCRIPT, "*.js", "JavaScript");

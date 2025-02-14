@@ -221,6 +221,9 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->common_link = bm.Get("COMMON_LINK", "");
 		b->debug_link = bm.Get("DEBUG_LINK", "");
 		b->release_link = bm.Get("RELEASE_LINK", "");
+
+		b->debug_cuda = bm.Get("DEBUG_CUDA", "");
+		b->release_cuda = bm.Get("RELEASE_CUDA", "");
 		
 		b->main_conf = !!main_conf.GetCount();
 		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";

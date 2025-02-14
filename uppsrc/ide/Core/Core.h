@@ -534,6 +534,8 @@ struct Builder {
 	String           c_options;
 	String           debug_options;
 	String           release_options;
+	String           debug_cuda;
+	String           release_cuda;
 	String           common_link;
 	String           debug_link;
 	String           release_link;
