@@ -78,6 +78,19 @@ void CSyntax::InitKeywords()
 		"hash_t",
 		NULL
 	};
+	static const char *cuda[] = {
+		"char1", "uchar1", "char2", "uchar2", "char3", "uchar3", "char4", "uchar4",
+		"short1", "ushort1", "short2", "ushort2", "short3", "ushort3", "short4", "ushort4",
+		"int1", "uint1", "int2", "uint2", "int3", "uint3", "int4", "uint4",
+		"long1", "ulong1", "long2", "ulong2", "long3", "ulong3", "long4", "ulong4",
+		"longlong1", "ulonglong1", "longlong2", "ulonglong2", "longlong3",
+		"ulonglong3", "longlong4", "ulonglong4", "float1", "float2", "float3", "float4",
+		"double1", "double2", "double3", "double4",
+		"dim3", "", "__host__", "__device__", "__global__", "__noinline__", "__forceinline__",
+		"__inline_hint__", "__constant__", "__shared__", "__grid_constant__", "__managed__",
+		"__restrict__ ", "gridDim", "blockIdx", "blockDim", "threadIdx", "warpSize",
+		NULL
+	};
 	static const char *usc[] = {
 		"void", "self", "if", "else", "while", "do", "case",
 		"default", "break", "return", "switch", "operator", "for",
@@ -360,7 +373,8 @@ void CSyntax::InitKeywords()
 	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
 	LoadSyntax(php, php2);
 	LoadSyntax(dbg, dbglib);
-	LoadSyntax(cpp, empty); // Order here is important, must be the same as enum
+	LoadSyntax(cpp, empty);
+	LoadSyntax(cpp, cuda);
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);
