@@ -66,8 +66,6 @@ struct ColorRampCtrl : public WheelRampCtrl {
 	ColorRampCtrl() : WheelRampCtrl(true) {}
 };
 
-const Display& StdColorDisplayNull();
-
 class ColorPopUp : public Ctrl {
 public:
 	virtual  void Paint(Draw& w);
@@ -144,7 +142,6 @@ public:
 	bool        IsDarkContent() const                { return wheel.IsDarkContent(); }
 
 	ColorPopUp();
-	virtual ~ColorPopUp();
 };
 
 class ColorPusher : public Ctrl {
@@ -185,11 +182,11 @@ public:
 	ColorPusher& Track(bool b = true)       { track = b; return *this; }
 	ColorPusher& NoTrack()                  { return Track(false); }
 	ColorPusher& NoRampWheel(bool b = true) { colors.NoRampWheel(b); return *this; }
+	ColorPusher& Hints(bool b = true)       { colors.Hints(b); return *this; }
 	ColorPusher& DarkContent(bool b = true) { colors.DarkContent(b); Refresh(); return *this; }
 	ColorPusher& AllowDarkContent(bool b = true) { colors.AllowDarkContent(b); Refresh(); return *this; }
 
 	ColorPusher();
-	virtual ~ColorPusher();
 };
 
 class ColorButton : public ColorPusher {
@@ -210,8 +207,9 @@ public:
 	ColorButton& SetStyle(const ToolButton::Style& s)     { style = &s; Refresh(); return *this; }
 
 	ColorButton();
-	virtual ~ColorButton();
 };
+
+const Display& StdColorDisplayNull();
 
 String FormatColor(Color c);
 Color  ReadColor(CParser& p);
