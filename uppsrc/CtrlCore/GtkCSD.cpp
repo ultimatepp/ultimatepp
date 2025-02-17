@@ -27,7 +27,7 @@ bool GtkCSD::IsSSDSupported()
 void GtkCSD::Create(GdkWindowTypeHint hint)
 {
 	enabled = false;
-	left = right = top = bottom = false;
+	left = right = top = bottom = 0;
 	if(!Ctrl::IsWayland())
 		return;
 	if(IsSSDSupported() && hint != GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
