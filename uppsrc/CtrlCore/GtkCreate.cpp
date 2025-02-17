@@ -83,7 +83,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
-	gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
+	gtk_window_resize(gtk(), LSC(r.GetWidth()) - top->csd.ExtraWidth(),
+	                  LSC(r.GetHeight()) - top->csd.ExtraHeight());
 		
 	if (top->header) {
 		gtk_container_add(GTK_CONTAINER(top->window), top->drawing_area);
