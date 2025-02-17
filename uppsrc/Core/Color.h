@@ -113,6 +113,10 @@ struct SColor : Color { // this is supposed to be static / global
 #ifdef _DEBUG
 	~SColor();
 #endif
+
+private: // has to be static/global, no copies allowed
+	SColor(const SColor& c);
+	void operator=(const SColor& s);
 };
 
 struct AColor : Color {
