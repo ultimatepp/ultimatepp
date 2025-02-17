@@ -5,6 +5,7 @@ using namespace Upp;
 struct MyApp : TopWindow {
 	Label label;
 	TimeCallback tm;
+	int          ii = 0;
 	
 	MyApp() {
 		Sizeable().Zoomable();
@@ -12,17 +13,7 @@ struct MyApp : TopWindow {
 		Add(label.LeftPos(0, 1000).TopPos(0, 200));
 		label.SetFont(Arial(200));
 		
-		Thread::Start([=] {
-			int ii = 0;
-			for(;;) {
-				Sleep(100);
-				GuiLock __;
-				DDUMP(ii);
-				if(IsShutdownThreads())
-					break;
-				label = AsString(ii++);
-			}
-		});
+		tm.Set(-100, [=] { label = AsString(ii++); });
 	}
 	~MyApp() {
 		ShutdownThreads();
