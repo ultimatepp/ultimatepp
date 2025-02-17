@@ -227,7 +227,7 @@ int CountBits64(uint64 mask)
     return __builtin_popcountll(mask);
 #elif defined(_MSC_VER)
     #if defined(_WIN64)
-        return __popcnt64(mask);
+        return (int)__popcnt64(mask);
     #else
         return CountBits(static_cast<dword>(mask)) +  CountBits(static_cast<dword>(mask >> 32));
     #endif

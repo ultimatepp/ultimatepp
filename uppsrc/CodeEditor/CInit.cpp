@@ -89,6 +89,7 @@ void CSyntax::InitKeywords()
 		"dim3", "", "__host__", "__device__", "__global__", "__noinline__", "__forceinline__",
 		"__inline_hint__", "__constant__", "__shared__", "__grid_constant__", "__managed__",
 		"__restrict__ ", "gridDim", "blockIdx", "blockDim", "threadIdx", "warpSize",
+		"size_t", "intptr_t", "uintptr_t",
 		NULL
 	};
 	static const char *usc[] = {
