@@ -261,9 +261,18 @@ void  SeedRandom();
 // Math utils
 
 template <typename T>
-inline T Lerp(T a, T b, double t)
+constexpr inline T Lerp(T a, T b, double t) noexcept
 {
 	return T(a * (1.0 - t) + b * t);
+}
+
+template <typename T, typename F>
+constexpr inline T Lerp(T a, T b, double t, F&& easefn) noexcept
+{
+	static_assert(std::is_invocable_r_v<double, F, double>,
+		"Upp::Lerp: Easing function must be callable with a double, and return a double");
+	
+	return T(a * (1.0 - easefn(t)) + b * easefn(t));
 }
 
 inline double  sqr          (double a)                      { return a * a; }
