@@ -76,6 +76,7 @@ file
 	CommandLineHandler.h,
 	CommandLineHandler.cpp,
 	About.h,
+	BuildInfo.cpp,
 	About.cpp,
 	Macro.cpp,
 	Help.cpp,
