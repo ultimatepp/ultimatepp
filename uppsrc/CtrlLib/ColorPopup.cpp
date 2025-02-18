@@ -105,6 +105,8 @@ String FormatColor(Color c)
 
 Color ReadColor(CParser& p)
 {
+	if(p.Id("Null"))
+		return Null;
 	for(int i = 0; i < __countof(s_colors); i++)
 		if(p.Id(s_colors[i].name))
 			return s_colors[i].color;
@@ -118,8 +120,6 @@ Color ReadColor(CParser& p)
 	p.PassChar(')');
 	return Color(minmax(r, 0, 255), minmax(g, 0, 255), minmax(b, 0, 255));
 }
-
-ColorPopUp::~ColorPopUp() {}
 
 int ColorPopUp::GetColorCount() const
 {

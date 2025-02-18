@@ -444,9 +444,11 @@ String RedefineMacros()
 		}
 	
 		cmdline << " -Dlint";
+
+		cmdline << " -Dassist_parser__";
 	
 		return cmdline;
 	}
 #endif	
-	return Null;
+	return " -Dassist_parser__";
 }

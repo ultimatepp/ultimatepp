@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-ColorPusher::~ColorPusher() {}
-
 void ColorPusher::Paint(Draw& w)
 {
 	Size sz = GetSize();
@@ -118,8 +116,6 @@ ColorPusher::ColorPusher()
 	colors.Hints();
 	SetFrame(EditFieldFrame());
 }
-
-ColorButton::~ColorButton() {}
 
 Size ColorButton::GetMinSize() const
 {

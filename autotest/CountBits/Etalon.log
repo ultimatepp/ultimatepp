@@ -1,0 +1,21 @@
+* /home/maldoror//upp/.cache/upp.out/autotest/CLANG.Debug.Debug_Full.Shared/CountBits 08.02.2025 14:47:07, user: maldoror
+
+CountBits(0x0001) = 1
+CountBits(0x000f) = 4
+CountBits(0x00ff) = 8
+CountBits(0x0fff) = 12
+CountBits(0xffff) = 16
+CountBits(0x000fffff) = 20
+CountBits(0x00ffffff) = 24
+CountBits(0x0fffffff) = 28
+CountBits(0xffffffff) = 32
+====================
+CountBits64(0x00000001ffffffff) = 33
+CountBits64(0x0000000fffffffff) = 36
+CountBits64(0x000000ffffffffff) = 40
+CountBits64(0x00000fffffffffff) = 44
+CountBits64(0x0000ffffffffffff) = 48
+CountBits64(0x000fffffffffffff) = 52
+CountBits64(0x00ffffffffffffff) = 56
+CountBits64(0x0fffffffffffffff) = 60
+CountBits64(0xffffffffffffffff) = 64

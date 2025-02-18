@@ -15,7 +15,7 @@ String GetGoogleMap(double center_x, double center_y, int zoom, int cx, int cy,
                     const char *format, String *error)
 {
 	String request;
-	request << "http://maps.google.com/maps/api/staticmap?center=" <<
+	request << "https://maps.google.com/maps/api/staticmap?center=" <<
 		       AsString(center_y) << ',' << AsString(center_x) <<
 		       "&zoom=" << zoom <<
 		       "&size=" << cx << 'x' << cy <<

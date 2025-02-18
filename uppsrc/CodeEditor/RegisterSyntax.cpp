@@ -38,6 +38,7 @@ void RegisterSyntaxModules()
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
 	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",
 	                "C/C++");
+	RegisterCSyntax("cuda", CSyntax::HIGHLIGHT_CUDA, "*.cu", "Cuda");
 	RegisterCSyntax("java", CSyntax::HIGHLIGHT_JAVA, "*.java", "Java");
 	RegisterCSyntax("js", CSyntax::HIGHLIGHT_JAVASCRIPT, "*.js", "JavaScript");
 	RegisterCSyntax("cs", CSyntax::HIGHLIGHT_CS, "*.cs", "C#");
@@ -51,6 +52,9 @@ void RegisterSyntaxModules()
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	RegisterCSyntax("php", CSyntax::HIGHLIGHT_PHP, "*.php", "PHP");
 	RegisterCSyntax("dbg", CSyntax::HIGHLIGHT_DBG, "*.dbg", "Debugger pretty printing scripts");
+	RegisterCSyntax("glsl", CSyntax::HIGHLIGHT_GLSL,
+	                "*.vert *.tesc *.tese *.geom *.frag *.comp",
+	                "GLSL");
 	
 	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
 	

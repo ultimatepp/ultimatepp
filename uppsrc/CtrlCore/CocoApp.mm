@@ -16,11 +16,13 @@ NSMenu *Cocoa_DockMenu();
 @implementation AppDelegate
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender
 {
+	Upp::GuiLock __;
 	return Upp::Cocoa_DockMenu();
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+	Upp::GuiLock __;
 	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(themeChanged:)
                                                      name:@"AppleColorPreferencesChangedNotification"
@@ -33,11 +35,13 @@ NSMenu *Cocoa_DockMenu();
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {
+	Upp::GuiLock __;
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)themeChanged:(NSNotification *)aNotification
 {
+	Upp::GuiLock __;
 	Upp::Ctrl::PostReSkin();
 }
 
@@ -125,13 +129,13 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 
 int Ctrl::GetKbdDelay()
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	return int(1000 * NSEvent.keyRepeatDelay);
 }
 
 int Ctrl::GetKbdSpeed()
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	return int(1000 * NSEvent.keyRepeatInterval);
 }
 
@@ -187,7 +191,9 @@ bool Ctrl::ProcessEvent(bool *)
 		return false;
 	
 	current_event = nil;
+	int n = LeaveGuiMutexAll();
 	[NSApp sendEvent:event];
+	EnterGuiMutex(n);
 	[event release];
 
 	return true;
@@ -205,15 +211,15 @@ bool Ctrl::ProcessEvents(bool *quit)
 		SweepMkImageCache();
 		return true;
 	}
-	SweepMkImageCache();
 	TimerProc(msecs());
+	SweepMkImageCache();
 	return false;
 }
 
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
@@ -287,7 +293,7 @@ Rect MakeScreenRect(NSScreen *screen, CGRect r)
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	for(NSScreen *screen in [NSScreen screens])
 		rc.Add(MakeScreenRect(screen, [screen visibleFrame]));
 }
@@ -330,7 +336,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 
 Rect Ctrl::GetScreenArea(Point pt)
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	for(NSScreen *screen in [NSScreen screens]) {
 		Rect rc = MakeScreenRect(screen, [screen frame]);
 		if(rc.Contains(pt))
@@ -353,7 +359,7 @@ bool Ctrl::IsCompositedGui()
 
 Rect Ctrl::GetDefaultWindowRect()
 {
-	GuiLock __;
+	Upp::GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
 	Size sz = r.GetSize();
 	

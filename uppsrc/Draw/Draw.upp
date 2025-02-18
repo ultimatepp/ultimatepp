@@ -6,7 +6,8 @@ acceptflags
 	NOGTK;
 
 uses
-	Core;
+	Core,
+	plugin/png;
 
 library(WIN32) "usp10 user32 gdi32";
 

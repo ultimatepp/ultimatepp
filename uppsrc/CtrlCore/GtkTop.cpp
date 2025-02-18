@@ -14,7 +14,7 @@ Rect Ctrl::GetFrameMargins()
 	return frameMargins != Rect(0, 0, 0, 0) ? frameMargins : Rect(8, 32, 8, 8);
 }
 
-void    TopWindow::SyncSizeHints()
+void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
 	if(!top)
@@ -25,13 +25,13 @@ void    TopWindow::SyncSizeHints()
 	Size sz = sz0;
 	if(sizeable)
 		sz = GetMinSize();
-	m.min_width = LSC(sz.cx);
-	m.min_height = LSC(sz.cy);
+	m.min_width = LSC(sz.cx + utop->csd.ExtraWidth());
+	m.min_height = LSC(sz.cy + utop->csd.ExtraHeight());
 	sz = sz0;
 	if(sizeable)
 		sz = GetMaxSize();
-	m.max_width = LSC(sz.cx);
-	m.max_height = LSC(sz.cy);
+	m.max_width = LSC(sz.cx + utop->csd.ExtraWidth());
+	m.max_height = LSC(sz.cy + utop->csd.ExtraHeight());
 	gtk_window_set_resizable(gtk(), sizeable);
 	Top *top = GetTop();
 	if(top) {

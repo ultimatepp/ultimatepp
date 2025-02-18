@@ -33,11 +33,8 @@ void ClangConfigSetDefaults()
 
 	IndexerThreads = max(min(CPU_Cores() - 2, (mem_mb - 4000) / 1000), 1);
 
-#ifdef CPU_ARM
-	AutoIndexer = CPU_Cores() >= 8;
-#else
-	AutoIndexer = CPU_Cores() >= 4;
-#endif
+//	AutoIndexer = CPU_Cores() >= 8 && mem_mb > 8000;
+	AutoIndexer = true;
 
 	LibClangCppVersion = 17;
 }

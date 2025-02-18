@@ -54,14 +54,17 @@ shSession][@(0.0.255) `&]_[* Keys]([@(0.0.255) const]_[_^Upp`:`:String^ String][
 ]_[*@3 prikey], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 pubkey], 
 [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 phrase], 
 [@(0.0.255) bool]_[*@3 fromfile]_`=_[@(0.0.255) true])&]
-[s2;%% Sets the asymmetric encryption keys to be used to authenticate 
+[s0;l288;%% Sets the asymmetric encryption keys to be used to authenticate 
 the session. [%-*@3 phrase] can be used to decipher the private 
 key, or it can be empty (not recommended). Returns `*this for 
 method chaining. Note that when the [%-*@3 fromfile] parameter 
 is true, [%-*@3 prikey] and [%-*@3 pubkey] strings will be treated 
 as file paths to the respective key files. This is the default 
 behaviour. Otherwise they will be treated as memory buffers containing 
-the actual keys.&]
+the actual keys. Note that it is possible to compute public key 
+from public key (aka. private key auth). To enable it, simply 
+&]
+[s2;%% pass an empty or Null [%-*@3 pubkey].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:Method`(int`,Upp`:`:Value`): [_^Upp`:`:SshSession^ SshSession
@@ -161,33 +164,6 @@ The `"[C none]`" method allows logging in without an authentication
 scheme. It is rarely used by the servers, and handled automatically 
 by the session.&]
 [s3;^Upp`:`:SFtp^ &]
-[s4;^Upp`:`:SFtp^ &]
-[s5;:Upp`:`:SshSession`:`:CreateSFtp`(`): [_^Upp`:`:SFtp^ SFtp]_[* CreateSFtp]()&]
-[s2;%% Creates an sftp channel instance.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateChannel`(`): [_^Upp`:`:SshChannel^ SshChannel]_[* CreateC
-hannel]()&]
-[s2;%% Creates a generic channel instance.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateExec`(`): [_^Upp`:`:SshExec^ SshExec]_[* CreateExec]()&]
-[s2;%% Creates an exec channel instance.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateScp`(`): [_^Upp`:`:Scp^ Scp]_[* CreateScp]()&]
-[s2;%% Creates an scp channel instance.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateTunnel`(`): [_^Upp`:`:SshTunnel^ SshTunnel]_[* CreateTunn
-el]()&]
-[s2;%% Creates a tcp`-ip and port forwarding channel instance.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateShell`(`): [_^Upp`:`:SshShell^ SshShell]_[* CreateShell](
-)&]
-[s2;%% Creates a remote shell channel instance.&]
-[s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:Connect`(const Upp`:`:String`&`): [@(0.0.255) bool]_[* Connect](
 [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 url])&]

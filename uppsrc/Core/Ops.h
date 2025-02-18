@@ -202,6 +202,47 @@ inline bool FitsInInt64(double x)
 	return x >= -9223372036854775808.0 && x < 9223372036854775808.0;
 }
 
+force_inline
+int CountBits(dword mask)
+{
+#if defined(__GNUC__) || defined(__clang__)
+    return __builtin_popcount(mask);
+#elif defined(_MSC_VER)
+    return __popcnt(mask);
+#else
+    // Fallback (unlikely)
+    mask = mask - ((mask >> 1) & 0x55555555);
+    mask = (mask & 0x33333333) + ((mask >> 2) & 0x33333333);
+    mask = (mask + (mask >> 4)) & 0x0F0F0F0F;
+    mask = mask + (mask >> 8);
+    mask = mask + (mask >> 16);
+    return mask & 0x3F;
+#endif
+}
+
+force_inline
+int CountBits64(uint64 mask)
+{
+#if defined(__GNUC__) || defined(__clang__)
+    return __builtin_popcountll(mask);
+#elif defined(_MSC_VER)
+    #if defined(_WIN64)
+        return (int)__popcnt64(mask);
+    #else
+        return CountBits(static_cast<dword>(mask)) +  CountBits(static_cast<dword>(mask >> 32));
+    #endif
+#else
+    // Fallback (unlikely)
+    mask = mask - ((mask >> 1) & 0x5555555555555555ULL);
+    mask = (mask & 0x3333333333333333ULL) + ((mask >> 2) & 0x3333333333333333ULL);
+    mask = (mask + (mask >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
+    mask = mask + (mask >> 8);
+    mask = mask + (mask >> 16);
+    mask = mask + (mask >> 32);
+    return mask & 0x7F;
+#endif
+}
+
 #if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
 
 #ifdef CPU_X86

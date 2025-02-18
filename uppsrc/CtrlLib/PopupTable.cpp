@@ -132,7 +132,7 @@ void PopUpTable::Normal()
 	MouseMoveCursor();
 	NoGrid();
 	AutoHideSb();
-	SetLineCy(Draw::GetStdFontCy());
+	SetLineCy(GetStdFontCyA());
 //	NoPopUpEx();
 }
 

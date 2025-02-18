@@ -4,6 +4,13 @@
 
 #include <X11/Xlib.h>
 
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
+#ifdef GDK_WINDOWING_WAYLAND
+#include <gdk/gdkwayland.h>
+#endif
+
 #define CATCH_ERRORS 1
 
 namespace Upp {
@@ -54,11 +61,28 @@ void Ctrl::PanicMsgBox(const char *title, const char *text)
 
 int Ctrl::scale;
 
-bool running_on_wayland;
-
-bool   RunningOnWayland()
+bool Ctrl::IsWayland()
 {
-	return running_on_wayland;
+#ifdef GDK_WINDOWING_WAYLAND
+	static bool wayland = GDK_IS_WAYLAND_DISPLAY(gdk_display_get_default());
+	return wayland;
+#endif
+	return false;
+}
+
+bool Ctrl::IsX11()
+{
+#ifdef GDK_WINDOWING_WAYLAND
+	static bool x11 = GDK_IS_X11_DISPLAY(gdk_display_get_default());
+	return x11;
+#endif
+	return false;
+}
+
+bool Ctrl::IsRunningOnWayland()
+{
+	static bool running = GetEnv("XDG_SESSION_TYPE") == "wayland";
+	return running;
 }
 
 void Ctrl::ThemeChanged(void *)
@@ -66,41 +90,69 @@ void Ctrl::ThemeChanged(void *)
 	PostReSkin();
 }
 
-void InitGtkApp(int argc, char **argv, const char **envptr)
+static bool sUseWayland;
+
+void Ctrl::UseWayland()
+{
+	sUseWayland = true;
+}
+
+bool InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 	
-	XInitThreads(); // otherwise there are errors despide GuiLock
-	
-	running_on_wayland = GetEnv("XDG_SESSION_TYPE") == "wayland";
-
 #if GTK_CHECK_VERSION(3, 10, 0)
-	gdk_set_allowed_backends("x11"); // this fixes some wayland issues
+	String backends = "x11,wayland";
+#ifdef flagWAYLAND
+	backends = "wayland,x11";
+#endif
+	if(FileExists(ConfigFile("USE_WAYLAND")) || sUseWayland)
+		backends = "wayland,x11";
+	gdk_set_allowed_backends(backends);
 #endif
 
-	EnterGuiMutex();
-	gtk_init(&argc, &argv);
+	if (!gtk_init_check(&argc, &argv)) {
+		Cerr() << t_("Failed to initialized GTK app!") << "\n";
+		return false;
+	}
+	if(Ctrl::IsX11())
+		XInitThreads(); // otherwise there are errors despite GuiLock
 
+	EnterGuiMutex();
+	
 	Ctrl::SetUHDEnabled(true);
 	
 	Ctrl::scale = 1;
 #if GTK_CHECK_VERSION(3, 10, 0)
-	Ctrl::scale = gdk_window_get_scale_factor(gdk_screen_get_root_window(gdk_screen_get_default()));
+	if(Ctrl::IsWayland()) {
+	    GtkWidget *window;
+	    window = gtk_window_new(GTK_WINDOW_POPUP);
+	    gtk_window_set_default_size (GTK_WINDOW (window), 1, 1);
+	    gtk_widget_show_all (window);
+		Ctrl::scale = gdk_window_get_scale_factor(gtk_widget_get_window(window));
+		gtk_widget_destroy(window);
+	}
+	else
+		Ctrl::scale = gdk_window_get_scale_factor(gdk_screen_get_root_window(gdk_screen_get_default()));
 #endif
 
 	Ctrl::GlobalBackBuffer();
 	Ctrl::ReSkin();
 	g_timeout_add(20, (GSourceFunc) Ctrl::TimeHandler, NULL);
 	InstallPanicMessageBox(Ctrl::PanicMsgBox);
-	gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
+	if(Ctrl::IsX11())
+		gdk_window_add_filter(NULL, Ctrl::RootKeyFilter, NULL);
 #if CATCH_ERRORS
 	g_log_set_default_handler (CatchError, 0);
 #endif
-	GtkSettings *settings = gtk_settings_get_default ();
+
+	GtkSettings *settings = gtk_settings_get_default();
 	if(settings) {
 		g_signal_connect_swapped(settings, "notify::gtk-theme-name", G_CALLBACK(Ctrl::ThemeChanged), NULL);
 		g_signal_connect_swapped(settings, "notify::gtk-application-prefer-dark-theme", G_CALLBACK(Ctrl::ThemeChanged), NULL);
 	}
+	
+	return true;
 }
 
 void ExitGtkApp()

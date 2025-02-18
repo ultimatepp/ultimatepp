@@ -21,10 +21,8 @@ String GccBuilder::CmdLine(const String& package, const Package& pkg)
 	return cc;
 }
 
-void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String basedir,
-                                const String& package, const Package& pkg)
+void GccBuilder::CToObject(String fo, String objfile, const String& package, const Package& pkg)
 {
-	String fo = BrcToC(binscript, basedir);
 	String tmpfile = ForceExt(objfile, ".c");
 	SaveFile(tmpfile, fo);
 	String cc = CmdLine(package, pkg);
@@ -92,6 +90,21 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			for(int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = NormalizePath(srcfile[j]);
 				String ext = GetSrcType(fn);
+				if(IsGLSLExt(ext)) {
+					PutConsole(GetFileName(fn));
+					// TODO: Use HDepend....
+					String spv = CatAnyPath(outdir, SourceToObjName(package, fn)) + ".spv";
+					if(host->Execute("glslc " + fn + " -o " + spv))
+						error = true;
+					String m = LoadFile(spv);
+					String c = "static byte spv_data[] = {";
+					for(byte b : m)
+						c << (int)b << ",";
+					c << "};\n";
+					c << "static const uint32_t *pCode = (uint32_t *)spv_data;\n";
+					c << "static const int codeSize = " << m.GetCount() << ";\n";
+					SaveChangedFile(ForceExt(spv, ""), c);
+				}
 				if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".brc", ".s", ".ss") >= 0 ||
 				   objectivec && findarg(ext, ".mm", ".m") >= 0 ||
 				   (!release && blitz && ext == ".icpp") ||
@@ -131,7 +144,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			}
 		}
 	}
-
+	
 	String cc = CmdLine(package, pkg);
 
 //	if(IsVerbose())
@@ -233,8 +246,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			return false;
 		String fn = sfile[i];
 		String ext = ToLower(GetFileExt(fn));
-		bool rc = (ext == ".rc");
-		bool brc = (ext == ".brc");
+		bool rc = ext == ".rc";
+		bool brc = ext == ".brc";
 		bool init = (i >= first_ifile);
 		String objfile = CatAnyPath(outdir, SourceToObjName(package, fn)) + (rc ? "$rc.o" : brc ? "$brc.o" : ".o");
 		if(GetFileName(fn) == "Info.plist")
@@ -258,13 +271,14 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				int slot = AllocSlot();
 				execerr = (slot < 0 || !Run(exec, slot, objfile, 1));
 			}
-			else if(brc) {
+			else
+			if(brc) {
 				try {
 					String brcdata = LoadFile(fn);
 					if(brcdata.IsVoid())
 						throw Exc(Format("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
-					BinaryToObject(objfile, parser, GetFileDirectory(fn), package, pkg);
+					CToObject(BrcToC(parser, GetFileDirectory(fn)), objfile, package, pkg);
 				}
 				catch(Exc e) {
 					PutConsole(e);

@@ -1,17 +1,14 @@
-#include "CtrlCore.h"
+#include <CtrlCore/CtrlCore.h>
 
 #ifdef GUI_GTK
-
 #ifdef GDK_WINDOWING_X11
-
-namespace Upp {
 
 #define Time        XTime
 #define Font        XFont
-#define Display     XDisplay
 #define Picture     XPicture
 
 #ifndef PLATFORM_OPENBSD // avoid warning
+#undef CurrentTime
 #define CurrentTime XCurrentTime
 #endif
 
@@ -20,13 +17,14 @@ namespace Upp {
 #undef Picture
 #undef Time
 #undef Font
-#undef Display
 
 #ifndef PLATFORM_OPENBSD // avoid warning
 #undef CurrentTime
 #endif
 
-XDisplay *Xdisplay()
+namespace Upp {
+
+_XDisplay *Xdisplay()
 {
 	return GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
 }
@@ -89,6 +87,9 @@ Atom XAtom(const char *name)
 
 Vector<int> GetPropertyInts(GdkWindow *w, const char *property)
 {
+	if(Ctrl::IsWayland())
+		return {}; // Not supported on Wayland...
+	
 	GuiLock __;
 	Vector<int> result;
 	String p = GetProperty(GDK_WINDOW_XID(w), XAtom(property), AnyPropertyType);
@@ -114,6 +115,9 @@ dword X11mods(dword key)
 
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
+	if(IsWayland())
+		return -1; // Not supported on Wayland...
+	
 	GuiLock __;
 	ASSERT(key >= K_DELTA);
 	gdk_x11_display_error_trap_push(gdk_display_get_default());
@@ -142,6 +146,9 @@ int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
+	if(IsWayland())
+		return; // Not supported on Wayland...
+	
 	GuiLock __;
 	if(id >= 0 && id < hotkey.GetCount() && hotkey[id]) {
 		gdk_x11_display_error_trap_push(gdk_display_get_default());
@@ -158,6 +165,9 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointer data)
 {
+	if(IsWayland())
+		return GDK_FILTER_CONTINUE; // Not supported on Wayland...
+	
 	XEvent *event = (XEvent *)xevent;
 	if(event->type == KeyPress)
 		for(int i = 0; i < hotkey.GetCount(); i++)
@@ -172,5 +182,4 @@ GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointe
 }
 
 #endif
-
 #endif

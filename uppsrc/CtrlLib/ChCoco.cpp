@@ -127,7 +127,7 @@ void ChHostSkin()
 	CtrlImg::Reset();
 	CtrlsImg::Reset();
 	ChReset();
-
+	
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
 
@@ -142,6 +142,8 @@ void ChHostSkin()
 	SColorDisabled_Write(CocoColor(COCO_DISABLED));
 
 	ChBaseSkin();
+
+	RoundStyleArrows();
 
 	SOImages(CtrlsImg::I_S0, COCO_RADIOBUTTON, 0);
 	SOImages(CtrlsImg::I_S1, COCO_RADIOBUTTON, 1);

@@ -116,15 +116,16 @@ LAYOUT(StylesLayout, 700, 524)
 	ITEM(Upp::LabelBox, dv___19, SetLabel(t_("Character")).LeftPosZ(212, 472).TopPosZ(388, 96))
 END_LAYOUT
 
-LAYOUT(RichFindReplaceLayout, 264, 128)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("&Find:")).LeftPosZ(4, 46).TopPosZ(4, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, find, HSizePosZ(50, 4).TopPosZ(4, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("&Replace:")).LeftPosZ(4, 46).TopPosZ(28, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, replace, HSizePosZ(50, 4).TopPosZ(28, 19))
+LAYOUT(RichFindReplaceLayout, 308, 128)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("&Find:")).LeftPosZ(4, 56).TopPosZ(4, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, find, HSizePosZ(64, 4).TopPosZ(4, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("&Replace:")).LeftPosZ(4, 56).TopPosZ(28, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, replace, HSizePosZ(64, 4).TopPosZ(28, 19))
 	ITEM(Upp::Option, wholeword, SetLabel(t_("&Whole word")).LeftPosZ(4, 256).TopPosZ(56, 18))
 	ITEM(Upp::Option, ignorecase, SetLabel(t_("&Ignore case")).LeftPosZ(4, 256).TopPosZ(76, 18))
 	ITEM(Upp::Button, amend, SetLabel(t_("&Replace")).LeftPosZ(4, 72).BottomPosZ(4, 24))
-	ITEM(Upp::Button, ok, SetLabel(t_("Find")).RightPosZ(72, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Find Next")).RightPosZ(72, 68).BottomPosZ(4, 24))
+	ITEM(Upp::Button, prev, SetLabel(t_("Find Previous")).RightPosZ(144, 84).BottomPosZ(4, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 END_LAYOUT
 

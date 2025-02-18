@@ -2,6 +2,10 @@
 
 #ifdef GUI_GTK
 
+#ifndef PLATFORM_OPENBSD
+#undef CurrentTime
+#endif
+
 #define LLOG(x) // DLOG(x)
 
 namespace Upp {
@@ -75,8 +79,6 @@ GtkWindow *Ctrl::gtk() const
 	const Top *top = GetTop();
 	return top ? (GtkWindow *)top->window : NULL;
 }
-
-
 
 }
 

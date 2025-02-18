@@ -1886,10 +1886,10 @@ bool FileSel::Execute(int _mode) {
 		for(int i = 0; i < lru.GetCount(); i++)
 			if(IsFullPath(lru[i]) && filesystem->FolderExists(lru[i]))
 				dir.Add(lru[i]);
-		dir.SetDisplay(Single<FolderDisplay>(), max(16, Draw::GetStdFontCy()));
+		dir.SetDisplay(Single<FolderDisplay>(), max(16, GetStdFontCyA()));
 	}
 	else {
-		dir.SetDisplay(Single<HomeDisplay>(), max(16, Draw::GetStdFontCy()));
+		dir.SetDisplay(Single<HomeDisplay>(), max(16, GetStdFontCyA()));
 		if(filesystem->IsPosix()) {
 			if(String(~dir)[0] == '/')
 				dir <<= "";

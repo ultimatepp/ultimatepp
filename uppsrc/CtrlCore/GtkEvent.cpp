@@ -2,6 +2,10 @@
 
 #ifdef GUI_GTK
 
+#ifndef PLATFORM_OPENBSD
+#undef CurrentTime
+#endif
+
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
@@ -78,17 +82,34 @@ Ctrl *Ctrl::GetTopCtrlFromId(int id)
 	return NULL;
 }
 
+bool Ctrl::ProcessInvalids()
+{
+	GuiLock __;
+	if(invalids) {
+		for(Win& win : wins) {
+			for(const Rect& r : win.invalid)
+				if(win.drawing_area && win.ctrl)
+					gdk_window_invalidate_rect(gtk_widget_get_window(win.drawing_area),
+					                           GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
+			win.invalid.Clear();
+		}
+		invalids = false;
+	}
+	return invalids;
+}
+
 gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
 		p->fullrefresh = false;
-		cairo_scale(cr, 1.0 / scale, 1.0 / scale);
+		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
 
 		SystemDraw w(cr);
 		painting = true;
+
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
@@ -136,7 +157,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		p->CancelPreedit();
 		if(p) {
 			Top *top = p->GetTop();
-			if(top) {
+			if(top && top->im_context) {
 				if(((GdkEventFocus *)event)->in)
 					gtk_im_context_focus_in(top->im_context);
 				else
@@ -145,8 +166,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			AddEvent(user_data, EVENT_FOCUS_CHANGE, value, event);
 		}
 		return false;
-	case GDK_MOTION_NOTIFY:
 	case GDK_LEAVE_NOTIFY:
+	case GDK_MOTION_NOTIFY:
 		break;
 	case GDK_BUTTON_PRESS:
 		p->CancelPreedit();
@@ -304,6 +325,10 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
 		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 	}
+	if(event && event->type == GDK_LEAVE_NOTIFY){
+		GdkEventCrossing *mevent = (GdkEventCrossing *)event;
+		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+	}
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
 	e.event = NULL;
@@ -389,21 +414,6 @@ void Ctrl::IMPreeditEnd(GtkIMContext *context, gpointer user_data)
 	Ctrl *w = GetTopCtrlFromId((uint32)(uintptr_t)user_data);
 	if(w && w->HasFocusDeep() && focusCtrl && !IsNull(focusCtrl->GetPreedit()))
 		w->HidePreedit();
-}
-
-bool Ctrl::ProcessInvalids()
-{
-	GuiLock __;
-	if(invalids) {
-		for(Win& win : wins) {
-			for(const Rect& r : win.invalid)
-				if(win.gdk && win.ctrl)
-					gdk_window_invalidate_rect(win.gdk, GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
-			win.invalid.Clear();
-		}
-		invalids = false;
-	}
-	return invalids;
 }
 
 void Ctrl::FetchEvents(bool may_block)

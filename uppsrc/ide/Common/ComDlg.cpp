@@ -113,6 +113,12 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".icpp")
 		img = IdeCommonImg::ISource();
 	else
+	if(IsGLSLExt(ext))
+		img = IdeCommonImg::GLSL();
+	else
+	if(ext == ".cu")
+		img = IdeCommonImg::Cuda();
+	else
 	if(findarg(ext, ".cpp", ".cc", ".cxx", ".mm") >= 0)
 		img = IdeCommonImg::Cpp();
 	else

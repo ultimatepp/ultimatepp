@@ -328,12 +328,14 @@ void Ide::SetupFormat() {
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/local/bin/mate-terminal -x");
 	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/local/bin/xterm -e");
+	ide.xfce <<= callback2(SetConsole, &ide.console, "/usr//local/bin/xfce4-terminal -x");
 	#else
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
 	ide.mate <<= callback2(SetConsole, &ide.console, "/usr/bin/mate-terminal -x");
 	ide.lxde <<= callback2(SetConsole, &ide.console, "/usr/bin/lxterminal -e");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
+	ide.xfce <<= callback2(SetConsole, &ide.console, "/usr/bin/xfce4-terminal -x");
 	#endif
 #endif
 
@@ -372,6 +374,15 @@ void Ide::SetupFormat() {
 	              .Add(20, "C++ 20")
 	              .Add(23, "C++ 23")
 	;
+	
+	ide.wayland.Hide();
+#ifdef GUI_GTK
+	String use_wayland_path = ConfigFile("USE_WAYLAND");
+	if(IsWayland() || IsXWayland()) {
+		ide.wayland.Show();
+		ide.wayland <<= FileExists(use_wayland_path);
+	}
+#endif
 
 	rtvr
 		(hlt.hilite_scope, hs)
@@ -573,6 +584,17 @@ void Ide::SetupFormat() {
 		CurrentFileDeleteCache();
 		editor.SyncCurrentFile();
 	}
+
+#ifdef GUI_GTK
+	if(IsWayland() || IsXWayland()) {
+		if(FileExists(use_wayland_path) != ide.wayland) {
+			if(ide.wayland)
+				Upp::SaveFile(use_wayland_path, Null);
+			else
+				DeleteFile(use_wayland_path);
+		}
+	}
+#endif
 }
 
 void Ide::FinishConfig()

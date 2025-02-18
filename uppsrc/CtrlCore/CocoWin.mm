@@ -11,15 +11,18 @@
 }
 
 - (BOOL)canBecomeKeyWindow {
+	Upp::GuiLock __;
     return active && ctrl && ctrl->IsEnabled();
 }
 
 - (BOOL)canBecomeMainWindow {
+	Upp::GuiLock __;
 	LLOG("canBecomeMainWindow " << Upp::Name(ctrl) << ", owner " << Upp::Name(ctrl->GetOwner()));
 	return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
 }
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender {
+	Upp::GuiLock __;
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@"DocTile Menu"] autorelease];
 	NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:@"Hello" action:@selector(hello) keyEquivalent:@"k"] autorelease];
 	[menu addItem:item];
@@ -173,12 +176,23 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	return h;
 }
 
+void WakeUpGuiThread();
+
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	LLOG("Invalidate Rect " << r);
-	if(top)
-		[GetTop()->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r.Inflated(10, 10))];
+	if(top) {
+		NSRect nsr = (NSRect)CGRectDPI(r.Inflated(10, 10));
+		if(IsMainThread())
+			[GetTop()->coco->view setNeedsDisplayInRect:nsr];
+		else {
+			Ptr<Ctrl> ctrl = this;
+			PostCallback([=] {
+				if(ctrl)
+					[ctrl->GetTop()->coco->view setNeedsDisplayInRect:nsr];
+			});
+		}
+	}
 }
 
 void Ctrl::WndScrollView(const Rect& r, int dx, int dy)

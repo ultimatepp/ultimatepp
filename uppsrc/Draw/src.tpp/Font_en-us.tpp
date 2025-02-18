@@ -90,6 +90,12 @@ default setting.&]
 of glyphs.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:Font`:`:GetStdFontSizeA`(`): [@(0.0.255) static] Size [* GetStdFontSizeA]()&]
+[s2;%% Returns metrics of standard font `- height and average width 
+of glyphs, including its bold and italic variants, using maximal 
+value of variants.&]
+[s3; &]
+[s4; &]
 [s5;:Font`:`:GetFace`(`)const: [@(0.0.255) int]_[* GetFace]()_[@(0.0.255) const]&]
 [s2;%% Face index of Font.&]
 [s3; &]

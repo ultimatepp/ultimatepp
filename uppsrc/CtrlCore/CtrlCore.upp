@@ -97,6 +97,7 @@ file
 	GtkCtrl.h,
 	GtkCtrl.cpp,
 	GtkCapture.cpp,
+	GtkCSD.cpp,
 	GtkWnd.cpp,
 	GtkCreate.cpp,
 	GtkEvent.cpp,

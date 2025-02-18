@@ -29,26 +29,31 @@ bool compare3(const wchar *s, const wchar *a, const wchar *b, int len)
 }
 
 struct RichFindIterator : RichText::Iterator {
-	int cursor;
-	int fpos;
+	int     cursor;
+	int     fpos;
 	WString upperw, lowerw;
-	bool ww;
-	int  len;
+	bool    ww;
+	int     len;
+	bool    back;
 
 	virtual bool operator()(int pos, const RichPara& para)
 	{
 		WString ptext = para.GetText();
-		if(pos + ptext.GetLength() > cursor && ptext.GetLength() >= len) {
+		if((back || pos + ptext.GetLength() > cursor) && ptext.GetLength() >= len) {
 			const wchar *q = ptext;
 			const wchar *e = ptext.End() - len;
-			if(cursor >= pos)
+			if(cursor >= pos && !back)
 				q += cursor - pos;
 			while(q <= e) {
+				int p = int(q - ~ptext + pos);
+				if(back && p >= cursor)
+					return true;
 				if(compare3(q, upperw, lowerw, len) &&
 				   (!ww || (q + len == e || !IsLetter(q[len])) &&
 				           (q == ptext || !IsLetter(q[-1])))) {
-					fpos = int(q - ~ptext + pos);
-					return true;
+					fpos = p;
+					if(!back)
+						return true;
 				}
 				q++;
 			}
@@ -57,7 +62,7 @@ struct RichFindIterator : RichText::Iterator {
 	}
 };
 
-int  RichEdit::FindPos()
+int  RichEdit::FindPos(bool back)
 {
 	RichFindIterator fi;
 	WString w = findreplace.find.GetText();
@@ -69,22 +74,26 @@ int  RichEdit::FindPos()
 		fi.upperw = fi.lowerw = w;
 	fi.len = w.GetLength();
 	fi.ww = findreplace.wholeword;
+	fi.back = back;
+	fi.fpos = -1;
 	if(w.GetLength()) {
-		fi.cursor = cursor;
-		if(text.Iterate(fi))
-			return fi.fpos;
+		fi.cursor = back ? min(anchor, cursor) : max(anchor, cursor);
+		text.Iterate(fi);
+		return fi.fpos;
 	}
 	return -1;
 }
 
-void RichEdit::Find()
+void RichEdit::Find(bool back)
 {
-	CancelSelection();
+	bool bak = persistent_findreplace;
+	persistent_findreplace = true; // keep it open
 	FindReplaceAddHistory();
 	if(notfoundfw)
-		Move(0, false);
+		Move(back ? text.GetLength() : 0, false);
 	found = notfoundfw = false;
-	int pos = FindPos();
+	int pos = FindPos(back);
+	CancelSelection();
 	if(pos >= 0) {
 		anchor = pos;
 		cursor = pos + findreplace.find.GetText().GetLength();
@@ -103,9 +112,8 @@ void RichEdit::Find()
 			r.bottom = r.top + sz.cy;
 		}
 		findreplace.SetRect(r);
-		if(!findreplace.IsOpen()) {
+		if(!findreplace.IsOpen())
 			findreplace.Open();
-		}
 		SetFocus();
 	}
 	else {
@@ -113,6 +121,7 @@ void RichEdit::Find()
 		CloseFindReplace();
 		notfoundfw = true;
 	}
+	persistent_findreplace = bak;
 }
 
 RichText RichEdit::ReplaceText()
@@ -139,7 +148,7 @@ void RichEdit::Replace()
 		cursor += findreplace.replace.GetText().GetLength();
 		anchor = cursor;
 		Finish();
-		Find();
+		Find(false);
 	}
 }
 
@@ -152,6 +161,7 @@ void RichEdit::OpenFindReplace()
 		int l, h;
 		if(GetSelection(l, h)) {
 			findreplace.amend.Hide();
+			findreplace.prev.Hide();
 			findreplace.ok.SetLabel(t_("Replace"));
 			findreplace.Title(t_("Replace in selection"));
 			findreplace.cancel <<= findreplace.Breaker(IDCANCEL);
@@ -162,7 +172,7 @@ void RichEdit::OpenFindReplace()
 				RichText rtext = ReplaceText();
 				cursor = l;
 				for(;;) {
-					int pos = FindPos();
+					int pos = FindPos(false);
 					if(pos < 0 || pos + len >= h)
 						break;
 					Select(pos, len);
@@ -176,16 +186,32 @@ void RichEdit::OpenFindReplace()
 			}
 			FindReplaceAddHistory();
 			findreplace.amend.Show();
+			findreplace.prev.Show();
 			findreplace.ok.SetLabel(t_("Find"));
-			findreplace.Title(t_("Find / Replace"));
-			findreplace.cancel <<= callback(&findreplace, &TopWindow::Close);
-			findreplace.ok <<= THISBACK(Find);
+			SetupFindReplace0();
 		}
 		else {
 			findreplace.Open();
 			findreplace.find.SetFocus();
 		}
 	}
+}
+
+void RichEdit::SetupFindReplace0()
+{
+	findreplace.Title(t_("Find / Replace"));
+	findreplace.cancel ^= [=] { findreplace.Close(); };
+	findreplace.ok ^= [=] { Find(false); };
+}
+
+void RichEdit::SetupFindReplace()
+{
+	CtrlLayoutOKCancel(findreplace, "");
+	SetupFindReplace0();
+	findreplace.amend ^= [=] { Replace(); };
+	findreplace.prev ^= [=] { Find(true); };
+	notfoundfw = found = false;
+	findreplace.NoCenter();
 }
 
 }

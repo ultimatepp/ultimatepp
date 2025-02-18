@@ -23,11 +23,15 @@ Color StatusPaper(const String& status)
 	static SColor stable([] { return s_Make(SLtGreen()); });
 	static SColor rolling([] { return s_Make(SLtCyan()); });
 
-	return decode(status, "broken", broken,
-	                      "experimental", experimental,
-	                      "stable", stable,
-	                      "rolling", rolling,
-	                      SColorPaper());
+	if(status == "broken")
+		return broken;
+	if(status == "experimental")
+		return experimental;
+	if(status == "stable")
+		return stable;
+	if(status == "rolling")
+		return rolling;
+	return SColorPaper();
 }
 
 void VerifyUppHubRequirements()

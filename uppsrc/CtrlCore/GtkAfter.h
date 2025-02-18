@@ -9,7 +9,7 @@ public:
 
 class DHCtrl : Ctrl {};
 
-void InitGtkApp(int argc, char **argv, const char **envptr);
+bool InitGtkApp(int argc, char **argv, const char **envptr);
 void ExitGtkApp();
 
 #define GUI_APP_MAIN \
@@ -18,7 +18,8 @@ void GuiMainFn_(); \
 int main(int argc, char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, (const char **)argv, envptr); \
 	GUI_APP_MAIN_HOOK \
-	UPP::InitGtkApp(argc, argv, envptr); \
+	if (!UPP::InitGtkApp(argc, argv, envptr)) \
+		return -1; \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::ExitGtkApp(); \

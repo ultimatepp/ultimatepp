@@ -220,11 +220,26 @@ void PPInfo::SetIncludes(Vector<String>&& incs)
 {
 	inc_cache.Clear();
 	includes = pick(incs);
+	includes_base_count = includes.GetCount();
 }
 
 void PPInfo::SetIncludes(const String& incs)
 {
 	SetIncludes(Split(incs, ';'));
+}
+
+void PPInfo::BaseIncludes()
+{
+	if(includes.GetCount() > includes_base_count) {
+		inc_cache.Clear();
+		includes.Trim(includes_base_count);
+	}
+}
+
+void PPInfo::AddInclude(const String& include)
+{
+	inc_cache.Clear();
+	includes << include;
 }
 
 void PPInfo::Dir::Load(const String& dir)
@@ -260,6 +275,18 @@ Time PPInfo::GetFileTime(const String& path)
 			d.Load(dir);
 	}
 	return dir_cache[q].files.Get(name, Null);
+}
+
+String PPInfo::NormalizePath(const String& path, const String& curr_dir)
+{
+	String key = path + "|" + curr_dir;
+	int q = normalize_path_cache.Find(key);
+	if(q < 0) {
+		String p = Upp::NormalizePath(path, curr_dir);
+		normalize_path_cache.Add(key, p);
+		return p;
+	}
+	return normalize_path_cache[q];
 }
 
 String PPInfo::FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdirs)
@@ -308,6 +335,11 @@ void PPInfo::Dirty()
 		f.dirty = true;
 	inc_cache.Clear();
 	dir_cache.Clear();
+	String cd = GetCurrentDirectory();
+	if(cd != current_dir) {
+		current_dir = cd;
+		normalize_path_cache.Clear();
+	}
 }
 
 std::atomic<int> PPInfo::scan_serial;
@@ -430,7 +462,7 @@ void PPInfo::GatherDependencies(const String& path, VectorMap<String, Time>& res
 	GatherDependencies(path, result, define_includes, flags, speculative);
 }
 
-Time PPInfo::GetTime(const String& path)
+Time PPInfo::GetTime(const String& path, VectorMap<String, Time> *ret_result)
 {
 	String p = NormalizePath(path);
 
@@ -442,12 +474,15 @@ Time PPInfo::GetTime(const String& path)
 	int d = depends.Find(p);
 	if(d >= 0) {
 		const Index<String>& dep = depends[d];
-		for(int i = 0; i < dep.GetCount(); i++) {
-			Time tm = GetFileTime(dep[i]);
+		for(const String& d : dep) {
+			Time tm = GetFileTime(d);
 			if(tm > ftm)
 				ftm = tm;
 		}
 	}
+
+	if(ret_result)
+		*ret_result = pick(result);
 
 	return ftm;
 }
@@ -465,11 +500,9 @@ bool PPInfo::BlitzApproved(const String& path)
 			String ipath = FindIncludeFile(inc, dir);
 			if(ipath.GetCount()) {
 				PPFile& f = File(ipath);
-				if(f.blitz == APPROVED)
-					return true;
 				if(f.blitz == PROHIBITED)
 					return false;
-				if(!f.guarded) {
+				if(f.blitz != APPROVED && !f.guarded) {
 					WhenBlitzBlock(ipath, path);
 					return false;
 				}
@@ -480,9 +513,19 @@ bool PPInfo::BlitzApproved(const String& path)
 
 static PPInfo hdepend;
 
-void HdependSetDirs(Vector<String>&& id)
+void HdependSetIncludes(Vector<String>&& id)
 {
 	hdepend.SetIncludes(pick(id));
+}
+
+void HdependBaseIncludes()
+{
+	hdepend.BaseIncludes();
+}
+
+void HdependAddInclude(const String& inc)
+{
+	hdepend.AddInclude(inc);
 }
 
 void HdependTimeDirty()
@@ -500,9 +543,9 @@ void HdependAddDependency(const String& file, const String& depends)
 	hdepend.AddDependency(file, depends);
 }
 
-Time HdependGetFileTime(const String& path)
+Time HdependGetFileTime(const String& path, VectorMap<String, Time> *ret_result)
 {
-	return hdepend.GetTime(path);
+	return hdepend.GetTime(path, ret_result);
 }
 
 Vector<String> HdependGetDependencies(const String& path, bool bydefine_too)

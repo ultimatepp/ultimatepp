@@ -1,0 +1,17 @@
+description "Simple CUDA example (experimental)\377";
+
+uses
+	Core;
+
+library
+	cudart_static.lib;
+
+file
+	Test.cu,
+	Cuda.cpp,
+	info.qtf,
+	MSVS22x64.bm;
+
+mainconfig
+	"" = "CUDA";
+

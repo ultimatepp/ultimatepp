@@ -34,6 +34,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 @implementation CocoClipboardOwner
 -(void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
+	Upp::GuiLock __;
 	auto render = [&](const Upp::String& fmt) -> Upp::String {
 		int q = data.Find(fmt);
 		if(q < 0)
@@ -63,6 +64,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 
 - (void)pasteboardChangedOwner:(NSPasteboard *)sender
 {
+	Upp::GuiLock __;
 	LLOG("pasteboardCahandedOwner");
 //	data.Clear();  // TODO: This seems to trigger on declareTypes despite owner being the same...
 }

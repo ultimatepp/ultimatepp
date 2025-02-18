@@ -33,9 +33,8 @@ void Ide::UpgradeTheIDE()
 #endif
 	release.createmap = false;
 	release.version.Clear();
-	release.def.blitz = false;
 	release.def.debug = false;
-	release.package.Clear();
+	release.def.blitz = MapFlag(GetMethodVars(method), "RELEASE_BLITZ");
 	
 	targetmode = 1;
 

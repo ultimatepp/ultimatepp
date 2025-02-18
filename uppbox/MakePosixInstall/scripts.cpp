@@ -5,7 +5,7 @@ AskContinue()
 {
   read -p "Continue (Y/n)?" answer
   if [ "$answer" != "${answer//[nN]/x}" ]; then
-	 exit;
+    exit;
   fi
 }
 
@@ -13,13 +13,13 @@ uname=`uname`
 
 if [[ "$uname" == 'Darwin' ]]; then
   DEP=""
-  if which brew; then
-    echo "Homebrew is already installed"
-  else
-    echo "Installing Homebrew package management system (to obtain openssl libraries required for U++)"
-    AskContinue
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if ! which brew; then
+    echo "Homebrew is not installed"
+    echo "We use Homebrew to obtain OpenSSL libraries and clang-format required for U++"
+    echo "Follow the instructions at https://brew.sh/ to install Homebrew"
+    exit
   fi
+  echo "Homebrew is installed"
   brew install openssl clang-format
   if clang++ --version; then
     echo "Commandline Development Tools already installed"
@@ -104,12 +104,12 @@ fi
 
 if clang++ --version >/dev/null; then
 	echo $UMK ./uppsrc ide CLANG -brs ./theide
-	$UMK ./uppsrc ide CLANG -brs ./theide
-	$UMK ./uppsrc umk CLANG -brs ./umk
+	$UMK ./uppsrc ide CLANG -brsH ./theide
+	$UMK ./uppsrc umk CLANG -brsH ./umk
 else
 	echo $UMK ./uppsrc ide GCC -brs ./theide
-	$UMK ./uppsrc ide GCC -brs ./theide
-	$UMK ./uppsrc umk GCC -brs ./umk
+	$UMK ./uppsrc ide GCC -brsH ./theide
+	$UMK ./uppsrc umk GCC -brsH ./umk
 fi
 
 theide=./theide

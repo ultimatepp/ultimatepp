@@ -62,6 +62,7 @@ class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 
 	static Font AStdFont;
 	static Size StdFontSize;
+	static Size StdFontSizeA; // max of normal / italic / bold / bold-italic
 	static bool std_font_override;
 
 	static void SetStdFont0(Font font);
@@ -96,6 +97,7 @@ public:
 	static void   SetStdFont(Font font);
 	static Font   GetStdFont();
 	static Size   GetStdFontSize();
+	static Size   GetStdFontSizeA();
 
 	enum {
 		STDFONT,
@@ -258,8 +260,10 @@ String AsString(const Font& f);
 
 inline void SetStdFont(Font font)                   { Font::SetStdFont(font); }
 inline Font GetStdFont()                            { return Font::GetStdFont(); }
-inline Size GetStdFontSize()                        { return Font::GetStdFontSize(); } // deprecated
+inline Size GetStdFontSize()                        { return Font::GetStdFontSize(); }
+inline Size GetStdFontSizeA()                       { return Font::GetStdFontSizeA(); }
 inline int  GetStdFontCy()                          { return GetStdFontSize().cy; }
+inline int  GetStdFontCyA()                         { return GetStdFontSizeA().cy; }
 
 Font StdFont();
 

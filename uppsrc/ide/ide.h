@@ -1304,6 +1304,8 @@ String GetGitBranchRaw(const String& dir);
 
 Index<String> GetAllNests(bool sleep = false);
 
+bool MapFlag(const VectorMap<class String, class String>& map, const char *key);
+
 #include "urepo.h"
 
 #endif

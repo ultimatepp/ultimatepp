@@ -202,8 +202,14 @@ void RichEdit::ReadFormat()
 			formatinfo = text.GetFormatInfo(min(cursor, anchor), abs(cursor - anchor));
 	else {
 		RichPos p = cursorp;
-		if(cursor && p.posinpara)
+		String l1 = p.format.link;
+		bool clearlink = p.posinpara == 0 || p.posinpara == p.paralen;
+		if(cursor && p.posinpara) {
 			p = text.GetRichPos(cursor - 1);
+			clearlink = clearlink || p.format.link.GetCount() && p.format.link != l1;
+		}
+		if(clearlink)
+			p.format.link.Clear();
 		formatinfo.Set(p.format);
 	}
 	ShowFormat();

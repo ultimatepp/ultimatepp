@@ -6,7 +6,18 @@ namespace Upp {
 
 Color SColorEvenRow()
 {
-	static SColor s([] { return Blend(SColorMark, SColorPaper, 220); });
+	static SColor s([] {
+		Color c;
+		Color hl = SColorHighlight();
+		for(Color c : { Blend(SColorMark, SColorPaper, 220),
+			            AdjustIfDark(Color(220, 255, 220)),
+			            AdjustIfDark(Color(220, 220, 255)),
+						AdjustIfDark(GrayColor(240))
+		}) // Make sure there is enough contrast between cursor and even lines
+			if(Difference(c, hl) > 80)
+				return c;
+		return SColorPaper();
+	});
 	return s;
 }
 
@@ -2797,7 +2808,7 @@ void ArrayCtrl::Reset() {
 	acceptingrow = 0;
 	columnsortfindkey = false;
 	spanwidecells = false;
-	linecy = Draw::GetStdFontCy();
+	linecy = GetStdFontCyA();
 	Clear();
 	sb.SetLine(linecy);
 	columnsortsecondary = NULL;

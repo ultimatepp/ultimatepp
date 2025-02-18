@@ -179,9 +179,12 @@ void  Ctrl::KillSetTimeCallback(int delay_ms, Function<void ()> cb, int id)
 	SetTimeCallback(delay_ms, cb, id);
 }
 
+void WakeUpGuiThread();
+
 void  Ctrl::PostCallback(Function<void ()> cb, int id)
 {
 	SetTimeCallback(0, cb, id);
+	WakeUpGuiThread();
 }
 
 void  Ctrl::KillPostCallback(Function<void ()> cb, int id)

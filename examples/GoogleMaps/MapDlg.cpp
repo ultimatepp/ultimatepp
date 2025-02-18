@@ -106,7 +106,7 @@ MapDlgDlg::MapDlgDlg()
 	SetRect(sz);
 
 	for(int i = 0; i < 22; i++)
-		zoom.Add(i);	
+		zoom.Add(i);
 	zoom <<= 17;
 	zoom <<= THISBACK(LoadMap);
 	zoomin <<= THISBACK(ZoomIn);

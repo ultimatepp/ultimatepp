@@ -21,8 +21,8 @@ struct App : TopWindow {
 
 	virtual void MouseMove(Point p, dword)
 	{
-		pos.Set(0, AsString(p.x), 40);
-		pos.Set(1, AsString(p.y), 40);
+		pos.Set(0, AsString(p.x), Zx(40));
+		pos.Set(1, AsString(p.y), Zx(40));
 		x.Set(PaintRect(dx, 100 * p.x / GetSize().cx));
 		y.Set(PaintRect(dy, 100 * p.y / GetSize().cy));
 	}
@@ -46,11 +46,11 @@ struct App : TopWindow {
 		Sizeable();
 		SetFrame(FieldFrame());
 		AddFrame(status);
-		status.AddFrame(pos.Right(100));
+		status.AddFrame(pos.RightZ(100));
 		status.AddFrame(x.Left(100));
 		status.AddFrame(y.Left(100));
-		dx.color = LtRed;
-		dy.color = LtGreen;
+		dx.color = SLtRed();
+		dy.color = SLtGreen();
 	}
 };
 

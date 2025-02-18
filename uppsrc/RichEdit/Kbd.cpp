@@ -106,16 +106,20 @@ bool RichEdit::Key(dword key, int count)
 		Redo();
 		return true;
 	case K_ENTER: {
+			if(findreplace.IsOpen()) {
+				findreplace.ok.PseudoPush();
+				return true;
+			}
 			if(singleline)
 				return false;
 			if(!RemoveSelection() && InsertLineSpecial())
 				return true;
 			if(RemoveBullet(false))
 				break;
-			formatinfo.link.Clear();
 			RichText::FormatInfo f = formatinfo;
 			InsertLine();
 			formatinfo = f;
+			formatinfo.link.Clear();
 			ShowFormat();
 			FinishNF();
 		}
@@ -146,7 +150,10 @@ bool RichEdit::Key(dword key, int count)
 		EvaluateFields();
 		break;
 	case K_F3:
-		Find();
+		Find(false);
+		break;
+	case K_SHIFT_F3:
+		Find(true);
 		break;
 	case K_CTRL_H:
 		Hyperlink();

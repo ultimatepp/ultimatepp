@@ -7,9 +7,17 @@
 #define TOPICFILE <ide/app.tpp/all.i>
 #include <Core/topic_group.h>
 
-#ifndef bmYEAR
-#include <build_info.h>
-#endif
+extern int bm_YEAR;
+extern int bm_MONTH;
+extern int bm_DAY;
+extern int bm_HOUR;
+extern int bm_MINUTE;
+extern int bm_SECOND;
+extern const char *bm_MACHINE;
+extern const char *bm_USER;
+extern const char *bm_GIT_REVCOUNT;
+extern const char *bm_GIT_BRANCH;
+extern const char *bm_GIT_HASH;
 
 String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 {
@@ -17,24 +25,25 @@ String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 	
 	char separator = qtf ? '\n' : ' ';
 
-#ifdef bmGIT_HASH
-	String rev = bmGIT_HASH;
-	String dr = rev;
-	if(dr.GetCount() > 8)
-		dr.Trim(8);
-	h << "Revision: ";
-	if(qtf && about)
-		h << "\1[^https://github.com/ultimatepp/ultimatepp/commit/" << rev << "^ ";
-	h << dr;
-	if(qtf && about)
-		h << "]\1";
-	h << separator;
-#endif
+	if(*bm_GIT_HASH) {
+		String rev = bm_GIT_HASH;
+		String dr = rev;
+		if(dr.GetCount() > 8)
+			dr.Trim(8);
+		h << "Revision: ";
+		if(qtf && about)
+			h << "\1[^https://github.com/ultimatepp/ultimatepp/commit/" << rev << "^ ";
+		h << dr;
+		if(qtf && about)
+			h << "]\1";
+		h << separator;
+	}
 
 	h << "Build: " << GenerateVersionNumber();
-#ifdef bmGIT_BRANCH
-	h << " " << bmGIT_BRANCH << "\n";
-#endif
+	
+	if(*bm_GIT_BRANCH)
+		h << " " << bm_GIT_BRANCH;
+	h << "\n";
 
 	if(sizeof(void *) == 8)
 		h << "64 bit";
@@ -71,19 +80,14 @@ String SplashCtrl::GenerateVersionInfo(bool qtf, bool about)
 	h << " SIMD";
 #endif
 
-#ifdef GUI_GTK
-	h << " Gtk";
-#endif
 #ifdef FLATPAK
 	h << " Flatpak";
 #endif
 	h << separator;
 
-#ifdef bmTIME
-	h << "Compiled: " << bmTIME;
-#endif
-
+	h << "Compiled: " << Time(bm_YEAR, bm_MONTH, bm_DAY, bm_HOUR, bm_MINUTE, bm_SECOND);
 	h << separator;
+
 	String p = GetExeFilePath();
 	if(p.GetCount() > 30)
 		p = ".." + p.Mid(max(p.GetCount() - 30, 0));
@@ -97,9 +101,8 @@ String SplashCtrl::GenerateVersionNumber()
 #ifdef bmSVN_REVISION
 	return bmSVN_REVISION;
 #endif
-#ifdef bmGIT_REVCOUNT
-	return AsString(atoi(bmGIT_REVCOUNT) + 2270);
-#endif
+	if(*bm_GIT_REVCOUNT)
+		return AsString(atoi(bm_GIT_REVCOUNT) + 2270);
 	return IDE_VERSION;
 }
 
@@ -133,7 +136,19 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 	if(items.GetCount())
 		h << classes.GetCount() << " classes, " << items.GetCount() << " items\n";
 	if(IsUHDMode())
-		h << "UHD mode";
+		h << "UHD ";
+
+#ifdef GUI_GTK
+	if(Ctrl::IsXWayland())
+		h << "XWayland";
+	else
+	if(Ctrl::IsWayland())
+		h << "Wayland";
+	else
+	if(Ctrl::IsX11())
+		h << "X11";
+#endif
+
 #if 0
 	h << "\n1\n2\n3\n4\n5\n6"; // for size testing
 #endif
