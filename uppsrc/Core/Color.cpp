@@ -113,13 +113,6 @@ SColor::SColor(Color (*fn)())
 	color = ii | SCOLOR;
 }
 
-#ifdef _DEBUG
-SColor::~SColor()
-{
-	ASSERT(!IsMainRunning()); // SColor cannot be stack variable
-}
-#endif
-
 void SColor::Refresh()
 {
 	Mutex::Lock __(sColorMutex);

@@ -110,9 +110,6 @@ struct SColor : Color { // this is supposed to be static / global
 	SColor(Color (*fn)() = NULL);
 	explicit SColor(Color c) : SColor() { Write(*this, c); }
 	void operator=(Color c)             { Write(*this, c); }
-#ifdef _DEBUG
-	~SColor();
-#endif
 
 private: // has to be static/global, no copies allowed
 	SColor(const SColor& c);

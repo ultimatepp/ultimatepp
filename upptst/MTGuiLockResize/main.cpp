@@ -17,9 +17,9 @@ struct MyApp : TopWindow {
 			for(;;) {
 				Sleep(100);
 				GuiLock __;
-				DDUMP(ii);
 				if(IsShutdownThreads())
 					break;
+				DLOG("============");
 				label = AsString(ii++);
 			}
 		});

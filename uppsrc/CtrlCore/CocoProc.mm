@@ -348,6 +348,7 @@ struct MMImp {
 }
 
 -(void)drawRect:(NSRect)r {
+	Upp::GuiLock __;
 	if(ctrl) {
 		Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
 		Upp::MMImp::Paint(ctrl, w, MakeRect(r, Upp::DPI(1)));
@@ -355,12 +356,14 @@ struct MMImp {
 }
 
 - (void)mouseDown:(NSEvent *)e {
+	Upp::GuiLock __;
 	coco_mouse_left = true;
 	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::LEFT))
 		[super mouseDown:e];
 }
 
 - (void)mouseUp:(NSEvent *)e {
+	Upp::GuiLock __;
 	coco_mouse_left = false;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTUP))
 		[super mouseUp:e];
@@ -368,28 +371,33 @@ struct MMImp {
 }
 
 - (void)mouseMoved:(NSEvent *)e {
+	Upp::GuiLock __;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE))
 		[super mouseMoved:e];
 }
 
 - (void)mouseDragged:(NSEvent *)e {
+	Upp::GuiLock __;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE))
 		[super mouseDragged:e];
 }
 
 - (void)rightMouseDown:(NSEvent*)e {
+	Upp::GuiLock __;
 	coco_mouse_right = true;
 	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::RIGHT))
 		[super rightMouseDown:e];
 }
 
 - (void)rightMouseUp:(NSEvent*)e {
+	Upp::GuiLock __;
 	coco_mouse_right = false;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP))
 		[super rightMouseUp:e];
 }
 
 - (void)scrollWheel:(NSEvent *)e {
+	Upp::GuiLock __;
 	int dy = [e deltaY];
 	int dx = [e deltaX];
 	if(!(dy && Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEWHEEL, dy)) &&
@@ -398,45 +406,54 @@ struct MMImp {
 }
 
 - (void)keyDown:(NSEvent *)e {
+	Upp::GuiLock __;
     [self interpretKeyEvents: [NSArray arrayWithObject: e]];
 	if(!Upp::MMImp::KeyEvent(ctrl, e, 0))
 		[super keyDown:e];
 }
 
 - (void)keyUp:(NSEvent *)e {
+	Upp::GuiLock __;
 	if(!Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP))
 			[super keyUp:e];
 }
 
 - (void)flagsChanged:(NSEvent *)e {
+	Upp::GuiLock __;
 	if(!Upp::MMImp::KeyFlags(ctrl, e))
 		[super flagsChanged:e];
 }
 
 - (void)cursorUpdate:(NSEvent *)event {
+	Upp::GuiLock __;
 	Upp::MMImp::Flags(event);
 	Upp::MMImp::DoCursorShape();
 }
 
 - (BOOL)windowShouldClose:(NSWindow *)sender {
+	Upp::GuiLock __;
 	if(ctrl->IsEnabled())
 		Upp::MMImp::DoClose(ctrl);
 	return NO;
 }
 
 - (void)windowDidResize:(NSNotification *)notification {
+	Upp::GuiLock __;
 	Upp::MMCtrl::SyncRect(self);
 }
 
 - (void)windowDidMove:(NSNotification *)notification {
+	Upp::GuiLock __;
 	Upp::MMCtrl::SyncRect(self);
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
+	Upp::GuiLock __;
 	Upp::MMImp::BecomeKey(ctrl);
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
+	Upp::GuiLock __;
 	Upp::MMImp::ResignKey(ctrl);
 }
 
@@ -445,36 +462,43 @@ struct MMImp {
 }
 
 - (BOOL)canBecomeKeyView {
+	Upp::GuiLock __;
 	return ctrl->IsEnabled();
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
+	Upp::GuiLock __;
 	return Upp::MMImp::DnD(ctrl, sender);
 }
 
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
+	Upp::GuiLock __;
 	return Upp::MMImp::DnD(ctrl, sender);
 }
 
 - (void)draggingEnded:(id <NSDraggingInfo>)sender
 {
+	Upp::GuiLock __;
 	Upp::MMImp::DnDLeave(ctrl);
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
+	Upp::GuiLock __;
 	Upp::MMImp::DnDLeave(ctrl);
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
+	Upp::GuiLock __;
 	return Upp::MMImp::DnD(ctrl, sender, true) != NSDragOperationNone;
 }
 
 - (void)updateTrackingAreas
 {
+	Upp::GuiLock __;
 	for(NSTrackingArea *t in [self trackingAreas])
 		[self removeTrackingArea:t];
 
@@ -493,6 +517,7 @@ struct MMImp {
 
 -(void)insertText:(id)aString replacementRange:(NSRange)replacementRange
 {
+	Upp::GuiLock __;
     (void) replacementRange;
 
     NSString* pInsert = [aString isMemberOfClass: [NSAttributedString class]] ? [aString string] : aString;
@@ -513,11 +538,13 @@ struct MMImp {
 
 - (NSRect)firstRectForCharacterRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange
 {
+	Upp::GuiLock __;
 	return Upp::MMImp::PreeditRect(ctrl);
 }
 
 - (void)setMarkedText:(id)aString selectedRange:(NSRange)selRange replacementRange:(NSRange)replacementRange
 {
+	Upp::GuiLock __;
     if(![aString isKindOfClass:[NSAttributedString class]] )
         aString = [[[NSAttributedString alloc] initWithString:aString] autorelease];
 
@@ -531,11 +558,13 @@ struct MMImp {
 
 - (void)unmarkText
 {
+	Upp::GuiLock __;
 	Upp::MMImp::CancelPreedit();
 }
 
 - (NSArray *)validAttributesForMarkedText
 {
+	Upp::GuiLock __;
     return [NSArray arrayWithObjects:NSUnderlineStyleAttributeName, nil];
 }
 
