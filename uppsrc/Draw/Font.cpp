@@ -14,6 +14,7 @@ void Std(Font& font)
 }
 
 Size Font::StdFontSize;
+Size Font::StdFontSizeA;
 Font Font::AStdFont;
 
 INITBLOCK {
@@ -118,6 +119,15 @@ void Font::SyncStdFont()
 {
 	Mutex::Lock __(sFontLock);
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().GetCy());
+	
+	StdFontSizeA = Size(0, 0);
+	for(int italic = 0; italic < 2; italic++)
+		for(int bold = 0; bold < 2; bold++) {
+			Font fnt = AStdFont().Bold(bold).Italic(italic);
+			StdFontSizeA.cx = max(StdFontSizeA.cx, fnt.GetAveWidth());
+			StdFontSizeA.cy = max(StdFontSizeA.cy, fnt.GetCy());
+		}
+
 	LLOG("SyncStdFont " << StdFontSize);
 	SyncUHDMode();
 }
@@ -184,6 +194,12 @@ Size Font::GetStdFontSize()
 {
 	InitStdFont();
 	return StdFontSize;
+}
+
+Size Font::GetStdFontSizeA()
+{
+	InitStdFont();
+	return StdFontSizeA;
 }
 
 Font StdFont()

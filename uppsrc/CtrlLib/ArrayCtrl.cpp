@@ -2808,7 +2808,7 @@ void ArrayCtrl::Reset() {
 	acceptingrow = 0;
 	columnsortfindkey = false;
 	spanwidecells = false;
-	linecy = Draw::GetStdFontCy();
+	linecy = GetStdFontCyA();
 	Clear();
 	sb.SetLine(linecy);
 	columnsortsecondary = NULL;

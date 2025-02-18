@@ -335,7 +335,7 @@ PopUpList::PopUpList() {
 	droplines = 16;
 	inpopup = 0;
 	permanent = false;
-	linecy = Draw::GetStdFontCy();
+	linecy = GetStdFontCyA();
 	display = &StdDisplay();
 	convert = NULL;
 }
