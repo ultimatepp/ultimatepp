@@ -190,6 +190,7 @@ $(OutFile): build_info  \
 	$(OutDir_ide)idewin.o \
 	$(OutDir_ide)main.o \
 	$(OutDir_ide)CommandLineHandler.o \
+	$(OutDir_ide)BuildInfo.o \
 	$(OutDir_ide)About.o \
 	$(OutDir_ide)Macro.o \
 	$(OutDir_ide)Help.o \
@@ -310,6 +311,7 @@ $(OutFile): build_info  \
 		$(OutDir_ide)idewin.o \
 		$(OutDir_ide)main.o \
 		$(OutDir_ide)CommandLineHandler.o \
+		$(OutDir_ide)BuildInfo.o \
 		$(OutDir_ide)About.o \
 		$(OutDir_ide)Macro.o \
 		$(OutDir_ide)Help.o \
@@ -10730,6 +10732,10 @@ $(OutDir_ide)CommandLineHandler.o: $(UPPDIR1)ide/CommandLineHandler.cpp \
 	$(UPPDIR1)RichText/Txt.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/CommandLineHandler.cpp -o $(OutDir_ide)CommandLineHandler.o
+
+$(OutDir_ide)BuildInfo.o: $(UPPDIR1)ide/BuildInfo.cpp \
+	$(UPPDIR1)ide/BuildInfo.cpp
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_ide)  $(UPPDIR1)ide/BuildInfo.cpp -o $(OutDir_ide)BuildInfo.o
 
 $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)CodeEditor/CodeEditor.h \
