@@ -3,8 +3,6 @@
 
 #include <Core/Core.h>
 
-namespace Upp {
-
 class BuilderComponent {
 public:
 	BuilderComponent() { this->builder = NULL; }
@@ -50,7 +48,5 @@ private:
 	String outDir;
 	String blitzFileName;
 };
-
-}
 
 #endif

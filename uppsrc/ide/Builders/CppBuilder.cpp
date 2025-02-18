@@ -569,9 +569,14 @@ Vector<String> RepoInfo(const String& package)
 	return info;
 }
 
+String CppBuilder::GetBuildInfoPath() const
+{
+	return AppendFileName(outdir, "build_info.h");
+}
+
 void CppBuilder::SaveBuildInfo(const String& package)
 {
-	String path = AppendFileName(outdir, "build_info.h");
+	String path = GetBuildInfoPath();
 	RealizePath(path);
 	FileOut info(path);
 	Time t = GetSysTime();

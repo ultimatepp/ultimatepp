@@ -1,7 +1,5 @@
 #include "Builders.h"
 
-namespace Upp {
-
 String BlitzBaseFile()
 {
 	return ConfigFile("blitzbase");
@@ -80,16 +78,18 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 	String blitz;
 	if(!IdeGetOneFile().IsEmpty())
 		return b;
+	String build_info_path = NormalizePath(builder.GetBuildInfoPath());
 	for(int i = 0; i < sourceFiles.GetCount(); i++) {
 		String sourceFile = sourceFiles[i];
 		String ext = ToLower(GetFileExt(sourceFile));
 		String objfile = CatAnyPath(outDir, GetFileTitle(sourceFile) + objext);
 		Time sourceFileTime = GetFileTime(sourceFile);
+		Time htime = builder.HdependFileTime(sourceFile);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
 		   && HdependBlitzApproved(sourceFile) && IsNull(soptions[i])
 		   && sourceFileTime < blitz_base_time
 		   && noblitz.Find(sourceFile) < 0) {
-			if(builder.HdependFileTime(sourceFile) > blitztime)
+			if(htime > blitztime)
 				b.build = true;
 			BlitzFile(blitz, sourceFile, HdependGetDefines(sourceFile), i);
 			b.info << ' ' << GetFileName(sourceFile);
@@ -118,6 +118,4 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		b.build = false;
 	}
 	return b;
-}
-
 }

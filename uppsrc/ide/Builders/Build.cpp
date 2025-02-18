@@ -319,6 +319,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
 	String& linkopt, bool link)
 {
+	HdependBaseIncludes();
 	String package = wspc[pkindex];
 	String mainpackage = wspc[0];
 	const Package& pkg = wspc.package[pkindex];
@@ -341,6 +342,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	b->method = method;
 	b->outdir = OutDir(b->config, package, bm);
 	host.RealizeDir(b->outdir);
+	HdependAddInclude(b->outdir);
 	String mainfn = Null;
 	Index<String> mcfg = PackageConfig(wspc, 0, bm, mainparam, host, *b, &mainfn);
 	HdependClearDependencies();
@@ -428,7 +430,7 @@ void MakeBuild::SetHdependDirs()
 			include.Add(SourcePath(wspc[i], pkg.include[j].text));
 	}
 
-	HdependSetDirs(pick(include));
+	HdependSetIncludes(pick(include));
 }
 
 Vector<String> MakeBuild::GetAllUses(const Workspace& wspc, int f,
@@ -546,6 +548,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	}
 	EndBuilding(ok);
 	SetErrorEditor();
+	HdependBaseIncludes();
 	return ok;
 }
 

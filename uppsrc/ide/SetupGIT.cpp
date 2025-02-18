@@ -1,9 +1,5 @@
 #include "ide.h"
 
-#ifndef bmYEAR
-#include <build_info.h>
-#endif
-
 bool SetupGITMaster()
 {
 	WithSetupGITLayout<TopWindow> dlg;

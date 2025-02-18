@@ -38,6 +38,7 @@ struct CppBuilder : Builder {
 	void                   DoRc(Vector<String>& sfile, Vector<String>& soptions, const Package& pkg, const String& package);
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
+	virtual                String GetBuildInfoPath() const;
 	void                   SaveBuildInfo(const String& package);
 	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
