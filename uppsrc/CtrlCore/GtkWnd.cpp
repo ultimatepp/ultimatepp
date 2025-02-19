@@ -415,7 +415,7 @@ void Ctrl::DoCancelPreedit()
 	Top *top = focusCtrl->GetTop();
 	if(top)
 		focusCtrl->HidePreedit();
-	if(top) {
+	if(top && top->im_context) {
 		gtk_im_context_reset(top->im_context);
 		gtk_im_context_focus_out(top->im_context);
 		gtk_im_context_focus_in(top->im_context);
