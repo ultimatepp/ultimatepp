@@ -10,8 +10,10 @@ int bm_DAY = bmDAY;
 int bm_HOUR = bmHOUR;
 int bm_MINUTE = bmMINUTE;
 int bm_SECOND = bmSECOND;
+
 const char *bm_MACHINE = bmMACHINE;
 const char *bm_USER = bmUSER;
+
 const char *bm_GIT_BRANCH =
 #ifdef bmGIT_HASH
 	bmGIT_BRANCH
