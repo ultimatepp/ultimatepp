@@ -175,7 +175,7 @@ Bombs::Bombs()
 		menu.Sub("File", [=](Bar& bar) {
 			bar.Add("Exit", Breaker(IDOK));
 			bar.Separator();
-			bar.Add("About..", [] { PromptOK("[*A9/ uBombs]&[A5 Ultimate`+`+ example]"); });
+			bar.Add("About..", [] { PromptOK("[*A9/ uBombs]&[A5 U`+`+ example]"); });
 		});
 		menu.Sub("Game", [=](Bar& bar) {
 			bar.Add("Restart", [=] { Generate(); });
