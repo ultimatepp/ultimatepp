@@ -458,7 +458,7 @@ void    Ctrl::KillRepeat() {
 	middlemousepos = Null;
 }
 
-bool    Ctrl::HasMouse() const
+bool    Ctrl::	HasMouse() const
 {
 	GuiLock __;
 	return mouseCtrl == this;
