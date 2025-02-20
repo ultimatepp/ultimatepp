@@ -290,7 +290,7 @@ class JsonIO;
 #include "Ops.h"
 #include "Fn.h"
 
-#ifdef flagNOSIMD
+#if defined(flagNOSIMD) || defined(flagLEGACY_CPU)
 	#ifdef CPU_SSE2
 	#undef CPU_SSE2
 	#endif

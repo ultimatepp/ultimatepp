@@ -160,7 +160,7 @@ void InstantSetup()
 	
 			bmSet(bm, "BUILDER", "CLANG");
 			bmSet(bm, "COMPILER", x64 ? "" : "i686-w64-mingw32-c++");
-			bmSet(bm, "COMMON_OPTIONS", "");
+			bmSet(bm, "COMMON_OPTIONS", "-mpopcnt");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++17");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_LINK", "");

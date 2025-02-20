@@ -205,9 +205,9 @@ inline bool FitsInInt64(double x)
 force_inline
 int CountBits(dword mask)
 {
-#if defined(__GNUC__) || defined(__clang__)
+#if COMPILER_GCC && !defined(flagLEGACY_CPU)
     return __builtin_popcount(mask);
-#elif defined(_MSC_VER)
+#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
     return __popcnt(mask);
 #else
     // Fallback (unlikely)
@@ -223,10 +223,10 @@ int CountBits(dword mask)
 force_inline
 int CountBits64(uint64 mask)
 {
-#if defined(__GNUC__) || defined(__clang__)
+#if COMPILER_GCC && !defined(flagLEGACY_CPU)
     return __builtin_popcountll(mask);
-#elif defined(_MSC_VER)
-    #if defined(_WIN64)
+#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
+    #if CPU_64
         return (int)__popcnt64(mask);
     #else
         return CountBits(static_cast<dword>(mask)) +  CountBits(static_cast<dword>(mask >> 32));
