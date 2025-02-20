@@ -183,7 +183,7 @@ void CreateBuildMethods()
 	#ifdef CPU_X86
 		common = "-mpopcnt";
 	#endif
-		bm.Replace("$COMMON$", common);
+		r.Replace("$COMMON$", common);
 		return r;
 	};
 
