@@ -386,35 +386,23 @@ bool LoadFromFile(Event<Stream&> serialize, const char *file = NULL, int version
 bool StoreToFile(Event<Stream&> serialize, const char *file = NULL, int version = Null);
 
 template <class T>
-void SerializeTFn(Stream &s, T *x)
-{
-	s % *x;
-}
-
-template <class T>
-Event<Stream&> SerializeCb(T& x)
-{
-	return callback1(SerializeTFn<T>, &x);
-}
-
-template <class T>
 bool Load(T& x, Stream& s, int version = Null) {
-	return Load(SerializeCb(x), s, version);
+	return Load([&](Stream& s) { s % x; }, s, version);
 }
 
 template <class T>
 bool Store(T& x, Stream& s, int version = Null) {
-	return Store(SerializeCb(x), s, version);
+	return Store([&](Stream& s) { s % x; }, s, version);
 }
 
 template <class T>
 bool LoadFromFile(T& x, const char *name = NULL, int version = Null) {
-	return LoadFromFile(SerializeCb(x), name, version);
+	return LoadFromFile([&](Stream& s) { s % x; }, name, version);
 }
 
 template <class T>
 bool StoreToFile(T& x, const char *name = NULL, int version = Null) {
-	return StoreToFile(SerializeCb(x), name, version);
+	return StoreToFile([&](Stream& s) { s % x; }, name, version);
 }
 
 template <class T>
@@ -456,10 +444,6 @@ bool LoadFromGlobal(Event<Stream&> serialize, const char *name);
 void StoreToGlobal(Event<Stream&> serialize, const char *name);
 
 void SerializeGlobalConfigs(Stream& s);
-
-#ifdef PLATFORM_WINCE
-inline void abort() { TerminateProcess(NULL, -1); }
-#endif
 
 template <class T>
 hash_t HashBySerialize(const T& cont)
