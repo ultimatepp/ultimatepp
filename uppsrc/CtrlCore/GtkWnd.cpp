@@ -259,7 +259,9 @@ Rect Ctrl::GetVirtualScreenArea()
 		return Rect(0, 0, 1024, 768);
 	}
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if(IsWayland()) {
+	if(IsWayland()) { // it is all pointless with Wayland, just return something mostly usable
+		return SCL(0, 0, 1650, 900);
+	#if 0
 		GdkRectangle rr;
 		auto *pDisplay = gdk_display_get_default();
 		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
@@ -269,6 +271,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		}
 		gdk_monitor_get_geometry(pMonitor, &rr);
 		return SCL(rr.x, rr.y, rr.width, rr.height);
+	#endif
 	}
 #endif
 	if(IsWayland()) {

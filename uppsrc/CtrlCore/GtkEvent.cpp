@@ -9,7 +9,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-#define LOG_EVENTS  _DBG_
+// #define LOG_EVENTS  _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
