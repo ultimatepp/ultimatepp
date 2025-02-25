@@ -119,6 +119,9 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".cu")
 		img = IdeCommonImg::Cuda();
 	else
+	if(ext == ".ci")
+		img = IdeCommonImg::Cudi();
+	else
 	if(findarg(ext, ".cpp", ".cc", ".cxx", ".mm") >= 0)
 		img = IdeCommonImg::Cpp();
 	else
