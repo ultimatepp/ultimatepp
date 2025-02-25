@@ -8,7 +8,7 @@ INITBLOCK {
 
 struct MyApp : TopWindow {
 	TimeCallback tm;
-	virtual void Paint(Draw& w) {
+	void Paint(Draw& w) override {
 		Size sz = GetSize();
 		w.DrawRect(GetSize(), SWhite());
 		int y = 0;
@@ -24,13 +24,24 @@ struct MyApp : TopWindow {
 		DrawSmartText(w, 0, 0, sz.cx, txt);
 	}
 	
+	void LeftDown(Point p, dword keyflags) override
+	{
+		new MyApp;
+	}
+
+	void Close() override {
+		delete this;
+	}
+
 	MyApp() {
 		Sizeable().Zoomable();
 		tm.Set(-200, [=] { Refresh(); });
+		OpenMain();
 	}
 };
 
 GUI_APP_MAIN
 {
-	MyApp().Run();
+	new MyApp;
+	Ctrl::EventLoop();
 }
