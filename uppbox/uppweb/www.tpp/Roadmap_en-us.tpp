@@ -52,6 +52,7 @@ or general rectangles&]
 [s0;i150;O0; General chameleon look improvements in Linux/Windows/MacOS&]
 [s0;i150;O0; AllowDarkContent in color selection widgets shows colors 
 converted with DarkTheme if dark mode is active&]
+[s0;i150;O0; Nicer Win11 dialog icons&]
 [s0;i150;O0; Experimental Wayland support (there is now Wayland option 
 in theide setup)&]
 [s0; &]
@@ -92,8 +93,7 @@ options&]
 [s0;i150;O0; Git history of file Copy Hash button&]
 [s0;i150;O0; Multiline cursor (Alt`+Shift`+Down to start)&]
 [s0;i150;O0; Insert sequence tool&]
-[s0;i150;O0; Automatic rc file creation (with app icon and manifest), 
-CtrlLib: Nicer Win32 dialog icons&]
+[s0;i150;O0; Automatic rc file creation (with app icon and manifest)&]
 [s0;i150;O0; PDB debugger now can use Esc scripts for pretty printing&]
 [s0;i150;O0; xfce terminal support in setup&]
 [s0;i150;O0; experimental glslc support (see upptst/vulkan)&]
