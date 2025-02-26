@@ -156,10 +156,10 @@ Rect Ctrl::GetWndScreenRect() const
 
 	if(!IsOpen())
 		return Null;
-	
+
 	gint x, y;
 	gint width, height;
-	
+
 	if(IsWayland()) {
 		if(top && utop->csd.IsEnabled()) {
 			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
@@ -174,7 +174,7 @@ Rect Ctrl::GetWndScreenRect() const
 		width = gdk_window_get_width(gdk());
 		height = gdk_window_get_height(gdk());
 	}
-	
+
 	return SCL(x, y, width, height);
 }
 
@@ -259,9 +259,7 @@ Rect Ctrl::GetVirtualScreenArea()
 		return Rect(0, 0, 1024, 768);
 	}
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if(IsWayland()) { // it is all pointless with Wayland, just return something mostly usable
-		return SCL(0, 0, 1650, 900);
-	#if 0
+	if(IsWayland()) {
 		GdkRectangle rr;
 		auto *pDisplay = gdk_display_get_default();
 		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
@@ -271,7 +269,6 @@ Rect Ctrl::GetVirtualScreenArea()
 		}
 		gdk_monitor_get_geometry(pMonitor, &rr);
 		return SCL(rr.x, rr.y, rr.width, rr.height);
-	#endif
 	}
 #endif
 	if(IsWayland()) {
@@ -438,7 +435,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		rr.right = (r.right + 1) / 2;
 		rr.bottom = (r.bottom + 1) / 2;
 	}
-	
+
 	if(IsWayland())
 		rr.Inflate(2, 2); // TODO: This is temporary fix
 
@@ -540,7 +537,7 @@ Rect Ctrl::GetDefaultWindowRect()
 	GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
 	Size sz = r.GetSize();
-	
+
 	static int pos = min(sz.cx / 10, 50);
 	pos += 10;
 	int cx = sz.cx * 2 / 3;
