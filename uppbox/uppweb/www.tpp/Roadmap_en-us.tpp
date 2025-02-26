@@ -81,7 +81,7 @@ allows dark paper in dark mode.&]
 for all variants of theide and umk (to share the same .var and 
 .bm files)&]
 [s0;i150;O0; RichEdits in theide now support dark theme&]
-[s0;i150;O0; Json/Xml viever &]
+[s0;i150;O0; Json/Xml viewer local menu&]
 [s0;i150;O0; aux packages now have Remove all menu command&]
 [s0;i150;O0; bmGIT`_BRANCH in build info&]
 [s0;i150;O0; The option in settings to allow access to Downloads 
