@@ -460,7 +460,7 @@ void FixButton(Image& button)
 	int g1 = Grayscale(SColorFace());
 	int n = 0;
 	for(RGBA c : m) {
-		if(abs(Grayscale(c) - g1) > 30)
+		if(abs(Grayscale(c) - g1) > 15)
 			n++;
 	}
 	if(n < 2 * isz.cx)
