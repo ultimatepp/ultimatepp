@@ -20,8 +20,8 @@ const TargetMode& MakeBuild::GetTargetMode()
 }
 
 Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
-                                 const VectorMap<String, String>& bm, String mainparam,
-                                 Host& host, Builder& b, String *target)
+                                       const VectorMap<String, String>& bm, String mainparam,
+                                       Host& host, Builder& b, String *target)
 {
 	String packagepath = PackagePath(wspc[package]);
 	const Package& pkg = wspc.package[package];
@@ -204,10 +204,21 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b = pAb;
 	}
 	else {
-		// TODO: cpp builder variables only!!!
 		b->compiler = bm.Get("COMPILER", "");
-		b->include = SplitDirs(Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
+		Vector<String> nests = GetUppDirs();
+		for(String& p : nests)
+			p = NormalizePath(p);
+		Index<String> used_nests; // only add nests that are used to prevent UppHub problems
 		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			String pp = NormalizePath(PackagePath(wspc[i]));
+			for(String n : nests)
+				if(pp.StartsWith(n)) {
+					used_nests.FindAdd(n);
+					break;
+				}
+		}
+		b->include = SplitDirs(Join(used_nests.GetKeys(), ";") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			const Package& pkg = wspc.GetPackage(i);
 			for(int j = 0; j < pkg.include.GetCount(); j++)
