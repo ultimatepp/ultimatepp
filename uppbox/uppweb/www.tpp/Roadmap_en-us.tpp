@@ -80,6 +80,9 @@ allows dark paper in dark mode.&]
 [s0;i150;O0; Posix config is now always in the same folder .../theide/.. 
 for all variants of theide and umk (to share the same .var and 
 .bm files)&]
+[s0;i150;O0; build process in Win32 now automatically picks manifest.xml 
+from packages (usually from CtrlCore) and application icon and 
+creates .rc file automatically&]
 [s0;i150;O0; RichEdits in theide now support dark theme&]
 [s0;i150;O0; Json/Xml viewer local menu&]
 [s0;i150;O0; aux packages now have Remove all menu command&]
