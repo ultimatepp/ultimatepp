@@ -65,8 +65,8 @@ void SliderCtrl::Paint(Draw& w)
 		Swap(c1, c2);
 	if(IsVert()) {
 		int half = size.cx >> 1;
-		w.DrawRect(half - DPI(1), l, DPI(2), t - l, c1);
-		w.DrawRect(half - DPI(1), t, DPI(2), h - t, c2);
+		w.DrawRect(half - DPI(1), h, DPI(2), t - h, c2);
+		w.DrawRect(half - DPI(1), t, DPI(2), l - t, c1);
 		if(!IsNull(value))
 			w.DrawImage((size.cx - CtrlImg::vthumb().GetSize().cx) >> 1, t - ThumbSz() / 2,
 			            CtrlImg::Get(CtrlImg::I_vthumb + ii));

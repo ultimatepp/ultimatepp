@@ -555,7 +555,6 @@ bool   SaveStream(Stream& out, const String& data);
 
 int64 CopyStream(Stream& dest, Stream& src, int64 count = INT64_MAX);
 
-#ifndef PLATFORM_WINCE
 void    CoutUTF8();
 Stream& Cout();
 Stream& Cerr();
@@ -563,7 +562,6 @@ String  ReadStdIn();
 String  ReadSecret();
 void    EnableEcho(bool b = true);
 void    DisableEcho();
-#endif
 
 Stream& NilStream();
 

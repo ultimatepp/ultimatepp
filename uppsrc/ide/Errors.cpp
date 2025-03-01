@@ -700,7 +700,7 @@ Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink,
 	int y = r.top + (r.GetHeight() - fcy) / 2;
 	w.DrawRect(r, paper);
 	int sl = Utf32Len(txt, atoi(h[1]));
-	int sh = Utf32Len(txt + sl, atoi(h[2])) + sl;
+	int sh = Utf32Len(~txt + sl, atoi(h[2])) + sl;
 	int x;
 	for(int text = 0; text < 2; text++) { // first pass draws background
 		x = r.left;

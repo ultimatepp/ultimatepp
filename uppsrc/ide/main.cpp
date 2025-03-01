@@ -257,8 +257,8 @@ void AppMain___()
 	}
 #endif
 
-	if(!hasvars)
-		SetupGITMaster();
+//	if(!hasvars) // this does not work for some reason on initial install, disable for now
+//		SetupGITMaster();
 
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();

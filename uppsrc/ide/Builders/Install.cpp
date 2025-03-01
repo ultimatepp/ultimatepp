@@ -63,7 +63,7 @@ LINKMODE_LOCK = "0";)";
 const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
-COMMON_OPTIONS = "";
+COMMON_OPTIONS = "-mpopcnt";
 COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
@@ -92,7 +92,7 @@ LINKMODE_LOCK = "0";)";
 const char *gcc_bm =
 R"(BUILDER = "GCC";
 COMPILER = "";
-COMMON_OPTIONS = "";
+COMMON_OPTIONS = "$COMMON$";
 COMMON_CPP_OPTIONS = "-std=c++17";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
@@ -119,7 +119,7 @@ LINKMODE_LOCK = "0";)";
 const char *clang_bm =
 R"(BUILDER = "CLANG";
 COMPILER = "clang++";
-COMMON_OPTIONS = "";
+COMMON_OPTIONS = "$COMMON$";
 COMMON_CPP_OPTIONS = "-std=c++17 -Wno-logical-op-parentheses";
 COMMON_C_OPTIONS = "";
 COMMON_LINK = "";
@@ -179,6 +179,11 @@ void CreateBuildMethods()
 			r.Replace("INCLUDE = \"\";", "INCLUDE = \"/usr/local/opt/openssl/include\";");
 			r.Replace("LIB = \"\";", "LIB = \"/usr/local/opt/openssl/lib\";");
 		}
+		String common;
+	#ifdef CPU_X86
+		common = "-mpopcnt";
+	#endif
+		r.Replace("$COMMON$", common);
 		return r;
 	};
 

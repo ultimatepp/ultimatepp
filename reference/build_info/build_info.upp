@@ -4,7 +4,8 @@ uses
 	Core;
 
 file
-	build_info.cpp;
+	build_info.cpp,
+	main.cpp;
 
 mainconfig
 	"" = "";

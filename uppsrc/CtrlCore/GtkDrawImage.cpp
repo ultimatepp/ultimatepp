@@ -250,7 +250,7 @@ Image Image::SizeBottomLeft() FCURSOR_(GDK_BOTTOM_LEFT_CORNER)
 Image Image::SizeBottom() FCURSOR_(GDK_BOTTOM_SIDE)
 Image Image::SizeBottomRight()  FCURSOR_(GDK_BOTTOM_RIGHT_CORNER)
 Image Image::Cross() FCURSOR_(GDK_CROSSHAIR)
-Image Image::Hand() FCURSOR_(GDK_HAND2)
+Image Image::Hand() FCURSOR_(GDK_HAND2		)
 
 }
 

@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#define UPP_VERSION 0x20241100
+#define UPP_VERSION 0x20250200
 
 #ifndef flagMT
 #define flagMT // MT is now always on
@@ -290,7 +290,7 @@ class JsonIO;
 #include "Ops.h"
 #include "Fn.h"
 
-#ifdef flagNOSIMD
+#if defined(flagNOSIMD) || defined(flagLEGACY_CPU)
 	#ifdef CPU_SSE2
 	#undef CPU_SSE2
 	#endif

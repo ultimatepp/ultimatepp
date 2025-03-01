@@ -1,0 +1,8 @@
+description "Demonstrates the use of build_info, supplied by U++ builder, slow compilation variant\377";
+
+uses
+	Core;
+
+file
+	main.cpp;
+

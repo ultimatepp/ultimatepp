@@ -142,7 +142,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	Value value;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 #ifdef LOG_EVENTS
-	String ev = "?";
+	String ev = "? " + AsString((int)event->type);
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
 	if(f)
 		ev = f->b;

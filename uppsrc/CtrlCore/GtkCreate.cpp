@@ -64,6 +64,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		r.right += top->csd.RightMargin();
 		r.top -= top->csd.TopMargin();
 		r.bottom += top->csd.BottomMargin();
+
+		g_signal_connect(top->window, "delete-event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	}
 	else {
 		top->drawing_area = top->window;
@@ -152,6 +154,7 @@ void Ctrl::WndDestroy()
 		top->im_context = nullptr;
 	}
 	gtk_widget_destroy(top->window);
+	top->window = nullptr;
 	isopen = false;
 	popup = false;
 	DeleteTop();

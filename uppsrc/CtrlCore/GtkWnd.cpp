@@ -156,10 +156,10 @@ Rect Ctrl::GetWndScreenRect() const
 
 	if(!IsOpen())
 		return Null;
-	
+
 	gint x, y;
 	gint width, height;
-	
+
 	if(IsWayland()) {
 		if(top && utop->csd.IsEnabled()) {
 			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
@@ -174,7 +174,7 @@ Rect Ctrl::GetWndScreenRect() const
 		width = gdk_window_get_width(gdk());
 		height = gdk_window_get_height(gdk());
 	}
-	
+
 	return SCL(x, y, width, height);
 }
 
@@ -255,8 +255,8 @@ Rect Ctrl::GetVirtualScreenArea()
 	GuiLock __;
 	auto pRootWindow = gdk_screen_get_root_window(gdk_screen_get_default());
 	if (!pRootWindow) {
-		ASSERT("Failed to obtain root window!");
-		return Rect();
+		LLOG("Failed to obtain root window!");
+		return Rect(0, 0, 1024, 768);
 	}
 #if GTK_CHECK_VERSION(3, 22, 0)
 	if(IsWayland()) {
@@ -264,16 +264,16 @@ Rect Ctrl::GetVirtualScreenArea()
 		auto *pDisplay = gdk_display_get_default();
 		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
 		if (!pMonitor) {
-			ASSERT("Failed to obtain monitor!");
-			return Rect();
+			LLOG("Failed to obtain monitor!");
+			return Rect(0, 0, 1024, 768);
 		}
 		gdk_monitor_get_geometry(pMonitor, &rr);
 		return SCL(rr.x, rr.y, rr.width, rr.height);
 	}
 #endif
 	if(IsWayland()) {
-		ASSERT("GTK Wayland backend not supported before 3.22 GTK version.");
-		return Rect();
+		LLOG("GTK Wayland backend not supported before 3.22 GTK version.");
+		return Rect(0, 0, 1024, 768);
 	}
 	gint x, y, width, height;
 	gdk_window_get_geometry(pRootWindow, &x, &y, &width, &height);
@@ -415,7 +415,7 @@ void Ctrl::DoCancelPreedit()
 	Top *top = focusCtrl->GetTop();
 	if(top)
 		focusCtrl->HidePreedit();
-	if(top) {
+	if(top && top->im_context) {
 		gtk_im_context_reset(top->im_context);
 		gtk_im_context_focus_out(top->im_context);
 		gtk_im_context_focus_in(top->im_context);
@@ -435,7 +435,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		rr.right = (r.right + 1) / 2;
 		rr.bottom = (r.bottom + 1) / 2;
 	}
-	
+
 	if(IsWayland())
 		rr.Inflate(2, 2); // TODO: This is temporary fix
 
@@ -537,7 +537,7 @@ Rect Ctrl::GetDefaultWindowRect()
 	GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
 	Size sz = r.GetSize();
-	
+
 	static int pos = min(sz.cx / 10, 50);
 	pos += 10;
 	int cx = sz.cx * 2 / 3;

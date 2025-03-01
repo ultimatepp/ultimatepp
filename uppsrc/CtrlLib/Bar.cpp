@@ -108,9 +108,9 @@ Size BarPane::LayOut(bool horz, int maxsize, bool repos)
 			VeHo(psz) = max(VeHo(psz), VeHo(sz));
 			if(q->ctrl) {
 				if(horz)
-					q->ctrl->LeftPos(psz.cx + hmargin, sz.cx);
+					q->ctrl->LeftPos(min(psz.cx + hmargin, 32000), sz.cx);
 				else
-					q->ctrl->TopPos(psz.cy + vmargin, sz.cy);
+					q->ctrl->TopPos(min(psz.cy + vmargin, 32000), sz.cy);
 			}
 			HoVe(psz) += HoVe(sz);
 			q++;
@@ -124,10 +124,11 @@ Size BarPane::LayOut(bool horz, int maxsize, bool repos)
 		if(repos)
 			while(f != q) {
 				if(f->ctrl) {
+					int bpm = min(bp, 32000);
 					if(horz)
-						f->ctrl->TopPos(bp, psz.cy);
+						f->ctrl->TopPos(bpm, psz.cy);
 					else
-						f->ctrl->LeftPos(bp, psz.cx);
+						f->ctrl->LeftPos(bpm, psz.cx);
 				}
 				f++;
 			}
