@@ -18,6 +18,8 @@ void ForAllNests(Event<const Vector<String>&> fn)
 
 void GatherAllFiles(const String& path, Index<String>& filei, VectorMap<String, String>& file)
 {
+	if(path.GetCount() == 0)
+		return;
 	Sleep(0); // This is supposed to be superlazy
 	for(FindFile ff(path + "/*.*"); ff && !Thread::IsShutdownThreads(); ff.Next())
 		if(ff.IsFolder() && *ff.GetName() != '.')
