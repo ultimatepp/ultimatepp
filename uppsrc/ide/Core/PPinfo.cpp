@@ -359,7 +359,7 @@ PPInfo::PPFile& PPInfo::File(const String& path)
 				int retry = 0;
 			again:
 				FileIn in(path);
-				if(!in && ++retry < 6) {
+				if(!in && ++retry < 6) { // in case other thread is doing the same (e.g. Indexer)
 					Sleep(retry * 100);
 					goto again;
 				}
