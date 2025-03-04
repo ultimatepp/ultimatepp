@@ -1,0 +1,11 @@
+* /home/maldoror/upp/.cache/upp.out/autotest/CLANG.Debug.Debug_Full.Shared.Sse2/SIMD3 08.02.2025 12:19:08, user: maldoror
+
+mask1 = 0xaaaa
+mask2 = 0xaa
+mask3 = 0xa
+mask4 = 0xa
+=================
+All zeros:   0x0000 (expected: 0x0000)
+All ones:    0xffff (expected: 0xffff)
+Alternating: 0xaaaa (expected: 0xaaaa)
+Single bit:  0x0020 (expected: 0x0020)
