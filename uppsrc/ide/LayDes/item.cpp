@@ -326,7 +326,7 @@ EscValue LayoutItem::CreateEsc() const
 		if(IsNumber(v))
 			w = (double)v;
 		if(v.Is<Color>())
-			w = EscColor(v);
+			w = EscColor(AdjustIfDark(RealizeColor((Color)v)));
 		ctrl.MapSet(property[q].name, w);
 	}
 	ctrl.MapSet("type", (WString)type);

@@ -566,6 +566,7 @@ private:
 	bool         multi_frame:1; // there is more than single frame, they are stored in heap
 	bool         top:1;
 	bool         megarect:1; // support for large virtual screen area - SetRect.TopLeft > 16000
+	bool         erasebg:1; // true before first Paint (in Win32, do WM_ERASEBKGND to avoid flickering)
 
 	static  bool      was_fullrefresh; // indicates that some widgets might have fullrefresh true
 
