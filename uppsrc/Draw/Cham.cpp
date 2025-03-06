@@ -407,9 +407,11 @@ bool IsDarkColorFace()
 	return sIsDarkColorFace;
 }
 
+extern bool AColor_dark_mode__;
+
 void ChReset()
 {
-	dark_theme__ = false;
+	AColor_dark_mode__ = dark_theme__ = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		*sChStyle()[i].status = 0;
 	ChLookFn(StdChLookFn);

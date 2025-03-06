@@ -145,9 +145,9 @@ macros:&]
 [s0; &]
 [s3;:4: Reacting to theme changes&]
 [s5; Before 2025.1 U`+`+ release, the application skin was loaded 
-from host platform just once at the start of execution and any 
-if user changed host platform theme, this was not reflected in 
-the application. Also changing to user defined or some predefined 
+from host platform just once at the start of execution and if 
+user changed host platform theme, this was not reflected in the 
+running application. Also changing to user defined or some predefined 
 skin required restart of application to work properly.&]
 [s5; Since 2025.1, application can be made to react to host platform 
 changes and can change skins without restart with a call to Ctrl`::SkinChangeSensi
