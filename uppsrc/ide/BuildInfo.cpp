@@ -15,7 +15,7 @@ const char *bm_MACHINE = bmMACHINE;
 const char *bm_USER = bmUSER;
 
 const char *bm_GIT_BRANCH =
-#ifdef bmGIT_HASH
+#ifdef bmGIT_BRANCH
 	bmGIT_BRANCH
 #else
 	""
