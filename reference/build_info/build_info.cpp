@@ -22,7 +22,7 @@ const char *bm_GIT_BRANCH =
 #endif
 ;
 const char *bm_GIT_REVCOUNT =
-#ifdef bm_GIT_REVCOUNT
+#ifdef bmGIT_REVCOUNT
 	bmGIT_REVCOUNT
 #else
 	""
