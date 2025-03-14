@@ -160,7 +160,7 @@ void CreateBuildMethods()
 			bm.Replace(var, h);
 		};
 		
-		Path("$INCLUDE$", "/opt/local/include;/usr/include;/usr/local/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include");
+		Path("$INCLUDE$", "/opt/local/include;/usr/include;/usr/local/include;/opt/homebrew/include;/opt/homebrew/opt/openssl/include;/Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk/usr/include/c++/v1");
 		Path("$LIB$", "/opt/local/lib;/usr/lib;/usr/local/lib;/opt/homebrew/lib;/opt/homebrew/opt/openssl/lib");
 		
 		String common;

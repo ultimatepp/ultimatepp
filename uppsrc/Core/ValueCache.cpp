@@ -35,9 +35,8 @@ void AdjustValueCache()
 	uint64 total, available;
 	GetSystemMemoryStatus(total, available);
 	ValueCacheMaxSize = int(available >> 10);
-	if(!ValueCacheMaxSize && available) {
-		ValueCacheMaxSize = 128*1024*1024;
-	}
+	if(!ValueCacheMaxSize)
+		ValueCacheMaxSize = available ? 128*1024*1024 : 16*1024;
 	ValueCacheMaxCount = max(ValueCacheMaxSize / 200, 20000);
 	LLOG("New MakeValue max size " << ValueCacheMaxSize << " count " << ValueCacheMaxCount);
 	ShrinkValueCache();
@@ -46,8 +45,14 @@ void AdjustValueCache()
 void ShrinkValueCache()
 {
 	Mutex::Lock __(ValueCacheMutex);
-	if(!ValueCacheMaxSize)
-		AdjustValueCache();
+	if(!ValueCacheMaxSize) {
+		static bool lock;
+		if(!lock) { // prevent (unlikely) recursion
+			lock = true;
+			AdjustValueCache();
+			lock = false;
+		}
+	}
 	LLOG("MakeValue cache size before shrink: " << TheValueCache().GetSize());
 	TheValueCache().Shrink(ValueCacheMaxSize, ValueCacheMaxCount);
 	LLOG("MakeValue cache size after shrink: " << TheValueCache().GetSize());
