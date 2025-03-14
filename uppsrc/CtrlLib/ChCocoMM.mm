@@ -15,7 +15,7 @@
 	
 void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 {
-	void (^dopaint)(void) = ^{
+	auto dopaint = [&] {
 		auto cg = (CGContextRef) cgcontext;
 		if(Upp::IsUHDMode())
 			CGContextScaleCTM(cg, 2, 2);
@@ -96,7 +96,7 @@ void Coco_PaintCh(void *cgcontext, int type, int value, int state)
 		}
 	};
 	
-	[NSApp.effectiveAppearance performAsCurrentDrawingAppearance:dopaint];
+	[NSApp.effectiveAppearance performAsCurrentDrawingAppearance:^{ dopaint(); }];
 }
 
 #endif
