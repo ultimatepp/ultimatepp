@@ -64,8 +64,11 @@ void Ctrl::StartGrabPopup()
 		Ctrl *w = activePopup[0];
 		if(w && w->IsOpen()) {
 			ReleaseWndCapture0();
-			if(w->GrabMouse())
+			// NOTE: On Wayland GrabMouse() is broken and shouldn't be used. Also gdk_device_grab()
+			// and gdk_seat_grab() are removed in GTK4.
+			if(IsWayland() || w->GrabMouse()) {
 				grabpopup = w;
+			}
 		}
 	}
 }
