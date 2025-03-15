@@ -163,7 +163,7 @@ void Ctrl::WndDestroy()
 	if(q >= 0)
 		wins.Remove(q);
 	if(owner) {
-		if(owner->utop->csd.IsEnabled()) {
+		if(owner->top && owner->utop && owner->utop->csd.IsEnabled()) {
 			// TODO: This fix the problem with keyboard when going back to original window, but
 			// the previous control is not being focused like it should be.
 			gtk_window_set_focus(owner->gtk(), owner->utop->drawing_area);
