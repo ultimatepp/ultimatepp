@@ -301,7 +301,13 @@ void Ide::BuildAndDebug0(const String& srcfile)
 		CreateHostRunDir(h);
 		h.ChDir(GetFileFolder(target));
 		VectorMap<String, String> bm = GetMethodVars(method);
-		String dbg = Nvl(bm.Get("DEBUGGER", Null), "gdb");
+		String dbg = Nvl(bm.Get("DEBUGGER", Null),
+#ifdef PLATFORM_OSX
+			"lldb"
+#else
+			"gdb"
+#endif
+		);
 		h.Launch('\"' + dbg + "\" \"" + target + "\"", true);
 	}
 }
