@@ -64,8 +64,10 @@ void Ctrl::StartGrabPopup()
 		Ctrl *w = activePopup[0];
 		if(w && w->IsOpen()) {
 			ReleaseWndCapture0();
-			if(w->GrabMouse())
+			// NOTE: On Wayland GrabMouse() is broken and shouldn't be used.
+			if(IsWayland() || w->GrabMouse()) {
 				grabpopup = w;
+			}
 		}
 	}
 }
