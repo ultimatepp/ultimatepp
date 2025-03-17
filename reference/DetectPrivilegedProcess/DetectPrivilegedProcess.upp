@@ -1,0 +1,11 @@
+description "Detects and warns if the app is running in root/admin mode.\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
