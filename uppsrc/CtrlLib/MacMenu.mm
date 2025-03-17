@@ -32,7 +32,7 @@ struct CocoMenuBar : public Bar {
 	int       cy = 0; // estimate of height to place the menu correctly
 
 	bool      just_check = false;
-	int       check_i = false;
+	int       check_i = 0;
 	bool      is_same = false;
 
 	struct Item : Bar::Item {
@@ -120,6 +120,8 @@ struct CocoMenuBar : public Bar {
 	
 	void ClearItems() {
 		cy = 0;
+		just_check = false;
+		is_same = false;
 		item.Clear();
 	}
 	
