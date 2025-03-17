@@ -87,6 +87,7 @@ bool Ctrl::IsRunningOnWayland()
 
 void Ctrl::ThemeChanged(void *)
 {
+	RLOG("ThemeChanged-Gtk!");
 	PostReSkin();
 }
 
@@ -149,6 +150,10 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 #endif
 
 	GtkSettings *settings = gtk_settings_get_default();
+	if(!settings) {
+		gtk_settings_get_for_display(
+	}
+	
 	if(settings) {
 		g_signal_connect_swapped(settings, "notify::gtk-theme-name", G_CALLBACK(Ctrl::ThemeChanged), NULL);
 		g_signal_connect_swapped(settings, "notify::gtk-application-prefer-dark-theme", G_CALLBACK(Ctrl::ThemeChanged), NULL);
