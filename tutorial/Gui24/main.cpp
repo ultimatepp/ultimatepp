@@ -13,7 +13,7 @@ struct MyAppWindow : TopWindow {
     
     void Paint(Draw& w) override {
         w.DrawRect(GetSize(), SLtYellow);
-        w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), Blue);
+        w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), SBlue);
     }
 };
 
