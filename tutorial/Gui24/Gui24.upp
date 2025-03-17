@@ -8,5 +8,5 @@ file
 	Gui24.t;
 
 mainconfig
-	"" = "GUI WAYLAND";
+	"" = "GUI";
 
