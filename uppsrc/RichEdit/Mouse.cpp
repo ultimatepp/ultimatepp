@@ -325,7 +325,6 @@ void RichEdit::RightDown(Point p, dword flags)
 	bar_object.Clear();
 	bar_fieldparam = Null;
 	if(!GetSelection(l, h)) {
-		LeftDown(p, flags);
 		if(objectpos >= 0)
 			o = bar_object = GetObject();
 		else {
