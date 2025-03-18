@@ -34,7 +34,8 @@ GUI_APP_MAIN
     // SetLanguage("pt-pt"); // Portuguese
     // SetLanguage("ru-ru"); // Russian
     // SetLanguage("tr-tr"); // Turkish
-    // SetLanguage("zh-cn"); // Traditional Chinese
+    // SetLanguage("zh-cn"); // Simplified Chinese
+    // SetLanguage("zh-tw"); // Traditional Chinese
     
     MyAppWindow().Run();
 }
