@@ -1996,7 +1996,7 @@ de traduction!`"][C+75 )]&]
 перевода!`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Merhaba çeviri motoru!`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻译引擎！`"][C+75 )]&]
-[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhTW][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
 [s0;l320; &]
 [s5; Before checking the results of the application, let`'s take 
 a closer look at framework construction used in this example. 
