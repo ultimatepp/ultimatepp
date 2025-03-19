@@ -36,7 +36,7 @@ struct CocoMenuBar : public Bar {
 	bool      is_same = false;
 
 	struct Item : Bar::Item {
-		NSMenuItem      *nsitem;
+		NSMenuItem      *nsitem = nullptr;
 		Event<>          cb;
 		One<CocoMenuBar> submenu;
 		CocoMenuBar     *bar;
@@ -56,8 +56,7 @@ struct CocoMenuBar : public Bar {
 		virtual Item& Enable(bool _enable = true);
 		virtual Item& Bold(bool bold = true);
 
-		Item()  { nsitem = [NSMenuItem new]; }
-		~Item() { [nsitem release]; }
+		~Item() { if(nsitem) [nsitem release]; }
 	};
 	
 	Array<Item> item;
@@ -83,6 +82,7 @@ struct CocoMenuBar : public Bar {
 			return item[0]; // dummy item, it will be redone anyway
 		}
 		Item& m = item.Add();
+		m.nsitem = [NSMenuItem new];
 		m.bar = this;
 		[cocomenu addItem:m.nsitem];
 		cy += GetStdFontCy();
@@ -93,18 +93,22 @@ struct CocoMenuBar : public Bar {
 
 	virtual Item& AddItem(Event<> cb) {
 		Item& m = AddItem();
-		m.cb = cb;
-		m.nsitem.target = cocomenu;
-		m.nsitem.action = @selector(cocoMenuAction:);
+		if(!just_check) {
+			m.cb = cb;
+			m.nsitem.target = cocomenu;
+			m.nsitem.action = @selector(cocoMenuAction:);
+		}
 		return m;
 	}
 	
 	virtual Item&  AddSubMenu(Event<Bar&> proc) {
 		Item& m = AddItem();
-		m.submenu.Create();
-		m.submenu->cocomenu->proc = proc;
-		m.nsitem.action = @selector(cocoMenuAction:);
-		m.nsitem.submenu = m.submenu->cocomenu;
+		if(!just_check) {
+			m.submenu.Create();
+			m.submenu->cocomenu->proc = proc;
+			m.nsitem.action = @selector(cocoMenuAction:);
+			m.nsitem.submenu = m.submenu->cocomenu;
+		}
 		return m;
 	}
 
