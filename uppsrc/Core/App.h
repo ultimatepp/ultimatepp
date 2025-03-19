@@ -24,6 +24,7 @@ String  GetTempDirectory();
 String  TempFile(const char *filename);
 
 #ifdef PLATFORM_POSIX
+String GetUserConfigDir(const String& exe, bool *sandboxed = NULL);
 String GetUserConfigDir(bool *sandboxed = NULL);
 #endif
 

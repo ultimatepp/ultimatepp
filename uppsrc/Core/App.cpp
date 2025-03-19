@@ -268,7 +268,8 @@ void CopyFolder(const char *dst, const char *src)
 }
 
 #ifdef PLATFORM_POSIX
-String GetUserConfigDir(bool *sandboxed)
+
+String GetUserConfigDir(const String& exe, bool *sandboxed)
 {
 	String cfgdir;
 	String h = GetExeFolder();
@@ -292,6 +293,12 @@ String GetUserConfigDir(bool *sandboxed)
 	
 	return cfgdir;
 }
+
+String GetUserConfigDir(bool *sandboxed)
+{
+	return GetUserConfigDir(GetExeFolder(), sandboxed);
+}
+
 #endif
 
 String  ConfigFile(const char *file) {
