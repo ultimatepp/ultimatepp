@@ -244,8 +244,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			FillRect(hdc, &rc, brush);
 	        DeleteObject(brush);
 	        erasebg = false;
-			return 1L;
 		}
+		return 1L;
 	case WM_PAINT:
 		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
