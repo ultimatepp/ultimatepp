@@ -53,8 +53,10 @@ void PackedData::SetData(int ii, const void *data, int datalen)
 	};
 	auto Out = [&](const void *s, int len) {
 		Reserve(len);
-		memcpy(t, s, len);
-		t += len;
+		if(len) {
+			memcpy(t, s, len);
+			t += len;
+		}
 	};
 	int i = 0;
 	const byte *p = (const byte *)ptr;

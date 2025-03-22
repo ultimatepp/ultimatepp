@@ -646,7 +646,7 @@ public:
 	int       insert_include;
 	int       bordercolumn;
 	bool      persistent_find_replace;
-	bool      find_replace_restore_pos;
+	bool      find_replace_restore_pos = false;
 	int       spellcheck_comments;
 	bool      wordwrap_comments = true;
 	bool      wordwrap = false;

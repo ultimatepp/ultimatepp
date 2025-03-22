@@ -53,8 +53,8 @@ class PPInfo {
 		VectorMap<String, String>     defines[2]; // #define ..., 1 - speculative
 		Index<String>                 includes[2]; // 1 - speculative includes (in #if conditionals)
 		Index<String>                 define_includes[2]; // #define LAYOUTFILE
-		bool                          guarded; // has include guards
-		int                           blitz; // AUTO, APPROVED, PROHIBITED
+		bool                          guarded = false; // has include guards
+		int                           blitz = 0; // AUTO, APPROVED, PROHIBITED
 		Time                          time = Null; // file time
 		
 		bool                          dirty = true; // need to be rechecked for change (filetime)

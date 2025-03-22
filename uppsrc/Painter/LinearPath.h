@@ -146,6 +146,7 @@ public:
 	void  SetClip(const Rectf& rect);
 	Rectf GetClip() const                     { return cliprect; }
 
+	bool IsValid() const                      { return min_y < max_y; }
 	int  MinY() const                         { return min_y; }
 	int  MaxY() const                         { return max_y; }
 	bool NotEmpty(int y)                      { return cell[y].count; }

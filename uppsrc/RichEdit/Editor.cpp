@@ -760,7 +760,6 @@ RichEdit::RichEdit()
 	pagesz = Size(3968, 6074);
 	unit = UNIT_POINT;
 	zoom = 100;
-	Clear();
 
 	context = NULL;
 	
@@ -770,6 +769,8 @@ RichEdit::RichEdit()
 	spellcheck = true;
 
 	overwrite = false;
+
+	Clear();
 
 	sb.WhenScroll = THISBACK(Scroll);
 	sb.SetLine(16);
