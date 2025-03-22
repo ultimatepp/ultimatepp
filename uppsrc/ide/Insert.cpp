@@ -270,8 +270,9 @@ void Ide::InsertMenu(Bar& bar)
 				n++;
 			}
 		}
+		if(n > 0)
+			bar.Separator();
 	}
-	bar.Separator();
 	bar.Add("Insert color..", THISBACK(InsertColor));
 	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	bar.Add("Insert sequence..", THISBACK(InsertSequence));
