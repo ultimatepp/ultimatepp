@@ -72,7 +72,7 @@ void *MemoryAllocPermanent(size_t size)
 	static byte *ptr = NULL;
 	static byte *limit = NULL;
 	ASSERT(size < INT_MAX);
-	if(ptr + size >= limit) {
+	if(!ptr || ptr + size >= limit) {
 		ptr = (byte *)SysAllocRaw(16384, 16384);
 		limit = ptr + 16384;
 	}
