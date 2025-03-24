@@ -214,6 +214,7 @@ struct ImageFilterKernel {
 	const int *kernel;
 	double     mul;
 
+    no_sanitize("shift")
 	int Get(int x, int dx) const { return kernel[clamp(((x << shift) - dx) * a / n + ashift, 0, kernel_size)]; }
 
 	void Init(double (*kfn)(double x), int a, int src_sz, int tgt_sz);

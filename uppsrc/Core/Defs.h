@@ -233,6 +233,12 @@ template<class T> class Function;
 #define never_inline
 #endif
 
+#ifdef COMPILER_CLANG
+#define no_sanitize(v) __attribute__((no_sanitize(v)))
+#else
+#define no_sanitize(v)
+#endif
+
 #ifdef _DEBUG
 #undef force_inline
 #define force_inline inline

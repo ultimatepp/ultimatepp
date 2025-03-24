@@ -215,6 +215,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 	}
 }
 
+no_sanitize("shift")
 void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 {
 	PAINTER_TIMING("LineRaw");
@@ -341,6 +342,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 
 void Rasterizer::Filler::End() {}
 
+no_sanitize("shift")
 void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 {
 	PAINTER_TIMING("Render");
