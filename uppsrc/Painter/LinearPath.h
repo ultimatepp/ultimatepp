@@ -47,7 +47,7 @@ private:
 	           const Pointf& a0, const Pointf& b0);
 	bool   PreClipped(Pointf p2, Pointf p3);
 
-public:	
+public:
 	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin, const Rectf& preclip);
 };
 

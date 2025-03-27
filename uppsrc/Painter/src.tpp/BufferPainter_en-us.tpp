@@ -16,7 +16,7 @@ topic "BufferPainter";
 Painter]&]
 [s2;%% BufferPainter is software implementation of Painter interface 
 which uses ImageBuffer as the painting target.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:BufferPainter`:`:GetBuffer`(`): ImageBuffer[@(0.0.255) `&] 
