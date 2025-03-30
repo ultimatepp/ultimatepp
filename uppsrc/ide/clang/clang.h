@@ -144,6 +144,8 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String nest; // Upp::Class
 	String unest; // UPP::CLASS
 	String bases; // base classes of struct/class
+	String parent_id;
+
 	Point  pos = Null;
 	int    kind = Null;
 	bool   definition = false;
@@ -160,6 +162,7 @@ String MakeDefinition(const AnnotationItem& m);
 
 struct ReferenceItem : Moveable<ReferenceItem> {
 	String id;
+	String parent_id; // function or struct that contains this item
 	Point  pos;
 	Point  ref_pos;
 	
@@ -243,7 +246,8 @@ class ClangVisitor {
 	CXLocation      GetLocation(CXSourceLocation cxlocation);
 	SourceLocation  GetSourceLocation(const CXLocation& p);
 	
-	bool locals = false;
+	bool   locals = false;
+	String parent_id;
 
 public:
 	VectorMap<String, CppFileInfo> info;

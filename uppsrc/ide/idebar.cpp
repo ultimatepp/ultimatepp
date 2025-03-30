@@ -860,8 +860,9 @@ void Ide::AssistMenu(Bar& menu)
 	menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
 	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
+	menu.Add(!designer, AK_IDUSAGE, [=] { IdUsage(); });
 	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_USAGETREE, [=] { UsageTree(); });
 	menu.Add(!designer, AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));

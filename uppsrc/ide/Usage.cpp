@@ -83,7 +83,7 @@ void GatherBaseVirtuals(const String& cls, const String& signature, Index<String
 				// two bases
 				for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
 					GatherBaseVirtuals(bcls, signature, ids, visited);
-	
+
 
 	for(const auto& f : ~CodeIndex()) // now check virtual methods of this cls
 		for(const AnnotationItem& m : f.value.items) {
@@ -115,89 +115,93 @@ void GatherVirtuals(const VectorMap<String, String>& bases, const String& cls,
 		}
 }
 
+void Ide::GetGlobalUsageIds(const String& id, bool& isvirtual, bool& isstatic, bool& istype, Index<String>& ids)
+{
+	isvirtual = false;
+	isstatic = false; // to limit file static variables to single file
+	istype = false;
+	String cls;
+	for(const auto& f : ~CodeIndex())
+		for(const AnnotationItem& m : f.value.items) {
+			if(m.id == id) {
+				if(m.isvirtual) {
+					isvirtual = true;
+					cls = m.nest;
+					break;
+				}
+				if(IsStruct(m.kind)) {
+					istype = true;
+					cls = m.nest;
+					break;
+				}
+				if(m.id == id && m.isstatic && f.key == editfile &&
+				   m.nest.GetCount() == m.nspace.GetCount()) // ignore class variables
+					isstatic = true;
+			}
+		}
+
+	ids.FindAdd(id);
+
+	if(isvirtual) {
+		Index<String> visited;
+		String signature = ScopeWorkaround(id.Mid(cls.GetCount()));
+		Index<String> base_id;
+		GatherBaseVirtuals(cls, signature, base_id, visited);
+
+		VectorMap<String, String> bases;
+		for(const auto& f : ~CodeIndex()) // check derived classes
+			for(const AnnotationItem& m : f.value.items)
+				if(IsStruct(m.kind))
+					for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
+						bases.Add(bcls, m.id);
+
+		visited.Clear();
+		for(const String& cls : base_id)
+			GatherVirtuals(bases, cls, signature, ids, visited);
+	}
+}
+
+bool Ide::IsLocalAtCursor(const String& id, Point ref_pos)
+{
+	int li = editor.GetCursorLine();
+	bool local = false;
+	AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
+	if(IsFunction(cm.kind)) // do local variables
+		for(const AnnotationItem& lm : editor.locals)
+			if(lm.id == id && lm.pos.y >= cm.pos.y && lm.pos.y <= li && ref_pos == lm.pos)
+				return true;
+	return false;
+}
+
 void Ide::Usage(const String& id, const String& name, Point ref_pos)
 {
 	if(IsNull(id))
 		return;
-	
+
 	ResetFileLine();
-
-	int li = editor.GetCursorLine();
-
-	bool local = false;
-	AnnotationItem cm = editor.FindCurrentAnnotation(); // what function body are we in?
-	if(IsFunction(cm.kind)) { // do local variables
-		for(const AnnotationItem& lm : editor.locals)
-			if(lm.id == id && lm.pos.y >= cm.pos.y && lm.pos.y <= li) {
-				if(ref_pos == lm.pos) {
-					local = true;
-					break;
-				}
-			}
-	}
-	
 	NewFFound();
 
+	Progress pi("Indexing files");
+	while(Indexer::IsRunning()) {
+		if(pi.StepCanceled())
+			break;
+		GuiSleep(10);
+	}
+
 	Index<String> unique;
-	if(local) {
+	if(IsLocalAtCursor(id, ref_pos)) {
 		AddReferenceLine(editfile, ref_pos, name, unique);
 		for(const ReferenceItem& lm : editor.references)
 			if(lm.id == id && lm.ref_pos == ref_pos)
 				AddReferenceLine(editfile, lm.pos, name, unique);
 	}
 	else {
-		bool isvirtual = false;
-		bool isstatic = false; // to limit file static variables to single file
-		bool istype = false;
-		String cls;
-		Progress pi("Indexing files");
-		while(Indexer::IsRunning()) {
-			if(pi.StepCanceled())
-				break;
-			GuiSleep(10);
-		}
-		for(const auto& f : ~CodeIndex())
-			for(const AnnotationItem& m : f.value.items) {
-				if(m.id == id) {
-					if(m.isvirtual) {
-						isvirtual = true;
-						cls = m.nest;
-						break;
-					}
-					if(IsStruct(m.kind)) {
-						istype = true;
-						cls = m.nest;
-						break;
-					}
-					if(m.id == id && m.isstatic && f.key == editfile &&
-					   m.nest.GetCount() == m.nspace.GetCount()) // ignore class variables
-						isstatic = true;
-				}
-			}
-		
+		bool isvirtual;
+		bool isstatic; // to limit file static variables to single file
+		bool istype;
 		Index<String> ids;
-		ids.FindAdd(id);
-		
-		if(isvirtual) {
-			Index<String> visited;
-			String signature = ScopeWorkaround(id.Mid(cls.GetCount()));
-			Index<String> base_id;
-			GatherBaseVirtuals(cls, signature, base_id, visited);
-			
-
-			VectorMap<String, String> bases;
-			for(const auto& f : ~CodeIndex()) // check derived classes
-				for(const AnnotationItem& m : f.value.items)
-					if(IsStruct(m.kind))
-						for(String bcls : Split(m.bases, [](int c) { return iscid(c) || c == ':' ? 0 : 1; }))
-							bases.Add(bcls, m.id);
-
-			
-
-			visited.Clear();
-			for(const String& cls : base_id)
-				GatherVirtuals(bases, cls, signature, ids, visited);
-		}
+	
+		GetGlobalUsageIds(id, isvirtual, isstatic, istype, ids);
 
 		UsageId(name, id, ids, istype, isstatic, unique);
 	}
@@ -211,7 +215,6 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 	int q = id.ReverseFind("::");
 	String constructor = id + "::" + (q >= 0 ? id.Mid(q + 2) : id) + "(";
 	String destructor = id + "::~(";
-	SortByKey(CodeIndex());
 	int kind = Null;
 	for(int src = 0; src < 2; src++)
 		for(const auto& f : ~CodeIndex()) {
@@ -231,7 +234,7 @@ void Ide::UsageId(const String& name, const String& id, const Index<String>& ids
 							Add(m.pos);
 				}
 		}
-	
+
 	if(!IsNull(kind))
 		FFoundSetIcon(CxxIcon(kind));
 }
@@ -261,6 +264,7 @@ void Ide::Usage()
 
 void Ide::IdUsage()
 {
+	SortByKey(CodeIndex());
 	if(designer)
 		return;
 	if(editfile.EndsWith(".lay")) {
@@ -307,6 +311,43 @@ void Ide::IdUsage()
 	Usage(ref_id, name, ref_pos);
 }
 
+void Ide::DoUsageTree(String parent_id, String id, String fn, Point mpos, String name, Index<String>& unique, int& lvl, String& current, Index<String>& done)
+{
+/*	AddReferenceLine(fn, mpos, name, unique);
+	if(parent_id != current) {
+		current = parent_id;
+		if(lvl < 40 && !IsNull(parent_id) && done.Find(parent_id) < 0 && done.GetCount() < 100) {
+			done.Add(parent_id);
+			lvl++;
+			for(int pass = 0; pass < 2; pass++)
+				for(const auto& f : ~CodeIndex()) {
+					for(const AnnotationItem& m : f.value.items) {
+						if(m.id == parent_id && m.definition != (bool)pass) {
+							String current;
+							DLOG(lvl << " " << parent_id);
+							Usage(parent_id, m.name, m.pos, [&](String parent_id, String id, String fn, Point mpos, String name) {
+								DoUsageTree(parent_id, id, fn, mpos, name, unique, lvl, current, done);
+							});
+							lvl--;
+							return;
+						}
+					}
+				}
+			lvl--;
+		}
+	}
+*/}
+
+void Ide::UsageTree()
+{
+/*	Index<String> unique, done;
+	int lvl = 0;
+	String current;
+	IdUsage([&](String parent_id, String id, String fn, Point mpos, String name) {
+		DoUsageTree(parent_id, id, fn, mpos, name, unique, lvl, current, done);
+	});
+*/}
+
 void Ide::FindDesignerItemReferences(const String& id, const String& name)
 {
 	SaveFile();
@@ -316,7 +357,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 	int q = CodeIndex().Find(path);
 	if(q < 0)
 		return;
-	
+
 	auto DoUsage = [&](const AnnotationItem& m) {
 		Index<String> ids, unique;
 		ids.Add(m.id);
@@ -332,7 +373,7 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 			return;
 		}
 	}
-	
+
 	// Probably untyped layout item, need to find all classes using the layout
 	q = id.ReverseFind("::");
 	if(q < 0) return;
@@ -358,3 +399,4 @@ void Ide::FindDesignerItemReferences(const String& id, const String& name)
 			}
 		}
 }
+

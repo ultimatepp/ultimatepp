@@ -486,7 +486,7 @@ public:
 	struct FoundList : ArrayCtrl {
 		Button freplace;
 		Image  icon;
-		
+
 		FoundList();
 	};
 
@@ -667,7 +667,7 @@ public:
 		true
 #endif
 	;
-		
+
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -716,7 +716,7 @@ public:
 	int           animate_autocomplete = 0, animate_autocomplete_dir = 0;
 	int           animate_indexer = 0, animate_indexer_dir = 0;
 	int           animate_phase = 0;
-	
+
 	Vector<Ptr<TopWindow>> window;
 
 	void          NewWindow(TopWindow *win);
@@ -1001,7 +1001,12 @@ public:
 		void  UsageId(const String& name, const String& id, const Index<String>& ids, bool istype, bool isstatic, Index<String>& unique);
 		void  Usage();
 		void  IdUsage();
+		bool  IsLocalAtCursor(const String& id, Point ref_pos);
+		void  GetGlobalUsageIds(const String& id, bool& isvirtual, bool& isstatic, bool& istype, Index<String>& ids);
 		void  Usage(const String& id, const String& name, Point ref_pos);
+		void  DoUsageTree(String parent_id, String id, String fn, Point mpos, String name, Index<String>& unique,
+		                  int& lvl, String& current, Index<String>& done);
+		void  UsageTree();
 		bool  OpenLink(const String& s, int pos);
 		String GetRefId(int pos, String& name, Point& ref_pos);
 		void  ContextGoto0(int pos);

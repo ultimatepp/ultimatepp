@@ -105,6 +105,7 @@ void AnnotationItem::Serialize(Stream& s)
 void ReferenceItem::Serialize(Stream& s)
 {
 	s % id
+	  % parent_id
 	  % pos
 	  % ref_pos
 	;
@@ -131,6 +132,7 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 #ifdef _DEBUG
 	  << "debug" // to have different codebase for development
 #endif
+	  << "1" // version
 	;
 	return CacheFile(GetFileTitle(source_file) + "$" + s.FinishString() + ".code_index");
 }
@@ -155,7 +157,7 @@ void DumpIndex(const char *file, const String& what_file)
 				out << '\t' << n.pos.y << ": " << n.id << " -> " << n.pretty << ", bases: " << n.bases << "\n";
 			out << "\t=== References:\n";
 			for(const auto& n : m.value.refs)
-				out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << "\n";
+				out << '\t' << n.pos << "   " << n.id << " -> " << n.ref_pos << ", parent: " << n.parent_id << "\n";
 		}
 }
 

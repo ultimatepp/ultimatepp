@@ -13,7 +13,7 @@ uses(!NOSO) plugin/png;
 uses(!NOSO) Draw;
 
 file
-	Builders.h options(BUILDER_OPTION) PCH,
+	Builders.h,
 	CppBuilder.cpp,
 	MakeFile.cpp,
 	CCJ.cpp,
