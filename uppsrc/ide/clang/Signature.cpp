@@ -96,9 +96,21 @@ String CleanupId(const char *s)
 				}
 			}
 			if(id == s_attribute) {
-				while(mm.GetCount() && mm[mm.GetCount() - 1] == ' ')
-					mm.SetLength(mm.GetCount() - 1);
-				break;
+				while(*s == ' ')
+					s++;
+				if(*s == '(') {
+					s++;
+					int lvl = 1;
+					while(*s && lvl) {
+						if(*s == '(')
+							lvl++;
+						if(*s == ')')
+							lvl--;
+						s++;
+					}
+					while(*s == ' ')
+						s++;
+				}
 			}
 			if((*s == ',' || *s == ')' || *s == '[') && was_param_type) {
 				was_param_type = false;
@@ -199,6 +211,8 @@ String CleanupPretty(const String& signature)
 							lvl--;
 						s++;
 					}
+					while(*s == ' ')
+						s++;
 				}
 				continue;
 			}
