@@ -14,13 +14,24 @@ struct UppHubNest : Moveable<UppHubNest> {
 	String           branch;
 };
 
+static Color s_Make(Color c) {	return Blend(SColorPaper(), c, IsDarkTheme() ? 60 : 20); }
+
 Color StatusPaper(const String& status)
 {
-	return Blend(SColorPaper(), decode(status, "broken", SLtRed(),
-	                                           "experimental", SLtYellow(),
-	                                           "stable", SLtGreen(),
-	                                           "rolling", SLtCyan(),
-	                                           SColorPaper()), IsDarkTheme() ? 60 : 20);
+	static SColor broken([] { return s_Make(SLtRed()); });
+	static SColor experimental([] { return s_Make(SLtYellow()); });
+	static SColor stable([] { return s_Make(SLtGreen()); });
+	static SColor rolling([] { return s_Make(SLtCyan()); });
+
+	if(status == "broken")
+		return broken;
+	if(status == "experimental")
+		return experimental;
+	if(status == "stable")
+		return stable;
+	if(status == "rolling")
+		return rolling;
+	return SColorPaper();
 }
 
 void VerifyUppHubRequirements()

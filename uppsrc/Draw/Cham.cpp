@@ -407,9 +407,11 @@ bool IsDarkColorFace()
 	return sIsDarkColorFace;
 }
 
+extern bool AColor_dark_mode__;
+
 void ChReset()
 {
-	dark_theme__ = false;
+	AColor_dark_mode__ = dark_theme__ = false;
 	for(int i = 0; i < sChStyle().GetCount(); i++)
 		*sChStyle()[i].status = 0;
 	ChLookFn(StdChLookFn);
@@ -422,6 +424,8 @@ void ChFinish()
 		sChStyle()[i].init();
 	sIsDarkColorFace = IsDark(SColorFace());
 	sLabelTextColorMismatch = IsDark(SColorText()) != IsDark(SColorLabel());
+	for(int i = 0; i < 5; i++) // repeat to propagate changes
+		SColor::Refresh();
 }
 
 Value sChOp(Draw& w, const Rect& r, const Value& v, int op, Color ink)

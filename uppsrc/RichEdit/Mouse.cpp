@@ -4,6 +4,8 @@ namespace Upp {
 
 Size RichEdit::GetPhysicalSize(const RichObject& obj)
 {
+	if(pixel_mode)
+		return obj.GetPixelSize() * 8;
 	if(ignore_physical_size)
 		return 600 * obj.GetPixelSize() / 96;
 	return obj.GetPhysicalSize();
@@ -13,19 +15,14 @@ void RichEdit::CancelMode()
 {
 	tabmove.table = 0;
 	selclick = false;
+	show_zoom = false;
 	dropcaret.Clear();
 }
 
 void RichEdit::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	if(keyflags == K_CTRL) {
-		if(IsNull(floating_zoom))
-			ZoomView(sgn(zdelta));
-		else {
-			floating_zoom = minmax(floating_zoom + zdelta / 480.0, 0.5, 10.0);
-			RefreshLayoutDeep();
-		}
-	}
+	if(keyflags == K_CTRL)
+		ZoomView(sgn(zdelta));
 	else
 		sb.Wheel(zdelta);
 }
@@ -77,14 +74,14 @@ void RichEdit::LeftDown(Point p, dword flags)
 	NextUndo();
 	SetFocus();
 	selclick = false;
-	tabmove = GetHotPos(p);
+	tabmove = GetHotPos(p); // resizing table columns
 	if(tabmove.table && tabmove.column >= -2) {
 		SaveTableFormat(tabmove.table);
 		SetCapture();
 		Move(text.GetCellPos(tabmove.table, 0, max(tabmove.column, 0)).pos);
 		return;
 	}
-	int c = GetHotSpot(p);
+	int c = GetHotSpot(p); // resizing active object
 	if(c >= 0 && objectpos >= 0) {
 		int pos = objectpos;
 		RectTracker tracker(*this);
@@ -121,9 +118,14 @@ void RichEdit::LeftDown(Point p, dword flags)
 	}
 	else {
 		c = GetMousePos(p);
+		RichPos pi = text.GetRichPos(c);
 		if(c >= 0) {
 			if(InSelection(c)) {
 				selclick = true;
+				return;
+			}
+			if((flags & K_CTRL) && WhenIsLink(pi.format.link)) {
+				WhenLink(pi.format.link);
 				return;
 			}
 			Move(c, flags & K_SHIFT);
@@ -137,6 +139,7 @@ void RichEdit::LeftDown(Point p, dword flags)
 
 void RichEdit::LeftUp(Point p, dword flags)
 {
+	WhenLeftUp();
 	useraction = true;
 	NextUndo();
 	int c = GetMousePos(p);
@@ -238,6 +241,7 @@ void RichEdit::StdBar(Bar& menu)
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
 			menu.Separator();
 			menu.Add(b, "20 %", THISBACK1(SetObjectPercent, 20)).Check(IsObjectPercent(percent, 20));
+			menu.Add(b, "25 %", THISBACK1(SetObjectPercent, 25)).Check(IsObjectPercent(percent, 20));
 			menu.Add(b, "30 %", THISBACK1(SetObjectPercent, 30)).Check(IsObjectPercent(percent, 30));
 			menu.Add(b, "40 %", THISBACK1(SetObjectPercent, 40)).Check(IsObjectPercent(percent, 40));
 			menu.Add(b, "50 %", THISBACK1(SetObjectPercent, 50)).Check(IsObjectPercent(percent, 50));
@@ -248,13 +252,18 @@ void RichEdit::StdBar(Bar& menu)
 			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100)).Check(IsObjectPercent(percent, 100));
 			menu.Break();
 			int delta = bar_object.GetYDelta();
-			menu.Add(t_("3 pt up"), THISBACK1(SetObjectYDelta, -3)).Check(IsObjectDelta(delta, -3));
-			menu.Add(t_("2 pt up"), THISBACK1(SetObjectYDelta, -2)).Check(IsObjectDelta(delta, -2));
-			menu.Add(t_("1 pt up"), THISBACK1(SetObjectYDelta, -1)).Check(IsObjectDelta(delta, -1));
+			auto pma = [=](String s) {
+				if(pixel_mode)
+					s.Replace(" pt", "");
+				return s;
+			};
+			menu.Add(pma(t_("3 pt up")), THISBACK1(SetObjectYDelta, -3)).Check(IsObjectDelta(delta, -3));
+			menu.Add(pma(t_("2 pt up")), THISBACK1(SetObjectYDelta, -2)).Check(IsObjectDelta(delta, -2));
+			menu.Add(pma(t_("1 pt up")), THISBACK1(SetObjectYDelta, -1)).Check(IsObjectDelta(delta, -1));
 			menu.Add(t_("Baseline"), THISBACK1(SetObjectYDelta, 0)).Check(IsObjectDelta(delta, 0));
-			menu.Add(t_("1 pt down"), THISBACK1(SetObjectYDelta, 1)).Check(IsObjectDelta(delta, 1));
-			menu.Add(t_("2 pt down"), THISBACK1(SetObjectYDelta, 2)).Check(IsObjectDelta(delta, 2));
-			menu.Add(t_("3 pt down"), THISBACK1(SetObjectYDelta, 3)).Check(IsObjectDelta(delta, 3));
+			menu.Add(pma(t_("1 pt down")), THISBACK1(SetObjectYDelta, 1)).Check(IsObjectDelta(delta, 1));
+			menu.Add(pma(t_("2 pt down")), THISBACK1(SetObjectYDelta, 2)).Check(IsObjectDelta(delta, 2));
+			menu.Add(pma(t_("3 pt down")), THISBACK1(SetObjectYDelta, 3)).Check(IsObjectDelta(delta, 3));
 			menu.Separator();
 			CopyTool(menu);
 			CutTool(menu);
@@ -414,7 +423,9 @@ Image RichEdit::CursorImage(Point p, dword flags)
 	case 2:
 		return Image::SizeHorz();
 	default:
-		if(text.GetRichPos(GetMousePos(p)).object) {
+		int c = GetMousePos(p);
+		RichPos pi = text.GetRichPos(c);
+		if(pi.object) {
 			return Image::Arrow();
 		}
 		else
@@ -425,8 +436,11 @@ Image RichEdit::CursorImage(Point p, dword flags)
 			if(hp.table > 0)
 				return Image::SizeHorz();
 			else {
-				int c = GetMousePos(p);
-				return InSelection(c) && !HasCapture() ? Image::Arrow() : Image::IBeam();
+				if(InSelection(c) && !HasCapture())
+					return Image::Arrow();
+				if((flags & K_CTRL) && WhenIsLink(pi.format.link))
+					return Image::Hand();
+				return Image::IBeam();
 			}
 		}
 	}

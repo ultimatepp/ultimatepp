@@ -1669,18 +1669,28 @@ void LayDes::ItemClick()
 	SyncItems();
 }
 
+void LayDes::InvalidateItems()
+{
+	if(!IsNull(currentlayout)) {
+		LayoutData& d = CurrentLayout();
+		for(int i = 0; i < d.item.GetCount(); i++)
+			d.item[i].Invalidate();
+	}
+}
+
 void LayDes::SyncUsc()
 {
 	type.ClearList();
 	for(int i = 0; i < LayoutTypes().GetCount(); i++)
 		if(LayoutTypes()[i].kind != LAYOUT_SUBCTRL)
 			type.AddList(LayoutTypes().GetKey(i));
-	if(!IsNull(currentlayout)) {
-		LayoutData& d = CurrentLayout();
-		for(int i = 0; i < d.item.GetCount(); i++)
-			d.item[i].Invalidate();
-	}
+	InvalidateItems();
 	Refresh();
+}
+
+void LayDes::Skin()
+{
+	InvalidateItems();
 }
 
 void LayDes::TypeEdit()

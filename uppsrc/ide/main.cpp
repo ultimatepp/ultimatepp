@@ -134,7 +134,7 @@ bool TryLoadLibClang()
 	// in Mint 21.1, clang installed is 14 but llvm defaults to 15
 	for(String s : Split(Sys("clang --version"), [](int c)->int { return !IsDigit(c); })) {
 		int n = Atoi(s);
-		if(n >= 5 && n < 30) { // update in 10 years...
+		if(n >= 5 && n < 5000) {
 			if(LoadLibClang("/usr/lib/llvm-" + AsString(n) + "/lib"))
 				return true;
 			break;
@@ -171,6 +171,7 @@ void OnCrash()
 
 INITBLOCK { // libclang does not work in Linux unless this is set
 	SetEnv("LC_CTYPE", "en_US.UTF-8");
+	SetConfigName("theide");
 }
 
 #ifdef flagMAIN
@@ -219,10 +220,11 @@ void AppMain___()
 	PeakMemoryProfile();
 #endif
 
-	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
+	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(false);
 
 	Ctrl::SetUHDEnabled();
 	Ctrl::SetDarkThemeEnabled();
+	Ctrl::SkinChangeSensitive();
 	Ctrl::SetAppName("TheIDE");
 
 	SetLanguage(LNG_ENGLISH);
@@ -255,8 +257,8 @@ void AppMain___()
 	}
 #endif
 
-	if(!hasvars)
-		SetupGITMaster();
+//	if(!hasvars) // this does not work for some reason on initial install, disable for now
+//		SetupGITMaster();
 
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();

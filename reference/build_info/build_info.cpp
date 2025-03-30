@@ -1,31 +1,37 @@
-#include <Core/Core.h>
+// we place this in separate file to speedup compilation
+// otherwise main.cpp has to be compiled each time as build_info.h is always new
+// and compiling this minimal file is much faster
+
 #include <build_info.h>
 
-using namespace Upp;
+int bm_YEAR = bmYEAR;
+int bm_MONTH = bmMONTH;
+int bm_DAY = bmDAY;
+int bm_HOUR = bmHOUR;
+int bm_MINUTE = bmMINUTE;
+int bm_SECOND = bmSECOND;
 
-CONSOLE_APP_MAIN
-{
-	StdLogSetup(LOG_COUT|LOG_FILE);
+const char *bm_MACHINE = bmMACHINE;
+const char *bm_USER = bmUSER;
 
-#ifdef bmTIME
-	LOG("Compiled " << bmTIME << ", " << (GetSysDate() - (Date)bmTIME) << " day(s) ago");
+const char *bm_GIT_BRANCH =
+#ifdef bm_GIT_BRANCH
+	bmGIT_BRANCH
+#else
+	""
 #endif
-#ifdef bmUSER
-	LOG("Compiled by user " << bmUSER);
-#endif
-#ifdef bmMACHINE
-	LOG("Compiled on machine " << bmMACHINE);
-#endif
-#ifdef bmSVN_REVISION
-	LOG("Svn revision " << bmSVN_REVISION);
-#endif
+;
+const char *bm_GIT_REVCOUNT =
 #ifdef bmGIT_REVCOUNT
-	LOG("Git revcount " << bmGIT_REVCOUNT);
+	bmGIT_REVCOUNT
+#else
+	""
 #endif
-#ifdef bmGIT_HASH
-	LOG("Git hash " << bmGIT_HASH);
+;
+const char *bm_GIT_HASH =
+#ifdef bm_GIT_HASH
+	bmGIT_HASH
+#else
+	""
 #endif
-#ifdef bmSVN_URL
-	LOG("Svn url " << bmSVN_URL);
-#endif
-}
+;

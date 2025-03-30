@@ -174,7 +174,7 @@ bool RepoSync::ListSvn(const String& path)
 						if(action == ADD && IsConflictFile(file)) {
 							action = DELETEC;
 							an = "Delete (conflict resolved)";
-							color = AdjustIfDark(Black());
+							color = AColor(Black());
 						}
 						else {
 							static const char *as[] = {
@@ -182,7 +182,7 @@ bool RepoSync::ListSvn(const String& path)
 							};
 							static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
 							an = as[action];
-							color = AdjustIfDark(c[action]);
+							color = AColor(c[action]);
 						}
 					}
 					if(pass == action < 0 && action != DELETEC) {
@@ -238,7 +238,7 @@ bool RepoSync::ListGit(const String& path)
 				};
 				static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
 				an = as[action];
-				color = AdjustIfDark(c[action]);
+				color = AColor(c[action]);
 			}
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
@@ -288,7 +288,7 @@ void RepoSync::SyncList()
 			return cfg.Find(s) >= 0;
 		};
 		int hi = list.GetCount();
-		Color bk = AdjustIfDark(LtYellow());
+		Color bk = AColor(LtYellow());
 		list.Add(REPOSITORY, path,
 		         AttrText().Paper(bk),
 		         AttrText(path).Bold().Paper(bk),

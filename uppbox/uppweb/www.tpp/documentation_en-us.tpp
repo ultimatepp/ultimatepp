@@ -29,6 +29,9 @@ white stains. Enjoy your reading!&]
 [s5; If you find that something is missing and you have questions. 
 U`+`+ community is ready to provide excellent support on the 
 [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
+[s5; This is the documentation of current stable release. Documentation 
+of latest development version is [^topic`:`/`/uppweb`/www`/documentation`_en`-us^ h
+ere].&]
 [s3; Table of Contents&]
 [s0; &]
 [s0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#1^ 1. Installation 
@@ -87,6 +90,8 @@ Find and Replace]&]
 file in project (Find File)]&]
 [s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ Importing external 
 libraries in source form]&]
+[s0;l160; [^topic`:`/`/ide`/app`/dbg`_en`-us^ Debugger pretty printing 
+scripts]&]
 [s0;l160; &]
 [s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ U`+`+ package/project 
 templates]&]

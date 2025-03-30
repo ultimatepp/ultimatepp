@@ -362,11 +362,13 @@ void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("DEBUG_OPTIONS",             &debug_options);
 	map.Add("DEBUG_FLAGS",               &debug_flags);
 	map.Add("DEBUG_LINK",                &debug_link);
+	map.Add("DEBUG_CUDA",                &debug_cuda);
 	map.Add("RELEASE_BLITZ",             &release_blitz);
 	map.Add("RELEASE_LINKMODE",          &release_linkmode);
 	map.Add("RELEASE_OPTIONS",           &speed_options);
 	map.Add("RELEASE_FLAGS",             &release_flags);
 	map.Add("RELEASE_LINK",              &release_link);
+	map.Add("RELEASE_CUDA",              &release_cuda);
 	map.Add("DEBUGGER",                  &debugger);
 	map.Add("ALLOW_PRECOMPILED_HEADERS", &allow_pch);
 	map.Add("DISABLE_BLITZ",             &disable_blitz);
@@ -796,13 +798,13 @@ void ExtractIncludes(Index<String>& r, String h)
 	}
 }
 
-String Ide::GetIncludePath()
-{ // this is 'real' include path defined by current build method, for Alt+J and #include assist
-	if(include_path.GetCount())
-		return include_path;
+String Ide::GetExternalIncludePath()
+{
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	include_path = Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "");
+
+	String include_path = bm.Get("INCLUDE", "");
+
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
@@ -853,7 +855,22 @@ String Ide::GetIncludePath()
 			}
 		}
 	}
+	return include_path;
+}
 	
+String Ide::GetIncludePath()
+{
+ // this is 'real' include path defined by current build method, for Alt+J and #include assist
+	if(include_path.GetCount())
+		return include_path;
+
+	SetupDefaultMethod();
+	VectorMap<String, String> bm = GetMethodVars(method);
+	include_path = Join(GetUppDirs(), ";");
+
+	MergeWith(include_path, ";", GetExternalIncludePath());
+
+	String include_path = GetExternalIncludePath();
 	IncludeAddPkgConfig(include_path, Null);
 
 	return include_path;

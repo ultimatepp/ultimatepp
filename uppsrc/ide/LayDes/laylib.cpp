@@ -42,13 +42,11 @@ Image GetUscImage(const String& id)
 EscValue EscColor(Color c)
 {
 	EscValue v;
-	if(c.GetSpecial() >= 0)
-		c = AdjustIfDark(RealizeColor(c));
-	if(!IsNull(c)) {
-		v.MapSet("r", c.GetR());
-		v.MapSet("g", c.GetG());
-		v.MapSet("b", c.GetB());
-	}
+	if(IsNull(c))
+		return v;
+	v.MapSet("r", c.GetR());
+	v.MapSet("g", c.GetG());
+	v.MapSet("b", c.GetB());
 	return v;
 }
 

@@ -28,7 +28,7 @@ void MainDlg::OnFile()
 
 void MainDlg::OnPallette()
 {
-	::RunDlgSelectColor();
+	
 }
 
 void MainDlg::OnPrinter()

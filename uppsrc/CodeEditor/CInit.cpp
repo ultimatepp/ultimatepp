@@ -78,6 +78,20 @@ void CSyntax::InitKeywords()
 		"hash_t",
 		NULL
 	};
+	static const char *cuda[] = {
+		"char1", "uchar1", "char2", "uchar2", "char3", "uchar3", "char4", "uchar4",
+		"short1", "ushort1", "short2", "ushort2", "short3", "ushort3", "short4", "ushort4",
+		"int1", "uint1", "int2", "uint2", "int3", "uint3", "int4", "uint4",
+		"long1", "ulong1", "long2", "ulong2", "long3", "ulong3", "long4", "ulong4",
+		"longlong1", "ulonglong1", "longlong2", "ulonglong2", "longlong3",
+		"ulonglong3", "longlong4", "ulonglong4", "float1", "float2", "float3", "float4",
+		"double1", "double2", "double3", "double4",
+		"dim3", "", "__host__", "__device__", "__global__", "__noinline__", "__forceinline__",
+		"__inline_hint__", "__constant__", "__shared__", "__grid_constant__", "__managed__",
+		"__restrict__ ", "gridDim", "blockIdx", "blockDim", "threadIdx", "warpSize",
+		"size_t", "intptr_t", "uintptr_t",
+		NULL
+	};
 	static const char *usc[] = {
 		"void", "self", "if", "else", "while", "do", "case",
 		"default", "break", "return", "switch", "operator", "for",
@@ -103,6 +117,28 @@ void CSyntax::InitKeywords()
 		"len", "remove", "insert", "mid", "keys", "values", "exists",
 		"erase", "rand", "OpenFileOut", "OpenFileAppend", "OpenFileIn",
 		"GetMinSize", "GetStdSize",
+		NULL
+	};
+	static const char *dbg[] = {
+		"void", "self", "if", "else", "while", "do", "case",
+		"default", "break", "return", "switch", "operator", "for",
+		"fn", "typename",
+		"value", "from", "items", "template_param",
+		"TEXT", "ITEM_COUNT", "ITEM_TYPE", "STRING",
+		"ITEM_PTR", "ITEM_PTRS", "ITEM_DEREF_PTRS", "ITEM_DEREF_PTRSZ", "CHUNK",
+		NULL
+	};
+	static const char *dbglib[] = {
+		"is_number", "is_array", "is_map", "is_void", "int", "to_string", "to_number",
+		"count", "keys", "values", "rand", "reverse", "sort", "order", "replace",
+		"ToUpper", "ToLower", "len", "mid", "exists",
+
+		"SizeOf", "TypeName", "TypeNo", "DeRef", "Field", "NestedType",
+		"PeekPtr", "Peek8", "Peek16", "Peek32", "Peek64", "Peek32f", "Peek64f",
+		"SizeOfPtr", "Offset", "Align",
+		
+		"LOG",
+
 		NULL
 	};
 	static const char *java[] = {
@@ -337,6 +373,9 @@ void CSyntax::InitKeywords()
 	LoadSyntax(css, cssn);
 	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
 	LoadSyntax(php, php2);
+	LoadSyntax(dbg, dbglib);
+	LoadSyntax(cpp, empty);
+	LoadSyntax(cpp, cuda);
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);

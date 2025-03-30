@@ -7,21 +7,19 @@ struct App : TopWindow {
 	SliderCtrl        slider;
 	Label             text;
 
-	void Slider() {
-		progress.Set(~slider, 100);
-		text = "\1[C6*/@b " + AsString(~slider);
-	}
-
 	typedef App CLASSNAME;
 
 	App() {
-		Add(slider.BottomPosZ(5, 30).HSizePos(10, 10));
-		Add(progress.VSizePos(10, 40).HCenterPos(40));
-		Add(text.LeftPos(5, 200).TopPos(5, 40));
-		slider <<= THISBACK(Slider);
+		*this << slider.BottomPosZ(5, 30).HSizePos(10, 10)
+		      << progress.VSizePosZ(10, 40).HCenterPos(40)
+		      << text.LeftPosZ(5, 200).TopPosZ(5, 40);
+		slider << [=] {
+			progress.Set(~slider, 100);
+			text = "\1[C6*/@b " + AsString(~slider);
+		};
 		slider.Range(100);
 		slider <<= 50;
-		Slider();
+		slider.WhenAction();
 		Sizeable().Zoomable();
 	}
 };

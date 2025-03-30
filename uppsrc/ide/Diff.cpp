@@ -3,18 +3,37 @@
 struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
+	Button   copy_hash;
 	
 	String repo_dir;
 	int    kind;
+	bool   modal = false;
+	int    line = 0;
 	
 	void LoadGit();
 	void Load();
 	void Set(const String& f);
+	void SyncTitle();
 	
 	typedef RepoDiff CLASSNAME;
 	
 	RepoDiff();
 };
+
+
+void RepoDiff::SyncTitle()
+{
+	String h = GetFileName(editfile);
+	String m = ~r.GetValue();
+	int q = m.FindAfter("@b \1");
+	if(q >= 0) {
+		m = m.Mid(q);
+		q = m.Find('\1');
+		if(q >= 0)
+			h << " " << m.Mid(0, q);
+	}
+	Title(h);
+}
 
 void RepoDiff::Set(const String& f)
 {
@@ -65,13 +84,24 @@ void RepoDiff::Set(const String& f)
 
 	if(kind == GIT_DIR) {
 		pane << branch.LeftPos(0, Zx(100)).VSizePos()
-		     << r.HSizePos(Zx(100) + DPI(2), 0).VSizePos();
+		     << r.HSizePos(Zx(100) + DPI(2), Zx(80) + DPI(2)).VSizePos()
+		     << copy_hash.RightPos(0, Zx(80)).VSizePos();
+		copy_hash.SetLabel("Copy Hash");
+		
+		copy_hash << [=] {
+			String h = ~~r;
+			String commit, path;
+			SplitTo(h, ':', commit, path);
+			WriteClipboardText(commit);
+		};
 
 		LoadBranches(branch, GetFileFolder(f));
 		LoadGit();
 	}
 
 	DiffDlg::Set(f);
+	
+	SyncTitle();
 }
 
 void LoadBranches(DropList& branch, const String& dir)
@@ -118,7 +148,7 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 	auto AddCommit = [&] {
 		if(commit.GetCount()) {
 			String h = commit;
-			if(h.GetCount() > 4)
+			if(h.GetCount() > 6)
 				h.Trim(6);
 			r.Add(IsNull(file) ? commit : commit + ":" + path,
 			      "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
@@ -177,6 +207,7 @@ void RepoDiff::Load()
 		return;
 	if(kind == SVN_DIR)
 		extfile = HostSys("svn cat " + editfile + '@' + AsString(~r));
+	Vector<TextCompareCtrl::Blame> bl;
 	if(kind == GIT_DIR) {
 		String h = ~~r;
 		String commit, path;
@@ -185,8 +216,65 @@ void RepoDiff::Load()
 			extfile = GitCmd(repo_dir, "show " + h);
 		else
 			extfile = GitCmd(GetFileFolder(editfile), "show " + commit + ":./" + GetFileName(editfile));
+	#if 1
+		extfile.Clear();
+		StringStream ss(GitCmd(GetFileFolder(editfile), "blame -p " + GetFileName(editfile) + " " + commit));
+		VectorMap<String, TextCompareCtrl::Blame> blame;
+		while(!ss.IsEof()) {
+			String ln = ss.GetLine();
+			Vector<String> h = Split(ln, ' ');
+			if(h.GetCount() == 0) break;
+			String hash = h[0];
+			TextCompareCtrl::Blame& b = blame.GetAdd(hash);
+			while(!ss.IsEof()) {
+				String ln = ss.GetLine();
+				if(ln.TrimStart("\t")) {
+					auto& m = bl.Add();
+					m = b;
+					m.hash = hash;
+					extfile << ln << "\n";
+					break;
+				}
+				if(ln.TrimStart("author "))
+					b.author = ln;
+				else
+				if(ln.TrimStart("summary "))
+					b.summary = ln;
+				else
+				if(ln.TrimStart("author-time "))
+					b.time = Time(1970, 1, 1) + Atoi(ln);
+			}
+		}
+	#endif
 	}
+	
 	diff.Set(backup = LoadFile(editfile), extfile);
+	if(bl.GetCount()) {
+		diff.SetPos(4700);
+		diff.right.WhenBlame = [=](const String& hash) {
+			auto FindHash = [&](RepoDiff& d) {
+				for(int i = 0; i < d.r.GetCount(); i++) {
+					String h = d.r.GetKey(i);
+					String commit, path;
+					SplitTo(h, ':', commit, path);
+					if(commit == hash) {
+						d.r.SetIndex(i);
+						d.Load();
+						break;
+					}
+				}
+			};
+			if(modal)
+				FindHash(*this);
+			else {
+				RepoDiff *rd = TheIde()->RunRepoDiff(editfile, line);
+				if(rd)
+					FindHash(*rd);
+			}
+		};
+	}
+	diff.right.PickBlame(pick(bl));
+	SyncTitle();
 }
 
 RepoDiff::RepoDiff()
@@ -199,26 +287,33 @@ RepoDiff::RepoDiff()
 	r << [=] { Load(); };
 	branch << [=] { LoadGit(); };
 	Sizeable().Zoomable();
+	serialize_placement = false;
 	Rect r = TheIde()->GetWorkArea();
-	r.Deflate(DPI(30), DPI(30));
+	r.Deflate(DPI(30), DPI(40));
 	SetRect(r);
 }
 
-void RunRepoDiff(const String& filepath)
+void RunRepoDiff(const String& filepath, int line)
 {
 	if(IsNull(filepath))
 		return;
 	RepoDiff dlg;
+	dlg.modal = true;
 	dlg.Set(filepath);
+	if(line >= 0)
+		dlg.diff.left.SetCursor(line + 1);
 	dlg.Execute();
 }
 
-void Ide::RunRepoDiff(const String& filepath)
+RepoDiff *Ide::RunRepoDiff(const String& filepath, int line)
 {
 	if(IsNull(filepath))
-		return;
+		return nullptr;
 	RepoDiff& dlg = CreateNewWindow<RepoDiff>();
+	dlg.line = line;
 	dlg.Set(filepath);
+	if(line >= 0)
+		dlg.diff.left.SetCursor(line + 1);
 	dlg.diff.WhenRightLine =
 	dlg.diff.WhenLeftLine = [=](int line) {
 		EditFile(filepath);
@@ -226,4 +321,5 @@ void Ide::RunRepoDiff(const String& filepath)
 		editor.SetFocus();
 	};
 	dlg.OpenMain();
+	return &dlg;
 }

@@ -1,7 +1,5 @@
 #include "Builders.h"
 
-namespace Upp {
-
 String BlitzBaseFile()
 {
 	return ConfigFile("blitzbase");
@@ -51,7 +49,7 @@ void BlitzFile(String& blitz, const String& sourceFile, const Vector<String>& de
 
 BlitzBuilderComponent::BlitzBuilderComponent(Builder* builder)
 	: BuilderComponent(builder)
-	, workingDir(builder->outdir)
+	, outDir(builder->outdir)
 	, blitzFileName("$blitz")
 {
 }
@@ -75,21 +73,23 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
-	b.object = CatAnyPath(workingDir, blitzFileName + String(objext));
+	b.object = CatAnyPath(outDir, blitzFileName + String(objext));
 	Time blitztime = GetFileTime(b.object);
 	String blitz;
 	if(!IdeGetOneFile().IsEmpty())
 		return b;
+	String build_info_path = NormalizePath(builder.GetBuildInfoPath());
 	for(int i = 0; i < sourceFiles.GetCount(); i++) {
 		String sourceFile = sourceFiles[i];
 		String ext = ToLower(GetFileExt(sourceFile));
-		String objfile = CatAnyPath(workingDir, GetFileTitle(sourceFile) + objext);
+		String objfile = CatAnyPath(outDir, GetFileTitle(sourceFile) + objext);
 		Time sourceFileTime = GetFileTime(sourceFile);
+		Time htime = builder.HdependFileTime(sourceFile);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
 		   && HdependBlitzApproved(sourceFile) && IsNull(soptions[i])
 		   && sourceFileTime < blitz_base_time
 		   && noblitz.Find(sourceFile) < 0) {
-			if(builder.HdependFileTime(sourceFile) > blitztime)
+			if(htime > blitztime)
 				b.build = true;
 			BlitzFile(blitz, sourceFile, HdependGetDefines(sourceFile), i);
 			b.info << ' ' << GetFileName(sourceFile);
@@ -101,7 +101,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		}
 	}
 	
-	b.path = CatAnyPath(workingDir, blitzFileName + ".cpp");
+	b.path = CatAnyPath(outDir, blitzFileName + ".cpp");
 	if(b.count > 1) {
 		sourceFiles = pick(excluded);
 		soptions = pick(excludedoptions);
@@ -118,6 +118,4 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(
 		b.build = false;
 	}
 	return b;
-}
-
 }

@@ -44,7 +44,7 @@ MainDlg::MainDlg()
 	tabs.Add(tab1.SizePos(), "Tab1"); // SizePos() means dialog fills the whole are of tab
 	tabs.Add(tab2.SizePos(), "Tab2");
 
-	tab1.dialog <<= THISBACK(DoDialog); // When pushing 'dialog' button, DoDialog is invoked
+	tab1.dialog << [=] { DoDialog(); }; // When pushing 'dialog' button, DoDialog is invoked
 }
 
 GUI_APP_MAIN

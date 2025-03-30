@@ -235,6 +235,17 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(i) InvalidateRect(hwnd, NULL, TRUE);
 			return i;
 		}
+	case WM_ERASEBKGND:
+		if(erasebg) {
+			HDC hdc = (HDC)(wParam);
+			RECT rc; GetClientRect(hwnd, &rc);
+			Color c = SColorFace();
+			HBRUSH brush = CreateSolidBrush(RGB(c.GetR(), c.GetG(), c.GetB()));
+			FillRect(hdc, &rc, brush);
+	        DeleteObject(brush);
+	        erasebg = false;
+		}
+		return 1L;
 	case WM_PAINT:
 		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
@@ -512,8 +523,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			DispatchKey(K_MOUSE_BACKWARD|K_KEYUP, 1);
 		return 0L;
 	}
-	case WM_ERASEBKGND:
-		return 1L;
 	case WM_DESTROY:
 		PreDestroy();
 		break;
@@ -593,9 +602,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_ACTIVATE:
 		LLOG("WM_ACTIVATE " << Name() << ", wParam = " << (int)wParam << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		ignorekeyup = true;
-	case 0x031A: // WM_THEMECHANGED
-		XpClear();
-		break;
 	case WM_SETFOCUS:
 		LLOG("WM_SETFOCUS " << Name() << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 		if(this != focusCtrlWnd || focusCtrl && focusCtrlWnd != focusCtrl->GetTopCtrl()) { // second condition fixes popup issue when clicking dialog parent
@@ -664,13 +670,10 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		}
 		return 0L;
 #endif
-/*	case WM_SETTINGCHANGE:
+	case WM_SETTINGCHANGE:
 	case 0x031A: // WM_THEMECHANGED
-		ReSkin();
-		RefreshLayoutDeep();
-		RefreshFrame();
+		PostReSkin();
 		break;
-*/
 /*
     case WM_IME_COMPOSITION:
 		HIMC himc = ImmGetContext(hwnd);
@@ -686,10 +689,14 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 */
 	}
 	if(hwnd) {
-		if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX unicode patch
-			return DefWindowProcW(hwnd, message, wParam, lParam);
+		LRESULT r;
+		int level = LeaveGuiMutexAll();
+		if(IsWindowUnicode(hwnd))
+			r = DefWindowProcW(hwnd, message, wParam, lParam);
 		else
-			return DefWindowProc(hwnd, message, wParam, lParam);
+			r = DefWindowProc(hwnd, message, wParam, lParam);
+		EnterGuiMutex(level);
+		return r;
 	}
 	return 0L;
 }

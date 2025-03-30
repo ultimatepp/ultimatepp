@@ -1449,6 +1449,11 @@ void FileSel::Activate()
 	TopWindow::Activate();
 }
 
+void FileSel::Skin()
+{
+	Reload();
+}
+
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
 	case K_F9:
@@ -1881,10 +1886,10 @@ bool FileSel::Execute(int _mode) {
 		for(int i = 0; i < lru.GetCount(); i++)
 			if(IsFullPath(lru[i]) && filesystem->FolderExists(lru[i]))
 				dir.Add(lru[i]);
-		dir.SetDisplay(Single<FolderDisplay>(), max(16, Draw::GetStdFontCy()));
+		dir.SetDisplay(Single<FolderDisplay>(), max(16, GetStdFontCyA()));
 	}
 	else {
-		dir.SetDisplay(Single<HomeDisplay>(), max(16, Draw::GetStdFontCy()));
+		dir.SetDisplay(Single<HomeDisplay>(), max(16, GetStdFontCyA()));
 		if(filesystem->IsPosix()) {
 			if(String(~dir)[0] == '/')
 				dir <<= "";
@@ -2234,21 +2239,12 @@ void FileSel::AddSystemPlaces(int row)
 FileSel& FileSel::AddStandardPlaces()
 {
 	AddPlace(GetHomeDirectory(), t_("Home"), "PLACES:FOLDER");
-#ifdef GUI_COCOA
-	AddPlace(GetSpecialDirectory(SF_NSDesktopDirectory), t_("Desktop"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSMusicDirectory), t_("Music"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSPicturesDirectory), t_("Pictures"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSMoviesDirectory), t_("Videos"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSDocumentDirectory), t_("Documents"), "PLACES:FOLDER");
-	AddPlace(GetSpecialDirectory(SF_NSDownloadsDirectory), t_("Downloads"), "PLACES:FOLDER");
-#else
 	AddPlace(GetDesktopFolder(), t_("Desktop"), "PLACES:FOLDER");
 	AddPlace(GetMusicFolder(), t_("Music"), "PLACES:FOLDER");
 	AddPlace(GetPicturesFolder(), t_("Pictures"), "PLACES:FOLDER");
 	AddPlace(GetVideoFolder(), t_("Videos"), "PLACES:FOLDER");
 	AddPlace(GetDocumentsFolder(), t_("Documents"), "PLACES:FOLDER");
 	AddPlace(GetDownloadFolder(), t_("Downloads"), "PLACES:FOLDER");
-#endif
 	AddPlaceSeparator();
 	AddSystemPlaces();
 #ifdef PLATFORM_WIN32

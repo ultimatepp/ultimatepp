@@ -26,9 +26,91 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2024.1.1 (rev. 17490) (Dec 2024)&]
+[s3; 2025.1 (rev. 17799) (Mar 2024)&]
+[s5; [*/ Current stable release]&]
+[s5;*/ &]
+[s0; [* Core]&]
+[s0;* &]
+[s0;i150;O0; In Posix .log files moved to .local/state/u`+`+/log&]
+[s0;i150;O0; Lerp templates and functions for linear interpolation&]
+[s0;i150;O0; FormatIntBase changed to work with int64 instead of 
+int&]
+[s0;i150;O0; DarkTheme function adjusted to better convert low luminosity 
+colors&]
+[s0;i150;O0; New AColor and SColor types allow simplified adjustments 
+for dark mode when runtime theme switch happens.&]
+[s0;i150;O0; Moveable logic changed to improve incomplete type handling&]
+[s0;i150;O0; CountBits / CountBits64 function (using popcnt instruction)&]
+[s0;i150;O0; new flagLEGACY`_CPU to support really old CPUs&]
 [s0; &]
-[s0; [*/ Current stable release]&]
+[s0; [* CtrlLib, CtrlCore]&]
+[s0;* &]
+[s0;i150;O0; Runtime skin changes&]
+[s0;i150;O0; InfoCtrl`::LeftZ/RightZ scaled methods&]
+[s0;i150;O0; Additional Animate functions for animation of widgets 
+or general rectangles&]
+[s0;i150;O0; WhenLeftUp event added to DocEdit/LineEdit/RichEdit&]
+[s0;i150;O0; General chameleon look improvements in Linux/Windows/MacOS&]
+[s0;i150;O0; AllowDarkContent in color selection widgets shows colors 
+converted with DarkTheme if dark mode is active&]
+[s0;i150;O0; Nicer Win11 dialog icons&]
+[s0;i150;O0; Experimental Wayland support (there is now Wayland option 
+in theide setup)&]
+[s0; &]
+[s0; [* RichEdit]&]
+[s0; &]
+[s0;i150;O0; Set last character format tool&]
+[s0;i150;O0; Find previous button in Find dialog&]
+[s0;i150;O0; When find/replace dialog is open Enter key does another 
+find&]
+[s0;i150;O0; PersistentFindReplace now default false&]
+[s0;i150;O0; Ctrl`+Click now opens http and https links&]
+[s0;i150;O0; Zooming improvements&]
+[s0;i150;O0; PixelMode `- special mode where images at 100% are pixel 
+perfect.&]
+[s0;i150;O0; AllowDarkContent, DarkContent `- displays all colors 
+converted with DarkTheme if dark mode is active, effectivelly 
+allows dark paper in dark mode.&]
+[s0; &]
+[s0; [* Core/SSH]&]
+[s0; &]
+[s0;i150;O0; libssh2 upgraded to version 1.11.1 (#209)&]
+[s0; &]
+[s0; [* ide, umk]&]
+[s0;* &]
+[s0;i150;O0; Posix config is now always in the same folder .../theide/.. 
+for all variants of theide and umk (to share the same .var and 
+.bm files)&]
+[s0;i150;O0; build process in Win32 now automatically picks manifest.xml 
+from packages (usually from CtrlCore) and application icon and 
+creates .rc file automatically&]
+[s0;i150;O0; RichEdits in theide now support dark theme&]
+[s0;i150;O0; Json/Xml viewer local menu&]
+[s0;i150;O0; aux packages now have Remove all menu command&]
+[s0;i150;O0; bmGIT`_BRANCH in build info&]
+[s0;i150;O0; The option in settings to allow access to Downloads 
+folder (default off on MacOS to prevent MacOS asking the permission)&]
+[s0;i150;O0; Search in files new external includes and current assembly 
+options&]
+[s0;i150;O0; `"Preselect All`" option in assembly setup&]
+[s0;i150;O0; Git history of file now shows blame&]
+[s0;i150;O0; Git history of file Copy Hash button&]
+[s0;i150;O0; Multiline cursor (Alt`+Shift`+Down to start)&]
+[s0;i150;O0; Insert sequence tool&]
+[s0;i150;O0; Automatic rc file creation (with app icon and manifest)&]
+[s0;i150;O0; PDB debugger now can use Esc scripts for pretty printing&]
+[s0;i150;O0; xfce terminal support in setup&]
+[s0;i150;O0; experimental glslc support (see upptst/vulkan)&]
+[s0;i150;O0; experimental CUDA support&]
+[s0; &]
+[s0; [* MacOs]&]
+[s0; &]
+[s0;i150;O0; Fixed Assist issues&]
+[s0;i150;O0; Fixed desktop folders (e.g. GetDownloadFolder function)&]
+[s0;i150;O0; Main menu flicker prevention&]
+[s5; &]
+[s5; &]
+[s3; 2024.1.1 (rev. 17490) (Dec 2024)&]
 [s0;*/ &]
 [s0; [* Core]&]
 [s0; &]
@@ -46,10 +128,6 @@ and FileMapping refactored&]
 [s0;i150;O0; Some iffy code now made more C`+`+ compliant (e.g. always 
 using memcpy for unaligned data)&]
 [s0;i150;O0; AsXML had new XML`_ESCAPELF&]
-[s0; &]
-[s0; [* plugin/Zip]&]
-[s0; &]
-[s0;i150;O0; zip64 support&]
 [s0; &]
 [s0; [* Draw]&]
 [s0; &]
@@ -77,7 +155,7 @@ workaround&]
 [s5;i150;poO0; CtrlMapper now provides operator()(Ctrl, T, const 
 T`& factor) for simple unit conversions&]
 [s5;po &]
-[s5;po [* ide]&]
+[s5;po [* TheIDE]&]
 [s5;po &]
 [s5;i150;poO0; Icon Designer refactored and optimised, new tools 
 added, S3 flag support added&]
@@ -97,16 +175,19 @@ too&]
 [s5;i150;poO0; Main package configuration dialog improved&]
 [s5;i150;poO0; Search through all assemblies&]
 [s5;po &]
+[s0; [* plugin/Zip]&]
+[s5;i150;poO0; zip64 support&]
+[s5;po &]
 [s5;po [* plugin] upgrades&]
 [s0; &]
 [s0;i150;O0; plugin/sqlite3: 3.46.0&]
 [s5;i150;poO0; plugin/lzma: 24.6&]
 [s5;i150;poO0; plugin/zstd: 1.5.6&]
-[s5;i150;poO0; Core: LZ4 1.9.4&]
 [s5;i150;poO0; plugin/z: 1.3.1&]
 [s5;i150;poO0; plugin/png: 1.6.46&]
 [s5;i150;poO0; plugin/tif: 4.6.0&]
 [s5;i150;poO0; plugin/jpeg: 9f&]
+[s5;i150;poO0; Core: LZ4 1.9.4&]
 [s5;po &]
 [s5;po [* Win32]&]
 [s5;po &]
@@ -118,80 +199,79 @@ too&]
 [s0; &]
 [s0; This is release is mostly focused on improving TheIDE capabilities.&]
 [s5; &]
-[s0;%- Core&]
-[s0;%- &]
-[s0;i150;O0;%- CParser`::ReadDoubleNoE (to ignore E part of double)&]
-[s0;i150;O0;%- CParser`::ReadIdh (with `'`-`' in id)&]
-[s0;%- &]
-[s0;%- Draw, CtrlLib&]
-[s0;%- &]
-[s0;i150;O0;%- StdDisplay (if CtrlLib is present) now supports `\1 
+[s0; Core&]
+[s0; &]
+[s0;i150;O0; CParser`::ReadDoubleNoE (to ignore E part of double)&]
+[s0;i150;O0; CParser`::ReadIdh (with `'`-`' in id)&]
+[s0; &]
+[s0; Draw, CtrlLib&]
+[s0; &]
+[s0;i150;O0; StdDisplay (if CtrlLib is present) now supports `\1 
 qtf escape code&]
-[s0;%- &]
-[s0;%- RichEdit, RichText&]
-[s0;%- &]
-[s0;i150;O0;%- `"Paste without formatting`"&]
-[s0;i150;O0;%- Clipboard `'HTML format`' support&]
-[s0;i150;O0;%- GetPlainText allow`_tabs parameter; CtrlLib Prompt 
-now sometimes uses `'`\t`' to separate table cells.&]
-[s0;i150;O0;%- EncodeHTML strikeout support&]
-[s0;%- &]
-[s0;%- ide&]
-[s0;%- &]
-[s0;i150;O0;%- New C`+`+ sources indexer mode `- previoualy, after 
+[s0; &]
+[s0; RichEdit, RichText&]
+[s0; &]
+[s0;i150;O0; `"Paste without formatting`"&]
+[s0;i150;O0; Clipboard `'HTML format`' support&]
+[s0;i150;O0; GetPlainText allow`_tabs parameter; CtrlLib Prompt now 
+sometimes uses `'`\t`' to separate table cells.&]
+[s0;i150;O0; EncodeHTML strikeout support&]
+[s0; &]
+[s0; ide&]
+[s0; &]
+[s0;i150;O0; New C`+`+ sources indexer mode `- previoualy, after 
 each file change, all depended files were reindexed. That often 
 resulted in very heavy CPU load after each header change. In 
 the new mode, only the changed file is being reindexed `- while 
 less accurate, real problems in this new mode are actually rare 
 and it makes for much more responsive experience using theide.&]
-[s0;i150;O0;%- Many Assist cornercases fixed&]
-[s0;i150;O0;%- Result lists of Find in Files and Usage now have `"Replace`" 
+[s0;i150;O0; Many Assist cornercases fixed&]
+[s0;i150;O0; Result lists of Find in Files and Usage now have `"Replace`" 
 button which effectively brings the `"rename the entity`" functionality 
 (e.g. to rename method, find its Usage and then use Replace)&]
-[s0;i150;O0;%- Bottom pane was redesigned allowing for more Find 
-in Files and Usage result lists.&]
-[s0;i150;O0;%- Many improvements in source comparsions&]
-[s0;i150;O0;%- `"Show git history of file`" now allows for choosing 
+[s0;i150;O0; Bottom pane was redesigned allowing for more Find in 
+Files and Usage result lists.&]
+[s0;i150;O0; Many improvements in source comparsions&]
+[s0;i150;O0; `"Show git history of file`" now allows for choosing 
 branches&]
-[s0;i150;O0;%- `"Compare with`" now suggests files with the same 
-name from other upp nests&]
-[s0;i150;O0;%- `"Compare directories`" now allows comparison with 
-git commit&]
-[s0;i150;O0;%- Various windows like comparisons are now non`-modal. 
+[s0;i150;O0; `"Compare with`" now suggests files with the same name 
+from other upp nests&]
+[s0;i150;O0; `"Compare directories`" now allows comparison with git 
+commit&]
+[s0;i150;O0; Various windows like comparisons are now non`-modal. 
 It is now e.g. possible to open multiple e.g. Directory comparison 
 windows&]
-[s0;i150;O0;%- Merge nests function got ability to specify target 
-folder. Default mode is now to `"import`" packages missing in 
-the first nest to `"imported`" subfolder of the first nest. The 
-idea is to create an assembly of first nest and its `"imported`" 
-subfolder to have imported packages fixed, while still allowing 
-the use of the very same packages from original sources with 
-another assembly.&]
-[s0;i150;O0;%- Visual improvements, UHD versions of many icons&]
-[s0;i150;O0;%- C`+`+ Language standard for assist (e.g. C`+`+ 17) 
-can now be selected in Assist setup&]
-[s0;i150;O0;%- Flow breaking commands (return, break, continue, goto, 
+[s0;i150;O0; Merge nests function got ability to specify target folder. 
+Default mode is now to `"import`" packages missing in the first 
+nest to `"imported`" subfolder of the first nest. The idea is 
+to create an assembly of first nest and its `"imported`" subfolder 
+to have imported packages fixed, while still allowing the use 
+of the very same packages from original sources with another 
+assembly.&]
+[s0;i150;O0; Visual improvements, UHD versions of many icons&]
+[s0;i150;O0; C`+`+ Language standard for assist (e.g. C`+`+ 17) can 
+now be selected in Assist setup&]
+[s0;i150;O0; Flow breaking commands (return, break, continue, goto, 
 co`_return, throw) now have specific syntax highlighting&]
-[s0;i150;O0;%- TheIDE now displays out`-of`-page function/class headers 
+[s0;i150;O0; TheIDE now displays out`-of`-page function/class headers 
 in the first line of editor. This is helpful for quick orientation 
 when jumping into long function body.&]
-[s0;i150;O0;%- External changes for files now getting proper undo 
-records (previously undo history was lost when file was edited 
-outside of ide session)&]
-[s0;i150;O0;%- Repo sync git pull mode changed to `"merge`" (from 
-`"rebase`")&]
-[s0;i150;O0;%- U`+`+ Builder now defines bmGIT`_HASH (with git hash 
+[s0;i150;O0; External changes for files now getting proper undo records 
+(previously undo history was lost when file was edited outside 
+of ide session)&]
+[s0;i150;O0; Repo sync git pull mode changed to `"merge`" (from `"rebase`")&]
+[s0;i150;O0; U`+`+ Builder now defines bmGIT`_HASH (with git hash 
 of first nests HEAD, if it is git repo).&]
-[s0;i150;O0;%- [/ Copy with Syntax highlighting] function&]
-[s0;%- &]
-[s0;%- umk&]
-[s0;%- &]
-[s0;i150;O0;%- `-h option to automatically download missing packages 
+[s0;i150;O0; [/ Copy with Syntax highlighting] function&]
+[s0; &]
+[s0; umk&]
+[s0; &]
+[s0;i150;O0; `-h option to automatically download missing packages 
 from UppHub if possible&]
-[s0;%- &]
-[s0;%- Win32:&]
-[s0;%- &]
-[s0;i150;O0;%- OpenSSL now upgraded to 1.1.1w&]
+[s0; &]
+[s0; Win32:&]
+[s0; &]
+[s0;i150;O0; OpenSSL now upgraded to 1.1.1w&]
 [s5; &]
 [s3; 2023.1 (rev. 16847) (May 2023)&]
 [s0; &]
@@ -1761,8 +1841,8 @@ bold&]
 [s0;*4 &]
 [s3; 1126[3  (5 May 2009)]&]
 [s0;*4 &]
-[s0;%- [* Library]&]
-[s0;*%- &]
+[s0; [* Library]&]
+[s0;* &]
 [s0;i150;O0; Change in SetDateFilter format, cleanup in related docs 
 &]
 [s0;i150;O0; Improved translation docs &]
@@ -1773,58 +1853,58 @@ Register &]
 [s0;i150;O0; TabBar: Tab Stacking and sorting added. Other changes. 
 &]
 [s0;i150;O0; Drawing refactored &]
-[s0;*%- &]
-[s0;*%- &]
-[s0;%- [* TheIDE ]&]
-[s0;*%- &]
+[s0;* &]
+[s0;* &]
+[s0; [* TheIDE ]&]
+[s0;* &]
 [s0;i150;O0; Refactored CodeNavigator, search symbol (Ctrl`+Q) now 
 copies current id search field &]
 [s0;*4 &]
 [s3; [%- 1096][3  (26 April 2009)]&]
-[s0;*4%- &]
-[s0;%- [* Library]&]
-[s0;*%- &]
-[s0;i150;O0;%- Painter: High quality, `"SVG/PDF strength`" software 
+[s0;*4 &]
+[s0; [* Library]&]
+[s0;* &]
+[s0;i150;O0; Painter: High quality, `"SVG/PDF strength`" software 
 renderer&]
-[s0;i150;O0;%- HttpClient improvements&]
-[s0;i150;O0;%- JPGRaster now can read EXIF thumbnails&]
-[s0;i150;O0;%- ODBC SQL interface&]
-[s0;i150;O0;%- Microsoft SQL Server interface improved&]
-[s0;i150;O0;%- Multithreading: ConditionVarable and LazyUpdate classes&]
-[s0;i150;O0;%- LocalProcess class&]
-[s0;i150;O0;%- RichText: EncodeHTML support for superscript, subscript, 
+[s0;i150;O0; HttpClient improvements&]
+[s0;i150;O0; JPGRaster now can read EXIF thumbnails&]
+[s0;i150;O0; ODBC SQL interface&]
+[s0;i150;O0; Microsoft SQL Server interface improved&]
+[s0;i150;O0; Multithreading: ConditionVarable and LazyUpdate classes&]
+[s0;i150;O0; LocalProcess class&]
+[s0;i150;O0; RichText: EncodeHTML support for superscript, subscript, 
 strikeout&]
-[s0;i150;O0;%- and smallcaps&]
-[s0;i150;O0;%- Mersenne twister based Random&]
-[s0;%- &]
-[s0;%- [* TheIDE]&]
-[s0;*%- &]
-[s0;i150;O0;%- Win32 .pdb debugger:&]
-[s0;l160;i150;O3;%- shows tooltip with values of variables&]
-[s0;l160;i150;O3;%- improved displaying of strings in pdb debugger&]
-[s0;l160;i150;O3;%- watches are remembered, Clear all watches function, 
+[s0;i150;O0; and smallcaps&]
+[s0;i150;O0; Mersenne twister based Random&]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0;* &]
+[s0;i150;O0; Win32 .pdb debugger:&]
+[s0;l160;i150;O3; shows tooltip with values of variables&]
+[s0;l160;i150;O3; improved displaying of strings in pdb debugger&]
+[s0;l160;i150;O3; watches are remembered, Clear all watches function, 
 Drag`&Drop to watches&]
-[s0;i150;O0;%- Packages can be sorted by name&]
-[s0;i150;O0;%- Packages now can be colored and assigned bold/italic 
+[s0;i150;O0; Packages can be sorted by name&]
+[s0;i150;O0; Packages now can be colored and assigned bold/italic 
 font&]
-[s0;i150;O0;%- Package files underlined if recently changed&]
-[s0;i150;O0;%- SVN support, SVN history of file&]
-[s0;i150;O0;%- Compare with file, compare with patch&]
-[s0;i150;O0;%- Assist`+`+&]
-[s0;l160;i150;O3;%- New heurestic error recovery of C`+`+ parser&]
-[s0;l160;i150;O3;%- New code navigator bar&]
-[s0;l160;i150;O3;%- Position of Assist parameter info improved&]
-[s0;l160;i150;O3;%- Context go to (Alt`+J) now jumps to layout designer 
+[s0;i150;O0; Package files underlined if recently changed&]
+[s0;i150;O0; SVN support, SVN history of file&]
+[s0;i150;O0; Compare with file, compare with patch&]
+[s0;i150;O0; Assist`+`+&]
+[s0;l160;i150;O3; New heurestic error recovery of C`+`+ parser&]
+[s0;l160;i150;O3; New code navigator bar&]
+[s0;l160;i150;O3; Position of Assist parameter info improved&]
+[s0;l160;i150;O3; Context go to (Alt`+J) now jumps to layout designer 
 when invoked on layout class template&]
-[s0;i150;O0;%- Topic`+`+ finished; documentation now visible (and 
-editable) as tooltip annotations of sources&]
-[s0;i150;O0;%- Abbreviations: e.g. type `"i`" and press Ctrl`+`[.`] 
+[s0;i150;O0; Topic`+`+ finished; documentation now visible (and editable) 
+as tooltip annotations of sources&]
+[s0;i150;O0; Abbreviations: e.g. type `"i`" and press Ctrl`+`[.`] 
 to expand it to if() ;&]
-[s0;i150;O0;%- Icon editor: free angle rotation&]
-[s0;i150;O0;%- Insert`" color or U`+`+ specific includes (.lay, .iml, 
+[s0;i150;O0; Icon editor: free angle rotation&]
+[s0;i150;O0; Insert`" color or U`+`+ specific includes (.lay, .iml, 
 .tpp group)&]
-[s0;i150;O0;%- Print command (of source files)&]
-[s0;i150;O0;%- Editor: ToUpper/Lower/InitCaps/SwapCase &]
+[s0;i150;O0; Print command (of source files)&]
+[s0;i150;O0; Editor: ToUpper/Lower/InitCaps/SwapCase &]
 [s0;4 &]
 [s3; 2008.1[3  (28 July 2008)]&]
 [s0; &]

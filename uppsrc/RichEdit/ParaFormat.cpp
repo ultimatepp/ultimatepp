@@ -5,7 +5,9 @@ namespace Upp {
 struct ParaFormatDlg : public WithParaFormatLayout<TopWindow> {
 	ParaFormatting para;
 
-	ParaFormatDlg() {
+	ParaFormatDlg(const RichEdit& e)
+	:	para(e)
+	{
 		CtrlLayoutOKCancel(*this, t_("Paragraph format"));
 		ActiveFocus(para.before);
 	}
@@ -13,7 +15,7 @@ struct ParaFormatDlg : public WithParaFormatLayout<TopWindow> {
 
 void RichEdit::ParaFormat()
 {
-	ParaFormatDlg d;
+	ParaFormatDlg d(*this);
 	d.para.Set(unit, formatinfo, !IsSelection() && cursorp.level == 0);
 	if(d.Execute() != IDOK || !d.para.IsChanged())
 		return;
@@ -110,7 +112,7 @@ void RichEdit::SetStyle()
 void RichEdit::Styles()
 {
 	NextUndo();
-	StyleManager s;
+	StyleManager s(*this);
 	s.Setup(ffs, unit);
 	s.Set(text, formatinfo.styleid);
 	if(s.Execute() != IDOK || !s.IsChanged())

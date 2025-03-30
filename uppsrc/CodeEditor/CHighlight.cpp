@@ -126,9 +126,8 @@ const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wcha
 		for(const wchar *s = p; s < e && !IsLetter(*s); s++)
 			n++;
 	hls.SetFlags(n, flags);
-	static WString todo = "TODO";
-	static WString fixme = "FIXME";
-	if(w.GetCount() >= 4 && w.GetCount() <= 5 && findarg(w, todo, fixme) >= 0)
+	static const Index<WString> key_words = {"TODO", "NOTE", "FIXME"};
+	if(w.GetCount() >= 4 && w.GetCount() <= 5 && key_words.Find(w) >= 0)
 		hls.Put(n, hl_style[INK_COMMENT_WORD], hl_style[PAPER_COMMENT_WORD]);
 	else
 		hls.Put(n, hl_style[INK_COMMENT]);

@@ -1914,7 +1914,7 @@ SLtYellow);]&]
 [s0;l320;%- [C+75         w][C@(0.0.255)+75 .][C+75 DrawText(][C@3+75 20][C+75 , 
 ][C@3+75 20][C+75 , ][*_C@(0.128.128)$(255.255.192)+75 t`_(][*_C@3$(255.255.192)+75 `"Hel
 lo translation engine!`"][*_C@(0.128.128)$(255.255.192)+75 )][C+75 , 
-Arial(][C@3+75 30][C+75 ), Blue);]&]
+Arial(][C@3+75 30][C+75 ), SBlue);]&]
 [s0;l320;%- [C+75     `}]&]
 [s0;l320;%- [C+75 `};]&]
 [s0;l320;C+75%- &]
@@ -1936,7 +1936,9 @@ Arial(][C@3+75 30][C+75 ), Blue);]&]
 [s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"pt`-pt`"); // Portuguese]&]
 [s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"ru`-ru`"); // Russian]&]
 [s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"tr`-tr`"); // Turkish]&]
-[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"zh`-cn`"); // Traditional 
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"zh`-cn`"); // Simplified 
+Chinese]&]
+[s0;l320;%- [C+75     ][/C@4+75 // SetLanguage(`"zh`-tw`"); // Traditional 
 Chinese]&]
 [s0;l320;%- [C+75     ]&]
 [s0;l320;%- [C+75     MyAppWindow()][C@(0.0.255)+75 .][C+75 Run();]&]
@@ -1975,7 +1977,8 @@ so for any errors we are sorry.&]
 [s0;l320;%- [C@(0.128.128)+75 ptPT][C+75 (][C@3+75 `"Minha aplicação`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Мое приложение`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Benim başvurum`"][C+75 )]&]
-[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"我的應用程序`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"我的应用程序`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhTW][C+75 (][C@3+75 `"我的應用程式`"][C+75 )]&]
 [s0;l320;C+75%- &]
 [s0;l320;%- [*C@(0.0.255)+75 T][C@(0.0.255)+75 `_][C+75 (][C@3+75 `"Hello 
 translation engine!`"][C+75 )]&]
@@ -1992,7 +1995,8 @@ de traduction!`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 ruRU][C+75 (][C@3+75 `"Привет движок 
 перевода!`"][C+75 )]&]
 [s0;l320;%- [C@(0.128.128)+75 trTR][C+75 (][C@3+75 `"Merhaba çeviri motoru!`"][C+75 )]&]
-[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhCN][C+75 (][C@3+75 `"您好翻译引擎！`"][C+75 )]&]
+[s0;l320;%- [C@(0.128.128)+75 zhTW][C+75 (][C@3+75 `"您好翻譯引擎！`"][C+75 )]&]
 [s0;l320; &]
 [s5; Before checking the results of the application, let`'s take 
 a closer look at framework construction used in this example. 

@@ -35,6 +35,7 @@ TopicEditor::TopicEditor()
 	topics_search.SetFilter(CharFilterToUpper);
 	
 	editor.SetPage(TopicPage());
+	editor.AllowDarkContent();
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	editor.WhenHyperlink = THISBACK(Hyperlink);
 
@@ -278,6 +279,7 @@ void TopicEditor::FormatMenu(Bar& bar)
 	bar.Separator();
 	editor.InkTool(bar);
 	editor.PaperTool(bar);
+	editor.LastFormatTool(bar);
 	bar.Separator();
 	editor.LanguageTool(bar);
 	editor.SpellCheckTool(bar);

@@ -493,8 +493,9 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		if(assist)
 			f.kind = 1;
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
-			Color paper = HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
-			                                                     : HighlightSetup::PAPER_WARNING).color;
+			static SColor serror([] { return HighlightSetup::GetHlStyle(HighlightSetup::PAPER_ERROR).color; });
+			static SColor swarning([] { return HighlightSetup::GetHlStyle(HighlightSetup::PAPER_WARNING).color; });
+			Color paper = f.kind == 1 ? serror : swarning;
 			if(f.kind == 1)
 				error_count++;
 			else
@@ -699,7 +700,7 @@ Size Ide::FoundDisplay::DrawHl(Draw& w, const char *s, const Rect& r, Color ink,
 	int y = r.top + (r.GetHeight() - fcy) / 2;
 	w.DrawRect(r, paper);
 	int sl = Utf32Len(txt, atoi(h[1]));
-	int sh = Utf32Len(txt + sl, atoi(h[2])) + sl;
+	int sh = Utf32Len(~txt + sl, atoi(h[2])) + sl;
 	int x;
 	for(int text = 0; text < 2; text++) { // first pass draws background
 		x = r.left;

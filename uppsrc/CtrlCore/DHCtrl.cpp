@@ -67,7 +67,7 @@ void DHCtrl::OpenHWND()
 	CloseHWND();
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd)
-		CreateWindowEx(0, "UPP-CLASS-A", "",
+		CreateWindowEx(0, "UPP-CLASS-W", "",
 		               WS_CHILD|WS_DISABLED|WS_VISIBLE,
 		               0, 0, 20, 20,
 		               phwnd, NULL, hInstance, this);

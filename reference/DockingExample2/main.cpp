@@ -71,15 +71,15 @@ DockingExample::DockingExample()
 	
 	// Add our MenuBar using the standard Docking menu
 	AddFrame(menu); // menu must be added before Set or it thinks it's a context menu
-	menu.Set(THISBACK(MainMenu));
+	menu.Set(THISFN(MainMenu));
 	
 	// Set Option callbacks. The option ctrls will permit/deny docking in different directions
 	//  for optionswindow only. The (int) is for the benefit of GCC
 	// You can also do this for the whole window (see DockWindow::AllowDockLeft() etc)
-	optionswindow.dockleft 		<<= THISBACK2(OnDockAllow, 	(int)DOCK_LEFT, 	&optionswindow.dockleft);		
-	optionswindow.docktop 		<<= THISBACK2(OnDockAllow, 	(int)DOCK_TOP, 		&optionswindow.docktop);		
-	optionswindow.dockright 	<<= THISBACK2(OnDockAllow, 	(int)DOCK_RIGHT, 	&optionswindow.dockright);		
-	optionswindow.dockbottom 	<<= THISBACK2(OnDockAllow, 	(int)DOCK_BOTTOM,	&optionswindow.dockbottom);	
+	optionswindow.dockleft   << [=] { OnDockAllow((int)DOCK_LEFT, 	&optionswindow.dockleft); };
+	optionswindow.docktop    << [=] { OnDockAllow((int)DOCK_TOP, 		&optionswindow.docktop); };
+	optionswindow.dockright  << [=] { OnDockAllow((int)DOCK_RIGHT, 	&optionswindow.dockright); };
+	optionswindow.dockbottom << [=] { OnDockAllow((int)DOCK_BOTTOM,	&optionswindow.dockbottom); };
 	
 	// Now we put some bogus data in our controls
 	FillArray(arrayctrl1);
@@ -88,7 +88,7 @@ DockingExample::DockingExample()
 	FillTree(treectrl2);
 	// And add the User-Guide button
 	Add(button.SetLabel("User Guide").LeftPosZ(4, 100).TopPosZ(4, 23));
-	button <<= THISBACK(OnUserGuide);	
+	button << [=] { OnUserGuide(); };
 }
 
 void DockingExample::DockInit()
@@ -136,7 +136,7 @@ void DockingExample::MainMenu(Bar &bar)
 {
 	// Add a Windows menu.
 	// We're using a the standard DockWindow menu, though you can also roll your own.
-	bar.Add("Windows", Image(), THISBACK(DockWindowMenu));	
+	bar.Sub("Windows", Image(), [=](Bar& bar) { DockWindowMenu(bar); });	
 }
 
 void DockingExample::OnDockAllow(int align, Option *ctrl)

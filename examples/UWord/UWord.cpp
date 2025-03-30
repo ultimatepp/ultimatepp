@@ -211,7 +211,7 @@ void UWord::Pdf()
 
 void UWord::About()
 {
-	PromptOK("[A5 uWord]&Using [*^www://upp.sf.net^ U`+`+] technology.");
+	PromptOK("[A5 uWord]&Using [*^https`:`/`/www`.ultimatepp`.org`/^ U`+`+] technology.");
 }
 
 void UWord::Destroy()
@@ -258,6 +258,7 @@ UWord::UWord()
 	static int doc;
 	Title(Format("Document%d", ++doc));
 	Icon(CtrlImg::File());
+	editor.AllowDarkContent();
 	editor.ClearModify();
 	SetBar();
 	editor.WhenRefreshBar = THISBACK(SetBar);
@@ -280,6 +281,8 @@ GUI_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
+	
+	Ctrl::SkinChangeSensitive();
 
 	UWordFs().Type("QTF files", "*.qtf")
 	         .Type("RTF files", "*.rtf")

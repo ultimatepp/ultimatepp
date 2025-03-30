@@ -153,8 +153,8 @@ String SelectInsertFile()
 	return SelectFileOpen(
 		"All files (*.*)\t*.*\n"
 		"Graphics files (*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg)\t*.png *.bmp *.jpg *.jpeg *.gif *.ico *.svg\n"
-		"Source files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js)\t"
-			"*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.rc *.brc *.upt *.witz *.js\n"
+		"Source files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.dbg *.rc *.brc *.upt *.witz *.js)\t"
+			"*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.lng *.sch *.usc *.dbg *.rc *.brc *.upt *.witz *.js\n"
 		"Web files (*.js *.css *.html *.htm *.htmls)\t*.js *.css *.html *.htm *.htmls\n"
 		"Data files (*.csv *.xml *.json)\t*.csv *.xml *.json\n"
 		"Text files (*.txt *.log *.info)\t*.txt *.log *.info\n"
@@ -192,7 +192,7 @@ void Ide::InsertAs(const String& data)
 	f[5] = LZMACompress(data);
 	for(int i = 0; i < 6; i++)
 		dlg.format.SetLabel(i, dlg.format.GetLabel(i) + " (" + AsString(f[i].GetCount()) + ")");
-	
+	dlg.format <<= 0;
 	if(dlg.Execute() != IDOK)
 		return;
 	int i = ~dlg.format;
@@ -270,10 +270,12 @@ void Ide::InsertMenu(Bar& bar)
 				n++;
 			}
 		}
+		if(n > 0)
+			bar.Separator();
 	}
-	bar.Separator();
 	bar.Add("Insert color..", THISBACK(InsertColor));
 	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
+	bar.Add("Insert sequence..", THISBACK(InsertSequence));
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });

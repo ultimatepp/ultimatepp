@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 30;
+	int version = 32;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -229,6 +229,8 @@ void Ide::Serialize(Stream& s)
 		s % block_caret;
 	if(version >= 30)
 		s % bar_branch;
+	if(version >= 32)
+		s % search_downloads;
 	if(version >= 7)
 		s % warnwhitespace;
 	s % tabs_icons;
@@ -254,6 +256,8 @@ void Ide::Serialize(Stream& s)
 	s % hilite_if_endif;
 	s % hilite_bracket;
 	s % hilite_ifdef;
+	if(version >= 31)
+		s % hl_custom;
 	if(version >= 3)
 		s % thousands_separator;
 	if(version >= 5)
@@ -293,7 +297,8 @@ void Ide::Serialize(Stream& s)
 	}
 	s % editor.commentdp;
 	s % bordercolumn;
-	s % bordercolor;
+	Color dummy_color;
+	s % dummy_color;
 	if(version >= 20)
 		s % find_pick_sel % find_pick_text % deactivate_save;
 	s % hydra1_threads;

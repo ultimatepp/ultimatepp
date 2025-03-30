@@ -479,6 +479,59 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	return cc;
 }
 
+bool IsWin32Manifest(const String& s)
+{
+	return s == "manifest.xml";
+}
+
+void CppBuilder::DoRc(Vector<String>& sfile, Vector<String>& soptions, const Package& pkg, const String& package)
+{
+	if(!HasFlag("MAIN") || !HasFlag("WIN32") || !HasFlag("GUI"))
+		return;
+	for(int i = 0; i < sfile.GetCount(); i++)
+		if(sfile[i].EndsWith(".rc"))
+			return;
+	String icon_path;
+	String manifest_path;
+	
+	auto DoManifest = [&](const Package& pkg, const String& package) {
+		for(int i = 0; i < pkg.GetCount(); i++)
+			if(IsWin32Manifest(pkg[i]))
+				manifest_path = SourcePath(package, pkg[i]);
+	};
+	
+	for(int i = 0; i < wspc.GetCount(); i++)
+		DoManifest(wspc.GetPackage(i), wspc[i]);
+	DoManifest(pkg, package); // main package manifest has priority
+	String d = GetFileFolder(PackagePath(package));
+	for(FindFile ff(d + "/*.*"); ff; ff.Next()) {
+		String p = ff.GetPath();
+		String n = GetFileName(p);
+		if(n == "icon.ico")
+			icon_path = p;
+	}
+	
+	String rc_file = CatAnyPath(outdir, "main.rc");
+	
+	String rc;
+	
+	if(manifest_path.GetCount()) {
+		SaveChangedFile(CatAnyPath(outdir, "manifest.xml"), LoadFile(manifest_path));
+		rc << "1 24 \"manifest.xml\"\r\n";
+	}
+	if(icon_path.GetCount()) {
+		SaveChangedFile(CatAnyPath(outdir, "icon.ico"), LoadFile(icon_path));
+		rc << "2 ICON DISCARDABLE \"icon.ico\"\r\n";
+	}
+
+	if(IsNull(rc))
+		return;
+
+	SaveChangedFile(rc_file, rc);
+	sfile.Add(rc_file);
+	soptions.Add();
+}
+
 Vector<String> RepoInfo(const String& package)
 {
 	Vector<String> info;
@@ -501,20 +554,29 @@ Vector<String> RepoInfo(const String& package)
 	if(repo == GIT_DIR) {
 		String h = GetCurrentDirectory();
 		SetCurrentDirectory(d);
-		String v = HostSys("git rev-list --count HEAD");
+		String gitpath = GetGitPath();
+		String v = HostSys(gitpath + " rev-list --count HEAD");
 		if(IsDigit(*v))
 			info.Add("#define bmGIT_REVCOUNT " + AsCString(TrimBoth(v)));
-		v = HostSys("git rev-parse HEAD");
+		v = HostSys(gitpath + " rev-parse HEAD");
 		if(v.GetCount())
 			info.Add("#define bmGIT_HASH " + AsCString(TrimBoth(v)));
+		v = HostSys(gitpath + " rev-parse --abbrev-ref HEAD");
+		if(v.GetCount())
+			info.Add("#define bmGIT_BRANCH " + AsCString(TrimBoth(v)));
 		SetCurrentDirectory(h);
 	}
 	return info;
 }
 
+String CppBuilder::GetBuildInfoPath() const
+{
+	return AppendFileName(outdir, "build_info.h");
+}
+
 void CppBuilder::SaveBuildInfo(const String& package)
 {
-	String path = AppendFileName(outdir, "build_info.h");
+	String path = GetBuildInfoPath();
 	RealizePath(path);
 	FileOut info(path);
 	Time t = GetSysTime();

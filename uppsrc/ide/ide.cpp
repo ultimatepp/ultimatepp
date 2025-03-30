@@ -36,7 +36,7 @@ String GetGitBranch(const String& dir)
 void Ide::MakeTitle()
 {
 	if(replace_in_files) return;
-
+	
 	String title;
 	title << Nvl(main, "TheIDE");
 
@@ -598,7 +598,7 @@ void Ide::SetIdeState(int newstate)
 }
 
 void Ide::MakeIcon() {
-	Image li = IdeImg::PackageLarge2();
+	Image li = IdeImg::Icon256();
 	WString mp = main.ToWString();
 	if(!IsNull(mp))
 	{
@@ -607,12 +607,12 @@ void Ide::MakeIcon() {
 		Draw& mdraw = idraw.Alpha();
 		idraw.DrawImage(0, 0, li);
 		mdraw.DrawImage(0, 0, li, White);
-		int fh = DPI(14);
+		int fh = 112;
 		Size sz(0, 0);
 		Font font;
-		while(fh > DPI(8)) {
+		while(fh > (IsUHDMode() ? 64 : 80)) {
 			font = StdFont(fh);
-			sz = GetTextSize(mp, font) + Size(4, 2);
+			sz = GetTextSize(mp, font) + 8 * Size(4, 2);
 			if(sz.cx <= isz.cx)
 				break;
 			fh--;
@@ -621,12 +621,12 @@ void Ide::MakeIcon() {
 		int y = isz.cy - sz.cy;
 		idraw.DrawRect(x, y, sz.cx, sz.cy, White);
 		mdraw.DrawRect(x, y, sz.cx, sz.cy, White);
-		idraw.DrawText(x + 2, y + 1, mp, font, Black);
+		idraw.DrawText(x + 12, y + 1, mp, font, Black);
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		if(state_icon)
-			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge2(),
-			                                         2, IdeImg::IconRunningLarge2(),
-			                                         IdeImg::IconBuildingLarge2()));
+			idraw.DrawImage(0, 0, decode(state_icon, 1, IdeImg::IconDebuggingLarge256(),
+			                                         2, IdeImg::IconRunningLarge256(),
+			                                         IdeImg::IconBuildingLarge256()));
 		li = idraw;
 	}
 	LargeIcon(li);
@@ -635,10 +635,8 @@ void Ide::MakeIcon() {
 void Ide::SetIcon()
 {
 	int new_state_icon = 0;
-	if((bool)debugger && !IdeIsDebugLock()) {
+	if((bool)debugger && !IdeIsDebugLock())
 		new_state_icon = 1;
-		return;
-	}
 	else
 	if((GetTimeClick() / 800) & 1) {
 		if(debugger)

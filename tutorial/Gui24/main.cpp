@@ -13,7 +13,7 @@ struct MyAppWindow : TopWindow {
     
     void Paint(Draw& w) override {
         w.DrawRect(GetSize(), SLtYellow);
-        w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), Blue);
+        w.DrawText(20, 20, t_("Hello translation engine!"), Arial(30), SBlue);
     }
 };
 
@@ -34,7 +34,8 @@ GUI_APP_MAIN
     // SetLanguage("pt-pt"); // Portuguese
     // SetLanguage("ru-ru"); // Russian
     // SetLanguage("tr-tr"); // Turkish
-    // SetLanguage("zh-cn"); // Traditional Chinese
+    // SetLanguage("zh-cn"); // Simplified Chinese
+    // SetLanguage("zh-tw"); // Traditional Chinese
     
     MyAppWindow().Run();
 }

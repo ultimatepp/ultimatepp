@@ -1,5 +1,22 @@
 void Animate(Ctrl& c, const Rect& target, int type = -1);
 void Animate(Ctrl& c, int x, int y, int cx, int cy, int type = -1);
+void Animate(Event<double> update, int duration = 100);
+void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration = 100);
+
+template <class T>
+void Animate(Vector<T>& data, const Vector<T>& targets, Event<> update, int duration = 100)
+{
+	if(data.GetCount() != targets.GetCount())
+		return;
+
+    Vector<T> src = clone(data);
+    
+    Animate([&](double t) {
+        for(int i = 0; i < data.GetCount(); i++)
+            data[i] = Lerp(src[i], targets[i], t);
+        update();
+    }, duration);
+}
 
 bool CtrlLibDisplayError(const Value& ev);
 

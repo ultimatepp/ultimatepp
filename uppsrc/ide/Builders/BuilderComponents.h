@@ -3,8 +3,6 @@
 
 #include <Core/Core.h>
 
-namespace Upp {
-
 class BuilderComponent {
 public:
 	BuilderComponent() { this->builder = NULL; }
@@ -36,7 +34,7 @@ class BlitzBuilderComponent : public BuilderComponent {
 public:
 	BlitzBuilderComponent(Builder *builder);
 	
-	void SetWorkingDir(const String& workingDir)       { this->workingDir = workingDir; }
+	void SetWorkingDir(const String& workingDir)       { this->outDir = workingDir; }
 	void SetBlitzFileName(const String& blitzFileName) { this->blitzFileName = blitzFileName; }
 	
 	Blitz MakeBlitzStep(
@@ -47,10 +45,8 @@ public:
 		const String& package = Null);
 	                    
 private:
-	String workingDir;
+	String outDir;
 	String blitzFileName;
 };
-
-}
 
 #endif

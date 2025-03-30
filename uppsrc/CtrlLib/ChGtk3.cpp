@@ -116,6 +116,7 @@ Color GetInkColor(GtkStyleContext *ctx, dword flags)
 	rgba.g = int(255 * color.green);
 	rgba.b = int(255 * color.blue);
 	rgba.a = int(255 * color.alpha);
+	rgba = Premultiply(rgba);
 	RGBA t = SColorPaper();
 	AlphaBlend(&t, &rgba, 1);
 	return t;
@@ -129,7 +130,7 @@ static GtkStateFlags sFlags;
 void Gtk_Free()
 {
 	if(sCtx)
-		g_object_unref(sCtx);
+		g_object_ref_sink(sCtx);
 	sCtx = NULL;
 }
 
@@ -206,12 +207,15 @@ Color GetInkColor()
 
 void SOImages(int imli, dword flags)
 {
+	int n = (GetStdFontCy() - 2) / DPI(1);
+	if(n < 18) // sometimes it gets too small relative to text..
+		n = 14;
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
-		CtrlsImg::Set(imli++, CairoImage(14, 14, [&](cairo_t *cr) {
-			gtk_render_background(sCtx, cr, 0, 0, 14, 14);
-			gtk_render_frame(sCtx, cr,  0, 0, 14, 14);
-			gtk_render_check(sCtx, cr, 0, 0, 14, 14);
+		CtrlsImg::Set(imli++, CairoImage(n, n, [&](cairo_t *cr) {
+			gtk_render_background(sCtx, cr, 0, 0, n, n);
+			gtk_render_frame(sCtx, cr,  0, 0, n, n);
+			gtk_render_check(sCtx, cr, 0, 0, n, n);
 		}));
 	}
 }
@@ -258,7 +262,7 @@ Image Gtk_Icon(const char *icon_name, int size)
 		
 		Size sz = m.GetSize();
 		
-		g_object_unref(pixbuf);
+		g_object_ref_sink(pixbuf);
 	
 		return sz.cy > size && sz.cy ? Rescale(m, sz.cx * size / sz.cy, size) : m;
 	}
@@ -333,52 +337,6 @@ void ChHostSkin()
 	SOImages(CtrlsImg::I_O2, GTK_STATE_FLAG_INCONSISTENT);
 
 	CtrlImg::Set(CtrlImg::I_MenuCheck0, CtrlsImg::O0());
-/*
-	{
-		MenuBar::Style& s = MenuBar::StyleDefault().Write();
-		s.pullshift.y = 0;
-
-		Gtk_New("menu");
-		Image m = CairoImage(128, 64);
-		s.pullshift.y = 0;
-		int mg = DPI(2);
-		s.popupframe = WithHotSpot(m, mg, mg);
-		Size sz = m.GetSize();
-		s.popupbody = Crop(m, mg, mg, sz.cx - 2 * mg, sz.cy - 2 * mg);
-		s.leftgap = DPI(16) + Zx(6);
-		SColorMenu_Write(GetBackgroundColor());
-		SColorMenuText_Write(s.menutext);
-		
-		Gtk_New("menu menuitem");
-		s.menutext = GetInkColor();
-		Gtk_State(CTRL_HOT);
-		s.itemtext = GetInkColor();
-		Color c = AvgColor(m);
-		if(Diff(c, s.menutext) < 100) // menutext color too close to background color, fix it
-			s.menutext = IsDark(c) ? White() : Black();
-		s.item = Hot3(CairoImage(32, 16));
-		
-		m = CreateImage(Size(DPI(32), DPI(16)), SColorFace());
-		Gtk_New("frame");
-		Over(m, CairoImage(DPI(32), DPI(16)));
-		Gtk_New("frame border");
-		Over(m, CairoImage(DPI(32), DPI(16)));
-		Gtk_New("menubar");
-		Over(m, CairoImage(DPI(32), DPI(16)));
-		s.look = Hot3(m);
-		Color dk = SColorText();
-		Color wh = SColorPaper();
-		if(IsDark(wh))
-			Swap(dk, wh);
-		s.topitemtext[0] = IsDark(AvgColor(m)) ? wh : dk;
-		s.topitem[1] = s.topitem[0] = Null;
-		s.topitemtext[1] = s.topitemtext[0];
-		Gtk_New("menubar menuitem", CTRL_HOT);
-		s.topitem[0] = Null;
-		s.topitem[2] = Hot3(CairoImage(32, 16));
-		s.topitemtext[2] = GetInkColor();
-	}
-*/
 	CtrlImg::Set(CtrlImg::I_MenuCheck1, CtrlsImg::O1());
 	CtrlImg::Set(CtrlImg::I_MenuRadio0, CtrlsImg::S0());
 	CtrlImg::Set(CtrlImg::I_MenuRadio1, CtrlsImg::S1());
@@ -396,20 +354,24 @@ void ChHostSkin()
 			s.focusmargin = DPI(4);
 			for(int i = 0; i < 4; i++) {
 				Gtk_State(i);
-				s.look[i] = Hot3(CairoImage());
+				Image m = Hot3(CairoImage());
+				FixButton(m);
+				s.look[i] = m;
 				Color ink = i == CTRL_DISABLED ? GetInkColor() : GetInkColorBk();
 				s.monocolor[i] = s.textcolor[i] = ink;
 				if(pass == 0) {
 					button[i] = WithHotSpots(CairoImage(100, 100), DPI(4), DPI(4), 0, 0);
 					text[i] = ink;
 				}
+				FixButton(button[i]);
 			}
 			s.ok = Gtk_IconAdjusted("gtk-ok", DPI(16));
 			s.cancel = Gtk_IconAdjusted("gtk-cancel", DPI(16));
 			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
-		ChSynthetic(button, text);
+		if(ChSynthetic(button, text))
+			RoundStyleArrows();
 
 		{
 			auto& s = ToolButton::StyleDefault().Write();
@@ -443,12 +405,11 @@ void ChHostSkin()
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
-		static gboolean stepper;
-		static gint minslider;
-		ONCELOCK {
-			static GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
-			gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
-		}
+		gboolean stepper;
+		gint minslider;
+		GtkWidget *proto = (GtkWidget *)gtk_scrollbar_new(GTK_ORIENTATION_HORIZONTAL, NULL); // to get style params
+		gtk_widget_style_get(proto, "has-backward-stepper", &stepper, "min-slider-length", &minslider, NULL);
+		g_object_ref_sink(proto);
 		if(!stepper)
 			s.arrowsize = 0;
 		Gtk_New("scrollbar.horizontal.bottom");
@@ -460,7 +421,7 @@ void ChHostSkin()
 		Gtk_New("scrollbar.horizontal.bottom contents trough slider");
 		GtkSize(sz);
 
-		s.barsize = s.thumbwidth = DPI(sz.cy);
+		s.barsize = s.thumbwidth = Ctrl::SCL(sz.cy);
 		s.thumbmin = max(minslider, 2 * s.barsize);
 
 		sz.cx = 4 * sz.cy;
@@ -569,7 +530,7 @@ Image Gtk_Icon(const char *icon_name, int size)
 		
 		Size sz = m.GetSize();
 		
-		g_object_unref(pixbuf);
+		g_object_ref_sink(pixbuf);
 	
 		return sz.cy > size && sz.cy ? Rescale(m, sz.cx * size / sz.cy, size) : m;
 	}

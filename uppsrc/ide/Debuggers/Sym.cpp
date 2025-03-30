@@ -368,6 +368,9 @@ const Pdb::Type& Pdb::GetType(int ti)
 					dword ch = children->ChildId[i];
 					dword tag = GetSymInfo(t.modbase, ch, TI_GET_SYMTAG);
 					dword kind = GetSymInfo(t.modbase, ch, TI_GET_DATAKIND);
+					if(tag == SymTagUDT)
+						t.member_type << GetTypeIndex(t.modbase, ch);
+					else
 					if(tag == SymTagData) {
 						String name = GetSymName(t.modbase, ch);
 						if(kind == DataIsMember) {
@@ -434,6 +437,8 @@ int Pdb::FindType(adr_t modbase, const String& name)
 		{ "wchar_t", UINT2 },
 		{ "int", SINT4 },
 		{ "unsigned int", UINT4 },
+		{ "long", SINT4 },
+		{ "unsigned long", UINT4 },
 		{ "float", FLT },
 		{ "double", DBL },
 		{ "int64", SINT8 },

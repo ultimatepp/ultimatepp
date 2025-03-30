@@ -104,11 +104,23 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".usc")
 		img = IdeCommonImg::Script();
 	else
+	if(ext == ".dbg")
+		img = IdeCommonImg::Debugger();
+	else
 	if(ext == ".lng" || ext == ".lngj" || ext == ".t" || ext == ".jt")
 		img = IdeCommonImg::Language();
 	else
 	if(ext == ".icpp")
 		img = IdeCommonImg::ISource();
+	else
+	if(IsGLSLExt(ext))
+		img = IdeCommonImg::GLSL();
+	else
+	if(ext == ".cu")
+		img = IdeCommonImg::Cuda();
+	else
+	if(ext == ".ci")
+		img = IdeCommonImg::Cudi();
 	else
 	if(findarg(ext, ".cpp", ".cc", ".cxx", ".mm") >= 0)
 		img = IdeCommonImg::Cpp();
@@ -208,8 +220,8 @@ void SourceFs(FileSel& fs)
 	fs.Type("Python files (*.py *.pyc *.pyd *.pyo)", "*.py *.pyc *.pyd *.pyo");
 	fs.Type("Web development files (*.html *.js *.css *.witz)", "*.html *.js *.css *.witz");
 	fs.Type("Xml files (*.xml *.xsd)", "*.xml *.xsd");
-	fs.Type("Other special files (*.sch *.usc *.rc *.brc *.upt)", "*.sch *.usc *.rc *.brc *.upt");
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.json *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.xml *.xsd *.qtf";
+	fs.Type("Other special files (*.sch *.usc *.dbg *.rc *.brc *.upt)", "*.sch *.usc *.dbg *.rc *.brc *.upt");
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.json *.lng *.sch *.usc *.dbg *.rc *.brc *.upt *.html *.js *.css *.witz *.xml *.xsd *.qtf";
 	fs.Type("All source files (" + mask + ")", mask);
 	IdeFs(fs);
 }
@@ -310,6 +322,7 @@ QtfDlgEditor::QtfDlgEditor()
     SetRect(0, 0, r.GetWidth() - 100, r.GetHeight() - 100);
     SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 100)));
     Title("Editor");
+    editor.AllowDarkContent();
 }
 
 void QTFEdit(String& text)

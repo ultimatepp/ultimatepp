@@ -1,0 +1,10 @@
+test()
+{
+    item.address = 1;
+    from = 100;
+    sz = 16;
+    data_ptr = [];
+	for(ii = 0; ii < 20000; ii++)
+		data_ptr[] = item.address + (ii + from) * sz;
+    return data_ptr;
+}

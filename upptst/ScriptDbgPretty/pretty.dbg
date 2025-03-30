@@ -1,0 +1,59 @@
+typename MyStruct {
+	TEXT("My struct: ", 7);
+	TEXT(Peek32(Field(value, "second").address));
+}
+
+typename MyWString {
+	STRING();
+	
+	ITEM_COUNT(Peek32(Field(value, "length")));
+	ITEM_TYPE("int");
+	ITEM_PTRS(DeRef(Field(value, "ptr")).address, 4, from, items);
+}
+
+typename MyVector {
+	ITEM_COUNT(Peek32(Field(value, "items")));
+	ITEM_TYPE(template_param[0]);
+	
+	adr = DeRef(Field(value, "vector")).address;
+	
+	sz = SizeOf(template_param[0]);
+
+	LOG(SizeOfPtr());
+	LOG("Just a test");
+
+	ITEM_PTRS(adr, sz, from, items);
+//	for(i = 0; i < items; i++)
+//		ITEM_PTR(adr + (i + from) * sz);
+}
+
+typename MyArray {
+	value = Field(value, "vector");
+
+	ITEM_COUNT(Peek32(Field(value, "items")));
+	ITEM_TYPE(template_param[0]);
+	
+	adr = DeRef(Field(value, "vector")).address;
+	
+	sz = SizeOf(template_param[0]);
+	
+	ITEM_DEREF_PTRS(adr, from, items);
+//	for(i = 0; i < items; i++)
+//		ITEM_PTR(PeekPtr(adr + (i + from) * SizeOfPtr()));
+
+	CHUNK(10);
+}
+
+typename MyVectorMap {
+	key = Field(value, "key");
+	key = Field(key, "key");
+
+	ITEM_COUNT(Peek32(Field(key, "items")));
+	
+	ITEM_TYPE(template_param[0]);
+	ITEM_PTRS(DeRef(Field(key, "vector")).address, SizeOf(template_param[0]), from, items);
+
+	value = Field(value, "value");
+	ITEM_TYPE(template_param[1]);
+	ITEM_PTRS(DeRef(Field(value, "vector")).address, SizeOf(template_param[1]), from, items);
+}

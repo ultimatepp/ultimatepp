@@ -31,10 +31,22 @@ struct CocoMenuBar : public Bar {
 	bool      dockmenu = false;
 	int       cy = 0; // estimate of height to place the menu correctly
 
+	bool      just_check = false;
+	int       check_i = 0;
+	bool      is_same = false;
+
 	struct Item : Bar::Item {
-		NSMenuItem      *nsitem;
+		NSMenuItem      *nsitem = nullptr;
 		Event<>          cb;
 		One<CocoMenuBar> submenu;
+		CocoMenuBar     *bar;
+
+		// flicker prevention - do not recreate top level menu if no changes
+		String           text;
+		bool             bold = false;
+		bool             enabled = false;
+
+		bool    FailCheck(bool chk = false);
 
 		virtual Item& Text(const char *text);
 		virtual Item& Key(dword key);
@@ -44,19 +56,34 @@ struct CocoMenuBar : public Bar {
 		virtual Item& Enable(bool _enable = true);
 		virtual Item& Bold(bool bold = true);
 
-		Item&   Label(const char *text);
-		Item&   RightLabel(const char *text);
-
-		Item& Key(KeyInfo& (*key)());
-
-		Item()  { nsitem = [NSMenuItem new]; }
-		~Item() { [nsitem release]; }
+		~Item() { if(nsitem) [nsitem release]; }
 	};
 	
 	Array<Item> item;
 	
+	void StartCheck() {
+		just_check = true;
+		check_i = 0;
+		is_same = true;
+	}
+	
+	bool CheckedIsSame() {
+		just_check = false;
+		return is_same;
+	}
+	
 	Item& AddItem() {
+		if(just_check) {
+			if(is_same && check_i < item.GetCount())
+				return item[check_i++];
+			is_same = false;
+			if(item.GetCount() == 0) // need dummy item
+				item.Add().bar = this;
+			return item[0]; // dummy item, it will be redone anyway
+		}
 		Item& m = item.Add();
+		m.nsitem = [NSMenuItem new];
+		m.bar = this;
 		[cocomenu addItem:m.nsitem];
 		cy += GetStdFontCy();
 		return m;
@@ -66,18 +93,22 @@ struct CocoMenuBar : public Bar {
 
 	virtual Item& AddItem(Event<> cb) {
 		Item& m = AddItem();
-		m.cb = cb;
-		m.nsitem.target = cocomenu;
-		m.nsitem.action = @selector(cocoMenuAction:);
+		if(!just_check) {
+			m.cb = cb;
+			m.nsitem.target = cocomenu;
+			m.nsitem.action = @selector(cocoMenuAction:);
+		}
 		return m;
 	}
 	
 	virtual Item&  AddSubMenu(Event<Bar&> proc) {
 		Item& m = AddItem();
-		m.submenu.Create();
-		m.submenu->cocomenu->proc = proc;
-		m.nsitem.action = @selector(cocoMenuAction:);
-		m.nsitem.submenu = m.submenu->cocomenu;
+		if(!just_check) {
+			m.submenu.Create();
+			m.submenu->cocomenu->proc = proc;
+			m.nsitem.action = @selector(cocoMenuAction:);
+			m.nsitem.submenu = m.submenu->cocomenu;
+		}
 		return m;
 	}
 
@@ -91,9 +122,15 @@ struct CocoMenuBar : public Bar {
 	
 	void Set(Event<Bar&> bar);
 	
-	void Clear() {
+	void ClearItems() {
 		cy = 0;
+		just_check = false;
+		is_same = false;
 		item.Clear();
+	}
+	
+	void Clear() {
+		ClearItems();
 		if(cocomenu) {
 			[cocomenu release];
 			cocomenu = NULL;
@@ -120,8 +157,14 @@ void CocoMenuBar::Set(Event<Bar&> bar)
 {
 	if(lock) return;
 	lock++;
-	[cocomenu removeAllItems];
+	
+	StartCheck();
 	bar(*this);
+	if(!CheckedIsSame()) {
+		ClearItems();
+		[cocomenu removeAllItems];
+		bar(*this);
+	}
 	lock--;
 }
 
@@ -146,6 +189,13 @@ void CocoMenuBar::Separator()
 
 CocoMenuBar::Item& CocoMenuBar::Item::Text(const char *text)
 {
+	String txt = text;
+	if(bar->just_check) {
+		if(txt != this->text)
+			bar->is_same = false;
+		return *this;
+	}
+	this->text = txt;
 	String h;
 	while(*text) {
 		if(*text == '&') {
@@ -165,8 +215,19 @@ CocoMenuBar::Item& CocoMenuBar::Item::Text(const char *text)
 	return *this;
 }
 
+bool CocoMenuBar::Item::FailCheck(bool chk)
+{
+	if(bar->just_check) {
+		bar->is_same = bar->is_same && chk;
+		return !bar->is_same;
+	}
+	return false;
+}
+
 CocoMenuBar::Item& CocoMenuBar::Item::Key(dword key)
 {
+	if(FailCheck())
+		return *this;
 	static Tuple2<int, int> code[] = {
 		#include "NSMenuKeys.i"
 	};
@@ -184,29 +245,41 @@ CocoMenuBar::Item& CocoMenuBar::Item::Key(dword key)
 
 CocoMenuBar::Item& CocoMenuBar::Item::Image(const class Image& img)
 {
+	if(FailCheck())
+		return *this;
 	nsitem.image = GetNSImage(img);
 	return *this;
 }
 
 CocoMenuBar::Item& CocoMenuBar::Item::Check(bool check)
 {
+	if(FailCheck())
+		return *this;
 	nsitem.state = check ? NSControlStateValueOn : NSControlStateValueOff;
 	return *this;
 }
 
 CocoMenuBar::Item& CocoMenuBar::Item::Radio(bool check)
 {
+	if(FailCheck())
+		return *this;
 	return Check(check);
 }
 
 CocoMenuBar::Item& CocoMenuBar::Item::Enable(bool enable)
 {
+	if(FailCheck(enabled == enable))
+		return *this;
+	enabled = enable;
 	nsitem.enabled = enable;
 	return *this;
 }
 
 CocoMenuBar::Item& CocoMenuBar::Item::Bold(bool bold)
 {
+	if(FailCheck(this->bold == bold))
+		return *this;
+	this->bold = bold;
 	return *this;
 }
 
@@ -229,6 +302,7 @@ bool CocoMenuBar::IsEmpty() const
 	if(m && m->ptr && m->ptr->dockmenu)
 		return;
 	if(m && m->ptr && proc) {
+		m->ptr->ClearItems();
 		[m removeAllItems];
 		proc(*m->ptr);
 	}
@@ -238,6 +312,8 @@ bool CocoMenuBar::IsEmpty() const
 	CocoMenu *m = (CocoMenu *)menu;
 	if(m && m->ptr && m->ptr->dockmenu)
 		return;
+	// DO NOT CALL ClearItems here - menu is closed before MenuAction, we need items to find
+	// correct callback
 	[m removeAllItems];
 }
 

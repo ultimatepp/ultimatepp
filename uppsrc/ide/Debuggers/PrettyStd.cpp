@@ -8,18 +8,16 @@ void Pdb::PrettyStdString(Pdb::Val val, const Vector<String>& tparam, int64 from
 	int size;
 	bool w = tparam[0] == "wchar_t";
 	if(HasAttr(val, "__r_")) { // CLANG variant
-		Val r = GetAttr(GetAttr(val, "__r_"), "__value_");
-		Val s = GetAttr(r, "__s");
-		size = GetByteAttr(s, "__size_");
-		if(size & 1) {
-			Val l = GetAttr(r, "__l");
-			size = GetIntAttr(l, "__size_");
-			a = DeRef(GetAttr(l, "__data_")).address;
+		Val r = GetAttr(val, "__r_");
+		Val v = GetAttr(r, "__value_");
+		Val s = GetAttr(v, "__s");
+		if(GetInt(GetAttr(s, "__is_long_"))) {
+			s = GetAttr(v, "__l");
+			a = DeRef(GetAttr(s, "__data_")).address;
 		}
-		else {
-			size = size >> 1;
-			a = s.address + 1 + w;
-		}
+		else
+			a = GetAttr(s, "__data_").address;
+		size = GetIntAttr(s, "__size_");
 	}
 	else {
 		Val q = GetAttr(GetAttr(val, "_Mypair"), "_Myval2");
@@ -50,7 +48,7 @@ void Pdb::PrettyStdVector(Pdb::Val val, const Vector<String>& tparam, int64 from
 		end = DeRef(GetAttr(q, "_Mylast"));
 	}
 	int sz = SizeOfType(tparam[0]);
-	p.data_count = (end.address - begin.address) / sz;
+	p.data_count = sz ? (end.address - begin.address) / sz : 0;
 	for(int i = 0; i < count; i++)
 		p.data_ptr.Add(begin.address + (i + from) * sz);
 }
@@ -79,25 +77,21 @@ void Pdb::TraverseTree(bool set, Pdb::Val head, Val node, int64& from, int& coun
 	TraverseTree(set, head, DeRef(GetAttr(node, "_Right")), from, count, p, depth + 1);
 }
 
-void Pdb::TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth)
+void Pdb::TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& count, Pdb::Pretty& p, int depth, int key_size, int value_size)
 {
 	if(depth > 40 || count <= 0) // avoid problems if tree is damaged
 		return;
 
 	Val left = DeRef(GetAttr(node, "__left_"));
 	if(left.address)
-		TraverseTreeClang(set, nodet, left, from, count, p, depth + 1);
+		TraverseTreeClang(set, nodet, left, from, count, p, depth + 1, key_size, value_size);
 
 	node.type = nodet;
 	Val data = GetAttr(node, "__value_");
 	if(from == 0) {
-		if(set)
-			p.data_ptr.Add(data.address);
-		else {
-			Val cc = GetAttr(data, "__cc");
-			p.data_ptr.Add(GetAttr(cc, "first").address);
-			p.data_ptr.Add(GetAttr(cc, "second").address);
-		}
+		p.data_ptr.Add(data.address);
+		if(!set)
+			p.data_ptr.Add(Align(data.address + key_size, value_size));
 		count--;
 	}
 	else
@@ -105,7 +99,7 @@ void Pdb::TraverseTreeClang(bool set, int nodet, Val node, int64& from, int& cou
 
 	Val right = DeRef(GetAttr(node, "__right_"));
 	if(right.address)
-		TraverseTreeClang(set, nodet, right, from, count, p, depth + 1);
+		TraverseTreeClang(set, nodet, right, from, count, p, depth + 1, key_size, value_size);
 }
 
 void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
@@ -124,7 +118,7 @@ void Pdb::PrettyStdTree(Pdb::Val val, bool set, const Vector<String>& tparam, in
 		Val value = GetAttr(GetAttr(tree, "__pair1_"), "__value_");
 		p.data_count = GetIntAttr(GetAttr(tree, "__pair3_"), "__value_");
 		Val node = DeRef(GetAttr(value, "__left_"));
-		TraverseTreeClang(set, GetTypeInfo(nodet).type, node, from, count, p, 0);
+		TraverseTreeClang(set, GetTypeInfo(nodet).type, node, from, count, p, 0, SizeOfType(tparam[0]),  SizeOfType(tparam[1]));
 	}
 	else {
 		val = GetAttr(GetAttr(GetAttr(val, "_Mypair"), "_Myval2"), "_Myval2");
@@ -225,7 +219,7 @@ void Pdb::PrettyStdDeque(Pdb::Val val, const Vector<String>& tparam, int64 from,
 	adr_t map;
 	if(HasAttr(val, "__size_")) {
 		p.data_count = GetIntAttr(GetAttr(val, "__size_"), "__value_");
-		block_size = sz < 256 ? 4096 / sz : 16;
+		block_size = sz && sz < 256 ? 4096 / sz : 16;
 		start = GetIntAttr(val, "__start_");
 		map = DeRef(GetAttr(GetAttr(val, "__map_"), "__begin_")).address;
 	}
@@ -253,19 +247,17 @@ void Pdb::PrettyStdUnordered(Pdb::Val val, bool set, const Vector<String>& tpara
 		                      << tparam[0] << "," << tparam[1] << " >,void *>";
 		int ntype = GetTypeInfo(nodet).type;
 		adr_t next = DeRef(GetAttr(GetAttr(GetAttr(val, "__p1_"), "__value_"), "__next_")).address;
+		int key_size = SizeOfType(tparam[0]);
+		int value_size = SizeOfType(tparam[1]);
 		while(next && count > 0) {
 			Val v = val;
 			v.type = ntype;
 			v.address = next;
 			if(from == 0) {
 				Val vl = GetAttr(v, "__value_");
-				if(set)
-					p.data_ptr.Add(vl.address);
-				else {
-					vl = GetAttr(vl, "__cc");
-					p.data_ptr.Add(GetAttr(vl, "first").address);
-					p.data_ptr.Add(GetAttr(vl, "second").address);
-				}
+				p.data_ptr.Add(vl.address);
+				if(!set)
+					p.data_ptr.Add(Align(vl.address + key_size, value_size));
 			}
 			else
 				from--;
@@ -274,6 +266,13 @@ void Pdb::PrettyStdUnordered(Pdb::Val val, bool set, const Vector<String>& tpara
 	}
 	else
 		PrettyStdListM(GetAttr(val, "_List"), tparam, from, count, p, !set);
+}
+
+void Pdb::PrettyStdAtomic(Pdb::Val val, const Vector<String>& tparam, int64 from, int count, Pdb::Pretty& p)
+{
+	p.data_ptr << val.address;
+	p.data_type << tparam[0];
+	p.kind = SINGLE_VALUE;
 }
 
 #endif

@@ -72,7 +72,7 @@ void *MemoryAllocPermanent(size_t size)
 	static byte *ptr = NULL;
 	static byte *limit = NULL;
 	ASSERT(size < INT_MAX);
-	if(ptr + size >= limit) {
+	if(!ptr || ptr + size >= limit) {
 		ptr = (byte *)SysAllocRaw(16384, 16384);
 		limit = ptr + 16384;
 	}
@@ -231,7 +231,7 @@ String AsString(const MemoryProfile& mem)
 	size_t asize = 0;
 	int fcount = 0;
 	size_t fsize = 0;
-	text << "Memory peak: " << MemoryUsedKbMax() << " KB, current: " << MemoryUsedKb() << "KB \n";
+	text << "Memory peak: " << MemoryUsedKbMax() << " KB, current: " << MemoryUsedKb() << " KB \n";
 	for(int i = 0; i < 1024; i++)
 		if(mem.allocated[i]) {
 			int sz = 4 * i;

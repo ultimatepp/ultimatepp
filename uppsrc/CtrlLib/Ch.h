@@ -9,6 +9,11 @@ void ChFlatSkin();
 void ChFlatDarkSkin();
 void ChFlatGraySkin();
 
+#ifdef PLATFORM_WIN32
+void ChHostSkinLight();
+void ChHostSkinDark();
+#endif
+
 Vector<Tuple<void (*)(), String>> GetAllChSkins();
 
 enum {
@@ -33,6 +38,7 @@ Color AvgColor(const Image& m, RGBA bg, int margin = 0);
 
 Color GetInk(const Image& m); // the color that is most different from AvgColor
 int   GetRoundness(const Image& m);
+void  FixButton(Image& button); // fix button if it is too close to face color
 
 Image WithRect(Image m, int x, int y, int cx, int cy, Color c);
 Image WithLeftLine(const Image& m, Color c, int w = DPI(1));
@@ -42,8 +48,15 @@ Image WithBottomLine(const Image& m, Color c, int w = DPI(1));
 
 Color FaceColor(int adj);
 
-// Creates synthetic style based on SColors and basic button face
-void ChSynthetic(Image *button100x100, Color *text, bool macos = false, int dpi = DPI(1));
+// Creates synthetic style based on SColors and basic button face, returns roundness
+int ChSynthetic(Image *button100x100, Color *text, bool macos = false, int dpi = DPI(1));
+
+void  RoundStyleArrows();
+
+Image MakeRoundScrollbarThumb(int width, int margin, Color fill, int stroke = 0, Color pen = Gray());
+
+void SyntheticTab(int i, int roundness, Color ink, int pen);
+void SyntheticTab(int i, int roundness, Color ink);
 
 // for diagnostics purposes
 #ifdef _DEBUG

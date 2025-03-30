@@ -258,27 +258,6 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 		wc.lpszClassName = L"UPP-CLASS-SB-DS-W";
 		RegisterClassW(&wc);
 	}
-	{
-		ILOG("RegisterClassA");
-		WNDCLASS  wc;
-		Zero(wc);
-		wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
-		wc.hInstance     = hInstance;
-		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
-		wc.lpszClassName = L_("UPP-CLASS-A");
-		RegisterClass(&wc);
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpszClassName = L_("UPP-CLASS-DS-A");
-		RegisterClass(&wc);
-		wc.style         = CS_SAVEBITS|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
-		wc.lpszClassName = L_("UPP-CLASS-SB-A");
-		RegisterClass(&wc);
-		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_SAVEBITS;
-		wc.lpszClassName = L_("UPP-CLASS-SB-DS-A");
-		RegisterClass(&wc);
-	}
 
 	WNDCLASS  wca;
 	Zero(wca);
@@ -467,15 +446,14 @@ void Ctrl::UseImmersiveDarkModeForWindowBorder()
 	ONCELOCK {
 		DllFn(DwmSetWindowAttribute, "dwmapi.dll", "DwmSetWindowAttribute");
 	}
-	if (!DwmSetWindowAttribute) {
-		return;
+	if(DwmSetWindowAttribute) {
+		const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+		
+		BOOL useDarkTheme = IsDarkTheme();
+		DwmSetWindowAttribute(
+			utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
+			&useDarkTheme, sizeof(useDarkTheme));
 	}
-	const auto DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-	
-	BOOL useDarkTheme = IsDarkTheme();
-	DwmSetWindowAttribute(
-		utop->hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE,
-		&useDarkTheme, sizeof(useDarkTheme));
 }
 
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
@@ -499,6 +477,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	                           parent, NULL, hInstance, this);
 
 	inloop = false;
+	erasebg = true; // avoid flickering
 
 	ASSERT(top->hwnd);
 	

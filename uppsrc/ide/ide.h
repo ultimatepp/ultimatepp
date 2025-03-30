@@ -334,7 +334,7 @@ struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 struct WebSearchTab : WithSetupWebSearchTabLayout<ParentCtrl> {
 	void Load();
 	void Save();
-	bool EditDlg(String& name, String& uri, String& zico);
+	bool EditDlg(String& name, String& uri, String& ico16, String& ico32);
 	void Add();
 	void Sync();
 	void Edit();
@@ -358,6 +358,8 @@ String SearchEnginesFile();
 
 int ApplyChanges(LineEdit& editor, const String& new_content);
 
+struct RepoDiff;
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -380,6 +382,7 @@ public:
 	virtual   void   DeactivateBy(Ctrl *new_focus);
 	virtual   void   Activate();
 	virtual   void   Layout();
+	virtual   void   Skin();
 
 	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);
@@ -522,6 +525,8 @@ public:
 
 	String    editfile2;
 
+	String    scratch_back; // to get back from Alt-M scratchfile
+
 	Vector<String> tablru;
 	int            tabi;
 	bool           blocktabs;
@@ -640,9 +645,8 @@ public:
 	bool      deactivate_save;
 	int       insert_include;
 	int       bordercolumn;
-	Color     bordercolor;
 	bool      persistent_find_replace;
-	bool      find_replace_restore_pos;
+	bool      find_replace_restore_pos = false;
 	int       spellcheck_comments;
 	bool      wordwrap_comments = true;
 	bool      wordwrap = false;
@@ -656,6 +660,14 @@ public:
 	bool      win_deactivated = false;
 	bool      block_caret = false;
 	bool      bar_branch = true;
+	bool      search_downloads =
+#ifdef PLATFORM_MACOS
+		false
+#else
+		true
+#endif
+	;
+		
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -672,6 +684,7 @@ public:
 	byte      hilite_scope;
 	int       hilite_bracket;
 	int       hilite_ifdef;
+	bool      hl_custom = false;
 	bool      barline;
 	bool      qtfsel;
 
@@ -843,6 +856,7 @@ public:
 		void  ClearEditedAll();
 		void  FindFileAll(const Vector<Tuple<int64, int>>& f);
 		void  InsertColor();
+		void  InsertSequence();
 		void  InsertImage();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const Package& pkg, const String& fn, String classname);
@@ -1003,7 +1017,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  DoPatchDiff();
-		void  RunRepoDiff(const String& filepath);
+		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
 		void  RemoveDs();
 		void  FindDesignerItemReferences(const String& id, const String& name);
@@ -1182,6 +1196,7 @@ public:
 	const Workspace& AssistWorkspace() const;
 
 	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
+	String    GetExternalIncludePath();
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();
@@ -1284,6 +1299,8 @@ void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const W
 String GetGitBranchRaw(const String& dir);
 
 Index<String> GetAllNests(bool sleep = false);
+
+bool MapFlag(const VectorMap<class String, class String>& map, const char *key);
 
 #include "urepo.h"
 

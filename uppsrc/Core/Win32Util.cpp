@@ -15,7 +15,6 @@ HINSTANCE AppGetHandle()
 
 void AppSetHandle(HINSTANCE dll_instance) { app_instance = dll_instance; }
 
-#ifndef PLATFORM_WINCE
 bool IsWin2K()
 {
 	OSVERSIONINFO of;
@@ -47,7 +46,27 @@ bool IsWin7()
 	GetVersionEx(&of);
 	return of.dwMajorVersion >= 6 && of.dwMinorVersion >= 1;
 }
-#endif
+
+dword GetWindowsBuildVersion()
+{
+	LONG(WINAPI *RtlGetVersion)(LPOSVERSIONINFOEXW);
+    DllFn(RtlGetVersion, "ntdll", "RtlGetVersion");
+
+	if(!RtlGetVersion)
+		return 0;
+
+	OSVERSIONINFOEXW osInfo;
+	osInfo.dwOSVersionInfoSize = sizeof(osInfo);
+	RtlGetVersion(&osInfo);
+	return osInfo.dwBuildNumber;
+}
+
+bool IsWin11()
+{
+	static bool b = GetWindowsBuildVersion() > 22000;
+	return b;
+}
+
 
 String AsString(const wchar_t *buffer) {
 	if(!buffer)

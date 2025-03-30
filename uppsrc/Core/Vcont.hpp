@@ -550,7 +550,8 @@ template <class T>
 void Array<T>::SetCount(int n) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.begin() + n, vector.end());
+	if(n < lc)
+		Del(vector.begin() + n, vector.end());
 	vector.SetCount(n);
 	Init(vector.begin() + lc, vector.begin() + n);
 }
@@ -559,7 +560,8 @@ template <class T>
 void Array<T>::SetCount(int n, const T& init) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.begin() + n, vector.end());
+	if(n < lc)
+		Del(vector.begin() + n, vector.end());
 	vector.SetCount(n);
 	Init(vector.begin() + lc, vector.begin() + n, init);
 }
@@ -568,7 +570,8 @@ template <class T>
 void Array<T>::SetCountR(int n) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.begin() + n, vector.end());
+	if(n < lc)
+		Del(vector.begin() + n, vector.end());
 	vector.SetCountR(n);
 	Init(vector.begin() + lc, vector.begin() + n);
 }
@@ -577,7 +580,8 @@ template <class T>
 void Array<T>::SetCountR(int n, const T& init) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.begin() + n, vector.end());
+	if(n < lc)
+		Del(vector.begin() + n, vector.end());
 	vector.SetCountR(n);
 	Init(vector.begin() + lc, vector.begin() + n, init);
 }

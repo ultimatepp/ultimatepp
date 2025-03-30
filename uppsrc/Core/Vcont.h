@@ -14,7 +14,7 @@ class Buffer : Moveable< Buffer<T> > {
 	T *ptr;
 	
 	void Malloc(size_t size) {
-		if(std::is_trivially_destructible<T>::value)
+		if constexpr(std::is_trivially_destructible<T>::value)
 			ptr = (T *)MemoryAlloc(size * sizeof(T));
 		else {
 			void *p = MemoryAlloc(size * sizeof(T) + 16);
@@ -32,7 +32,7 @@ class Buffer : Moveable< Buffer<T> > {
 	}
 	void Free() {
 		if(ptr) {
-			if(std::is_trivially_destructible<T>::value)
+			if constexpr(std::is_trivially_destructible<T>::value)
 				MemoryFree(ptr);
 			else {
 				void *p = (byte *)ptr - 16;
@@ -138,8 +138,6 @@ template <class U> class Index;
 
 template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
-	static_assert(is_trivially_relocatable<T> || is_upp_guest<T>);
-	
 	T       *vector;
 	int      items;
 	int      alloc;

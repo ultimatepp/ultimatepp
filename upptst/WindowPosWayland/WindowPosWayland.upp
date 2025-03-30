@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI WAYLAND";
+

@@ -257,7 +257,7 @@ String CleanupPretty(const String& signature)
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info)
 {
-	bool op = memcmp(name, "operator", 8) == 0 && !iscid(name[8]);
+	bool op = strncmp(name, "operator", 8) == 0 && !iscid(name[8]);
 	Vector<ItemTextPart> part;
 	int name_len = name.GetLength();
 	if(name_len == 0) {
@@ -289,7 +289,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		}
 		else
 		if(iscid(*s) || (*s == '~' && *name == '~')) {
-			if(memcmp(s, name, name_len) == 0 && !iscid(s[name_len]) && !op) { // need strncmp because of e.g. operator++
+			if(strncmp(s, name, name_len) == 0 && !iscid(s[name_len]) && !op) {
 				p.type = ITEM_NAME;
 				n = name_len;
 				const char *q = s + name_len;

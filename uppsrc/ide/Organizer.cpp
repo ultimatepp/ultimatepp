@@ -452,7 +452,7 @@ void PackageEditor::AdjustFileOptionCursor()
 void PackageEditor::FileOptionMenu(Bar& bar)
 {
 	bool b = IsActiveFile();
-	bar.Add(b, "Add compiler flags..", THISBACK(AddFileOption)).Key(K_INSERT);
+	bar.Add(b, "Add compiler options..", THISBACK(AddFileOption)).Key(K_INSERT);
 	bar.Add(b, "Add dependence..", THISBACK1(AddDepends, false)).Key(K_CTRL_INSERT);
 	bar.Add(b, "Add external dependence..", THISBACK1(AddDepends, true)).Key(K_SHIFT_INSERT);
 	bar.Separator();

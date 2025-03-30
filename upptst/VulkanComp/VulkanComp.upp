@@ -1,0 +1,15 @@
+uses
+	Core,
+	Draw;
+
+library
+	vulkan-1;
+
+file
+	shader.comp highlight cpp,
+	import_vulkan_shader.h,
+	Vulkan.cpp;
+
+mainconfig
+	"" = "";
+

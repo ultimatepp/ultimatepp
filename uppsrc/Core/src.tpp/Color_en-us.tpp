@@ -54,12 +54,11 @@ Color are needed instead of global Color constants on many platforms,
 because often global variables are not allowed when using dynamic 
 libraries.&]
 [s7; [%-*@3 fn]-|Pointer to a function returning Color.&]
-[s0; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Color`:`:Color`(RGBA`):%- [* Color]([_^RGBA^ RGBA]_[*@3 rgba])&]
 [s2; Conversion from a RGBA structure [%-*@3 rgba].&]
 [s3; &]
-[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3; &]
 [s5;:Color`:`:operator Value`(`)const:%- [* operator_Value]()_[@(0.0.255) const]&]
@@ -147,7 +146,7 @@ F_[*@3 cr])&]
 [s2; Creates Color from COLORREF.&]
 [s7; [%-*C@3 cr]-|COLORREF.&]
 [s7; [*/ Return value]-|Color.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Color`:`:operator dword`(`)const:%- [* operator_dword]()_[@(0.0.255) const]&]
 [s6;%- Not available on Win32&]
@@ -158,16 +157,58 @@ etRaw]().&]
 [s5;:Color`:`:operator RGBA`(`)const:%- [* operator_RGBA]()_[@(0.0.255) const]&]
 [s2; Returns a RGBA structure containing the color information.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Color`:`:ToString`(`)const:%- String [* ToString]() [@(0.0.255) const]&]
+[s2; Converts Color to textual form.&]
+[s3; &]
+[ {{10000@(113.42.0) [s0; [*@(229)4 SColor]]}}&]
+[s3;%- &]
+[s1;:Upp`:`:SColor:%- [@(0.0.255) struct ][*3 SColor][3  ][@(0.0.255)3 :][3  
+Color]&]
+[s2; This creates special kind of `"logical`" color constant that 
+is defined by function which is reevaluated on GUI theme change, 
+thus allowing color to react to the new theme. Instances of this 
+class must have static storage duration (cannot be stack nor 
+thread variables). Number of SColor definitions is limited for 
+performance reasons to about 1000. The SColor instances can be 
+copied to normal Color while maintaining its dynamic feature.&]
 [s0; &]
-[s0; &]
-[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:Upp`:`:SColor`:`:SColor`(Color`(`*`)`(`)`):%- [* SColor](Color 
+([@(0.0.255) `*]fn)() [@(0.0.255) `=] [@3 0])&]
+[s2; Creates SColor with color definition function.&]
+[s3; &]
+[ {{10000@(113.42.0) [s0; [*@(229)4 AColor]]}}&]
+[s3;%- &]
+[s1;:Upp`:`:AColor:%- [@(0.0.255) struct ][*3 AColor][3  ][@(0.0.255)3 :][3  
+Color]&]
+[s2; This special kind of Color logical constant is created from 
+normal color. In light theme, color is used unchanged. In dark 
+theme, color is adjusted using [%-* DarkThemeCached] function. 
+The AColor instances can be copied to normal Color while maintaining 
+its dynamic feature. [/ (Unlike SColor there are no limitations 
+with respect to storage duration).]&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:Upp`:`:AColor`:`:AColor`(Color`):%- [* AColor](Color [*@3 c])&]
+[s5;:Upp`:`:AColor`:`:AColor`(int`,int`,int`):%- [* AColor]([@(0.0.255) int] 
+[*@3 r], [@(0.0.255) int] [*@3 g], [@(0.0.255) int] [*@3 b])&]
+[s2; Creates AColor.&]
+[s3; &]
 [ {{10000@(113.42.0) [s0; [*@(229)4 Utility functions]]}}&]
 [s3;%- &]
 [s5;:GetRValue`(dword`):%- [@(0.0.255) int]_[* GetRValue]([_^dword^ dword]_[*@3 c])&]
 [s2; Returns red component from a platform specific value.&]
 [s7; [%-*C@3 c]-|Platform specific value.&]
 [s7; [*/ Return value]-|Red component.&]
-[s3; &]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:operator`*`(int`,Color`):%- RGBA operator[@(0.0.255) `*]([@(0.0.255) int] 
+alpha, Color c)&]
+[s2; Returns RGBA value (premultiplied color with alpha).&]
+[s3;%- &]
 [s4;%- &]
 [s5;:GetGValue`(dword`):%- [@(0.0.255) int]_[* GetGValue]([_^dword^ dword]_[*@3 c])&]
 [s2; Returns green component from a platform specific value.&]
@@ -203,13 +244,6 @@ etRaw]().&]
 [s7; [%-*C@3 a]-|Color.&]
 [s7; [%-*C@3 b]-|Color.&]
 [s7; [*/ Return value]-|a if not Null, b otherwise.&]
-[s3; &]
-[s4;%- &]
-[s5;:AsString`(const Color`&`):%- [@(0.0.255) template]_<>_[_^String^ String]_[* AsString](
-[@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 c])&]
-[s2; Converts Color to textual form.&]
-[s7; [%-*C@3 c]-|Color.&]
-[s7; [*/ Return value]-|Textual form.&]
 [s3; &]
 [s4;%- &]
 [s5;:RGBtoHSV`(double`,double`,double`,double`&`,double`&`,double`&`):%- [@(0.0.255) vo
@@ -289,6 +323,18 @@ ykColorf]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) 
 `[0..1`] range).&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:RelativeLuminance`(Color`):%- [@(0.0.255) double] [* RelativeLuminance](Color
+ [*@3 color])&]
+[s2; Computes [^https`:`/`/www`.w3`.org`/TR`/2008`/REC`-WCAG20`-20081211`/`#relativeluminancedef^ r
+elative luminance].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ContrastRatio`(Color`,Color`):%- [@(0.0.255) double] [* ContrastRatio](Color 
+[*@3 c1], Color [*@3 c2])&]
+[s2; Computes [^https`:`/`/www`.w3`.org`/TR`/2008`/REC`-WCAG20`-20081211`/`#contrast`-ratiodef^ c
+ontrast ration].&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Upp`:`:CmyColorf`(double`,double`,double`):%- [_^Upp`:`:Color^ Color]_[* CmyColorf](
 [@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) double]_[*@3 y])&]
 [s2; Converts CMY color definition to RGB (all components are in 
@@ -297,20 +343,23 @@ ykColorf]([@(0.0.255) double]_[*@3 c], [@(0.0.255) double]_[*@3 m], [@(0.0.255) 
 [s4;%- &]
 [s5;:Blend`(Color`,Color`,int`):%- [_^Color^ Color]_[* Blend]([_^Color^ Color]_[*@3 c1], 
 [_^Color^ Color]_[*@3 c2], [@(0.0.255) int]_[*@3 alpha]_`=_[@3 128])&]
-[s2; Blends two colors.&]
-[s7; [%-*C@3 c1]-|First color.&]
-[s7; [%-*C@3 c2]-|Second color.&]
-[s7; [%-*C@3 alpha]-|Blending factor in the range 0..255.&]
-[s7; [*/ Return value]-|Blended color `- (255 `- alpha) / 255.0 `* c1 
-`+ alpha / 255.0 `* c2.&]
+[s2; Blends two colors `- computes  (255 `- [%-*@3 alpha]) / 255.0 
+`* [%-*@3 c1] `+ [%-*@3 alpha ]/ 255.0 `* [%-*@3 c2].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Lerp`(Color`,Color`,double`):%- Color [* Lerp](Color [*@3 a], 
+Color [*@3 b], [@(0.0.255) double] [*@3 t])&]
+[s2;%- Computes the linear interpolation (basically blend) between 
+[*@3 a] and [*@3 b], if the parameter [*@3 t] is inside `[0,1`], the 
+linear extrapolation otherwise. Extrapolation is clamped at valid 
+channel values 0..255. This is similar to blend except [*@3 t] 
+range is `[0,1`] and extrapolation works.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:ColorToHtml`(Color`):%- [_^String^ String]_[* ColorToHtml]([_^Color^ Color]_[*@3 color])
 &]
-[s2; Converts Color to the textual format used in HTML (into hexadecimal 
+[s7; Converts Color to the textual format used in HTML (into hexadecimal 
 form like #ffffff for white).&]
-[s7; [%-*C@3 color]-|Color.&]
-[s7; [*/ Return value]-|HTML text.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ColorFromText`(const char`*`):%- [_^Upp`:`:Color^ Color]_[* ColorFromText]([@(0.0.255) c
@@ -358,7 +407,7 @@ and vice versa, sustaining the color hue.&]
 [s9; Predefined colors are represented by functions that return the 
 predefined color value.&]
 [s3; &]
-[s0; &]
+[s3; &]
 [s5;:Black`(`):%- [_^Color^ Color]_[* Black]()&]
 [s2; Black.&]
 [s3;%- &]

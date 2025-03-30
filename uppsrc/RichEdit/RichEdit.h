@@ -84,6 +84,8 @@ enum {
 	UNIT_INCH,
 	UNIT_MM,
 	UNIT_CM,
+	
+	UNIT_PIXELMODE,
 };
 
 class UnitEdit : public EditField, public Convert {
@@ -103,9 +105,10 @@ private:
 	static String DotAsText(int dot, int unit);
 	void Spin(int delta);
 	void Read(double& q, int& u) const;
+	void SyncFilter();
 
 public:
-	UnitEdit& SetUnit(int _unit)                        { unit = _unit; return *this; }
+	UnitEdit& SetUnit(int _unit)                        { unit = _unit; SyncFilter(); return *this; }
 	void      Set(int _unit, int d)                     { unit = _unit; SetData(d); }
 	UnitEdit& WithSgn(bool b = true);
 
@@ -123,7 +126,9 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 #define LAYOUTFILE <RichEdit/RichEdit.lay>
 #include <CtrlCore/lay.h>
 
-bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf);
+bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf, bool allow_dark, bool dark);
+
+class RichEdit;
 
 class ParaFormatting : public WithParaLayout<StaticRect> {
 public:
@@ -137,6 +142,8 @@ private:
 	Font     font;
 	bool     modified;
 	String   header_qtf, footer_qtf;
+	bool     dark = false;
+	bool     allow_dark = false;
 
 	RichPara::NumberFormat GetNumbering();
 	bool                   IsNumbering();
@@ -156,7 +163,7 @@ public:
 	void  NewHdrFtr();
 	void  SyncHdrFtr();
 
-	ParaFormatting();
+	ParaFormatting(const RichEdit& e);
 };
 
 class StyleManager : public WithStylesLayout<TopWindow> {
@@ -194,7 +201,7 @@ public:
 	
 	void     Setup(const Vector<int>& faces, int aunit = UNIT_DOT);
 
-	StyleManager();
+	StyleManager(const RichEdit& e);
 };
 
 void SetupFaceList(DropList& face);
@@ -226,6 +233,7 @@ public:
 	virtual Point  GetPreedit();
 	virtual Font   GetPreeditFont();
 	virtual Rect   GetCaret() const;
+	virtual void   Skin();
 
 private:
 	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }
@@ -302,6 +310,12 @@ private:
 	
 	PaintInfo                paint_info;
 	bool                     ignore_physical_size;
+	
+	bool                     pixel_mode = false;
+	bool                     dark_content = false;
+	bool                     allow_dark_content = false;
+	
+	bool                     show_zoom = false;
 
 	static int fh[];
 
@@ -459,6 +473,9 @@ private:
 	Zoom       clipzoom;
 	
 	double     floating_zoom;
+	
+	RichPara::CharFormat last_format;
+	Image      last_format_img;
 
 	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
@@ -476,6 +493,9 @@ private:
 	void       Finish();
 	void       ReadFormat();
 	void       ShowFormat();
+	void       SetLastCharFormat(const RichPara::CharFormat& fmt);
+	void       SetLastCharFormat();
+	void       LastCharFormat();
 	int        GetMousePos(Point p);
 	RichHotPos GetHotPos(Point p);
 	int        GetHotSpot(Point p) const;
@@ -602,11 +622,13 @@ private:
 	void     JoinCell();
 	void     CellProperties();
 
+	void     SetupFindReplace0();
+	void     SetupFindReplace();
 	void     OpenFindReplace();
 	void     CloseFindReplace();
-	int      FindPos();
+	int      FindPos(bool back);
 	RichText ReplaceText();
-	void     Find();
+	void     Find(bool back);
 	void     Replace();
 	void     FindReplaceAddHistory();
 
@@ -622,7 +644,9 @@ private:
 	void     ZoomClip(RichText& text) const;
 	
 	void     InsertImage();
-	
+
+	RichObject Adjust(RichObject o);
+
 	void     StyleKeys();
 	void     ApplyStyleKey(int i);
 	
@@ -648,6 +672,7 @@ private:
 
 	friend class StyleKeysDlg;
 	friend class StyleManager;
+	friend class ParaFormatting;
 
 	using Ctrl::Accept;
 
@@ -662,8 +687,8 @@ public:
 	virtual void  PasteFilter(RichText& txt, const String& fmt);
 	virtual void  Filter(RichText& txt);
 
-	static double DotToPt(int dot);
-	static int    PtToDot(double pt);
+	static double DotToPt(int dot, int unit = UNIT_DOT);
+	static int    PtToDot(double pt, int unit = UNIT_DOT);
 	static Bits   SpellParagraph(const RichPara& p);
 	static void   FixedLang(int lang)              { fixedlang = lang; }
 
@@ -674,6 +699,8 @@ public:
 	Event<String&>           WhenIndexEntry;
 	Event<Bar&>              WhenBar;
 	Event<>                  WhenSel;
+	Gate<const String&>      WhenIsLink;
+	Event<const String&>     WhenLink;
 
 	void   StdBar(Bar& menu);
 
@@ -732,6 +759,7 @@ public:
 	void   SubscriptTool(Bar& bar, dword key = 0);
 	void   InkTool(Bar& bar);
 	void   PaperTool(Bar& bar);
+	void   LastFormatTool(Bar& bar, dword key = K_CTRL_D);
 	void   LanguageTool(Bar& bar, int width = Zx(60));
 	void   HyperlinkTool(Bar& bar, int width = Zx(180), dword key = 0, const char *tip = NULL);
 	void   SpellCheckTool(Bar& bar);
@@ -801,6 +829,8 @@ public:
 	void            ApplyStylesheet(const RichText& r);
 	void            SetPage(const Size& sz)                { pagesz = sz; Finish(); }
 	Size            GetPage()                              { return pagesz; }
+	bool            IsDarkContent() const;
+	void            SetupDark(ColorPusher& c) const;
 
 	RichEdit&       NoRuler()                              { RemoveFrame(ruler); return *this; }
 	RichEdit&       SingleLine(bool b = true)              { singleline = b; return *this; }
@@ -818,9 +848,12 @@ public:
 	RichEdit&       BulletIndent(int i)                    { bullet_indent = i; return *this; }
 	RichEdit&       PersistentFindReplace(bool b = true)   { persistent_findreplace = b; return *this; }
 	RichEdit&       Floating(double zoomlevel_ = 1);
-	RichEdit&       NoFloating(double zoomlevel_ = 1)      { return Floating(Null); }
+	RichEdit&       NoFloating()                           { return Floating(Null); }
 	RichEdit&       SetPaintInfo(const PaintInfo& pi)      { paint_info = pi; return *this; }
 	RichEdit&       IgnorePhysicalObjectSize(bool b = true){ ignore_physical_size = b; return *this; }
+	RichEdit&       PixelMode();
+	RichEdit&       DarkContent(bool b = true);
+	RichEdit&       AllowDarkContent(bool b = true);
 
 	struct UndoInfo {
 		int              undoserial;
@@ -848,6 +881,8 @@ public:
 	void     SetFooter(const String& s)                   { footer = s; }
 	void     PrintNoLinks(bool b = true)                  { nolinks = b; }
 
+	Event<>  WhenLeftUp;
+	
 	typedef RichEdit CLASSNAME;
 
 	RichEdit();
@@ -855,6 +890,10 @@ public:
 };
 
 class RichEditWithToolBar : public RichEdit {
+public:
+	virtual void Skin();
+
+private:
 	ToolBar  toolbar;
 	bool     extended;
 	void RefreshBar();

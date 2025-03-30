@@ -463,7 +463,7 @@ void Calendar::Paint(Draw &w)
 
 	if(w.IsPainting(0, hs, sz.cx, rh))
 	{
-		int y = (int) (hs + (rowh - fh) / 2.0);
+		int y = (int) (hs + ((double)rowh - fh) / 2.0);
 		fnt.NoBold().NoUnderline();
 		tsz = GetTextSize(t_("Wk"), fnt);
 		w.DrawText(bs + (cw - tsz.cx) / 2, y, t_("Wk"), fnt, st.week);
@@ -1531,13 +1531,13 @@ CH_STYLE(Calendar, Style, StyleDefault)
 
 	bgmain        = SColorPaper;
 	bgtoday       = SColorPaper;
-	bgselect      = AdjustIfDark(Color(255, 254, 220));
+	bgselect      = AColor(255, 254, 220);
 
 	fgmain        = SColorText;
 	fgtoday       = SBlack;
 	fgselect      = SBlack;
 
-	outofmonth    = AdjustIfDark(Color(180, 180, 180));
+	outofmonth    = AColor(180, 180, 180);
 	curdate       = SWhite;
 	today         = SColorText;
 	selecttoday   = SColorMark;
