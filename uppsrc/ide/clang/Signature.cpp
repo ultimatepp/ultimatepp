@@ -186,6 +186,22 @@ String CleanupPretty(const String& signature)
 			while(iscid(*s))
 				s++;
 			int len = int(s - b);
+			if(len == 13 && memcmp(b, "__attribute__", 13) == 0) {
+				while(*s == ' ')
+					s++;
+				if(*s == '(') {
+					s++;
+					int lvl = 1;
+					while(*s && lvl) {
+						if(*s == '(')
+							lvl++;
+						if(*s == ')')
+							lvl--;
+						s++;
+					}
+				}
+				continue;
+			}
 			if(len == 5 && (memcmp(b, "class", 5) == 0 && tlvl == 0 || memcmp(b, "union", 5) == 0) ||
 			   len == 6 && (memcmp(b, "struct", 6) == 0 && tlvl == 0 || memcmp(b, "extern", 6) == 0 || memcmp(b, "inline", 6) == 0) ||
 			   len == 7 && (memcmp(b, "virtual", 7) == 0) ||
