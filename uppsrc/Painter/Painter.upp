@@ -13,7 +13,6 @@ file
 	Painting.h,
 	Painting.cpp,
 	PaintPainting.cpp,
-	PainterInit.icpp,
 	LinearPath.h,
 	Xform2D.cpp,
 	Approximate.cpp,
