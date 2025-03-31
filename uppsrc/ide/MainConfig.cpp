@@ -108,7 +108,8 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	Sizeable().Zoomable();
 	fe.AddFrame(cb);
 	fe.SetFilter(FlagFilterM);
-	cb.SetImage(CtrlImg::smallright()).NoWantFocus();
+//	cb.SetImage(CtrlImg::smallright()).NoWantFocus();
+	cb.SetLabel("..").NoWantFocus();
 	cb <<= THISBACK(FlagDlg);
 	list.AddColumn("Flags", 3).Edit(fe);
 	list.AddColumn("Optional name", 2).Edit(ce);
