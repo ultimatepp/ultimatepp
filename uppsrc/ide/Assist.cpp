@@ -469,7 +469,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 			SetAnnotations(f);
 
 			ClearErrors();
-			if(!IsCurrentFileDirty()) {
+			if(!IsCurrentFileDirty() && theide && theide->IsProjectFile(theide->editfile)) {
 				errors = clone(ds);
 	
 				Vector<Point> err;
