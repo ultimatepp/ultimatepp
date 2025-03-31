@@ -26,7 +26,7 @@ END_LAYOUT
 
 LAYOUT(ConfLayout, 764, 752)
 	ITEM(Upp::Option, gui, SetLabel(t_("GUI application")).LeftPosZ(8, 112).TopPosZ(4, 16))
-	ITEM(Upp::Option, debugcode, SetLabel(t_("Allowing debuging code in release mode")).LeftPosZ(124, 240).TopPosZ(4, 16))
+	ITEM(Upp::Option, debugcode, SetLabel(t_("Allow debuging code in release mode")).LeftPosZ(124, 240).TopPosZ(4, 16))
 	ITEM(Upp::ArrayCtrl, accepts, AutoHideSb(true).HSizePosZ(8, 8).VSizePosZ(28, 60))
 	ITEM(Upp::Label, dv___3, SetLabel(t_("&Other flags:")).LeftPosZ(8, 58).BottomPosZ(37, 19))
 	ITEM(Upp::EditString, other, HSizePosZ(68, 8).BottomPosZ(37, 19))
