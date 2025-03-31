@@ -247,7 +247,7 @@ int CountBits64(uint64 mask)
 
 #ifdef CPU_X86
 
-inline
+force_inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
 	return _addcarry_u64(carry, result, value, &result);
 }
@@ -263,7 +263,7 @@ byte addc64(uint64& r, uint64 a, byte carry)
 
 #endif
 
-inline
+force_inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
 	unsigned __int128 prod =  (unsigned __int128)a * b;
@@ -273,13 +273,13 @@ uint64 mul64(uint64 a, uint64 b, uint64& hi)
 
 #elif defined(COMPILER_MSC) && defined(CPU_64)
 
-inline
+force_inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
 	return _umul128(a, b, &hi);
 }
 
-inline
+force_inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
 	return _addcarry_u64(carry, result, value, &result);
 }
