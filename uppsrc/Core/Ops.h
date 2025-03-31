@@ -205,10 +205,12 @@ inline bool FitsInInt64(double x)
 force_inline
 int CountBits(dword mask)
 {
-#if COMPILER_GCC && !defined(flagLEGACY_CPU)
-    return __builtin_popcount(mask);
-#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
-    return __popcnt(mask);
+#ifndef flagLEGACY_CPU // support for old CPUs (released before 2010)
+	#if COMPILER_GCC
+	    return __builtin_popcount(mask);
+	#elif COMPILER_MSC
+	    return __popcnt(mask);
+	#endif
 #else
     // Fallback (unlikely)
     mask = mask - ((mask >> 1) & 0x55555555);

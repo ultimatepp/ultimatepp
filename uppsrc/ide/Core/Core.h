@@ -48,7 +48,7 @@ class PPInfo {
 
 	struct PPFile : Moveable<PPFile> {
 		int                           scan_serial = 0;
-		Vector<Tuple<String, int>>    flags; // "#if... flagXXXX"
+		VectorMap<String, String>     flags; // "#if... flagXXXX", key - flagXXX, value - comment
 		VectorMap<String, String>     all_defines; // #define ..., 1 - speculative
 		VectorMap<String, String>     defines[2]; // #define ..., 1 - speculative
 		Index<String>                 includes[2]; // 1 - speculative includes (in #if conditionals)
@@ -108,19 +108,15 @@ public:
 
 	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
-	                                         Vector<Tuple<String, String, int>>& flags, bool speculative,
-	                                         const String& include, Vector<String>& chain, bool& found);
+	                                         bool speculative, const String& include, Vector<String>& chain, bool& found);
 	Time                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
-	                                         ArrayMap<String, Index<String>>& define_includes,
-	                                         Vector<Tuple<String, String, int>>& flags, bool speculative = true);
-	void                  GatherDependencies(const String& path, VectorMap<String, Time>& result,
 	                                         ArrayMap<String, Index<String>>& define_includes,
 	                                         bool speculative = true);
 
 	Time                  GetTime(const String& path, VectorMap<String, Time> *ret_result = nullptr);
 	
 	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).all_defines; }
-	const Vector<Tuple<String, int>>& GetFileFlags(const String& path)  { return File(NormalizePath(path)).flags; }
+	const VectorMap<String, String>& GetFileFlags(const String& path)   { return File(NormalizePath(path)).flags; }
 
 	void                  Dirty();
 };
