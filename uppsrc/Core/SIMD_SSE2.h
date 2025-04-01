@@ -154,6 +154,11 @@ force_inline i8x16  operator^(i8x16 a, i8x16 b)   { return _mm_xor_si128(a.data,
 force_inline i8x16& operator^=(i8x16& a, i8x16 b) { return a = a ^ b; }
 force_inline i8x16  operator~(i8x16 a)            { return _mm_xor_si128(a.data, i8all(0xff).data); }
 
+force_inline i8x16  operator==(i8x16 a, i8x16 b)   { return _mm_cmpeq_epi8(a.data, b.data); }
+force_inline i8x16  operator<(i8x16 a, i8x16 b)    { return _mm_cmplt_epi8(a.data, b.data); }
+force_inline i8x16  operator>(i8x16 a, i8x16 b)    { return _mm_cmpgt_epi8(a.data, b.data); }
+force_inline bool   AllTrue(i8x16 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }
 // force_inline i32x4 Round(f32x4 a)                 { return _mm_cvtps_epi32(a.data); }
