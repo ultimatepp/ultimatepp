@@ -258,7 +258,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			bool execerr = false;
 			if(rc) {
 				String exec;
-				String windres = "windres.exe";
+				String windres = "windres";
+#ifdef PLATFORM_WIN32
+				String windres += ".exe";
+#endif
 				int q = compiler.ReverseFind('-'); // clang32 windres name is i686-w64-mingw32-windres.exe
 				if(q > 0)
 					windres = compiler.Mid(0, q + 1) + windres;
