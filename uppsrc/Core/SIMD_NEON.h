@@ -226,6 +226,11 @@ force_inline i8x16  operator^(i8x16 a, i8x16 b)    { return veorq_s8(a, b); }
 force_inline i8x16& operator^=(i8x16& a, i8x16 b)  { return a = a ^ b; }
 force_inline i8x16  operator~(i8x16 a)             { return vmvnq_s8(a); }
 
+force_inline i8x16  operator==(i8x16 a, i8x16 b)  { return vreinterpretq_s8_u8(vceqq_s8(a, b)); }
+force_inline i8x16  operator<(i8x16 a, i8x16 b)   { return vreinterpretq_s8_u8(vcltq_s8(a, b)); }
+force_inline i8x16  operator>(i8x16 a, i8x16 b)   { return vreinterpretq_s8_u8(vcgtq_s8(a, b)); }
+force_inline bool   AllTrue(i8x16 a)              {	return AllTrue(vreinterpretq_u32_s8(a)); }
+
 force_inline f32x4 ToFloat(i32x4 a)               { return vcvtq_f32_s32(a); }
 force_inline i32x4 Truncate(f32x4 a)              { return vcvtq_s32_f32(a); }
 
