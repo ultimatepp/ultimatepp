@@ -214,10 +214,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 			}
 			recent <<= "[g [@K/ Recent:] " + text;
 			recent.WhenLink = [=](const String& s) {
-				DDUMP(s);
-				DDUMP(lru);
 				int i = Atoi(s);
-				DDUMP(i);
 				if(i >= 0 && lru.GetCount()) {
 					selected = lru[i].b;
 					LoadVars(lru[i].a);
