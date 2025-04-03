@@ -1,0 +1,486 @@
+* /Users/cxl/out/CLANG.Debug.Debug_Full.Shared/SIMD_CMP 02.04.2025 12:04:20, user: cxl
+
+=============== f32x4
+a = 9 9 9 9
+c = 9 9 9 9
+AllTrue(c == a) = true
+AnyTrue(c == a) = true
+CountTrue(c == a) = 4
+FirstTrue(c == a) = 0
+matches = 0 1 2 3 
+b = 0 0 0 0
+AllTrue(c == b) = false
+AnyTrue(c == b) = false
+CountTrue(c == b) = 0
+matches = 
+---
+a = 9 9 9 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 3
+FirstTrue(c == a) = 1
+matches = 1 2 3 
+b = 0 0 0 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 1
+FirstTrue(c == b) = 0
+matches = 0 
+---
+a = 9 9 0 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 2
+FirstTrue(c == a) = 2
+matches = 2 3 
+b = 0 0 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 2
+FirstTrue(c == b) = 0
+matches = 0 1 
+---
+a = 9 0 0 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 1
+FirstTrue(c == a) = 3
+matches = 3 
+b = 0 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 3
+FirstTrue(c == b) = 0
+matches = 0 1 2 
+---
+a = 1 2 3 4
+b = 1 2 3 9
+c = 9 9 9 9
+AllTrue(a == b) = false
+AllTrue(a == a) = true
+AnyTrue(a == b) = true
+AnyTrue(a == c) = false
+CountTrue(a == b) = 3
+FirstTrue(a == b) = 1
+=============== i16x8
+a = 9 9 9 9  9 9 9 9
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = true
+AnyTrue(c == a) = true
+CountTrue(c == a) = 8
+FirstTrue(c == a) = 0
+matches = 0 1 2 3 4 5 6 7 
+b = 0 0 0 0  0 0 0 0
+AllTrue(c == b) = false
+AnyTrue(c == b) = false
+CountTrue(c == b) = 0
+matches = 
+---
+a = 9 9 9 9  9 9 9 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 7
+FirstTrue(c == a) = 1
+matches = 1 2 3 4 5 6 7 
+b = 0 0 0 0  0 0 0 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 1
+FirstTrue(c == b) = 0
+matches = 0 
+---
+a = 9 9 9 9  9 9 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 6
+FirstTrue(c == a) = 2
+matches = 2 3 4 5 6 7 
+b = 0 0 0 0  0 0 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 2
+FirstTrue(c == b) = 0
+matches = 0 1 
+---
+a = 9 9 9 9  9 0 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 5
+FirstTrue(c == a) = 3
+matches = 3 4 5 6 7 
+b = 0 0 0 0  0 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 3
+FirstTrue(c == b) = 0
+matches = 0 1 2 
+---
+a = 9 9 9 9  0 0 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 4
+FirstTrue(c == a) = 4
+matches = 4 5 6 7 
+b = 0 0 0 0  9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 4
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 
+---
+a = 9 9 9 0  0 0 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 3
+FirstTrue(c == a) = 5
+matches = 5 6 7 
+b = 0 0 0 9  9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 5
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 
+---
+a = 9 9 0 0  0 0 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 2
+FirstTrue(c == a) = 6
+matches = 6 7 
+b = 0 0 9 9  9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 6
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 
+---
+a = 9 0 0 0  0 0 0 0
+c = 9 9 9 9  9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 1
+FirstTrue(c == a) = 7
+matches = 7 
+b = 0 9 9 9  9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 7
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 
+---
+a = 1 2 3 4  5 6 7 8
+b = 1 4 2 4  5 7 7 9
+c = 9 9 9 9  9 9 9 9
+AllTrue(a == b) = false
+AllTrue(a == a) = true
+AnyTrue(a == b) = true
+AnyTrue(a == c) = false
+CountTrue(a == b) = 4
+FirstTrue(a == b) = 1
+=============== i32x4
+a = 9 9 9 9
+c = 9 9 9 9
+AllTrue(c == a) = true
+AnyTrue(c == a) = true
+CountTrue(c == a) = 4
+FirstTrue(c == a) = 0
+matches = 0 1 2 3 
+b = 0 0 0 0
+AllTrue(c == b) = false
+AnyTrue(c == b) = false
+CountTrue(c == b) = 0
+matches = 
+---
+a = 9 9 9 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 3
+FirstTrue(c == a) = 1
+matches = 1 2 3 
+b = 0 0 0 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 1
+FirstTrue(c == b) = 0
+matches = 0 
+---
+a = 9 9 0 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 2
+FirstTrue(c == a) = 2
+matches = 2 3 
+b = 0 0 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 2
+FirstTrue(c == b) = 0
+matches = 0 1 
+---
+a = 9 0 0 0
+c = 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 1
+FirstTrue(c == a) = 3
+matches = 3 
+b = 0 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 3
+FirstTrue(c == b) = 0
+matches = 0 1 2 
+---
+a = 1 2 3 4
+b = 1 2 3 9
+c = 9 9 9 9
+AllTrue(a == b) = false
+AllTrue(a == a) = true
+AnyTrue(a == b) = true
+AnyTrue(a == c) = false
+CountTrue(a == b) = 3
+FirstTrue(a == b) = 1
+=============== i8x16
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = true
+AnyTrue(c == a) = true
+CountTrue(c == a) = 16
+FirstTrue(c == a) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 0 . 0 0 0 0
+AllTrue(c == b) = false
+AnyTrue(c == b) = false
+CountTrue(c == b) = 0
+matches = 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 15
+FirstTrue(c == a) = 1
+matches = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 0 . 0 0 0 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 1
+FirstTrue(c == b) = 0
+matches = 0 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 14
+FirstTrue(c == a) = 2
+matches = 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 0 . 0 0 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 2
+FirstTrue(c == b) = 0
+matches = 0 1 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 13
+FirstTrue(c == a) = 3
+matches = 3 4 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 0 . 0 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 3
+FirstTrue(c == b) = 0
+matches = 0 1 2 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 12
+FirstTrue(c == a) = 4
+matches = 4 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 0 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 4
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 9 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 11
+FirstTrue(c == a) = 5
+matches = 5 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 0 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 5
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 9 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 10
+FirstTrue(c == a) = 6
+matches = 6 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 0 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 6
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 
+---
+a = 9 9 9 9 . 9 9 9 9 . 9 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 9
+FirstTrue(c == a) = 7
+matches = 7 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 0 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 7
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 
+---
+a = 9 9 9 9 . 9 9 9 9 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 8
+FirstTrue(c == a) = 8
+matches = 8 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 0 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 8
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 
+---
+a = 9 9 9 9 . 9 9 9 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 7
+FirstTrue(c == a) = 9
+matches = 9 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 0 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 9
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 
+---
+a = 9 9 9 9 . 9 9 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 6
+FirstTrue(c == a) = 10
+matches = 10 11 12 13 14 15 
+b = 0 0 0 0 . 0 0 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 10
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 
+---
+a = 9 9 9 9 . 9 0 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 5
+FirstTrue(c == a) = 11
+matches = 11 12 13 14 15 
+b = 0 0 0 0 . 0 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 11
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 
+---
+a = 9 9 9 9 . 0 0 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 4
+FirstTrue(c == a) = 12
+matches = 12 13 14 15 
+b = 0 0 0 0 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 12
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 11 
+---
+a = 9 9 9 0 . 0 0 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 3
+FirstTrue(c == a) = 13
+matches = 13 14 15 
+b = 0 0 0 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 13
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 11 12 
+---
+a = 9 9 0 0 . 0 0 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 2
+FirstTrue(c == a) = 14
+matches = 14 15 
+b = 0 0 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 14
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+---
+a = 9 0 0 0 . 0 0 0 0 . 0 0 0 0 . 0 0 0 0
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == a) = false
+AnyTrue(c == a) = true
+CountTrue(c == a) = 1
+FirstTrue(c == a) = 15
+matches = 15 
+b = 0 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(c == b) = false
+AnyTrue(c == b) = true
+CountTrue(c == b) = 15
+FirstTrue(c == b) = 0
+matches = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+---
+a = 1 2 3 4 . 5 6 7 8 . 1 2 3 4 . 5 6 7 8
+b = 1 4 2 4 . 5 7 7 0 . 1 4 2 4 . 5 7 7 9
+c = 9 9 9 9 . 9 9 9 9 . 9 9 9 9 . 9 9 9 9
+AllTrue(a == b) = false
+AllTrue(a == a) = true
+AnyTrue(a == b) = true
+AnyTrue(a == c) = false
+CountTrue(a == b) = 8
+FirstTrue(a == b) = 1

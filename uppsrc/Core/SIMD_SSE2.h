@@ -38,6 +38,10 @@ force_inline f32x4  operator>(f32x4 a, f32x4 b)   { return _mm_cmpgt_ps(a.data, 
 force_inline f32x4  operator<=(f32x4 a, f32x4 b)  { return _mm_cmple_ps(a.data, b.data); }
 force_inline f32x4  operator>=(f32x4 a, f32x4 b)  { return _mm_cmpge_ps(a.data, b.data); }
 force_inline bool   AllTrue(f32x4 a)              { return _mm_movemask_ps(a.data) == 0xf; }
+force_inline bool   AnyTrue(f32x4 a)              { return _mm_movemask_ps(a.data); }
+force_inline int    CountTrue(f32x4 a)            { return CountBits(_mm_movemask_ps(a.data)); }
+force_inline int    FirstTrue(f32x4 a)            { return CountTrailingZeroBits(_mm_movemask_ps(a.data)); }
+force_inline bool   IsTrue(f32x4 a, int i)        { return _mm_movemask_ps(a.data) & (1 << i); }
 
 force_inline f32x4 min(f32x4 a, f32x4 b)          { return _mm_min_ps(a.data, b.data); }
 force_inline f32x4 max(f32x4 a, f32x4 b)          { return _mm_max_ps(a.data, b.data); }
@@ -95,6 +99,10 @@ force_inline i16x8  operator==(i16x8 a, i16x8 b)   { return _mm_cmpeq_epi16(a.da
 force_inline i16x8  operator<(i16x8 a, i16x8 b)    { return _mm_cmplt_epi16(a.data, b.data); }
 force_inline i16x8  operator>(i16x8 a, i16x8 b)    { return _mm_cmpgt_epi16(a.data, b.data); }
 force_inline bool   AllTrue(i16x8 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i16x8 a)               { return _mm_movemask_epi8(a.data); }
+force_inline int    CountTrue(i16x8 a)             { return CountBits(_mm_movemask_epi8(a.data)) >> 1; }
+force_inline int    FirstTrue(i16x8 a)             { return CountTrailingZeroBits(_mm_movemask_epi8(a.data)) >> 1; }
+force_inline int    IsTrue(i16x8 a, int i)         { return _mm_movemask_epi8(a.data) & (1 << 2 * i); }
 
 struct i32x4 : i16x8 { // 4xint32
 	i32x4()                      {}
@@ -129,6 +137,10 @@ force_inline i32x4  operator==(i32x4 a, i32x4 b)   { return _mm_cmpeq_epi32(a.da
 force_inline i32x4  operator<(i32x4 a, i32x4 b)    { return _mm_cmplt_epi32(a.data, b.data); }
 force_inline i32x4  operator>(i32x4 a, i32x4 b)    { return _mm_cmpgt_epi32(a.data, b.data); }
 force_inline bool   AllTrue(i32x4 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i32x4 a)               { return _mm_movemask_ps(_mm_castsi128_ps(a.data)); }
+force_inline int    CountTrue(i32x4 a)             { return CountBits(_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
+force_inline int    FirstTrue(i32x4 a)             { return CountTrailingZeroBits(_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
+force_inline bool   IsTrue(i32x4 a, int i)         { return _mm_movemask_ps(_mm_castsi128_ps(a.data)) & (1 << i); }
 
 struct i8x16 : i16x8 { // 16xint8
 	i8x16()                      {}
@@ -158,6 +170,10 @@ force_inline i8x16  operator==(i8x16 a, i8x16 b)   { return _mm_cmpeq_epi8(a.dat
 force_inline i8x16  operator<(i8x16 a, i8x16 b)    { return _mm_cmplt_epi8(a.data, b.data); }
 force_inline i8x16  operator>(i8x16 a, i8x16 b)    { return _mm_cmpgt_epi8(a.data, b.data); }
 force_inline bool   AllTrue(i8x16 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i8x16 a)                { return _mm_movemask_epi8(a.data); }
+force_inline int    CountTrue(i8x16 a)              { return CountBits(_mm_movemask_epi8(a.data)); }
+force_inline int    FirstTrue(i8x16 a)              { return CountTrailingZeroBits(_mm_movemask_epi8(a.data)); }
+force_inline bool   IsTrue(i8x16 a, int i)          { return _mm_movemask_epi8(a.data) & (1 << i); }
 
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }
