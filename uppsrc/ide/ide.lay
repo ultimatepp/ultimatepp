@@ -1,5 +1,6 @@
 LAYOUT(SelectPackageLayout, 816, 468)
-	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 8).VSizePosZ(4, 32))
+	ITEM(Upp::RichTextCtrl, recent, LeftPosZ(4, 804).TopPosZ(4, 24))
+	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 8).VSizePosZ(28, 32))
 	ITEM(Upp::DropList, kind, Tip(t_("Select which packages should be displayed")).LeftPosZ(4, 124).BottomPosZ(7, 19))
 	ITEM(Upp::DropList, nest, Tip(t_("Select which packages should be displayed")).LeftPosZ(132, 112).BottomPosZ(7, 19))
 	ITEM(Upp::EditString, search, Tip(t_("Search for the concrete package")).HSizePosZ(248, 412).BottomPosZ(6, 20))

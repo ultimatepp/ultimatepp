@@ -202,6 +202,31 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Left(base, Zx(170)));
+	
+	recent.NoSb().NoHyperlinkDecoration();
+	if(main) {
+		LoadLRU();
+		if(lru.GetCount()) {
+			String text;
+			for(int i = 0; i < lru.GetCount(); i++) {
+				const auto& m = lru[i];
+				MergeWith(text, ", ", "[^" + AsString(i) + "^ \1" + m.a + "\1" + ":_[* \1" + m.b + "\1]]");
+			}
+			recent <<= "[g [@K/ Recent:] " + text;
+			recent.WhenLink = [=](const String& s) {
+				DDUMP(s);
+				DDUMP(lru);
+				int i = Atoi(s);
+				DDUMP(i);
+				if(i >= 0 && lru.GetCount()) {
+					selected = lru[i].b;
+					LoadVars(lru[i].a);
+					selected_nest = GetPackagePathNest(PackagePath(selected));
+					Break(IDYES);
+				}
+			};
+		}
+	}
 
 	if (!selectvars)
 		splitter.Hide();
@@ -239,6 +264,30 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	};
 	
 	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
+}
+
+String SelectPackageDlg::LRUFilePath()
+{
+	return ConfigFile("main.lru");
+}
+
+void SelectPackageDlg::LoadLRU()
+{
+	LoadFromFile(lru, LRUFilePath());
+}
+
+void SelectPackageDlg::StoreLRU(const String& p)
+{
+	auto q = Tuple(~base.GetKey(), p);
+	LoadLRU();
+	LoadFromFile(lru, p);
+	int i = FindIndex(lru, q);
+	if(i >= 0)
+		lru.Remove(i);
+	lru.Insert(0, q);
+	if(lru.GetCount() > 10)
+		lru.Trim(10);
+	StoreToFile(lru, LRUFilePath());
 }
 
 void SelectPackageDlg::SyncFilter()
@@ -865,6 +914,8 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	dlg.CenterScreen();
 	String b = dlg.Run(nest, startwith);
 	StoreToGlobal(dlg, c);
+	if(main && b.GetCount())
+		dlg.StoreLRU(b);
 	return b;
 }
 
