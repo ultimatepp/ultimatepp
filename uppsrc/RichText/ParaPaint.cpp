@@ -375,6 +375,8 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				hg++;
 			}
 		rc.py.y += linecy;
+		if(pi.single_line)
+			break;
 	}
 	Size sz = RichTextImg::EndParaChar().GetSize();
 	if(sz.cy < z * lineascent && !IsNull(pi.showcodes))
