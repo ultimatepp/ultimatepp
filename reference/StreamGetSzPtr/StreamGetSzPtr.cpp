@@ -19,7 +19,7 @@ int CountLinesOptimized(Stream& s)
 		const byte *p = s.GetSzPtr(sz);
 		if(sz) {
 			const byte *e = p + sz;
-			const byte *e4 = p + (sz & ~3);
+			__BREAK__;
 			while(p < e)
 				n += *p++ == '\n';
 		}
@@ -30,7 +30,6 @@ int CountLinesOptimized(Stream& s)
 			n += c == '\n';
 		}
 	}
-	return n;
 }
 
 #ifdef CPU_SIMD
@@ -38,7 +37,7 @@ int CountLinesOptimizedSIMD(Stream& s)
 {
 	int n = 0;
 
-	for (;;) {
+	for(;;) {
 		int sz;
 		const byte* p = s.GetSzPtr(sz);
 
@@ -50,21 +49,18 @@ int CountLinesOptimizedSIMD(Stream& s)
 				n += CountTrue(i8x16(p) == q);
 				p += 16;
 			}
-
-			// Process remaining bytes (less than 16)
-			while (p < e) {
+			
+			while (p < e) { // Process remaining bytes (less than 16)
 				n += (*p++ == '\n');
 			}
 		}
 		else {
 			int c = s.Get();
-			if (c < 0)
+			if(c < 0)
 				return n;
 			n += (c == '\n');
 		}
 	}
-
-	return n;
 }
 #endif
 
