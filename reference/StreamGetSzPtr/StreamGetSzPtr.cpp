@@ -19,7 +19,6 @@ int CountLinesOptimized(Stream& s)
 		const byte *p = s.GetSzPtr(sz);
 		if(sz) {
 			const byte *e = p + sz;
-			__BREAK__;
 			while(p < e)
 				n += *p++ == '\n';
 		}
