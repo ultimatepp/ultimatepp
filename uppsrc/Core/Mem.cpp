@@ -152,10 +152,10 @@ hash_t memhash(const void *ptr, size_t len)
 			dword val1, val2, val3, val4;
 			val1 = val2 = val3 = val4 = HASH_CONST1;
 			while(len >= 16) {
-				val1 = HASH_CONST2 * val1 + *(dword *)(s);
-				val2 = HASH_CONST2 * val2 + *(dword *)(s + 4);
-				val3 = HASH_CONST2 * val3 + *(dword *)(s + 8);
-				val4 = HASH_CONST2 * val4 + *(dword *)(s + 12);
+				val1 = HASH_CONST2 * val1 + Peek32(s);
+				val2 = HASH_CONST2 * val2 + Peek32(s + 4);
+				val3 = HASH_CONST2 * val3 + Peek32(s + 8);
+				val4 = HASH_CONST2 * val4 + Peek32(s + 12);
 				s += 16;
 				len -= 16;
 			}
@@ -166,10 +166,10 @@ hash_t memhash(const void *ptr, size_t len)
 		}
 		const byte *e = s + len - 4;
 		while(s < e) {
-			val = HASH_CONST2 * val + *(dword *)(s);
+			val = HASH_CONST2 * val + Peek32(s);
 			s += 4;
 		}
-		return HASH_CONST2 * val + *(dword *)(e);
+		return HASH_CONST2 * val + Peek32(e);
 	}
 	if(len >= 2) {
 		val = HASH_CONST2 * val + Peek16(s);
