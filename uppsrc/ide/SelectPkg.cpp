@@ -278,7 +278,7 @@ void SelectPackageDlg::LoadLRU()
 
 void SelectPackageDlg::StoreLRU(const String& p)
 {
-	auto q = Tuple(~base.GetKey(), p);
+	auto q = Tuple(GetVarsName(), p);
 	LoadLRU();
 	LoadFromFile(lru, p);
 	int i = FindIndex(lru, q);
@@ -914,7 +914,7 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	dlg.CenterScreen();
 	String b = dlg.Run(nest, startwith);
 	StoreToGlobal(dlg, c);
-	if(main && b.GetCount())
+	if(main && selectvars && b.GetCount())
 		dlg.StoreLRU(b);
 	return b;
 }

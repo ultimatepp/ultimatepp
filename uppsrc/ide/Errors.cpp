@@ -563,7 +563,7 @@ void Ide::SyncErrorsMessage()
 			cnt << warning_count << " warning(s)";
 		}
 	}
-	else  {
+	else {
 		h = "\1[g Message";
 		if(error_count)
 			cnt << "[*@r " << error_count << " error" << (error_count > 1 ? "s]" : "]");
@@ -576,6 +576,11 @@ void Ide::SyncErrorsMessage()
 	if(cnt.GetCount())
 		h << " (" << cnt << ")";
 	error.HeaderTab(2).SetText(h);
+	if(error_count)
+		btabs.Set(error_tab_i, "Errors (" + AsString(error_count) + ")", SRed(), StdFont().Bold());
+	else
+	if(warning_count)
+		btabs.Set(error_tab_i, "Warnings (" + AsString(warning_count) + ")", SColorText());
 }
 
 void Ide::ConsoleRunEnd()

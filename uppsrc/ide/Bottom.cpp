@@ -35,6 +35,15 @@ void RightTabs::Add(const Image& img, const String& tip, bool highlight)
 	Repos();
 }
 
+void RightTabs::Set(int i, const String& text, Color ink, Font font)
+{
+	auto& m = tab[i];
+	m.tip = text;
+	m.ink = ink;
+	m.font = font;
+	Refresh();
+}
+
 int RightTabs::Tab::GetHeight() const
 {
 	return max(img.GetSize().cy, StdFont().GetCy()) + SPACE;
@@ -51,7 +60,7 @@ void RightTabs::PaintTab(Draw& w, int x, int y, int cx, int cy, Color paper, con
 	Size isz = t.img.GetSize();
 	int icx = max(DPI(16), isz.cx);
 	w.DrawImage(x + DPI(1) + (icx - isz.cx) / 2, (cy - isz.cy) / 2 + y, t.img);
-	w.DrawText(x + icx + DPI(3), (cy - StdFont().GetCy()) / 2 + y, t.tip, StdFont(), t.highlight ? SLtBlue() : SColorText());
+	w.DrawText(x + icx + DPI(3), (cy - StdFont().GetCy()) / 2 + y, t.tip, t.font, t.highlight ? SLtBlue() : t.ink);
 	w.End();
 }
 
@@ -170,6 +179,7 @@ void Ide::BTabs()
 	btabs.Clear();
 	btabs.Add(IdeImg::close, "Close (Esc)");
 	btabs.Add(IdeImg::console, "Console");
+	error_tab_i = btabs.GetCount();
 	btabs.Add(IdeImg::errors, "Errors");
 	btabs.Add(IdeImg::calc, "Calculator");
 	if(bottomctrl)
