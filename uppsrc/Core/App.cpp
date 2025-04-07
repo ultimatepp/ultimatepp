@@ -619,7 +619,7 @@ void AppExit__()
 #endif
 }
 
-#ifdef flagTURTLE
+#ifdef flagTURTLE // Turtle web backend
 
 void Turtle_PutLink(const String& link);
 

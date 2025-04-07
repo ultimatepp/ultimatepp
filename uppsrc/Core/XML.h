@@ -44,7 +44,7 @@ struct XmlError : public Exc
 
 class XmlParser {
 	enum {
-#ifdef flagTEST_XML // This is for testing purposes only to increase boundary condition frequency
+#ifdef flagTEST_XML // .This is for testing purposes only to increase boundary condition frequency
 		MCHARS = 128,
 		CHUNK = 256
 #else

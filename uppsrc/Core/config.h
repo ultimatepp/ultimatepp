@@ -26,7 +26,7 @@
 		#undef  WINVER
 		#undef  _WIN32_WINNT
 
-		#ifdef flagWIN10
+		#ifdef flagWIN10 // Force _WIN32_WINNT and NTDDI_VERSION to Win10 values
 			#define _WIN32_WINNT _WIN32_WINNT_WIN10
 			#undef NTDDI_VERSION
 			#define NTDDI_VERSION NTDDI_WIN10_19H1
@@ -52,7 +52,7 @@
 			#define PLATFORM_BSD 1
 			#define PLATFORM_MACOS 1
 			#define PLATFORM_OSX 1
-			#ifndef flagUSEMALLOC
+			#ifndef flagUSEMALLOC // Completely disable U++ heap allocator
 				#define STD_NEWDELETE
 			#endif
 		#else
@@ -129,7 +129,7 @@
 	#endif
 #endif
 
-#ifdef flagFlatpak
+#ifdef flagFlatpak // Activates features for Flatpak compilation
 	#define FLATPAK 1
 #endif
 
@@ -168,11 +168,6 @@
 
 #ifndef CPU_ALIGNED
 #define CPU_UNALIGNED
-#endif
-
-#ifdef  flagCLR
-#define flagUSEMALLOC
-#define STD_NEWDELETE
 #endif
 
 #if __cplusplus >= 201103

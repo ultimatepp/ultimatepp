@@ -3,7 +3,9 @@
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-#if !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA) && !defined(flagNOMM)
+#if !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA)
+
+#ifndef flagNOMM // Removes ObjectiveC and AppKit dependence in Draw (but disables Fonts)
 
 #define Point NS_Point
 #define Rect  NS_Rect
@@ -356,5 +358,7 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int chr, Font
 }
 
 };
+
+#endif
 
 #endif

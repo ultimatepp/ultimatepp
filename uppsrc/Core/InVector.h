@@ -77,7 +77,7 @@ private:
 	template <class Range>
 	void     Insert_(int ii, const Range& r, bool def);
 
-#ifdef flagIVTEST
+#ifdef flagIVTEST // .activate additional diagnostics code for InVector
 	void Check(int blki, int offset) const;
 #endif
 public:

@@ -496,7 +496,7 @@ void Thread::Sleep(int msec)
 #endif
 }
 
-#ifdef flagPROFILEMT
+#ifdef flagPROFILEMT // Add code to gather Mutex locking/blocking statistics
 MtInspector *MtInspector::Dumi()
 {
 	static MtInspector h(NULL);
@@ -652,7 +652,6 @@ void ConditionVariable::Broadcast()
 
 ConditionVariable::ConditionVariable()
 {
-#ifndef flagTESTXPCV
 	ONCELOCK {
 		if(IsWinVista()) {
 			DllFn(InitializeConditionVariable, "kernel32", "InitializeConditionVariable");
@@ -661,7 +660,6 @@ ConditionVariable::ConditionVariable()
 			DllFn(SleepConditionVariableCS, "kernel32", "SleepConditionVariableCS");
 		}
 	}
-#endif
 	if(InitializeConditionVariable)
 		InitializeConditionVariable(cv);
 	else

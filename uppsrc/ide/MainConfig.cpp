@@ -35,19 +35,27 @@ void MainConfigDlg::FlagDlg()
 	PPInfo pp;
 	pp.SetIncludes(TheIde()->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
 	const Workspace& wspc = GetIdeWorkspace();
+	
+	static Index<String> ignore_flags = {
+		"DEBUG", "WIN32", "GUI", "DEBUGCODE", "GCC", "GCC32", "CLANG",
+		"ANDROID", "WIN32", "POSIX", "OSX", "SO",
+	};
 
 	for(int i = 0; i < wspc.GetCount(); i++) { // find package of included file
 		const Package& pk = wspc.GetPackage(i);
 		String pk_name = wspc[i];
 		for(int i = 0; i < pk.file.GetCount(); i++)
-			if(!pk.file[i].separator || 1)
+			if(!pk.file[i].separator)
 				for(auto m : ~pp.GetFileFlags(SourcePath(pk_name, pk.file[i]))) {
 					String f = m.key;
 					f.TrimStart("flag");
-					auto& fl = flags.GetAdd(f);
-					fl.b.FindAdd(pk_name);
-					if(m.value.GetCount() > fl.a.GetCount())
-						fl.a = m.value;
+					if(ignore_flags.Find(f) < 0) {
+						auto& fl = flags.GetAdd(f);
+						fl.b.FindAdd(pk_name);
+						String comment = m.value;
+						if(comment.GetCount() > fl.a.GetCount())
+							fl.a = comment;
+					}
 				}
 	}
 	
@@ -68,8 +76,12 @@ void MainConfigDlg::FlagDlg()
 	cfg.accepts.ColumnWidths("29 140 458 117");
 	cfg.accepts.EvenRowColor();
 	cfg.accepts.NoCursor();
-	for(const auto& f : ~flags)
-		cfg.accepts.Add(false, f.key, f.value.a, Join(f.value.b.GetKeys(), ", "));
+	for(int pass = 0; pass < 2; pass++) // second pass for "hidden" flags
+		for(const auto& f : ~flags)
+			if((*f.value.a == '.') == pass) {
+				f.value.a.TrimStart(".");
+				cfg.accepts.Add(false, f.key, AttrText(f.value.a).Italic(pass), Join(f.value.b.GetKeys(), ", "));
+			}
 	
 	cfg.other.SetFilter(FlagFilterM);
 	cfg.gui <<= false;

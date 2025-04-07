@@ -133,8 +133,6 @@ void TinyFree(int size, void *ptr)
 inline MemoryOptions::MemoryOptions() {}
 inline MemoryOptions::~MemoryOptions() {}
 
-#ifndef flagHEAPOVERRIDE
-
 inline void  *MemoryAllocPermanent(size_t size)                { return malloc(size); }
 inline void  *MemoryAlloc(size_t size)     { return new byte[size]; }
 inline void  *MemoryAllocSz(size_t &size)  { return new byte[size]; }
@@ -165,8 +163,6 @@ inline MemoryProfile *PeakMemoryProfile() { return NULL; }
 inline void *TinyAlloc(int size) { return MemoryAlloc(size); }
 
 inline void TinyFree(int, void *ptr) { return MemoryFree(ptr); }
-
-#endif
 
 #endif
 

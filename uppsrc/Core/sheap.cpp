@@ -478,7 +478,7 @@ size_t GetMemoryBlockSize_(void *ptr)
 
 #else
 
-#ifdef flagHEAPLOG
+#ifdef flagHEAPLOG // log all heap allocations and deallocations
 
 #undef AllocSz
 

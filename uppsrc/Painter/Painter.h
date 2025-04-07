@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-#ifdef flagTIMING
+#ifdef flagPAINTER_TIMING // .Activate Painter benchmarking code
 #define PAINTER_TIMING(x)     RTIMING(x)
 #else
 #define PAINTER_TIMING(x)  // RTIMING(x)

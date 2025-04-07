@@ -269,7 +269,7 @@ String AsString(const MemoryProfile& mem)
 	return text;
 }
 
-#ifdef flagHEAPSTAT
+#ifdef flagHEAPSTAT // Produce U++ allocation heap histogram into log
 int stat[65536];
 int bigstat;
 

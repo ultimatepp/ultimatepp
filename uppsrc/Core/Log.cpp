@@ -308,7 +308,7 @@ void  LogStream::_Put(const void *data, dword size)
 		sTh.Put(*q++);
 }
 
-#ifdef flagCHECKINIT
+#ifdef flagCHECKINIT // Adds heap check and additional logging INITBLOCKs
 
 void InitBlockBegin__(const char *fn, int line) {
 	RLOG(fn << " " << line << " init block");

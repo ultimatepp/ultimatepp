@@ -5,7 +5,7 @@
 
 #include <Core/Core.h>
 
-#ifdef flagCFONTS
+#ifdef flagCFONTS // Activates custom font system in Draw (font routines in another package)
 #define CUSTOM_FONTSYS
 #endif
 
