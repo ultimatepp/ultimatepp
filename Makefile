@@ -32857,6 +32857,7 @@ $(OutDir_CodeEditor)CodeEditor.o: $(UPPDIR1)CodeEditor/CodeEditor.cpp \
 	$(UPPDIR1)CodeEditor/CodeEditor.h \
 	$(UPPDIR1)CodeEditor/CodeEditor.iml \
 	$(UPPDIR1)CodeEditor/CodeEditor.lay \
+	$(UPPDIR1)CodeEditor/CodeEditor.t \
 	$(UPPDIR1)CodeEditor/CSyntax.h \
 	$(UPPDIR1)CodeEditor/DiffSyntax.h \
 	$(UPPDIR1)CodeEditor/hl_color.i \
@@ -33158,6 +33159,7 @@ $(OutDir_CtrlLib)CtrlLibInit.o: $(UPPDIR1)CtrlLib/CtrlLibInit.cpp \
 	$(UPPDIR1)CtrlLib/Ctrl.iml \
 	$(UPPDIR1)CtrlLib/Ctrl.lay \
 	$(UPPDIR1)CtrlLib/CtrlLib.h \
+	$(UPPDIR1)CtrlLib/CtrlLib.t \
 	$(UPPDIR1)CtrlLib/CtrlLibInit.cpp \
 	$(UPPDIR1)CtrlLib/Ctrls.iml \
 	$(UPPDIR1)CtrlLib/CtrlUtil.h \
@@ -43672,6 +43674,7 @@ $(OutDir_TabBar)TabBar.o: $(UPPDIR1)TabBar/TabBar.cpp \
 	$(UPPDIR1)TabBar/TabBar.cpp \
 	$(UPPDIR1)TabBar/TabBar.h \
 	$(UPPDIR1)TabBar/TabBar.iml \
+	$(UPPDIR1)TabBar/TabBar.t \
 	$(UPPDIR1)TabBar/TabBarCtrl.h \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_TabBar)  $(UPPDIR1)TabBar/TabBar.cpp -o $(OutDir_TabBar)TabBar.o
@@ -47848,6 +47851,7 @@ $(OutDir_Report)ReportDlg.o: $(UPPDIR1)Report/ReportDlg.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
+	$(UPPDIR1)Report/Report.t \
 	$(UPPDIR1)Report/ReportDlg.cpp \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -54604,6 +54608,7 @@ $(OutDir_Core)t.o: $(UPPDIR1)Core/t.cpp \
 	$(UPPDIR1)Core/Convert.h \
 	$(UPPDIR1)Core/Convert.hpp \
 	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/Core.t \
 	$(UPPDIR1)Core/CoSort.h \
 	$(UPPDIR1)Core/CoWork.h \
 	$(UPPDIR1)Core/Defs.h \
@@ -58453,6 +58458,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
 	$(UPPDIR1)RichEdit/RichEdit.lay \
+	$(UPPDIR1)RichEdit/RichEdit.t \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
 	$(UPPDIR1)RichText/RichText.iml \
@@ -70536,6 +70542,7 @@ $(OutDir_CtrlCore)CtrlCoreInit.o: $(UPPDIR1)CtrlCore/CtrlCoreInit.cpp \
 	$(UPPDIR1)Core/z.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.h \
 	$(UPPDIR1)CtrlCore/CtrlCore.iml \
+	$(UPPDIR1)CtrlCore/CtrlCore.t \
 	$(UPPDIR1)CtrlCore/CtrlCoreInit.cpp \
 	$(UPPDIR1)CtrlCore/MKeys.h \
 	$(UPPDIR1)CtrlCore/TopWindow.h \
