@@ -257,15 +257,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			int time = msecs();
 			bool execerr = false;
 			if(rc) {
-				String exec;
-				String windres = "windres";
-#ifdef PLATFORM_WIN32
-				windres += ".exe";
-#endif
-				int q = compiler.ReverseFind('-'); // clang32 windres name is i686-w64-mingw32-windres.exe
-				if(q > 0)
-					windres = compiler.Mid(0, q + 1) + windres;
-				exec << FindInDirs(host->GetExecutablesDirs(), windres) << " -i " << GetPathQ(fn);
+				String exec = MakeToolName("windres") << " -i " << GetPathQ(fn);
 				if(cc.Find(" -m32 ") >= 0)
 					exec << " --target=pe-i386 ";
 				exec << " -o " << GetPathQ(objfile) << Includes(" --include-dir=", package, pkg)
@@ -374,6 +366,25 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	return true;
 }
 
+String GccBuilder::MakeToolName(const char* tn)
+{
+    String name;
+    String clang = CompilerName();
+    // cross-compiler name: x86_64-apple-darwin19-clang++-libc++
+    // archiver name is x86_64-apple-darwin19-ar
+    int q = clang.ReverseFind("-clang");
+    if(q == 0)
+        q = clang.ReverseFind('-');
+    if(q > 0)
+        name = clang.Mid(0, q + 1);
+    name << tn;
+#ifdef PLATFORM_WIN32
+    name += ".exe";
+#endif
+    name = FindInDirs(host->GetExecutablesDirs(), name);
+    return name;
+}
+
 bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
                            const Vector<String>& all_uses, const Vector<String>& all_libraries,
                            const String& link_options)
@@ -397,7 +408,8 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 		lib << " -o ";
 	}
 	else
-		lib = "ar -sr ";
+        lib = MakeToolName("ar") << " -sr ";
+
 	lib << GetPathQ(product);
 
 	String llib;
@@ -506,9 +518,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		return CreateLib(ForceExt(target, ".a"), linkfile, Vector<String>(), Vector<String>(), linkoptions);
 
 	int time = msecs();
-#ifdef PLATFORM_OSX
-	CocoaAppBundle();
-#endif
+    if (HasFlag("OSX") && HasFlag("GUI"))
+        CocoaAppBundle();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
