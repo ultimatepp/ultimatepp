@@ -581,6 +581,8 @@ void Ide::SyncErrorsMessage()
 	else
 	if(warning_count)
 		btabs.Set(error_tab_i, "Warnings (" + AsString(warning_count) + ")", SColorText());
+	else
+		btabs.Set(error_tab_i, "Errors", SColorText());
 }
 
 void Ide::ConsoleRunEnd()
