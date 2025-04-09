@@ -224,7 +224,7 @@ tring]_[* GetDesktopManager]()&]
 the value of `"DESKTOP`_SESSION`" environment variable is returned.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ProcessHasAdminRights`(`): [@(0.0.255) bool] [* ProcessHasAdminRights]()&]
+[s5;:Upp`:`:IsAdmin`(`): [@(0.0.255) bool] [* IsAdmin]()&]
 [s2;%% Return true if the current process is running as administrator 
 (Windows) or root (POSIX).&]
 [s3; &]
