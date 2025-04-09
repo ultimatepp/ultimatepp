@@ -857,7 +857,7 @@ String GetProgramDataFolder() { return String("/var/opt"); }
 
 #endif
 
-bool ProcessHasAdminRights()
+bool IsAdmin()
 {
 #ifdef PLATFORM_POSIX
     return geteuid() == 0;
