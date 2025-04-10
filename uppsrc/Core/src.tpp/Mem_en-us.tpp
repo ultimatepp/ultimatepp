@@ -105,6 +105,16 @@ onst]_[@(0.0.255) void]_`*[*@3 p], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 q
 about the same speed. Provided mostly for completeness.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:memeq8len`(const void`*`,const void`*`,size`_t`): size`_t 
+[* memeq8len]([@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 p], 
+[@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 q], size`_t 
+[*@3 count])&]
+[s2;%% Returns the [/ position] such that [/ position ]< [*@3 count ][@(0.0.255) `&`&] 
+[*@3 p][@(0.0.255) `[][/ position][@(0.0.255) `] !`=] [*@3 q][@(0.0.255) `[][/ position][@(0.0.255) `]
+]. If no such position exists, returns [*@3 count]. In other words 
+returns count of bytes at p and q that are equal.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:memhash`(const void`*`,size`_t`): [_^Upp`:`:hash`_t^ hash`_t]_[* memhash]([@(0.0.255) c
 onst]_[@(0.0.255) void]_`*[*@3 ptr], [_^size`_t^ size`_t]_[*@3 size])&]
 [s2;%% Computes a non`-cryptographic hash of memory block. &]

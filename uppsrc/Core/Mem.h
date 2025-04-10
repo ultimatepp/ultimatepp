@@ -448,6 +448,33 @@ bool memeq32(const void *p, const void *q, size_t count);
 bool memeq64(const void *p, const void *q, size_t count);
 bool memeq128(const void *p, const void *q, size_t count);
 
+inline
+size_t memeq8len(const void *p, const void *q, size_t count)
+{
+	const byte *t = (byte *)p;
+	const byte *t0 = t;
+	const byte *s = (byte *)q;
+
+	const byte *et = t0 + (count & ~15);
+	
+	while(t < et) {
+		i8x16 cmp = i8x16(t) == i8x16(s);
+		if(!AllTrue(cmp))
+			return t - t0 + FirstFalse(cmp);
+		t += 16;
+		s += 16;
+	}
+	
+	et = t0 + count;
+	while(t < et) {
+		if(*s != *t)
+			return t - t0;
+		s++;
+		t++;
+	}
+	return count;
+}
+
 #else
 
 template <class T>
@@ -618,6 +645,24 @@ inline
 bool memeq128(const void *p, const void *q, size_t count)
 {
 	return memcmp(p, q, 16 * count) == 0;
+}
+
+inline
+size_t memeq8len(const void *p, const void *q, size_t count)
+{
+	const byte *t = (byte *)p;
+	const byte *t0 = t;
+	const byte *s = (byte *)q;
+	const byte *et = t0 + count;
+	
+	while(t < et) {
+		if(*t != *s)
+			return t - t0;
+		t++;
+		s++;
+	}
+	
+	return count;
 }
 
 #endif
