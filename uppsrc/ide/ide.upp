@@ -20,7 +20,8 @@ uses
 	Report,
 	Core/SSL,
 	plugin/md,
-	ide/clang;
+	ide/clang,
+	ide/Linter;
 
 file
 	IDE readonly separator,
@@ -135,7 +136,8 @@ mainconfig
 	"" = "GUI PEAKMEM",
 	"" = "GUI HEAPLOG",
 	"" = "GUI X11",
-	"" = "GUI DEBUGCODE";
+	"" = "GUI DEBUGCODE",
+	"" = "GUI LINTER";
 
 custom() "",
 	"ASDFASDFASDF",

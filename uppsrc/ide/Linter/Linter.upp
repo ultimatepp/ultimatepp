@@ -1,0 +1,23 @@
+description "TheIDE, static analyzer modules.\377B0,0,0";
+
+uses
+	ide/Core,
+	ide/Common;
+
+file
+	Linter.h,
+	Linter.cpp,
+	CppCheck readonly separator,
+	CppCheck.h,
+	CppCheck.cpp,
+	CppCheckConfig.cpp,
+	CppCheckConfig.lay,
+	Resources readonly separator,
+	Linter.key,
+	Linter.iml,
+	Docs readonly separator,
+	src.tpp,
+	Info readonly separator,
+	Copying,
+	Todo.txt;
+
