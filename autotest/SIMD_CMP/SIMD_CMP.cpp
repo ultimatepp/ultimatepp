@@ -23,6 +23,8 @@ T Test()
 		DDUMP(CountTrue(c == a));
 		if(AnyTrue(c == a))
 			DDUMP(FirstTrue(c == a));
+		if(!AllTrue(c == a))
+			DDUMP(FirstFalse(c == a));
 		String matches;
 		for(int j = 0; j < n; j++)
 			if(IsTrue(c == a, j))
@@ -34,6 +36,8 @@ T Test()
 		DDUMP(CountTrue(c == b));
 		if(AnyTrue(c == b))
 			DDUMP(FirstTrue(c == b));
+		if(!AllTrue(c == b))
+			DDUMP(FirstFalse(c == b));
 		matches.Clear();
 		for(int j = 0; j < n; j++)
 			if(IsTrue(c == b, j))
@@ -68,6 +72,7 @@ CONSOLE_APP_MAIN
 		DDUMP(AnyTrue(a == c));
 		DDUMP(CountTrue(a == b));
 		DDUMP(FirstTrue(a == b));
+		DDUMP(FirstFalse(a == b));
 	}
 	DLOG("=============== i16x8");
 	{
@@ -85,6 +90,7 @@ CONSOLE_APP_MAIN
 		DDUMP(AnyTrue(a == c));
 		DDUMP(CountTrue(a == b));
 		DDUMP(FirstTrue(a == b));
+		DDUMP(FirstFalse(a == b));
 	}
 	DLOG("=============== i32x4");
 	{
@@ -102,6 +108,7 @@ CONSOLE_APP_MAIN
 		DDUMP(AnyTrue(a == c));
 		DDUMP(CountTrue(a == b));
 		DDUMP(FirstTrue(a == b));
+		DDUMP(FirstFalse(a == b));
 	}
 	DLOG("=============== i8x16");
 	{
@@ -119,6 +126,7 @@ CONSOLE_APP_MAIN
 		DDUMP(AnyTrue(a == c));
 		DDUMP(CountTrue(a == b));
 		DDUMP(FirstTrue(a == b));
+		DDUMP(FirstFalse(a == b));
 	}
 	CheckLogEtalon();
 }
