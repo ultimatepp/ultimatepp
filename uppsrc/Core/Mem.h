@@ -783,7 +783,7 @@ size_t memcnt16(const void *s, dword value, size_t sz)
 	}
 #endif
 
-	while(p < e) // Process remaining bytes (less than 16)
+	while(p < e) // Process remaining words (less than 8)
 		n += (*p++ == value);
 	return n;
 }
@@ -807,7 +807,7 @@ size_t memcnt32(const void *s, dword value, size_t sz)
 	}
 #endif
 
-	while(p < e) // Process remaining bytes (less than 16)
+	while(p < e) // Process remaining dwords (less than 4)
 		n += (*p++ == value);
 	return n;
 }
