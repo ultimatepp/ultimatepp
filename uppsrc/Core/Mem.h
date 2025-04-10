@@ -739,3 +739,75 @@ bool memeq_t(const T *p, const T *q, size_t count)
 }
 
 hash_t memhash(const void *ptr, size_t count);
+
+inline
+size_t memcnt8(const void *s, dword value, size_t sz)
+{
+	const byte *p = (byte *)s;
+	const byte *e = p + sz;
+	size_t n = 0;
+
+#ifdef CPU_SIMD
+	const byte *e16 = p + (sz & ~15);  // Process in 16-byte chunks
+	if(p < e16) {
+		i8x16 value16 = i8all(value);
+		do {
+			n += CountTrue(i8x16(p) == value16);
+			p += 16;
+		}
+		while(p < e16);
+	}
+#endif
+
+	while(p < e) // Process remaining bytes (less than 16)
+		n += (*p++ == value);
+	return n;
+}
+
+inline
+size_t memcnt16(const void *s, dword value, size_t sz)
+{
+	const word *p = (word *)s;
+	const word *e = p + sz;
+	size_t n = 0;
+
+#ifdef CPU_SIMD
+	const word *e16 = p + (sz & ~7);  // Process in 16-byte chunks
+	if(p < e16) {
+		i16x8 value8 = i16all(value);
+		do {
+			n += CountTrue(i16x8(p) == value8);
+			p += 8;
+		}
+		while(p < e16);
+	}
+#endif
+
+	while(p < e) // Process remaining bytes (less than 16)
+		n += (*p++ == value);
+	return n;
+}
+
+inline
+size_t memcnt32(const void *s, dword value, size_t sz)
+{
+	const dword *p = (dword *)s;
+	const dword *e = p + sz;
+	size_t n = 0;
+
+#ifdef CPU_SIMD
+	const dword *e16 = p + (sz & ~3);  // Process in 16-byte chunks
+	if(p < e16) {
+		i32x4 value4 = i32all(value);
+		do {
+			n += CountTrue(i32x4(p) == value4);
+			p += 4;
+		}
+		while(p < e16);
+	}
+#endif
+
+	while(p < e) // Process remaining bytes (less than 16)
+		n += (*p++ == value);
+	return n;
+}

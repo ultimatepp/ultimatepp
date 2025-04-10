@@ -113,12 +113,24 @@ about the same speed. Provided mostly for completeness.&]
 [*@3 p][@(0.0.255) `[][/ position][@(0.0.255) `] !`=] [*@3 q][@(0.0.255) `[][/ position][@(0.0.255) `]
 ]. If no such position exists, returns [*@3 count]. In other words 
 returns count of bytes at p and q that are equal.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:memcnt8`(const void`*`,dword`,size`_t`): size`_t [* memcnt8]([@(0.0.255) cons
+t] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s5;:Upp`:`:memcnt16`(const void`*`,dword`,size`_t`): size`_t [* memcnt16]([@(0.0.255) co
+nst] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s5;:Upp`:`:memcnt32`(const void`*`,dword`,size`_t`): size`_t [* memcnt32]([@(0.0.255) co
+nst] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s2;%% Counts the number of items equal to [%-*@3 value].&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:memhash`(const void`*`,size`_t`): [_^Upp`:`:hash`_t^ hash`_t]_[* memhash]([@(0.0.255) c
 onst]_[@(0.0.255) void]_`*[*@3 ptr], [_^size`_t^ size`_t]_[*@3 size])&]
 [s2;%% Computes a non`-cryptographic hash of memory block. &]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:FoldHash`(Upp`:`:qword`): [_^Upp`:`:dword^ dword]_[* FoldHash]([_^Upp`:`:qword^ q
 word]_[*@3 h])&]
