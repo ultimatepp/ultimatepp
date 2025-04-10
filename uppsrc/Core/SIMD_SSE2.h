@@ -173,10 +173,11 @@ force_inline i8x16  operator==(i8x16 a, i8x16 b)   { return _mm_cmpeq_epi8(a.dat
 force_inline i8x16  operator<(i8x16 a, i8x16 b)    { return _mm_cmplt_epi8(a.data, b.data); }
 force_inline i8x16  operator>(i8x16 a, i8x16 b)    { return _mm_cmpgt_epi8(a.data, b.data); }
 force_inline bool   AllTrue(i8x16 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
-force_inline bool   AnyTrue(i8x16 a)                { return _mm_movemask_epi8(a.data); }
-force_inline int    CountTrue(i8x16 a)              { return CountBits(_mm_movemask_epi8(a.data)); }
-force_inline int    FirstFalse(i8x16 a)             { return CountTrailingZeroBits(~_mm_movemask_epi8(a.data)); }
-force_inline bool   IsTrue(i8x16 a, int i)          { return _mm_movemask_epi8(a.data) & (1 << i); }
+force_inline bool   AnyTrue(i8x16 a)               { return _mm_movemask_epi8(a.data); }
+force_inline int    CountTrue(i8x16 a)             { return CountBits(_mm_movemask_epi8(a.data)); }
+force_inline int    FirstTrue(i8x16 a)             { return CountTrailingZeroBits(_mm_movemask_epi8(a.data)); }
+force_inline int    FirstFalse(i8x16 a)            { return CountTrailingZeroBits(~_mm_movemask_epi8(a.data)); }
+force_inline bool   IsTrue(i8x16 a, int i)         { return _mm_movemask_epi8(a.data) & (1 << i); }
 
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }
