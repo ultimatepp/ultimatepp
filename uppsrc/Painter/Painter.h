@@ -335,10 +335,19 @@ public:
 	void     Paint(const Painting& p);
 
 	Painter& Rectangle(double x, double y, double cx, double cy);
-	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r);
+	Painter& Rectangle(const Rectf& r)                                             { return Rectangle(r.left, r.top, r.Width(), r.Height()); }
+	Painter& Rectangle(Pointf p1, Pointf p2)                                       { return Rectangle(Rectf(p1, p2)); }
 	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r1, double r2);
+	Painter& RoundedRectangle(const Rectf& r, double r1, double r2)                { return RoundedRectangle(r.left, r.top, r.Width(), r.Height(), r1, r2); }
+	Painter& RoundedRectangle(Pointf p1, Pointf p2, double r1, double r2)          { return RoundedRectangle(Rectf(p1, p2), r1, r2); }
+	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r)  { return RoundedRectangle(x, y, cx, cy, r, r); }
+	Painter& RoundedRectangle(const Rectf& rc, double r)                           { return RoundedRectangle(rc, r, r); }
+	Painter& RoundedRectangle(Pointf p1, Pointf p2, double r)                      { return RoundedRectangle(p1, p2, r, r); }
 	Painter& Ellipse(double x, double y, double rx, double ry);
+	Painter& Ellipse(const Rectf& r)                                               { return Ellipse(r.left, r.top, r.Width(), r.Height()); }
+	Painter& Ellipse(Pointf p1, Pointf p2)                                         { return Ellipse(Rectf(p1, p2)); }
 	Painter& Circle(double x, double y, double r);
+	Painter& Circle(Pointf p, double r)                                            { return Circle(p.x, p.y, r); }
 	
 	Painter& RectPath(int x, int y, int cx, int cy);
 	Painter& RectPath(const Rect& r);

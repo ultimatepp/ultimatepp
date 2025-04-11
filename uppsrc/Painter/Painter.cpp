@@ -284,11 +284,6 @@ Painter& Painter::Rectangle(double x, double y, double cx, double cy)
 	return Move(x, y).RelLine(cx, 0).RelLine(0, cy).RelLine(-cx, 0).Close();
 }
 
-Painter& Painter::RoundedRectangle(double x, double y, double cx, double cy, double r)
-{
-	return RoundedRectangle(x, y, cx, cy, r, r);
-}
-
 Painter& Painter::RoundedRectangle(double x, double y, double cx, double cy, double rx, double ry)
 {
 	ASSERT(rx >= 0 && ry >= 0);
