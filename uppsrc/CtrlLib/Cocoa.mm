@@ -1,4 +1,4 @@
-#ifndef flagSKELETON
+#ifndef flagSKELETON // replaces GUI host with empty VirtualGui (e.g. for converting GUI app to console)
 
 #include <CtrlLib/CtrlLib.h>
 #include <CtrlCore/CocoMM.h>

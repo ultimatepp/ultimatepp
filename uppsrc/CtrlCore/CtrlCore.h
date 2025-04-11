@@ -4,15 +4,14 @@
 #include <RichText/RichText.h>
 #include <Painter/Painter.h>
 
-#ifdef  flagNOGTK
-#undef  flagGTK
+#ifdef  flagNOGTK // prevents linking with GTK libraries. Impplies X11.
 #define flagX11
 #endif
 
 #include <guiplatform.h>
 
 #ifndef GUIPLATFORM_INCLUDE
-	#ifdef flagVIRTUALGUI
+	#ifdef flagVIRTUALGUI // Required for VirtualGui package (simple GUI host implemented by virtual functions)
 		#define VIRTUALGUI 1
 	#endif
 
@@ -32,12 +31,9 @@
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
-		#ifdef flagX11
+		#ifdef flagX11 // forces the legacy X11 backend (instead of GTK)
 			#define GUIPLATFORM_INCLUDE "X11Gui.h"
 		#else
-			#ifndef flagGTK
-				#define flagGTK
-			#endif
 			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif
