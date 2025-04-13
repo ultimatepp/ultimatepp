@@ -272,17 +272,29 @@ void Host::Launch(const char *_cmdline, bool console)
 	if(console)
 		cmdline = "/usr/bin/open " + script;
 #else
-	String lc = ResolveHostConsole();
-	if(FileExists(lc))
-	{
-		if(console)
-			cmdline = HostConsole + " sh " + script;
+	if(console) {
+		String lc = ResolveHostConsole();
+		if(FileExists(lc))
+		{
+			#ifdef FLATPAK
+				auto real_hc = HostConsole;
+				real_hc.Replace(String("/run/host/"), String("/usr/"));
+				cmdline = FindCommand(exedirs, CMDLINE_PREFIX + real_hc + " sh " + script);
+			#else
+				cmdline = HostConsole + " sh " + script;
+			#endif
+		}
+		else
+		if(HostConsole.GetCount())
+			PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
 	}
-	else
-	if(HostConsole.GetCount())
-		PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
+#ifdef FLATPAK
+	else {
+		cmdline = FindCommand(exedirs, CMDLINE_PREFIX + cmdline);
+	}
 #endif
-
+#endif
+	
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	Vector<char *> args;
 	
