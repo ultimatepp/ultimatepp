@@ -409,8 +409,6 @@ enum {
 	QTF_CRLF = 8,
 	QTF_NOCHARSET = 16,
 	QTF_NOLANG = 32,
-	
-	QTF_ALL = 0xffffffff
 };
 
 #include "Txt.h"
