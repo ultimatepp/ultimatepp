@@ -697,7 +697,7 @@ public:
 	Event<String&, WString&> WhenHyperlink;
 	Event<String&>           WhenLabel;
 	Event<String&>           WhenIndexEntry;
-	Event<Bar&>              WhenBar;
+	Event<Bar&>              WhenBar; // Context menu
 	Event<>                  WhenSel;
 	Gate<const String&>      WhenIsLink;
 	Event<const String&>     WhenLink;
