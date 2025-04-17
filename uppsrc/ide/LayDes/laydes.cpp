@@ -229,6 +229,8 @@ void LayDes::Paint2(Draw& w)
 	LayoutData& l = CurrentLayout();
 	Size lsz = LayoutZoom(l.size);
 	w.DrawRect(0, 0, lsz.cx, lsz.cy, SLtGray);
+	if(l.item.GetCount() == 0)
+		w.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(30).Italic(), SGray());
 	if(setting.paintgrid) {
 		int gx = minmax((int)~setting.gridx, 1, 32);
 		int gy = minmax((int)~setting.gridy, 1, 32);
