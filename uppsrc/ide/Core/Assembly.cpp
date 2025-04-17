@@ -115,16 +115,18 @@ void Nest::Set(const String& id, const String& val)
 String Nest::PackagePath0(const String& name)
 {
 	String uppfile = NativePath(name);
-	if(IsFullPath(uppfile)) return NormalizePath(uppfile);
+	if(IsFullPath(uppfile))
+		return NormalizePath(uppfile);
+	String pname = GetFileName(uppfile);
 	Vector<String> d = GetUppDirs();
+	if(IsExternalMode() && name == "@" + GetVarsName())
+		return (d.GetCount() ? d[0] : GetUppDir()) + "/" + pname + ".upp";
 	String p;
 	for(int i = 0; i < d.GetCount(); i++) {
-		p = NormalizePath(AppendFileName(AppendFileName(d[i], uppfile),
-		                  GetFileName(uppfile)) + ".upp");
+		p = NormalizePath(AppendFileName(AppendFileName(d[i], uppfile), pname) + ".upp");
 		if(FileExists(p)) return p;
 	}
-	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile),
-		                                GetFileName(uppfile)) + ".upp") : String();
+	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile), pname) + ".upp") : String();
 }
 
 String Nest::PackagePath(const String& name)
@@ -194,6 +196,11 @@ void OverrideHubDir(const String& path)
 	override_hub_dir = path;
 }
 
+bool   IsExternalMode()
+{ // use TheIDE as editor/analyser, packages are stored separately, no compilation
+	return GetVar("EXTERNAL") == "1";
+}
+
 String GetHubDir()
 {
 	if(override_hub_dir.GetCount())
@@ -255,15 +262,17 @@ String GetAssemblyId()
 Vector<String> GetUppDirsRaw()
 {
 	Vector<String> s = SplitDirs(GetVar("UPP"));
-	static Vector<String> hub_dirs;
-	if(!hub_loaded) {
-		hub_dirs.Clear();
-		for(const FindFile& ff : FindFile(GetHubDir() + "/*.*"))
-			if(ff.IsFolder())
-				hub_dirs.Add(ff.GetPath());
-		hub_loaded = true;
+	if(!IsExternalMode()) {
+		static Vector<String> hub_dirs;
+		if(!hub_loaded) {
+			hub_dirs.Clear();
+			for(const FindFile& ff : FindFile(GetHubDir() + "/*.*"))
+				if(ff.IsFolder())
+					hub_dirs.Add(ff.GetPath());
+			hub_loaded = true;
+		}
+		s.Append(hub_dirs);
 	}
-	s.Append(hub_dirs);
 	return s;
 }
 
@@ -294,4 +303,21 @@ String GetUppDir() {
 #ifdef PLATFORM_POSIX
 	return s.GetCount() == 0 ? GetHomeDirectory() : s[0];
 #endif
+}
+
+String PackageFilePath(const String& path)
+{ // in external mode we are storing packages into .config
+	if(IsExternalMode()) {
+		String n = GetPackagePathNest(path);
+		String p = GetFileName(path);
+		if(IsNull(n) || n.GetCount() + 1 >= p.GetCount())
+			return path;
+		p = UnixPath(p.Mid(n.GetCount() + 1));
+		p.Replace("\\", "%");
+		p.Replace("/", "%");
+		p = ConfigFile("external/" + GetVarsName()) + "/" + p;
+		RealizePath(p);
+		return p;
+	}
+	return path;
 }

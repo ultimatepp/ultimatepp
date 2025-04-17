@@ -303,6 +303,8 @@ String GetUppOut();
 
 String DefaultHubFilePath();
 
+bool   IsExternalMode();
+
 void   SetHubDir(const String& path);
 void   OverrideHubDir(const String& path);
 String GetHubDir();
@@ -325,6 +327,7 @@ String GetUppDir();
 void   SetVar(const String& var, const String& val, bool save = true);
 void   SetMainNest(const String& n);
 String GetAssemblyId();
+String PackageFilePath(const String& path);
 
 String GetCurrentBuildMethod();
 String GetCurrentMainPackage();
