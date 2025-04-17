@@ -143,10 +143,10 @@ void Ide::AssistEdit(Bar& menu)
 
 void Ide::InsertAdvanced(Bar& bar)
 {
-	LTIMESTOP("InsertAdvanced");
+	LTIMESTOP("Miscellaneous");
 	bool b = !editor.IsReadOnly();
 	AssistEdit(bar);
-	bar.Add(b, "Advanced", THISBACK(EditSpecial));
+	bar.Add(b, "Miscellaneous", THISBACK(EditSpecial));
 }
 
 void Ide::Reformat(Bar& bar)

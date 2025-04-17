@@ -311,6 +311,7 @@ struct WorkspaceWork {
 	bool         organizer;
 	bool         showtime;
 	bool         sort;
+	bool         noemptyload = false; // in external mode, do not load files if package is empty (todo: refactor whole thing)
 	
 	Index<String> errorfiles;
 
@@ -385,6 +386,7 @@ struct WorkspaceWork {
 	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi);
 	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi, bool tree);
 	void Import();
+	void SyncPackage();
 	void RemoveFile();
 	void DelFile();
 	void RenameFile();
@@ -409,7 +411,6 @@ struct WorkspaceWork {
 
 	void PackageMenu(Bar& bar);
 	void FileMenu(Bar& bar);
-	void SpecialFileMenu(Bar& bar);
 	void InsertSpecialMenu(Bar& menu);
 
 	String PackagePathA(const String& pn);
