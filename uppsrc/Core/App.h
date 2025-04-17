@@ -116,4 +116,6 @@ String GetTemplatesFolder();
 String GetDownloadFolder();
 String GetProgramDataFolder();
 
+bool   IsAdmin();
+
 void   InstallCrashHook(void (*h)());
