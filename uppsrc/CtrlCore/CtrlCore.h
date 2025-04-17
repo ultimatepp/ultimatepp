@@ -4,15 +4,14 @@
 #include <RichText/RichText.h>
 #include <Painter/Painter.h>
 
-#ifdef  flagNOGTK
-#undef  flagGTK
+#ifdef  flagNOGTK // prevents linking with GTK libraries. Impplies X11.
 #define flagX11
 #endif
 
 #include <guiplatform.h>
 
 #ifndef GUIPLATFORM_INCLUDE
-	#ifdef flagVIRTUALGUI
+	#ifdef flagVIRTUALGUI // Required for VirtualGui package (simple GUI host implemented by virtual functions)
 		#define VIRTUALGUI 1
 	#endif
 
@@ -32,12 +31,9 @@
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
-		#ifdef flagX11
+		#ifdef flagX11 // forces the legacy X11 backend (instead of GTK)
 			#define GUIPLATFORM_INCLUDE "X11Gui.h"
 		#else
-			#ifndef flagGTK
-				#define flagGTK
-			#endif
 			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif
@@ -330,7 +326,7 @@ void GuiPlatformAdjustDragImage(ImageBuffer& b);
 Image MakeDragImage(const Image& arrow, Image sample);
 
 const char *ClipFmtsText();
-bool        AcceptText	(PasteClip& clip);
+bool        AcceptText(PasteClip& clip);
 String      GetString(PasteClip& clip);
 WString     GetWString(PasteClip& clip);
 String      GetTextClip(const String& text, const String& fmt);
@@ -566,6 +562,7 @@ private:
 	bool         multi_frame:1; // there is more than single frame, they are stored in heap
 	bool         top:1;
 	bool         megarect:1; // support for large virtual screen area - SetRect.TopLeft > 16000
+	bool         erasebg:1; // true before first Paint (in Win32, do WM_ERASEBKGND to avoid flickering)
 
 	static  bool      was_fullrefresh; // indicates that some widgets might have fullrefresh true
 

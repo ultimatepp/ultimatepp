@@ -19,11 +19,6 @@ int CountLinesOptimized(Stream& s)
 		const byte *p = s.GetSzPtr(sz);
 		if(sz) {
 			const byte *e = p + sz;
-			const byte *e4 = p + (sz & ~3);
-			while(p < e4) {
-				n += (p[0] == '\n' || p[1] == '\n' || p[2] == '\n' || p[3] == '\n');
-				p += 4;
-			}
 			while(p < e)
 				n += *p++ == '\n';
 		}
@@ -34,7 +29,25 @@ int CountLinesOptimized(Stream& s)
 			n += c == '\n';
 		}
 	}
-	return n;
+}
+
+int CountLinesOptimizedSIMD(Stream& s)
+{
+	int n = 0;
+
+	for(;;) {
+		int sz;
+		const byte* p = s.GetSzPtr(sz);
+
+		if(sz)
+			n += memcnt8(p, '\n', sz); // this is using SIMD..
+		else {
+			int c = s.Get();
+			if(c < 0)
+				return n;
+			n += (c == '\n');
+		}
+	}
 }
 
 CONSOLE_APP_MAIN
@@ -57,5 +70,11 @@ CONSOLE_APP_MAIN
 		RTIMESTOP("Optimized");
 		FileIn in(arg[0]);
 		RDUMP(CountLinesOptimized(in));
+	}
+
+	{
+		RTIMESTOP("Optimized SIMD (using memcnt8)");
+		FileIn in(arg[0]);
+		RDUMP(CountLinesOptimizedSIMD(in));
 	}
 }

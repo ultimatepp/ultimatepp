@@ -105,16 +105,38 @@ onst]_[@(0.0.255) void]_`*[*@3 p], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 q
 about the same speed. Provided mostly for completeness.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:memeq8len`(const void`*`,const void`*`,size`_t`): size`_t 
+[* memeq8len]([@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 p], 
+[@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 q], size`_t 
+[*@3 count])&]
+[s2;%% Returns the [/ position] such that [/ position ]< [*@3 count ][@(0.0.255) `&`&] 
+[*@3 p][@(0.0.255) `[][/ position][@(0.0.255) `] !`=] [*@3 q][@(0.0.255) `[][/ position][@(0.0.255) `]
+]. If no such position exists, returns [*@3 count]. In other words 
+returns count of bytes at p and q that are equal.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:memcnt8`(const void`*`,dword`,size`_t`): size`_t [* memcnt8]([@(0.0.255) cons
+t] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s5;:Upp`:`:memcnt16`(const void`*`,dword`,size`_t`): size`_t [* memcnt16]([@(0.0.255) co
+nst] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s5;:Upp`:`:memcnt32`(const void`*`,dword`,size`_t`): size`_t [* memcnt32]([@(0.0.255) co
+nst] [@(0.0.255) void] [@(0.0.255) `*][*@3 s], dword [*@3 value], size`_t 
+[*@3 sz])&]
+[s2;%% Counts the number of items equal to [%-*@3 value].&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:memhash`(const void`*`,size`_t`): [_^Upp`:`:hash`_t^ hash`_t]_[* memhash]([@(0.0.255) c
 onst]_[@(0.0.255) void]_`*[*@3 ptr], [_^size`_t^ size`_t]_[*@3 size])&]
 [s2;%% Computes a non`-cryptographic hash of memory block. &]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:FoldHash`(Upp`:`:qword`): [_^Upp`:`:dword^ dword]_[* FoldHash]([_^Upp`:`:qword^ q
 word]_[*@3 h])&]
 [s2;%% This functions `"hashes all bits together`". One purpose is 
 to bring the entropy of higher bits down so that the hash can 
-be limited by masking, other purpose is to provide hash for integral 
+be limited by masking, other purpose is to provide hash for integer 
 numbers.&]
 [s2;%% &]
 [s4; &]
@@ -137,6 +159,14 @@ loosing the precision.&]
 [s5;:Upp`:`:CountBits64`(uint64`): [@(0.0.255) int] [* CountBits64]([_^Upp`:`:uint64^ uint6
 4] [*@3 mask])&]
 [s2;%% Returns the total number of set bits in a given bit [%-*@3 mask].&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CountTrailingZeroBits`(dword`): [@(0.0.255) int] [* CountTrailingZeroBits](dw
+ord [*@3 x])&]
+[s5;:Upp`:`:CountTrailingZeroBits64`(uint64`): [@(0.0.255) int] [* CountTrailingZeroBits6
+4](uint64 [*@3 x])&]
+[s2; [%% Returns the index of first non`-zero bit in (from least significant 
+bit). If] [*@3 x] is zero, the result is undefined.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Peek16le`(const void`*`): [@(0.0.255) int]_[* Peek16le]([@(0.0.255) const]_[@(0.0.255) v

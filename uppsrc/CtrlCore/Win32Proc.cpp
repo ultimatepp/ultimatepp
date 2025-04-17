@@ -235,6 +235,17 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(i) InvalidateRect(hwnd, NULL, TRUE);
 			return i;
 		}
+	case WM_ERASEBKGND:
+		if(erasebg) {
+			HDC hdc = (HDC)(wParam);
+			RECT rc; GetClientRect(hwnd, &rc);
+			Color c = SColorFace();
+			HBRUSH brush = CreateSolidBrush(RGB(c.GetR(), c.GetG(), c.GetB()));
+			FillRect(hdc, &rc, brush);
+	        DeleteObject(brush);
+	        erasebg = false;
+		}
+		return 1L;
 	case WM_PAINT:
 		ASSERT_(!painting || IsPanicMode(), "WM_PAINT invoked for " + Name() + " while in Paint routine");
 		ASSERT(hwnd);
@@ -512,8 +523,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			DispatchKey(K_MOUSE_BACKWARD|K_KEYUP, 1);
 		return 0L;
 	}
-	case WM_ERASEBKGND:
-		return 1L;
 	case WM_DESTROY:
 		PreDestroy();
 		break;

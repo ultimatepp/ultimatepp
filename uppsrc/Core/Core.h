@@ -3,13 +3,9 @@
 
 #define UPP_VERSION 0x20250200
 
-#ifndef flagMT
-#define flagMT // MT is now always on
-#endif
-
 #define _MULTITHREADED
 #define MULTITHREADED
-#ifdef flagDLL
+#ifdef flagDLL // Build .dll
 	#define flagUSEMALLOC
 	#define STD_NEWDELETE
 #endif
@@ -18,7 +14,7 @@
 	#define _USRDLL
 #endif
 
-#ifdef flagHEAPDBG
+#ifdef flagHEAPDBG // Activate heap debugging features even in release mode
 	#define HEAPDBG
 #endif
 
@@ -40,7 +36,7 @@
 
 #include "config.h"
 
-#if defined(flagSTD_NEWDELETE) && !defined(STD_NEWDELETE)
+#if defined(flagSTD_NEWDELETE) && !defined(STD_NEWDELETE) // Do not use U++ heap for new/delete
 #define STD_NEWDELETE
 #endif
 
@@ -278,7 +274,7 @@ namespace std {
 
 namespace Upp {
 
-#ifndef flagNODEPRECATED
+#ifndef flagNODEPRECATED // Using deprecated features produces error
 #define DEPRECATED
 #endif
 
@@ -290,7 +286,11 @@ class JsonIO;
 #include "Ops.h"
 #include "Fn.h"
 
-#if defined(flagNOSIMD) || defined(flagLEGACY_CPU)
+#ifdef flagLEGACY_CPU
+#define flagNOSIMD
+#endif
+
+#if defined(flagNOSIMD) // Disable SIMD (e.g. SSE2, ARM NEON)
 	#ifdef CPU_SSE2
 	#undef CPU_SSE2
 	#endif
@@ -441,8 +441,6 @@ typedef void   *DLLHANDLE;
 DLLHANDLE LoadDll__(UPP::String& fn, const char *const *names, void *const *procs);
 void      FreeDll__(DLLHANDLE dllhandle);
 
-#ifndef flagNONAMESPACE
 using Upp::byte; // Dirty solution to Windows.h typedef byte...
-#endif
 
 #endif //CORE_H

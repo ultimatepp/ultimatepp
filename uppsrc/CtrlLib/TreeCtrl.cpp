@@ -634,7 +634,13 @@ int  TreeCtrl::GetLineCount()
 
 void TreeCtrl::ScrollIntoLine(int i)
 {
-	sb.ScrollIntoY(line[i].y, item[line[i].itemi].GetSize(display).cy);
+	Size sz = item[line[i].itemi].GetSize(display);
+	sb.ScrollIntoY(line[i].y, sz.cy);
+	if(scrollinto_x) {
+		Rect r = GetValueRect(line[i], Point(0, 0));
+		int x = GetLineX(line[i]);
+		sb.ScrollIntoX(x, r.right - x);
+	}
 }
 
 void TreeCtrl::CenterLine(int i)
@@ -688,7 +694,7 @@ void TreeCtrl::SetCursorLine(int i, bool sc, bool sel, bool cb)
 		Item& m = item[line[i].itemi];
 		if (!multiselect && !m.canselect) return;
 		if(sc)
-			sb.ScrollIntoY(line[i].y, m.GetSize(display).cy);
+			ScrollIntoLine(i);
 		RefreshLine(cursor);
 		cursor = i;
 		RefreshLine(cursor);
@@ -720,7 +726,7 @@ void TreeCtrl::SetCursorLineSync(int i)
 		Item& m = item[line[cursor].itemi];
 		if(cursor >= 0) {
 			Sync();
-			sb.ScrollIntoY(line[cursor].y, m.GetSize(display).cy);
+			ScrollIntoLine(cursor);
 		}
 		if(!(m.ctrl && m.ctrl->SetWantFocus()))
 			SetWantFocus();
@@ -845,17 +851,21 @@ void TreeCtrl::LeftDrag(Point p, dword keyflags)
 	WhenDrag();
 }
 
-Rect TreeCtrl::GetValueRect(const Line& l) const
+Rect TreeCtrl::GetValueRect(const Line& l, Point org) const
 {
 	const Item& m = item[l.itemi];
 	Size msz = m.GetSize(display);
 	Size isz = m.image.GetSize();
 	Size vsz = m.GetValueSize(display);
-	Point org = sb;
-	int x = levelcx + l.level * levelcx + isz.cx - org.x + m.margin;
+	int x = GetLineX(l) + isz.cx + m.margin - org.x;
 	if(m.ctrl && !highlight_ctrl)
 		x += m.GetCtrlSize().cx;
 	return RectC(x, l.y - org.y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
+}
+
+Rect TreeCtrl::GetValueRect(const Line& l) const
+{
+	return GetValueRect(l, sb);
 }
 
 void TreeCtrl::DoClick(Point p, dword flags, bool down, bool canedit)

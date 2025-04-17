@@ -68,14 +68,14 @@ void TopWindowFrame::Paint(Draw& w)
 	Rect m = Margins();
 	int c = GetStdFontCy() + 4;
 	ChPaintEdge(w, sz, FBImg::border());
-	ChPaint(w, m.left, m.top, sz.cx - m.left - m.right, GetStdFontCy() + 4,
+	ChPaint(w, m.left, m.top, sz.cx - m.left - m.right, c,
 	        window->IsForeground() ? FBImg::title() : FBImg::bgtitle());
 	int tx = m.left + 2;
 	int tcx = sz.cx - m.left - m.right - 4 - c * (close.IsShown() + maximize.IsShown());
 	if(!IsNull(icon)) {
 		Image h = icon;
 		if(h.GetWidth() > c || h.GetHeight() > c)
-			h = Rescale(h, GetFitSize(h.GetSize(), Size(c)));
+			h = Rescale(h, GetFitSize(h.GetSize(), Size(c, c)));
 		w.DrawImage(tx, m.top + 2, h);
 		tx += c;
 		tcx -= c;

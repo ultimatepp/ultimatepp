@@ -44,8 +44,6 @@ EscValue EscColor(Color c)
 	EscValue v;
 	if(IsNull(c))
 		return v;
-	if(c.GetSpecial() >= 0)
-		c = AColor(RealizeColor(c));
 	v.MapSet("r", c.GetR());
 	v.MapSet("g", c.GetG());
 	v.MapSet("b", c.GetB());

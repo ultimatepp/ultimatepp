@@ -38,6 +38,11 @@ force_inline f32x4  operator>(f32x4 a, f32x4 b)   { return _mm_cmpgt_ps(a.data, 
 force_inline f32x4  operator<=(f32x4 a, f32x4 b)  { return _mm_cmple_ps(a.data, b.data); }
 force_inline f32x4  operator>=(f32x4 a, f32x4 b)  { return _mm_cmpge_ps(a.data, b.data); }
 force_inline bool   AllTrue(f32x4 a)              { return _mm_movemask_ps(a.data) == 0xf; }
+force_inline bool   AnyTrue(f32x4 a)              { return _mm_movemask_ps(a.data); }
+force_inline int    CountTrue(f32x4 a)            { return CountBits(_mm_movemask_ps(a.data)); }
+force_inline int    FirstTrue(f32x4 a)            { return CountTrailingZeroBits(_mm_movemask_ps(a.data)); }
+force_inline int    FirstFalse(f32x4 a)           { return CountTrailingZeroBits(~_mm_movemask_ps(a.data)); }
+force_inline bool   IsTrue(f32x4 a, int i)        { return _mm_movemask_ps(a.data) & (1 << i); }
 
 force_inline f32x4 min(f32x4 a, f32x4 b)          { return _mm_min_ps(a.data, b.data); }
 force_inline f32x4 max(f32x4 a, f32x4 b)          { return _mm_max_ps(a.data, b.data); }
@@ -49,18 +54,23 @@ force_inline f32x4 Broadcast1(f32x4 a)            { return _mm_shuffle_ps(a.data
 force_inline f32x4 Broadcast2(f32x4 a)            { return _mm_shuffle_ps(a.data, a.data, _MM_BCAST(2)); }
 force_inline f32x4 Broadcast3(f32x4 a)            { return _mm_shuffle_ps(a.data, a.data, _MM_BCAST(3)); }
 
-struct i16x8 { // 8xint16
+template <class T>
+struct iTxN { // 8xint16
 	__m128i data;
-
-	i16x8& Load(const void *ptr)       { data = _mm_loadu_si128((__m128i *)ptr); return *this; }
-	i16x8& Load64(const void *ptr)     { data = _mm_castpd_si128(_mm_load_sd((double *)ptr)); return *this; }
-	i16x8& Load32(const void *ptr)     { data = _mm_castps_si128(_mm_load_ss((float *)ptr)); return *this; }
-
-	void   Store(void *ptr)      { _mm_storeu_si128((__m128i *)ptr, data); }
-	void   Store64(void *ptr)    { _mm_store_sd((double *)ptr, _mm_castsi128_pd(data)); }
-	void   Store32(void *ptr)    { _mm_store_ss((float *)ptr, _mm_castsi128_ps(data)); }
-	void   Stream(void *ptr)     { _mm_stream_si128((__m128i *)ptr, data); };
 	
+	T& AsT()                       { return *static_cast<T *>(this); }
+
+	T& Load(const void *ptr)       { data = _mm_loadu_si128((__m128i *)ptr); return AsT(); }
+	T& Load64(const void *ptr)     { data = _mm_castpd_si128(_mm_load_sd((double *)ptr)); return AsT(); }
+	T& Load32(const void *ptr)     { data = _mm_castps_si128(_mm_load_ss((float *)ptr)); return AsT(); }
+
+	void   Store(void *ptr)        { _mm_storeu_si128((__m128i *)ptr, data); }
+	void   Store64(void *ptr)      { _mm_store_sd((double *)ptr, _mm_castsi128_pd(data)); }
+	void   Store32(void *ptr)      { _mm_store_ss((float *)ptr, _mm_castsi128_ps(data)); }
+	void   Stream(void *ptr)       { _mm_stream_si128((__m128i *)ptr, data); };
+};
+
+struct i16x8 : iTxN<i16x8> { // 8xint16
 	i16x8()                      {}
 	i16x8(const void *ptr)       { Load(ptr); }
 	i16x8(__m128i d)             { data = d; }
@@ -95,14 +105,20 @@ force_inline i16x8  operator==(i16x8 a, i16x8 b)   { return _mm_cmpeq_epi16(a.da
 force_inline i16x8  operator<(i16x8 a, i16x8 b)    { return _mm_cmplt_epi16(a.data, b.data); }
 force_inline i16x8  operator>(i16x8 a, i16x8 b)    { return _mm_cmpgt_epi16(a.data, b.data); }
 force_inline bool   AllTrue(i16x8 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i16x8 a)               { return _mm_movemask_epi8(a.data); }
+force_inline int    CountTrue(i16x8 a)             { return CountBits(_mm_movemask_epi8(a.data)) >> 1; }
+force_inline int    FirstTrue(i16x8 a)             { return CountTrailingZeroBits(_mm_movemask_epi8(a.data)) >> 1; }
+force_inline int    FirstFalse(i16x8 a)             { return CountTrailingZeroBits(~_mm_movemask_epi8(a.data)) >> 1; }
+force_inline int    IsTrue(i16x8 a, int i)         { return _mm_movemask_epi8(a.data) & (1 << 2 * i); }
 
-struct i32x4 : i16x8 { // 4xint32
+struct i32x4 : iTxN<i32x4> { // 4xint32
 	i32x4()                      {}
 	i32x4(const void *ptr)       { Load(ptr); }
 	i32x4(__m128i d)             { data = d; }
 	i32x4(int v)                 { data = _mm_set_epi32(0, 0, 0, v); }
 	i32x4(int a, int b, int c, int d)  { data = _mm_set_epi32(a, b, c, d); }
 	operator int()               { return _mm_cvtsi128_si32(data); }
+	operator i16x8() const       { return i16x8(data); }
 };
 
 force_inline i32x4  i32all(int v)                 { return _mm_set1_epi32(v); }
@@ -129,14 +145,20 @@ force_inline i32x4  operator==(i32x4 a, i32x4 b)   { return _mm_cmpeq_epi32(a.da
 force_inline i32x4  operator<(i32x4 a, i32x4 b)    { return _mm_cmplt_epi32(a.data, b.data); }
 force_inline i32x4  operator>(i32x4 a, i32x4 b)    { return _mm_cmpgt_epi32(a.data, b.data); }
 force_inline bool   AllTrue(i32x4 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i32x4 a)               { return _mm_movemask_ps(_mm_castsi128_ps(a.data)); }
+force_inline int    CountTrue(i32x4 a)             { return CountBits(_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
+force_inline int    FirstTrue(i32x4 a)             { return CountTrailingZeroBits(_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
+force_inline int    FirstFalse(i32x4 a)            { return CountTrailingZeroBits(~_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
+force_inline bool   IsTrue(i32x4 a, int i)         { return _mm_movemask_ps(_mm_castsi128_ps(a.data)) & (1 << i); }
 
-struct i8x16 : i16x8 { // 16xint8
+struct i8x16 : iTxN<i8x16> { // 16xint8
 	i8x16()                      {}
 	i8x16(const void *ptr)       { Load(ptr); }
 	i8x16(__m128i d)             { data = d; }
 	i8x16(int v)                 { data = _mm_set_epi8(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,v); }
 	i8x16(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p)
 	                             { data = _mm_set_epi8(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p); }
+	operator i16x8() const       { return i16x8(data); }
 };
 
 force_inline i8x16  i8all(int v)                  { return _mm_set1_epi8(v); }
@@ -153,6 +175,16 @@ force_inline i8x16& operator|=(i8x16& a, i8x16 b) { return a = a | b; }
 force_inline i8x16  operator^(i8x16 a, i8x16 b)   { return _mm_xor_si128(a.data, b.data); }
 force_inline i8x16& operator^=(i8x16& a, i8x16 b) { return a = a ^ b; }
 force_inline i8x16  operator~(i8x16 a)            { return _mm_xor_si128(a.data, i8all(0xff).data); }
+
+force_inline i8x16  operator==(i8x16 a, i8x16 b)   { return _mm_cmpeq_epi8(a.data, b.data); }
+force_inline i8x16  operator<(i8x16 a, i8x16 b)    { return _mm_cmplt_epi8(a.data, b.data); }
+force_inline i8x16  operator>(i8x16 a, i8x16 b)    { return _mm_cmpgt_epi8(a.data, b.data); }
+force_inline bool   AllTrue(i8x16 a)               { return _mm_movemask_epi8(a.data) == 0xffff; }
+force_inline bool   AnyTrue(i8x16 a)               { return _mm_movemask_epi8(a.data); }
+force_inline int    CountTrue(i8x16 a)             { return CountBits(_mm_movemask_epi8(a.data)); }
+force_inline int    FirstTrue(i8x16 a)             { return CountTrailingZeroBits(_mm_movemask_epi8(a.data)); }
+force_inline int    FirstFalse(i8x16 a)            { return CountTrailingZeroBits(~_mm_movemask_epi8(a.data)); }
+force_inline bool   IsTrue(i8x16 a, int i)         { return _mm_movemask_epi8(a.data) & (1 << i); }
 
 force_inline f32x4 ToFloat(i32x4 a)               { return _mm_cvtepi32_ps(a.data); }
 force_inline i32x4 Truncate(f32x4 a)              { return _mm_cvttps_epi32(a.data); }

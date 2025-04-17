@@ -290,6 +290,7 @@ struct PaintInfo {
 	void   *context;
 	bool    showlabels;
 	bool    shrink_oversized_objects;
+	bool    single_line = false; // draw just one line (special usecase)
 	void  (*DrawSelection)(Draw& w, int x, int y, int cx, int cy);
 	
 	Color   ResolveInk(Color ink) const;
@@ -408,8 +409,6 @@ enum {
 	QTF_CRLF = 8,
 	QTF_NOCHARSET = 16,
 	QTF_NOLANG = 32,
-	
-	QTF_ALL = 0xffffffff
 };
 
 #include "Txt.h"

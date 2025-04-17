@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	memeq8len.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,3 +1,6 @@
+#ifdef flagSTATIC_PNG // Forces the use of internal PNG code even if host has libpng.so
+#endif // just for mainconfig info
+
 #if defined(flagWIN32) || defined(flagOSX) || defined(flagSTATIC_PNG)
 #include <plugin/png/lib/png.h>
 #else

@@ -692,12 +692,12 @@ public:
 	static Bits   SpellParagraph(const RichPara& p);
 	static void   FixedLang(int lang)              { fixedlang = lang; }
 
-	Event<>                  WhenRefreshBar;
+	Event<>                  WhenRefreshBar; // Toolbar should be updated
 	Event<>                  WhenStartEvaluating;
 	Event<String&, WString&> WhenHyperlink;
 	Event<String&>           WhenLabel;
 	Event<String&>           WhenIndexEntry;
-	Event<Bar&>              WhenBar;
+	Event<Bar&>              WhenBar; // Context menu
 	Event<>                  WhenSel;
 	Gate<const String&>      WhenIsLink;
 	Event<const String&>     WhenLink;

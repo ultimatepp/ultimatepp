@@ -26,8 +26,9 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [s2;%% Release history&]
-[s3;%% 2025.1rc (Mar 2024)&]
-[s5;%% &]
+[s3;%% 2025.1 (rev. 17799) (Mar 2025)&]
+[s5;%% [*/ Current stable release]&]
+[s5;*/%% &]
 [s0; [* Core]&]
 [s0;* &]
 [s0;i150;O0; In Posix .log files moved to .local/state/u`+`+/log&]
@@ -80,6 +81,9 @@ allows dark paper in dark mode.&]
 [s0;i150;O0; Posix config is now always in the same folder .../theide/.. 
 for all variants of theide and umk (to share the same .var and 
 .bm files)&]
+[s0;i150;O0; build process in Win32 now automatically picks manifest.xml 
+from packages (usually from CtrlCore) and application icon and 
+creates .rc file automatically&]
 [s0;i150;O0; RichEdits in theide now support dark theme&]
 [s0;i150;O0; Json/Xml viewer local menu&]
 [s0;i150;O0; aux packages now have Remove all menu command&]
@@ -107,7 +111,6 @@ options&]
 [s5;%% &]
 [s5;%% &]
 [s3;%% 2024.1.1 (rev. 17490) (Dec 2024)&]
-[s0;%% [*/ Current stable release]&]
 [s0;*/%% &]
 [s0;%% [* Core]&]
 [s0;%% &]

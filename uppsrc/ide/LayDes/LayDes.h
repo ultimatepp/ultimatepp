@@ -281,6 +281,7 @@ public:
 	void   RightDown(Point p, dword keyflags) override;
 	void   Layout() override;
 	bool   HotKey(dword key) override;
+	void   Skin() override;
 
 private:
 	bool   DoKey(dword key, int count);
@@ -473,6 +474,7 @@ private:
 	
 	void        GotoUsing();
 
+	void        InvalidateItems();
 	void        SyncUsc();
 	void        Save();
 	void        CloseDesigner();

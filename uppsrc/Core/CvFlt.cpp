@@ -412,13 +412,13 @@ String FormatDoubleN(double x)
 String FormatFloat(float x)
 {
 	char h[512];
-	return String(h, FormatDouble_(h, x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL));
+	return String(h, FormatDouble_(h, (double)x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP|FD_SPECIAL));
 }
 
 String FormatFloatN(float x)
 {
 	char h[512];
-	return String(h, FormatDouble_(h, x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP));
+	return String(h, FormatDouble_(h, (double)x, 7, FD_TOLERANCE(6)|FD_MINIMAL_EXP));
 }
 
 

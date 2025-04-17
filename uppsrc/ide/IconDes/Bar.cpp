@@ -412,14 +412,14 @@ IconDes::IconDes()
 
 	bottompane.Bottom(iconshow, 64);
 	
-	SetBar();
-	ColorChanged();
-	BackPaint();
-
 	magnify = 13;
 	pen = 1;
 	
 	single_mode = false;
+
+	SetBar();
+	ColorChanged();
+	BackPaint();
 
 	status.Width(200);
 	status.NoTransparent();

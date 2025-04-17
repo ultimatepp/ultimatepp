@@ -633,12 +633,19 @@ to indicate it is empty.&]
 [s5;:Upp`:`:TreeCtrl`:`:Editor`(Upp`:`:Ctrl`&`): [_^Upp`:`:TreeCtrl^ TreeCtrl][@(0.0.255) `&
 ]_[* Editor]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 e])&]
 [s2;%% Assigns alternative editor for WhenEdited functionality.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:TreeCtrl`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`): [_^TreeCtrl^ TreeCtrl
 ][@(0.0.255) `&]_[* SetScrollBarStyle]([@(0.0.255) const]_[_^ScrollBar`:`:Style^ ScrollBa
 r`::Style][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Assigns a chameleon visual style of scrollbar of TreeCtrl.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:ScrollIntoX`(bool`): TreeCtrl[@(0.0.255) `&] 
+[* ScrollIntoX]([@(0.0.255) bool] [*@3 b])&]
+[s2;%% If active, ScrollIntoLine and ScrolIntoCursor functions also 
+move horizontal scrollbar to make item visible (e.g. if it is 
+very deep in the tree).&]
 [s3;%% &]
 [s0;%% &]
 [s0; &]

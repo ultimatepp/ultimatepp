@@ -1,5 +1,6 @@
 LAYOUT(SelectPackageLayout, 816, 468)
-	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 8).VSizePosZ(4, 32))
+	ITEM(Upp::RichTextCtrl, recent, LeftPosZ(4, 804).TopPosZ(4, 19))
+	ITEM(Upp::ParentCtrl, parent, HSizePosZ(4, 8).VSizePosZ(24, 32))
 	ITEM(Upp::DropList, kind, Tip(t_("Select which packages should be displayed")).LeftPosZ(4, 124).BottomPosZ(7, 19))
 	ITEM(Upp::DropList, nest, Tip(t_("Select which packages should be displayed")).LeftPosZ(132, 112).BottomPosZ(7, 19))
 	ITEM(Upp::EditString, search, Tip(t_("Search for the concrete package")).HSizePosZ(248, 412).BottomPosZ(6, 20))
@@ -24,14 +25,14 @@ LAYOUT(ConfigLayout, 724, 216)
 	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).LeftPosZ(292, 68).BottomPosZ(5, 23))
 END_LAYOUT
 
-LAYOUT(ConfLayout, 368, 752)
+LAYOUT(ConfLayout, 764, 752)
 	ITEM(Upp::Option, gui, SetLabel(t_("GUI application")).LeftPosZ(8, 112).TopPosZ(4, 16))
-	ITEM(Upp::Option, debugcode, SetLabel(t_("Allowing debuging code in release mode")).LeftPosZ(124, 240).TopPosZ(4, 16))
-	ITEM(Upp::ArrayCtrl, accepts, AutoHideSb(true).VertGrid(false).HorzGrid(false).HSizePosZ(8, 4).VSizePosZ(28, 60))
+	ITEM(Upp::Option, debugcode, SetLabel(t_("Allow debuging code in release mode")).LeftPosZ(124, 240).TopPosZ(4, 16))
+	ITEM(Upp::ArrayCtrl, accepts, AutoHideSb(true).HSizePosZ(8, 8).VSizePosZ(28, 60))
 	ITEM(Upp::Label, dv___3, SetLabel(t_("&Other flags:")).LeftPosZ(8, 58).BottomPosZ(37, 19))
-	ITEM(Upp::EditString, other, HSizePosZ(68, 4).BottomPosZ(37, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(6, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 24))
+	ITEM(Upp::EditString, other, HSizePosZ(68, 8).BottomPosZ(37, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(CustomLayout, 608, 410)

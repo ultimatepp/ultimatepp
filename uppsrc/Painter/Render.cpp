@@ -315,9 +315,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 	for(const auto& p : path_info->path) {
 		RenderPathSegments(j.g, p, j.regular ? &pathattr : NULL, j.tolerance);
 		if(width != ONPATH) {
-			int n = rasterizer.MaxY() - rasterizer.MinY();
-			if(n >= 0) {
+			if(rasterizer.IsValid()) {
 				PAINTER_TIMING("RenderPath2 Fill");
+				int n = rasterizer.MaxY() - rasterizer.MinY();
 				if(doco && n > 6) {
 					CoWork co;
 					co * [&] { fill(&co); };
@@ -468,8 +468,8 @@ void BufferPainter::FinishPathJob()
 			}
 		};
 
-		int n = maxy - miny;
-		if(n >= 0) {
+		if(miny < maxy) {
+			int n = maxy - miny;
 			if(n > 6) {
 				std::atomic<int> ii(0);
 				CoDo([&] {

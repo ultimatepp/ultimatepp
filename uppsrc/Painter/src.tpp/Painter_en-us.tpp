@@ -340,6 +340,10 @@ of them, advance between characters can be overriden with [%-*@3 dx].&]
 [s5;:Upp`:`:Painter`:`:Rectangle`(double`,double`,double`,double`): Painter[@(0.0.255) `&
 ] [* Rectangle]([@(0.0.255) double] [*@3 x], [@(0.0.255) double] [*@3 y], 
 [@(0.0.255) double] [*@3 cx], [@(0.0.255) double] [*@3 cy])&]
+[s5;:Upp`:`:Painter`:`:Rectangle`(const Rectf`&`): Painter[@(0.0.255) `&] 
+[* Rectangle]([@(0.0.255) const] Rectf[@(0.0.255) `&] [*@3 r])&]
+[s5;:Upp`:`:Painter`:`:Rectangle`(Pointf`,Pointf`): Painter[@(0.0.255) `&] 
+[* Rectangle](Pointf [*@3 p1], Pointf [*@3 p2])&]
 [s2;%% Convenience method that adds a rectangle to the path.&]
 [s3; &]
 [s4; &]
@@ -351,6 +355,18 @@ inter[@(0.0.255) `&] [* RoundedRectangle]([@(0.0.255) double] [*@3 x],
 ainter[@(0.0.255) `&] [* RoundedRectangle]([@(0.0.255) double] [*@3 x], 
 [@(0.0.255) double] [*@3 y], [@(0.0.255) double] [*@3 cx], [@(0.0.255) double] 
 [*@3 cy], [@(0.0.255) double] [*@3 rx], [@(0.0.255) double] [*@3 ry])&]
+[s5;:Upp`:`:Painter`:`:RoundedRectangle`(const Rectf`&`,double`): Painter[@(0.0.255) `&
+] [* RoundedRectangle]([@(0.0.255) const] Rectf[@(0.0.255) `&] [*@3 rc], 
+[@(0.0.255) double] [*@3 r])&]
+[s5;:Upp`:`:Painter`:`:RoundedRectangle`(Pointf`,Pointf`,double`): Painter[@(0.0.255) `&
+] [* RoundedRectangle](Pointf [*@3 p1], Pointf [*@3 p2], [@(0.0.255) double] 
+[*@3 r])&]
+[s5;:Upp`:`:Painter`:`:RoundedRectangle`(const Rectf`&`,double`,double`): Painter[@(0.0.255) `&
+] [* RoundedRectangle]([@(0.0.255) const] Rectf[@(0.0.255) `&] [*@3 r], 
+[@(0.0.255) double] [*@3 r1], [@(0.0.255) double] [*@3 r2])&]
+[s5;:Upp`:`:Painter`:`:RoundedRectangle`(Pointf`,Pointf`,double`,double`): Painter[@(0.0.255) `&
+] [* RoundedRectangle](Pointf [*@3 p1], Pointf [*@3 p2], [@(0.0.255) double] 
+[*@3 r1], [@(0.0.255) double] [*@3 r2])&]
 [s2;%% Convenience method that adds rounded rectangle to the path. 
 [%-*@3 r] specifies the radius of circular corner, [%-*@3 rx] [%-*@3 ry] 
 radii of elliptical corners.&]
@@ -359,12 +375,18 @@ radii of elliptical corners.&]
 [s5;:Upp`:`:Painter`:`:Ellipse`(double`,double`,double`,double`): Painter[@(0.0.255) `&
 ] [* Ellipse]([@(0.0.255) double] [*@3 x], [@(0.0.255) double] [*@3 y], 
 [@(0.0.255) double] [*@3 rx], [@(0.0.255) double] [*@3 ry])&]
+[s5;:Upp`:`:Painter`:`:Ellipse`(const Rectf`&`): Painter[@(0.0.255) `&] 
+[* Ellipse]([@(0.0.255) const] Rectf[@(0.0.255) `&] [*@3 r])&]
+[s5;:Upp`:`:Painter`:`:Ellipse`(Pointf`,Pointf`): Painter[@(0.0.255) `&] 
+[* Ellipse](Pointf [*@3 p1], Pointf [*@3 p2])&]
 [s2;%% Convenience method that adds ellipse to the path.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Painter`:`:Circle`(double`,double`,double`): Painter[@(0.0.255) `&] 
 [* Circle]([@(0.0.255) double] [*@3 x], [@(0.0.255) double] [*@3 y], [@(0.0.255) double] 
 [*@3 r])&]
+[s5;:Upp`:`:Painter`:`:Circle`(Pointf`,double`): Painter[@(0.0.255) `&] 
+[* Circle](Pointf [*@3 p], [@(0.0.255) double] [*@3 r])&]
 [s2;%% Convenience method that adds circle to the path.&]
 [s3; &]
 [s4; &]

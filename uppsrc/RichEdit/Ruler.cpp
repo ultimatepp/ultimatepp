@@ -33,7 +33,7 @@ void RichRuler::Paint(Draw& w)
 	int cx = zoom * pgcx;
 	w.DrawRect(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6), SColorPaper);
 	int i = 0;
-	if(grid * zoom > 2)
+	if(grid * zoom.AsDouble() > 2)
 		for(;;) {
 			int x = fround(++i * grid) * zoom;
 			if(x >= cx) break;

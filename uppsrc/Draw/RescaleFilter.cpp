@@ -114,11 +114,13 @@ void ImageFilterKernel::Init(double (*kfn)(double), int a, int src_sz, int tgt_s
 		Buffer<int> *k = kache.FindPtr(key);
 		if(k)
 			kernel = *k;
-		Buffer<int>& ktab = kache.GetAdd(key);
-		ktab.Alloc(((2 * a) << shift) + 1);
-		for(int i = 0; i < ((2 * a) << shift) + 1; i++)
-			ktab[i] = int((1 << shift) * (*kfn)((double)i / (1 << shift) - a));
-		kernel = ktab;
+		else {
+			Buffer<int>& ktab = kache.GetAdd(key);
+			ktab.Alloc(((2 * a) << shift) + 1);
+			for(int i = 0; i < ((2 * a) << shift) + 1; i++)
+				ktab[i] = int((1 << shift) * (*kfn)((double)i / (1 << shift) - a));
+			kernel = ktab;
+		}
 	}
 }
 

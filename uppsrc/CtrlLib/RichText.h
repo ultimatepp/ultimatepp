@@ -34,6 +34,7 @@ private:
 	bool          shrink_oversized_objects;
 	bool          icursor = true;
 	bool          copy_with_tabs = false;
+	bool          single_line = false;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -120,6 +121,7 @@ public:
 	RichTextView&   ICursor(bool b = true)                    { icursor = b; return *this; }
 	RichTextView&   NoICursor()                               { return ICursor(false); }
 	RichTextView&   CopyWithTabs(bool b = true)               { copy_with_tabs = b; return *this; }
+	RichTextView&   SingleLine(bool b = true)                 { single_line = b; return *this; }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 

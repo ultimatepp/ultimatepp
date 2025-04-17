@@ -205,10 +205,12 @@ inline bool FitsInInt64(double x)
 force_inline
 int CountBits(dword mask)
 {
-#if COMPILER_GCC && !defined(flagLEGACY_CPU)
-    return __builtin_popcount(mask);
-#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
-    return __popcnt(mask);
+#ifndef flagLEGACY_CPU // support for old CPUs (released before 2010)
+	#if COMPILER_GCC
+	    return __builtin_popcount(mask);
+	#elif COMPILER_MSC
+	    return __popcnt(mask);
+	#endif
 #else
     // Fallback (unlikely)
     mask = mask - ((mask >> 1) & 0x55555555);
@@ -243,11 +245,60 @@ int CountBits64(uint64 mask)
 #endif
 }
 
+force_inline
+int CountTrailingZeroBits(dword x)
+{
+#if COMPILER_GCC && !defined(flagLEGACY_CPU)
+	return __builtin_ctz(x);
+#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
+	unsigned long index;
+	_BitScanForward(&index, x);
+	return index;
+#else
+	// unlikely fallback
+	int ret = 0;
+	if((x & 0xffff) == 0) {
+		x >>= 16;
+		ret += 16;
+	}
+	if((x & 0xff) == 0) {
+		x >>= 8;
+		ret += 8;
+	}
+	if((x & 0xf) == 0) {
+		x >>= 4;
+		ret += 4;
+	}
+	if((x & 0x3) == 0) {
+		x >>= 2;
+		ret += 2;
+	}
+	if((x & 0x1) == 0)
+		ret += 1;
+	return ret;
+#endif
+}
+
+force_inline
+int CountTrailingZeroBits64(uint64 x)
+{
+#if COMPILER_GCC && !defined(flagLEGACY_CPU)
+	return __builtin_ctzll(x);
+#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
+	unsigned long index;
+	_BitScanForward64(&index, x);
+	return index;
+#else
+	// unlikely fallback
+	return (x & 0xffffffff) ? CountTrailingZeroBits((dword)x) : CountTrailingZeroBits((dword)(x >> 32)) + 32;
+#endif
+}
+
 #if defined(__SIZEOF_INT128__) && (__GNUC__ > 5 || __clang_major__ >= 5)
 
 #ifdef CPU_X86
 
-inline
+force_inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
 	return _addcarry_u64(carry, result, value, &result);
 }
@@ -263,7 +314,7 @@ byte addc64(uint64& r, uint64 a, byte carry)
 
 #endif
 
-inline
+force_inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
 	unsigned __int128 prod =  (unsigned __int128)a * b;
@@ -273,13 +324,13 @@ uint64 mul64(uint64 a, uint64 b, uint64& hi)
 
 #elif defined(COMPILER_MSC) && defined(CPU_64)
 
-inline
+force_inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)
 {
 	return _umul128(a, b, &hi);
 }
 
-inline
+force_inline
 byte addc64(uint64& result, const uint64& value, byte carry) {
 	return _addcarry_u64(carry, result, value, &result);
 }

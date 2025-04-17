@@ -66,6 +66,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.sizetracking = sizetracking;
 	pi.shrink_oversized_objects = shrink_oversized_objects;
 	pi.darktheme = IsDarkTheme();
+	pi.single_line = single_line;
 	Rect pg = GetPage();
 	pg.top = TopY();
 	text.Paint(pw, pg, pi);
@@ -152,7 +153,10 @@ int  RichTextView::GetPointPos(Point p) const
 	sz.cx -= margin.left + margin.right;
 	sz.cy -= margin.top + margin.bottom;
 	p = GetTextPoint(p);
-	return text.GetPos(p.x, PageY(0, p.y), GetPage());
+	Rect pg = GetPage();
+	if(single_line)
+		pg.right = INT_MAX / 2;
+	return text.GetPos(p.x, PageY(0, p.y), pg);
 }
 
 String RichTextView::GetLink(int pos, Point p) const

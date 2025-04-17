@@ -15,7 +15,7 @@ String Ide::GetTargetLogPath()
 	return ForceExt(target, ".log");
 #else
 	String title = GetFileTitle(target);
-	String pp = GetFileFolder(GetUserConfigDir()) + "/.local/state/u++/log/" + title + ".log";
+	String pp = GetFileFolder(GetUserConfigDir(GetFileFolder(target))) + "/.local/state/u++/log/" + title + ".log";
 	if(FileExists(pp))
 		return pp;
 	String h = GetFileFolder(target);

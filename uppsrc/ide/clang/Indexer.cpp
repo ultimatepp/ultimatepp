@@ -65,8 +65,7 @@ const VectorMap<String, Time>& FindMasterSourceCached(PPInfo& ppi, const Workspa
 			bool found = false;
 			VectorMap<String, Time> deps;
 			ArrayMap<String, Index<String>> dics;
-			Vector<Tuple<String, String, int>> flags;
-			ppi.GatherDependencies(master, deps, dics, flags, speculative, header_file, chain, found);
+			ppi.GatherDependencies(master, deps, dics, speculative, header_file, chain, found);
 			
 			MasterSourceCacheRecord& m = cache.GetAdd(header_file);
 			m.chain.Clear();

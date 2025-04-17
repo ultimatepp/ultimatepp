@@ -15,7 +15,7 @@ void MakeWGLContext(int depthBits, int stencilBits, int samples)
 {
 	ONCELOCK {
 		for(int pass = 0; pass < 2; pass++) {
-			HWND hWND = CreateWindow("UPP-CLASS-A", "Fake Window",
+			HWND hWND = CreateWindow("UPP-CLASS-W", "Fake Window",
 			                         WS_CAPTION|WS_SYSMENU|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
 			                         0, 0, 1, 1, NULL, NULL,
 			                         NULL, NULL);

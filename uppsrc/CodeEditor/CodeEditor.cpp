@@ -1315,9 +1315,8 @@ void CodeEditor::Zoom(int d)
 }
 
 void CodeEditor::MouseWheel(Point p, int zdelta, dword keyFlags) {
-	if(keyFlags & K_CTRL) {
+	if(keyFlags & K_CTRL)
 		Zoom(sgn(zdelta));
-	}
 	else
 		LineEdit::MouseWheel(p, zdelta, keyFlags);
 }

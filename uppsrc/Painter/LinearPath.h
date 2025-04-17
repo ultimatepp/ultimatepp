@@ -47,7 +47,7 @@ private:
 	           const Pointf& a0, const Pointf& b0);
 	bool   PreClipped(Pointf p2, Pointf p3);
 
-public:	
+public:
 	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin, const Rectf& preclip);
 };
 
@@ -146,6 +146,7 @@ public:
 	void  SetClip(const Rectf& rect);
 	Rectf GetClip() const                     { return cliprect; }
 
+	bool IsValid() const                      { return min_y < max_y; }
 	int  MinY() const                         { return min_y; }
 	int  MaxY() const                         { return max_y; }
 	bool NotEmpty(int y)                      { return cell[y].count; }

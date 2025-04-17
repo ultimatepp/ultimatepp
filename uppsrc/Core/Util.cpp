@@ -4,9 +4,11 @@
 #	include <winnls.h>
 #endif
 
-#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID) && defined(flagSTACKTRACE)
+#ifdef flagSTACKTRACE // On Panic (e.g. failed ASSERT) try to print stack back-trace
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID)
 #	include <execinfo.h>
 #	include <cxxabi.h>
+#endif
 #endif
 
 namespace Upp {

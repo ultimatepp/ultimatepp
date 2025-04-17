@@ -253,6 +253,8 @@ private:
 		Image  img;
 		String tip;
 		bool   highlight = false;
+		Color  ink = SColorText();
+		Font   font = StdFont();
 
 		int    GetHeight() const;
 		int    GetRight() const  { return y + GetHeight(); }
@@ -269,9 +271,11 @@ private:
 
 public:
 	void Clear();
+	int  GetCount() const                                        { return tab.GetCount(); }
 	void Add(const Image& img, const String& tip, bool highlight = false);
 	void SetCursor(int i);
 	int  GetCursor() const                                       { return cursor; }
+	void Set(int i, const String& text, Color ink, Font font = StdFont());
 
 	RightTabs();
 };
@@ -483,6 +487,7 @@ public:
 	EscValue         macro_api;
 
 	RightTabs   btabs;
+	int         error_tab_i = 0; // index of btabs "Errors"
 	StaticRect  bottom;
 	Splitter    editor_bottom;
 	Console     console;
@@ -650,7 +655,7 @@ public:
 	int       insert_include;
 	int       bordercolumn;
 	bool      persistent_find_replace;
-	bool      find_replace_restore_pos;
+	bool      find_replace_restore_pos = false;
 	int       spellcheck_comments;
 	bool      wordwrap_comments = true;
 	bool      wordwrap = false;

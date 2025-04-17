@@ -296,6 +296,7 @@ void Ctrl::Show(bool ashow) {
 	if(visible != ashow) {
 		visible = true;
 		fullrefresh = false;
+		erasebg = true;
 		RefreshFrame();
 		visible = ashow;
 		fullrefresh = false;
@@ -552,6 +553,7 @@ Ctrl::Ctrl() {
 	unicode = false;
 	popupgrab = false;
 	fullrefresh = false;
+	erasebg = false;
 	akv = false;
 	layout_id_literal = false;
 	top = false;

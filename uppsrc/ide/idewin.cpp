@@ -12,6 +12,7 @@ void Ide::Skin()
 		editor.DefaultHlStyles();
 		UpdateFormat();
 	}
+	SyncUsc();
 }
 
 void Ide::ToggleVerboseBuild() {

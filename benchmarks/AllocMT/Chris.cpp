@@ -669,7 +669,7 @@ public:
   }
 
   void shutdown_local() throw() {
-#ifdef flagUSEMALLOC
+#ifdef flagUSEMALLOC // disable U++ allocator (MemoryAlloc is malloc, new/delete standard library)
     tls_malloc.shutdown();
 #else
 	UPP::MemoryFreeThread();

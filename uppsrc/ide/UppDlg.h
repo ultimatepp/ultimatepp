@@ -163,6 +163,8 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	bool           canceled;
 	String         selected, selected_nest;
 
+	Vector<Tuple<String, String>> lru;
+
 	struct PkInfo {
 		String package;
 		String description;
@@ -207,6 +209,10 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 
 	void           ListCursor();
 	void           ChangeDescription();
+	
+	String         LRUFilePath();
+	void           LoadLRU();
+	void           StoreLRU(const String& p);
 
 	void           SyncFilter();
 	void           ScanFolder(const String& path, ArrayMap<String, PkData>& nd,

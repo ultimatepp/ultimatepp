@@ -2,6 +2,15 @@
 
 using namespace Upp;
 
+force_inline
+uint64 cmask16__(uint16x8_t mask) {
+	uint8x8_t res = vshrn_n_u16(mask, 4);
+	uint64_t  matches = vget_lane_u64(vreinterpret_u64_u8(res), 0);
+	return matches;
+}
+
+const uint64 cmask_all__ = 0xffffffffffffffffull;
+
 struct f32x4 {
 	float32x4_t data;
 
@@ -53,14 +62,13 @@ force_inline f32x4  operator>(f32x4 a, f32x4 b)   { return vreinterpretq_f32_u32
 force_inline f32x4  operator<=(f32x4 a, f32x4 b)  { return vreinterpretq_f32_u32(vcleq_f32(a, b)); }
 force_inline f32x4  operator>=(f32x4 a, f32x4 b)  { return vreinterpretq_f32_u32(vcgeq_f32(a, b)); }
 
-force_inline bool   AllTrue(uint32x4_t v) {
-    uint32x2_t tmp = vand_u32(vget_low_u32(v), vget_high_u32(v));
-    return vget_lane_u32(vpmin_u32(tmp, tmp), 0) == 0xffffffff;;
-}
-
-force_inline bool   AllTrue(f32x4 a) {
-	return AllTrue(vreinterpretq_u32_f32(a));
-}
+force_inline uint64 cmaskf__(float32x4_t mask)      { return cmask16__(vreinterpretq_u16_f32(mask)); }
+force_inline bool   AllTrue(f32x4 a)                { return cmaskf__(a.data) == cmask_all__; }
+force_inline bool   AnyTrue(f32x4 a)                { return cmaskf__(a.data); }
+force_inline int    CountTrue(f32x4 a)              { return CountBits64(cmaskf__(a.data)) >> 4; }
+force_inline int    FirstTrue(f32x4 a)              { return CountTrailingZeroBits64(cmaskf__(a.data)) >> 4; }
+force_inline int    FirstFalse(f32x4 a)             { return CountTrailingZeroBits64(~cmaskf__(a.data)) >> 4; }
+force_inline bool   IsTrue(f32x4 a, int i)          { return cmaskf__(a.data) & ((uint64)1 << (i << 4)); }
 
 force_inline f32x4 min(f32x4 a, f32x4 b)          { return vminq_f32(a, b); }
 force_inline f32x4 max(f32x4 a, f32x4 b)          { return vmaxq_f32(a, b); }
@@ -122,9 +130,12 @@ force_inline i16x8  operator==(i16x8 a, i16x8 b)  { return vreinterpretq_s16_u16
 force_inline i16x8  operator<(i16x8 a, i16x8 b)   { return vreinterpretq_s16_u16(vcltq_s16(a, b)); }
 force_inline i16x8  operator>(i16x8 a, i16x8 b)   { return vreinterpretq_s16_u16(vcgtq_s16(a, b)); }
 
-force_inline bool   AllTrue(i16x8 a) {
-	return AllTrue(vreinterpretq_u32_s16(a));
-}
+force_inline bool   AllTrue(i16x8 a)                { return cmask16__(a.data) == cmask_all__; }
+force_inline bool   AnyTrue(i16x8 a)                { return cmask16__(a.data); }
+force_inline int    CountTrue(i16x8 a)              { return CountBits64(cmask16__(a.data)) >> 3; }
+force_inline int    FirstTrue(i16x8 a)              { return CountTrailingZeroBits64(cmask16__(a.data)) >> 3; }
+force_inline int    FirstFalse(i16x8 a)             { return CountTrailingZeroBits64(~cmask16__(a.data)) >> 3; }
+force_inline bool   IsTrue(i16x8 a, int i)          { return cmask16__(a.data) & ((uint64)1 << (i << 3)); }
 
 struct i32x4 { // 4xint32
 	int32x4_t data;
@@ -176,9 +187,13 @@ force_inline i32x4  operator==(i32x4 a, i32x4 b)  { return vreinterpretq_s32_u32
 force_inline i32x4  operator<(i32x4 a, i32x4 b)   { return vreinterpretq_s32_u32(vcltq_s32(a, b)); }
 force_inline i32x4  operator>(i32x4 a, i32x4 b)   { return vreinterpretq_s32_u32(vcgtq_s32(a, b)); }
 
-force_inline bool   AllTrue(i32x4 a) {
-	return AllTrue(vreinterpretq_u32_s32(a));
-}
+force_inline uint64 cmask32__(uint32x4_t mask)      { return cmask16__(vreinterpretq_u16_u32(mask)); }
+force_inline bool   AllTrue(i32x4 a)                { return cmask32__(a.data) == cmask_all__; }
+force_inline bool   AnyTrue(i32x4 a)                { return cmask32__(a.data); }
+force_inline int    CountTrue(i32x4 a)              { return CountBits64(cmask32__(a.data)) >> 4; }
+force_inline int    FirstTrue(i32x4 a)              { return CountTrailingZeroBits64(cmask32__(a.data)) >> 4; }
+force_inline int    FirstFalse(i32x4 a)             { return CountTrailingZeroBits64(~cmask32__(a.data)) >> 4; }
+force_inline bool   IsTrue(i32x4 a, int i)          { return cmask32__(a.data) & ((uint64)1 << (i << 4)); }
 
 struct i8x16 { // 16*int8
 	int8x16_t data;
@@ -225,6 +240,18 @@ force_inline i8x16& operator|=(i8x16& a, i8x16 b)  { return a = a | b; }
 force_inline i8x16  operator^(i8x16 a, i8x16 b)    { return veorq_s8(a, b); }
 force_inline i8x16& operator^=(i8x16& a, i8x16 b)  { return a = a ^ b; }
 force_inline i8x16  operator~(i8x16 a)             { return vmvnq_s8(a); }
+
+force_inline i8x16  operator==(i8x16 a, i8x16 b)   { return vreinterpretq_s8_u8(vceqq_s8(a, b)); }
+force_inline i8x16  operator<(i8x16 a, i8x16 b)    { return vreinterpretq_s8_u8(vcltq_s8(a, b)); }
+force_inline i8x16  operator>(i8x16 a, i8x16 b)    { return vreinterpretq_s8_u8(vcgtq_s8(a, b)); }
+
+force_inline uint64 cmask8__(uint8x16_t mask)      { return cmask16__(vreinterpretq_u16_u8(mask)); }
+force_inline bool   AllTrue(i8x16 a)               { return cmask8__(a.data) == cmask_all__; }
+force_inline bool   AnyTrue(i8x16 a)               { return cmask8__(a.data); }
+force_inline int    CountTrue(i8x16 a)             { return CountBits64(cmask8__(a.data)) >> 2; }
+force_inline int    FirstTrue(i8x16 a)             { return CountTrailingZeroBits64(cmask8__(a.data)) >> 2; }
+force_inline int    FirstFalse(i8x16 a)            { return CountTrailingZeroBits64(~cmask8__(a.data)) >> 2; }
+force_inline bool   IsTrue(i8x16 a, int i)         { return cmask8__(a.data) & ((uint64)1 << (i << 2)); }
 
 force_inline f32x4 ToFloat(i32x4 a)               { return vcvtq_f32_s32(a); }
 force_inline i32x4 Truncate(f32x4 a)              { return vcvtq_s32_f32(a); }

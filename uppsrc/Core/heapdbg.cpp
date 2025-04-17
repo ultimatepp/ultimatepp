@@ -4,6 +4,8 @@
 
 namespace Upp {
 
+bool NoMemoryLeaksCheck;
+
 static bool  sIgnoreNonMainLeaks;
 static bool  sIgnoreNonUppThreadsLeaks;
 
@@ -224,8 +226,6 @@ void MemoryCheckDebug()
 	}
 	while(p != &dbg_live);
 }
-
-bool NoMemoryLeaksCheck;
 
 void MemoryDumpLeaks()
 {

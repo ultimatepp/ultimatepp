@@ -229,6 +229,8 @@ void LayDes::Paint2(Draw& w)
 	LayoutData& l = CurrentLayout();
 	Size lsz = LayoutZoom(l.size);
 	w.DrawRect(0, 0, lsz.cx, lsz.cy, SLtGray);
+	if(l.item.GetCount() == 0)
+		w.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(30).Italic(), SGray());
 	if(setting.paintgrid) {
 		int gx = minmax((int)~setting.gridx, 1, 32);
 		int gy = minmax((int)~setting.gridy, 1, 32);
@@ -1669,18 +1671,28 @@ void LayDes::ItemClick()
 	SyncItems();
 }
 
+void LayDes::InvalidateItems()
+{
+	if(!IsNull(currentlayout)) {
+		LayoutData& d = CurrentLayout();
+		for(int i = 0; i < d.item.GetCount(); i++)
+			d.item[i].Invalidate();
+	}
+}
+
 void LayDes::SyncUsc()
 {
 	type.ClearList();
 	for(int i = 0; i < LayoutTypes().GetCount(); i++)
 		if(LayoutTypes()[i].kind != LAYOUT_SUBCTRL)
 			type.AddList(LayoutTypes().GetKey(i));
-	if(!IsNull(currentlayout)) {
-		LayoutData& d = CurrentLayout();
-		for(int i = 0; i < d.item.GetCount(); i++)
-			d.item[i].Invalidate();
-	}
+	InvalidateItems();
 	Refresh();
+}
+
+void LayDes::Skin()
+{
+	InvalidateItems();
 }
 
 void LayDes::TypeEdit()

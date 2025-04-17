@@ -15,14 +15,14 @@ const char *bm_MACHINE = bmMACHINE;
 const char *bm_USER = bmUSER;
 
 const char *bm_GIT_BRANCH =
-#ifdef bmGIT_HASH
+#ifdef bmGIT_BRANCH
 	bmGIT_BRANCH
 #else
 	""
 #endif
 ;
 const char *bm_GIT_REVCOUNT =
-#ifdef bmGIT_HASH
+#ifdef bmGIT_REVCOUNT
 	bmGIT_REVCOUNT
 #else
 	""

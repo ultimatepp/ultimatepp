@@ -104,6 +104,7 @@ private:
 	bool         accel;
 	bool         highlight_ctrl;
 	bool         multiroot;
+	bool         scrollinto_x = false;
 	Image        imgEmpty;
 
 	bool         selclick;
@@ -163,6 +164,8 @@ private:
 	void   DoClick(Point p, dword flags, bool down, bool canedit);
 	void   SyncInfo();
 	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
+	int    GetLineX(const Line& l) const        { return levelcx + l.level * levelcx; }
+	Rect   GetValueRect(const Line& l, Point org) const;
 	Rect   GetValueRect(const Line& l) const;
 	void   StartEdit();
 	void   KillEdit();
@@ -344,6 +347,7 @@ public:
 	TreeCtrl& RenderMultiRoot(bool a = true) { multiroot = a; Refresh(); return *this; }
 	TreeCtrl& EmptyNodeIcon(const Image& a)  { imgEmpty = a; Refresh(); return *this; }
 	TreeCtrl& Editor(Ctrl& e)                { editor = &e; return *this; }
+	TreeCtrl& ScrollIntoX(bool b = true)     { scrollinto_x = b; return *this; }
 	
 	TreeCtrl& SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 
