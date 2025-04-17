@@ -864,7 +864,7 @@ String GetProgramDataFolder() { return String("/var/opt"); }
 
 #endif
 
-bool IsAdmin()
+bool IsUserAdmin()
 {
 #ifdef PLATFORM_POSIX
     return geteuid() == 0;
@@ -884,7 +884,7 @@ bool IsAdmin()
     }
     return isAdmin;
 #else
-    // Unsupported platform. (Assume no elevation).
+    // Unsupported platform. (Assume no elevation.)
     return false;
 #endif
 }
