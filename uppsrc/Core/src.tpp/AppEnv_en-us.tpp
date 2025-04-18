@@ -224,6 +224,11 @@ tring]_[* GetDesktopManager]()&]
 the value of `"DESKTOP`_SESSION`" environment variable is returned.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:IsUserAdmin`(`): [@(0.0.255) bool] [* IsUserAdmin]()&]
+[s2;%% Return true if the current process is running as administrator 
+(Windows) or root (POSIX).&]
+[s3; &]
+[s4; &]
 [s5;:LaunchWebBrowser`(const String`&`): [@(0.0.255) void]_[* LaunchWebBrowser]([@(0.0.255) c
 onst]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&
 ]_[*@3 url])&]
