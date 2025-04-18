@@ -931,7 +931,7 @@ void Ide::BrowseMenu(Bar& menu)
 	}
 
 	if(AssistDiagnostics) {
-		menu.Separator();
+		menu.MenuSeparator();
 		menu.Add("Dump and show whole current index", [=] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path);
@@ -948,6 +948,9 @@ void Ide::BrowseMenu(Bar& menu)
 			String p = CacheFile("CurrentContext" + AsString(Random()) + AsString(Random()) + ".txt");
 			Upp::SaveFile(p, editor.CurrentContext().content);
 			EditFile(p);
+		});
+		menu.Add("Current include path", [=] {
+			PromptOK("\1" + Join(Split(GetCurrentIncludePath(),';'), "\n"));
 		});
 	}
 }
