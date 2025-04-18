@@ -183,13 +183,10 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	ok.WhenAction = clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
 	cancel.WhenAction = WhenClose = THISBACK(OnCancel);
 	clist.Columns(4);
-	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
 	alist.AddColumn("Package").Add(3);
 	alist.AddColumn("Nest");
 	alist.AddColumn("Description");
 	alist.AddIndex();
-	alist.ColumnWidths("108 79 317");
-	alist.WhenCursor = THISBACK(ListCursor);
 	alist.EvenRowColor();
 	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
 	list.Add(clist.SizePos());
@@ -337,12 +334,15 @@ void SelectPackageDlg::Serialize(Stream& s)
 
 String SelectPackageDlg::GetCurrentName()
 {
+	String n;
 	if(clist.IsShown())
-		return clist.GetCurrentName();
+		n = clist.GetCurrentName();
 	else
 	if(alist.IsCursor())
-		return alist.Get(0);
-	return Null;
+		n = alist.Get(0);
+	else
+		return Null;
+	return n;
 }
 
 String SelectPackageDlg::GetCurrentNest()
@@ -382,16 +382,6 @@ void SelectPackageDlg::ChangeDescription()
 		p.description = ~dlg.text;
 		if(alist.IsCursor())
 			alist.Set(2, ~dlg.text);
-	}
-}
-
-void SelectPackageDlg::ListCursor()
-{
-	int c = GetCurrentIndex();
-	if(c >= 0 && c < packages.GetCount()) {
-		String pp = PackagePath(GetCurrentName());
-		Package pkg;
-		pkg.Load(pp);
 	}
 }
 
@@ -439,7 +429,9 @@ void SelectPackageDlg::OnOK()
 	Package pkg;
 	int fk = ~kind;
 	String n = GetCurrentName();
-	if(n.GetCount() && pkg.Load(PackagePath(n)) &&
+	if(IsExternalMode() && (clist.IsShown() && clist.IsCursor() || alist.IsCursor())
+	   ||
+	   n.GetCount() && pkg.Load(PackagePath(n)) &&
 	   (!(fk == MAIN) || pkg.config.GetCount()) &&
 	   (!(fk == NONMAIN) || !pkg.config.GetCount())) {
 		loading = false;
@@ -715,9 +707,22 @@ void SelectPackageDlg::SyncList(const String& find)
 	alist.Clear();
 	clist.Clear();
 	nest_list.Clear();
-	ListCursor();
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
+	if(IsExternalMode()) {
+		alist.HeaderTab(2).Hide();
+		alist.ColumnWidths("400 70");
+		Vector<String> h = GetUppDirs();
+		if(h.GetCount()) {
+			alist.Add("@" + GetVarsName(), GetFileName(h[0]), Null, IdeImg::MainPackage());
+			alist.SetDisplay(alist.GetCount() - 1, 0, bpd);
+			clist.Add("@" + GetVarsName(), IdeImg::MainPackage());
+		}
+	}
+	else {
+		alist.HeaderTab(1).Show();
+		alist.ColumnWidths("108 79 317");
+	}
 	for(int i = 0; i < packages.GetCount(); i++) {
 		const PkInfo& pkg = packages[i];
 		Image icon = pkg.icon;
@@ -790,6 +795,8 @@ void SelectPackageDlg::Load(const String& find)
 			SyncFilter();
 		}
 		Vector<String> upp = GetUppDirsRaw();
+		bool external = IsExternalMode();
+		String source_masks = GetVar("SOURCE_MASKS");
 		packages.Clear();
 		list.AddFrame(lists_status);
 		loading = true;
@@ -818,8 +825,9 @@ void SelectPackageDlg::Load(const String& find)
 				String path = nest.GetKey(i);
 				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
+
 					LSLOW(); // this is used for testing only, normally it is NOP
-					Time tm = FileGetTime(upp_path);
+					Time tm = FileGetTime(PackageFilePath(upp_path));
 					if(IsNull(tm)) // .upp file does not exist - not a package
 						d.ispackage = false;
 					else
@@ -836,6 +844,12 @@ void SelectPackageDlg::Load(const String& find)
 					}
 					else
 						d.ispackage = true;
+					
+					if(external && !d.ispackage) // in external mode folders with sources are packages
+						for(FindFile ff(path + "/*.*"); ff; ff.Next())
+							if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
+								d.ispackage = true;
+
 					if(d.ispackage) {
 						String icon_path;
 						if(IsUHDMode())
@@ -851,6 +865,7 @@ void SelectPackageDlg::Load(const String& find)
 							d.itm = tm;
 						}
 					}
+					
 					ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
 				}
 				else
@@ -916,6 +931,7 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	StoreToGlobal(dlg, c);
 	if(main && selectvars && b.GetCount())
 		dlg.StoreLRU(b);
+
 	return b;
 }
 

@@ -215,6 +215,7 @@ void Package::Option(bool& option, const char *name)
 
 bool Package::Load(const char *path)
 {
+	String fp = PackageFilePath(path);
 	for(;;) {
 		Reset();
 		library.Clear();
@@ -231,9 +232,9 @@ bool Package::Load(const char *path)
 		config.Clear();
 		custom.Clear();
 		description.Clear();
-		String f = LoadFile(path);
+		String f = LoadFile(fp);
 		cr = f.Find('\r') >= 0;
-		time = FileGetTime(path);
+		time = FileGetTime(fp);
 		if(IsNull(time))
 			return false;
 		CParser p(f);
@@ -385,7 +386,7 @@ bool Package::Load(const char *path)
 			return true;
 		}
 		catch(CParser::Error error) {
-			if(sResolve(error, path, p.GetLine() - 1))
+			if(sResolve(error, fp, p.GetLine() - 1))
 				return false;
 			Save(path);
 			return true;
@@ -528,5 +529,5 @@ bool Package::Save(const char *path) const {
 	String content = out.GetResult();
 	if(cr)
 		content.Replace("\n", "\r\n");
-	return SaveChangedFile(path, content);
+	return SaveChangedFile(PackageFilePath(path), content);
 }

@@ -622,6 +622,9 @@ String UppHub()
 
 void UppHubAuto(const String& main)
 {
+	if(IsExternalMode())
+		return;
+
 	bool noprompt = false;
 	Index<String> pmissing;
 	for(;;) {

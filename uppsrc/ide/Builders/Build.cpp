@@ -206,7 +206,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	else {
 		// TODO: cpp builder variables only!!!
 		b->compiler = bm.Get("COMPILER", "");
-		b->include = SplitDirs(Join(GetUppDirs(), ";") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
+		b->include = SplitDirs(Join(GetUppDirs(), ";") + ';' + GetVarsIncludes() + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
 		const Workspace& wspc = GetIdeWorkspace();
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			const Package& pkg = wspc.GetPackage(i);
@@ -415,6 +415,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 void MakeBuild::SetHdependDirs()
 {
 	Vector<String> include = SplitDirs(GetVar("UPP") + ';'
+	    + GetVarsIncludes() + ';'
 		+ GetMethodVars(method).Get("INCLUDE", "") + ';'
 		+ Environment().Get("INCLUDE", "")
 #ifdef PLATFORM_POSIX

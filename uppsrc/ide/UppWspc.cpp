@@ -331,6 +331,7 @@ void WorkspaceWork::PackageCursor()
 	if(actualpackage != METAPACKAGE)
 		filelist.WhenBar = THISBACK(FileMenu);
 	repo_dirs = RepoDirs(true).GetCount();
+
 }
 
 Vector<String> WorkspaceWork::RepoDirs(bool actual)
@@ -490,6 +491,34 @@ ImportDlg::ImportDlg()
 bool FileOrder_(const String& a, const String& b)
 {
 	return stricmp(a, b) < 0;
+}
+
+void SyncPackage(const String& active, Package& actual)
+{
+	Vector<String> file;
+	for(FindFile ff(GetFileFolder(PackagePath(active)) + "/*.*"); ff; ff.Next())
+		if(ff.IsFile()) {
+			String n = ff.GetName();
+			if(IsSourceFile(n) || IsHeaderFile(n))
+				file.Add(n);
+		}
+
+	Sort(file, [=](const String& a, const String& b) {
+		int q = CompareNoCase(GetFileTitle(a), GetFileTitle(b));
+		if(q) return q < 0;
+		return GetFileExt(b) < GetFileExt(a); // put .h first
+	});
+	
+	Index<String> ifile(pick(file));
+
+	Index<String> pf;
+	actual.file.RemoveIf([&](int i) { return ifile.Find(actual.file[i]) < 0; });
+	for(String s : actual.file)
+		pf.FindAdd(s);
+	
+	for(String s : ifile)
+		if(pf.Find(s) < 0)
+			actual.file.Add(s);
 }
 
 void WorkspaceWork::DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi, int from)
@@ -877,12 +906,14 @@ void WorkspaceWork::InsertSpecialMenu(Bar& menu)
 		.Help("Open file selector in Local directory for current package");
 	menu.Add("Insert home directory file(s)..", THISBACK1(AddFile, HOME_FILE))
 		.Help("Open file selector in current user's HOME directory");
-}
-
-void WorkspaceWork::SpecialFileMenu(Bar& menu)
-{
-	InsertSpecialMenu(menu);
-	menu.Add("Import directory tree sources..", THISBACK(Import));
+	menu.Add("Remove all files", [=] {
+		if(PromptYesNo("Remove all files?")) {
+			actual.file.Clear();
+			noemptyload = true;
+			SaveLoadPackage();
+			noemptyload = false;
+		}
+	});
 }
 
 void WorkspaceWork::OpenFileFolder()
@@ -911,8 +942,11 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	menu.Add("Insert separator..", IdeImg::SeparatorOpen(), [=] { AddSeparator(); })
 		.Help("Add text separator line");
 	if(!isaux) {
-		menu.Add("Insert special", THISBACK(SpecialFileMenu))
-		    .Help("Less frequently used methods of adding files to the package");
+		menu.Sub("Miscellaneous", [=](Bar& menu) {
+			menu.Add("Sync package with files in package directory..", [=] { ::SyncPackage(GetActivePackage(), actual); SaveLoadPackage(); });
+			InsertSpecialMenu(menu);
+			menu.Add("Import directory tree sources..", [=] { Import(); });
+		});
 	}
 	menu.Separator();
 	if(!organizer) {
@@ -991,7 +1025,20 @@ void WorkspaceWork::ToggleIncludeable()
 void WorkspaceWork::AddNormalUses()
 {
 	String p = SelectPackage("Select package");
-	if(p.IsEmpty()) return;
+
+	if(p.IsEmpty())
+		return;
+
+	if(IsExternalMode()) { // in external mode, if package is empty (new), add all files in the folder
+		Package pkg;
+		String path = PackagePath(p);
+		pkg.Load(PackagePath(p));
+		if(pkg.file.GetCount() == 0) {
+			SyncPackage(p, pkg);
+			pkg.Save(path);
+		}
+	}
+	
 	OptItem& m = actual.uses.Add();
 	m.text = p;
 	SaveLoadPackage();

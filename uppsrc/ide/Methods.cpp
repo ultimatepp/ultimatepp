@@ -951,6 +951,7 @@ String Ide::GetCurrentIncludePath()
 	}
 	
 	include_path = Join(GetUppDirs(), ";") + ';';
+	MergeWith(include_path, ";", GetVarsIncludes());
 	String inc1 = bm.Get("INCLUDE", "");
 	MergeWith(include_path, ";", inc1);
 	
@@ -976,6 +977,8 @@ String Ide::GetCurrentIncludePath()
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include_path, ";", SourcePath(wspc[i], pkg.include[j].text));
+		if(IsExternalMode()) // just add everything..
+			MergeWith(include_path, ";", PackageDirectory(wspc[i]));
 	}
 
 	return include_path;

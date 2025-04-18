@@ -67,7 +67,7 @@ void CSyntax::InitKeywords()
 		"else", "long", "static",
 		"enum", "namespace", "string",
 		"await", "async", "throws", "awaits",
-		"!break", "continue", "goto", "throw", "return",
+		"break", "continue", "goto", "throw", "return",
 		NULL
 	};
 	static const char *upp[] = {
@@ -368,7 +368,7 @@ void CSyntax::InitKeywords()
 	LoadSyntax(lay, empty);
 	LoadSyntax(sch, empty);
 	LoadSyntax(sql, empty);
-	LoadSyntax(cs, empty);
+	LoadSyntax(cs, empty); // C#
 	LoadSyntax(javascript, javascriptn);
 	LoadSyntax(css, cssn);
 	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
