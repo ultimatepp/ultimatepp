@@ -176,6 +176,11 @@ String GetUppOut()
 	return Nvl(GetVar("OUTPUT"), GetDefaultUppOut());
 }
 
+String GetVarsIncludes()
+{
+	return GetVar("INCLUDE");
+}
+
 String DefaultHubFilePath()
 {
 	return ConfigFile("UppHub.path");

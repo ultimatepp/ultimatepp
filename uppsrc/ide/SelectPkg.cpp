@@ -183,12 +183,10 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	ok.WhenAction = clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
 	cancel.WhenAction = WhenClose = THISBACK(OnCancel);
 	clist.Columns(4);
-	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
 	alist.AddColumn("Package").Add(3);
 	alist.AddColumn("Nest");
 	alist.AddColumn("Description");
 	alist.AddIndex();
-	alist.WhenCursor = THISBACK(ListCursor);
 	alist.EvenRowColor();
 	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
 	list.Add(clist.SizePos());
@@ -385,18 +383,6 @@ void SelectPackageDlg::ChangeDescription()
 		if(alist.IsCursor())
 			alist.Set(2, ~dlg.text);
 	}
-}
-
-void SelectPackageDlg::ListCursor()
-{
-/*
-	int c = GetCurrentIndex();
-	if(c >= 0 && c < packages.GetCount()) {
-		String pp = PackagePath(GetCurrentName());
-		Package pkg;
-		pkg.Load(pp);
-	}
-*/
 }
 
 void SelectPackageDlg::SyncBrief()
@@ -721,7 +707,6 @@ void SelectPackageDlg::SyncList(const String& find)
 	alist.Clear();
 	clist.Clear();
 	nest_list.Clear();
-	ListCursor();
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
 	if(IsExternalMode()) {
@@ -811,6 +796,7 @@ void SelectPackageDlg::Load(const String& find)
 		}
 		Vector<String> upp = GetUppDirsRaw();
 		bool external = IsExternalMode();
+		String source_masks = GetVar("SOURCE_MASKS");
 		packages.Clear();
 		list.AddFrame(lists_status);
 		loading = true;
@@ -837,56 +823,46 @@ void SelectPackageDlg::Load(const String& find)
 
 				PkData& d = nest[i];
 				String path = nest.GetKey(i);
-				DDUMP(path);
 				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
-					DDUMP(external);
-					if(external) { // all folders are (pontential) packages
-						d.ispackage = true;
-						d.main = false;
-						for(FindFile ff(path + "/*.*"); ff; ff.Next()) { // folders with sources are "main"
-							if(ff.IsFile()) {
-								String ext = GetFileExt(ff.GetName());
-								if(findarg(ext, ".c", ".cpp", ".h", ".hpp", ".cs", ".ts") >= 0)
-									d.main = true;
-							}
-							ff.GetPath();
-						}
-					}
-					else {
-						String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
-						LSLOW(); // this is used for testing only, normally it is NOP
-						Time tm = FileGetTime(upp_path);
-						if(IsNull(tm)) // .upp file does not exist - not a package
-							d.ispackage = false;
-						else
-						if(tm != d.tm) { // cached info is outdated
-							Package p;
-							if(p.Load(upp_path)) {
-								d.description = p.description;
-								d.main = p.config.GetCount();
-								d.tm = tm;
-								d.ispackage = true;
-							}
-							else
-								d.ispackage = false;
-						}
-						else
-							d.ispackage = true;
+					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
 
-						if(d.ispackage) {
-							String icon_path;
-							if(IsUHDMode())
-								icon_path = AppendFileName(path, "icon32x32.png");
-							if(IsNull(icon_path) || !FileExists(icon_path))
-								icon_path = AppendFileName(path, "icon16x16.png");
-							tm = FileGetTime(icon_path);
-							if(IsNull(tm)) // package icon does not exist
-								d.icon = Null;
-							else
-							if(tm != d.itm || d.icon.GetSize().cx != DPI(16)) { // chached package icon outdated
-								d.icon = StreamRaster::LoadFileAny(icon_path);
-								d.itm = tm;
-							}
+					LSLOW(); // this is used for testing only, normally it is NOP
+					Time tm = FileGetTime(PackageFilePath(upp_path));
+					if(IsNull(tm)) // .upp file does not exist - not a package
+						d.ispackage = false;
+					else
+					if(tm != d.tm) { // cached info is outdated
+						Package p;
+						if(p.Load(upp_path)) {
+							d.description = p.description;
+							d.main = p.config.GetCount();
+							d.tm = tm;
+							d.ispackage = true;
+						}
+						else
+							d.ispackage = false;
+					}
+					else
+						d.ispackage = true;
+					
+					if(external && !d.ispackage) // in external mode folders with sources are packages
+						for(FindFile ff(path + "/*.*"); ff; ff.Next())
+							if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
+								d.ispackage = true;
+
+					if(d.ispackage) {
+						String icon_path;
+						if(IsUHDMode())
+							icon_path = AppendFileName(path, "icon32x32.png");
+						if(IsNull(icon_path) || !FileExists(icon_path))
+							icon_path = AppendFileName(path, "icon16x16.png");
+						tm = FileGetTime(icon_path);
+						if(IsNull(tm)) // package icon does not exist
+							d.icon = Null;
+						else
+						if(tm != d.itm || d.icon.GetSize().cx != DPI(16)) { // chached package icon outdated
+							d.icon = StreamRaster::LoadFileAny(icon_path);
+							d.itm = tm;
 						}
 					}
 					
@@ -955,7 +931,7 @@ String SelectPackage(String& nest, const char *title, const char *startwith, boo
 	StoreToGlobal(dlg, c);
 	if(main && selectvars && b.GetCount())
 		dlg.StoreLRU(b);
-	DDUMP(b);
+
 	return b;
 }
 

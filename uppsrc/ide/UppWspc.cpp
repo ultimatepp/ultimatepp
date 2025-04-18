@@ -327,12 +327,6 @@ void WorkspaceWork::PackageCursor()
 	repo_dirs = false;
 	Fetch(actual, actualpackage);
 	LoadActualPackage();
-	if(IsExternalMode() && actual.file.GetCount() == 0 && !noemptyload) {
-		SyncPackage();
-		SavePackage();
-		Fetch(actual, actualpackage);
-		LoadActualPackage();
-	}
 	filelist.Enable();
 	if(actualpackage != METAPACKAGE)
 		filelist.WhenBar = THISBACK(FileMenu);
@@ -499,10 +493,8 @@ bool FileOrder_(const String& a, const String& b)
 	return stricmp(a, b) < 0;
 }
 
-void WorkspaceWork::SyncPackage()
+void SyncPackage(const String& active, Package& actual)
 {
-	String active = GetActivePackage();
-	if(active.IsEmpty()) return;
 	Vector<String> file;
 	for(FindFile ff(GetFileFolder(PackagePath(active)) + "/*.*"); ff; ff.Next())
 		if(ff.IsFile()) {
@@ -951,7 +943,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		.Help("Add text separator line");
 	if(!isaux) {
 		menu.Sub("Miscellaneous", [=](Bar& menu) {
-			menu.Add("Sync package with files in package directory..", [=] { SyncPackage(); SaveLoadPackage(); });
+			menu.Add("Sync package with files in package directory..", [=] { ::SyncPackage(GetActivePackage(), actual); SaveLoadPackage(); });
 			InsertSpecialMenu(menu);
 			menu.Add("Import directory tree sources..", [=] { Import(); });
 		});
@@ -1033,7 +1025,20 @@ void WorkspaceWork::ToggleIncludeable()
 void WorkspaceWork::AddNormalUses()
 {
 	String p = SelectPackage("Select package");
-	if(p.IsEmpty()) return;
+
+	if(p.IsEmpty())
+		return;
+
+	if(IsExternalMode()) { // in external mode, if package is empty (new), add all files in the folder
+		Package pkg;
+		String path = PackagePath(p);
+		pkg.Load(PackagePath(p));
+		if(pkg.file.GetCount() == 0) {
+			SyncPackage(p, pkg);
+			pkg.Save(path);
+		}
+	}
+	
 	OptItem& m = actual.uses.Add();
 	m.text = p;
 	SaveLoadPackage();

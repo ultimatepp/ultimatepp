@@ -102,6 +102,8 @@ int FilterPackageName(int c);
 struct NestEditorDlg : public WithNestEditorLayout<TopWindow> {
     NestEditorDlg();
     
+    bool firstbold = true;
+    
 	void   Set(const String& nests);
 	String Get() const;
 
@@ -119,6 +121,7 @@ public:
 
 private:
     void OnUpp();
+    void Sync();
 
 private:
     bool               new_base;
@@ -207,7 +210,6 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	void           OnBase();
 	void           OnFilter();
 
-	void           ListCursor();
 	void           ChangeDescription();
 	
 	String         LRUFilePath();
@@ -386,7 +388,6 @@ struct WorkspaceWork {
 	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi);
 	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi, bool tree);
 	void Import();
-	void SyncPackage();
 	void RemoveFile();
 	void DelFile();
 	void RenameFile();

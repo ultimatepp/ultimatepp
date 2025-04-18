@@ -176,8 +176,9 @@ void NestEditorDlg::Sync()
 	remove.Enable(b);
 	up.Enable(b);
 	down.Enable(b);
-	for(int i = 0; i < nests.GetCount(); i++)
-		nests.SetDisplay(i, 0, i == 0 ? BoldDisplay() : StdDisplay());
+	if(firstbold)
+		for(int i = 0; i < nests.GetCount(); i++)
+			nests.SetDisplay(i, 0, i == 0 ? BoldDisplay() : StdDisplay());
 }
 
 bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }
@@ -198,23 +199,47 @@ BaseSetupDlg::BaseSetupDlg()
 
 	upp << [=] { OnUpp(); };
 	
+	setup_includes << [=] {
+		NestEditorDlg ndlg;
+		ndlg.firstbold = false;
+		ndlg.Title("Includes");
+		ndlg.Set(~include);
+		if(!ndlg.ExecuteOK())
+			return;
+		include <<= ndlg.Get();
+	};
+	
 	output_sel.Tip("Select output directory...");
 	upv_sel.Tip("Select UppHub directory...");
 	DirSelect(output, output_sel);
 	DirSelect(upv, upv_sel);
 	upv.NullText(GetHubDir());
 	output.NullText(GetDefaultUppOut());
+	
+	source_masks <<= "*.cpp *.h *.hpp *.c *.m *.C *.M *.cxx *.cc *.mm *.MM *.js *.cs *.java";
+	
+	external << [=] { Sync(); };
+	Sync();
+}
+
+void BaseSetupDlg::Sync()
+{
+	source_masks.Enable(external);
 }
 
 bool BaseSetupDlg::Run(String& vars)
 {
 	upp      <<= GetVar("UPP");
 	output   <<= GetUppOut();
+	include  <<= GetVar("INCLUDE");
 	upv      <<= GetVar("UPPHUB");
 	all      <<= GetVar("_all") == "1";
 	external <<= GetVar("EXTERNAL") == "1";
+	source_masks <<= GetVar("SOURCE_MASKS");
 	base     <<= vars;
 	new_base = IsNull(vars);
+
+	Sync();
 	
 	while(TopWindow::Run() == IDOK)
 	{
@@ -232,9 +257,11 @@ bool BaseSetupDlg::Run(String& vars)
 		}
 		SetVar("UPP", ~upp);
 		SetVar("OUTPUT", ~output);
+		SetVar("INCLUDE", ~include);
 		SetVar("UPPHUB", ~upv);
 		SetVar("_all", all ? "1" : "0");
 		SetVar("EXTERNAL", external ? "1" : "0");
+		SetVar("SOURCE_MASKS", ~source_masks);
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)
 			RealizeDirectory(paths[i]);

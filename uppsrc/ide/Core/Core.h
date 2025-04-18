@@ -300,6 +300,7 @@ public:
 Nest& MainNest();
 
 String GetUppOut();
+String GetVarsIncludes();
 
 String DefaultHubFilePath();
 
