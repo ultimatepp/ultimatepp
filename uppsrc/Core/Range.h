@@ -22,7 +22,8 @@ public:
 
 	SubRangeClass& Write()                   { return *this; }
 
-	value_type& operator[](int i) const { ASSERT(i >= 0 && i < count); return l[i]; }
+	value_type& operator[](int i)             { ASSERT(i >= 0 && i < count); return l[i]; }
+	const value_type& operator[](int i) const { ASSERT(i >= 0 && i < count); return l[i]; }
 	I  begin() const { return l; }
 	I  end() const { return l + count; }
 
