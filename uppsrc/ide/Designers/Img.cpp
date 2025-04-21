@@ -32,7 +32,7 @@ void IdeImgView::EditMenu(Bar& menu)
 bool IsImgFile(const String& path)
 {
 	String s = ToLower(GetFileExt(path));
-	return s == ".png" || s == ".jpg" || s == ".gif" || s == ".bmp";
+	return s == ".png" || s == ".jpg" || s == ".gif" || s == ".bmp" || s == ".svg";
 }
 
 struct ImageViewModule : public IdeModule {
@@ -42,6 +42,17 @@ struct ImageViewModule : public IdeModule {
 	}
 	virtual IdeDesigner *CreateDesigner(const char *path, byte) {
 		if(IsImgFile(path)) {
+			if(ToLower(path).EndsWith(".svg"))
+			{
+				String svg = LoadFile(path);
+				Rectf bbox;
+				Sizef sz;
+				GetSVGDimensions(svg, sz, bbox);
+				IdeImgView *d = new IdeImgView;
+				d->filename = path;
+				d->img = RenderSVGImage(Size(max(sz.cx, bbox.right), max(sz.cy, bbox.bottom)), svg);
+				return d;
+			}
 			FileIn in(path);
 			One<StreamRaster> o = StreamRaster::OpenAny(in);
 			if(o) {
