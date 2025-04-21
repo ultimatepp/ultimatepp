@@ -45,12 +45,12 @@ struct ImageViewModule : public IdeModule {
 			if(ToLower(path).EndsWith(".svg"))
 			{
 				String svg = LoadFile(path);
-				Rectf bbox;
-				Sizef sz;
-				GetSVGDimensions(svg, sz, bbox);
+				Sizef sz = GetSVGBoundingBox(svg).GetSize();
+				while(max(sz.cx, sz.cy) < 500)
+					sz *= 2;
 				IdeImgView *d = new IdeImgView;
 				d->filename = path;
-				d->img = RenderSVGImage(Size(max(sz.cx, bbox.right), max(sz.cy, bbox.bottom)), svg);
+				d->img = RenderSVGImage(sz, svg);
 				return d;
 			}
 			FileIn in(path);
