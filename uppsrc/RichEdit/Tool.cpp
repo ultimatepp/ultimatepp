@@ -331,7 +331,7 @@ void RichEdit::PasteTool(Bar& bar, dword key)
 
 void RichEdit::PastePlainTextTool(Bar& bar, dword key)
 {
-	bar.Add(!IsReadOnly() && IsClipboardAvailableText(), t_("Paste without formating"), [=] {
+	bar.Add(!IsReadOnly() && IsClipboardAvailableText(), t_("Paste without formatting"), [=] {
 		useraction = true;
 		PasteText(AsRichText(ReadClipboardUnicodeText(), GetFormatInfo()));
 	})
