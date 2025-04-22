@@ -58,7 +58,9 @@ bool FileSelNative::Execute0(int mode, const char *title)
 	for(int i = 0; i < type.GetCount(); i++) {
 	    GtkFileFilter *filter = gtk_file_filter_new();
 	    gtk_file_filter_set_name(filter, type[i].a);
-	    gtk_file_filter_add_pattern(filter, decode(type[i].b, "*.*", "*", type[i].b));
+	    Vector<String> patterns = Split(type[i].b, [](int c){ return (int)(c == ';' || c == ' '); });
+	    for(int j = 0; j < patterns.GetCount(); j++)
+			gtk_file_filter_add_pattern(filter, decode(patterns[j], "*.*", "*", patterns[j]));
 	    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fc), filter);
 	    if(i == activetype)
 			gtk_file_chooser_set_filter(GTK_FILE_CHOOSER(fc), filter);
