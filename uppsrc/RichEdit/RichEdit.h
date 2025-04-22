@@ -477,7 +477,6 @@ private:
 	RichPara::CharFormat last_format;
 	Image      last_format_img;
 
-	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
 	int        GetPosY(PageY py) const;
 	void       GetPagePoint(Point p, PageY& py, int& x);
@@ -729,6 +728,8 @@ public:
 	void                 ApplyFormatInfo(const RichText::FormatInfo& fi);
 	int                  GetChar(int pos) const    { return text[pos]; }
 	int                  operator[](int pos) const { return text[pos]; }
+
+	Rect   GetTextRect() const;
 
 	void   Undo();
 	void   Redo();
