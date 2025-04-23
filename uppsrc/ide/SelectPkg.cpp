@@ -20,7 +20,8 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	if(b) {
 		menu.Separator();
 		String dir = GetFileFolder(PackagePath(GetCurrentName()));
-		menu.Add(b, "Terminal at " + dir, [=] { TheIde()->LaunchTerminal(dir); });
+		menu.Add(b, "Open package directory", [=] { ShellOpenFolder(dir); });
+		menu.Add(b, "Terminal at package directory", [=] { TheIde()->LaunchTerminal(dir); });
 	}
 }
 
