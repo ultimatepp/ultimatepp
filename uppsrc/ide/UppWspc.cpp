@@ -159,7 +159,7 @@ void WorkspaceWork::SavePackage()
 		else
 			b.data = String::GetVoid();
 	}
-	if(FileExists(pp) || actual.GetCount())
+	if(FileExists(pp) || IsExternalMode() || actual.GetCount())
 		actual.Save(pp);
 }
 
@@ -1032,13 +1032,13 @@ void WorkspaceWork::AddNormalUses()
 	if(IsExternalMode()) { // in external mode, if package is empty (new), add all files in the folder
 		Package pkg;
 		String path = PackagePath(p);
-		pkg.Load(PackagePath(p));
+		pkg.Load(path);
 		if(pkg.file.GetCount() == 0) {
 			SyncPackage(p, pkg);
 			pkg.Save(path);
 		}
 	}
-	
+
 	OptItem& m = actual.uses.Add();
 	m.text = p;
 	SaveLoadPackage();

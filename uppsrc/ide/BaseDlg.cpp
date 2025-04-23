@@ -12,7 +12,7 @@ void InvalidatePackageInfo(const String& name)
 PackageInfo GetPackageInfo(const String& name)
 {
 	String path = PackagePath(name);
-	Time tm = FileGetTime(path);
+	Time tm = FileGetTime(PackageFilePath(path));
 	int q = sPi.Find(name);
 	if(q >= 0) {
 		if(path == sPi[q].path && tm == sPi[q].stamp)
