@@ -101,11 +101,12 @@ struct SvgParser {
 	BoundsPainter  bp;
 	VectorMap<String, const XmlNode*> idmap;
 	VectorMap<String, String> classes;
+	Color          currentColor = SBlack();
 
 	void Reset();
 
-	static Color GetTextColor(const String& color);
-	static Color GetColor(const String& text);
+	Color GetTextColor(const String& color);
+	Color GetColor(const String& text);
 	
 	void    ProcessValue(const String& key, const String& value);
 	void    Style(const char *style);

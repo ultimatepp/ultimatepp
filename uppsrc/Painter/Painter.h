@@ -460,15 +460,15 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool abs);
 };
 
-bool  RenderSVG(Painter& p, const char *svg, Event<String, String&> resloader);
-bool  RenderSVG(Painter& p, const char *svg);
+bool  RenderSVG(Painter& p, const char *svg, Event<String, String&> resloader, Color ink = SBlack());
+bool  RenderSVG(Painter& p, const char *svg, Color ink = SBlack());
 
 void  GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox);
 Rectf GetSVGBoundingBox(const char *svg);
 Rectf GetSVGPathBoundingBox(const char *path);
 
-Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader);
-Image RenderSVGImage(Size sz, const char *svg);
+Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader, Color ink = SBlack());
+Image RenderSVGImage(Size sz, const char *svg, Color ink = SBlack());
 
 bool IsSVG(const char *svg);
 

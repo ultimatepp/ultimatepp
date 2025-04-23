@@ -149,6 +149,8 @@ Color SvgParser::GetTextColor(const String& color) {
 		{"whitesmoke", 245, 245, 245},
 		{"yellow", 255, 255, 0},
 		{"yellowgreen", 154, 205, 50},
+		
+		{"currentcolor", 0, 0, 0},
 	};
 	
 	static VectorMap<String, Color> map;
@@ -156,6 +158,11 @@ Color SvgParser::GetTextColor(const String& color) {
 		for(int i = 0; i < __countof(colors); i++)
 			map.Add(colors[i].name, Color(colors[i].r, colors[i].g, colors[i].b));
 	}
+	
+	String lc = ToLower(color);
+
+	if(lc == "currentcolor")
+		return currentColor;
 	
 	return map.Get(color, map.Get(ToLower(color), Null));
 }
