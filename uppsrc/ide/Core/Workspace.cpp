@@ -57,9 +57,7 @@ String SourcePath(const String& package, const String& file) {
 
 bool IsExternalPackage(const String& folder)
 {
-	DDUMP(folder);
 	String source_masks = GetVar("SOURCE_MASKS");
-	DDUMP(source_masks);
 	for(FindFile ff(folder + "/*.*"); ff; ff.Next())
 		if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
 			return true;
