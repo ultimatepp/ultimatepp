@@ -275,6 +275,9 @@ struct UppList : FileList {
 	                   dword style) const;
 };
 
+void SyncPackage(const String& active, Package& actual);
+void SyncEmptyPackage(const String& p);
+
 struct WorkspaceWork {
 	static    Font ListFont();
 

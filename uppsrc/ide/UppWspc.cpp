@@ -1,4 +1,5 @@
 #include "ide.h"
+#include "ide.h"
 
 const char tempaux[] = "<temp-aux>";
 const char prjaux[] = "<prj-aux>";
@@ -521,6 +522,17 @@ void SyncPackage(const String& active, Package& actual)
 			actual.file.Add(s);
 }
 
+void SyncEmptyPackage(const String& p)
+{
+	Package pkg;
+	String path = PackagePath(p);
+	pkg.Load(path);
+	if(pkg.file.GetCount() == 0) {
+		SyncPackage(p, pkg);
+		pkg.Save(path);
+	}
+}
+
 void WorkspaceWork::DoImportTree(const String& dir, const String& mask, bool sep, Progress& pi, int from)
 {
 	String active = GetActivePackage();
@@ -1029,15 +1041,8 @@ void WorkspaceWork::AddNormalUses()
 	if(p.IsEmpty())
 		return;
 
-	if(IsExternalMode()) { // in external mode, if package is empty (new), add all files in the folder
-		Package pkg;
-		String path = PackagePath(p);
-		pkg.Load(path);
-		if(pkg.file.GetCount() == 0) {
-			SyncPackage(p, pkg);
-			pkg.Save(path);
-		}
-	}
+	if(IsExternalMode()) // in external mode, if package is empty (new), add all files in the folder
+		SyncEmptyPackage(p);
 
 	OptItem& m = actual.uses.Add();
 	m.text = p;

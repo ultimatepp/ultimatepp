@@ -219,6 +219,8 @@ bool Ide::OpenMainPackage()
 	main.Clear();
 	if(!IsOpen())
 		Open();
+	if(IsExternalMode())
+		SyncEmptyPackage(p);
 	SetMain(p);
 	return true;
 }
