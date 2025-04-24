@@ -1044,8 +1044,25 @@ void WorkspaceWork::AddNormalUses()
 	if(IsExternalMode()) // in external mode, if package is empty (new), add all files in the folder
 		SyncEmptyPackage(p);
 
-	OptItem& m = actual.uses.Add();
-	m.text = p;
+	actual.uses.Add().text = p;
+	SaveLoadPackage();
+	InvalidateIncludes();
+}
+
+void WorkspaceWork::AddFolderUses()
+{
+	String p = GetActivePackage();
+	if(IsNull(p))
+		return;
+	for(FindFile ff(PackageDirectory(p) + "/*"); ff; ff.Next())
+		if(ff.IsFolder() && IsExternalPackage(ff.GetPath())) {
+			String pp = p + '/' + ff.GetName();
+			if(FindMatch(actual.uses, [&](const OptItem& m) { return m.text == pp; }) < 0) {
+				if(IsExternalMode()) // in external mode, if package is empty (new), add all files in the folder
+					SyncEmptyPackage(pp);
+				actual.uses.Add().text = pp;
+			}
+		}
 	SaveLoadPackage();
 	InvalidateIncludes();
 }
@@ -1165,6 +1182,8 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 		bool cando = !IsAux() && package.IsCursor();
 		String act = UnixPath(GetActivePackage());
 		menu.Add(cando, ~Format("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
+		if(IsExternalMode())
+			menu.Add(cando, ~Format("Add subfolder packages to '%s'", act), THISBACK(AddFolderUses));
 		RemovePackageMenu(menu);
 		if(menu.IsMenuBar()) {
 			bool main = package.GetCursor() == 0;

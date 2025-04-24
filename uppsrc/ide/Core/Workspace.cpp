@@ -55,6 +55,17 @@ String SourcePath(const String& package, const String& file) {
 	return NormalizePath(AppendFileName(GetFileFolder(PackagePath(package)), file));
 }
 
+bool IsExternalPackage(const String& folder)
+{
+	DDUMP(folder);
+	String source_masks = GetVar("SOURCE_MASKS");
+	DDUMP(source_masks);
+	for(FindFile ff(folder + "/*.*"); ff; ff.Next())
+		if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
+			return true;
+	return false;
+}
+
 bool IsNestReadOnly(const String& path)
 {
 	Vector<String> d = GetUppDirs();

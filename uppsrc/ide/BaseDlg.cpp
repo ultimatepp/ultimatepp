@@ -216,7 +216,9 @@ BaseSetupDlg::BaseSetupDlg()
 	upv.NullText(GetHubDir());
 	output.NullText(GetDefaultUppOut());
 	
-	source_masks <<= "*.cpp *.h *.hpp *.c *.m *.C *.M *.cxx *.cc *.mm *.MM *.js *.cs *.java";
+	source_masks.AddList("*.cpp *.h");
+	source_masks.AddList("*.cpp *.h *.hpp *.c *.cxx *.cc *.m *.mm");
+	source_masks.AddList("*.cpp *.h *.hpp *.c *.cxx *.cc *.m *.mm *.cs *.java *.js *.ts *.tsx *.jsx");
 	
 	external << [=] { Sync(); };
 	Sync();

@@ -343,6 +343,7 @@ String SourcePath(const String& package, const String& name);
 inline
 String PackageDirectory(const String& name) { return GetFileDirectory(PackagePath(name)); }
 bool   IsNestReadOnly(const String& path);
+bool   IsExternalPackage(const String& folder);
 
 String GetPackagePathNest(const String& path);
 

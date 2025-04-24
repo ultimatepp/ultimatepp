@@ -398,6 +398,7 @@ struct WorkspaceWork {
 	void ToggleIncludeable();
 
 	void AddNormalUses();
+	void AddFolderUses();
 	void AddAnyUses();
 	void TogglePackageSpeed();
 

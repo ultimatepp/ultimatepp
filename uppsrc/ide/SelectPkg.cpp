@@ -797,7 +797,6 @@ void SelectPackageDlg::Load(const String& find)
 		}
 		Vector<String> upp = GetUppDirsRaw();
 		bool external = IsExternalMode();
-		String source_masks = GetVar("SOURCE_MASKS");
 		packages.Clear();
 		list.AddFrame(lists_status);
 		loading = true;
@@ -847,9 +846,7 @@ void SelectPackageDlg::Load(const String& find)
 						d.ispackage = true;
 					
 					if(external && !d.ispackage) // in external mode folders with sources are packages
-						for(FindFile ff(path + "/*.*"); ff; ff.Next())
-							if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
-								d.ispackage = true;
+						d.ispackage = IsExternalPackage(path);
 
 					if(d.ispackage) {
 						String icon_path;
