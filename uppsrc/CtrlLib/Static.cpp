@@ -51,6 +51,13 @@ StaticText& StaticText::SetText(const char *s)
 	return *this;
 }
 
+StaticText& StaticText::SetOrientation(int orientation)
+{
+	SetIntAttr(ATTR_ORIENTATION, orientation);
+	Refresh();
+	return *this;
+}
+
 void StaticText::MakeDrawLabel(DrawLabel& l) const
 {
 	l.text = text;
@@ -61,9 +68,11 @@ void StaticText::MakeDrawLabel(DrawLabel& l) const
 	l.limg = GetImage();
 	l.lspc = Nvl(GetIntAttr(ATTR_IMAGE_SPC), 0);
 	l.disabled = !IsShowEnabled();
+	l.orientation = GetOrientation();
 	l.accesskey = accesskey;
 	if(dynamic_cast<const LabelBox *>(this)) {
 		l.valign = ALIGN_TOP;
+		l.orientation = ORIENTATION_NORMAL;
 		l.disabledink = LabelBoxDisabledTextColor();
 	}
 }

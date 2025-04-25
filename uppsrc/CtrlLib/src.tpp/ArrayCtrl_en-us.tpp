@@ -2736,15 +2736,23 @@ these default values are not used.&]
 for newly created rows. This is used only when the row insertion 
 is GUI`-based (like using the [* DoInsert] method for instance). 
 When a row is added to the array programmatically (e.g. using 
-[* Add] or [* Insert]), the [* InserValue] property is not consulted.&]
+[* Add] or [* Insert]), the [* InsertValue] property is not consulted.&]
 [s7; [*C@3 g]-|a reference to the value generation factory. The ownership 
 to the factory is not passed by this call; the caller must insure 
 the existence of the factory object throughout the array duration.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
-[s4; &]
-[s5;:ArrayCtrl`:`:IdInfo`:`:Accel`(int`(`*`)`(int`)`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&
-]_[* Accel]([@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]))&]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:IdInfo`:`:Inserts`(Function`):%- IdInfo[@(0.0.255) `&] 
+[* Inserts](Function<Value ()> [*@3 gen])&]
+[s2; Newly created cells will be initialized using value obtained 
+by calling [%-*@3 gen](). This only happens when row is added by 
+user action `- when a row is added to the array programmatically 
+(e.g. using [* Add] or [* Insert]), [%-*@3 gen] is not used.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:IdInfo`:`:Accel`(int`(`*`)`(int`)`):%- IdInfo[@(0.0.255) `&] 
+[* Accel]([@(0.0.255) int] ([@(0.0.255) `*][*@3 filter])([@(0.0.255) int]))&]
 [s2; This method sets up the source index accelerator function. The 
 accelerator is used to quickly locate rows using the keyboard 
 key presses.&]
@@ -2957,6 +2965,14 @@ an Oracle SEQUENCE object for a primary key column.&]
 generation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:Inserts`(Function`):%- ArrayCtrl[@(0.0.255) `::]Colum
+n[@(0.0.255) `&] [* Inserts](Function<Value ()> [*@3 gen])&]
+[s2; Newly created cells will be initialized using value obtained 
+by calling [%-*@3 gen](). This only happens when row is added by 
+user action `- when a row is added to the array programmatically 
+(e.g. using [* Add] or [* Insert]), [%-*@3 gen] is not used.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:NoClickEdit`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
 ]_[* NoClickEdit]()&]

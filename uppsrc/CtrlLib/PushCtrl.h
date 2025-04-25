@@ -336,6 +336,8 @@ private:
 	const Display *display;
 	Value          data;
 
+	Function<Value(const Value&)> convertby;
+
 	WString        nulltext;
 	Color          nullink;
 	Font           nullfont;
@@ -356,6 +358,9 @@ public:
 
 	DataPusher&    SetConvert(const Convert& _convert) { convert = &_convert; Refresh(); return *this; }
 	const Convert& GetConvert() const                  { return *convert; }
+	
+	DataPusher&    ConvertBy(Function<Value(const Value&)> cv) { convertby = cv; Refresh(); return *this; }
+	Value          Format(const Value& v);
 
 	DataPusher&    SetDisplay(const Display& _display) { display = &_display; Refresh(); return *this; }
 	const Display& GetDisplay() const                  { return *display; }

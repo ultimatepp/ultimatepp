@@ -199,6 +199,12 @@ ArrayCtrl::Column& ArrayCtrl::Column::InsertValue(ValueGen& g) {
 	return *this;
 }
 
+ArrayCtrl::Column& ArrayCtrl::Column::Inserts(Function<Value ()> gen)
+{
+	arrayctrl->IndexInfo(arrayctrl->Pos(pos[0])).Inserts(gen);
+	return *this;
+}
+
 HeaderCtrl::Column& ArrayCtrl::Column::HeaderTab() {
 	return arrayctrl->header.Tab(arrayctrl->header.FindIndex(index));
 }
@@ -2193,6 +2199,21 @@ void ArrayCtrl::Add(__List##I(E__Value)) { \
 __Expand(E__AddF)
 
 void  ArrayCtrl::Insert(int i, int count) {
+	Vector<Vector<Value>> inserts;
+	bool hasins = false;
+	for(int ii = 0; ii < idx.GetCount(); ii++)
+		if(idx[ii].HasInsertValue()) {
+			hasins = true;
+			break;
+		}
+	if(hasins) {
+		inserts.SetCount(count);
+		for(int j = 0; j < count; j++) { // need to compute insert values before array changes
+			inserts[j].SetCount(idx.GetCount());
+			for(int ii = 0; ii < idx.GetCount(); ii++)
+				inserts[j][ii] = idx[ii].GetInsertValue();
+		}
+	}
 	if(i < array.GetCount()) {
 		array.InsertN(i, count);
 		for(int j = 0; j < column.GetCount(); j++)
@@ -2209,13 +2230,16 @@ void  ArrayCtrl::Insert(int i, int count) {
 		Reline(i, y);
 	}
 	if(virtualcount >= 0) virtualcount += count;
+	int ini = 0;
 	while(count--) {
-		for(int ii = 0; ii < idx.GetCount(); ii++) {
-			Value v = idx[ii].GetInsertValue();
-			if(!IsNull(v))
-				Set(i, ii, v);
-		}
+		if(hasins)
+			for(int ii = 0; ii < idx.GetCount(); ii++) {
+				Value v = inserts[ini][ii];
+				if(!IsNull(v))
+					Set(i, ii, v);
+			}
 		i++;
+		ini++;
 	}
 	Refresh();
 	SetSb();

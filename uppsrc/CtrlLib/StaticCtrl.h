@@ -10,6 +10,7 @@ public:
 		ATTR_IMAGE,
 		ATTR_IMAGE_SPC,
 		ATTR_VALIGN,
+		ATTR_ORIENTATION,
 		ATTR_LAST,
 	};
 
@@ -33,6 +34,7 @@ public:
 	StaticText& AlignBottom()                           { return SetVAlign(ALIGN_BOTTOM); }
 	StaticText& SetImage(const Image& img, int spc = 0);
 	StaticText& SetText(const char *text);
+	StaticText& SetOrientation(int orientation);
 	
 	String      GetText() const                         { return text; }
 	Font        GetFont() const                         { return Nvl(GetFontAttr(ATTR_FONT), StdFont()); }
@@ -40,6 +42,7 @@ public:
 	int         GetAlign() const                        { return Nvl(GetIntAttr(ATTR_ALIGN), ALIGN_LEFT); }
 	int         GetVAlign() const                       { return Nvl(GetIntAttr(ATTR_VALIGN), ALIGN_CENTER); }
 	Image       GetImage() const                        { return GetAttr<Image>(ATTR_IMAGE); }
+	int         GetOrientation() const                  { return Nvl(GetIntAttr(ATTR_ORIENTATION), ORIENTATION_NORMAL); }
 
 	StaticText& operator=(const char *s)                { SetText(s); return *this; }
 

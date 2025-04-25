@@ -1,5 +1,4 @@
 topic "DataPusher";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "DataPusher";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 DataPusher]]}}&]
 [s3; &]
@@ -17,13 +17,7 @@ topic "DataPusher";
 [s0; &]
 [s2; 
 @@image:1906&143
-€ƒ±—€€€ƒéÿ€€€€ø¿œíœÑ­Â° ŒÅ»±û¼åÛ˜‡•ÄåôÅ±ıã¶”«šöœİ’¦Á¶›òé¤Ï“ÿÇ“¡„Âñ±îÿ÷„Ğ
-×²–œà °ˆ¤À©°¤À©Á°¤À©¾ëÉÎéšÖü·§´†½×ˆú×¹”—ÅÎ”·½‹éêºá„Œ­ç¹Óöğ­™éÚ”ıîää¥ ¨¯¹÷Ñ®Å
-·–‡“ÑÙ’Ñ”§¶ä›ˆ×öŞ“Œ¥í©²Úë¶½ÑÈ®¦ÛÛŒ¬Ù›çîøÇÚãå”ÔëŞ…Û¶®Ï–†‘Åìúì¢ıªëîâºÏÒáì±ĞŸüÓÒ¾
-íİÑ»±Ü˜ö¢…¸º´¤›°è˜§³Ñúİ®¬‹õŞ·¶›‹¨¤Ê©†§ê³·¥­ÃİÖ”ßâÉÌÒ£á§ÇşÀÆÓ¯­µİÇâûº†šÜ™´ÿßĞ
-Ñ–ëÚÒ„•ÕÄ®šÜ··²ØŞÌÑÒ°˜¨ëÏ—®«šÛ˜­™å‰â§ŞÆÑÜ€ùõ›•½åÌÌÏ—ƒƒõÉü¯éÑ²İÓõÍÔïÆ¬îûº¹ó¼ï
-§»Á¶ßç±×³õÄè×»ûß€¸İ§òïÿ˜¨°ÙŒÔçËÏô…ø£÷‚…½è²Ø’ ”üÆ¢• ”Ø’ ”á®¥‘Â‡êûÅÿ¥‚Âˆı™œŞ‚˜¦ú
-
+(AzEBFwAAAOn/AAAAAHic7ZzRrcIwDEU7MXu8ZZiHFZ7EDuUPRbF947aUmvYc3Q+SJrYbcmkkEM//xxMhhBBCsW5/d4TQgbKWnAHgILAkQCmwJEApsCRAKT5ryWma1o18N6cGPdcOiPpXlBdFzpS3PenqOuEEDC250/ZwLZnpFP1u5OQljSgvOXdRrkWWh5NR2ZJRASe2ZJsIV16TjCXtqbJrtj3RyC6m24ws2Z4b53jH2uNllNTehVu2Ls+WEcXsemwifWvuYrpP0mExUJ/8U9K+3VGPuzHcmCKFuDq0pJtoGCcz0fpdLIv1jl63NouoJMqeKQbqs7clLcNdFI3fYslM0uGnR35AxlOttd3HYvs6GtyZNH9fUJZrWlKEFdUuGpBcNzeyXkxR0rAYqM+XD64rmtstGWWJ4g8nRtHcgPl1m71lzEzPFwP1yXwvaQ9RXdN1TdTvRm57urlzvG+7wbZfZ7FX9cRoV7v7XzhdJ3JvfxgwWQzUZ8tPBXijd4KFvTJYEqAU/MYVoBRYEqAUriURQgfq+/8lghBCCP2cXgKYpno=)
 &]
 [s0; &]
 [s9; DataPusher is a class that is able to Convert and Display some 
@@ -88,6 +82,18 @@ Default action is to call WhenAction callback.&]
 [s7; [*/ Return value]-|Current Convert.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:DataPusher`:`:ConvertBy`(Function`):%- DataPusher[@(0.0.255) `&] 
+[* ConvertBy](Function<Value ([@(0.0.255) const] Value[@(0.0.255) `&])> 
+[*@3 cv])&]
+[s2; Sets a conversion function. This is applied before [%-*@3 `_convert].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:DataPusher`:`:Format`(const Value`&`):%- Value [* Format]([@(0.0.255) const] 
+Value[@(0.0.255) `&] [*@3 v])&]
+[s2; Returns [%-*@3 v] converted by ConvertBy and SetConvert exactly 
+the same as in DataPusher`::Paint..&]
+[s3;%- &]
+[s4;%- &]
 [s5;:DataPusher`:`:SetDisplay`(const Display`&`):%- [_^DataPusher^ DataPusher][@(0.0.255) `&
 ]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 `_display])&]
 [s2; Sets the new Display.&]
@@ -140,4 +146,4 @@ ult])`"), [_^Color^ Color]_[*@3 ink]_`=_Brown)&]
 [s5;:DataPusher`:`:WhenPreAction:%- [_^Callback^ Callback]_[* WhenPreAction]&]
 [s2; This callback is invoked before DoAction.&]
 [s3; &]
-[s0; ]
+[s0; ]]

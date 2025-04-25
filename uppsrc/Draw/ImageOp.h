@@ -172,10 +172,9 @@ void  SysImageReleased(const Image& img); // SystemDraw dropped Image handle
 Image MakeImage(const ImageMaker& m);
 Image MakeImage(const Image& image, Image (*make)(const Image& image));
 
-void  SweepMkImageCache();
-
-void SetMakeImageCacheMax(int m); // obsolete
-void SetMakeImageCacheSize(int m); // obsolete
+void SweepMkImageCache(); // deprecated, use AdjustValueCache();
+void SetMakeImageCacheMax(int m); // deprecated, use SetupValueCache
+void SetMakeImageCacheSize(int m); // deprecated, use SetupValueCache
 
 Image MakeImagePaintOnly(const ImageMaker& m);
 

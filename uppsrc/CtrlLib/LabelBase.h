@@ -28,6 +28,8 @@ void DrawVertDrop(Draw& w, int x, int y, int cy);
 Point GetDragScroll(Ctrl *ctrl, Point p, Size max);
 Point GetDragScroll(Ctrl *ctrl, Point p, int max = 16);
 
+enum { ORIENTATION_NORMAL, ORIENTATION_VERTICAL_LEFT, TURN_VERTICAL_RIGHT };
+
 struct DrawLabelBasic {
 	String    text;
 	Font      font;
@@ -38,10 +40,11 @@ struct DrawLabelBasic {
 
 	int       align:4;
 	int       valign:4;
+	int       orientation:4;
 	
 	bool      nowrap:1;
 	
-	DrawLabelBasic() { align = valign = ALIGN_CENTER; nowrap = false; accesskey = 0; font = StdFont(); }
+	DrawLabelBasic() { align = valign = ALIGN_CENTER; orientation = ORIENTATION_NORMAL; nowrap = false; accesskey = 0; font = StdFont(); }
 };
 
 struct DrawLabelExt {

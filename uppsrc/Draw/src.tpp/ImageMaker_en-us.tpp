@@ -47,8 +47,8 @@ onst]_`=_[@3 0]&]
 [s5;:MakeImage`(const ImageMaker`&`): [_^Image^ Image]_[* MakeImage]([@(0.0.255) const]_[_^ImageMaker^ I
 mageMaker][@(0.0.255) `&]_[*@3 m])&]
 [s2;%% Returns the Image based on ImageMaker (either retrieves from 
-the cache or creates and stores to cache). Amount of images kept 
-in is controlled by SetImageCacheSize and SetImageCacheMax.&]
+the cache or creates and stores to cache). Images are stored 
+in the U`+`+ global cache.&]
 [s3;%% &]
 [s4; &]
 [s5;:MakeImage`(const Image`&`,Image`(`*`)`(const Image`&`)`): [_^Image^ Image]_[* MakeIm

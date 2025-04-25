@@ -40,18 +40,21 @@ public:
 
 public:
 	struct IdInfo {
-		Value           insertval;
-		ValueGen       *insertgen;
-		int            (*accel)(int);
+		Value              insertval;
+		ValueGen          *insertgen;
+		Function<Value ()> inserts;
+		int              (*accel)(int);
 
-		IdInfo& InsertValue(const Value& v)  { insertval = v; return *this; }
-		IdInfo& InsertValue(ValueGen& g)     { insertgen = &g; return *this; }
-		IdInfo& Accel(int (*filter)(int))    { accel = filter; return *this; }
-		IdInfo& Accel()                      { return Accel(CharFilterDefaultToUpperAscii); }
+		IdInfo& InsertValue(const Value& v)     { insertval = v; return *this; }
+		IdInfo& InsertValue(ValueGen& g)        { insertgen = &g; return *this; }
+		IdInfo& Inserts(Function<Value ()> gen) { inserts = gen; return *this; }
+		IdInfo& Accel(int (*filter)(int))       { accel = filter; return *this; }
+		IdInfo& Accel()                         { return Accel(CharFilterDefaultToUpperAscii); }
 
-		Value   GetInsertValue()             { return insertgen ? insertgen->Get() : insertval; }
+		bool    HasInsertValue() const          { return insertgen || inserts || !IsNull(insertval); }
+		Value   GetInsertValue()                { return insertgen ? insertgen->Get() : inserts ? inserts() : insertval; }
 
-		IdInfo()                             { insertgen = NULL; accel = NULL; }
+		IdInfo()                                { insertgen = NULL; accel = NULL; }
 	};
 
 	class Column : FormatConvert {
@@ -102,6 +105,7 @@ public:
 		Column& With(Event<One<Ctrl>&> factory);
 		Column& InsertValue(const Value& v);
 		Column& InsertValue(ValueGen& g);
+		Column& Inserts(Function<Value ()> gen);
 		Column& NoClickEdit()                      { clickedit = false; return *this; }
 		Column& Cache();
 		Column& Accel(int (*filter)(int))          { accel = filter; return *this; }
