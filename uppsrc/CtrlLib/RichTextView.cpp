@@ -82,6 +82,8 @@ void  RichTextView::SetSb()
 
 bool  RichTextView::Key(dword key, int count)
 {
+	if(single_line)
+		return false;
 	if(key == K_CTRL_C || key == K_SHIFT_INSERT) {
 		Copy();
 		return true;
@@ -91,6 +93,8 @@ bool  RichTextView::Key(dword key, int count)
 
 void  RichTextView::MouseWheel(Point p, int zdelta, dword keyflags)
 {
+	if(single_line)
+		return;
 	if(!WhenMouseWheel(zdelta, keyflags))
 		sb.Wheel(zdelta);
 }
@@ -134,6 +138,8 @@ String RichTextView::GetSelectionData(const String& fmt) const
 
 void RichTextView::RightDown(Point p, dword keyflags)
 {
+	if(single_line)
+		return;
 	MenuBar b;
 	b.Add(cursor != anchor, t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
 	b.Execute();
@@ -245,6 +251,8 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 
 void RichTextView::LeftDouble(Point p, dword keyflags)
 {
+	if(single_line)
+		return;
 	int pos = GetPointPos(p);
 	if(IsLeNum(text[pos])) {
 		anchor = pos;
@@ -262,6 +270,8 @@ void RichTextView::LeftDouble(Point p, dword keyflags)
 
 void RichTextView::LeftTriple(Point p, dword keyflags)
 {
+	if(single_line)
+		return;
     int pos = GetPointPos(p);
 	RichPos rp = text.GetRichPos(pos);
 	anchor = pos - rp.posinpara;
@@ -275,6 +285,8 @@ void RichTextView::MouseMove(Point p, dword keyflags)
 	int pos = GetPointPos(p);
 	WhenMouseMove(pos);
 	if(HasCapture()) {
+		if(single_line)
+			return;
 		if(pos < 0)
 			return;
 		cursor = pos;
