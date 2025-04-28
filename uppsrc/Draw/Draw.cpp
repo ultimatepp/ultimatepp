@@ -25,17 +25,14 @@ Color Draw::GetDefaultInk() const
 
 void Draw::SinCos(int angle, double& sina, double& cosa)
 {
-	angle = angle % 3600;
-	switch(angle) {
-	case    0: sina =  0; cosa =  1; break;
-	case  900: sina =  1; cosa =  0; break;
-	case 1800: sina =  0; cosa = -1; break;
-	case 2700: sina = -1; cosa =  0; break;
-	default:
+	if(angle == 0) {
+		sina = 0;
+		cosa = 1;
+	}
+	else {
 		double a = angle * M_PI / 1800.0;
 		sina = sin(a);
 		cosa = cos(a);
-		break;
 	}
 }
 

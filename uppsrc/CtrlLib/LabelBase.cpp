@@ -29,49 +29,6 @@ String DeAmp(const char *s)
 	return out;
 }
 
-Size GetSmartTextSize(const char *text, Font font, int cx) {
-	if(*text == '\1') {
-		Size sz;
-		RichText txt = ParseQTF(text + 1);
-		txt.ApplyZoom(GetRichTextStdScreenZoom());
-		sz.cx = min(cx, txt.GetWidth());
-		sz.cy = txt.GetHeight(Zoom(1, 1), sz.cx);
-		return sz;
-	}
-	return GetTLTextSize(ToUnicode(text, CHARSET_DEFAULT), font);
-}
-
-int GetSmartTextHeight(const char *s, int cx, Font font) {
-	if(*s == '\1') {
-		Size sz;
-		RichText txt = ParseQTF(s + 1);
-		txt.ApplyZoom(GetRichTextStdScreenZoom());
-		return txt.GetHeight(Zoom(1, 1), cx);
-	}
-	int cy = font.Info().GetHeight();
-	int h = cy;
-	while(*s) {
-		if(*s == '\n')
-			h += cy;
-		s++;
-	}
-	return h;
-}
-
-void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font, Color ink,
-                   int accesskey, Color qtf_ink, int dark_theme) {
-	if(*text == '\1') {
-		RichText txt = ParseQTF(text + 1, accesskey);
-		txt.ApplyZoom(GetRichTextStdScreenZoom());
-		PaintInfo pi;
-		pi.darktheme = !IsNull(dark_theme) ? dark_theme : IsDarkTheme();
-		pi.textcolor = qtf_ink;
-		txt.Paint(draw, x, y, cx, pi);
-		return;
-	}
-	DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
-}
-
 bool CompareAccessKey(int accesskey, dword key)
 {
 	return accesskey && dword(ToUpper(accesskey & 255) - 'A' + K_ALT_A) == key;

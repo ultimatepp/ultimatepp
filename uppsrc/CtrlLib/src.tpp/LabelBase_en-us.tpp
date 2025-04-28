@@ -33,84 +33,69 @@ r]_`*[*@3 s])&]
 [s2; This routine escapes all occurrences of `'`&`' character in 
 source string with `"`&`&`" string to avoid using it as access`-key 
 flag.&]
-[s7; [%-*C@3 s]-|Input string.&]
-[s7; [*/ Return value]-|Escaped string.&]
 [s3; &]
 [s4;%- &]
 [s5;:GetSmartTextSize`(const char`*`,Font`,int`):%- [_^Size^ Size]_[* GetSmartTextSize]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 text], [_^Font^ Font]_[*@3 font]_`=_StdFont(), 
 [@(0.0.255) int]_[*@3 cx]_`=_INT`_MAX)&]
-[s2; Returns the minimal size of SmartText. If text is multi`-paragraph 
-QTF text, width of text is the width of widest paragraph without 
-doing any line breaks (paragraphs are formatted for infinite 
-width).&]
-[s7; [%-*C@3 w]-|Draw.&]
-[s7; [%-*C@3 text]-|SmartText string.&]
-[s7; [%-*C@3 font]-|Font for non`-QTF text.&]
-[s7; [*/ Return value]-|Size of SmartText.&]
+[s2; Returns the minimal size of SmartText for given width [%-*@3 cx]. 
+If text is multi`-paragraph QTF text, width of text is the width 
+of widest paragraph.&]
 [s3; &]
 [s4;%- &]
 [s5;:GetSmartTextHeight`(const char`*`,int`,Font`):%- [@(0.0.255) int]_[* GetSmartTextHei
 ght]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 cx], 
 [_^Font^ Font]_[*@3 font]_`=_StdFont())&]
-[s2; Returns the height of given SmartText for given width. QTF paragraphs 
-are formatted for this width.&]
-[s7; [%-*C@3 w]-|Draw.&]
-[s7; [%-*C@3 s]-|SmartText string.&]
-[s7; [%-*C@3 cx]-|Required width.&]
-[s7; [%-*C@3 font]-|Font for non`-QTF text.&]
-[s7; [*/ Return value]-|Height of SmartText.&]
+[s2; Returns the height of given SmartText for given width [%-*@3 cx]. 
+QTF paragraphs are formatted for this width.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:DrawSmartText`(Upp`:`:Draw`&`,int`,int`,int`,const char`*`,Upp`:`:Font`,Upp`:`:Color`,int`,Upp`:`:Color`):%- [@(0.0.255) v
-oid]_[* DrawSmartText]([_^Upp`:`:Draw^ Draw][@(0.0.255) `&]_[*@3 w], 
-[@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [_^Upp`:`:Font^ Font]_[*@3 font]_`=_StdF
-ont(), [_^Upp`:`:Color^ Color]_[*@3 ink]_`=_SBlack(), [@(0.0.255) int]_[*@3 accesskey]_`=
-_[@3 0], [_^Upp`:`:Color^ Color]_[*@3 qtf`_ink]_`=_Null)&]
-[s2; Paints SmartText to target Draw.&]
-[s7; [%-*C@3 w]-|Draw.&]
-[s7; [%-*C@3 x, y]-|Position.&]
-[s7; [%-*C@3 cx]-|Required width.&]
-[s7; [%-*C@3 text]-|SmartText.&]
-[s7; [%-*C@3 font]-|Font for non`-QTF SmartText.&]
-[s7; [%-*C@3 ink]-|Text color for non`-QTF SmartText.&]
-[s7; [%-*C@3 accesskey]-|Access`-key `- first corresponding character 
-will be painted with underline.&]
-[s7; [%-*C@3 qtf`_ink][%- -|If not Null o]verrides ink of qtf text and 
-disables the qtf text background `- useful to handle selected 
-items.&]
+[s5;:Upp`:`:DrawSmartText`(Draw`&`,int`,int`,int`,const char`*`,Font`,Color`,int`,Color`,int`):%- [@(0.0.255) v
+oid] [* DrawSmartText](Draw[@(0.0.255) `&] [*@3 w], [@(0.0.255) int] 
+[*@3 x], [@(0.0.255) int] [*@3 y], [@(0.0.255) int] [*@3 cx], [@(0.0.255) const] 
+[@(0.0.255) char] [@(0.0.255) `*][*@3 text], Font [*@3 font ][@(0.0.255) `=] 
+StdFont(), Color [*@3 ink ][@(0.0.255) `=] SBlack(), [@(0.0.255) int] 
+[*@3 accesskey] [@(0.0.255) `=] [@3 0], Color [*@3 qtf`_ink ][@(0.0.255) `=] 
+Null, [@(0.0.255) int] [*@3 dark`_theme ][@(0.0.255) `=] Null)&]
+[s5;:Upp`:`:DrawSmartText`(Draw`&`,int`,int`,int`,const char`*`,int`,Font`,Color`,int`,Color`,int`):%- [@(0.0.255) v
+oid] [* DrawSmartText](Draw[@(0.0.255) `&] [*@3 w], [@(0.0.255) int] 
+[*@3 x], [@(0.0.255) int] [*@3 y], [@(0.0.255) int] [*@3 cx], [@(0.0.255) const] 
+[@(0.0.255) char] [@(0.0.255) `*][*@3 text], [@(0.0.255) int] [*@3 orientation], 
+Font font [@(0.0.255) `=] [*@3 StdFont](), Color ink [@(0.0.255) `=] 
+[*@3 SBlack](), [@(0.0.255) int] [*@3 accesskey] [@(0.0.255) `=] [@3 0], 
+Color qtf`_ink [@(0.0.255) `=] [*@3 Null], [@(0.0.255) int] dark`_theme 
+[@(0.0.255) `=] [*@3 Null])&]
+[s2; Draws SmartText [%-*@3 text] at position [%-*@3 x] [%-*@3 y] with 
+width [%-*@3 cx]. [%-*@3 ink] is text color for non`-QTF text. If 
+[%-  ][%-*@3 qtf`_ink ][%- is not null, it overrides the text color 
+of qtf. First character equal to ][%-*@3 accesskey][%- , regardless 
+case, is underlined (this is to support key accelerators). If 
+][%-*@3 dark`_theme][%-  is Null, qtf text converts colors to dark 
+theme is dark theme is active. 1 forces the conversion to dark 
+theme to happen always (even in light theme), 0 disables it. 
+][%-*@3 orientation] parameter can rotate text clockwise (ORIENTATION`_CLOCKWISE) 
+or anticlockwise (ORIENTATION`_ANTICLOCKWISE).&]
 [s3; &]
 [s4;%- &]
 [s5;:ExtractAccessKey`(const char`*`,String`&`):%- [_^byte^ byte]_[* ExtractAccessKey]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s], [_^String^ String][@(0.0.255) `&]_[*@3 label])&]
-[s2; Scans input string for access`-key.&]
-[s7; [%-*C@3 s]-|Input string.&]
-[s7; [%-*C@3 label]-|Output string `- with access`-key removed.&]
-[s7; [*/ Return value]-|Access`-key.&]
+[s7; Scans input string for access`-key.&]
 [s3; &]
 [s4;%- &]
 [s5;:CompareAccessKey`(byte`,dword`):%- [@(0.0.255) bool]_[* CompareAccessKey]([_^byte^ byt
 e]_[*@3 accesskey], [_^dword^ dword]_[*@3 key])&]
 [s2; Compares access key to U`+`+ event key value as received by 
 Key virtual method.&]
-[s7; [%-*C@3 accesskey]-|Access`-key.&]
-[s7; [%-*C@3 key]-|U`+`+ event key value.&]
-[s7; [*/ Return value]-|True if values match.&]
 [s3; &]
 [s4;%- &]
 [s5;:ChooseAccessKey`(const char`*`,dword`):%- [_^byte^ byte]_[* ChooseAccessKey]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s], [_^dword^ dword]_[*@3 used])&]
-[s2; Scans input string for suitable access`-key.&]
-[s7; [%-*C@3 s]-|Input string.&]
-[s7; [%-*C@3 used]-|Bit`-set of already used access`-keys. Bit`-mask 
-of specific access`-key is defined by [^topic`:`/`/CtrlCore`/src`/Ctrl`$en`-us`#`:`:Ctrl`:`:AccessKeyBit`(byte`)^ C
-trl`::AccessKeyBit] class method.&]
-[s7; [*/ Return value]-|Access`-key or 0 if no suitable access`-key 
-found.&]
+[s7; Scans input string for suitable access`-key. [%-*C@3 used] is 
+a bit`-set of already used access`-keys. Bit`-mask of specific 
+access`-key is defined by [^topic`:`/`/CtrlCore`/src`/Ctrl`$en`-us`#`:`:Ctrl`:`:AccessKeyBit`(byte`)^ C
+trl`::AccessKeyBit] class method. Returns access`-key or 0 if 
+no suitable access`-key found.&]
 [s3; &]
-[s0; &]
-[s0; &]
 [s0;%- &]
 [ {{10000@3 [s0; [*@(229)4 DrawLabel]]}}&]
 [s3; &]

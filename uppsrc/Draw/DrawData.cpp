@@ -55,7 +55,7 @@ EXITBLOCK
 #endif
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp)
-{
+{ // optimizing for some old printers with limited memory which results in problems with printing e.g. full page image
 	int xi = 0;
 	int cx = m.GetWidth();
 	int ccy = m.GetHeight();

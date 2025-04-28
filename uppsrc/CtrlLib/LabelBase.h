@@ -15,6 +15,12 @@ void DrawSmartText(Draw& w, int x, int y, int cx, const char *text,
                    Font font = StdFont(), Color ink = SBlack(), int accesskey = 0,
                    Color qtf_ink = Null, int dark_theme = Null);
 
+enum { ORIENTATION_NORMAL, ORIENTATION_ANTICLOCKWISE, ORIENTATION_CLOCKWISE };
+
+void DrawSmartText(Draw& w, int x, int y, int cx, const char *text, int orientation,
+                   Font font = StdFont(), Color ink = SBlack(), int accesskey = 0,
+                   Color qtf_ink = Null, int dark_theme = Null);
+
 int   ExtractAccessKey(const char *s, String& label);
 bool  CompareAccessKey(int accesskey, dword key);
 int   ChooseAccessKey(const char *s, dword used);
@@ -27,8 +33,6 @@ void DrawVertDrop(Draw& w, int x, int y, int cy);
 
 Point GetDragScroll(Ctrl *ctrl, Point p, Size max);
 Point GetDragScroll(Ctrl *ctrl, Point p, int max = 16);
-
-enum { ORIENTATION_NORMAL, ORIENTATION_VERTICAL_LEFT, TURN_VERTICAL_RIGHT };
 
 struct DrawLabelBasic {
 	String    text;

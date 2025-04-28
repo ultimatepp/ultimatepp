@@ -13,6 +13,7 @@ file
 	CtrlLib readonly separator,
 	CtrlLibInit.cpp,
 	LabelBase.h,
+	SmartText.cpp,
 	LabelBase.cpp,
 	DisplayPopup.h,
 	DisplayPopup.cpp,
