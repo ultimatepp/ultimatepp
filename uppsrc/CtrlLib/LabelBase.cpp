@@ -20,59 +20,6 @@ void CtrlsImageLook(Value *look, int i, const Image& image, int n)
 		*look++ = ChLookWith(CtrlsImg::Get(i++), image);
 }
 
-String DeAmp(const char *s)
-{
-	String out;
-	for(; *s; out.Cat(*s++))
-		if(*s == '&')
-			out.Cat('&');
-	return out;
-}
-
-bool CompareAccessKey(int accesskey, dword key)
-{
-	return accesskey && dword(ToUpper(accesskey & 255) - 'A' + K_ALT_A) == key;
-}
-
-int  ExtractAccessKey(const char *s, String& label)
-{
-	byte akey = 0;
-	int  pos = 0;
-	String text;
-	bool qtf = *s == '\1';
-	while(*s)
-		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
-			akey = ToAscii(ToUpper(s[1]));
-			pos = text.GetLength() + 1;
-			s++;
-		}
-		else
-			text.Cat(*s++);
-	text.Shrink();
-	label = text;
-	return MAKELONG(akey, pos);
-}
-
-int  ChooseAccessKey(const char *text, dword used)
-{
-	for(const char *s = text; *s; s++) {
-		byte ac = *s;
-		if(ac < 128 && ac >= 'A' && ac <= 'Z' && (Ctrl::AccessKeyBit(ac) & used) == 0)
-			return MAKELONG(ac, s - text + 1);
-	}
-	for(const char *s = text; *s; s++) {
-		dword ac = ToUpper(*s);
-		if(ac < 128 && ac >= 'A' && ac <= 'Z' && ac != 'I' && ac != 'L' && (Ctrl::AccessKeyBit(ac) & used) == 0)
-			return ac;
-	}
-	for(const char *s = text; *s; s++) {
-		dword ac = ToUpper(*s);
-		if(ac < 128 && ac >= 'A' && ac <= 'Z' && (Ctrl::AccessKeyBit(ac) & used) == 0)
-			return ac;
-	}
-	return 0;
-}
-
 Size DrawLabel::GetSize(int txtcx) const
 {
 	return GetSize(txtcx, limg.GetSize(), lspc, rimg.GetSize(), rspc);
@@ -146,74 +93,178 @@ Rect DrawLabel::PaintRect(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccess
 	int txtcx = r.GetWidth() - sz1.cx - Nvl(lspc, 0) - sz2.cx - Nvl(rspc, 0);
 	bool donowrap = nowrap && *text != '\1';
 	Size txtsz = *text ? GetSmartTextSize(text, font, donowrap ? INT_MAX/2 : txtcx) : paintrect.GetStdSize();
-	if(txtsz.cx) {
-		if(!rimg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
-			sz2.cx = 0;
-			rspc = 0;
-		}
-		if(!limg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
-			sz1.cx = 0;
-			lspc = 0;
-		}
-	}
-	Size isz = GetSize(txtcx, sz1, lspc, sz2, rspc);
-	Point p = r.TopLeft(), ip;
-	if(align == ALIGN_LEFT)
-		p.x = r.left;
-	else
-	if(align == ALIGN_RIGHT)
-		p.x = r.right - isz.cx;
-	else
-	if(align == ALIGN_CENTER)
-		p.x = (r.right + r.left - isz.cx) / 2;
-	if(valign == ALIGN_TOP)
-		p.y = r.top;
-	else
-	if(valign == ALIGN_BOTTOM)
-		p.y = r.bottom - isz.cy;
-	else
-	if(valign == ALIGN_CENTER)
-		p.y = (r.bottom + r.top - txtsz.cy) / 2;
 	Color color = disabled && !IsNull(disabledink) ? disabledink : ink;
 	if(IsNull(color))
 		color = disabled ? SColorDisabled : GetLabelTextColor(ctrl);
-	int ix;
-	if(IsNull(lspc))
-		ix = r.left + push;
-	else {
-		ix = p.x + push;
-		p.x += sz1.cx;
-		p.x += lspc;
-	}
-	int iy = push + (r.top + r.bottom - sz1.cy) / 2;
+	if(orientation) {
+		if(txtsz.cx) {
+			if(!rimg_never_hide && txtsz.cx + sz1.cy + sz2.cy + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+				sz2.cy = 0;
+				rspc = 0;
+			}
+			if(!limg_never_hide && txtsz.cx + sz1.cy + sz2.cy + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+				sz1.cy = 0;
+				lspc = 0;
+			}
+		}
 
-	if(sz1.cx) {
-		if(IsNull(lcolor))
-			w.DrawImage(ix, iy, DisabledImage(limg, disabled));
-		else
-			w.DrawImage(ix, iy, limg, lcolor);
-	}
-	iy = push + (r.top + r.bottom - sz2.cy) / 2;
-	ix = (IsNull(rspc) ? r.right - sz2.cx : p.x + txtsz.cx + rspc) + push;
-	if(sz2.cx) {
-		if(IsNull(rcolor))
-			w.DrawImage(ix, iy, DisabledImage(rimg, disabled));
-		else
-			w.DrawImage(ix, iy, rimg, rcolor);
-	}
-	paintrect.Paint(w, p.x + push, p.y + push, txtsz.cx, isz.cy, color, Null);
+		Size isz = GetSize(txtcx, sz1, lspc, sz2, rspc);
+		
+		Point p;
+		bool  cw = orientation == ORIENTATION_CLOCKWISE;
+		if(cw) {
+			p = r.TopRight();
+			if(align == ALIGN_LEFT)
+				p.y = r.top;
+			else
+			if(align == ALIGN_RIGHT)
+				p.y = r.bottom - isz.cx;
+			else
+			if(align == ALIGN_CENTER)
+				p.y = (r.top + r.bottom - isz.cx) / 2;
+
+			if(valign == ALIGN_TOP)
+				p.x = r.right;
+			else
+			if(valign == ALIGN_BOTTOM)
+				p.x = r.left + isz.cy;
+			else
+			if(valign == ALIGN_CENTER)
+				p.x = r.right - (r.Width() - isz.cy) / 2;
+		}
+		else {
+			p = r.BottomLeft();
+			if(align == ALIGN_LEFT)
+				p.y = r.bottom;
+			else
+			if(align == ALIGN_RIGHT)
+				p.y = r.top + isz.cx;
+			else
+			if(align == ALIGN_CENTER)
+				p.y = r.bottom - (r.Width() - isz.cx) / 2;
+
+			if(valign == ALIGN_TOP)
+				p.x = r.left;
+			else
+			if(valign == ALIGN_BOTTOM)
+				p.x = r.right - isz.cy;
+			else
+			if(valign == ALIGN_CENTER)
+				p.x = (r.left + r.right - isz.cy) / 2;
+		}
+
+		int iy;
+		if(IsNull(lspc))
+			iy = r.left + push;
+		else {
+			iy = p.y + push;
+			if(cw)
+				p.y += sz1.cy + lspc;
+			else {
+				iy -= sz1.cy;
+				p.y -= sz1.cy + lspc;
+			}
+		}
+		int ix = push + (r.left + r.right - sz1.cx) / 2;
 	
-	if(*text) {
-		if(disabled && *text != '\1')
-			DrawSmartText(w, p.x + push + 1, p.y + push + 1,
-			              donowrap ? INT_MAX/2 : txtcx, text, font, SColorPaper);
-		DrawSmartText(w, p.x + push, p.y + push, donowrap ? INT_MAX/2 : txtcx,
-		              text, font, color, visibleaccesskey ? accesskey : 0);
-		if(focus)
-			DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
-	}
+		if(sz1.cx) {
+			if(IsNull(lcolor))
+				w.DrawImage(ix, iy, DisabledImage(limg, disabled));
+			else
+				w.DrawImage(ix, iy, limg, lcolor);
+		}
 
-	return Rect(p, isz);
+		ix = push + (r.left + r.right - sz2.cx) / 2;
+		if(cw)
+			iy = IsNull(rspc) ? r.bottom - sz2.cy : p.y + txtsz.cx + rspc;
+		else
+			iy = IsNull(rspc) ? r.top : p.y - txtsz.cx - rspc - sz2.cy;
+		iy += push;
+		if(sz2.cx) {
+			if(IsNull(rcolor))
+				w.DrawImage(ix, iy, DisabledImage(rimg, disabled));
+			else
+				w.DrawImage(ix, iy, rimg, rcolor);
+		}
+		paintrect.Paint(w, p.x + push, p.y + push, txtsz.cx, isz.cy, color, Null);
+		
+		if(*text) {
+			if(disabled && *text != '\1')
+				DrawSmartText(w, p.x + push + 1, p.y + push + 1,
+				              donowrap ? INT_MAX/2 : txtcx, text, orientation, font, SColorPaper);
+			DrawSmartText(w, p.x + push, p.y + push, donowrap ? INT_MAX/2 : txtcx,
+			              text, orientation, font, color, visibleaccesskey ? accesskey : 0);
+			if(focus)
+				DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
+		}
+		return Rect(p, isz);
+	}
+	else {
+		if(txtsz.cx) {
+			if(!rimg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+				sz2.cx = 0;
+				rspc = 0;
+			}
+			if(!limg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+				sz1.cx = 0;
+				lspc = 0;
+			}
+		}
+		Size isz = GetSize(txtcx, sz1, lspc, sz2, rspc);
+		Point p = r.TopLeft();
+		if(align == ALIGN_LEFT)
+			p.x = r.left;
+		else
+		if(align == ALIGN_RIGHT)
+			p.x = r.right - isz.cx;
+		else
+		if(align == ALIGN_CENTER)
+			p.x = (r.right + r.left - isz.cx) / 2;
+		if(valign == ALIGN_TOP)
+			p.y = r.top;
+		else
+		if(valign == ALIGN_BOTTOM)
+			p.y = r.bottom - isz.cy;
+		else
+		if(valign == ALIGN_CENTER)
+			p.y = (r.bottom + r.top - txtsz.cy) / 2;
+		int ix;
+		if(IsNull(lspc))
+			ix = r.left + push;
+		else {
+			ix = p.x + push;
+			p.x += sz1.cx;
+			p.x += lspc;
+		}
+		int iy = push + (r.top + r.bottom - sz1.cy) / 2;
+	
+		if(sz1.cx) {
+			if(IsNull(lcolor))
+				w.DrawImage(ix, iy, DisabledImage(limg, disabled));
+			else
+				w.DrawImage(ix, iy, limg, lcolor);
+		}
+		iy = push + (r.top + r.bottom - sz2.cy) / 2;
+		ix = (IsNull(rspc) ? r.right - sz2.cx : p.x + txtsz.cx + rspc) + push;
+		if(sz2.cx) {
+			if(IsNull(rcolor))
+				w.DrawImage(ix, iy, DisabledImage(rimg, disabled));
+			else
+				w.DrawImage(ix, iy, rimg, rcolor);
+		}
+		paintrect.Paint(w, p.x + push, p.y + push, txtsz.cx, isz.cy, color, Null);
+		
+		if(*text) {
+			if(disabled && *text != '\1')
+				DrawSmartText(w, p.x + push + 1, p.y + push + 1,
+				              donowrap ? INT_MAX/2 : txtcx, text, font, SColorPaper);
+			DrawSmartText(w, p.x + push, p.y + push, donowrap ? INT_MAX/2 : txtcx,
+			              text, font, color, visibleaccesskey ? accesskey : 0);
+			if(focus)
+				DrawFocus(w, p.x - 2, p.y, txtsz.cx + 5, isz.cy);
+		}
+		return Rect(p, isz);
+	}
 }
 
 Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey) const
@@ -280,7 +331,6 @@ LabelBase& LabelBase::SetPaintRect(const PaintRect& paintrect) {
 	LabelUpdate();
 	return *this;
 }
-
 
 LabelBase& LabelBase::SetText(const char *text) {
 	lbl.text = text;

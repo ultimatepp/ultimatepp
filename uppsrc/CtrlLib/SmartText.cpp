@@ -167,4 +167,57 @@ void DrawSmartText(Draw& w, int x, int y, int cx, const char *text, int orientat
 	DrawSmartText(ow, 0, 0, cx, text, font, ink, accesskey, qtf_ink, dark_theme);
 }
 
+String DeAmp(const char *s)
+{
+	String out;
+	for(; *s; out.Cat(*s++))
+		if(*s == '&')
+			out.Cat('&');
+	return out;
+}
+
+bool CompareAccessKey(int accesskey, dword key)
+{
+	return accesskey && dword(ToUpper(accesskey & 255) - 'A' + K_ALT_A) == key;
+}
+
+int  ExtractAccessKey(const char *s, String& label)
+{
+	byte akey = 0;
+	int  pos = 0;
+	String text;
+	bool qtf = *s == '\1';
+	while(*s)
+		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
+			akey = ToAscii(ToUpper(s[1]));
+			pos = text.GetLength() + 1;
+			s++;
+		}
+		else
+			text.Cat(*s++);
+	text.Shrink();
+	label = text;
+	return MAKELONG(akey, pos);
+}
+
+int  ChooseAccessKey(const char *text, dword used)
+{
+	for(const char *s = text; *s; s++) {
+		byte ac = *s;
+		if(ac < 128 && ac >= 'A' && ac <= 'Z' && (Ctrl::AccessKeyBit(ac) & used) == 0)
+			return MAKELONG(ac, s - text + 1);
+	}
+	for(const char *s = text; *s; s++) {
+		dword ac = ToUpper(*s);
+		if(ac < 128 && ac >= 'A' && ac <= 'Z' && ac != 'I' && ac != 'L' && (Ctrl::AccessKeyBit(ac) & used) == 0)
+			return ac;
+	}
+	for(const char *s = text; *s; s++) {
+		dword ac = ToUpper(*s);
+		if(ac < 128 && ac >= 'A' && ac <= 'Z' && (Ctrl::AccessKeyBit(ac) & used) == 0)
+			return ac;
+	}
+	return 0;
+}
+
 }
