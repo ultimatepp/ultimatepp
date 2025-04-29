@@ -289,7 +289,7 @@ void RTFEncoder::PutObject(const RichObject& object)
 	Command("picwgoal", DotTwips(out_size.cx));
 	Command("pichgoal", DotTwips(out_size.cy));
 	Command("pngblip");
-	PutBinHex(PNGEncoder().SaveString(object.ToImage(out_size)));
+	PutBinHex(PNGEncoder().SaveString(object.ToImage(out_size, charfmt.ink)));
 }
 
 bool RTFEncoder::PutParaFormat(const RichPara::Format& pf, const RichPara::Format& difpf)

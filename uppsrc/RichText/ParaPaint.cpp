@@ -129,6 +129,7 @@ bool RichPara::BreaksPage(const RichContext& rc, const Lines& pl, int i) const
 struct RichObjectImageMaker : ImageMaker {
 	RichObject object;
 	Size       sz;
+	Color      ink;
 	void       *context;
 
 	virtual String Key() const;
@@ -141,12 +142,13 @@ String RichObjectImageMaker::Key() const
 	RawCat(b, object.GetSerialId());
 	RawCat(b, sz);
 	RawCat(b, context);
+	RawCat(b, ink);
 	return String(b);
 }
 
 Image RichObjectImageMaker::Make() const
 {
-	return object.ToImage(sz, context);
+	return object.ToImage(sz, ink, context);
 }
 
 void RichPara::DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int style)
@@ -281,11 +283,12 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 								RichObjectImageMaker im;
 								im.object = o;
 								im.sz = sz;
+								im.ink = (*i)->ink;
 								im.context = pi.context;
 								draw.DrawImage(0, 0, MakeImagePaintOnly(im));
 							}
 							else
-								o.Paint(draw, sz, pi.context);
+								o.Paint(draw, sz, (*i)->ink, pi.context);
 						draw.End();
 					}
 					i++;

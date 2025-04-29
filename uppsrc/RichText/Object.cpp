@@ -100,23 +100,23 @@ Size RichObjectType::GetPixelSize(const Value& data, void *context) const
 
 Size RichObjectType::GetPixelSize(const Value& data) const { return Size(1, 1); }
 
-void RichObjectType::Paint(const Value& data, Draw& w, Size sz, void *context) const
+void RichObjectType::Paint(const Value& data, Draw& w, Size sz, Color ink, void *context) const
 {
-	Paint(data, w, sz);
+	Paint(data, w, sz, ink);
 }
 
-void RichObjectType::Paint(const Value& data, Draw& w, Size sz) const {}
+void RichObjectType::Paint(const Value& data, Draw& w, Size sz, Color ink) const {}
 
-Image RichObjectType::ToImage(int64 serial_id, const Value& data, Size sz) const
+Image RichObjectType::ToImage(int64 serial_id, const Value& data, Size sz, Color ink) const
 {
-	return ToImage(serial_id, data, sz, NULL);
+	return ToImage(serial_id, data, sz, ink, NULL);
 }
 
-Image RichObjectType::ToImage(int64, const Value& data, Size sz, void *context) const
+Image RichObjectType::ToImage(int64, const Value& data, Size sz, Color ink, void *context) const
 {
 	ImageAnyDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
-	Paint(data, iw, sz, context);
+	Paint(data, iw, sz, ink, context);
 	return iw;
 }
 
@@ -164,10 +164,10 @@ void RichObject::Register(const char *name, RichObjectType *type)
 	Map().FindAdd(name, type);
 }
 
-void RichObject::Paint(Draw& w, Size sz, void *context) const
+void RichObject::Paint(Draw& w, Size sz, Color ink, void *context) const
 {
 	if(type)
-		type->Paint(data, w, sz, context);
+		type->Paint(data, w, sz, ink, context);
 	else {
 		w.DrawRect(sz, SColorFace());
 		DrawFrame(w, sz, SColorText());
@@ -175,13 +175,13 @@ void RichObject::Paint(Draw& w, Size sz, void *context) const
 	}
 }
 
-Image RichObject::ToImage(Size sz, void *context) const
+Image RichObject::ToImage(Size sz, Color ink, void *context) const
 {
 	if(type)
-		return type->ToImage(serial, data, sz, context);
+		return type->ToImage(serial, data, sz, ink, context);
 	else {
 		ImageAnyDraw w(sz);
-		Paint(w, sz, context);
+		Paint(w, sz, ink, context);
 		return w;
 	}
 }

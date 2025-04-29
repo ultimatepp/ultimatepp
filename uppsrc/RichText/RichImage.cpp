@@ -9,8 +9,8 @@ struct RichImage : public RichObjectType {
 	virtual String GetTypeName(const Value& v) const;
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz, Color, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, Color, void *) const;
 
 	virtual bool   Accept(PasteClip& clip);
 	virtual Value  Read(PasteClip& clip);
@@ -81,13 +81,13 @@ Size   RichImage::GetPhysicalSize(const Value& data) const
 	return sz;
 }
 
-void   RichImage::Paint(const Value& data, Draw& w, Size sz, void *) const
+void   RichImage::Paint(const Value& data, Draw& w, Size sz, Color, void *) const
 {
 	Image x = LoadImageFromString(data);
 	w.DrawImage(0, 0, sz.cx, sz.cy, x);
 }
 
-Image  RichImage::ToImage(int64, const Value& data, Size sz, void *) const
+Image  RichImage::ToImage(int64, const Value& data, Size sz, Color, void *) const
 {
 	return Rescale(LoadImageFromString(data), sz);
 }
@@ -183,8 +183,8 @@ struct RichRawImage : public RichObjectType {
 	virtual String Write(const Value& v) const;
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz, Color, void *) const;
+	virtual Image  ToImage(int64, const Value& data, Size sz, Color, void *) const;
 };
 
 String RichRawImage::GetTypeName(const Value& v) const
@@ -233,7 +233,7 @@ Size RichRawImage::GetPixelSize(const Value& data) const
 	return Size(0, 0);
 }
 
-void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
+void RichRawImage::Paint(const Value& data, Draw& w, Size sz, Color ink, void *) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -253,10 +253,10 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 	}
 	else
 	if(IsSVG(s))
-		w.DrawImage(0, 0, RenderSVGImage(sz, s));
+		w.DrawImage(0, 0, RenderSVGImage(sz, s, ink));
 }
 
-Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, void *) const
+Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, Color ink, void *) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -279,7 +279,7 @@ Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, void *)
 	}
 	else
 	if(IsString(data) && IsSVG(~data))
-		return RenderSVGImage(sz, ~data);
+		return RenderSVGImage(sz, ~data, ink);
 	return Null;
 }
 
