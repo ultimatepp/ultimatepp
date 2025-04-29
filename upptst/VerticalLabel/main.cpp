@@ -1,13 +1,11 @@
-#include <CtrlLib/CtrlLib.h>
+#include "VerticalLabel.h"
 
-using namespace Upp;
+VerticalLabel::VerticalLabel()
+{
+	CtrlLayout(*this, "Window title");
+}
 
 GUI_APP_MAIN
 {
-	TopWindow win;
-	Label l;
-	l = "This is a label";
-	win << l.SizePos();
-	l.SetOrientation(ORIENTATION_VERTICAL_LEFT);
-	win.Run();
+	VerticalLabel().Run();
 }

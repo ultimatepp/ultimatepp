@@ -22,6 +22,18 @@ enum_property Align {
 	"ALIGN_RIGHT"
 };
 
+enum_property VAlign {
+	"ALIGN_TOP",
+	"ALIGN_CENTER",
+	"ALIGN_BOTTOM"
+};
+
+enum_property Orientation {
+	"ORIENTATION_NORMAL",
+	"ORIENTATION_CLOCKWISE",
+	"ORIENTATION_ANTICLOCKWISE"
+};
+
 fn IsUHD()
 {
 	return GetTextSize("X", StdFont()).cy > 24;
@@ -261,6 +273,8 @@ ctrl Label {
 
 	Doc    SetLabel @0 ? "Label of control";
 	Align  SetAlign = ALIGN_LEFT @2;
+	VAlign SetVAlign = ALIGN_CENTER @2;
+	Orientation SetOrientation = ORIENTATION_NORMAL @2;
 	Font   SetFont = StdFont() @2;
 	Color  SetInk = :SBlack @2;
 	Frame  SetFrame @3;
@@ -268,13 +282,30 @@ ctrl Label {
 
 	Paint(w) {
 		sz = ViewSize(w);
-		textsize = GetSmartTextSize(.SetLabel, .SetFont);
+/*		textsize = GetSmartTextSize(.SetLabel, .SetFont);
 		px = 0;
 		if(.SetAlign == "ALIGN_CENTER")
 			px = (sz.cx - textsize.cx) / 2;
 		if(.SetAlign == "ALIGN_RIGHT")
 			px = sz.cx - textsize.cx;
 		w.DrawSmartText(px, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont, .SetInk, sz.cx);
+*/
+		align = 1;
+		if(.SetAlign == "ALIGN_CENTER")
+			align = 3;
+		if(.SetAlign == "ALIGN_RIGHT")
+			align = 2;
+		valign = 3;
+		if(.SetVAlign == "ALIGN_TOP")
+			valign = 1;
+		if(.SetVAlign == "ALIGN_BOTTOM")
+			valign = 2;
+		orientation = 0;
+		if(.SetOrientation == "ORIENTATION_CLOCKWISE")
+			orientation = 1;
+		if(.SetOrientation == "ORIENTATION_ANTICLOCKWISE")
+			orientation = 2;
+		w.DrawLabel(0, 0, sz.cx, sz.cy, .SetLabel, .SetFont, .SetInk, align, valign, orientation);
 	}
 	Sample() {
 		.SetLabel = "Label";

@@ -74,6 +74,7 @@ struct EscDraw : public EscHandle {
 	void DrawLine(EscEscape& e);
 	void DrawText(EscEscape& e);
 	void DrawSmartText(EscEscape& e);
+	void DrawLabel(EscEscape& e);
 	void DrawQtf(EscEscape& e);
 	void GetTextSize(EscEscape& e);
 	void DrawImage(EscEscape& e);

@@ -15,7 +15,7 @@ void DrawSmartText(Draw& w, int x, int y, int cx, const char *text,
                    Font font = StdFont(), Color ink = SBlack(), int accesskey = 0,
                    Color qtf_ink = Null, int dark_theme = Null);
 
-enum { ORIENTATION_NORMAL, ORIENTATION_ANTICLOCKWISE, ORIENTATION_CLOCKWISE };
+enum { ORIENTATION_NORMAL, ORIENTATION_CLOCKWISE, ORIENTATION_ANTICLOCKWISE };
 
 void DrawSmartText(Draw& w, int x, int y, int cx, const char *text, int orientation,
                    Font font = StdFont(), Color ink = SBlack(), int accesskey = 0,

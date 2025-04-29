@@ -2,7 +2,9 @@ uses
 	CtrlLib;
 
 file
-	main.cpp;
+	VerticalLabel.h,
+	main.cpp,
+	VerticalLabel.lay;
 
 mainconfig
 	"" = "GUI";

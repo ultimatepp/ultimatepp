@@ -1,0 +1,15 @@
+LAYOUT(VerticalLabelLayout, 804, 248)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Label!")).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(8, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("Label!")).SetAlign(Upp::ALIGN_RIGHT).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(140, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("Label!")).SetAlign(Upp::ALIGN_CENTER).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(272, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___3, SetLabel(t_("Label!")).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(8, 128).TopPosZ(128, 116))
+	ITEM(Upp::Label, dv___4, SetLabel(t_("Label!")).SetAlign(Upp::ALIGN_RIGHT).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(140, 128).TopPosZ(128, 116))
+	ITEM(Upp::Label, dv___5, SetLabel(t_("Label!")).SetAlign(Upp::ALIGN_CENTER).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(272, 128).TopPosZ(128, 116))
+	ITEM(Upp::Label, dv___6, SetLabel(t_("Label!")).SetAlign(Upp::ALIGN_CENTER).SetVAlign(Upp::ALIGN_TOP).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(404, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___7, SetLabel(t_("\001[/ Label!")).SetAlign(Upp::ALIGN_CENTER).SetVAlign(Upp::ALIGN_BOTTOM).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(536, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___8, SetLabel(t_("\001[/ Label!")).SetAlign(Upp::ALIGN_CENTER).SetVAlign(Upp::ALIGN_TOP).SetOrientation(Upp::ORIENTATION_CLOCKWISE).LeftPosZ(668, 128).TopPosZ(8, 116))
+	ITEM(Upp::Label, dv___9, SetLabel(t_("Label!")).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(404, 128).TopPosZ(128, 116))
+	ITEM(Upp::Label, dv___10, SetLabel(t_("\001[/ Label!")).SetAlign(Upp::ALIGN_CENTER).SetVAlign(Upp::ALIGN_TOP).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(536, 128).TopPosZ(128, 116))
+	ITEM(Upp::Label, dv___11, SetLabel(t_("\001[/ Label!")).SetAlign(Upp::ALIGN_CENTER).SetVAlign(Upp::ALIGN_BOTTOM).SetOrientation(Upp::ORIENTATION_ANTICLOCKWISE).LeftPosZ(668, 128).TopPosZ(128, 116))
+END_LAYOUT
+

@@ -395,6 +395,47 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	::DrawSmartText(w, x, y, cx, text, font, color, accesskey);
 }
 
+void EscDraw::DrawLabel(EscEscape& e)
+{ // DrawLabel(x, y, cx, cy, text, font, ink, align, valign, orientation)
+	if(e.GetCount() < 5 || e.GetCount() > 10)
+		e.ThrowError("wrong number of arguments in call to 'DrawLabel'");
+	int x = e.Int(0);
+	int y = e.Int(1);
+	int cx = e.Int(2);
+	int cy = e.Int(3);
+
+	Upp::DrawLabel dl;
+	int ii = 4;
+	String text;
+	if(ii < e.GetCount() && e[ii].IsArray())
+		dl.text = ToUtf8((WString)e[ii++]);
+
+	dl.font = StdFont().Height(11);
+	if(ii < e.GetCount())
+		dl.font = FontEsc(e[ii++]);
+	if(dl.font.GetHeight() == 0)
+#ifdef GUI_X11
+		dl.font.Height(12);
+#else
+		dl.font.Height(11);
+#endif
+
+	if(ii < e.GetCount())
+		dl.ink = ColorEsc(e[ii++]);
+
+	if(ii < e.GetCount() && e[ii].IsInt())
+		dl.align = clamp(e.Int(ii++), 1, 3);
+
+	if(ii < e.GetCount() && e[ii].IsInt())
+		dl.valign = clamp(e.Int(ii++), 1, 3);
+
+	if(ii < e.GetCount() && e[ii].IsInt())
+		dl.orientation = clamp(e.Int(ii++), 0, 2);
+	
+	dl.Paint(w, e.Int(0), e.Int(1), e.Int(2), e.Int(3));
+}
+
+
 void EscDraw::DrawQtf(EscEscape& e)
 {
 	if(e.GetCount() < 5 || e.GetCount() > 6)
@@ -467,6 +508,7 @@ EscDraw::EscDraw(EscValue& v, Draw& w)
 	v.Escape("DrawLine(...)", this, THISBACK(DrawLine));
 	v.Escape("DrawText(...)", this, THISBACK(DrawText));
 	v.Escape("DrawSmartText(...)", this, THISBACK(DrawSmartText));
+	v.Escape("DrawLabel(...)", this, THISBACK(DrawLabel));
 	v.Escape("DrawQtf(...)", this, THISBACK(DrawQtf));
 	v.Escape("GetTextSize(...)", this, THISBACK(GetTextSize));
 	v.Escape("DrawImage(...)", this, THISBACK(DrawImage));
