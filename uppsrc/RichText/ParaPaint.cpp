@@ -126,6 +126,33 @@ bool RichPara::BreaksPage(const RichContext& rc, const Lines& pl, int i) const
 	return false;
 }
 
+struct EllipseImageMaker : ImageMaker {
+	Size       sz;
+
+	virtual String Key() const;
+	virtual Image  Make() const;
+};
+
+String EllipseImageMaker::Key() const
+{
+	return String((const char *)&sz, sizeof(sz));
+}
+
+Image EllipseImageMaker::Make() const
+{
+	ImagePainter p(sz);
+	p.Clear(RGBAZero());
+	p.DrawEllipse(0, 0, sz.cx, sz.cy, Black());
+	return p;
+}
+
+static Image sEllipseImage(Size sz)
+{
+	EllipseImageMaker m;
+	m.sz = sz;
+	return MakeImage(m);
+}
+
 struct RichObjectImageMaker : ImageMaker {
 	RichObject object;
 	Size       sz;
@@ -334,11 +361,20 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 					draw.DrawRect(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUNDWHITE:
-					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
-					draw.DrawEllipse(r1, pi.ResolvePaper(White()));
+					if(draw.IsPrinter()) {
+						draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
+						draw.DrawEllipse(r1, pi.ResolvePaper(White()));
+					}
+					else {
+						draw.DrawImage(r.left, r.top, sEllipseImage(r.GetSize()), pi.ResolveInk(bullet_ink));
+						draw.DrawImage(r1.left, r1.top, sEllipseImage(r1.GetSize()), pi.ResolvePaper(White()));
+					}
 					break;
 				case BULLET_ROUND:
-					draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
+					if(draw.IsPrinter())
+						draw.DrawEllipse(r, pi.ResolveInk(bullet_ink));
+					else
+						draw.DrawImage(r.left, r.top, sEllipseImage(r.GetSize()), pi.ResolveInk(bullet_ink));
 					break;
 				}
 			}
