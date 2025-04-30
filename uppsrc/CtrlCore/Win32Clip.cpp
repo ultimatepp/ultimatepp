@@ -365,7 +365,7 @@ Image GetImage(PasteClip& clip)
 		LoadFromString(m, ~clip);
 		if(!m.IsEmpty())
 			return m;
-				}
+	}
 	if(clip.Accept("dib")) {
 		String data = ~clip;
 		if((unsigned)data.GetCount() < sizeof(BITMAPINFO)) return Null;
@@ -403,16 +403,19 @@ String sDib(const Value& image)
 	Image img = image;
 	BITMAPINFOHEADER header;
 	Zero(header);
+	Size sz = img.GetSize();
 	header.biSize = sizeof(header);
-	header.biWidth = img.GetWidth();
-	header.biHeight = -img.GetHeight();
+	header.biWidth = sz.cx;
+	header.biHeight = sz.cy;
 	header.biBitCount = 32;
 	header.biPlanes = 1;
 	header.biCompression = BI_RGB;
 	StringBuffer b(int(sizeof(header) + 4 * img.GetLength()));
 	byte *p = (byte *)~b;
 	memcpy(p, &header, sizeof(header));
-	memcpy(p + sizeof(header), ~img, 4 * img.GetLength());
+	p += sizeof(header);
+	for(int i = 0; i < sz.cy; i++)
+		memcpy(4 * i * sz.cx + p, img[sz.cy - 1 - i], 4 * sz.cx);
 	return String(b);
 }
 
