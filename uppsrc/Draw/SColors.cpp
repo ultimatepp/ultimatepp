@@ -21,6 +21,15 @@ CH_COLOR(SLtBlue, AdjustIfDark(LtBlue()));
 CH_COLOR(SLtMagenta, AdjustIfDark(LtMagenta()));
 CH_COLOR(SLtCyan, AdjustIfDark(LtCyan()));
 
+CH_COLOR(SOrange, AdjustIfDark(Orange()));
+CH_COLOR(SPink, AdjustIfDark(Pink()));
+CH_COLOR(SDkRed, AdjustIfDark(DkRed()));
+CH_COLOR(SDkGreen, AdjustIfDark(DkGreen()));
+CH_COLOR(SDkBlue, AdjustIfDark(DkBlue()));
+CH_COLOR(SDkYellow, AdjustIfDark(DkYellow()));
+CH_COLOR(SDkMagenta, AdjustIfDark(DkMagenta()));
+CH_COLOR(SDkCyan, AdjustIfDark(DkCyan()));
+
 bool dark_theme__;
 extern bool AColor_dark_mode__;
 

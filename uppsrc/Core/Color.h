@@ -158,7 +158,7 @@ inline Color DkCyan()    { return Color(0, 128, 128); }
 inline Color LtRed()     { return Color(255, 0, 0); }
 inline Color LtGreen()   { return Color(0, 255, 0); }
 inline Color LtBlue()    { return Color(0, 0, 255); }
-inline Color LtYellow()  { return Color(255, 255, 128); }
+inline Color LtYellow()  { return Color(255, 255, 192); }
 inline Color LtMagenta() { return Color(255, 0, 255); }
 inline Color LtCyan()    { return Color(0, 255, 255); }
 
