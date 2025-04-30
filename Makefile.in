@@ -77178,6 +77178,11 @@ $(OutDir_RichText)Object.o: $(UPPDIR1)RichText/Object.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Object.cpp \
 	$(UPPDIR1)RichText/Para.h \
@@ -77395,6 +77400,11 @@ $(OutDir_RichText)ParaData.o: $(UPPDIR1)RichText/ParaData.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/ParaData.cpp \
@@ -77501,6 +77511,11 @@ $(OutDir_RichText)ParaType.o: $(UPPDIR1)RichText/ParaType.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/ParaType.cpp \
@@ -77608,6 +77623,11 @@ $(OutDir_RichText)ParaPaint.o: $(UPPDIR1)RichText/ParaPaint.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/ParaPaint.cpp \
@@ -77714,6 +77734,11 @@ $(OutDir_RichText)HeaderFooter.o: $(UPPDIR1)RichText/HeaderFooter.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/HeaderFooter.cpp \
 	$(UPPDIR1)RichText/Para.h \
@@ -77820,6 +77845,11 @@ $(OutDir_RichText)TxtData.o: $(UPPDIR1)RichText/TxtData.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -77926,6 +77956,11 @@ $(OutDir_RichText)TxtPaint.o: $(UPPDIR1)RichText/TxtPaint.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78032,6 +78067,11 @@ $(OutDir_RichText)TxtOp.o: $(UPPDIR1)RichText/TxtOp.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78138,6 +78178,11 @@ $(OutDir_RichText)Format.o: $(UPPDIR1)RichText/Format.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Format.cpp \
 	$(UPPDIR1)RichText/Para.h \
@@ -78244,6 +78289,11 @@ $(OutDir_RichText)TableCell.o: $(UPPDIR1)RichText/TableCell.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78350,6 +78400,11 @@ $(OutDir_RichText)TableLayout.o: $(UPPDIR1)RichText/TableLayout.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78456,6 +78511,11 @@ $(OutDir_RichText)TablePaint.o: $(UPPDIR1)RichText/TablePaint.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78562,6 +78622,11 @@ $(OutDir_RichText)TableData.o: $(UPPDIR1)RichText/TableData.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78668,6 +78733,11 @@ $(OutDir_RichText)TextPaint.o: $(UPPDIR1)RichText/TextPaint.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78774,6 +78844,11 @@ $(OutDir_RichText)TextStyle.o: $(UPPDIR1)RichText/TextStyle.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78880,6 +78955,11 @@ $(OutDir_RichText)TextData.o: $(UPPDIR1)RichText/TextData.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -78986,6 +79066,11 @@ $(OutDir_RichText)TextTable.o: $(UPPDIR1)RichText/TextTable.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -79092,6 +79177,11 @@ $(OutDir_RichText)EncodeQtf.o: $(UPPDIR1)RichText/EncodeQtf.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/EncodeQtf.cpp \
 	$(UPPDIR1)RichText/Para.h \
@@ -79198,6 +79288,11 @@ $(OutDir_RichText)ParseQtf.o: $(UPPDIR1)RichText/ParseQtf.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/ParseQtf.cpp \
@@ -79304,6 +79399,11 @@ $(OutDir_RichText)EncodeHTML.o: $(UPPDIR1)RichText/EncodeHTML.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/EncodeHTML.cpp \
 	$(UPPDIR1)RichText/Para.h \
@@ -79410,6 +79510,11 @@ $(OutDir_RichText)ParseHTML.o: $(UPPDIR1)RichText/ParseHTML.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/ParseHTML.cpp \
@@ -79516,6 +79621,11 @@ $(OutDir_RichText)Util.o: $(UPPDIR1)RichText/Util.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
+	$(UPPDIR1)Painter/BufferPainter.h \
+	$(UPPDIR1)Painter/LinearPath.h \
+	$(UPPDIR1)Painter/Painter.h \
+	$(UPPDIR1)Painter/Painter.hpp \
+	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
