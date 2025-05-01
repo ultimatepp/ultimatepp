@@ -858,7 +858,7 @@ void Ide::EditFile(const String& p)
 
 void Ide::CheckFileUpdate()
 {
-	if(editfile.IsEmpty() || !IsForeground() || designer) return;
+	if(editfile.IsEmpty() || !IsForeground() || designer || !FileExists(editfile)) return;
 	FileTime tm = GetFileTime(editfile);
 	if(tm == edittime) return;
 	edittime = tm;
