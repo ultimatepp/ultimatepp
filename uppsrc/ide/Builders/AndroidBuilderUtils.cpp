@@ -4,10 +4,7 @@ namespace Upp {
 
 String AndroidBuilderUtils::GetAssemblyDir(const String& package)
 {
-	String packageManifest = PackagePath(package);
-	String packageDir = GetFileFolder(packageManifest);
-	
-	return GetAssemblyDir(packageDir, package);
+	return GetAssemblyDir(PackageDirectory(package), package);
 }
 
 String AndroidBuilderUtils::GetAssemblyDir(const String& packageDir, const String& package)

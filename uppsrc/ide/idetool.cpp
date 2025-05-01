@@ -506,7 +506,7 @@ void Ide::DoPatchDiff()
 		dir.FindAdd(d[i]);
 	const Workspace& wspc = IdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
-		dir.FindAdd(GetFileFolder(PackagePath(wspc[i])));
+		dir.FindAdd(PackageDirectory(wspc[i]));
 	static PatchDiff dlg;
 	dlg.diff.WhenLeftLine = THISBACK1(GotoDirDiffLeft, &dlg);
 	if(!dlg.IsOpen()) {

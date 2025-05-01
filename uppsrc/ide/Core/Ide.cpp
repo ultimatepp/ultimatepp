@@ -27,7 +27,7 @@ String GetSourcePackage(const String& path)
 	const Workspace& w = GetIdeWorkspace();
 	for(int i = 0; i < w.GetCount(); i++) {
 		String pn = w[i];
-		String pp = ToLower(GetFileFolder(PackagePath(pn)));
+		String pp = ToLower(PackageDirectory(pn));
 		if(p.StartsWith(pp) && findarg(p[pp.GetCount()], '/', '\\') >= 0)
 			return pn;
 	}

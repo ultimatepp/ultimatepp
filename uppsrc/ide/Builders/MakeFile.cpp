@@ -34,10 +34,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	const Vector<String>& all_uses, const Vector<String>& all_libraries,
 	const Index<String>& common_config, bool exporting)
 {
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
 	Vector<String> src = GetUppDirs();
 	for(int i = 0; i < src.GetCount(); i++)
 		src[i] = UnixPath(src[i]);

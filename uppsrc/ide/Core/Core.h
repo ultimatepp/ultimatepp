@@ -285,7 +285,7 @@ class Nest {
 	VectorMap<String, String> var;
 	VectorMap<String, String> package_cache;
 
-	String PackagePath0(const String& name);
+	String PackageDirectory0(const String& name);
 
 public:
 	bool   Save(const char *path);
@@ -294,7 +294,7 @@ public:
 	void   Set(const String& id, const String& val);
 
 	void   InvalidatePackageCache();
-	String PackagePath(const String& name);
+	String PackageDirectory(const String& name);
 };
 
 Nest& MainNest();
@@ -304,7 +304,21 @@ String GetVarsIncludes();
 
 String DefaultHubFilePath();
 
-bool   IsExternalMode();
+
+String GetCurrentBuildMethod();
+String GetCurrentMainPackage();
+
+String GetAnyFileName(const char *path);
+String CatAnyPath(String path, const char *more);
+
+bool   IsFullDirectory(const String& d);
+bool   IsFolder(const String& path);
+
+bool   IsCSourceFile(const char *path);
+bool   IsCHeaderFile(const char *path);
+
+String GetLocalDir();
+String LocalPath(const String& filename);
 
 void   SetHubDir(const String& path);
 void   OverrideHubDir(const String& path);
@@ -325,38 +339,22 @@ Vector<String> GetUppDirsRaw();
 Vector<String> GetUppDirs();
 bool   IsHubDir(const String& path);
 String GetUppDir();
+
 void   SetVar(const String& var, const String& val, bool save = true);
 void   SetMainNest(const String& n);
 String GetAssemblyId();
-String PackageFilePath(const String& path);
-
-String GetCurrentBuildMethod();
-String GetCurrentMainPackage();
-
-String GetAnyFileName(const char *path);
-String GetAnyFileTitle(const char *path);
-String CatAnyPath(String path, const char *more);
-
 void   InvalidatePackageCache();
-String PackagePath(const String& name);
+
+bool   IsExternalMode();
+
+bool   IsDirectoryExternalPackage(const String& dir);
+bool   IsDirectoryPackage(const String& path);
+String PackageFile(const String& name);
 String SourcePath(const String& package, const String& name);
-inline
-String PackageDirectory(const String& name) { return GetFileDirectory(PackagePath(name)); }
+String PackageDirectory(const String& name);
 bool   IsNestReadOnly(const String& path);
-bool   IsExternalPackage(const String& folder);
 
 String GetPackagePathNest(const String& path);
-
-String GetLocalDir();
-String LocalPath(const String& filename);
-
-bool   IsFullDirectory(const String& d);
-bool   IsFolder(const String& path);
-
-bool   IsCSourceFile(const char *path);
-bool   IsCHeaderFile(const char *path);
-
-String FollowCygwinSymlink(const String& filename);
 
 void   SplitPathMap(const char *path_map, Vector<String>& local, Vector<String>& remote);
 String JoinPathMap(const Vector<String>& local, const Vector<String>& remote);

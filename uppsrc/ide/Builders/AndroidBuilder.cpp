@@ -46,15 +46,14 @@ bool AndroidBuilder::BuildPackage(
 	const bool isMainPackage = HasFlag("MAIN");
 	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
 	const bool isBlitz = HasFlag("BLITZ") || ndk_blitz;
-	String uppManifestPath = PackagePath(package);
-	String packageDir = GetFileFolder(uppManifestPath);
+	String packageDir = PackageDirectory(package);
 	String assemblyDir = AndroidBuilderUtils::GetAssemblyDir(packageDir, package);
 	
 	ChDir(packageDir);
 	PutVerbose("cd " + packageDir);
 	
 	Package pkg;
-	pkg.Load(uppManifestPath);
+	pkg.Load(PackageFile(package));
 	
 	Vector<String> javaFiles;
 	Vector<String> nativeSources;

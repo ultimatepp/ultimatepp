@@ -470,10 +470,9 @@ void Ide::MacroPackageDir(EscEscape& e)
 		pkg = GetActivePackage();
 	else
 		pkg = e[0];
-	String pp = PackagePathA(pkg);
-	if(!FileExists(pp))
+	if(!FileExists(PackageFileA(pkg)))
 		e.ThrowError("PackageDir: Package not found.");
-	e = GetFileFolder(pp);
+	e = PackageDirA(pkg);
 }
 
 void Ide::MacroAssembly(EscEscape& e)
@@ -521,9 +520,9 @@ void Ide::MacroPackageFiles(EscEscape& e)
 	String pp;
 	Package pkg;
 	if(e.GetCount()==0)
-		pp = GetActivePackagePath();
+		pp = GetActivePackageFile();
 	else
-		pp = PackagePathA(String(e[0]));
+		pp = PackageFileA(String(e[0]));
 	if(!FileExists(pp))
 		e.ThrowError("PackageFiles: Package not found.");
 	pkg.Load(pp);

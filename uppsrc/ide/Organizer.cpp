@@ -496,7 +496,7 @@ void DependsDlg::New()
 	FileSel *fs;
 	if(!IsNull(package)) {
 		fs = &BasedSourceFs();
-		fs->BaseDir(GetFileFolder(PackagePath(package)));
+		fs->BaseDir(PackageDirectory(package));
 		fs->Multi(false);
 	}
 	else {
@@ -705,7 +705,7 @@ void PackageEditor::MergeNests()
 	Vector<String> tocopy, tocopy_nest;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		String pkg_name = wspc[i];
-		String pkg_dir = GetFileFolder(PackagePath(pkg_name));
+		String pkg_dir = PackageDirectory(pkg_name);
 		String pkg_nest = GetPackagePathNest(pkg_dir);
 		if(NormalizePath(GetPackagePathNest(pkg_dir)) != app_nest) {
 			dlg.list.Add(pkg_name);

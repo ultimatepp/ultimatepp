@@ -188,7 +188,7 @@ void Ide::CreateMakefile()
 	}
 	FileSel mfout;
 	mfout.AllFilesType();
-	mfout <<= AppendFileName(GetFileDirectory(PackagePath(wspc[0])), "Makefile");
+	mfout <<= AppendFileName(PackageDirectory(wspc[0]), "Makefile");
 	if(!mfout.ExecuteSaveAs("Save makefile as"))
 		return;
 	SaveMakeFile(~mfout, true);

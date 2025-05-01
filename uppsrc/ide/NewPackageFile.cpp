@@ -109,7 +109,7 @@ void NewPackageFileWindow::Type(const char *ext, const char *desc)
 void WorkspaceWork::NewPackageFile()
 {
 	NewPackageFileWindow dlg;
-	dlg.folder = GetFileFolder(GetActivePackagePath());
+	dlg.folder = GetActivePackageDir();
 	dlg.Open();
 	dlg.name.SetFocus();
 	dlg.name.SetSelection(0, 0);

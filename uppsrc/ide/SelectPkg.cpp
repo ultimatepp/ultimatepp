@@ -11,15 +11,17 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	bool b = GetCurrentName().GetCount();
 	menu.Add("New package..", [=] { OnNew(); });
 	menu.Separator();
-	menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
-	menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
-	menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
-	menu.Add(b, "Move package to..", [=] { MovePackage(false); });
-	menu.Add(b, "Delete package..", [=] { DeletePackage(); });
+	if(!IsExternalMode()) {
+		menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
+		menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
+		menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
+		menu.Add(b, "Move package to..", [=] { MovePackage(false); });
+		menu.Add(b, "Delete package..", [=] { DeletePackage(); });
+	}
 	menu.Add(b, "Change description..", [=] { ChangeDescription(); });
 	if(b) {
 		menu.Separator();
-		String dir = GetFileFolder(PackagePath(GetCurrentName()));
+		String dir = PackageDirectory(GetCurrentName());
 		menu.Add(b, "Open package directory", [=] { ShellOpenFolder(dir); });
 		menu.Add(b, "Terminal at package directory", [=] { TheIde()->LaunchTerminal(dir); });
 	}
@@ -83,7 +85,7 @@ void SelectPackageDlg::RenamePackage(bool duplicate)
 again:
 	if(!EditText(n, duplicate ? "Duplicate package:" : "Rename package", "Name", FilterPackageName))
 		return;
-	if(!RenamePackageFs(PackagePath(GetCurrentName()), n, duplicate))
+	if(!RenamePackageFs(PackageFile(GetCurrentName()), n, duplicate))
 		goto again;
 	search <<= Null;
 	Load(n);
@@ -92,6 +94,9 @@ again:
 
 void SelectPackageDlg::MovePackage(bool copy)
 {
+	if(IsExternalMode())
+		return;
+
 	WithMoveCopyPackageLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, copy ? "Copy package to" : "Move package to");
 
@@ -111,7 +116,7 @@ void SelectPackageDlg::MovePackage(bool copy)
 			}
 			ff.Next();
 		}
-		
+
 		Vector<String> sd = pick(udir.PickKeys());
 		Sort(sd, [](const String& a, const String& b) { return ToUpper(a) < ToUpper(b); });
 		for(String d : sd)
@@ -126,7 +131,7 @@ void SelectPackageDlg::MovePackage(bool copy)
 again:
 	if(dlg.Run() != IDOK)
 		return;
-	
+
 	String dir = ~dlg.dir;
 	if(!DirectoryExists(dir)) {
 		Exclamation("Invalid target directory!");
@@ -142,7 +147,7 @@ again:
 		goto again;
 	}
 
-	if(!RenamePackageFs(PackagePath(GetCurrentName()), pkg, pkg + "/" + GetFileName(~~dlg.name) + ".upp", copy))
+	if(!RenamePackageFs(PackageFile(GetCurrentName()), pkg, pkg + "/" + GetFileName(~~dlg.name) + ".upp", copy))
 		goto again;
 
 	Load(~~dlg.name);
@@ -153,7 +158,7 @@ void SelectPackageDlg::DeletePackage()
 	String n = GetCurrentName();
 	if(IsNull(n))
 		return;
-	String pp = GetFileFolder(PackagePath(GetCurrentName()));
+	String pp = PackageDirectory(GetCurrentName());
 	if(!DirectoryExists(pp)) {
 		Exclamation("Directory does not exist!");
 		return;
@@ -190,33 +195,42 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	alist.AddIndex();
 	alist.EvenRowColor();
 	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
+	alist.ColumnWidths("108 79 317");
 	list.Add(clist.SizePos());
 	list.Add(alist.SizePos());
-	
+
 	lists_status.SetDefault("");
 	lists_status.NoSizeGrip();
 	lists_status.Height(Zy(10));
 	lists_status.Add(progress.SizePos());
-	
+
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Left(base, Zx(170)));
-	
+
 	recent.NoSb().NoHyperlinkDecoration().SingleLine();
 	LoadLRU();
 	if(main && selectvars && lru.GetCount()) {
 		String text;
 		for(int i = 0; i < lru.GetCount(); i++) {
 			const auto& m = lru[i];
-			MergeWith(text, ", ", "[^" + AsString(i) + "^ \1" + m.a + "\1" + ":_[* \1" + m.b + "\1]]");
+			MergeWith(text, ", ", "[$W^A" + AsString(i) + "^ \1" + m.a + "\1]" +
+			                      ":_[*^ "+ AsString(i) + "^ \1" + m.b + "\1]");
 		}
 		recent <<= "[g [@K/ Recent:] " + text;
 		recent.WhenLink = [=](const String& s) {
-			int i = Atoi(s);
-			if(i >= 0 && lru.GetCount()) {
-				selected = lru[i].b;
-				LoadVars(lru[i].a);
-				selected_nest = GetPackagePathNest(PackagePath(selected));
-				Break(IDYES);
+			if(*s == 'A') {
+				int i = Atoi(~s + 1);
+				if(i >= 0 && lru.GetCount())
+					base.FindSetCursor(lru[i].a);
+			}
+			else {
+				int i = Atoi(s);
+				if(i >= 0 && lru.GetCount()) {
+					selected = lru[i].b;
+					LoadVars(lru[i].a);
+					selected_nest = GetPackagePathNest(PackageDirectory(selected));
+					Break(IDYES);
+				}
 			}
 		};
 	}
@@ -228,7 +242,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 
 	if (!selectvars)
 		splitter.Hide();
-	
+
 	newu << [=] { OnNew(); };
 	kind.Add(MAIN, "Main packages");
 	kind.Add(NONMAIN, "Non-main packages");
@@ -250,7 +264,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	loadi = 0;
 	loading = false;
 	clist.WhenBar = alist.WhenBar = THISBACK(PackageMenu);
-	
+
 	upphub.SetImage(IdeImg::UppHub());
 	upphub << [=] {
 		String p = UppHub();
@@ -260,7 +274,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 			clist.FindSetCursor(p);
 		}
 	};
-	
+
 	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
 }
 
@@ -369,9 +383,9 @@ void SelectPackageDlg::ChangeDescription()
 		PkInfo& p = packages[ii];
 		WithDescriptionLayout<TopWindow> dlg;
 		CtrlLayoutOKCancel(dlg, "Package description");
-		String pp = PackagePath(p.package);
+		String pp = PackageFile(p.package);
 		Package pkg;
-		if(!pkg.Load(pp)) {
+		if(!pkg.Load(pp) && !IsExternalMode()) {
 			Exclamation("Package does not exist.");
 			return;
 		}
@@ -432,7 +446,7 @@ void SelectPackageDlg::OnOK()
 	String n = GetCurrentName();
 	if(IsExternalMode() && (clist.IsShown() && clist.IsCursor() || alist.IsCursor())
 	   ||
-	   n.GetCount() && pkg.Load(PackagePath(n)) &&
+	   n.GetCount() && pkg.Load(PackageFile(n)) &&
 	   (!(fk == MAIN) || pkg.config.GetCount()) &&
 	   (!(fk == NONMAIN) || !pkg.config.GetCount())) {
 		loading = false;
@@ -710,20 +724,6 @@ void SelectPackageDlg::SyncList(const String& find)
 	nest_list.Clear();
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
-	if(IsExternalMode()) {
-		alist.HeaderTab(2).Hide();
-		alist.ColumnWidths("400 70");
-		Vector<String> h = GetUppDirs();
-		if(h.GetCount()) {
-			alist.Add("@" + GetVarsName(), GetFileName(h[0]), Null, IdeImg::MainPackage());
-			alist.SetDisplay(alist.GetCount() - 1, 0, bpd);
-			clist.Add("@" + GetVarsName(), IdeImg::MainPackage());
-		}
-	}
-	else {
-		alist.HeaderTab(1).Show();
-		alist.ColumnWidths("108 79 317");
-	}
 	for(int i = 0; i < packages.GetCount(); i++) {
 		const PkInfo& pkg = packages[i];
 		Image icon = pkg.icon;
@@ -825,9 +825,8 @@ void SelectPackageDlg::Load(const String& find)
 				String path = nest.GetKey(i);
 				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
-
 					LSLOW(); // this is used for testing only, normally it is NOP
-					Time tm = FileGetTime(PackageFilePath(upp_path));
+					Time tm = FileGetTime(upp_path);
 					if(IsNull(tm)) // .upp file does not exist - not a package
 						d.ispackage = false;
 					else
@@ -844,9 +843,9 @@ void SelectPackageDlg::Load(const String& find)
 					}
 					else
 						d.ispackage = true;
-					
+
 					if(external && !d.ispackage) // in external mode folders with sources are packages
-						d.ispackage = IsExternalPackage(path);
+						d.ispackage = IsDirectoryExternalPackage(path);
 
 					if(d.ispackage) {
 						String icon_path;
@@ -863,7 +862,7 @@ void SelectPackageDlg::Load(const String& find)
 							d.itm = tm;
 						}
 					}
-					
+
 					ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
 				}
 				else
@@ -871,7 +870,7 @@ void SelectPackageDlg::Load(const String& find)
 			}
 			nest.Sweep();
 		}
-	
+
 		StoreToFile(data, cache_path);
 		list.RemoveFrame(lists_status);
 		while(IsSplashOpen())
@@ -938,3 +937,4 @@ String SelectPackage(const char *title, const char *startwith, bool selectvars, 
 	String dummy;
 	return SelectPackage(dummy, title, startwith, selectvars, main);
 }
+

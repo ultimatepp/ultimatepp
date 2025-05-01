@@ -633,7 +633,7 @@ void UppHubAuto(const String& main)
 		Index<String> missing;
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			String p = wspc[i];
-			if(!FileExists(PackagePath(p)))
+			if(!FileExists(PackageFile(p)))
 				missing.FindAdd(p);
 		}
 

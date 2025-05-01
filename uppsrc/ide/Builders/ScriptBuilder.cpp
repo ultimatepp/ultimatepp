@@ -109,10 +109,9 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 	const Vector<String>& all_uses, const Vector<String>& all_libraries, int)
 {
 	int i;
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
+	String packagedir = PackageDirectory(package);
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 	Vector<String> obj;

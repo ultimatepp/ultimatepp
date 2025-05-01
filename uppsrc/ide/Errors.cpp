@@ -46,7 +46,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInf
 							::Workspace  wspc;
 							wspc.Scan(main);
 							for(int i = 0; i < wspc.GetCount(); i++)
-								cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
+								cache.wspc_paths.Add(PackageDirectory(wspc[i]));
 						}
 						for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
 							String path = AppendFileName(cache.wspc_paths[i], file);
@@ -61,7 +61,6 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ListLineInf
 							}
 						}
 					}
-					file = FollowCygwinSymlink(file);
 					if(!IsFullPath(file) || !exists && !FileExists(file) || !IsTextFile(file))
 						file = Null;
 					cache.file.Add(file0, file);

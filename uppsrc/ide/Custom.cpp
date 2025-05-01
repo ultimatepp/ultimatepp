@@ -137,7 +137,7 @@ void Custom::Perform(const char *main) {
 			}
 	}
 	for(i = 0; i < wspc.GetCount(); i++) {
-		String pp = PackagePath(wspc[i]);
+		String pp = PackageFile(wspc[i]);
 		Package& pkg = wspc.GetPackage(i);
 		if(pkg.GetCount() || FileExists(pp))
 			pkg.Save(pp);

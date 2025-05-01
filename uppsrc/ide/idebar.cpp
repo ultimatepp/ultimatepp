@@ -531,14 +531,13 @@ void Ide::Project(Bar& menu)
 	if(!IsEditorMode()) {
 		menu.MenuSeparator();
 		if(repo_dirs) {
-			String pp = GetActivePackagePath();
+			String pp = GetActivePackageDir();
 			menu.AddMenu(FileExists(pp) && editfile_repo,
 			             (editfile_repo == SVN_DIR ? "Show svn history of " : "Show git history of ") + GetFileName(pp),
 			             IdeImg::SvnDiff(), [=] {
 				if(FileExists(pp))
 					RunRepoDiff(pp);
 			});
-			pp = GetFileFolder(pp);
 			menu.Add("Invoke gitk at " + pp, [=] {
 				Host h;
 				CreateHost(h, false, false);

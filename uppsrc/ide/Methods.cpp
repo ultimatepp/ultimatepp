@@ -968,7 +968,7 @@ String Ide::GetCurrentIncludePath()
 		const Package& pkg = wspc.GetPackage(i);
 		for(int j = 0; j < pkg.GetCount(); j++)
 			if(pkg[j] == "import.ext")
-				AddDirs(include_path, GetFileFolder(PackagePath(wspc[i])));
+				AddDirs(include_path, PackageDirectory(wspc[i]));
 	}
 
 	::MainConf(wspc, include_path);

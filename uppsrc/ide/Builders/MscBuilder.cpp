@@ -179,10 +179,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	SaveBuildInfo(package);
 
 	int i;
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
+	String packagedir = PackageDirectory(package);
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 	IdeConsoleBeginGroup(package);
@@ -730,9 +729,8 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 bool MscBuilder::Preprocess(const String& package, const String& file, const String& target, bool)
 {
 	FileOut out(target);
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
+	pkg.Load(PackageFile(package));
 	return Execute(CmdLine(package, pkg) + " -E " + file, out);
 }
 

@@ -22,10 +22,9 @@ void CppBuilder::AddCCJ(
 	const char* eol = "\n";
 	const char* tab = "\t";
 
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
+	String packagedir = PackageDirectory(package);
 	Vector<String> src = GetUppDirs();
 	for(int i = 0; i < src.GetCount(); i++)
 		src[i] = UnixPath(src[i]);

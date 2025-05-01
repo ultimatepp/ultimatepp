@@ -71,10 +71,9 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 	int time = msecs();
 	int i;
 	int manifest = -1;
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
+	String packagedir = PackageDirectory(package);
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 	Vector<String> pkgsfile;

@@ -52,10 +52,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	SaveBuildInfo(package);
 	
 	int i;
-	String packagepath = PackagePath(package);
 	Package pkg;
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
+	pkg.Load(PackageFile(package));
+	String packagedir = PackageDirectory(package);
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 	IdeConsoleBeginGroup(package);
@@ -634,9 +633,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 bool GccBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
 {
 	Package pkg;
-	String packagePath = PackagePath(package);
-	pkg.Load(packagePath);
-	String packageDir = GetFileFolder(packagePath);
+	pkg.Load(PackageFile(package));
+	String packageDir = PackageDirectory(package);
 	ChDir(packageDir);
 	PutVerbose("cd " + packageDir);
 

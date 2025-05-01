@@ -253,7 +253,7 @@ void Ide::FindInFiles(bool replace) {
 		if(where == 0) {
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++)
-				dirs << GetFileFolder(PackagePath(wspc[i]));
+				dirs << PackageDirectory(wspc[i]);
 		}
 		if(where == 1)
 			dirs.Append(GetUppDirsRaw());

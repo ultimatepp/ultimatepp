@@ -197,7 +197,7 @@ bool CppBuilder::Cp(const String& cmd, const String& package, bool& error) {
 	if(cmd.GetLength() > 2 && ToLower(cmd.Mid(0, 3)) == "cp ") {
 		Vector<String> path = Split(cmd.Mid(3), ' ');
 		if(path.GetCount() == 2) {
-			String p = GetFileFolder(PackagePath(package));
+			String p = PackageDirectory(package);
 			String p1 = NormalizePath(path[0], p);
 			String p2 = NormalizePath(path[1], p);
 			RealizePath(p2);
@@ -335,7 +335,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 		
 		Index<String> pkg_files;
 		Package pkg;
-		pkg.Load(PackagePath(package));
+		pkg.Load(PackageFile(package));
 		for(int i = 0; i < pkg.GetCount(); i++)
 			pkg_files.Add(pkg[i]);
 		
@@ -418,7 +418,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 				VectorMap<String, String> mac;
 				AddPath(mac, "PATH", file);
 				AddPath(mac, "RELPATH", pf);
-				AddPath(mac, "DIR", GetFileFolder(PackagePath(package)));
+				AddPath(mac, "DIR", PackageDirectory(package));
 				AddPath(mac, "FILEDIR", GetFileFolder(file));
 				AddPath(mac, "PACKAGE", package);
 				mac.Add("FILE", GetFileName(file));
@@ -503,7 +503,7 @@ void CppBuilder::DoRc(Vector<String>& sfile, Vector<String>& soptions, const Pac
 	for(int i = 0; i < wspc.GetCount(); i++)
 		DoManifest(wspc.GetPackage(i), wspc[i]);
 	DoManifest(pkg, package); // main package manifest has priority
-	String d = GetFileFolder(PackagePath(package));
+	String d = PackageDirectory(package);
 	for(FindFile ff(d + "/*.*"); ff; ff.Next()) {
 		String p = ff.GetPath();
 		String n = GetFileName(p);
@@ -535,7 +535,7 @@ void CppBuilder::DoRc(Vector<String>& sfile, Vector<String>& soptions, const Pac
 Vector<String> RepoInfo(const String& package)
 {
 	Vector<String> info;
-	String d = GetFileFolder(PackagePath(package));
+	String d = PackageDirectory(package);
 	int repo = GetRepoKind(d);
 	if(repo == SVN_DIR) {
 		String v = Sys("svnversion " + d);
@@ -628,7 +628,7 @@ String SourceToObjName(const String& package, const String& srcfile_)
 	if(srcfile.TrimStart(".."))
 		r << "__";
 	else {
-		q = GetFileFolder(PackagePath(package)).GetCount() + 1;
+		q = PackageDirectory(package).GetCount() + 1;
 		if(q >= srcfile.GetCount())
 			return GetFileTitle(srcfile);
 	}

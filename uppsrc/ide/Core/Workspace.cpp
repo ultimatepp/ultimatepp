@@ -1,44 +1,13 @@
 #include "Core.h"
 
-bool IsCSourceFile(const char *path)
-{
-	String ext = ToLower(GetFileExt(path));
-	return ext == ".cpp" || ext == ".c" || ext == ".cc" || ext == ".cxx"
-	                     || ext == ".m" || ext == ".mm" || ext == ".icpp";
-}
-
-bool IsCHeaderFile(const char *path)
-{
-	String ext = ToLower(GetFileExt(path));
-	return ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx" || ext == ".i";
-}
-
-bool IsFullDirectory(const String& d) {
-	if(IsFullPath(d)) {
-		FindFile ff(d);
-		if(ff) return ff.IsDirectory();
-	}
-	return false;
-}
-
-bool IsFolder(const String& path)
-{
-	if(IsNull(path) || *path.Last() == '\\' || *path.Last() == '/' || *path.Last() == ':')
-		return true;
-	if(path.Find('?') >= 0 || path.Find('*') >= 0)
-		return false;
-	FindFile ff(path);
-	return ff && ff.IsDirectory();
-}
-
 void InvalidatePackageCache()
 {
 	MainNest().InvalidatePackageCache();
 }
 
-String PackagePath(const String& name)
+String PackageDirectory(const String& name)
 {
-	return MainNest().PackagePath(name);
+	return MainNest().PackageDirectory(name);
 }
 
 String GetPackagePathNest(const String& path)
@@ -52,16 +21,36 @@ String GetPackagePathNest(const String& path)
 
 String SourcePath(const String& package, const String& file) {
 	if(IsFullPath(file)) return NativePath(file);
-	return NormalizePath(AppendFileName(GetFileFolder(PackagePath(package)), file));
+	return NormalizePath(AppendFileName(PackageDirectory(package), file));
 }
 
-bool IsExternalPackage(const String& folder)
+bool IsDirectoryExternalPackage(const String& dir)
 {
 	String source_masks = GetVar("SOURCE_MASKS");
-	for(FindFile ff(folder + "/*.*"); ff; ff.Next())
+	for(FindFile ff(dir + "/*.*"); ff; ff.Next())
 		if(ff.IsFile() && PatternMatchMulti(source_masks, ff.GetName()))
 			return true;
 	return false;
+}
+
+bool IsDirectoryPackage(const String& path)
+{
+	if(IsExternalMode())
+		return IsDirectoryExternalPackage(path);
+	return FileExists(AppendFileName(path, GetFileTitle(path) + ".upp"));
+}
+
+String PackageFile(const String& package)
+{ // in external mode we are storing packages into .config
+	if(IsExternalMode()) {
+		String p = ConfigFile("external/" + GetVarsName()) + "/" +
+		                      Filter(package, [](int c) {
+		                         return findarg(c, '/', '\\', ':') >= 0 ? '%' : c;
+		                      });
+		RealizePath(p);
+		return p;
+	}
+	return AppendFileName(PackageDirectory(package), GetFileTitle(package) + ".upp");
 }
 
 bool IsNestReadOnly(const String& path)
@@ -72,41 +61,6 @@ bool IsNestReadOnly(const String& path)
 			return true;
 	return false;
 }
-
-String GetAnyFileName(const char *path)
-{
-	const char *p = path;
-	for(char c; (c = *path++) != 0;)
-		if(c == '\\' || c == '/' || c == ':')
-			p = path;
-	return p;
-}
-
-String GetAnyFileTitle(const char *path)
-{
-	String fn = GetAnyFileName(path);
-	const char *p = fn;
-	const char *e = p;
-	while(*e && *e != '.')
-		e++;
-	return String(p, e);
-}
-
-String CatAnyPath(String path, const char *more)
-{
-	if(!more || !*more)
-		return path;
-	if(!path.IsEmpty() && *path.Last() != '\\' && *path.Last() != '/' &&
-	*more != '\\' && *more != '/')
-#ifdef PLATFORM_WIN32
-		path.Cat('\\');
-#else
-		path.Cat('/');
-#endif
-	path.Cat(more);
-	return path;
-}
-
 
 void SplitHostName(const char *hostname, String& host, int& port) {
 	enum { DEFAULT_REMOTE_PORT = 2346 };
@@ -226,7 +180,7 @@ bool   GetFlag(const Vector<String>& conf, const char *flag) {
 
 void Workspace::AddLoad(const String& name)
 {
-	package.Add(name).Load(PackagePath(name));
+	package.Add(name).Load(PackageFile(name));
 }
 
 void Workspace::AddUses(Package& p, const Vector<String> *flag)
