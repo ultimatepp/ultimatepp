@@ -198,7 +198,7 @@ public:
 	void   SetSize(Size sz)                      { SetSize(sz.cx, sz.cy); }
 	Size   GetSize() const                       { return size; }
 	void   Paint(Draw& w, Size sz, Color ink, void *context = NULL) const;
-	Image  ToImage(Size sz, Color ink, void *context = NULL) const;
+	Image  ToImage(Size sz, Color ink = Black(), void *context = NULL) const;
 	Size   GetPhysicalSize() const               { return physical_size; }
 	Size   GetPixelSize() const                  { return pixel_size; }
 	Size   GetDefaultSize(Size maxsize, void *context = NULL) const { return type ? type->GetDefaultSize(data, maxsize, context) : physical_size; }

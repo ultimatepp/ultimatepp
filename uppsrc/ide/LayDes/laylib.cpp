@@ -399,10 +399,6 @@ void EscDraw::DrawLabel(EscEscape& e)
 { // DrawLabel(x, y, cx, cy, text, font, ink, align, valign, orientation)
 	if(e.GetCount() < 5 || e.GetCount() > 10)
 		e.ThrowError("wrong number of arguments in call to 'DrawLabel'");
-	int x = e.Int(0);
-	int y = e.Int(1);
-	int cx = e.Int(2);
-	int cy = e.Int(3);
 
 	Upp::DrawLabel dl;
 	int ii = 4;
