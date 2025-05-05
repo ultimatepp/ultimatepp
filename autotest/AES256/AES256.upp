@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core/SSL;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+
