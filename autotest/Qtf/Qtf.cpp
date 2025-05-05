@@ -28,6 +28,8 @@ CONSOLE_APP_MAIN
 	String pdfpath = AppendFileName(outdir, "test.pdf");
 	SaveFile(pdfpath, pdf);
 	
+	DDUMP(pdfpath);
+	
 	String h = LoadDataFile("test.pdf");
 	ASSERT(h.GetCount() == pdf.GetCount());
 	int q = h.ReverseFind("trailer");
