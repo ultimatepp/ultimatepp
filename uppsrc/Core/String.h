@@ -1,8 +1,9 @@
 class Nuller;
 
-inline int strlen8(const char *s) { return s ? (int)strlen(s) : 0; }
 int strlen16(const char16 *s);
 int strlen32(const wchar *s);
+
+inline int strlen8(const char *s) { return s ? (int)strlen(s) : 0; }
 
 #ifdef PLATFORM_POSIX
 inline int stricmp(const char *a, const char *b)         { return strcasecmp(a, b); }
@@ -952,7 +953,6 @@ template<> inline String AsString(const std::wstring& s)    { return WString(s).
 
 unsigned ctoi(int c);
 
-typedef int (*CharFilter)(int);
 
 int CharFilterAscii(int c);
 int CharFilterAscii128(int c);

@@ -54,7 +54,7 @@ file
 	StringMem.i highlight cpp,
 	String.cpp,
 	WString.cpp,
-	StrUtil.cpp,
+	CharFilter.h,
 	SplitMerge.h,
 	SplitMerge.cpp,
 	CharSet.i,

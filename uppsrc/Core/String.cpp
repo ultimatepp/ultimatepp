@@ -367,4 +367,31 @@ int CompareNoCase(const String& a, const char *b)
 	return CompareNoCase(ToUtf32(a), ToUtf32(b, (int)strlen(b)));
 }
 
+int strlen16(const char16 *s)
+{
+	if(!s) return 0;
+	const char16 *s0 = s;
+	while(*s) s++;
+	return int(s - s0);
+}
+
+int strlen32(const wchar *s)
+{
+	if(!s) return 0;
+	const wchar *s0 = s;
+	while(*s) s++;
+	return int(s - s0);
+}
+
+unsigned ctoi(int c)
+{
+	if(c >= '0' && c <= '9')
+		return c - '0';
+	if(c >= 'A' && c <= 'Z')
+		return c - 'A' + 10;
+	if(c >= 'a' && c <= 'z')
+		return c - 'a' + 10;
+	return (unsigned)-1;
+}
+
 }
