@@ -256,7 +256,7 @@ CONSOLE_APP_MAIN
 		Index<String> missing;
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			String p = wspc[i];
-			if(!FileExists(PackagePath(p)))
+			if(!FileExists(PackageFile(p)))
 				missing.FindAdd(p);
 		}
 		if(missing.GetCount()) {
@@ -289,7 +289,7 @@ CONSOLE_APP_MAIN
 		ide.method = bp;
 
 		if(ccfile) {
-			ide.SaveCCJ(GetFileDirectory(PackagePath(ide.main)) + "compile_commands.json", false);
+			ide.SaveCCJ(GetFileDirectory(PackageFile(ide.main)) + "compile_commands.json", false);
 			SetExitCode(0);
 			return;
 		}
