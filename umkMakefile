@@ -139,6 +139,7 @@ $(OutDir_umk)Console.o: $(UPPDIR1)umk/Console.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -241,6 +242,7 @@ $(OutDir_umk)IdeContext.o: $(UPPDIR1)umk/IdeContext.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -343,6 +345,7 @@ $(OutDir_umk)MakeBuild.o: $(UPPDIR1)umk/MakeBuild.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -445,6 +448,7 @@ $(OutDir_umk)Export.o: $(UPPDIR1)umk/Export.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -547,6 +551,7 @@ $(OutDir_umk)UppHub.o: $(UPPDIR1)umk/UppHub.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -649,6 +654,7 @@ $(OutDir_umk)umake.o: $(UPPDIR1)umk/umake.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -754,6 +760,7 @@ $(OutDir_ide_Builders)CppBuilder.o: $(UPPDIR1)ide/Builders/CppBuilder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -855,6 +862,7 @@ $(OutDir_ide_Builders)MakeFile.o: $(UPPDIR1)ide/Builders/MakeFile.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -956,6 +964,7 @@ $(OutDir_ide_Builders)CCJ.o: $(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1057,6 +1066,7 @@ $(OutDir_ide_Builders)GccBuilder.o: $(UPPDIR1)ide/Builders/GccBuilder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1159,6 +1169,7 @@ $(OutDir_ide_Builders)MscBuilder.o: $(UPPDIR1)ide/Builders/MscBuilder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1261,6 +1272,7 @@ $(OutDir_ide_Builders)JavaBuilder.o: $(UPPDIR1)ide/Builders/JavaBuilder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1362,6 +1374,7 @@ $(OutDir_ide_Builders)ScriptBuilder.o: $(UPPDIR1)ide/Builders/ScriptBuilder.cpp 
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1463,6 +1476,7 @@ $(OutDir_ide_Builders)Cocoa.o: $(UPPDIR1)ide/Builders/Cocoa.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1564,6 +1578,7 @@ $(OutDir_ide_Builders)AndroidProject.o: $(UPPDIR1)ide/Builders/AndroidProject.cp
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1652,6 +1667,7 @@ $(OutDir_ide_Builders)AndroidApplicationMakeFile.o: $(UPPDIR1)ide/Builders/Andro
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1740,6 +1756,7 @@ $(OutDir_ide_Builders)AndroidMakeFile.o: $(UPPDIR1)ide/Builders/AndroidMakeFile.
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1828,6 +1845,7 @@ $(OutDir_ide_Builders)AndroidModuleMakeFile.o: $(UPPDIR1)ide/Builders/AndroidMod
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -1916,6 +1934,7 @@ $(OutDir_ide_Builders)AndroidBuilder.o: $(UPPDIR1)ide/Builders/AndroidBuilder.cp
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2023,6 +2042,7 @@ $(OutDir_ide_Builders)AndroidBuilderCommands.o: $(UPPDIR1)ide/Builders/AndroidBu
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2126,6 +2146,7 @@ $(OutDir_ide_Builders)AndroidBuilderUtils.o: $(UPPDIR1)ide/Builders/AndroidBuild
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2229,6 +2250,7 @@ $(OutDir_ide_Builders)AndroidModuleMakeFileBuilder.o: $(UPPDIR1)ide/Builders/And
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2332,6 +2354,7 @@ $(OutDir_ide_Builders)Blitz.o: $(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2433,6 +2456,7 @@ $(OutDir_ide_Builders)Build.o: $(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2539,6 +2563,7 @@ $(OutDir_ide_Builders)Install.o: $(UPPDIR1)ide/Builders/Install.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2640,6 +2665,7 @@ $(OutDir_ide_Builders)BuilderUtils.o: $(UPPDIR1)ide/Builders/BuilderUtils.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2774,6 +2800,7 @@ $(OutDir_ide_Core)Ide.o: $(UPPDIR1)ide/Core/Ide.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2871,6 +2898,7 @@ $(OutDir_ide_Core)Cache.o: $(UPPDIR1)ide/Core/Cache.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -2968,6 +2996,7 @@ $(OutDir_ide_Core)Core.o: $(UPPDIR1)ide/Core/Core.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3065,6 +3094,7 @@ $(OutDir_ide_Core)Util.o: $(UPPDIR1)ide/Core/Util.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3162,6 +3192,7 @@ $(OutDir_ide_Core)Builder.o: $(UPPDIR1)ide/Core/Builder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3259,6 +3290,7 @@ $(OutDir_ide_Core)PPinfo.o: $(UPPDIR1)ide/Core/PPinfo.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3356,6 +3388,7 @@ $(OutDir_ide_Core)Assembly.o: $(UPPDIR1)ide/Core/Assembly.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3453,6 +3486,7 @@ $(OutDir_ide_Core)Package.o: $(UPPDIR1)ide/Core/Package.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3550,6 +3584,7 @@ $(OutDir_ide_Core)Workspace.o: $(UPPDIR1)ide/Core/Workspace.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3647,6 +3682,7 @@ $(OutDir_ide_Core)usc.o: $(UPPDIR1)ide/Core/usc.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3744,6 +3780,7 @@ $(OutDir_ide_Core)BinObj.o: $(UPPDIR1)ide/Core/BinObj.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3841,6 +3878,7 @@ $(OutDir_ide_Core)Host.o: $(UPPDIR1)ide/Core/Host.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -3938,6 +3976,7 @@ $(OutDir_ide_Core)Logger.o: $(UPPDIR1)ide/Core/Logger.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4058,6 +4097,7 @@ $(OutDir_ide_Android)Android.o: $(UPPDIR1)ide/Android/Android.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4158,6 +4198,7 @@ $(OutDir_ide_Android)AndroidSDK.o: $(UPPDIR1)ide/Android/AndroidSDK.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4261,6 +4302,7 @@ $(OutDir_ide_Android)AndroidNDK.o: $(UPPDIR1)ide/Android/AndroidNDK.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4361,6 +4403,7 @@ $(OutDir_ide_Android)Apk.o: $(UPPDIR1)ide/Android/Apk.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4461,6 +4504,7 @@ $(OutDir_ide_Android)AndroidManifest.o: $(UPPDIR1)ide/Android/AndroidManifest.cp
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4561,6 +4605,7 @@ $(OutDir_ide_Android)Adb.o: $(UPPDIR1)ide/Android/Adb.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4661,6 +4706,7 @@ $(OutDir_ide_Android)LogCat.o: $(UPPDIR1)ide/Android/LogCat.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4759,6 +4805,7 @@ $(OutDir_ide_Android)NDKBuild.o: $(UPPDIR1)ide/Android/NDKBuild.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4879,6 +4926,7 @@ $(OutDir_ide_Java)JavaVersion.o: $(UPPDIR1)ide/Java/JavaVersion.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -4977,6 +5025,7 @@ $(OutDir_ide_Java)Java.o: $(UPPDIR1)ide/Java/Java.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5075,6 +5124,7 @@ $(OutDir_ide_Java)Jdk.o: $(UPPDIR1)ide/Java/Jdk.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5189,6 +5239,7 @@ $(OutDir_plugin_png)pngupp.o: $(UPPDIR1)plugin/png/pngupp.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5289,6 +5340,7 @@ $(OutDir_plugin_png)pngreg.o: $(UPPDIR1)plugin/png/pngreg.icpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5399,6 +5451,7 @@ $(OutDir_Draw)Font.o: $(UPPDIR1)Draw/Font.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5498,6 +5551,7 @@ $(OutDir_Draw)FontCR.o: $(UPPDIR1)Draw/FontCR.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5598,6 +5652,7 @@ $(OutDir_Draw)FontWin32.o: $(UPPDIR1)Draw/FontWin32.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5697,6 +5752,7 @@ $(OutDir_Draw)FontFc.o: $(UPPDIR1)Draw/FontFc.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5796,6 +5852,7 @@ $(OutDir_Draw)FontCocoNOMM.o: $(UPPDIR1)Draw/FontCocoNOMM.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5895,6 +5952,7 @@ $(OutDir_Draw)Draw.o: $(UPPDIR1)Draw/Draw.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -5994,6 +6052,7 @@ $(OutDir_Draw)DrawText.o: $(UPPDIR1)Draw/DrawText.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6093,6 +6152,7 @@ $(OutDir_Draw)DrawData.o: $(UPPDIR1)Draw/DrawData.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6192,6 +6252,7 @@ $(OutDir_Draw)Drawing.o: $(UPPDIR1)Draw/Drawing.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6291,6 +6352,7 @@ $(OutDir_Draw)ImageAnyDraw.o: $(UPPDIR1)Draw/ImageAnyDraw.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6390,6 +6452,7 @@ $(OutDir_Draw)DrawUtil.o: $(UPPDIR1)Draw/DrawUtil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6489,6 +6552,7 @@ $(OutDir_Draw)DrawTextUtil.o: $(UPPDIR1)Draw/DrawTextUtil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6588,6 +6652,7 @@ $(OutDir_Draw)Display.o: $(UPPDIR1)Draw/Display.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6688,6 +6753,7 @@ $(OutDir_Draw)Image.o: $(UPPDIR1)Draw/Image.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6787,6 +6853,7 @@ $(OutDir_Draw)ImageBlit.o: $(UPPDIR1)Draw/ImageBlit.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6886,6 +6953,7 @@ $(OutDir_Draw)RasterFormat.o: $(UPPDIR1)Draw/RasterFormat.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -6985,6 +7053,7 @@ $(OutDir_Draw)RasterWrite.o: $(UPPDIR1)Draw/RasterWrite.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7084,6 +7153,7 @@ $(OutDir_Draw)Palette.o: $(UPPDIR1)Draw/Palette.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7183,6 +7253,7 @@ $(OutDir_Draw)Raster.o: $(UPPDIR1)Draw/Raster.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7282,6 +7353,7 @@ $(OutDir_Draw)RasterEncoder.o: $(UPPDIR1)Draw/RasterEncoder.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7381,6 +7453,7 @@ $(OutDir_Draw)ImageOp.o: $(UPPDIR1)Draw/ImageOp.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7480,6 +7553,7 @@ $(OutDir_Draw)ImageChOp.o: $(UPPDIR1)Draw/ImageChOp.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7579,6 +7653,7 @@ $(OutDir_Draw)Mify.o: $(UPPDIR1)Draw/Mify.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7678,6 +7753,7 @@ $(OutDir_Draw)ImageScale.o: $(UPPDIR1)Draw/ImageScale.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7777,6 +7853,7 @@ $(OutDir_Draw)RescaleFilter.o: $(UPPDIR1)Draw/RescaleFilter.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7876,6 +7953,7 @@ $(OutDir_Draw)MakeCache.o: $(UPPDIR1)Draw/MakeCache.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -7975,6 +8053,7 @@ $(OutDir_Draw)DrawRasterData.o: $(UPPDIR1)Draw/DrawRasterData.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8074,6 +8153,7 @@ $(OutDir_Draw)Uhd.o: $(UPPDIR1)Draw/Uhd.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8173,6 +8253,7 @@ $(OutDir_Draw)Iml.o: $(UPPDIR1)Draw/Iml.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8272,6 +8353,7 @@ $(OutDir_Draw)DDARasterizer.o: $(UPPDIR1)Draw/DDARasterizer.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8371,6 +8453,7 @@ $(OutDir_Draw)SDrawClip.o: $(UPPDIR1)Draw/SDrawClip.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8470,6 +8553,7 @@ $(OutDir_Draw)SDrawPut.o: $(UPPDIR1)Draw/SDrawPut.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8569,6 +8653,7 @@ $(OutDir_Draw)SDrawText.o: $(UPPDIR1)Draw/SDrawText.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8668,6 +8753,7 @@ $(OutDir_Draw)SDraw.o: $(UPPDIR1)Draw/SDraw.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8767,6 +8853,7 @@ $(OutDir_Draw)SImageDraw.o: $(UPPDIR1)Draw/SImageDraw.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8866,6 +8953,7 @@ $(OutDir_Draw)Cham.o: $(UPPDIR1)Draw/Cham.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -8965,6 +9053,7 @@ $(OutDir_Draw)SColors.o: $(UPPDIR1)Draw/SColors.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9144,6 +9233,7 @@ $(OutDir_Esc)EscValue.o: $(UPPDIR1)Esc/EscValue.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9232,6 +9322,7 @@ $(OutDir_Esc)EscArray.o: $(UPPDIR1)Esc/EscArray.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9320,6 +9411,7 @@ $(OutDir_Esc)EscMap.o: $(UPPDIR1)Esc/EscMap.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9408,6 +9500,7 @@ $(OutDir_Esc)Esc.o: $(UPPDIR1)Esc/Esc.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9496,6 +9589,7 @@ $(OutDir_Esc)EscRun.o: $(UPPDIR1)Esc/EscRun.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9584,6 +9678,7 @@ $(OutDir_Esc)EscStdLib.o: $(UPPDIR1)Esc/EscStdLib.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9672,6 +9767,7 @@ $(OutDir_Esc)Value.o: $(UPPDIR1)Esc/Value.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9780,6 +9876,7 @@ $(OutDir_plugin_bz2)bz2upp.o: $(UPPDIR1)plugin/bz2/bz2upp.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -9882,6 +9979,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10025,6 +10123,7 @@ $(OutDir_plugin_lz4)Compress.o: $(UPPDIR1)plugin/lz4/Compress.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10114,6 +10213,7 @@ $(OutDir_plugin_lz4)Decompress.o: $(UPPDIR1)plugin/lz4/Decompress.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10203,6 +10303,7 @@ $(OutDir_plugin_lz4)util.o: $(UPPDIR1)plugin/lz4/util.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10304,6 +10405,7 @@ $(OutDir_plugin_zstd)Compress.o: $(UPPDIR1)plugin/zstd/Compress.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10393,6 +10495,7 @@ $(OutDir_plugin_zstd)Decompress.o: $(UPPDIR1)plugin/zstd/Decompress.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -10482,6 +10585,7 @@ $(OutDir_plugin_zstd)Util.o: $(UPPDIR1)plugin/zstd/Util.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11042,6 +11146,7 @@ $(OutDir_Core)Cpu.o: $(UPPDIR1)Core/Cpu.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11129,6 +11234,7 @@ $(OutDir_Core)Mem.o: $(UPPDIR1)Core/Mem.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11216,6 +11322,7 @@ $(OutDir_Core)SIMD.o: $(UPPDIR1)Core/SIMD.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11303,6 +11410,7 @@ $(OutDir_Core)Mt.o: $(UPPDIR1)Core/Mt.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11390,6 +11498,7 @@ $(OutDir_Core)heaputil.o: $(UPPDIR1)Core/heaputil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11477,6 +11586,7 @@ $(OutDir_Core)hheap.o: $(UPPDIR1)Core/hheap.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11564,6 +11674,7 @@ $(OutDir_Core)sheap.o: $(UPPDIR1)Core/sheap.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11651,6 +11762,7 @@ $(OutDir_Core)lheap.o: $(UPPDIR1)Core/lheap.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11738,6 +11850,7 @@ $(OutDir_Core)heap.o: $(UPPDIR1)Core/heap.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11825,6 +11938,7 @@ $(OutDir_Core)heapdbg.o: $(UPPDIR1)Core/heapdbg.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11912,6 +12026,7 @@ $(OutDir_Core)StringFind.o: $(UPPDIR1)Core/StringFind.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -11999,6 +12114,7 @@ $(OutDir_Core)String.o: $(UPPDIR1)Core/String.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12086,6 +12202,7 @@ $(OutDir_Core)WString.o: $(UPPDIR1)Core/WString.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12163,93 +12280,6 @@ $(OutDir_Core)WString.o: $(UPPDIR1)Core/WString.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/WString.cpp -o $(OutDir_Core)WString.o
 
-$(OutDir_Core)StrUtil.o: $(UPPDIR1)Core/StrUtil.cpp \
-	$(UPPDIR1)Core/Algo.h \
-	$(UPPDIR1)Core/App.h \
-	$(UPPDIR1)Core/AString.hpp \
-	$(UPPDIR1)Core/Atomic.h \
-	$(UPPDIR1)Core/BiCont.h \
-	$(UPPDIR1)Core/Callback.h \
-	$(UPPDIR1)Core/CallbackN.i \
-	$(UPPDIR1)Core/CallbackNP.i \
-	$(UPPDIR1)Core/CallbackR.i \
-	$(UPPDIR1)Core/CharSet.h \
-	$(UPPDIR1)Core/CharSet.i \
-	$(UPPDIR1)Core/CoAlgo.h \
-	$(UPPDIR1)Core/Color.h \
-	$(UPPDIR1)Core/Complex.h \
-	$(UPPDIR1)Core/config.h \
-	$(UPPDIR1)Core/Convert.h \
-	$(UPPDIR1)Core/Convert.hpp \
-	$(UPPDIR1)Core/Core.h \
-	$(UPPDIR1)Core/CoSort.h \
-	$(UPPDIR1)Core/CoWork.h \
-	$(UPPDIR1)Core/Defs.h \
-	$(UPPDIR1)Core/Diag.h \
-	$(UPPDIR1)Core/FileMapping.h \
-	$(UPPDIR1)Core/FilterStream.h \
-	$(UPPDIR1)Core/FixedMap.h \
-	$(UPPDIR1)Core/Fn.h \
-	$(UPPDIR1)Core/Format.h \
-	$(UPPDIR1)Core/Function.h \
-	$(UPPDIR1)Core/Gtypes.h \
-	$(UPPDIR1)Core/Hash.h \
-	$(UPPDIR1)Core/Heap.h \
-	$(UPPDIR1)Core/HttpStatusCode.i \
-	$(UPPDIR1)Core/Huge.h \
-	$(UPPDIR1)Core/i18n.h \
-	$(UPPDIR1)Core/Index.h \
-	$(UPPDIR1)Core/Index.hpp \
-	$(UPPDIR1)Core/Inet.h \
-	$(UPPDIR1)Core/InMap.hpp \
-	$(UPPDIR1)Core/InVector.h \
-	$(UPPDIR1)Core/InVector.hpp \
-	$(UPPDIR1)Core/JSON.h \
-	$(UPPDIR1)Core/Lang.h \
-	$(UPPDIR1)Core/Lang_s.h \
-	$(UPPDIR1)Core/LocalProcess.h \
-	$(UPPDIR1)Core/Map.h \
-	$(UPPDIR1)Core/Map.hpp \
-	$(UPPDIR1)Core/Mem.h \
-	$(UPPDIR1)Core/Mt.h \
-	$(UPPDIR1)Core/Obsolete.h \
-	$(UPPDIR1)Core/Ops.h \
-	$(UPPDIR1)Core/Other.h \
-	$(UPPDIR1)Core/Other.hpp \
-	$(UPPDIR1)Core/Parser.h \
-	$(UPPDIR1)Core/Path.h \
-	$(UPPDIR1)Core/Profile.h \
-	$(UPPDIR1)Core/Ptr.h \
-	$(UPPDIR1)Core/Range.h \
-	$(UPPDIR1)Core/Sort.h \
-	$(UPPDIR1)Core/Sorted.h \
-	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/Stream.h \
-	$(UPPDIR1)Core/String.h \
-	$(UPPDIR1)Core/StrUtil.cpp \
-	$(UPPDIR1)Core/t_.h \
-	$(UPPDIR1)Core/TimeDate.h \
-	$(UPPDIR1)Core/Topic.h \
-	$(UPPDIR1)Core/Topt.h \
-	$(UPPDIR1)Core/Tuple.h \
-	$(UPPDIR1)Core/Utf.hpp \
-	$(UPPDIR1)Core/Util.h \
-	$(UPPDIR1)Core/Uuid.h \
-	$(UPPDIR1)Core/Value.h \
-	$(UPPDIR1)Core/Value.hpp \
-	$(UPPDIR1)Core/ValueCache.h \
-	$(UPPDIR1)Core/ValueUtil.h \
-	$(UPPDIR1)Core/ValueUtil.hpp \
-	$(UPPDIR1)Core/Vcont.h \
-	$(UPPDIR1)Core/Vcont.hpp \
-	$(UPPDIR1)Core/Win32Util.h \
-	$(UPPDIR1)Core/XML.h \
-	$(UPPDIR1)Core/Xmlize.h \
-	$(UPPDIR1)Core/Xmlize.hpp \
-	$(UPPDIR1)Core/z.h \
-	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/StrUtil.cpp -o $(OutDir_Core)StrUtil.o
-
 $(OutDir_Core)SplitMerge.o: $(UPPDIR1)Core/SplitMerge.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
@@ -12260,6 +12290,7 @@ $(OutDir_Core)SplitMerge.o: $(UPPDIR1)Core/SplitMerge.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12347,6 +12378,7 @@ $(OutDir_Core)Utf.o: $(UPPDIR1)Core/Utf.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12434,6 +12466,7 @@ $(OutDir_Core)UnicodeInfo.o: $(UPPDIR1)Core/UnicodeInfo.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12521,6 +12554,7 @@ $(OutDir_Core)CharSet.o: $(UPPDIR1)Core/CharSet.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.cpp \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
@@ -12609,6 +12643,7 @@ $(OutDir_Core)Bom.o: $(UPPDIR1)Core/Bom.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12695,6 +12730,7 @@ $(OutDir_Core)Path.o: $(UPPDIR1)Core/Path.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12782,6 +12818,7 @@ $(OutDir_Core)NetNode.o: $(UPPDIR1)Core/NetNode.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12870,6 +12907,7 @@ $(OutDir_Core)App.o: $(UPPDIR1)Core/App.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -12956,6 +12994,7 @@ $(OutDir_Core)Huge.o: $(UPPDIR1)Core/Huge.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13043,6 +13082,7 @@ $(OutDir_Core)Stream.o: $(UPPDIR1)Core/Stream.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13131,6 +13171,7 @@ $(OutDir_Core)BlockStream.o: $(UPPDIR1)Core/BlockStream.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13217,6 +13258,7 @@ $(OutDir_Core)FilterStream.o: $(UPPDIR1)Core/FilterStream.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13304,6 +13346,7 @@ $(OutDir_Core)FileMapping.o: $(UPPDIR1)Core/FileMapping.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13391,6 +13434,7 @@ $(OutDir_Core)Log.o: $(UPPDIR1)Core/Log.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13478,6 +13522,7 @@ $(OutDir_Core)Debug.o: $(UPPDIR1)Core/Debug.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13565,6 +13610,7 @@ $(OutDir_Core)Ini.o: $(UPPDIR1)Core/Ini.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13652,6 +13698,7 @@ $(OutDir_Core)Util.o: $(UPPDIR1)Core/Util.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13739,6 +13786,7 @@ $(OutDir_Core)mathutil.o: $(UPPDIR1)Core/mathutil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13826,6 +13874,7 @@ $(OutDir_Core)Random.o: $(UPPDIR1)Core/Random.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -13913,6 +13962,7 @@ $(OutDir_Core)Speller.o: $(UPPDIR1)Core/Speller.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14000,6 +14050,7 @@ $(OutDir_Core)LocalProcess.o: $(UPPDIR1)Core/LocalProcess.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14087,6 +14138,7 @@ $(OutDir_Core)PackedData.o: $(UPPDIR1)Core/PackedData.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14174,6 +14226,7 @@ $(OutDir_Core)Vcont.o: $(UPPDIR1)Core/Vcont.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14261,6 +14314,7 @@ $(OutDir_Core)Index.o: $(UPPDIR1)Core/Index.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14348,6 +14402,7 @@ $(OutDir_Core)TimeDate.o: $(UPPDIR1)Core/TimeDate.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14435,6 +14490,7 @@ $(OutDir_Core)Value.o: $(UPPDIR1)Core/Value.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14522,6 +14578,7 @@ $(OutDir_Core)ValueUtil.o: $(UPPDIR1)Core/ValueUtil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14609,6 +14666,7 @@ $(OutDir_Core)Format.o: $(UPPDIR1)Core/Format.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14696,6 +14754,7 @@ $(OutDir_Core)CvFlt.o: $(UPPDIR1)Core/CvFlt.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14784,6 +14843,7 @@ $(OutDir_Core)Convert.o: $(UPPDIR1)Core/Convert.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14871,6 +14931,7 @@ $(OutDir_Core)Color.o: $(UPPDIR1)Core/Color.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -14958,6 +15019,7 @@ $(OutDir_Core)Gtypes.o: $(UPPDIR1)Core/Gtypes.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15045,6 +15107,7 @@ $(OutDir_Core)t.o: $(UPPDIR1)Core/t.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15134,6 +15197,7 @@ $(OutDir_Core)Lang.o: $(UPPDIR1)Core/Lang.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15221,6 +15285,7 @@ $(OutDir_Core)LangInfo.o: $(UPPDIR1)Core/LangInfo.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15308,6 +15373,7 @@ $(OutDir_Core)parser.o: $(UPPDIR1)Core/parser.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15395,6 +15461,7 @@ $(OutDir_Core)XML.o: $(UPPDIR1)Core/XML.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15482,6 +15549,7 @@ $(OutDir_Core)Xmlize.o: $(UPPDIR1)Core/Xmlize.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15569,6 +15637,7 @@ $(OutDir_Core)JSON.o: $(UPPDIR1)Core/JSON.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15656,6 +15725,7 @@ $(OutDir_Core)Uuid.o: $(UPPDIR1)Core/Uuid.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15743,6 +15813,7 @@ $(OutDir_Core)Ptr.o: $(UPPDIR1)Core/Ptr.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15830,6 +15901,7 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -15922,6 +15994,7 @@ $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16009,6 +16082,7 @@ $(OutDir_Core)CoWork.o: $(UPPDIR1)Core/CoWork.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16096,6 +16170,7 @@ $(OutDir_Core)ValueCache.o: $(UPPDIR1)Core/ValueCache.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16183,6 +16258,7 @@ $(OutDir_Core)MD5.o: $(UPPDIR1)Core/MD5.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16270,6 +16346,7 @@ $(OutDir_Core)SHA1.o: $(UPPDIR1)Core/SHA1.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16357,6 +16434,7 @@ $(OutDir_Core)SHA256.o: $(UPPDIR1)Core/SHA256.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16449,6 +16527,7 @@ $(OutDir_Core)xxHsh.o: $(UPPDIR1)Core/xxHsh.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16537,6 +16616,7 @@ $(OutDir_Core)InetUtil.o: $(UPPDIR1)Core/InetUtil.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16624,6 +16704,7 @@ $(OutDir_Core)MIME.o: $(UPPDIR1)Core/MIME.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16711,6 +16792,7 @@ $(OutDir_Core)Socket.o: $(UPPDIR1)Core/Socket.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16798,6 +16880,7 @@ $(OutDir_Core)Http.o: $(UPPDIR1)Core/Http.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16885,6 +16968,7 @@ $(OutDir_Core)WebSocket.o: $(UPPDIR1)Core/WebSocket.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -16972,6 +17056,7 @@ $(OutDir_Core)Dli.o: $(UPPDIR1)Core/Dli.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -17059,6 +17144,7 @@ $(OutDir_Core)Win32Util.o: $(UPPDIR1)Core/Win32Util.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
@@ -17150,7 +17236,6 @@ $(OutDir_Core)Core.a: \
 	$(OutDir_Core)StringFind.o \
 	$(OutDir_Core)String.o \
 	$(OutDir_Core)WString.o \
-	$(OutDir_Core)StrUtil.o \
 	$(OutDir_Core)SplitMerge.o \
 	$(OutDir_Core)Utf.o \
 	$(OutDir_Core)UnicodeInfo.o \
@@ -17223,7 +17308,6 @@ $(OutDir_Core)Core.a: \
 		$(OutDir_Core)StringFind.o \
 		$(OutDir_Core)String.o \
 		$(OutDir_Core)WString.o \
-		$(OutDir_Core)StrUtil.o \
 		$(OutDir_Core)SplitMerge.o \
 		$(OutDir_Core)Utf.o \
 		$(OutDir_Core)UnicodeInfo.o \
@@ -17296,6 +17380,7 @@ $(OutDir_plugin_pcre)RegExp.o: $(UPPDIR1)plugin/pcre/RegExp.cpp \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
 	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
 	$(UPPDIR1)Core/CharSet.h \
 	$(UPPDIR1)Core/CharSet.i \
 	$(UPPDIR1)Core/CoAlgo.h \
