@@ -29,7 +29,9 @@ Broadcast or until [%-*@3 timeout`_ms] milliseconds elapses. [%-*@3 m]
 has to be owned by calling thread before invoking. When Signal 
 or Broadcast are received, resumes execution and reacquires [%-*@3 m][%- . 
 ]Negative value for [%-*@3 timeout`_ms] means the waiting time 
-is unlimited.&]
+is unlimited. Note that execution can also be resumed by [*^https`:`/`/en`.wikipedia`.org`/wiki`/Spurious`_wakeup^ s
+purious wakeup] so you should always check the state after execution 
+is resumed.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ConditionVariable`:`:Signal`(`): [@(0.0.255) void]_[* Signal]()&]
