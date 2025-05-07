@@ -160,6 +160,17 @@ String CleanupId(const char *s)
 					was_param_type = false;
 					operator_def = false;
 				}
+				if(s[1] == '*') { // function pointer, e.g. int(*)(int)
+					was_param_type = false;  // prevent skipping   ^^^
+					while(*s && *s != ')') {
+						if(*s == '*') // exclude any names
+							mm.Cat(*s);
+						s++;
+					}
+					mm.Cat(')');
+					if(*s) s++;
+					continue;
+				}
 				inparams = true;
 			}
 			if(*s == ',')
