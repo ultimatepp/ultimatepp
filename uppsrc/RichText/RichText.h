@@ -290,7 +290,6 @@ struct PaintInfo {
 	void   *context;
 	bool    showlabels;
 	bool    shrink_oversized_objects;
-	bool    single_line = false; // draw just one line (special usecase)
 	void  (*DrawSelection)(Draw& w, int x, int y, int cx, int cy);
 	
 	Color   ResolveInk(Color ink) const;

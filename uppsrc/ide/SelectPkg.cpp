@@ -207,16 +207,29 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Left(base, Zx(170)));
 
-	recent.NoSb().NoHyperlinkDecoration().SingleLine();
+	recent.NoSb().NoHyperlinkDecoration();
 	LoadLRU();
 	if(main && selectvars && lru.GetCount()) {
 		String text;
 		for(int i = 0; i < lru.GetCount(); i++) {
 			const auto& m = lru[i];
-			MergeWith(text, ", ", "[$W^A" + AsString(i) + "^ \1" + m.a + "\1]" +
+			MergeWith(text, ", ", "[@b^A" + AsString(i) + "^ \1" + m.a + "\1]" +
 			                      ":_[*^ "+ AsString(i) + "^ \1" + m.b + "\1]");
 		}
-		recent <<= "[g [@K/ Recent:] " + text;
+		if(text.GetCount())
+			recent <<= "[gpw [@K/ Recent:] " + text;
+		Rect r = recent.GetRect();
+		Rect pg = recent.GetPage();
+		RichText txt = ParseQTF(recent.GetQTF());
+		int cy = 0;
+		for(int i = 0; i < txt.GetLength(); i++) { // Find the height of text that completely fits
+			Rect cr = txt.GetCaret(i, pg);
+			if(cr.bottom > r.GetHeight()) // does not fit
+				break;
+			cy = cr.bottom;
+		}
+		r.bottom = r.top + cy;
+		recent.SetRect(r);
 		recent.WhenLink = [=](const String& s) {
 			if(*s == 'A') {
 				int i = Atoi(~s + 1);
@@ -233,6 +246,9 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 				}
 			}
 		};
+		LogPos p = parent.GetPos();
+		p.y.SetA(r.bottom + DPI(3));
+		parent.SetPos(p);
 	}
 	else {
 		LogPos p = parent.GetPos();
@@ -297,8 +313,8 @@ void SelectPackageDlg::StoreLRU(const String& p)
 	if(i >= 0)
 		lru.Remove(i);
 	lru.Insert(0, q);
-	if(lru.GetCount() > 10)
-		lru.Trim(10);
+	if(lru.GetCount() > 100)
+		lru.Trim(100);
 	StoreToFile(lru, LRUFilePath());
 }
 

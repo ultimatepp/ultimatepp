@@ -66,7 +66,6 @@ void  RichTextView::Paint(Draw& w)
 	pi.sizetracking = sizetracking;
 	pi.shrink_oversized_objects = shrink_oversized_objects;
 	pi.darktheme = IsDarkTheme();
-	pi.single_line = single_line;
 	Rect pg = GetPage();
 	pg.top = TopY();
 	text.Paint(pw, pg, pi);
@@ -82,8 +81,6 @@ void  RichTextView::SetSb()
 
 bool  RichTextView::Key(dword key, int count)
 {
-	if(single_line)
-		return false;
 	if(key == K_CTRL_C || key == K_SHIFT_INSERT) {
 		Copy();
 		return true;
@@ -93,8 +90,6 @@ bool  RichTextView::Key(dword key, int count)
 
 void  RichTextView::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	if(single_line)
-		return;
 	if(!WhenMouseWheel(zdelta, keyflags))
 		sb.Wheel(zdelta);
 }
@@ -138,8 +133,6 @@ String RichTextView::GetSelectionData(const String& fmt) const
 
 void RichTextView::RightDown(Point p, dword keyflags)
 {
-	if(single_line)
-		return;
 	MenuBar b;
 	b.Add(cursor != anchor, t_("Copy"), CtrlImg::copy(), THISBACK(Copy)).Key(K_CTRL_C);
 	b.Execute();
@@ -159,10 +152,7 @@ int  RichTextView::GetPointPos(Point p) const
 	sz.cx -= margin.left + margin.right;
 	sz.cy -= margin.top + margin.bottom;
 	p = GetTextPoint(p);
-	Rect pg = GetPage();
-	if(single_line)
-		pg.right = INT_MAX / 2;
-	return text.GetPos(p.x, PageY(0, p.y), pg);
+	return text.GetPos(p.x, PageY(0, p.y), GetPage());
 }
 
 String RichTextView::GetLink(int pos, Point p) const
@@ -251,8 +241,6 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 
 void RichTextView::LeftDouble(Point p, dword keyflags)
 {
-	if(single_line)
-		return;
 	int pos = GetPointPos(p);
 	if(IsLeNum(text[pos])) {
 		anchor = pos;
@@ -270,8 +258,6 @@ void RichTextView::LeftDouble(Point p, dword keyflags)
 
 void RichTextView::LeftTriple(Point p, dword keyflags)
 {
-	if(single_line)
-		return;
     int pos = GetPointPos(p);
 	RichPos rp = text.GetRichPos(pos);
 	anchor = pos - rp.posinpara;
@@ -285,8 +271,6 @@ void RichTextView::MouseMove(Point p, dword keyflags)
 	int pos = GetPointPos(p);
 	WhenMouseMove(pos);
 	if(HasCapture()) {
-		if(single_line)
-			return;
 		if(pos < 0)
 			return;
 		cursor = pos;
