@@ -223,7 +223,7 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 			throw Exc("Decryption aborted");
 		
 		while(remaining > 0) {
-			int64 csz = min((int64) chunksize, remaining);
+			int64 csz = min(static_cast<int64>(chunksize), remaining);
 			String chunk = in.Get(static_cast<int>(csz)); // Chunk size is guaranteed to be smaller than INT_MAX
 			if(chunk.IsEmpty())
 				break;
