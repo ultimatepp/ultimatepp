@@ -938,6 +938,7 @@ void GridCtrl::Paste(int mode)
 	}
 	WhenPaste();
 	ClearSelection();
+	WhenSelectAction();
 }
 
 void GridCtrl::DoCopy()
@@ -4239,6 +4240,7 @@ bool GridCtrl::TabKey(bool enter_mode)
 				DoAppendNoEdit();
 		}
 		ClearSelection();
+		WhenSelectAction();
 
 		if(isnext)
 			return true;
@@ -6030,6 +6032,7 @@ void GridCtrl::DoGoPageDn()           { GoPageDn();                  }
 void GridCtrl::DoSelectAll()
 {
 	SelectCount(fixed_rows, total_rows - fixed_rows);
+	WhenSelectAction();
 }
 
 GridCtrl& GridCtrl::ShowRow(int n, bool refresh)
