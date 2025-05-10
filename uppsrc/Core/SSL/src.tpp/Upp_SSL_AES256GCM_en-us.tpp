@@ -76,8 +76,8 @@ range. Default is implementation`-defined. Returns `*this for
 method chaining.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Aes256Gcm`:`:Chunksize`(int`):%- Aes256Gcm[@(0.0.255) `&] 
-[* Chunksize]([@(0.0.255) int] [*@3 sz])&]
+[s5;:Upp`:`:Aes256Gcm`:`:ChunkSize`(int`):%- Aes256Gcm[@(0.0.255) `&] 
+[* ChunkSize]([@(0.0.255) int] [*@3 sz])&]
 [s2; Sets the processing chunk size (for streaming I/O) to [%-*@3 sz]. 
 Must be at least 128 bytes. Returns `*this for method chaining.&]
 [s3;%- &]

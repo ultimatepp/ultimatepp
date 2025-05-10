@@ -153,7 +153,7 @@ public:
     virtual ~Aes256Gcm();
 
     Aes256Gcm& Iteration(int n)                                         { iteration = clamp(n, AES_GCM_MIN_ITERATION, AES_GCM_MAX_ITERATION); return *this; }
-    Aes256Gcm& Chunksize(int sz)                                        { chunksize = clamp(sz, 128, INT_MAX); return *this; }
+    Aes256Gcm& ChunkSize(int sz)                                        { chunksize = clamp(sz, 128, INT_MAX); return *this; }
 
     bool Encrypt(Stream& in, const String& password, Stream& out);
     bool Encrypt(const String& in, const String& password, String& out) { return EncDec(true, in, password, out); }
