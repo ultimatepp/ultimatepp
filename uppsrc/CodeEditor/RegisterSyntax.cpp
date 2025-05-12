@@ -40,7 +40,7 @@ void RegisterSyntaxModules()
 	                "C/C++");
 	RegisterCSyntax("cuda", CSyntax::HIGHLIGHT_CUDA, "*.cu *.ci", "Cuda");
 	RegisterCSyntax("java", CSyntax::HIGHLIGHT_JAVA, "*.java", "Java");
-	RegisterCSyntax("js", CSyntax::HIGHLIGHT_JAVASCRIPT, "*.js", "JavaScript");
+	RegisterCSyntax("js", CSyntax::HIGHLIGHT_JAVASCRIPT, "*.js *.jsx *.ts *.tsx", "JavaScript");
 	RegisterCSyntax("cs", CSyntax::HIGHLIGHT_CS, "*.cs", "C#");
 	RegisterCSyntax("json", CSyntax::HIGHLIGHT_JSON, "*.json", "JSON");
 	RegisterCSyntax("css", CSyntax::HIGHLIGHT_CSS, "*.css", "Cascading Style Sheet");

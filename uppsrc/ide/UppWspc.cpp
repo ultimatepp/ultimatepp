@@ -499,11 +499,13 @@ bool FileOrder_(const String& a, const String& b)
 
 void SyncPackage(const String& active, Package& actual)
 {
+	String source_masks = GetVar("SOURCE_MASKS");
+
 	Vector<String> file;
 	for(FindFile ff(PackageDirectory(active) + "/*.*"); ff; ff.Next())
 		if(ff.IsFile()) {
 			String n = ff.GetName();
-			if(IsSourceFile(n) || IsHeaderFile(n))
+			if(IsSourceFile(n) || IsHeaderFile(n) || IsExternalMode() && PatternMatchMulti(source_masks, n))
 				file.Add(n);
 		}
 
