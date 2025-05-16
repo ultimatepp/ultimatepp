@@ -11,7 +11,16 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	bool b = GetCurrentName().GetCount();
 	menu.Add("New package..", [=] { OnNew(); });
 	menu.Separator();
-	if(!IsExternalMode()) {
+	if(IsExternalMode()) {
+		menu.Add(b, "Delete package..", [=] {
+			String p = PackageFile(GetCurrentName());
+			if(FileExists(p) && PromptYesNo("Delete package?")) {
+				DeleteFile(p);
+				Load();
+			}
+		});
+	}
+	else {
 		menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
 		menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
 		menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
@@ -487,11 +496,13 @@ void SelectPackageDlg::OnFilter()
 	SyncList(Null);
 }
 
-String SelectExternalPackage()
+String SelectExternalPackage(const String& from)
 {
 	FileSel fs;
 	fs.ActiveDir(GetHomeDirectory());
 	LoadFromGlobal(fs, "PackageDirSelector");
+	if(from.GetCount())
+		fs.ActiveDir(from);
 	bool b = fs.ExecuteSelectDir("Select package directory");
 	StoreToGlobal(fs, "PackageDirSelector");
 	return b ? ~fs : String::GetVoid();
@@ -583,29 +594,31 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	;
 	bar.Add(base.IsCursor(), "Edit assembly..", THISBACK(OnBaseEdit))
 		.Key(K_CTRL_ENTER);
-	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
-		.Key(K_CTRL_DELETE);
-	bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
-	Vector<String> dirs = SplitDirs(GetVar("UPP"));
-	if(dirs.GetCount()) {
-		bar.Separator();
-		for(String s : dirs)
-			bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
-	}
-	Vector<String> d = GetRepoDirs();
-	if(HasGit()) {
-		bar.Separator();
-		bar.Add("Clone U++ GitHub sources..", [=] {
-			String vars = base.Get(0);
-			SetupGITMaster();
-			SyncBase(vars);
-		});
-	}
-	if(d.GetCount()) {
-		bar.Separator();
-		for(int i = 0; i < d.GetCount(); i++)
-			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
-		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
+	if(!IsExternalMode()) {
+		bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
+			.Key(K_CTRL_DELETE);
+		bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
+		Vector<String> dirs = SplitDirs(GetVar("UPP"));
+		if(dirs.GetCount()) {
+			bar.Separator();
+			for(String s : dirs)
+				bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
+		}
+		Vector<String> d = GetRepoDirs();
+		if(HasGit()) {
+			bar.Separator();
+			bar.Add("Clone U++ GitHub sources..", [=] {
+				String vars = base.Get(0);
+				SetupGITMaster();
+				SyncBase(vars);
+			});
+		}
+		if(d.GetCount()) {
+			bar.Separator();
+			for(int i = 0; i < d.GetCount(); i++)
+				bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
+			bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
+		}
 	}
 }
 
@@ -849,6 +862,11 @@ void SelectPackageDlg::Load(const String& find)
 				nest <<= ALL;
 			else
 				nest <<= 0;
+			if(alist_external != IsExternalMode()) {
+				alist_external = IsExternalMode();
+				alist.ColumnWidths(alist_external ? "300 0 200": "108 79 317");
+			}
+			alist.HeaderTab(1).Show(!alist_external);
 			SyncFilter();
 		}
 		Vector<String> upp = GetUppDirsRaw();

@@ -1040,7 +1040,7 @@ void WorkspaceWork::ToggleIncludeable()
 
 void WorkspaceWork::AddNormalUses()
 {
-	String p = IsExternalMode() ? SelectExternalPackage() : SelectPackage("Select package");
+	String p = IsExternalMode() ? SelectExternalPackage(actualpackage) : SelectPackage("Select package");
 
 	if(p.IsEmpty())
 		return;
