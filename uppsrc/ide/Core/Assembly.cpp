@@ -131,8 +131,8 @@ void OverrideHubDir(const String& path)
 }
 
 bool   IsExternalMode()
-{ // use TheIDE as editor/analyser, packages are stored separately, no compilation
-	return GetVar("EXTERNAL") == "1";
+{ // Any folder can be package, .upp files are not stored in packages (but in cfg/external)
+	return GetVarsName() == "[external]";
 }
 
 String GetHubDir()
@@ -234,6 +234,8 @@ String Nest::PackageDirectory0(const String& name)
 	String uppfile = NativePath(name);
 	if(IsFullPath(uppfile))
 		return NormalizePath(uppfile);
+	if(IsExternalMode()) // name must be full directory path in external mode
+		return String();
 	String pname = GetFileName(uppfile);
 	Vector<String> d = GetUppDirs();
 	for(int i = 0; i < d.GetCount(); i++) {
