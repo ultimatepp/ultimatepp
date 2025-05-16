@@ -346,8 +346,10 @@ String GetAssemblyId();
 void   InvalidatePackageCache();
 
 bool   IsExternalMode();
-
+String EncodePathAsFileName(const String& path);
+String DecodePathFromFileName(const String& n);
 bool   IsDirectoryExternalPackage(const String& dir);
+
 bool   IsDirectoryPackage(const String& path);
 String PackageFile(const String& name);
 String SourcePath(const String& package, const String& name);

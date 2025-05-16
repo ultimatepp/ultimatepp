@@ -12,6 +12,8 @@ String PackageDirectory(const String& name)
 
 String GetPackagePathNest(const String& path)
 {
+	if(IsExternalMode())
+		return Null;
 	String h = UnixPath(NormalizePath(path));
 	for(auto dir : GetUppDirs())
 		if(h.StartsWith(UnixPath(NormalizePath(dir)) + '/'))
@@ -36,17 +38,30 @@ bool IsDirectoryExternalPackage(const String& dir)
 bool IsDirectoryPackage(const String& path)
 {
 	if(IsExternalMode())
-		return IsDirectoryExternalPackage(path);
+		return DirectoryExists(path);
 	return FileExists(AppendFileName(path, GetFileTitle(path) + ".upp"));
+}
+
+String EncodePathAsFileName(const String& path)
+{
+	String p = UnixPath(path);
+	p.Replace("/", "[sLash]");
+	p.Replace(":", "[cOlon]");
+	return p;
+}
+
+String DecodePathFromFileName(const String& n)
+{
+	String p = n;
+	p.Replace("[sLash]", "/");
+	p.Replace("[cOlon]", ":");
+	return p;
 }
 
 String PackageFile(const String& package)
 { // in external mode we are storing packages into .config
 	if(IsExternalMode()) {
-		String p = ConfigFile("external/" + GetVarsName()) + "/" +
-		                      Filter(package, [](int c) {
-		                         return findarg(c, '/', '\\', ':') >= 0 ? '%' : c;
-		                      });
+		String p = ConfigFile("external") + "/" + EncodePathAsFileName(package);
 		RealizePath(p);
 		return p;
 	}

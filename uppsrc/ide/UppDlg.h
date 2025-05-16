@@ -121,7 +121,6 @@ public:
 
 private:
     void OnUpp();
-    void Sync();
 
 private:
     bool               new_base;
@@ -488,3 +487,5 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 };
 
 void EditPackages(const char *main, const char *startwith, String& cfg);
+
+String SelectExternalPackage();
