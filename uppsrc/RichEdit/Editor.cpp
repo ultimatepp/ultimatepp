@@ -268,8 +268,12 @@ void RichEdit::Layout()
 		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8 * 100 / zoom, INT_MAX));
 	else
 	if(!IsNull(floating_zoom)) {
-		Zoom m = GetRichTextStdScreenZoom();
-		SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
+		if(floating_zoom > 0) {
+			Zoom m = GetRichTextStdScreenZoom();
+			SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
+		}
+		else
+			SetPage(Size(int(-1 / floating_zoom * sz.cx), INT_MAX));
 	}
 	sb.SetPage(sz.cy > 10 ? sz.cy - 4 : sz.cy);
 	SetupRuler();

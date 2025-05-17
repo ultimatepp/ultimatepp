@@ -82,6 +82,7 @@ void RichEdit::AddUndo(One<UndoRec>&& ur)
 {
 	redo.Clear();
 	SetModify();
+	WhenAction();
 	modified = true;
 	incundoserial = true;
 	while(undo.GetCount() > undosteps)
