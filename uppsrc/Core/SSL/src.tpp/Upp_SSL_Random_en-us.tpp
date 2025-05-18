@@ -20,10 +20,10 @@ for high`-security applications that demand guaranteed uniqueness
 and strong collision resistance.  It ensures process`-unique 
 nonces by mixing the process ID with timestamps and is fork`-safe 
 on POSIX systems, automatically reseeding after a fork to avoid 
-duplication. The implementation is thread`-safe, supporting concurrent 
-initialization and generation across threads without race conditions. 
-It enforces a minimum nonce size of 12 bytes, aligning with cryptographic 
-standards. &]
+duplication. The implementation is [/ thread`-safe], supporting 
+concurrent initialization and generation across threads without 
+race conditions. It enforces a minimum nonce size of 12 bytes, 
+aligning with cryptographic standards. &]
 [s2;%% &]
 [s2;%% The generator offers two distinct modes: one for producing 
 unique, non`-repeating nonces,  and another for extracting purely 
