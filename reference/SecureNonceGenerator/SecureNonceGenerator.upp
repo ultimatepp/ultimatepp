@@ -1,0 +1,12 @@
+description "Demonstrates the Core/SSL's cryptographic nonce/random generation.\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	SecureNonceGenerator.cpp;
+
+mainconfig
+	"" = "";
+

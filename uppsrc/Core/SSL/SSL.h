@@ -180,4 +180,40 @@ String AES256Decrypt(const String& in, const String& password, Gate<int64, int64
 bool AES256Encrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
 bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
 
+class SecureRandomGenerator : NoCopy {
+    static_assert(sizeof(uint64) == 8,
+                "Upp::SecureRandomGenerator: Expected 64-bit uint64");
+public:
+    // Meyer's singleton
+    static SecureRandomGenerator& Instance() { static SecureRandomGenerator q; return q; }
+
+    String Generate(int n);
+    String GenerateNonce(int n);
+
+private:
+    SecureRandomGenerator() = default;
+    SecureRandomGenerator(SecureRandomGenerator&&) = delete;
+    SecureRandomGenerator& operator=(const SecureRandomGenerator&) = delete;
+    
+    void   Init();
+    void   Seed();
+    uint64 Next();
+
+    std::atomic<uint64> counter;
+};
+
+// SecureRandomGenerator helper functions
+
+inline String SecureRandom(int n)       { return SecureRandomGenerator::Instance().Generate(n); }
+inline String SecureNonce(int n)        { return SecureRandomGenerator::Instance().GenerateNonce(n);  }
+
+inline String GetAESGCMNonce()          { return SecureRandomGenerator::Instance().GenerateNonce(12); }  // 12 bytes, optimal for AES-GCM
+inline String GetChaChaPoly1305Nonce()  { return SecureRandomGenerator::Instance().GenerateNonce(12); }  // 12 bytes, standard for ChaCha20-Poly1305
+inline String GetTLSNonce()             { return SecureRandomGenerator::Instance().GenerateNonce(12); }  // 12 bytes, used in TLS 1.2/1.3
+inline String GetAESCCMNonce()          { return SecureRandomGenerator::Instance().GenerateNonce(13); }  // 13 bytes, max size for AES-CCM
+inline String GetJWTNonce()             { return SecureRandomGenerator::Instance().GenerateNonce(16); }  // 16 bytes, good for JWT
+inline String GetOAuthNonce()           { return SecureRandomGenerator::Instance().GenerateNonce(16); }  // 16 bytes, common for OAuth
+inline String GetOCSPNonce()            { return SecureRandomGenerator::Instance().GenerateNonce(20); }  // 20 bytes, OCSP nonce extension
+inline String GetECDSANonce()           { return SecureRandomGenerator::Instance().GenerateNonce(32); }  // 32 bytes, for ECDSA signatures
+inline String GetDTLSCookie()           { return SecureRandomGenerator::Instance().GenerateNonce(32); }  // 32 bytes, DTLS cookie
 }
