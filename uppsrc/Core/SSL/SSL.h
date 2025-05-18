@@ -147,6 +147,8 @@ constexpr const int AES_GCM_MIN_ITERATION     = 10000;
 constexpr const int AES_GCM_MAX_ITERATION     = 1000000;
 constexpr const int AES_GCM_DEFAULT_ITERATION = 100000;
 
+INITIALIZE(AES);
+
 class Aes256Gcm : NoCopy {
 public:
     Aes256Gcm();
@@ -169,7 +171,6 @@ private:
     void   SetError(const String& txt);
 
     EVP_CIPHER_CTX* ctx;
-    EVP_CIPHER*     cipher;
     int             chunksize;
     int             iteration;
     String          err;

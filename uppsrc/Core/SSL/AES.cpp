@@ -15,23 +15,39 @@ namespace {
 	constexpr const int AES_GCM_IV_SIZE           = 12;                // GCM standard IV size
 	constexpr const int AES_GCM_TAG_SIZE          = 16;
 	constexpr const int AES_GCM_ENVELOPE_SIZE     = AES_GCM_PREFIX_LEN + AES_GCM_SALT_SIZE + AES_GCM_IV_SIZE + AES_GCM_TAG_SIZE;
+
+	static    EVP_CIPHER* sCipher = nullptr;
+
+const EVP_CIPHER* GetAes256GcmCipher()
+{
+	return sCipher;
+}
+	
+}
+
+INITIALIZER(AES)
+{
+	sCipher = EVP_CIPHER_fetch(nullptr, "AES-256-GCM", nullptr);
+}
+
+EXITBLOCK
+{
+	if(sCipher)
+		EVP_CIPHER_free(sCipher);
 }
 
 Aes256Gcm::Aes256Gcm()
 : iteration(AES_GCM_DEFAULT_ITERATION)
 , chunksize(1024)
 {
+	SslInitThread();
 	ctx = EVP_CIPHER_CTX_new();
-	cipher = EVP_CIPHER_fetch(nullptr, "AES-256-GCM", nullptr);
 }
 
 Aes256Gcm::~Aes256Gcm()
 {
 	if(ctx)
 		EVP_CIPHER_CTX_free(ctx);
-	
-	if(cipher)
-		EVP_CIPHER_free(cipher);
 }
 
 void Aes256Gcm::SetError(const String& txt)
@@ -51,6 +67,12 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 		return false;
 	}
 	
+	if(!EVP_CIPHER_CTX_reset(ctx)) {
+	    SetError("Failed to reset EVP_CIPHER_CTX");
+		return false;
+	}
+	
+	const EVP_CIPHER*  cipher = GetAes256GcmCipher();
 	if(!cipher) {
 		SetError("Failed to fetch AES-256-GCM cipher");
 		return false;
@@ -62,33 +84,35 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 		return false;
 	}
 
-	byte salt[AES_GCM_SALT_SIZE], iv[AES_GCM_IV_SIZE], tag[AES_GCM_TAG_SIZE];
-	int64 processed = 0;
-
 	try {
+		byte tag[AES_GCM_TAG_SIZE];
+		int64 processed = 0;
+
+		String salt, iv;
+
 		// Generate random salt
-		if(!RAND_bytes(salt, sizeof(salt)))
+		if(salt = SecureRandom(AES_GCM_SALT_SIZE); salt.IsVoid())
 			throw Exc("Salt generation failed");
 		
 		// Generate random initialization vector
-		if(!RAND_bytes(iv, sizeof(iv)))
+		if(iv = GetAESGCMNonce(); iv.IsVoid())
 			throw Exc("IV generation failed");
 
 		// Derive key from password (can be Null)
-		if(!PKCS5_PBKDF2_HMAC(~password, password.GetLength(), salt, sizeof(salt), iteration, EVP_sha256(), sizeof(key), key))
+		if(!PKCS5_PBKDF2_HMAC(~password, password.GetLength(), (const byte*) ~salt, salt.GetLength(), iteration, EVP_sha256(), sizeof(key), key))
 			throw Exc("PBKDF2: Key derivation failed");
 
 		// Initialize cipher
-		if(!EVP_EncryptInit_ex2(ctx, cipher, key, iv, nullptr))
+		if(!EVP_EncryptInit_ex2(ctx, cipher, key, (const byte*) ~iv, nullptr))
 			throw Exc("Cipher initialization failed");
 
 		// Put header
 		out.Put(AES_GCM_FORMAT_PREFIX, AES_GCM_PREFIX_LEN);
-		out.Put(salt, sizeof(salt));
-		out.Put(iv, sizeof(iv));
+		out.Put(salt);
+		out.Put(iv);
 		
 		// Update counter with header size
-		processed = AES_GCM_PREFIX_LEN + sizeof(salt) + sizeof(iv);
+		processed = AES_GCM_PREFIX_LEN + AES_GCM_SALT_SIZE + AES_GCM_IV_SIZE;
 		
 		if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
 			throw Exc("Encryption aborted");
@@ -166,7 +190,13 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 		SetError("Failed to create context");
 		return false;
 	}
+
+	if(!EVP_CIPHER_CTX_reset(ctx)) {
+	    SetError("Failed to reset EVP_CIPHER_CTX");
+		return false;
+	}
 	
+	const EVP_CIPHER*  cipher = GetAes256GcmCipher();
 	if(!cipher) {
 		SetError("Failed to fetch AES-256-GCM cipher");
 		return false;
