@@ -32,7 +32,7 @@ void Ide::GotoPos(String path, Point pos)
 
 String PosFn(const String& pkg, const String& n)
 {
-	return String() << Filter(pkg, [](int c) { return c == '\\' ? '/' : c; }) << '/' << n;
+	return String() << Filter(IsExternalMode() ? GetFileName(pkg) : pkg, [](int c) { return c == '\\' ? '/' : c; }) << '/' << n;
 }
 
 void Ide::CopyPosition()
