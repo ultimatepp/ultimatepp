@@ -8,10 +8,12 @@
 
 namespace Upp {
 
-static std::atomic<bool>  sForked(false);
-static std::atomic<dword> sPid(0);
 
 namespace {
+
+std::atomic<bool>   sForked(false);
+std::atomic<dword>  sPid(0);
+std::atomic<uint64> sCounter;
 
 constexpr const int NONCE_MIN = 12;
 
@@ -67,16 +69,26 @@ dword GetProcessUniqueId()
 	return sPid.load(std::memory_order_acquire);
 }
 
+void SRandomSeed()
+{
+	byte q[8];
+	if(!SSLRandom(&q, 8))
+		throw Exc("Failed to generate random number");
+	sCounter.store(Peek64le(&q), std::memory_order_relaxed);
 }
 
-void SecureRandomGenerator::Init()
+
+void SRandomInit()
 {
+    static_assert(sizeof(uint64) == 8,
+                "Upp::SecureRandomGenerator: Expected 64-bit uint64");
+
 	// Since we are using a singleton, SslInitThread ensures
 	// OpenSSL is aware of the ST/MT environment.
 	SslInitThread();
 
 	ONCELOCK {
-		Seed();
+		SRandomSeed();
 #ifdef PLATFORM_POSIX
 		pthread_atfork(nullptr, nullptr, [] {
 			sForked = true;
@@ -88,18 +100,11 @@ void SecureRandomGenerator::Init()
 	}
 }
 
-void SecureRandomGenerator::Seed()
-{
-	byte q[8];
-	if(!SSLRandom(&q, 8))
-		throw Exc("Failed to generate random number");
-	counter.store(Peek64le(&q), std::memory_order_relaxed);
-}
 
-uint64 SecureRandomGenerator::Next()
+uint64 SRandomNext()
 {
 	for(;;) {
-		uint64 cnt = counter.load(std::memory_order_acquire);
+		uint64 cnt = sCounter.load(std::memory_order_acquire);
 		if(cnt == UINT64_MAX) // Never allow wraparound.
 			throw Exc("Counter overflow, nonce space exhausted");
 		// Let's occasionally add a small random jump (a well known technique)
@@ -107,7 +112,7 @@ uint64 SecureRandomGenerator::Next()
 			byte jump[8];
 			if(SSLRandom(&jump, 8)) {
 				uint64 newcnt = cnt + (Peek64le(&jump) & 0xFFFF);
-				if(counter.compare_exchange_strong(cnt, newcnt,
+				if(sCounter.compare_exchange_strong(cnt, newcnt,
 													std::memory_order_acq_rel,
 													std::memory_order_acquire))
 					return newcnt;
@@ -115,7 +120,7 @@ uint64 SecureRandomGenerator::Next()
 			}
 		}
 		uint64 next = cnt + 1;
-		if(counter.compare_exchange_weak(cnt, next,
+		if(sCounter.compare_exchange_weak(cnt, next,
 										std::memory_order_acq_rel,
 										std::memory_order_acquire))
 			return next;
@@ -123,10 +128,12 @@ uint64 SecureRandomGenerator::Next()
 	}
 }
 
-String SecureRandomGenerator::Generate(int n)
+}
+
+String SecureRandom(int n)
 {
 	try {
-		Init();
+		SRandomInit();
 		Buffer<byte> q(n);
 		if(!SSLRandom(~q, n))
 			throw("Failed to generate random number");
@@ -141,13 +148,13 @@ String SecureRandomGenerator::Generate(int n)
 	return String::GetVoid();
 }
 
-String SecureRandomGenerator::GenerateNonce(int n)
+String SecureNonce(int n)
 {
 	try {
-		Init();
+		SRandomInit();
 #ifdef PLATFORM_POSIX
 		if(sForked.load(std::memory_order_acquire) && Thread::IsMain()) {
-			Seed();
+			SRandomSeed();
 			sForked.store(false, std::memory_order_release);
 		}
 #endif
@@ -155,7 +162,7 @@ String SecureRandomGenerator::GenerateNonce(int n)
 		String nonce;
 		nonce.Reserve(n);
 		RawCat(nonce, GetProcessUniqueId());                     // 4 bytes: process unique id
-		RawCat(nonce, Next());                                   // 8 bytes: incremented counter
+		RawCat(nonce, SRandomNext());                            // 8 bytes: incremented counter
 		// Remaining bytes filled with OpenSSL randomness
 		if(n > NONCE_MIN) {
 			int rlen = n - NONCE_MIN;
