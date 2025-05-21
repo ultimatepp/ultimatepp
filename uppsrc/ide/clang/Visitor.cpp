@@ -131,12 +131,11 @@ String ClangCursorInfo::Id()
 				p++;
 			m = CleanupId(p);
 			{ // remove any scope
-				int p = m.Find('(');
-				for(;;) {
-					int q = m.Find("::");
-					if(q < 0 || q >= p)
-						break;
-					m = m.Mid(q + 2);
+				int q = m.Find('(');
+				if(q >= 0) {
+					q = m.ReverseFind("::", q);
+					if(q >= 0)
+						m = m.Mid(q + 2);
 				}
 			}
 			while(findarg(m[q], ':', '*', '&', '(', ')', ' ') >= 0)
