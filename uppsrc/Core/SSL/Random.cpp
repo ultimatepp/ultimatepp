@@ -13,7 +13,7 @@ namespace {
 
 std::atomic<bool>   sForked(false);
 std::atomic<dword>  sPid(0);
-std::atomic<uint64> sCounter;
+std::atomic<uint64> sCounter(0);
 
 constexpr const int NONCE_MIN = 12;
 
@@ -77,14 +77,11 @@ void SRandomSeed()
 	sCounter.store(Peek64le(&q), std::memory_order_relaxed);
 }
 
-
 void SRandomInit()
 {
     static_assert(sizeof(uint64) == 8,
                 "Upp::SecureRandomGenerator: Expected 64-bit uint64");
 
-	// Since we are using a singleton, SslInitThread ensures
-	// OpenSSL is aware of the ST/MT environment.
 	SslInitThread();
 
 	ONCELOCK {
@@ -99,7 +96,6 @@ void SRandomInit()
 #endif
 	}
 }
-
 
 uint64 SRandomNext()
 {
@@ -136,7 +132,7 @@ String SecureRandom(int n)
 		SRandomInit();
 		Buffer<byte> q(n);
 		if(!SSLRandom(~q, n))
-			throw("Failed to generate random number");
+			throw Exc("Failed to generate random number");
 		return String(q, n);
 	}
 	catch(const Exc& e) {
