@@ -315,13 +315,18 @@ String SelectPackageDlg::LRUFilePath()
 void SelectPackageDlg::LoadLRU()
 {
 	LoadFromFile(lru, LRUFilePath());
+	Index<Tuple<String, String>> lu; // prevent duplicates, \ vs /
+	for(auto h : lru) {
+		h.b = UnixPath(h.b);
+		lu.FindAdd(h);
+	}
+	lru = lu.PickKeys();
 }
 
 void SelectPackageDlg::StoreLRU(const String& p)
 {
 	auto q = Tuple(GetVarsName(), p);
 	LoadLRU();
-	LoadFromFile(lru, p);
 	int i = FindIndex(lru, q);
 	if(i >= 0)
 		lru.Remove(i);
