@@ -316,6 +316,8 @@ private:
 	bool                     allow_dark_content = false;
 	
 	bool                     show_zoom = false;
+	
+	Color                    override_paper = Null;
 
 	static int fh[];
 
@@ -855,6 +857,7 @@ public:
 	RichEdit&       PixelMode();
 	RichEdit&       DarkContent(bool b = true);
 	RichEdit&       AllowDarkContent(bool b = true);
+	RichEdit&       OverridePaper(Color p);
 
 	struct UndoInfo {
 		int              undoserial;

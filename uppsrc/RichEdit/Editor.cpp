@@ -104,9 +104,10 @@ void RichEdit::Paint(Draw& w)
 	p_size = sz;
 	Rect tr = GetTextRect();
 	Zoom zoom = GetZoom();
-	w.DrawRect(sz, IsDarkContent() ? SColorPaper() : White());
+	w.DrawRect(sz, Nvl(override_paper, IsDarkContent() ? SColorPaper() : White()));
 	PageY py = text.GetHeight(pagesz);
-	Color showcodesa = IsDarkContent() ? DarkTheme(showcodes) : showcodes;
+	bool dark = IsDarkContent() || !IsNull(override_paper) && IsDark(override_paper);
+	Color showcodesa = dark ? DarkTheme(showcodes) : showcodes;
 	{
 		EditPageDraw pw(w);
 		pw.x = tr.left;
@@ -131,7 +132,7 @@ void RichEdit::Paint(Draw& w)
 		pi.sizetracking = sizetracking;
 		pi.showcodes = showcodesa;
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
-		pi.hyperlink = IsDarkContent() ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
+		pi.hyperlink = dark ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
 		pi.darktheme = IsDarkContent();
 		
 		if(spellcheck)
@@ -734,6 +735,13 @@ RichEdit& RichEdit::AllowDarkContent(bool b)
 	allow_dark_content = b;
 	Refresh();
 	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::OverridePaper(Color p)
+{
+	override_paper = p;
+	Refresh();
 	return *this;
 }
 
