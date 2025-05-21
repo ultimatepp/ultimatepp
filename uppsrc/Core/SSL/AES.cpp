@@ -14,24 +14,34 @@ namespace {
 	constexpr const int AES_GCM_KEY_SIZE          = 32;
 	constexpr const int AES_GCM_IV_SIZE           = 12;                // GCM standard IV size
 	constexpr const int AES_GCM_TAG_SIZE          = 16;
-	constexpr const int AES_GCM_ENVELOPE_SIZE     = AES_GCM_PREFIX_LEN + AES_GCM_SALT_SIZE + AES_GCM_IV_SIZE + AES_GCM_TAG_SIZE;
+	constexpr const int AES_GCM_HEADER_SIZE       = AES_GCM_PREFIX_LEN + AES_GCM_SALT_SIZE + AES_GCM_IV_SIZE;
+	constexpr const int AES_GCM_ENVELOPE_SIZE     = AES_GCM_HEADER_SIZE + AES_GCM_TAG_SIZE;
+
+const EVP_CIPHER* GetAes256GcmCipher()
+{
+	struct sCipher {
+		EVP_CIPHER *ptr;
+		sCipher()  { ptr = EVP_CIPHER_fetch(nullptr, "AES-256-GCM", nullptr); }
+		~sCipher() { if(ptr) EVP_CIPHER_free(ptr); }
+	};
+	return Single<sCipher>().ptr;
+}
+	
 }
 
 Aes256Gcm::Aes256Gcm()
 : iteration(AES_GCM_DEFAULT_ITERATION)
 , chunksize(1024)
 {
+	SslInitThread();
 	ctx = EVP_CIPHER_CTX_new();
-	cipher = EVP_CIPHER_fetch(nullptr, "AES-256-GCM", nullptr);
+	cipher = GetAes256GcmCipher();
 }
 
 Aes256Gcm::~Aes256Gcm()
 {
 	if(ctx)
 		EVP_CIPHER_CTX_free(ctx);
-	
-	if(cipher)
-		EVP_CIPHER_free(cipher);
 }
 
 void Aes256Gcm::SetError(const String& txt)
@@ -40,14 +50,17 @@ void Aes256Gcm::SetError(const String& txt)
 	LLOG("Aes256Gcm: " << txt);
 }
 
-bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
+bool Aes256Gcm::Init(Stream& in)
 {
 	err.Clear();
 
-	byte key[AES_GCM_KEY_SIZE];
-
 	if(!ctx) {
 		SetError("Failed to create context");
+		return false;
+	}
+	
+	if(!EVP_CIPHER_CTX_reset(ctx)) {
+	    SetError("Failed to reset context");
 		return false;
 	}
 	
@@ -58,90 +71,118 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 	
 	// Require size information
 	if(in.GetSize() <= 0) {
-		SetError("Invalid stream size or no data to encrypt");
+		SetError("Invalid stream size or no data to encrypt/decrypt");
 		return false;
 	}
+	
+	return true;
+}
 
-	byte salt[AES_GCM_SALT_SIZE], iv[AES_GCM_IV_SIZE], tag[AES_GCM_TAG_SIZE];
-	int64 processed = 0;
+bool Aes256Gcm::GenerateSaltAndIV(String& salt, String& iv)
+{
+	salt = SecureRandom(AES_GCM_SALT_SIZE);
+	iv    = GetAESGCMNonce();
+	return !salt.IsVoid() && !iv.IsVoid();
+}
+
+bool Aes256Gcm::DeriveKey(const String& password, const String& salt, byte *key, int keylen)
+{
+	return PKCS5_PBKDF2_HMAC(~password, password.GetLength(), (const byte*) ~salt, salt.GetLength(), iteration, EVP_sha256(), keylen, key);
+}
+
+int Aes256Gcm::WriteHeader(Stream& out, const String& salt, const String& iv)
+{
+	out.Put(AES_GCM_FORMAT_PREFIX, AES_GCM_PREFIX_LEN);
+	out.Put(salt);
+	out.Put(iv);
+	return AES_GCM_HEADER_SIZE;
+}
+
+bool Aes256Gcm::EncryptStream(Stream& in, Stream& out, int64& processed)
+{
+	Buffer<byte> buffer(chunksize);
+	int buflen = 0;
+	
+	while(!in.IsEof()) {
+		String chunk = in.Get(chunksize);
+		if(chunk.IsEmpty())
+			break;
+	
+		if(!EVP_EncryptUpdate(ctx, buffer, &buflen, (const byte*) ~chunk, chunk.GetLength()))
+			return false;
+	
+		if(buflen > 0)
+			out.Put(buffer, buflen);
+	
+		processed += chunk.GetLength();
+		if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
+			return false;
+	}
+	return true;
+}
+
+bool Aes256Gcm::FinalizeEncryption(Stream& out, int64& processed)
+{
+	byte tag[AES_GCM_TAG_SIZE];
+	Buffer<byte> buffer(chunksize);
+	int buflen = 0;
+
+	if(!EVP_EncryptFinal_ex(ctx, buffer, &buflen))
+		return false;
+
+	if(buflen > 0) {
+		out.Put(buffer, buflen);
+		processed += buflen;
+	}
+
+	OSSL_PARAM params[] = {
+		OSSL_PARAM_construct_octet_string("tag", tag, sizeof(tag)),
+		OSSL_PARAM_construct_end()
+	};
+	
+	if(!EVP_CIPHER_CTX_get_params(ctx, params))
+		return false;
+
+	out.Put(tag, sizeof(tag));
+	processed += sizeof(tag);
+	return true;
+}
+
+
+bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
+{
+	if(!Init(in))
+		return false;
+
+	byte key[AES_GCM_KEY_SIZE];
+	String salt, iv;
 
 	try {
-		// Generate random salt
-		if(!RAND_bytes(salt, sizeof(salt)))
-			throw Exc("Salt generation failed");
-		
-		// Generate random initialization vector
-		if(!RAND_bytes(iv, sizeof(iv)))
-			throw Exc("IV generation failed");
+		if(!GenerateSaltAndIV(salt, iv))
+			throw Exc("Salt/IV generation failed");
 
-		// Derive key from password (can be Null)
-		if(!PKCS5_PBKDF2_HMAC(~password, password.GetLength(), salt, sizeof(salt), iteration, EVP_sha256(), sizeof(key), key))
-			throw Exc("PBKDF2: Key derivation failed");
+		if(!DeriveKey(password, salt, key, sizeof(key)))
+			throw Exc("Key derivation failed");
 
-		// Initialize cipher
-		if(!EVP_EncryptInit_ex2(ctx, cipher, key, iv, nullptr))
+		if(!EVP_EncryptInit_ex2(ctx, cipher, key, (const byte*)~iv, nullptr))
 			throw Exc("Cipher initialization failed");
 
-		// Put header
-		out.Put(AES_GCM_FORMAT_PREFIX, AES_GCM_PREFIX_LEN);
-		out.Put(salt, sizeof(salt));
-		out.Put(iv, sizeof(iv));
-		
-		// Update counter with header size
-		processed = AES_GCM_PREFIX_LEN + sizeof(salt) + sizeof(iv);
-		
+		int64 processed = WriteHeader(out, salt, iv);
+
 		if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
 			throw Exc("Encryption aborted");
 
-		Buffer<byte> buffer(chunksize);
-		int buflen = 0;
+		if(!EncryptStream(in, out, processed))
+			throw Exc("Encryption failed");
 
-		while(!in.IsEof()) {
-			String chunk = in.Get(chunksize);
-			if(chunk.IsEmpty())
-				break;
-
-			// Encrypt the chunk
-			if(!EVP_EncryptUpdate(ctx, buffer, &buflen, (const byte*) ~chunk, chunk.GetLength()))
-				throw Exc("Encryption failed");
-
-			if(buflen > 0) {
-				out.Put(buffer, buflen);
-			}
-			
-			processed += chunk.GetLength();
-			if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
-				throw Exc("Encryption aborted");
-		}
-
-		// Finalize
-		if(!EVP_EncryptFinal_ex(ctx, buffer, &buflen))
+		if(!FinalizeEncryption(out, processed))
 			throw Exc("Finalization failed");
-	
-		// Write final block (if any)
-		if(buflen > 0) {
-			out.Put(buffer, buflen);
-			processed += buflen;
-		}
-		
-		// Get GCM tag
-		OSSL_PARAM params[] = {
-			OSSL_PARAM_construct_octet_string("tag", tag, sizeof(tag)),
-			OSSL_PARAM_construct_end()
-		};
-		if(!EVP_CIPHER_CTX_get_params(ctx, params))
-			throw Exc("Failed to get tag");
 
-		// Put tag
-		out.Put(tag, sizeof(tag));
-		processed += sizeof(tag);
-		
-		// Final progress (100%)
 		if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
 			throw Exc("Encryption aborted");
 
 		// Leave no trace
-		OPENSSL_cleanse(&key, sizeof(key));
+		OPENSSL_cleanse(key, sizeof(key));
 		return true;
 	}
 	catch(const Exc& e) {
@@ -152,124 +193,133 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 	}
 
 	// Leave no trace
-	OPENSSL_cleanse(&key, sizeof(key));
+	OPENSSL_cleanse(key, sizeof(key));
 	return false;
 }
 
-bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
+bool Aes256Gcm::ReadHeader(Stream& in, String& salt, String& iv)
 {
-	err.Clear();
-
-	byte key[AES_GCM_KEY_SIZE];
-
-	if(!ctx) {
-		SetError("Failed to create context");
-		return false;
-	}
-	
-	if(!cipher) {
-		SetError("Failed to fetch AES-256-GCM cipher");
-		return false;
-	}
-	
-	// Require size information
-	if(in.GetSize() <= 0) {
-		SetError("Invalid stream size or no data to decrypt");
-		return false;
-	}
-		
-	// Read and validate header
-	String header = in.Get(AES_GCM_PREFIX_LEN);
-	if(header.GetLength() < AES_GCM_PREFIX_LEN || !header.StartsWith(AES_GCM_FORMAT_PREFIX)) {
+	if(String header = in.Get(AES_GCM_PREFIX_LEN); header.GetLength() < AES_GCM_PREFIX_LEN || !header.StartsWith(AES_GCM_FORMAT_PREFIX)) {
 		SetError("Invalid format");
 		return false;
 	}
 	
-	// Read salt
-	String salt = in.Get(AES_GCM_SALT_SIZE);
-	if(salt.GetLength() < AES_GCM_SALT_SIZE) {
+	if(salt = in.Get(AES_GCM_SALT_SIZE); salt.GetLength() < AES_GCM_SALT_SIZE) {
 		SetError("Failed to read salt");
 		return false;
 	}
 	
-	// Read initialization vector
-	String iv = in.Get(AES_GCM_IV_SIZE);
-	if(iv.GetLength() < AES_GCM_IV_SIZE) {
+	if(iv = in.Get(AES_GCM_IV_SIZE); iv.GetLength() < AES_GCM_IV_SIZE) {
 		SetError("Failed to read initialization vector");
 		return false;
 	}
 
-	// Get the size of the ciphertext content
-	const int64 ciphertextlen = in.GetSize() - AES_GCM_ENVELOPE_SIZE;
-	if(ciphertextlen <= 0) {
+	if(int64 ctlen = in.GetSize() - AES_GCM_ENVELOPE_SIZE; ctlen <= 0) {
 		SetError("Encrypted input is too short");
 		return false;
 	}
 
-	try {
-		// Derive key from password (can be Null)
-		if(!PKCS5_PBKDF2_HMAC(~password, password.GetLength(), salt, AES_GCM_SALT_SIZE, iteration, EVP_sha256(), sizeof(key), key))
-			throw Exc("PBKDF2: Key derivation failed");
-		
-		// Init decryption
-		if(!EVP_DecryptInit_ex2(ctx, cipher, key, iv, nullptr))
-			throw Exc("Initialization failed");
-		
-		Buffer<byte> buffer(min((int64) chunksize, ciphertextlen));
-		int    buflen = 0;
-		int64 remaining = ciphertextlen, processed = AES_GCM_ENVELOPE_SIZE;
-		
-		if(WhenProgress(processed, in.GetSize()))
-			throw Exc("Decryption aborted");
-		
-		while(remaining > 0) {
-			int64 csz = min(static_cast<int64>(chunksize), remaining);
-			String chunk = in.Get(static_cast<int>(csz)); // Chunk size is guaranteed to be smaller than INT_MAX
-			if(chunk.IsEmpty())
-				break;
-			
-			// Decrypt the chunk
-			if(!EVP_DecryptUpdate(ctx, buffer, &buflen, (const byte*) ~chunk, chunk.GetLength()))
-				throw Exc("Decryption failed");
-			
-			if(buflen > 0)
-				out.Put(buffer, buflen);
-	
-			processed += chunk.GetLength();
-			remaining -= chunk.GetLength();
+	return true;
+}
 
-			if(WhenProgress(processed, in.GetSize()))
-				throw Exc("Decryption aborted");
-		}
-		
-		String tag = in.Get(AES_GCM_TAG_SIZE);
-		if(tag.GetLength() < AES_GCM_TAG_SIZE)
-			throw Exc("Unable to retrieve authentication tag");
-		
-		if(!in.IsEof())
-			throw Exc("Trailing data found after authentication tag");
-		
-		// Set GCM tag
-		OSSL_PARAM params[] = {
-			OSSL_PARAM_construct_octet_string("tag", (void*) ~tag, AES_GCM_TAG_SIZE),
-			OSSL_PARAM_construct_end()
-		};
-		
-		if(!EVP_CIPHER_CTX_set_params(ctx, params))
-			throw Exc("Failed to set tag");
+bool Aes256Gcm::DecryptStream(Stream& in, Stream& out, int64& processed)
+{
+	Buffer<byte> buffer(chunksize);
+	int buflen = 0;
+	processed = AES_GCM_ENVELOPE_SIZE;
+	int64 remaining = in.GetSize() - AES_GCM_ENVELOPE_SIZE;
 
-		// Finalize decryption
-		if(!EVP_DecryptFinal_ex(ctx, buffer, &buflen))
-			throw Exc("Authentication failed");
+	if(WhenProgress(processed, in.GetSize()))
+		return false;
+
+	while(remaining > 0) {
+		int64 csz = min(static_cast<int64>(chunksize), remaining);
+		String chunk = in.Get(static_cast<int>(csz)); // Chunk size is guaranteed to be smaller than INT_MAX
+		if(chunk.IsEmpty())
+			break;
 		
-		// Write final block (if any)
+		// Decrypt the chunk
+		if(!EVP_DecryptUpdate(ctx, buffer, &buflen, (const byte*) ~chunk, chunk.GetLength()))
+			return false;
+		
 		if(buflen > 0)
 			out.Put(buffer, buflen);
+
+		processed += chunk.GetLength();
+		remaining -= chunk.GetLength();
+
+		if(WhenProgress(processed, in.GetSize()))
+			return false;
+	}
+
+	return true;
+}
+
+bool Aes256Gcm::ReadTag(Stream& in, String& tag)
+{
+	if(tag = in.Get(AES_GCM_TAG_SIZE); tag.GetLength() < AES_GCM_TAG_SIZE)
+		return false;
+	return in.IsEof(); // There should be no trailing data
+}
+
+bool Aes256Gcm::SetGcmTag(const String& tag)
+{
+	OSSL_PARAM params[] = {
+		OSSL_PARAM_construct_octet_string("tag", (void*) ~tag, AES_GCM_TAG_SIZE),
+		OSSL_PARAM_construct_end()
+	};
+	
+	return EVP_CIPHER_CTX_set_params(ctx, params);
+}
+
+bool Aes256Gcm::FinalizeDecryption(Stream& out)
+{
+	Buffer<byte> buffer(chunksize);
+	int buflen = 0;
+
+	if(!EVP_DecryptFinal_ex(ctx, buffer, &buflen))
+		return false;
+
+	if(buflen > 0)
+		out.Put(buffer, buflen);
+	return true;
+}
+
+bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
+{
+	if(!Init(in))
+		return false;
+
+	byte key[AES_GCM_KEY_SIZE];
+
+	try {
+		String salt, iv;
+		int64 processed = 0;
+
+		if(!ReadHeader(in, salt, iv))
+			return false;
+
+		if(!DeriveKey(password, salt, key, sizeof(key)))
+			throw Exc("Key derivation failed");
+
+		if(!EVP_DecryptInit_ex2(ctx, cipher, key, iv, nullptr))
+			throw Exc("Initialization failed");
+
+		if(!DecryptStream(in, out, processed))
+			throw Exc("Decryption failed");
 		
-		// Final progress (100%)
-		if(WhenProgress(in.GetSize(), in.GetSize()))
-			throw Exc("Decryption aborted");
-		
+		String tag;
+		if(!ReadTag(in, tag))
+			throw Exc("Unable to retrieve authentication tag");
+
+		if(!SetGcmTag(tag))
+			throw Exc("Failed to set authentication tag");
+
+		if(!FinalizeDecryption(out))
+			throw Exc("Authentication failed");
+
+		WhenProgress(in.GetSize(), in.GetSize());
+
 		// Leave no trace
 		OPENSSL_cleanse(&key, sizeof(key));
 		return true;
