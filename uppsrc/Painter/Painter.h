@@ -344,7 +344,7 @@ public:
 	Painter& RoundedRectangle(const Rectf& rc, double r)                           { return RoundedRectangle(rc, r, r); }
 	Painter& RoundedRectangle(Pointf p1, Pointf p2, double r)                      { return RoundedRectangle(p1, p2, r, r); }
 	Painter& Ellipse(double x, double y, double rx, double ry);
-	Painter& Ellipse(const Rectf& r)                                               { return Ellipse(r.left, r.top, r.Width(), r.Height()); }
+	Painter& Ellipse(const Rectf& r)                                               { Pointf c = r.CenterPoint(); return Ellipse(c.x, c.y, r.Width() / 2, r.Height() / 2); }
 	Painter& Ellipse(Pointf p1, Pointf p2)                                         { return Ellipse(Rectf(p1, p2)); }
 	Painter& Circle(double x, double y, double r);
 	Painter& Circle(Pointf p, double r)                                            { return Circle(p.x, p.y, r); }
