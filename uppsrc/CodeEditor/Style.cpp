@@ -38,7 +38,7 @@ void HighlightSetup::DefaultHlStyles()
 		WhiteTheme();
 }
 
-inline void HighlightSetup::InitOnce()
+void HighlightSetup::InitOnce()
 {
 	ONCELOCK {
 		static bool initialised;
