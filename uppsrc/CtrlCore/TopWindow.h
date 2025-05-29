@@ -17,6 +17,7 @@ public:
 	virtual String   GetDesc() const;
 	virtual void     ChildGotFocus();
 	virtual void     SetMinSize(Size sz);
+	virtual bool     IsCustomTitleBarDragArea(Point p);
 
 public:
 	struct TopStyle : ChStyle<TopStyle> {
@@ -79,8 +80,13 @@ private:
 	bool        frameless:1;
 	bool        urgent:1;
 	bool        close_rejects:1;
+	bool        custom_titlebar:1;
 	byte        state;
 	Image       icon, largeicon;
+
+	int         custom_titlebar_cy = 0;
+	int         active_titlebar_button = -1;
+	bool        active_titlebar_active = false;
 
 	const TopStyle *st;
 	
@@ -174,6 +180,10 @@ public:
 	TopWindow& Icon(const Image& m);
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
+	
+	static bool IsCustomTitleBarAvailable();
+	TopWindow&  CustomTitleBar(int cy = 0);
+	bool        IsCustomTitleBar() const              { return custom_titlebar && IsCustomTitleBarAvailable(); }
 
 	static const TopStyle& StyleDefault();
 	TopWindow&  SetStyle(const TopStyle& s);

@@ -61,6 +61,15 @@ static HANDLE xp_widget_handle[XP_COUNT];
 static VectorMap<XpElement, int> xp_margin;
 static VectorMap<XpElement, int> xp_opaque;
 
+int GetWin32TitleBarHeight(HWND hwnd)
+{
+    SIZE title_bar_size = {0};
+    HTHEME theme = XpTheme().OpenThemeData(hwnd, L"WINDOW");
+	XpTheme().GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, TS_TRUE, &title_bar_size);
+    XpTheme().CloseThemeData(theme);
+    return title_bar_size.cy;
+}
+
 void XpClear()
 {
 	for(int i = 0; i < XP_COUNT; i++)

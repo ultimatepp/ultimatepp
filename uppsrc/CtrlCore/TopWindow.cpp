@@ -421,6 +421,34 @@ TopWindow& TopWindow::Icon(const Image& smallicon, const Image& _largeicon)
 	return *this;
 }
 
+bool is_custom_titlebar_available__;
+
+bool TopWindow::IsCustomTitleBarAvailable()
+{
+	return is_custom_titlebar_available__;
+}
+
+TopWindow& TopWindow::CustomTitleBar(int cy)
+{
+	custom_titlebar = true;
+	custom_titlebar_cy = cy;
+	return *this;
+}
+
+bool TopWindow::IsCustomTitleBarDragArea(Point p)
+{
+	DDUMP(p);
+	p += GetScreenRect().TopLeft(); // to handle frame widgets correctly
+	DDUMP(p);
+	for(Ctrl& q : *this) {
+		DDUMP(q.GetScreenRect());
+		DDUMP(q.GetScreenRect().Contains(p));
+		if(q.GetScreenRect().Contains(p))
+			return false;
+	}
+	return true;
+}
+
 TopWindow& TopWindow::ToolWindow(bool b)
 {
 	tool = b;
@@ -505,6 +533,8 @@ TopWindow::TopWindow()
 	dokeys = true;
 	fullscreen = frameless = urgent = false;
 	close_rejects = false;
+	custom_titlebar = false;
+	custom_titlebar_cy = 0;
 }
 
 TopWindow::~TopWindow()

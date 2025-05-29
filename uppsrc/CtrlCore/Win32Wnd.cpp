@@ -231,6 +231,10 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
 	LLOG("InitWin32");
+	
+	extern bool is_custom_titlebar_available__;
+	
+	is_custom_titlebar_available__ = IsWin11();
 
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 //	RLOGBLOCK("Ctrl::InitWin32");
