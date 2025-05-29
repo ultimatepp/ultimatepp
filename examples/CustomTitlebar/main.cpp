@@ -16,6 +16,7 @@ struct MyApp : TopWindow {
 	}
 	
 	MenuBar bar;
+	LineEdit editor;
 	
 	MyApp() {
 		CustomTitleBar();
@@ -23,6 +24,8 @@ struct MyApp : TopWindow {
 		bar.Set([=](Bar& bar) {
 			MainMenu(bar);
 		});
+		
+		Add(editor.HSizePos().VSizePos(50, 0));
 	};
 };
 

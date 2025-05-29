@@ -115,6 +115,29 @@ static int getTitlebarButtonWidth(int dpi)
 
 int GetWin32TitleBarHeight(HWND hwnd); // implemented in CtrlLib/ChWin32.cpp
 
+/* UHD
+
+r = [0, 0] - [2854, 60] : (2854, 60)
+button_width = 94
+
+HD
+
+r = [0, 0] - [1424, 31] : (1424, 31)
+button_width = 47
+
+Light
+
+Bar     238 244 249
+Min/max 230,234,239
+
+Dark
+
+bar     26,34,39
+min/max 39,47,52
+close  232,17,35
+
+*/
+
 static Rect getTitleBarRect(HWND hwnd) // TODO (image, cy)
 { // Adopted from: https://github.com/oberth/custom-chrome/blob/master/source/gui/window_helper.hpp#L52-L64
     const int top_and_bottom_borders = 2;
@@ -134,8 +157,10 @@ void Ctrl::PaintWinBar(SystemDraw& w, const Rect& clip)
 	HWND hwnd = GetHWND();
 	if(topwin && topwin->custom_titlebar && hwnd) {
 		Rect r = getTitleBarRect(hwnd);
+		DDUMP(r);
 //		draw.DrawRect(r, Yellow());
 		int button_width = getTitlebarButtonWidth(GetDpiForWindow(hwnd));
+		DDUMP(button_width);
 
 		int x = r.right;
 		int n = 0;
