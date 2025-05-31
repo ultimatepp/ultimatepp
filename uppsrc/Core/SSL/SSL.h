@@ -180,4 +180,7 @@ String AES256Decrypt(const String& in, const String& password, Gate<int64, int64
 bool AES256Encrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
 bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
 
+// Secure buffer
+#include "Buffer.hpp"
+
 }

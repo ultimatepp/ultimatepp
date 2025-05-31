@@ -1,0 +1,12 @@
+description "SecureBuffer unit tests\377";
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	SecureBuffer.cpp;
+
+mainconfig
+	"" = "";
+
