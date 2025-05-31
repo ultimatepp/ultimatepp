@@ -13,6 +13,7 @@ file
 	Socket.cpp,
 	P7S.cpp,
 	AES.cpp,
+	Buffer.hpp,
 	SSL.icpp,
 	Docs readonly separator,
 	src.tpp;
