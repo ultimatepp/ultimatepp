@@ -339,8 +339,7 @@ void Ide::Layout()
 	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 
 	if(IsCustomTitleBar()) {
-
-		int r = HorzLayoutZoom(170);
+		int r = HorzLayoutZoom(270);
 		int mw = menubar.GetWidth();
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
 		
@@ -373,15 +372,18 @@ void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const W
 void CursorInfoCtrl::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	Size tsz = GetTextSize(text, StdFont());
+	RichText txt = ParseQTF(text);
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
 	int x = sz.cx - tsz.cx;
 	int y = (sz.cy - tsz.cy) / 2;
-	w.DrawText(x, y, text, StdFont(), SColorText());
+	txt.Paint(w, x, y, INT_MAX / 2);
 }
 
 CursorInfoCtrl::CursorInfoCtrl()
 {
 	Transparent();
+	IgnoreMouse();
 }
 
 Ide::Ide()

@@ -566,11 +566,20 @@ void Ide::DoDisplay()
 		return;
 	Point p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
-	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
-	int64 l, h;
-	editor.GetSelection(l, h);
-	if(h > l)
-		s << ", Sel " << h - l;
+	if(IsCustomTitleBar()) {
+		s << "[g \1" << editfile << "\1:[* " << p.y + 1 << "], " << p.x + 1;
+		int64 l, h;
+		editor.GetSelection(l, h);
+		if(h > l)
+			s << ", [@W$B " << h - l;
+	}
+	else {
+		s << "[g Ln " << p.y + 1 << ", Col " << p.x + 1;
+		int64 l, h;
+		editor.GetSelection(l, h);
+		if(h > l)
+			s << ", Sel " << h - l;
+	}
 	display.Set(s);
 	
 	ManageDisplayVisibility();
