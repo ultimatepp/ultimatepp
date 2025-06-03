@@ -183,6 +183,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	case WM_TIMER:
 		TimerProc(msecs());
 		AnimateCaret();
+		SyncCustomTitleBars();
 		break;
 	case WM_RENDERFORMAT:
 		RenderFormat((dword)wParam);
@@ -232,10 +233,6 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	GuiLock __;
 	LLOG("InitWin32");
 	
-	extern bool is_custom_titlebar_available__;
-	
-	is_custom_titlebar_available__ = IsWin11();
-
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 //	RLOGBLOCK("Ctrl::InitWin32");
 	sMainThreadId = GetCurrentThreadId();
@@ -291,6 +288,23 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 #undef ILOG
 
 	GlobalBackPaint();
+
+	extern bool is_custom_titlebar_available__;
+	
+	is_custom_titlebar_available__ = IsWin11();
+
+	extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
+	
+	custom_titlebar_metrics__ = [=](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
+		if(!tw->custom_titlebar)
+			return;
+		m.height = GetWin32TitleBarHeight(tw);
+		m.lm = 0;
+		Image icon = tw->GetIcon();
+		if(!IsNull(icon))
+			m.lm = DPI(4) + min(icon.GetWidth(), 32);
+		m.rm = (tw->IsZoomable() ? 3 : 1) * GetWin32TitleBarButtonWidth();
+	};
 	
 	EnterGuiMutex();
 }

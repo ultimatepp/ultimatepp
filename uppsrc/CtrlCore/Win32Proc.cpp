@@ -82,39 +82,6 @@ void Ctrl::DoCancelPreedit()
 	}
 }
 
-static UINT getDpiForWindow(HWND hwnd)
-{
-	static UINT (WINAPI *GetDpiForWindow)(HWND hwnd);
-	DllFn(GetDpiForWindow, "user32.dll", "GetDpiForWindow");
-	return GetDpiForWindow ? GetDpiForWindow(hwnd) : 96;
-}
-
-static int getSystemMetricsForDpi(int nIndex, UINT dpi)
-{
-	static int (*GetSystemMetricsForDpi)(int nIndex, UINT dpi);
-	DllFn(GetSystemMetricsForDpi, "user32.dll", "GetSystemMetricsForDpi");
-	return GetSystemMetricsForDpi ? GetSystemMetricsForDpi(nIndex, dpi) : 0;
-}
-
-static bool IsMaximized(HWND hwnd)
-{
-  WINDOWPLACEMENT placement = {0};
-  placement.length = sizeof(WINDOWPLACEMENT);
-  return GetWindowPlacement(hwnd, &placement) && placement.showCmd == SW_SHOWMAXIMIZED;
-}
-
-static int win32_dpi_scale(int value, UINT dpi)
-{
-	return (int)((double)value * dpi / 96);
-}
-
-static int getTitlebarButtonWidth(int dpi)
-{
-	return win32_dpi_scale(47, dpi);
-}
-
-int GetWin32TitleBarHeight(HWND hwnd); // implemented in CtrlLib/ChWin32.cpp
-
 /* UHD
 
 r = [0, 0] - [2854, 60] : (2854, 60)
@@ -129,6 +96,7 @@ Light
 
 Bar     238 244 249
 Min/max 230,234,239
+close   Color(196, 43, 28)
 
 Dark
 
@@ -138,16 +106,41 @@ close  232,17,35
 
 */
 
-static Rect getTitleBarRect(HWND hwnd) // TODO (image, cy)
-{ // Adopted from: https://github.com/oberth/custom-chrome/blob/master/source/gui/window_helper.hpp#L52-L64
-    const int top_and_bottom_borders = 2;
+int Ctrl::GetWin32TitleBarHeight(const TopWindow *tw)
+{
+	return max(tw->custom_titlebar_cy, IsUHDMode() ? 60 : 31);
+}
 
-    int height = win32_dpi_scale(GetWin32TitleBarHeight(hwnd), GetDpiForWindow(hwnd)) + top_and_bottom_borders;
+int Ctrl::GetWin32TitleBarButtonWidth()
+{
+	return IsUHDMode() ? 94 : 47;
+}
 
-    RECT rect;
-    GetClientRect(hwnd, &rect);
-    rect.bottom = rect.top + height;
+Rect Ctrl::GetTitleBarRect(const TopWindow *win) // TODO (image, cy)
+{
+	RECT rect;
+    GetClientRect(win->GetHWND(), &rect);
+    rect.top = 0;
+    rect.bottom = GetWin32TitleBarHeight(win);
     return rect;
+}
+
+bool Ctrl::IsMaximized(HWND hwnd)
+{
+  WINDOWPLACEMENT placement = {0};
+  placement.length = sizeof(WINDOWPLACEMENT);
+  return GetWindowPlacement(hwnd, &placement) && placement.showCmd == SW_SHOWMAXIMIZED;
+}
+
+void Ctrl::PaintWinBarBackground(SystemDraw& w, const Rect& clip)
+{
+	bool custom_titlebar = false;
+	auto topwin = dynamic_cast<TopWindow *>(this);
+	HWND hwnd = GetHWND();
+	if(topwin && topwin->custom_titlebar && hwnd) {
+		Rect r = GetTitleBarRect(topwin);
+		w.DrawRect(r, IsDarkTheme() ? Color(26, 34, 39) : Color(238, 244, 249));
+	}
 }
 
 void Ctrl::PaintWinBar(SystemDraw& w, const Rect& clip)
@@ -156,32 +149,67 @@ void Ctrl::PaintWinBar(SystemDraw& w, const Rect& clip)
 	auto topwin = dynamic_cast<TopWindow *>(this);
 	HWND hwnd = GetHWND();
 	if(topwin && topwin->custom_titlebar && hwnd) {
-		Rect r = getTitleBarRect(hwnd);
-		DDUMP(r);
-//		draw.DrawRect(r, Yellow());
-		int button_width = getTitlebarButtonWidth(GetDpiForWindow(hwnd));
-		DDUMP(button_width);
-
+		Rect r = GetTitleBarRect(topwin);
+		int height = r.GetHeight();
+		bool maximized = IsMaximized(hwnd);
+//		draw.DrawRect(r, Yellow()); // uncomment for testing...
+		int button_width = GetWin32TitleBarButtonWidth();
+		
 		int x = r.right;
 		int n = 0;
 		auto Drw = [&](const Image& m) {
 			x -= button_width;
 			Color ink = topwin->HasFocusDeep() ? SBlack() : Gray();
 			if(topwin->active_titlebar_button == n) {
-				w.DrawRect(x, r.top, button_width, r.GetHeight(), n ? SWhiteGray() : Color(196, 43, 28));
+				w.DrawRect(x, r.top, button_width, height,
+				           IsDarkTheme() ? n ? Color(39, 47, 52) : Color(232, 17, 35)
+				                         : n ? Color(230, 234, 239) : Color(196, 43, 28));
 				if(n == 0)
 					ink = SWhite();
 			}
-			w.DrawImage(x + (button_width - m.GetWidth()) / 2, r.top + (r.GetHeight() - m.GetHeight()) / 2, m, ink);
+			w.DrawImage(x + (button_width - m.GetWidth()) / 2, r.top + (height - m.GetHeight()) / 2, m, ink);
 			n++;
 		};
 		Drw(CtrlCoreImg::WinClose());
 		if(topwin->IsZoomable()) {
-			Drw(IsMaximized(hwnd) ? CtrlCoreImg::WinMaximized() : CtrlCoreImg::WinMaximize());
+			Drw(maximized ? CtrlCoreImg::WinMaximized() : CtrlCoreImg::WinMaximize());
 			Drw(CtrlCoreImg::WinMinimize());
 		}
-		
+
+		Image icon = topwin->GetIcon();
+		if(!IsNull(icon)) {
+			if(max(icon.GetHeight(), icon.GetWidth()) > 32)
+				icon = CachedRescale(icon, Size(32, 32));
+			int ix = DPI(maximized ? 2 : 4);
+			if(ix + icon.GetWidth() <= x)
+				w.DrawImage(ix, (height - icon.GetHeight()) / 2, icon);
+		}
+	
 		// TODO: Fake shadow rect?
+	}
+}
+
+void Ctrl::SyncCustomTitleBars()
+{
+	for(Ctrl *q : GetTopWindows()) {
+		auto topwin = dynamic_cast<TopWindow *>(q);
+		if(topwin) {
+			DLOG("SyncCystomTTbar");
+			DDUMP(topwin->custom_titlebar);
+			DDUMP(topwin->active_titlebar_button);
+		}
+		if(topwin && topwin->custom_titlebar && topwin->active_titlebar_button >= 0) {
+			HWND hwnd = topwin->GetHWND();
+			if(hwnd) {
+				Point p;
+				::GetCursorPos(p);
+				DDUMP(p);
+				DDUMP(topwin->GetScreenRect());
+				DDUMP(topwin->GetScreenRect().Contains(p));
+				if(!topwin->GetScreenRect().Contains(p))
+					InvalidateRect(hwnd, GetTitleBarRect(topwin), FALSE);
+			}
+		}
 	}
 }
 
@@ -196,10 +224,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	if(::GetCursorPos(&p))
 		CurrentMousePos = p;
 	
-	bool custom_titlebar = false;
 	auto topwin = dynamic_cast<TopWindow *>(this);
-	if(topwin)
-		custom_titlebar = topwin->custom_titlebar;
+	bool custom_titlebar = topwin && topwin->custom_titlebar;
 
 	Rect titlebar_rect = Null;
 	int titlebar_button_width = 0;
@@ -207,12 +233,12 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	bool active_titlebar_active = false;
 
 	if(custom_titlebar) {
-		titlebar_rect = getTitleBarRect(hwnd);
-		titlebar_button_width = getTitlebarButtonWidth(GetDpiForWindow(hwnd));
+		titlebar_rect = GetTitleBarRect(topwin);
+		titlebar_button_width = GetWin32TitleBarButtonWidth();
 		
 		Point p = CurrentMousePos;
 		ScreenToClient(hwnd, p);
-		if(p.y >= titlebar_rect.top && p.y < titlebar_rect.bottom) {
+		if(titlebar_rect.Contains(p)) {
 			int q = (titlebar_rect.right - p.x) / titlebar_button_width;
 			active_titlebar_button = q >= 0 && q < (topwin->IsZoomable() ? 3 : 1) ? q : -1;
 		}
@@ -250,6 +276,33 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	auto ClickActivate = [&] {
 		ClickActivateWnd();
 		StopPreedit();
+	};
+
+	auto SysMenu = [&] {
+		if(!custom_titlebar)
+			return;
+        BOOL isMaximized = IsMaximized(hwnd);
+        MENUITEMINFO menu_item_info;
+        menu_item_info.cbSize = sizeof(menu_item_info);
+        menu_item_info.fMask = MIIM_STATE;
+        HMENU sys_menu = GetSystemMenu(hwnd, false);
+        
+		auto Menu = [&](UINT item, bool enabled) {
+			menu_item_info.fState = enabled ? MF_ENABLED : MF_DISABLED;
+			SetMenuItemInfo(sys_menu, item, false, &menu_item_info);
+		};
+        
+        Menu(SC_RESTORE, isMaximized);
+        Menu(SC_MOVE, !isMaximized);
+        Menu(SC_SIZE, !isMaximized);
+        Menu(SC_MINIMIZE, true);
+        Menu(SC_MAXIMIZE, !isMaximized);
+        Menu(SC_CLOSE, true);
+
+		Point p((LONG)lParam);
+        BOOL result = TrackPopupMenu(sys_menu, TPM_RETURNCMD, p.x, p.y, 0, hwnd, NULL);
+        if(result)
+			PostMessage(hwnd, WM_SYSCOMMAND, result, 0);
 	};
 
 	switch(message) {
@@ -442,20 +495,44 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				return HTMAXBUTTON;
 			// Looks like adjustment happening in NCCALCSIZE is messing with the detection
 			// of the top hit area so manually fixing that.
+			bool maximized = IsMaximized(hwnd);
 			UINT dpi = GetDpiForWindow(hwnd);
 			int frame_y = GetSystemMetricsForDpi(SM_CYFRAME, dpi);
 			int padding = GetSystemMetricsForDpi(92 /*SM_CXPADDEDBORDER*/, dpi);
-			Point cursor_point((LONG)lParam);
-			ScreenToClient(hwnd, cursor_point);
+			Point p((LONG)lParam);
+			ScreenToClient(hwnd, p);
 			// We should not return HTTOP when hit-testing a maximized window 
-			if(!IsMaximized(hwnd) && cursor_point.y > 0 && cursor_point.y < frame_y + padding && topwin->IsSizeable())
+			if(!IsMaximized(hwnd) && p.y > 0 && p.y < frame_y + padding && topwin->IsSizeable())
 				return HTTOP;
 			
 			// Since we are drawing our own caption, this needs to be a custom test
-			if(cursor_point.y < getTitleBarRect(hwnd).bottom && topwin->IsCustomTitleBarDragArea(cursor_point))
+			auto cm = topwin->GetCustomTitleBarMetrics();
+			if(p.y < GetWin32TitleBarHeight(topwin) && (p.x < cm.lm || p.x >= titlebar_rect.right - cm.rm || topwin->IsCustomTitleBarDragArea(p)))
 				return HTCAPTION;
 			
 			return HTCLIENT;
+		}
+		break;
+	case WM_NCLBUTTONDOWN:
+		ClickActivate();
+		IgnoreMouseUp();
+		if(active_titlebar_button >= 0)
+			return 0;
+
+		if(custom_titlebar) {
+			Point p((LONG)lParam);
+			ScreenToClient(hwnd, p);
+			
+			// Since we are drawing our own caption, this needs to be a custom test
+			int height = GetWin32TitleBarHeight(topwin);
+			if(p.y < height) {
+				Image icon = topwin->GetIcon();
+				if(!IsNull(icon)) {
+					int lm = DPI(IsMaximized(hwnd) ? 2 : 4);
+					if(p.x >= lm && p.x < min(icon.GetWidth(), height))
+						SysMenu();
+				}
+			}
 		}
 		break;
     case WM_NCLBUTTONUP: // Map button clicks to the right messages for the window
@@ -472,30 +549,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
         }
 		break;
     case WM_NCRBUTTONUP:
-		if(wParam == HTCAPTION) {
-	        BOOL isMaximized = IsMaximized(hwnd);
-	        MENUITEMINFO menu_item_info;
-	        menu_item_info.cbSize = sizeof(menu_item_info);
-	        menu_item_info.fMask = MIIM_STATE;
-	        HMENU sys_menu = GetSystemMenu(hwnd, false);
-	        
-			auto Menu = [&](UINT item, bool enabled) {
-				menu_item_info.fState = enabled ? MF_ENABLED : MF_DISABLED;
-				SetMenuItemInfo(sys_menu, item, false, &menu_item_info);
-			};
-	        
-	        Menu(SC_RESTORE, isMaximized);
-	        Menu(SC_MOVE, !isMaximized);
-	        Menu(SC_SIZE, !isMaximized);
-	        Menu(SC_MINIMIZE, true);
-	        Menu(SC_MAXIMIZE, !isMaximized);
-	        Menu(SC_CLOSE, true);
-
-			Point p((LONG)lParam);
-	        BOOL result = TrackPopupMenu(sys_menu, TPM_RETURNCMD, p.x, p.y, 0, hwnd, NULL);
-	        if(result)
-				PostMessage(hwnd, WM_SYSCOMMAND, result, 0);
-		}
+		if(wParam == HTCAPTION)
+			SysMenu();
 		break;
 	case WM_LBUTTONDOWN:
 		ClickActivate();
@@ -554,12 +609,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		DoMouse(MIDDLEDOUBLE, MousePos());
 		if(_this) PostInput();
 		return 0L;
-	case WM_NCLBUTTONDOWN:
-		ClickActivate();
-		IgnoreMouseUp();
-		if(active_titlebar_button >= 0)
-			return 0;
-		break;
 	case WM_NCRBUTTONDOWN:
 	case WM_NCMBUTTONDOWN:
 		ClickActivate();

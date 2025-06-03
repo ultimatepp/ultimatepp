@@ -17,7 +17,7 @@ void Ide::Skin()
 
 void Ide::ToggleVerboseBuild() {
 	console.verbosebuild = !console.verbosebuild;
-	
+
 	SetToolBar();
 }
 
@@ -295,15 +295,16 @@ void Ide::IdeSetBar()
 void Ide::SetupBars()
 {
 	ClearFrames();
-	
+
 	int r = HorzLayoutZoom(170);
 #ifdef PLATFORM_COCOA
 	AddFrame(toolbar);
 	display.RightPos(4, r).VSizePos(2, 3);
 #else
 	int l = HorzLayoutZoom(350);
-	
+
 	menubar.Transparent();
+	display.IgnoreMouse();
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
@@ -323,9 +324,32 @@ void Ide::SetupBars()
 		AddFrame(toolbar);
 		toolbar.NoTransparent();
 	}
+
+	if(IsCustomTitleBar())
+		bararea.Height(GetCustomTitleBarMetrics().height);
+
 #endif
+
 	AddFrame(statusbar);
 	SetBar();
+}
+
+void Ide::Layout()
+{
+	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
+
+	if(IsCustomTitleBar()) {
+
+		int r = HorzLayoutZoom(170);
+		int mw = menubar.GetWidth();
+		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
+		
+		auto cm = GetCustomTitleBarMetrics();
+	
+		menubar.LeftPos(cm.lm, mw).VCenterPos(menubar.GetStdHeight());
+		toolbar.HSizePos(cm.lm + mw + DPI(4), r).VCenterPos(tcy);
+		display.RightPos(4 + cm.rm, r).VSizePos(2, 3);
+	}
 }
 
 void SetupError(ArrayCtrl& error, const char *s)
@@ -336,11 +360,6 @@ void SetupError(ArrayCtrl& error, const char *s)
 	error.AddIndex("INFO");
 	error.ColumnWidths("184 44 298");
 	error.NoWantFocus();
-}
-
-void Ide::Layout()
-{
-	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
 void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
@@ -373,14 +392,14 @@ Ide::Ide()
 	editor.WhenSel << [=] {
 		delayed_toolbar.KillSet(150, [=] { SetToolBar(); });
 	};
-	
+
 	editormode = false;
-	
+
 	start_time = GetSysTime();
 	stat_build_time = 0;
 	build_start_time = Null;
 	hydra1_threads = CPU_Cores();
-	
+
 	chstyle = 0;
 
 	Sizeable().Zoomable();
@@ -391,7 +410,7 @@ Ide::Ide()
 	filetabs = AlignedFrame::TOP;
 	auto_enclose = false;
 	mark_lines = true;
-	
+
 	persistent_find_replace = false;
 
 	idestate = EDITING;
@@ -408,12 +427,12 @@ Ide::Ide()
 	editorsplit.Vert(editor_p, editor2);
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
-	
+
 	editpane.AddFrame(editor.navigatorframe);
 
 	right_split.Horz(editpane, right);
 	right_split.Zoom(0);
-	
+
 	SetupError(error, "Message");
 	error.AddIndex("NOTES");
 	error.ColumnWidths("207 41 834");
@@ -423,7 +442,7 @@ Ide::Ide()
 	error.WhenLeftClick = THISBACK(ShowError);
 	console.WhenLine = THISBACK1(ConsoleLine, false);
 	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
-	
+
 	addnotes = false;
 	removing_notes = false;
 
@@ -436,7 +455,7 @@ Ide::Ide()
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
-	
+
 	editor.WhenSelectionChanged << [=] {
 		editor2.Illuminate(editor.GetIlluminated());
 	};
@@ -466,7 +485,7 @@ Ide::Ide()
 	editor.WhenFontScroll = THISBACK(EditorFontScroll);
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);
 	editor.WhenPaste = THISBACK(IdePaste);
-	
+
 	editor.WhenFindAll << THISFN(FindFileAll);
 
 	macro_api = MacroEditor();
@@ -527,7 +546,7 @@ Ide::Ide()
 #else
 	setmain_newide = false;
 #endif
-	
+
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
 
@@ -588,34 +607,34 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
-	
+
 	editor.WhenTip = THISBACK(EditorTip);
 	editor.WhenCtrlClick = THISBACK(CtrlClick);
-	
+
 	find_pick_sel = true;
 	find_pick_text = false;
-	
+
 	deactivate_save = true;
-	
+
 	output_per_assembly = true;
-	
+
 	issaving = 0;
 	isscanning = 0;
-	
+
 	linking = false;
-	
+
 	error_count = 0;
 	warning_count = 0;
-	
+
 	editfile_isfolder = false;
 	editfile_repo = NOT_REPO_DIR;
-	
+
 	editfile_line_endings = Null;
 
 	HideBottom();
 	SetupBars();
 	SetBar();
-	
+
 	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
@@ -631,6 +650,8 @@ Ide::Ide()
 		});
 	};
 #endif
+
+	CustomTitleBar();
 }
 
 Ide::~Ide()
@@ -673,3 +694,4 @@ void IdeShowConsole()
 }
 
 void Ide::Paint(Draw&) {}
+

@@ -397,6 +397,7 @@ TopWindow& TopWindow::Icon(const Image& m)
 {
 	if(!icon.IsSame(m)) {
 		icon = m;
+		DLOG("ICON " << icon.GetSize());
 		SyncCaption();
 	}
 	return *this;
@@ -435,18 +436,30 @@ TopWindow& TopWindow::CustomTitleBar(int cy)
 	return *this;
 }
 
+Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__ =
+[](const TopWindow *, TopWindow::CustomTitleBarMetrics& m) {
+	m.lm = m.rm = m.height = 0;
+	m.background = SColorPaper();
+};
+
+TopWindow::CustomTitleBarMetrics TopWindow::GetCustomTitleBarMetrics() const
+{
+	CustomTitleBarMetrics m;
+	custom_titlebar_metrics__(this, m);
+	return m;
+}
+
+static bool sIsDragArea(Ctrl& w, Point p)
+{
+	for(Ctrl& q : w)
+		if(q.GetScreenRect().Contains(p))
+			return q.IsIgnoreMouse() || sIsDragArea(q, p);
+	return false;
+}
+
 bool TopWindow::IsCustomTitleBarDragArea(Point p)
 {
-	DDUMP(p);
-	p += GetScreenRect().TopLeft(); // to handle frame widgets correctly
-	DDUMP(p);
-	for(Ctrl& q : *this) {
-		DDUMP(q.GetScreenRect());
-		DDUMP(q.GetScreenRect().Contains(p));
-		if(q.GetScreenRect().Contains(p))
-			return false;
-	}
-	return true;
+	return sIsDragArea(*this, p + GetScreenRect().TopLeft());
 }
 
 TopWindow& TopWindow::ToolWindow(bool b)
