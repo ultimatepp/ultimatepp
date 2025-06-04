@@ -362,6 +362,9 @@ void AppMain___()
 		bool clset = false;
 		
 		ide.LoadConfig();
+
+		if(!ide.disable_custom_caption)
+			ide.CustomTitleBar();
 		
 		if(arg.GetCount() == 1) {
 			if(arg[0].EndsWith(".upp")) {

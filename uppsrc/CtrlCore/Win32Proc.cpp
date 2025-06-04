@@ -82,7 +82,9 @@ void Ctrl::DoCancelPreedit()
 	}
 }
 
-/* UHD
+/* Windows Custom Titlebar metrics
+
+UHD
 
 r = [0, 0] - [2854, 60] : (2854, 60)
 button_width = 94
@@ -193,19 +195,11 @@ void Ctrl::SyncCustomTitleBars()
 {
 	for(Ctrl *q : GetTopWindows()) {
 		auto topwin = dynamic_cast<TopWindow *>(q);
-		if(topwin) {
-			DLOG("SyncCystomTTbar");
-			DDUMP(topwin->custom_titlebar);
-			DDUMP(topwin->active_titlebar_button);
-		}
 		if(topwin && topwin->custom_titlebar && topwin->active_titlebar_button >= 0) {
 			HWND hwnd = topwin->GetHWND();
 			if(hwnd) {
 				Point p;
 				::GetCursorPos(p);
-				DDUMP(p);
-				DDUMP(topwin->GetScreenRect());
-				DDUMP(topwin->GetScreenRect().Contains(p));
 				if(!topwin->GetScreenRect().Contains(p))
 					InvalidateRect(hwnd, GetTitleBarRect(topwin), FALSE);
 			}

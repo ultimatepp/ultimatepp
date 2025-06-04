@@ -368,6 +368,12 @@ void Ide::Layout()
 		display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
+bool Ide::IsCustomTitleBarDragArea(Point p)
+{
+	p += GetScreenRect().TopLeft();
+	return !menubar.GetScreenRect().Contains(p) && !toolbar.GetScreenRect().Contains(p);
+}
+
 void Ide::DoDisplay()
 {
 	if(replace_in_files)
@@ -701,8 +707,6 @@ Ide::Ide()
 		});
 	};
 #endif
-
-	CustomTitleBar();
 }
 
 Ide::~Ide()

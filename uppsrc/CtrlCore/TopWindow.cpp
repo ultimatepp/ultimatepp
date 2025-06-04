@@ -397,7 +397,6 @@ TopWindow& TopWindow::Icon(const Image& m)
 {
 	if(!icon.IsSame(m)) {
 		icon = m;
-		DLOG("ICON " << icon.GetSize());
 		SyncCaption();
 	}
 	return *this;
