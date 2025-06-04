@@ -17,7 +17,7 @@ void Ide::Skin()
 
 void Ide::ToggleVerboseBuild() {
 	console.verbosebuild = !console.verbosebuild;
-	
+
 	SetToolBar();
 }
 
@@ -295,37 +295,115 @@ void Ide::IdeSetBar()
 void Ide::SetupBars()
 {
 	ClearFrames();
-	
+
 	int r = HorzLayoutZoom(170);
 #ifdef PLATFORM_COCOA
 	AddFrame(toolbar);
 	display.RightPos(4, r).VSizePos(2, 3);
 #else
 	int l = HorzLayoutZoom(350);
-	
+
 	menubar.Transparent();
+	display.IgnoreMouse();
+	bararea.Add(barrect.SizePos());
+	AddFrame(bararea);
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
-		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
-		bararea.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
-		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
+		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
+		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(max(menubar.GetStdHeight(), tcy));
-		AddFrame(bararea);
 		toolbar.Transparent();
 	}
 	else {
-		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
-		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
+		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(menubar.GetStdHeight());
-		AddFrame(bararea);
 		AddFrame(TopSeparatorFrame());
 		AddFrame(toolbar);
 		toolbar.NoTransparent();
 	}
+
+	if(IsCustomTitleBar()) {
+		bararea.Height(GetCustomTitleBarMetrics().height);
+		barrect.Add(display_main);
+	}
+
 #endif
+
 	AddFrame(statusbar);
 	SetBar();
+}
+
+void Ide::Layout()
+{
+	if(IsCustomTitleBar()) {
+		int mw = menubar.GetWidth();
+		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
+		
+		auto cm = GetCustomTitleBarMetrics();
+		barrect.HSizePos(cm.lm, cm.rm);
+	
+		int x = 0;
+
+		menubar.LeftPos(0, mw).VCenterPos(menubar.GetStdHeight());
+		x += mw;
+
+		if(toolbar_in_row) {
+			int tw = toolbar.GetWidth();
+			x += DPI(4);
+			toolbar.LeftPos(x, tw).VCenterPos(tcy);
+			x += tw;
+		}
+		
+		int cx = Zx(150);
+		display_main.LeftPos(x, cx).VSizePos();
+		x += cx;
+
+		display.HSizePos(x + DPI(4), 0).VSizePos();
+		display.Show();
+	}
+	else
+		display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
+}
+
+bool Ide::IsCustomTitleBarDragArea(Point p)
+{
+	p += GetScreenRect().TopLeft();
+	return !menubar.GetScreenRect().Contains(p) && !toolbar.GetScreenRect().Contains(p);
+}
+
+void Ide::DoDisplay()
+{
+	if(replace_in_files)
+		return;
+	Point p;
+	if(!designer)
+		p = editor.GetColumnLine(editor.GetCursor64());
+	String s;
+	if(IsCustomTitleBar()) {
+		s << "[g \1" << editfile << "\1";
+		if(!designer) {
+			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
+			int64 l, h;
+			editor.GetSelection(l, h);
+			if(h > l)
+				s << ", [@W$B " << h - l;
+		}
+	}
+	else {
+		if(!designer) {
+			s << "[g Ln " << p.y + 1 << ", Col " << p.x + 1;
+			int64 l, h;
+			editor.GetSelection(l, h);
+			if(h > l)
+				s << ", Sel " << h - l;
+		}
+	}
+
+	display.Set(s);
+	display_main.Set("[g [@b \1" + GetVarsName() + "\1]: [* " + main);
 }
 
 void SetupError(ArrayCtrl& error, const char *s)
@@ -336,11 +414,6 @@ void SetupError(ArrayCtrl& error, const char *s)
 	error.AddIndex("INFO");
 	error.ColumnWidths("184 44 298");
 	error.NoWantFocus();
-}
-
-void Ide::Layout()
-{
-	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
 void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)
@@ -354,15 +427,18 @@ void HighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const W
 void CursorInfoCtrl::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	Size tsz = GetTextSize(text, StdFont());
+	RichText txt = ParseQTF(text);
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
 	int x = sz.cx - tsz.cx;
 	int y = (sz.cy - tsz.cy) / 2;
-	w.DrawText(x, y, text, StdFont(), SColorText());
+	txt.Paint(w, x, y, INT_MAX / 2);
 }
 
 CursorInfoCtrl::CursorInfoCtrl()
 {
 	Transparent();
+	IgnoreMouse();
 }
 
 Ide::Ide()
@@ -373,14 +449,14 @@ Ide::Ide()
 	editor.WhenSel << [=] {
 		delayed_toolbar.KillSet(150, [=] { SetToolBar(); });
 	};
-	
+
 	editormode = false;
-	
+
 	start_time = GetSysTime();
 	stat_build_time = 0;
 	build_start_time = Null;
 	hydra1_threads = CPU_Cores();
-	
+
 	chstyle = 0;
 
 	Sizeable().Zoomable();
@@ -391,7 +467,7 @@ Ide::Ide()
 	filetabs = AlignedFrame::TOP;
 	auto_enclose = false;
 	mark_lines = true;
-	
+
 	persistent_find_replace = false;
 
 	idestate = EDITING;
@@ -408,12 +484,12 @@ Ide::Ide()
 	editorsplit.Vert(editor_p, editor2);
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
-	
+
 	editpane.AddFrame(editor.navigatorframe);
 
 	right_split.Horz(editpane, right);
 	right_split.Zoom(0);
-	
+
 	SetupError(error, "Message");
 	error.AddIndex("NOTES");
 	error.ColumnWidths("207 41 834");
@@ -423,7 +499,7 @@ Ide::Ide()
 	error.WhenLeftClick = THISBACK(ShowError);
 	console.WhenLine = THISBACK1(ConsoleLine, false);
 	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
-	
+
 	addnotes = false;
 	removing_notes = false;
 
@@ -436,7 +512,7 @@ Ide::Ide()
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
-	
+
 	editor.WhenSelectionChanged << [=] {
 		editor2.Illuminate(editor.GetIlluminated());
 	};
@@ -466,7 +542,7 @@ Ide::Ide()
 	editor.WhenFontScroll = THISBACK(EditorFontScroll);
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);
 	editor.WhenPaste = THISBACK(IdePaste);
-	
+
 	editor.WhenFindAll << THISFN(FindFileAll);
 
 	macro_api = MacroEditor();
@@ -527,7 +603,7 @@ Ide::Ide()
 #else
 	setmain_newide = false;
 #endif
-	
+
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
 
@@ -588,34 +664,34 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
-	
+
 	editor.WhenTip = THISBACK(EditorTip);
 	editor.WhenCtrlClick = THISBACK(CtrlClick);
-	
+
 	find_pick_sel = true;
 	find_pick_text = false;
-	
+
 	deactivate_save = true;
-	
+
 	output_per_assembly = true;
-	
+
 	issaving = 0;
 	isscanning = 0;
-	
+
 	linking = false;
-	
+
 	error_count = 0;
 	warning_count = 0;
-	
+
 	editfile_isfolder = false;
 	editfile_repo = NOT_REPO_DIR;
-	
+
 	editfile_line_endings = Null;
 
 	HideBottom();
 	SetupBars();
 	SetBar();
-	
+
 	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 	libclang_coptions = "-Wno-logical-op-parentheses -Wno-pragma-pack";
 
@@ -673,3 +749,4 @@ void IdeShowConsole()
 }
 
 void Ide::Paint(Draw&) {}
+

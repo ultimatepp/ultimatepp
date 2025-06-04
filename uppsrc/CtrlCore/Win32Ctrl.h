@@ -44,6 +44,16 @@ protected:
 	void  Create0(CreateBox *cr);
 	void  Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow);
 	Image DoMouse(int e, Point p, int zd = 0);
+
+	void   PaintWinBarBackground(SystemDraw& w, const Rect& clip);
+	void   PaintWinBar(SystemDraw& w, const Rect& clip);
+	int    GetActiveTitleBarButton();
+	static void   SyncCustomTitleBars();
+	static int    GetWin32TitleBarHeight(const TopWindow *win);
+	static int    GetWin32TitleBarButtonWidth();
+	static Rect   GetTitleBarRect(const TopWindow *win);
+	static bool   IsMaximized(HWND hwnd);
+
 	static void sProcessMSG(MSG& msg);
 
 	static  Vector<Event<> > hotkey;

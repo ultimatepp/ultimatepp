@@ -101,6 +101,7 @@ void Ide::MakeTitle()
 		title << " (scanning files)";
 	
 	Title(title.ToWString());
+	DoDisplay();
 }
 
 bool Ide::CanToggleReadOnly()
@@ -558,27 +559,6 @@ void Ide::History(int d)
 void Ide::BookKey(int key)
 {
 	Key(key, 1);
-}
-
-void Ide::DoDisplay()
-{
-	if(replace_in_files)
-		return;
-	Point p = editor.GetColumnLine(editor.GetCursor64());
-	String s;
-	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
-	int64 l, h;
-	editor.GetSelection(l, h);
-	if(h > l)
-		s << ", Sel " << h - l;
-	display.Set(s);
-	
-	ManageDisplayVisibility();
-}
-
-void Ide::ManageDisplayVisibility()
-{
-	display.Show(!designer);
 }
 
 void Ide::SetIdeState(int newstate)

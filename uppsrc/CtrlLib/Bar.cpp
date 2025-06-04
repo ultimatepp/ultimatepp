@@ -13,7 +13,7 @@ void BarPane::PaintBar(Draw& w, const SeparatorCtrl::Style& ss, const Value& pan
                        const Value& iconbar, int iconsz)
 {
 	Size sz = GetSize();
-	Rect r = GetSize();
+	Rect r = sz;
 	for(int i = 0; i < breakpos.GetCount(); i++)
 		if(horz) {
 			int y = breakpos[i];

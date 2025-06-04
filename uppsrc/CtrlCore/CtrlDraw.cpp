@@ -504,8 +504,17 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << ", clip: " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
+	auto DoCtrlPaint = [&](SystemDraw& w, const Rect& clip) {
+	#ifdef PLATFORM_WIN32
+		PaintWinBarBackground(w, clip);
+	#endif
+		CtrlPaint(w, clip);
+	#ifdef PLATFORM_WIN32
+		PaintWinBar(w, clip);
+	#endif
+	};
 	if(globalbackbuffer) {
-		CtrlPaint(draw, clip);
+		DoCtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 		return;
 	}
@@ -515,35 +524,12 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		bw.Create(draw, clip.GetSize());
 		bw.Offset(-clip.TopLeft());
 		bw.SetPaintingDraw(draw, clip.TopLeft());
-		CtrlPaint(bw, clip);
+		DoCtrlPaint(bw, clip);
 		bw.Put(draw, clip.TopLeft());
 		LLOG("========== END (FULLBACKPAINT)");
 		return;
 	}
-/*	if(backpaint == TRANSPARENTBACKPAINT) {
-		LLOG("TransparentBackpaint");
-		Vector<Rect> area;
-		GatherTransparentAreas(area, draw, GetRect().GetSize(), clip);
-		for(int i = 0; i < area.GetCount(); i++) {
-			Rect ar = area[i];
-			LLOG("Painting area: " << ar);
-			ShowRepaintRect(draw, ar, LtBlue());
-			BackDraw bw;
-			bw.Create(draw, ar.GetSize());
-			bw.Offset(-ar.TopLeft());
-			bw.SetPaintingDraw(draw, ar.TopLeft());
-			CtrlPaint(bw, ar);
-			bw.Put(draw, ar.TopLeft());
-			if(!draw.ExcludeClip(ar)) {
-				LLOG("========== END");
-				return;
-			}
-		}
-		PaintOpaqueAreas(draw, GetRect().GetSize(), clip);
-		LLOG("========== END");
-		return;
-	}*/
-	CtrlPaint(draw, clip);
+	DoCtrlPaint(draw, clip);
 	LLOG("========== END");
 }
 

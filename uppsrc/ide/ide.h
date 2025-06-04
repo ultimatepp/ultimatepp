@@ -387,6 +387,7 @@ public:
 	virtual   void   Activate();
 	virtual   void   Layout();
 	virtual   void   Skin();
+	virtual   bool   IsCustomTitleBarDragArea(Point p);
 
 	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);
@@ -625,6 +626,7 @@ public:
 	bool      indent_spaces;
 	bool      show_status_bar;
 	bool      toolbar_in_row;
+	bool      disable_custom_caption = false;
 	bool      show_tabs;
 	bool      show_spaces;
 	bool      warnwhitespace;
@@ -683,7 +685,8 @@ public:
 	bool      bookmark_pos;
 
 	FrameTop<StaticBarArea> bararea;
-	CursorInfoCtrl          display;
+	ParentCtrl              barrect; // to do custom caption clipping
+	CursorInfoCtrl          display, display_main;
 	ImageCtrl               indeximage, indeximage2;
 
 	byte      hilite_scope;
@@ -1156,7 +1159,6 @@ public:
 	void      SetupEditor();
 
 	void      DoDisplay();
-	void      ManageDisplayVisibility();
 
 	void      SetIcon();
 	void      CheckFileUpdate();
