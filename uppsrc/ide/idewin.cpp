@@ -305,28 +305,30 @@ void Ide::SetupBars()
 
 	menubar.Transparent();
 	display.IgnoreMouse();
+	bararea.Add(barrect.SizePos());
+	AddFrame(bararea);
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
-		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
-		bararea.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
-		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
+		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
+		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(max(menubar.GetStdHeight(), tcy));
-		AddFrame(bararea);
 		toolbar.Transparent();
 	}
 	else {
-		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
-		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
+		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(menubar.GetStdHeight());
-		AddFrame(bararea);
 		AddFrame(TopSeparatorFrame());
 		AddFrame(toolbar);
 		toolbar.NoTransparent();
 	}
 
-	if(IsCustomTitleBar())
+	if(IsCustomTitleBar()) {
 		bararea.Height(GetCustomTitleBarMetrics().height);
+		barrect.Add(display_main);
+	}
 
 #endif
 
@@ -336,19 +338,66 @@ void Ide::SetupBars()
 
 void Ide::Layout()
 {
-	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
-
 	if(IsCustomTitleBar()) {
-		int r = HorzLayoutZoom(270);
 		int mw = menubar.GetWidth();
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
 		
 		auto cm = GetCustomTitleBarMetrics();
+		barrect.HSizePos(cm.lm, cm.rm);
 	
-		menubar.LeftPos(cm.lm, mw).VCenterPos(menubar.GetStdHeight());
-		toolbar.HSizePos(cm.lm + mw + DPI(4), r).VCenterPos(tcy);
-		display.RightPos(4 + cm.rm, r).VSizePos(2, 3);
+		int x = 0;
+
+		menubar.LeftPos(0, mw).VCenterPos(menubar.GetStdHeight());
+		x += mw;
+
+		if(toolbar_in_row) {
+			int tw = toolbar.GetWidth();
+			x += DPI(4);
+			toolbar.LeftPos(x, tw).VCenterPos(tcy);
+			x += tw;
+		}
+		
+		int cx = Zx(150);
+		display_main.LeftPos(x, cx).VSizePos();
+		x += cx;
+
+		display.HSizePos(x + DPI(4), 0).VSizePos();
+		display.Show();
 	}
+	else
+		display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
+}
+
+void Ide::DoDisplay()
+{
+	if(replace_in_files)
+		return;
+	Point p;
+	if(!designer)
+		p = editor.GetColumnLine(editor.GetCursor64());
+	String s;
+	if(IsCustomTitleBar()) {
+		s << "[g \1" << editfile << "\1";
+		if(!designer) {
+			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
+			int64 l, h;
+			editor.GetSelection(l, h);
+			if(h > l)
+				s << ", [@W$B " << h - l;
+		}
+	}
+	else {
+		if(!designer) {
+			s << "[g Ln " << p.y + 1 << ", Col " << p.x + 1;
+			int64 l, h;
+			editor.GetSelection(l, h);
+			if(h > l)
+				s << ", Sel " << h - l;
+		}
+	}
+
+	display.Set(s);
+	display_main.Set("[g [@b \1" + GetVarsName() + "\1]: [* " + main);
 }
 
 void SetupError(ArrayCtrl& error, const char *s)

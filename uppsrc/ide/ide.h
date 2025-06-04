@@ -683,7 +683,8 @@ public:
 	bool      bookmark_pos;
 
 	FrameTop<StaticBarArea> bararea;
-	CursorInfoCtrl          display;
+	ParentCtrl              barrect; // to do custom caption clipping
+	CursorInfoCtrl          display, display_main;
 	ImageCtrl               indeximage, indeximage2;
 
 	byte      hilite_scope;
@@ -1156,7 +1157,6 @@ public:
 	void      SetupEditor();
 
 	void      DoDisplay();
-	void      ManageDisplayVisibility();
 
 	void      SetIcon();
 	void      CheckFileUpdate();

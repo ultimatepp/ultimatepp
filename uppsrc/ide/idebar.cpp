@@ -501,9 +501,9 @@ void Ide::Project(Bar& menu)
 	{
 		mainconfiglist.Enable(idestate == EDITING);
 		buildmode.Enable(idestate == EDITING);
-		menu.Add(mainconfiglist, HorzLayoutZoom(180));
+		menu.Add(mainconfiglist, HorzLayoutZoom(140));
 		menu.Gap(4);
-		menu.Add(buildmode, HorzLayoutZoom(180));
+		menu.Add(buildmode, HorzLayoutZoom(140));
 		menu.Separator();
 	}
 	if(!IsEditorMode()) {
@@ -1067,6 +1067,7 @@ void Ide::SetBar()
 {
 	SetMenuBar();
 	SetToolBar();
+	RefreshLayout();
 }
 
 void Ide::SetMenuBar()
