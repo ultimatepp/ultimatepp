@@ -383,13 +383,13 @@ void Ide::DoDisplay()
 		p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	if(IsCustomTitleBar()) {
-		s << "[g \1 " << editfile << " \1";
+		s << "[g \1" << editfile << "\1";
 		if(!designer) {
 			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
 			int64 l, h;
 			editor.GetSelection(l, h);
 			if(h > l)
-				s << ", [@W$B " << h - l;
+				s << ",[@W$B  " << h - l << " ";
 		}
 	}
 	else {
@@ -403,7 +403,7 @@ void Ide::DoDisplay()
 	}
 
 	display.Set(s);
-	display_main.Set("[g$Y [@b \1" + GetVarsName() + "\1]: [* " + main);
+	display_main.Set("[g$Y  [@b \1" + GetVarsName() + "\1]: [* " + main + " ");
 }
 
 void SetupError(ArrayCtrl& error, const char *s)
