@@ -423,9 +423,9 @@ TopWindow& TopWindow::Icon(const Image& smallicon, const Image& _largeicon)
 
 bool is_custom_titlebar_available__;
 
-bool TopWindow::IsCustomTitleBarAvailable()
+bool TopWindow::IsCustomTitleBar() const
 {
-	return is_custom_titlebar_available__;
+	return custom_titlebar && is_custom_titlebar_available__;
 }
 
 TopWindow& TopWindow::CustomTitleBar(int cy)

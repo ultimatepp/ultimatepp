@@ -60,39 +60,39 @@ public:
 
 void UWord::FileBar(Bar& bar)
 {
-	bar.Add("New", CtrlImg::new_doc(), THISBACK(New))
+	bar.Add("New", CtrlImg::new_doc(), [=] { New(); })
 	   .Key(K_CTRL_N)
 	   .Help("Open new window");
-	bar.Add("Open..", CtrlImg::open(), THISBACK(Open))
+	bar.Add("Open..", CtrlImg::open(), [=] { Open(); })
 	   .Key(K_CTRL_O)
 	   .Help("Open existing document");
-	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), THISBACK(Save))
+	bar.Add(editor.IsModified(), "Save", CtrlImg::save(), [=] { Save(); })
 	   .Key(K_CTRL_S)
 	   .Help("Save current document");
-	bar.Add("SaveAs", CtrlImg::save_as(), THISBACK(SaveAs))
+	bar.Add("SaveAs", CtrlImg::save_as(), [=] { SaveAs(); })
 	   .Help("Save current document with a new name");
 	bar.ToolGap();
 	bar.MenuSeparator();
-	bar.Add("Export to PDF..", UWordImg::pdf(), THISBACK(Pdf))
+	bar.Add("Export to PDF..", UWordImg::pdf(), [=] { Pdf(); })
 	   .Help("Export document to PDF file");
 	if(bar.IsMenuBar()) {
 		if(lrufile().GetCount())
-			lrufile()(bar, THISBACK(OpenFile));
+			lrufile()(bar, [=](const String& path) { OpenFile(path); });
 		bar.Separator();
-		bar.Add("Exit", THISBACK(Destroy));
+		bar.Add("Exit", [=] { Destroy(); });
 	}
 }
 
 void UWord::AboutMenu(Bar& bar)
 {
-	bar.Add("About..", THISBACK(About));
+	bar.Add("About..", [=] { About(); });
 }
 
 void UWord::MainMenu(Bar& bar)
 {
-	bar.Add("File", THISBACK(FileBar));
-	bar.Add("Window", callback(WindowsMenu));
-	bar.Add("Help", THISBACK(AboutMenu));
+	bar.Sub("File", [=](Bar& bar) { FileBar(bar); });
+	bar.Sub("Window", [=](Bar& bar) { WindowsMenu(bar); });
+	bar.Sub("Help", [=](Bar& bar) { AboutMenu(bar); });
 }
 
 void UWord::New()
@@ -237,7 +237,7 @@ void UWord::MainBar(Bar& bar)
 
 void UWord::SetBar()
 {
-	toolbar.Set(THISBACK(MainBar));
+	toolbar.Set([=](Bar& bar) { MainBar(bar); });
 }
 
 UWord::UWord()
@@ -251,7 +251,7 @@ UWord::UWord()
 	AddFrame(toolbar);
 	AddFrame(statusbar);
 	Add(editor.SizePos());
-	menubar.Set(THISBACK(MainMenu));
+	menubar.Set([=](Bar& bar) { MainMenu(bar); });
 	Sizeable().Zoomable();
 	WhenClose = THISBACK(Destroy);
 	menubar.WhenHelp = toolbar.WhenHelp = statusbar;

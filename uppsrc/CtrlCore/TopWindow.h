@@ -181,9 +181,8 @@ public:
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
 	
-	static bool IsCustomTitleBarAvailable();
 	TopWindow&  CustomTitleBar(int min_cy = 0);
-	bool        IsCustomTitleBar() const              { return custom_titlebar && IsCustomTitleBarAvailable(); }
+	bool        IsCustomTitleBar() const;
 
 	struct CustomTitleBarMetrics {
 		int   lm;
