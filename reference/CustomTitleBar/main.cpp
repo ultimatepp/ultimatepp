@@ -36,7 +36,7 @@ struct MyApp : TopWindow {
 		int h = menubar.GetStdHeight();
 		CustomTitleBar(h); // h is suggested minimum height
 		
-		if(IsCustomTitleBar() && 0) {
+		if(IsCustomTitleBar()) {
 			menubar.Transparent();
 			auto cm = GetCustomTitleBarMetrics();
 			bararea.Height(cm.height);
