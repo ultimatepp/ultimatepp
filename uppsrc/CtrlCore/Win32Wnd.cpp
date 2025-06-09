@@ -228,6 +228,9 @@ void Ctrl::InstallPanicBox()
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 }
 
+extern bool is_custom_titlebar_available__;
+extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
+
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
@@ -289,12 +292,8 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 
 	GlobalBackPaint();
 
-	extern bool is_custom_titlebar_available__;
-	
 	is_custom_titlebar_available__ = IsWin11();
 
-	extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
-	
 	custom_titlebar_metrics__ = [=](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
 		if(!tw->custom_titlebar)
 			return;
