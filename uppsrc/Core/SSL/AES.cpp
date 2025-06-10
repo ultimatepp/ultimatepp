@@ -154,17 +154,17 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 	if(!Init(in))
 		return false;
 
-	byte key[AES_GCM_KEY_SIZE];
+	SecureBuffer<byte> key(AES_GCM_KEY_SIZE);
 	String salt, iv;
 
 	try {
 		if(!GenerateSaltAndIV(salt, iv))
 			throw Exc("Salt/IV generation failed");
 
-		if(!DeriveKey(password, salt, key, sizeof(key)))
+		if(!DeriveKey(password, salt, ~key, key.GetSize()))
 			throw Exc("Key derivation failed");
 
-		if(!EVP_EncryptInit_ex2(ctx, cipher, key, (const byte*)~iv, nullptr))
+		if(!EVP_EncryptInit_ex2(ctx, cipher, ~key, (const byte*) ~iv, nullptr))
 			throw Exc("Cipher initialization failed");
 
 		int64 processed = WriteHeader(out, salt, iv);
@@ -181,8 +181,6 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 		if(WhenProgress(processed, in.GetSize() + AES_GCM_ENVELOPE_SIZE))
 			throw Exc("Encryption aborted");
 
-		// Leave no trace
-		OPENSSL_cleanse(key, sizeof(key));
 		return true;
 	}
 	catch(const Exc& e) {
@@ -192,8 +190,6 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 		SetError("Unknown exception");
 	}
 
-	// Leave no trace
-	OPENSSL_cleanse(key, sizeof(key));
 	return false;
 }
 
@@ -290,7 +286,7 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 	if(!Init(in))
 		return false;
 
-	byte key[AES_GCM_KEY_SIZE];
+	SecureBuffer<byte> key(AES_GCM_KEY_SIZE);
 
 	try {
 		String salt, iv;
@@ -299,10 +295,10 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 		if(!ReadHeader(in, salt, iv))
 			return false;
 
-		if(!DeriveKey(password, salt, key, sizeof(key)))
+		if(!DeriveKey(password, salt, ~key, key.GetSize()))
 			throw Exc("Key derivation failed");
 
-		if(!EVP_DecryptInit_ex2(ctx, cipher, key, iv, nullptr))
+		if(!EVP_DecryptInit_ex2(ctx, cipher, ~key, iv, nullptr))
 			throw Exc("Initialization failed");
 
 		if(!DecryptStream(in, out, processed))
@@ -320,8 +316,6 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 
 		WhenProgress(in.GetSize(), in.GetSize());
 
-		// Leave no trace
-		OPENSSL_cleanse(&key, sizeof(key));
 		return true;
 	}
 	catch(const Exc& e) {
@@ -330,9 +324,7 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 	catch(...) {
 		SetError("Unknown exception");
 	}
-	
-	// Leave no trace
-	OPENSSL_cleanse(&key, sizeof(key));
+
 	return false;
 }
 
