@@ -424,6 +424,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -656,6 +657,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -888,6 +890,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -1120,6 +1123,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -1352,6 +1356,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -1584,6 +1589,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -1816,6 +1822,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -2048,6 +2055,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -2280,6 +2288,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -2512,6 +2521,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -2744,6 +2754,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -2976,6 +2987,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -3208,6 +3220,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -3440,6 +3453,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -3672,6 +3686,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -3904,6 +3919,7 @@ $(OutDir_ide)AssistDisplay.o: $(UPPDIR1)ide/AssistDisplay.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -4136,6 +4152,7 @@ $(OutDir_ide)IncludeTrick.o: $(UPPDIR1)ide/IncludeTrick.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -4368,6 +4385,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -4600,6 +4618,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -4832,6 +4851,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -5064,6 +5084,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -5296,6 +5317,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -5528,6 +5550,7 @@ $(OutDir_ide)Usage.o: $(UPPDIR1)ide/Usage.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -5760,6 +5783,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -5992,6 +6016,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -6224,6 +6249,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -6456,6 +6482,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -6688,6 +6715,7 @@ $(OutDir_ide)Events.o: $(UPPDIR1)ide/Events.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -6920,6 +6948,7 @@ $(OutDir_ide)NavDlg.o: $(UPPDIR1)ide/NavDlg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -7152,6 +7181,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -7384,6 +7414,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -7616,6 +7647,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -7848,6 +7880,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -8080,6 +8113,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -8312,6 +8346,7 @@ $(OutDir_ide)InsertImage.o: $(UPPDIR1)ide/InsertImage.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -8544,6 +8579,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -8776,6 +8812,7 @@ $(OutDir_ide)Sequence.o: $(UPPDIR1)ide/Sequence.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -9008,6 +9045,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -9240,6 +9278,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -9472,6 +9511,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -9704,6 +9744,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -9937,6 +9978,7 @@ $(OutDir_ide)background.o: $(UPPDIR1)ide/background.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -10169,6 +10211,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -10402,6 +10445,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -10625,6 +10669,7 @@ $(OutDir_ide)CommandLineHandler.o: $(UPPDIR1)ide/CommandLineHandler.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -10796,6 +10841,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -11029,6 +11075,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -11261,6 +11308,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -11493,6 +11541,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -11725,6 +11774,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -11957,6 +12007,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -12189,6 +12240,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -12421,6 +12473,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -12653,6 +12706,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -12885,6 +12939,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -13117,6 +13172,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -13349,6 +13405,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -13581,6 +13638,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -13816,6 +13874,7 @@ $(OutDir_ide)SetupGIT.o: $(UPPDIR1)ide/SetupGIT.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -14048,6 +14107,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -14280,6 +14340,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -14512,6 +14573,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -14744,6 +14806,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -14978,6 +15041,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -15210,6 +15274,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -15442,6 +15507,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -15674,6 +15740,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -15906,6 +15973,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -16138,6 +16206,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -16370,6 +16439,7 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -16602,6 +16672,7 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -16834,6 +16905,7 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -17066,6 +17138,7 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -17298,6 +17371,7 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -17530,6 +17604,7 @@ $(OutDir_ide)DirRepoDiff.o: $(UPPDIR1)ide/DirRepoDiff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -17765,6 +17840,7 @@ $(OutDir_ide_Common)ComDlg.o: $(UPPDIR1)ide/Common/ComDlg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -17947,6 +18023,7 @@ $(OutDir_ide_Common)Module.o: $(UPPDIR1)ide/Common/Module.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18128,6 +18205,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18311,6 +18389,7 @@ $(OutDir_ide_Core)Ide.o: $(UPPDIR1)ide/Core/Ide.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18409,6 +18488,7 @@ $(OutDir_ide_Core)Cache.o: $(UPPDIR1)ide/Core/Cache.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18507,6 +18587,7 @@ $(OutDir_ide_Core)Core.o: $(UPPDIR1)ide/Core/Core.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18605,6 +18686,7 @@ $(OutDir_ide_Core)Util.o: $(UPPDIR1)ide/Core/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18703,6 +18785,7 @@ $(OutDir_ide_Core)Builder.o: $(UPPDIR1)ide/Core/Builder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18801,6 +18884,7 @@ $(OutDir_ide_Core)PPinfo.o: $(UPPDIR1)ide/Core/PPinfo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18899,6 +18983,7 @@ $(OutDir_ide_Core)Assembly.o: $(UPPDIR1)ide/Core/Assembly.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -18997,6 +19082,7 @@ $(OutDir_ide_Core)Package.o: $(UPPDIR1)ide/Core/Package.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19095,6 +19181,7 @@ $(OutDir_ide_Core)Workspace.o: $(UPPDIR1)ide/Core/Workspace.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19193,6 +19280,7 @@ $(OutDir_ide_Core)usc.o: $(UPPDIR1)ide/Core/usc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19291,6 +19379,7 @@ $(OutDir_ide_Core)BinObj.o: $(UPPDIR1)ide/Core/BinObj.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19389,6 +19478,7 @@ $(OutDir_ide_Core)Host.o: $(UPPDIR1)ide/Core/Host.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19487,6 +19577,7 @@ $(OutDir_ide_Core)Logger.o: $(UPPDIR1)ide/Core/Logger.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19618,6 +19709,7 @@ $(OutDir_ide_LayDes)sdiff.o: $(UPPDIR1)ide/LayDes/sdiff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -19814,6 +19906,7 @@ $(OutDir_ide_LayDes)laylib.o: $(UPPDIR1)ide/LayDes/laylib.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20010,6 +20103,7 @@ $(OutDir_ide_LayDes)layusc.o: $(UPPDIR1)ide/LayDes/layusc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20206,6 +20300,7 @@ $(OutDir_ide_LayDes)property.o: $(UPPDIR1)ide/LayDes/property.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20402,6 +20497,7 @@ $(OutDir_ide_LayDes)textprop.o: $(UPPDIR1)ide/LayDes/textprop.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20598,6 +20694,7 @@ $(OutDir_ide_LayDes)fontprop.o: $(UPPDIR1)ide/LayDes/fontprop.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20794,6 +20891,7 @@ $(OutDir_ide_LayDes)propane.o: $(UPPDIR1)ide/LayDes/propane.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -20990,6 +21088,7 @@ $(OutDir_ide_LayDes)item.o: $(UPPDIR1)ide/LayDes/item.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -21186,6 +21285,7 @@ $(OutDir_ide_LayDes)layout.o: $(UPPDIR1)ide/LayDes/layout.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -21382,6 +21482,7 @@ $(OutDir_ide_LayDes)visgen.o: $(UPPDIR1)ide/LayDes/visgen.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -21578,6 +21679,7 @@ $(OutDir_ide_LayDes)laydes.o: $(UPPDIR1)ide/LayDes/laydes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -21775,6 +21877,7 @@ $(OutDir_ide_LayDes)layfile.o: $(UPPDIR1)ide/LayDes/layfile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -21971,6 +22074,7 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22226,6 +22330,7 @@ $(OutDir_ide_Builders)CppBuilder.o: $(UPPDIR1)ide/Builders/CppBuilder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22328,6 +22433,7 @@ $(OutDir_ide_Builders)MakeFile.o: $(UPPDIR1)ide/Builders/MakeFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22430,6 +22536,7 @@ $(OutDir_ide_Builders)CCJ.o: $(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22532,6 +22639,7 @@ $(OutDir_ide_Builders)GccBuilder.o: $(UPPDIR1)ide/Builders/GccBuilder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22635,6 +22743,7 @@ $(OutDir_ide_Builders)MscBuilder.o: $(UPPDIR1)ide/Builders/MscBuilder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22738,6 +22847,7 @@ $(OutDir_ide_Builders)JavaBuilder.o: $(UPPDIR1)ide/Builders/JavaBuilder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22840,6 +22950,7 @@ $(OutDir_ide_Builders)ScriptBuilder.o: $(UPPDIR1)ide/Builders/ScriptBuilder.cpp 
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -22942,6 +23053,7 @@ $(OutDir_ide_Builders)Cocoa.o: $(UPPDIR1)ide/Builders/Cocoa.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23044,6 +23156,7 @@ $(OutDir_ide_Builders)AndroidProject.o: $(UPPDIR1)ide/Builders/AndroidProject.cp
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23133,6 +23246,7 @@ $(OutDir_ide_Builders)AndroidApplicationMakeFile.o: $(UPPDIR1)ide/Builders/Andro
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23222,6 +23336,7 @@ $(OutDir_ide_Builders)AndroidMakeFile.o: $(UPPDIR1)ide/Builders/AndroidMakeFile.
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23311,6 +23426,7 @@ $(OutDir_ide_Builders)AndroidModuleMakeFile.o: $(UPPDIR1)ide/Builders/AndroidMod
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23400,6 +23516,7 @@ $(OutDir_ide_Builders)AndroidBuilder.o: $(UPPDIR1)ide/Builders/AndroidBuilder.cp
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23508,6 +23625,7 @@ $(OutDir_ide_Builders)AndroidBuilderCommands.o: $(UPPDIR1)ide/Builders/AndroidBu
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23612,6 +23730,7 @@ $(OutDir_ide_Builders)AndroidBuilderUtils.o: $(UPPDIR1)ide/Builders/AndroidBuild
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23716,6 +23835,7 @@ $(OutDir_ide_Builders)AndroidModuleMakeFileBuilder.o: $(UPPDIR1)ide/Builders/And
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23820,6 +23940,7 @@ $(OutDir_ide_Builders)Blitz.o: $(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -23922,6 +24043,7 @@ $(OutDir_ide_Builders)Build.o: $(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24029,6 +24151,7 @@ $(OutDir_ide_Builders)Install.o: $(UPPDIR1)ide/Builders/Install.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24131,6 +24254,7 @@ $(OutDir_ide_Builders)BuilderUtils.o: $(UPPDIR1)ide/Builders/BuilderUtils.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24276,6 +24400,7 @@ $(OutDir_ide_Debuggers)Terminal.o: $(UPPDIR1)ide/Debuggers/Terminal.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24465,6 +24590,7 @@ $(OutDir_ide_Debuggers)Disas.o: $(UPPDIR1)ide/Debuggers/Disas.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24654,6 +24780,7 @@ $(OutDir_ide_Debuggers)GdbCmd.o: $(UPPDIR1)ide/Debuggers/GdbCmd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -24844,6 +24971,7 @@ $(OutDir_ide_Debuggers)GdbData.o: $(UPPDIR1)ide/Debuggers/GdbData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25033,6 +25161,7 @@ $(OutDir_ide_Debuggers)Gdb.o: $(UPPDIR1)ide/Debuggers/Gdb.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25222,6 +25351,7 @@ $(OutDir_ide_Debuggers)GdbMem.o: $(UPPDIR1)ide/Debuggers/GdbMem.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25401,6 +25531,7 @@ $(OutDir_ide_Debuggers)GdbUtils.o: $(UPPDIR1)ide/Debuggers/GdbUtils.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25502,6 +25633,7 @@ $(OutDir_ide_Debuggers)Cpu.o: $(UPPDIR1)ide/Debuggers/Cpu.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25691,6 +25823,7 @@ $(OutDir_ide_Debuggers)Debug.o: $(UPPDIR1)ide/Debuggers/Debug.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -25880,6 +26013,7 @@ $(OutDir_ide_Debuggers)Mem.o: $(UPPDIR1)ide/Debuggers/Mem.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -26069,6 +26203,7 @@ $(OutDir_ide_Debuggers)Sym.o: $(UPPDIR1)ide/Debuggers/Sym.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -26258,6 +26393,7 @@ $(OutDir_ide_Debuggers)Exp.o: $(UPPDIR1)ide/Debuggers/Exp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -26447,6 +26583,7 @@ $(OutDir_ide_Debuggers)PrettyUpp.o: $(UPPDIR1)ide/Debuggers/PrettyUpp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -26636,6 +26773,7 @@ $(OutDir_ide_Debuggers)PrettyStd.o: $(UPPDIR1)ide/Debuggers/PrettyStd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -26825,6 +26963,7 @@ $(OutDir_ide_Debuggers)Scripts.o: $(UPPDIR1)ide/Debuggers/Scripts.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27014,6 +27153,7 @@ $(OutDir_ide_Debuggers)Pretty.o: $(UPPDIR1)ide/Debuggers/Pretty.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27203,6 +27343,7 @@ $(OutDir_ide_Debuggers)Visualise.o: $(UPPDIR1)ide/Debuggers/Visualise.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27392,6 +27533,7 @@ $(OutDir_ide_Debuggers)Data.o: $(UPPDIR1)ide/Debuggers/Data.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27581,6 +27723,7 @@ $(OutDir_ide_Debuggers)Tree.o: $(UPPDIR1)ide/Debuggers/Tree.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27770,6 +27913,7 @@ $(OutDir_ide_Debuggers)Stack.o: $(UPPDIR1)ide/Debuggers/Stack.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -27959,6 +28103,7 @@ $(OutDir_ide_Debuggers)Code.o: $(UPPDIR1)ide/Debuggers/Code.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -28148,6 +28293,7 @@ $(OutDir_ide_Debuggers)Pdb.o: $(UPPDIR1)ide/Debuggers/Pdb.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -28388,6 +28534,7 @@ $(OutDir_ide_Browser)Util.o: $(UPPDIR1)ide/Browser/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -28577,6 +28724,7 @@ $(OutDir_ide_Browser)TopicBase.o: $(UPPDIR1)ide/Browser/TopicBase.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -28765,6 +28913,7 @@ $(OutDir_ide_Browser)File.o: $(UPPDIR1)ide/Browser/File.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -28953,6 +29102,7 @@ $(OutDir_ide_Browser)Topic.o: $(UPPDIR1)ide/Browser/Topic.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -29141,6 +29291,7 @@ $(OutDir_ide_Browser)Template.o: $(UPPDIR1)ide/Browser/Template.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -29329,6 +29480,7 @@ $(OutDir_ide_Browser)Link.o: $(UPPDIR1)ide/Browser/Link.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -29517,6 +29669,7 @@ $(OutDir_ide_Browser)TopicWin.o: $(UPPDIR1)ide/Browser/TopicWin.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -29706,6 +29859,7 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -29938,6 +30092,7 @@ $(OutDir_ide_Browser)CodeRef.o: $(UPPDIR1)ide/Browser/CodeRef.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -30126,6 +30281,7 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -30385,6 +30541,7 @@ $(OutDir_CodeEditor)Register.o: $(UPPDIR1)CodeEditor/Register.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -30551,6 +30708,7 @@ $(OutDir_CodeEditor)HighlightOut.o: $(UPPDIR1)CodeEditor/HighlightOut.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -30717,6 +30875,7 @@ $(OutDir_CodeEditor)Syntax.o: $(UPPDIR1)CodeEditor/Syntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -30883,6 +31042,7 @@ $(OutDir_CodeEditor)Style.o: $(UPPDIR1)CodeEditor/Style.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31049,6 +31209,7 @@ $(OutDir_CodeEditor)RegisterSyntax.o: $(UPPDIR1)CodeEditor/RegisterSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31215,6 +31376,7 @@ $(OutDir_CodeEditor)CSyntax.o: $(UPPDIR1)CodeEditor/CSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31381,6 +31543,7 @@ $(OutDir_CodeEditor)CInit.o: $(UPPDIR1)CodeEditor/CInit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31547,6 +31710,7 @@ $(OutDir_CodeEditor)CHighlight.o: $(UPPDIR1)CodeEditor/CHighlight.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31713,6 +31877,7 @@ $(OutDir_CodeEditor)CLogic.o: $(UPPDIR1)CodeEditor/CLogic.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -31879,6 +32044,7 @@ $(OutDir_CodeEditor)DiffSyntax.o: $(UPPDIR1)CodeEditor/DiffSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32045,6 +32211,7 @@ $(OutDir_CodeEditor)TagSyntax.o: $(UPPDIR1)CodeEditor/TagSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32211,6 +32378,7 @@ $(OutDir_CodeEditor)PythonSyntax.o: $(UPPDIR1)CodeEditor/PythonSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32377,6 +32545,7 @@ $(OutDir_CodeEditor)LogSyntax.o: $(UPPDIR1)CodeEditor/LogSyntax.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32543,6 +32712,7 @@ $(OutDir_CodeEditor)EditorBar.o: $(UPPDIR1)CodeEditor/EditorBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32709,6 +32879,7 @@ $(OutDir_CodeEditor)FindReplace.o: $(UPPDIR1)CodeEditor/FindReplace.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -32875,6 +33046,7 @@ $(OutDir_CodeEditor)Lang.o: $(UPPDIR1)CodeEditor/Lang.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33042,6 +33214,7 @@ $(OutDir_CodeEditor)CodeEditor.o: $(UPPDIR1)CodeEditor/CodeEditor.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33239,6 +33412,7 @@ $(OutDir_CtrlLib)CtrlLibInit.o: $(UPPDIR1)CtrlLib/CtrlLibInit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33394,6 +33568,7 @@ $(OutDir_CtrlLib)SmartText.o: $(UPPDIR1)CtrlLib/SmartText.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33547,6 +33722,7 @@ $(OutDir_CtrlLib)LabelBase.o: $(UPPDIR1)CtrlLib/LabelBase.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33700,6 +33876,7 @@ $(OutDir_CtrlLib)DisplayPopup.o: $(UPPDIR1)CtrlLib/DisplayPopup.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -33853,6 +34030,7 @@ $(OutDir_CtrlLib)Button.o: $(UPPDIR1)CtrlLib/Button.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34006,6 +34184,7 @@ $(OutDir_CtrlLib)Switch.o: $(UPPDIR1)CtrlLib/Switch.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34159,6 +34338,7 @@ $(OutDir_CtrlLib)VirtualButtons.o: $(UPPDIR1)CtrlLib/VirtualButtons.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34312,6 +34492,7 @@ $(OutDir_CtrlLib)EditField.o: $(UPPDIR1)CtrlLib/EditField.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34465,6 +34646,7 @@ $(OutDir_CtrlLib)Text.o: $(UPPDIR1)CtrlLib/Text.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34618,6 +34800,7 @@ $(OutDir_CtrlLib)LineEdit.o: $(UPPDIR1)CtrlLib/LineEdit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34771,6 +34954,7 @@ $(OutDir_CtrlLib)DocEdit.o: $(UPPDIR1)CtrlLib/DocEdit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -34924,6 +35108,7 @@ $(OutDir_CtrlLib)ScrollBar.o: $(UPPDIR1)CtrlLib/ScrollBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35077,6 +35262,7 @@ $(OutDir_CtrlLib)HeaderCtrl.o: $(UPPDIR1)CtrlLib/HeaderCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35230,6 +35416,7 @@ $(OutDir_CtrlLib)ArrayCtrl.o: $(UPPDIR1)CtrlLib/ArrayCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35383,6 +35570,7 @@ $(OutDir_CtrlLib)MultiButton.o: $(UPPDIR1)CtrlLib/MultiButton.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35536,6 +35724,7 @@ $(OutDir_CtrlLib)PopupTable.o: $(UPPDIR1)CtrlLib/PopupTable.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35689,6 +35878,7 @@ $(OutDir_CtrlLib)PopUpList.o: $(UPPDIR1)CtrlLib/PopUpList.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35842,6 +36032,7 @@ $(OutDir_CtrlLib)DropList.o: $(UPPDIR1)CtrlLib/DropList.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -35995,6 +36186,7 @@ $(OutDir_CtrlLib)DropChoice.o: $(UPPDIR1)CtrlLib/DropChoice.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36148,6 +36340,7 @@ $(OutDir_CtrlLib)Static.o: $(UPPDIR1)CtrlLib/Static.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36301,6 +36494,7 @@ $(OutDir_CtrlLib)Splitter.o: $(UPPDIR1)CtrlLib/Splitter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36454,6 +36648,7 @@ $(OutDir_CtrlLib)FrameSplitter.o: $(UPPDIR1)CtrlLib/FrameSplitter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36607,6 +36802,7 @@ $(OutDir_CtrlLib)SliderCtrl.o: $(UPPDIR1)CtrlLib/SliderCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36760,6 +36956,7 @@ $(OutDir_CtrlLib)ColumnList.o: $(UPPDIR1)CtrlLib/ColumnList.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -36913,6 +37110,7 @@ $(OutDir_CtrlLib)Progress.o: $(UPPDIR1)CtrlLib/Progress.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37066,6 +37264,7 @@ $(OutDir_CtrlLib)AKeys.o: $(UPPDIR1)CtrlLib/AKeys.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37219,6 +37418,7 @@ $(OutDir_CtrlLib)RichTextView.o: $(UPPDIR1)CtrlLib/RichTextView.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37372,6 +37572,7 @@ $(OutDir_CtrlLib)Prompt.o: $(UPPDIR1)CtrlLib/Prompt.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37525,6 +37726,7 @@ $(OutDir_CtrlLib)Help.o: $(UPPDIR1)CtrlLib/Help.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37678,6 +37880,7 @@ $(OutDir_CtrlLib)DateTimeCtrl.o: $(UPPDIR1)CtrlLib/DateTimeCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37831,6 +38034,7 @@ $(OutDir_CtrlLib)SuggestCtrl.o: $(UPPDIR1)CtrlLib/SuggestCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -37984,6 +38188,7 @@ $(OutDir_CtrlLib)Bar.o: $(UPPDIR1)CtrlLib/Bar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38137,6 +38342,7 @@ $(OutDir_CtrlLib)MenuItem.o: $(UPPDIR1)CtrlLib/MenuItem.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38291,6 +38497,7 @@ $(OutDir_CtrlLib)MenuBar.o: $(UPPDIR1)CtrlLib/MenuBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38445,6 +38652,7 @@ $(OutDir_CtrlLib)ToolButton.o: $(UPPDIR1)CtrlLib/ToolButton.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38598,6 +38806,7 @@ $(OutDir_CtrlLib)ToolBar.o: $(UPPDIR1)CtrlLib/ToolBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38751,6 +38960,7 @@ $(OutDir_CtrlLib)ToolTip.o: $(UPPDIR1)CtrlLib/ToolTip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -38904,6 +39114,7 @@ $(OutDir_CtrlLib)StatusBar.o: $(UPPDIR1)CtrlLib/StatusBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39057,6 +39268,7 @@ $(OutDir_CtrlLib)TabCtrl.o: $(UPPDIR1)CtrlLib/TabCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39210,6 +39422,7 @@ $(OutDir_CtrlLib)TreeCtrl.o: $(UPPDIR1)CtrlLib/TreeCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39363,6 +39576,7 @@ $(OutDir_CtrlLib)DropTree.o: $(UPPDIR1)CtrlLib/DropTree.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39516,6 +39730,7 @@ $(OutDir_CtrlLib)DlgColor.o: $(UPPDIR1)CtrlLib/DlgColor.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39669,6 +39884,7 @@ $(OutDir_CtrlLib)ColorPopup.o: $(UPPDIR1)CtrlLib/ColorPopup.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39822,6 +40038,7 @@ $(OutDir_CtrlLib)ColorPusher.o: $(UPPDIR1)CtrlLib/ColorPusher.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -39975,6 +40192,7 @@ $(OutDir_CtrlLib)FileList.o: $(UPPDIR1)CtrlLib/FileList.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40128,6 +40346,7 @@ $(OutDir_CtrlLib)FileSel.o: $(UPPDIR1)CtrlLib/FileSel.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40281,6 +40500,7 @@ $(OutDir_CtrlLib)FileSelUtil.o: $(UPPDIR1)CtrlLib/FileSelUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40434,6 +40654,7 @@ $(OutDir_CtrlLib)PrinterJob.o: $(UPPDIR1)CtrlLib/PrinterJob.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40587,6 +40808,7 @@ $(OutDir_CtrlLib)Windows.o: $(UPPDIR1)CtrlLib/Windows.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40740,6 +40962,7 @@ $(OutDir_CtrlLib)Win32.o: $(UPPDIR1)CtrlLib/Win32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -40893,6 +41116,7 @@ $(OutDir_CtrlLib)Gtk.o: $(UPPDIR1)CtrlLib/Gtk.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41046,6 +41270,7 @@ $(OutDir_CtrlLib)TrayIconWin32.o: $(UPPDIR1)CtrlLib/TrayIconWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41199,6 +41424,7 @@ $(OutDir_CtrlLib)TrayIconX11.o: $(UPPDIR1)CtrlLib/TrayIconX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41352,6 +41578,7 @@ $(OutDir_CtrlLib)TrayIconGtk.o: $(UPPDIR1)CtrlLib/TrayIconGtk.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41505,6 +41732,7 @@ $(OutDir_CtrlLib)Update.o: $(UPPDIR1)CtrlLib/Update.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41658,6 +41886,7 @@ $(OutDir_CtrlLib)CtrlUtil.o: $(UPPDIR1)CtrlLib/CtrlUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41812,6 +42041,7 @@ $(OutDir_CtrlLib)LNGCtrl.o: $(UPPDIR1)CtrlLib/LNGCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -41965,6 +42195,7 @@ $(OutDir_CtrlLib)Ch.o: $(UPPDIR1)CtrlLib/Ch.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42119,6 +42350,7 @@ $(OutDir_CtrlLib)ChWin32.o: $(UPPDIR1)CtrlLib/ChWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42272,6 +42504,7 @@ $(OutDir_CtrlLib)ChGtk3.o: $(UPPDIR1)CtrlLib/ChGtk3.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42425,6 +42658,7 @@ $(OutDir_CtrlLib)ChCoco.o: $(UPPDIR1)CtrlLib/ChCoco.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42707,6 +42941,7 @@ $(OutDir_plugin_bz2)bz2upp.o: $(UPPDIR1)plugin/bz2/bz2upp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42810,6 +43045,7 @@ $(OutDir_HexView)HexView.o: $(UPPDIR1)HexView/HexView.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -42973,6 +43209,7 @@ $(OutDir_TextDiffCtrl)TextDiff.o: $(UPPDIR1)TextDiffCtrl/TextDiff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43128,6 +43365,7 @@ $(OutDir_TextDiffCtrl)TextCtrl.o: $(UPPDIR1)TextDiffCtrl/TextCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43283,6 +43521,7 @@ $(OutDir_TextDiffCtrl)DiffCtrl.o: $(UPPDIR1)TextDiffCtrl/DiffCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43439,6 +43678,7 @@ $(OutDir_TextDiffCtrl)DirDiff.o: $(UPPDIR1)TextDiffCtrl/DirDiff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43594,6 +43834,7 @@ $(OutDir_TextDiffCtrl)patch.o: $(UPPDIR1)TextDiffCtrl/patch.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43749,6 +43990,7 @@ $(OutDir_TextDiffCtrl)PatchDiff.o: $(UPPDIR1)TextDiffCtrl/PatchDiff.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -43922,6 +44164,7 @@ $(OutDir_TabBar)TabBar.o: $(UPPDIR1)TabBar/TabBar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -44082,6 +44325,7 @@ $(OutDir_TabBar)FileTabs.o: $(UPPDIR1)TabBar/FileTabs.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -44239,6 +44483,7 @@ $(OutDir_TabBar)TabBarCtrl.o: $(UPPDIR1)TabBar/TabBarCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -44418,6 +44663,7 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -44650,6 +44896,7 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -44882,6 +45129,7 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -45114,6 +45362,7 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -45346,6 +45595,7 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -45578,6 +45828,7 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -45810,6 +46061,7 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46042,6 +46294,7 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46286,6 +46539,7 @@ $(OutDir_ide_Android)Android.o: $(UPPDIR1)ide/Android/Android.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46387,6 +46641,7 @@ $(OutDir_ide_Android)AndroidSDK.o: $(UPPDIR1)ide/Android/AndroidSDK.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46491,6 +46746,7 @@ $(OutDir_ide_Android)AndroidNDK.o: $(UPPDIR1)ide/Android/AndroidNDK.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46592,6 +46848,7 @@ $(OutDir_ide_Android)Apk.o: $(UPPDIR1)ide/Android/Apk.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46693,6 +46950,7 @@ $(OutDir_ide_Android)AndroidManifest.o: $(UPPDIR1)ide/Android/AndroidManifest.cp
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46794,6 +47052,7 @@ $(OutDir_ide_Android)Adb.o: $(UPPDIR1)ide/Android/Adb.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46895,6 +47154,7 @@ $(OutDir_ide_Android)LogCat.o: $(UPPDIR1)ide/Android/LogCat.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -46994,6 +47254,7 @@ $(OutDir_ide_Android)NDKBuild.o: $(UPPDIR1)ide/Android/NDKBuild.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47115,6 +47376,7 @@ $(OutDir_ide_Java)JavaVersion.o: $(UPPDIR1)ide/Java/JavaVersion.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47214,6 +47476,7 @@ $(OutDir_ide_Java)Java.o: $(UPPDIR1)ide/Java/Java.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47313,6 +47576,7 @@ $(OutDir_ide_Java)Jdk.o: $(UPPDIR1)ide/Java/Jdk.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47434,6 +47698,7 @@ $(OutDir_ide_MacroManager)MacroElement.o: $(UPPDIR1)ide/MacroManager/MacroElemen
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47613,6 +47878,7 @@ $(OutDir_ide_MacroManager)MacroManager.o: $(UPPDIR1)ide/MacroManager/MacroManage
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47798,6 +48064,7 @@ $(OutDir_ide_MacroManager)UscFileParser.o: $(UPPDIR1)ide/MacroManager/UscFilePar
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -47979,6 +48246,7 @@ $(OutDir_Report)Report.o: $(UPPDIR1)Report/Report.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48134,6 +48402,7 @@ $(OutDir_Report)ReportDlg.o: $(UPPDIR1)Report/ReportDlg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48301,6 +48570,7 @@ $(OutDir_Core_SSL)Util.o: $(UPPDIR1)Core/SSL/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48391,6 +48661,7 @@ $(OutDir_Core_SSL)InitExit.o: $(UPPDIR1)Core/SSL/InitExit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48481,6 +48752,7 @@ $(OutDir_Core_SSL)Socket.o: $(UPPDIR1)Core/SSL/Socket.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48571,6 +48843,7 @@ $(OutDir_Core_SSL)P7S.o: $(UPPDIR1)Core/SSL/P7S.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48661,6 +48934,7 @@ $(OutDir_Core_SSL)AES.o: $(UPPDIR1)Core/SSL/AES.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48751,6 +49025,7 @@ $(OutDir_Core_SSL)SSL.o: $(UPPDIR1)Core/SSL/SSL.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48857,6 +49132,7 @@ $(OutDir_plugin_md)Markdown.o: $(UPPDIR1)plugin/md/Markdown.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -48972,6 +49248,7 @@ $(OutDir_ide_clang)libclang.o: $(UPPDIR1)ide/clang/libclang.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -49154,6 +49431,7 @@ $(OutDir_ide_clang)util.o: $(UPPDIR1)ide/clang/util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -49336,6 +49614,7 @@ $(OutDir_ide_clang)macros.o: $(UPPDIR1)ide/clang/macros.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -49518,6 +49797,7 @@ $(OutDir_ide_clang)Signature.o: $(UPPDIR1)ide/clang/Signature.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -49700,6 +49980,7 @@ $(OutDir_ide_clang)clang.o: $(UPPDIR1)ide/clang/clang.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -49882,6 +50163,7 @@ $(OutDir_ide_clang)Visitor.o: $(UPPDIR1)ide/clang/Visitor.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50064,6 +50346,7 @@ $(OutDir_ide_clang)CurrentFile.o: $(UPPDIR1)ide/clang/CurrentFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50246,6 +50529,7 @@ $(OutDir_ide_clang)Indexer.o: $(UPPDIR1)ide/clang/Indexer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50490,6 +50774,7 @@ $(OutDir_Esc)EscValue.o: $(UPPDIR1)Esc/EscValue.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50579,6 +50864,7 @@ $(OutDir_Esc)EscArray.o: $(UPPDIR1)Esc/EscArray.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50668,6 +50954,7 @@ $(OutDir_Esc)EscMap.o: $(UPPDIR1)Esc/EscMap.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50757,6 +51044,7 @@ $(OutDir_Esc)Esc.o: $(UPPDIR1)Esc/Esc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50846,6 +51134,7 @@ $(OutDir_Esc)EscRun.o: $(UPPDIR1)Esc/EscRun.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -50935,6 +51224,7 @@ $(OutDir_Esc)EscStdLib.o: $(UPPDIR1)Esc/EscStdLib.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51024,6 +51314,7 @@ $(OutDir_Esc)Value.o: $(UPPDIR1)Esc/Value.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51133,6 +51424,7 @@ $(OutDir_Core)Cpu.o: $(UPPDIR1)Core/Cpu.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51221,6 +51513,7 @@ $(OutDir_Core)Mem.o: $(UPPDIR1)Core/Mem.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51309,6 +51602,7 @@ $(OutDir_Core)SIMD.o: $(UPPDIR1)Core/SIMD.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51397,6 +51691,7 @@ $(OutDir_Core)Mt.o: $(UPPDIR1)Core/Mt.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51485,6 +51780,7 @@ $(OutDir_Core)heaputil.o: $(UPPDIR1)Core/heaputil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51573,6 +51869,7 @@ $(OutDir_Core)hheap.o: $(UPPDIR1)Core/hheap.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51661,6 +51958,7 @@ $(OutDir_Core)sheap.o: $(UPPDIR1)Core/sheap.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51749,6 +52047,7 @@ $(OutDir_Core)lheap.o: $(UPPDIR1)Core/lheap.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51837,6 +52136,7 @@ $(OutDir_Core)heap.o: $(UPPDIR1)Core/heap.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -51925,6 +52225,7 @@ $(OutDir_Core)heapdbg.o: $(UPPDIR1)Core/heapdbg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52013,6 +52314,7 @@ $(OutDir_Core)StringFind.o: $(UPPDIR1)Core/StringFind.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52101,6 +52403,7 @@ $(OutDir_Core)String.o: $(UPPDIR1)Core/String.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52189,6 +52492,7 @@ $(OutDir_Core)WString.o: $(UPPDIR1)Core/WString.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52277,6 +52581,7 @@ $(OutDir_Core)SplitMerge.o: $(UPPDIR1)Core/SplitMerge.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52365,6 +52670,7 @@ $(OutDir_Core)Utf.o: $(UPPDIR1)Core/Utf.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52453,6 +52759,7 @@ $(OutDir_Core)UnicodeInfo.o: $(UPPDIR1)Core/UnicodeInfo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52541,6 +52848,7 @@ $(OutDir_Core)CharSet.o: $(UPPDIR1)Core/CharSet.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52629,6 +52937,7 @@ $(OutDir_Core)Bom.o: $(UPPDIR1)Core/Bom.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Bom.cpp \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
@@ -52717,6 +53026,7 @@ $(OutDir_Core)Path.o: $(UPPDIR1)Core/Path.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52805,6 +53115,7 @@ $(OutDir_Core)NetNode.o: $(UPPDIR1)Core/NetNode.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52894,6 +53205,7 @@ $(OutDir_Core)App.o: $(UPPDIR1)Core/App.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -52981,6 +53293,7 @@ $(OutDir_Core)Huge.o: $(UPPDIR1)Core/Huge.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53069,6 +53382,7 @@ $(OutDir_Core)Stream.o: $(UPPDIR1)Core/Stream.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53157,6 +53471,7 @@ $(OutDir_Core)BlockStream.o: $(UPPDIR1)Core/BlockStream.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/BlockStream.cpp \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
@@ -53245,6 +53560,7 @@ $(OutDir_Core)FilterStream.o: $(UPPDIR1)Core/FilterStream.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53333,6 +53649,7 @@ $(OutDir_Core)FileMapping.o: $(UPPDIR1)Core/FileMapping.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53421,6 +53738,7 @@ $(OutDir_Core)Log.o: $(UPPDIR1)Core/Log.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53509,6 +53827,7 @@ $(OutDir_Core)Debug.o: $(UPPDIR1)Core/Debug.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53597,6 +53916,7 @@ $(OutDir_Core)Ini.o: $(UPPDIR1)Core/Ini.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53685,6 +54005,7 @@ $(OutDir_Core)Util.o: $(UPPDIR1)Core/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53773,6 +54094,7 @@ $(OutDir_Core)mathutil.o: $(UPPDIR1)Core/mathutil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53861,6 +54183,7 @@ $(OutDir_Core)Random.o: $(UPPDIR1)Core/Random.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -53949,6 +54272,7 @@ $(OutDir_Core)Speller.o: $(UPPDIR1)Core/Speller.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54037,6 +54361,7 @@ $(OutDir_Core)LocalProcess.o: $(UPPDIR1)Core/LocalProcess.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54119,12 +54444,102 @@ $(OutDir_Core)LocalProcess.o: $(UPPDIR1)Core/LocalProcess.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/LocalProcess.cpp -o $(OutDir_Core)LocalProcess.o
 
+$(OutDir_Core)BinUndoRedo.o: $(UPPDIR1)Core/BinUndoRedo.cpp \
+	$(UPPDIR1)Core/Algo.h \
+	$(UPPDIR1)Core/App.h \
+	$(UPPDIR1)Core/AString.hpp \
+	$(UPPDIR1)Core/Atomic.h \
+	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.cpp \
+	$(UPPDIR1)Core/BinUndoRedo.h \
+	$(UPPDIR1)Core/Callback.h \
+	$(UPPDIR1)Core/CallbackN.i \
+	$(UPPDIR1)Core/CallbackNP.i \
+	$(UPPDIR1)Core/CallbackR.i \
+	$(UPPDIR1)Core/CharFilter.h \
+	$(UPPDIR1)Core/CharSet.h \
+	$(UPPDIR1)Core/CharSet.i \
+	$(UPPDIR1)Core/CoAlgo.h \
+	$(UPPDIR1)Core/Color.h \
+	$(UPPDIR1)Core/Complex.h \
+	$(UPPDIR1)Core/config.h \
+	$(UPPDIR1)Core/Convert.h \
+	$(UPPDIR1)Core/Convert.hpp \
+	$(UPPDIR1)Core/Core.h \
+	$(UPPDIR1)Core/CoSort.h \
+	$(UPPDIR1)Core/CoWork.h \
+	$(UPPDIR1)Core/Defs.h \
+	$(UPPDIR1)Core/Diag.h \
+	$(UPPDIR1)Core/FileMapping.h \
+	$(UPPDIR1)Core/FilterStream.h \
+	$(UPPDIR1)Core/FixedMap.h \
+	$(UPPDIR1)Core/Fn.h \
+	$(UPPDIR1)Core/Format.h \
+	$(UPPDIR1)Core/Function.h \
+	$(UPPDIR1)Core/Gtypes.h \
+	$(UPPDIR1)Core/Hash.h \
+	$(UPPDIR1)Core/Heap.h \
+	$(UPPDIR1)Core/HttpStatusCode.i \
+	$(UPPDIR1)Core/Huge.h \
+	$(UPPDIR1)Core/i18n.h \
+	$(UPPDIR1)Core/Index.h \
+	$(UPPDIR1)Core/Index.hpp \
+	$(UPPDIR1)Core/Inet.h \
+	$(UPPDIR1)Core/InMap.hpp \
+	$(UPPDIR1)Core/InVector.h \
+	$(UPPDIR1)Core/InVector.hpp \
+	$(UPPDIR1)Core/JSON.h \
+	$(UPPDIR1)Core/Lang.h \
+	$(UPPDIR1)Core/Lang_s.h \
+	$(UPPDIR1)Core/LocalProcess.h \
+	$(UPPDIR1)Core/Map.h \
+	$(UPPDIR1)Core/Map.hpp \
+	$(UPPDIR1)Core/Mem.h \
+	$(UPPDIR1)Core/Mt.h \
+	$(UPPDIR1)Core/Obsolete.h \
+	$(UPPDIR1)Core/Ops.h \
+	$(UPPDIR1)Core/Other.h \
+	$(UPPDIR1)Core/Other.hpp \
+	$(UPPDIR1)Core/Parser.h \
+	$(UPPDIR1)Core/Path.h \
+	$(UPPDIR1)Core/Profile.h \
+	$(UPPDIR1)Core/Ptr.h \
+	$(UPPDIR1)Core/Range.h \
+	$(UPPDIR1)Core/Sort.h \
+	$(UPPDIR1)Core/Sorted.h \
+	$(UPPDIR1)Core/SplitMerge.h \
+	$(UPPDIR1)Core/Stream.h \
+	$(UPPDIR1)Core/String.h \
+	$(UPPDIR1)Core/t_.h \
+	$(UPPDIR1)Core/TimeDate.h \
+	$(UPPDIR1)Core/Topic.h \
+	$(UPPDIR1)Core/Topt.h \
+	$(UPPDIR1)Core/Tuple.h \
+	$(UPPDIR1)Core/Utf.hpp \
+	$(UPPDIR1)Core/Util.h \
+	$(UPPDIR1)Core/Uuid.h \
+	$(UPPDIR1)Core/Value.h \
+	$(UPPDIR1)Core/Value.hpp \
+	$(UPPDIR1)Core/ValueCache.h \
+	$(UPPDIR1)Core/ValueUtil.h \
+	$(UPPDIR1)Core/ValueUtil.hpp \
+	$(UPPDIR1)Core/Vcont.h \
+	$(UPPDIR1)Core/Vcont.hpp \
+	$(UPPDIR1)Core/Win32Util.h \
+	$(UPPDIR1)Core/XML.h \
+	$(UPPDIR1)Core/Xmlize.h \
+	$(UPPDIR1)Core/Xmlize.hpp \
+	$(UPPDIR1)Core/z.h \
+	$(UPPDIR1)uppconfig.h
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Core)  $(UPPDIR1)Core/BinUndoRedo.cpp -o $(OutDir_Core)BinUndoRedo.o
+
 $(OutDir_Core)PackedData.o: $(UPPDIR1)Core/PackedData.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54213,6 +54628,7 @@ $(OutDir_Core)Vcont.o: $(UPPDIR1)Core/Vcont.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54301,6 +54717,7 @@ $(OutDir_Core)Index.o: $(UPPDIR1)Core/Index.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54389,6 +54806,7 @@ $(OutDir_Core)TimeDate.o: $(UPPDIR1)Core/TimeDate.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54477,6 +54895,7 @@ $(OutDir_Core)Value.o: $(UPPDIR1)Core/Value.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54565,6 +54984,7 @@ $(OutDir_Core)ValueUtil.o: $(UPPDIR1)Core/ValueUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54653,6 +55073,7 @@ $(OutDir_Core)Format.o: $(UPPDIR1)Core/Format.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54741,6 +55162,7 @@ $(OutDir_Core)CvFlt.o: $(UPPDIR1)Core/CvFlt.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54830,6 +55252,7 @@ $(OutDir_Core)Convert.o: $(UPPDIR1)Core/Convert.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -54918,6 +55341,7 @@ $(OutDir_Core)Color.o: $(UPPDIR1)Core/Color.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55006,6 +55430,7 @@ $(OutDir_Core)Gtypes.o: $(UPPDIR1)Core/Gtypes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55094,6 +55519,7 @@ $(OutDir_Core)t.o: $(UPPDIR1)Core/t.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55184,6 +55610,7 @@ $(OutDir_Core)Lang.o: $(UPPDIR1)Core/Lang.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55272,6 +55699,7 @@ $(OutDir_Core)LangInfo.o: $(UPPDIR1)Core/LangInfo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55360,6 +55788,7 @@ $(OutDir_Core)parser.o: $(UPPDIR1)Core/parser.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55448,6 +55877,7 @@ $(OutDir_Core)XML.o: $(UPPDIR1)Core/XML.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55536,6 +55966,7 @@ $(OutDir_Core)Xmlize.o: $(UPPDIR1)Core/Xmlize.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55624,6 +56055,7 @@ $(OutDir_Core)JSON.o: $(UPPDIR1)Core/JSON.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55712,6 +56144,7 @@ $(OutDir_Core)Uuid.o: $(UPPDIR1)Core/Uuid.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55800,6 +56233,7 @@ $(OutDir_Core)Ptr.o: $(UPPDIR1)Core/Ptr.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55888,6 +56322,7 @@ $(OutDir_Core)z.o: $(UPPDIR1)Core/z.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -55981,6 +56416,7 @@ $(OutDir_Core)Topic.o: $(UPPDIR1)Core/Topic.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56069,6 +56505,7 @@ $(OutDir_Core)CoWork.o: $(UPPDIR1)Core/CoWork.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56157,6 +56594,7 @@ $(OutDir_Core)ValueCache.o: $(UPPDIR1)Core/ValueCache.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56245,6 +56683,7 @@ $(OutDir_Core)MD5.o: $(UPPDIR1)Core/MD5.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56333,6 +56772,7 @@ $(OutDir_Core)SHA1.o: $(UPPDIR1)Core/SHA1.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56421,6 +56861,7 @@ $(OutDir_Core)SHA256.o: $(UPPDIR1)Core/SHA256.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56514,6 +56955,7 @@ $(OutDir_Core)xxHsh.o: $(UPPDIR1)Core/xxHsh.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56603,6 +57045,7 @@ $(OutDir_Core)InetUtil.o: $(UPPDIR1)Core/InetUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56691,6 +57134,7 @@ $(OutDir_Core)MIME.o: $(UPPDIR1)Core/MIME.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56779,6 +57223,7 @@ $(OutDir_Core)Socket.o: $(UPPDIR1)Core/Socket.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56867,6 +57312,7 @@ $(OutDir_Core)Http.o: $(UPPDIR1)Core/Http.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -56955,6 +57401,7 @@ $(OutDir_Core)WebSocket.o: $(UPPDIR1)Core/WebSocket.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57043,6 +57490,7 @@ $(OutDir_Core)Dli.o: $(UPPDIR1)Core/Dli.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57131,6 +57579,7 @@ $(OutDir_Core)Win32Util.o: $(UPPDIR1)Core/Win32Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57248,6 +57697,7 @@ $(OutDir_Core)Core.a: \
 	$(OutDir_Core)Random.o \
 	$(OutDir_Core)Speller.o \
 	$(OutDir_Core)LocalProcess.o \
+	$(OutDir_Core)BinUndoRedo.o \
 	$(OutDir_Core)PackedData.o \
 	$(OutDir_Core)Vcont.o \
 	$(OutDir_Core)Index.o \
@@ -57320,6 +57770,7 @@ $(OutDir_Core)Core.a: \
 		$(OutDir_Core)Random.o \
 		$(OutDir_Core)Speller.o \
 		$(OutDir_Core)LocalProcess.o \
+		$(OutDir_Core)BinUndoRedo.o \
 		$(OutDir_Core)PackedData.o \
 		$(OutDir_Core)Vcont.o \
 		$(OutDir_Core)Index.o \
@@ -57367,6 +57818,7 @@ $(OutDir_plugin_lzma)lzma.o: $(UPPDIR1)plugin/lzma/lzma.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57511,6 +57963,7 @@ $(OutDir_plugin_lz4)Compress.o: $(UPPDIR1)plugin/lz4/Compress.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57601,6 +58054,7 @@ $(OutDir_plugin_lz4)Decompress.o: $(UPPDIR1)plugin/lz4/Decompress.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57691,6 +58145,7 @@ $(OutDir_plugin_lz4)util.o: $(UPPDIR1)plugin/lz4/util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57793,6 +58248,7 @@ $(OutDir_plugin_zstd)Compress.o: $(UPPDIR1)plugin/zstd/Compress.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57883,6 +58339,7 @@ $(OutDir_plugin_zstd)Decompress.o: $(UPPDIR1)plugin/zstd/Decompress.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -57973,6 +58430,7 @@ $(OutDir_plugin_zstd)Util.o: $(UPPDIR1)plugin/zstd/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -58534,6 +58992,7 @@ $(OutDir_RichEdit)Ruler.o: $(UPPDIR1)RichEdit/Ruler.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -58691,6 +59150,7 @@ $(OutDir_RichEdit)UnitEdit.o: $(UPPDIR1)RichEdit/UnitEdit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -58847,6 +59307,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59005,6 +59466,7 @@ $(OutDir_RichEdit)Speller.o: $(UPPDIR1)RichEdit/Speller.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59161,6 +59623,7 @@ $(OutDir_RichEdit)Kbd.o: $(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59317,6 +59780,7 @@ $(OutDir_RichEdit)Mouse.o: $(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59473,6 +59937,7 @@ $(OutDir_RichEdit)Cursor.o: $(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59629,6 +60094,7 @@ $(OutDir_RichEdit)Undo.o: $(UPPDIR1)RichEdit/Undo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59785,6 +60251,7 @@ $(OutDir_RichEdit)Modify.o: $(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -59941,6 +60408,7 @@ $(OutDir_RichEdit)Formating.o: $(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60097,6 +60565,7 @@ $(OutDir_RichEdit)FormatDlg.o: $(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60253,6 +60722,7 @@ $(OutDir_RichEdit)ParaFormat.o: $(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60409,6 +60879,7 @@ $(OutDir_RichEdit)TableUndo.o: $(UPPDIR1)RichEdit/TableUndo.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60565,6 +61036,7 @@ $(OutDir_RichEdit)Table.o: $(UPPDIR1)RichEdit/Table.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60721,6 +61193,7 @@ $(OutDir_RichEdit)Find.o: $(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -60877,6 +61350,7 @@ $(OutDir_RichEdit)Tool.o: $(UPPDIR1)RichEdit/Tool.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61033,6 +61507,7 @@ $(OutDir_RichEdit)Clip.o: $(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61189,6 +61664,7 @@ $(OutDir_RichEdit)StyleKeys.o: $(UPPDIR1)RichEdit/StyleKeys.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61345,6 +61821,7 @@ $(OutDir_RichEdit)HeaderFooter.o: $(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61549,6 +62026,7 @@ $(OutDir_plugin_png)pngupp.o: $(UPPDIR1)plugin/png/pngupp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61650,6 +62128,7 @@ $(OutDir_plugin_png)pngreg.o: $(UPPDIR1)plugin/png/pngreg.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61761,6 +62240,7 @@ $(OutDir_Draw)Font.o: $(UPPDIR1)Draw/Font.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61861,6 +62341,7 @@ $(OutDir_Draw)FontCR.o: $(UPPDIR1)Draw/FontCR.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -61962,6 +62443,7 @@ $(OutDir_Draw)FontWin32.o: $(UPPDIR1)Draw/FontWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62062,6 +62544,7 @@ $(OutDir_Draw)FontFc.o: $(UPPDIR1)Draw/FontFc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62162,6 +62645,7 @@ $(OutDir_Draw)FontCocoNOMM.o: $(UPPDIR1)Draw/FontCocoNOMM.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62262,6 +62746,7 @@ $(OutDir_Draw)Draw.o: $(UPPDIR1)Draw/Draw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62362,6 +62847,7 @@ $(OutDir_Draw)DrawText.o: $(UPPDIR1)Draw/DrawText.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62462,6 +62948,7 @@ $(OutDir_Draw)DrawData.o: $(UPPDIR1)Draw/DrawData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62562,6 +63049,7 @@ $(OutDir_Draw)Drawing.o: $(UPPDIR1)Draw/Drawing.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62662,6 +63150,7 @@ $(OutDir_Draw)ImageAnyDraw.o: $(UPPDIR1)Draw/ImageAnyDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62762,6 +63251,7 @@ $(OutDir_Draw)DrawUtil.o: $(UPPDIR1)Draw/DrawUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62862,6 +63352,7 @@ $(OutDir_Draw)DrawTextUtil.o: $(UPPDIR1)Draw/DrawTextUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -62962,6 +63453,7 @@ $(OutDir_Draw)Display.o: $(UPPDIR1)Draw/Display.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63063,6 +63555,7 @@ $(OutDir_Draw)Image.o: $(UPPDIR1)Draw/Image.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63163,6 +63656,7 @@ $(OutDir_Draw)ImageBlit.o: $(UPPDIR1)Draw/ImageBlit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63263,6 +63757,7 @@ $(OutDir_Draw)RasterFormat.o: $(UPPDIR1)Draw/RasterFormat.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63363,6 +63858,7 @@ $(OutDir_Draw)RasterWrite.o: $(UPPDIR1)Draw/RasterWrite.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63463,6 +63959,7 @@ $(OutDir_Draw)Palette.o: $(UPPDIR1)Draw/Palette.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63563,6 +64060,7 @@ $(OutDir_Draw)Raster.o: $(UPPDIR1)Draw/Raster.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63663,6 +64161,7 @@ $(OutDir_Draw)RasterEncoder.o: $(UPPDIR1)Draw/RasterEncoder.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63763,6 +64262,7 @@ $(OutDir_Draw)ImageOp.o: $(UPPDIR1)Draw/ImageOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63863,6 +64363,7 @@ $(OutDir_Draw)ImageChOp.o: $(UPPDIR1)Draw/ImageChOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -63963,6 +64464,7 @@ $(OutDir_Draw)Mify.o: $(UPPDIR1)Draw/Mify.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64063,6 +64565,7 @@ $(OutDir_Draw)ImageScale.o: $(UPPDIR1)Draw/ImageScale.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64163,6 +64666,7 @@ $(OutDir_Draw)RescaleFilter.o: $(UPPDIR1)Draw/RescaleFilter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64263,6 +64767,7 @@ $(OutDir_Draw)MakeCache.o: $(UPPDIR1)Draw/MakeCache.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64363,6 +64868,7 @@ $(OutDir_Draw)DrawRasterData.o: $(UPPDIR1)Draw/DrawRasterData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64463,6 +64969,7 @@ $(OutDir_Draw)Uhd.o: $(UPPDIR1)Draw/Uhd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64563,6 +65070,7 @@ $(OutDir_Draw)Iml.o: $(UPPDIR1)Draw/Iml.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64663,6 +65171,7 @@ $(OutDir_Draw)DDARasterizer.o: $(UPPDIR1)Draw/DDARasterizer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64763,6 +65272,7 @@ $(OutDir_Draw)SDrawClip.o: $(UPPDIR1)Draw/SDrawClip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64863,6 +65373,7 @@ $(OutDir_Draw)SDrawPut.o: $(UPPDIR1)Draw/SDrawPut.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -64963,6 +65474,7 @@ $(OutDir_Draw)SDrawText.o: $(UPPDIR1)Draw/SDrawText.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65063,6 +65575,7 @@ $(OutDir_Draw)SDraw.o: $(UPPDIR1)Draw/SDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65163,6 +65676,7 @@ $(OutDir_Draw)SImageDraw.o: $(UPPDIR1)Draw/SImageDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65263,6 +65777,7 @@ $(OutDir_Draw)Cham.o: $(UPPDIR1)Draw/Cham.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65363,6 +65878,7 @@ $(OutDir_Draw)SColors.o: $(UPPDIR1)Draw/SColors.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65543,6 +66059,7 @@ $(OutDir_PdfDraw)TTFStream.o: $(UPPDIR1)PdfDraw/TTFStream.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65650,6 +66167,7 @@ $(OutDir_PdfDraw)TTFStruct.o: $(UPPDIR1)PdfDraw/TTFStruct.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65757,6 +66275,7 @@ $(OutDir_PdfDraw)TTFSubset.o: $(UPPDIR1)PdfDraw/TTFSubset.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65864,6 +66383,7 @@ $(OutDir_PdfDraw)TTFReader.o: $(UPPDIR1)PdfDraw/TTFReader.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -65971,6 +66491,7 @@ $(OutDir_PdfDraw)PdfDraw.o: $(UPPDIR1)PdfDraw/PdfDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66079,6 +66600,7 @@ $(OutDir_PdfDraw)PdfReport.o: $(UPPDIR1)PdfDraw/PdfReport.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66186,6 +66708,7 @@ $(OutDir_PdfDraw)PdfInit.o: $(UPPDIR1)PdfDraw/PdfInit.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66311,6 +66834,7 @@ $(OutDir_Painter)Painter.o: $(UPPDIR1)Painter/Painter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66416,6 +66940,7 @@ $(OutDir_Painter)SvgArc.o: $(UPPDIR1)Painter/SvgArc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66521,6 +67046,7 @@ $(OutDir_Painter)PainterPath.o: $(UPPDIR1)Painter/PainterPath.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66626,6 +67152,7 @@ $(OutDir_Painter)DrawOp.o: $(UPPDIR1)Painter/DrawOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66731,6 +67258,7 @@ $(OutDir_Painter)Painting.o: $(UPPDIR1)Painter/Painting.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66836,6 +67364,7 @@ $(OutDir_Painter)PaintPainting.o: $(UPPDIR1)Painter/PaintPainting.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -66941,6 +67470,7 @@ $(OutDir_Painter)Xform2D.o: $(UPPDIR1)Painter/Xform2D.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67046,6 +67576,7 @@ $(OutDir_Painter)Approximate.o: $(UPPDIR1)Painter/Approximate.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67151,6 +67682,7 @@ $(OutDir_Painter)Stroker.o: $(UPPDIR1)Painter/Stroker.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67256,6 +67788,7 @@ $(OutDir_Painter)Dasher.o: $(UPPDIR1)Painter/Dasher.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67361,6 +67894,7 @@ $(OutDir_Painter)Transformer.o: $(UPPDIR1)Painter/Transformer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67466,6 +68000,7 @@ $(OutDir_Painter)Rasterizer.o: $(UPPDIR1)Painter/Rasterizer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67571,6 +68106,7 @@ $(OutDir_Painter)RasterizerClip.o: $(UPPDIR1)Painter/RasterizerClip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67676,6 +68212,7 @@ $(OutDir_Painter)RenderChar.o: $(UPPDIR1)Painter/RenderChar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67781,6 +68318,7 @@ $(OutDir_Painter)Fillers.o: $(UPPDIR1)Painter/Fillers.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67888,6 +68426,7 @@ $(OutDir_Painter)Context.o: $(UPPDIR1)Painter/Context.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -67993,6 +68532,7 @@ $(OutDir_Painter)Path.o: $(UPPDIR1)Painter/Path.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68098,6 +68638,7 @@ $(OutDir_Painter)Render.o: $(UPPDIR1)Painter/Render.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68204,6 +68745,7 @@ $(OutDir_Painter)Image.o: $(UPPDIR1)Painter/Image.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68309,6 +68851,7 @@ $(OutDir_Painter)Mask.o: $(UPPDIR1)Painter/Mask.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68414,6 +68957,7 @@ $(OutDir_Painter)Gradient.o: $(UPPDIR1)Painter/Gradient.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68519,6 +69063,7 @@ $(OutDir_Painter)RadialGradient.o: $(UPPDIR1)Painter/RadialGradient.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68624,6 +69169,7 @@ $(OutDir_Painter)OnPath.o: $(UPPDIR1)Painter/OnPath.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68729,6 +69275,7 @@ $(OutDir_Painter)SvgUtil.o: $(UPPDIR1)Painter/SvgUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68835,6 +69382,7 @@ $(OutDir_Painter)SvgBounds.o: $(UPPDIR1)Painter/SvgBounds.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -68941,6 +69489,7 @@ $(OutDir_Painter)SvgStyle.o: $(UPPDIR1)Painter/SvgStyle.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69047,6 +69596,7 @@ $(OutDir_Painter)SvgParser.o: $(UPPDIR1)Painter/SvgParser.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69213,6 +69763,7 @@ $(OutDir_plugin_pcre)RegExp.o: $(UPPDIR1)plugin/pcre/RegExp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69342,6 +69893,7 @@ $(OutDir_CtrlCore)SystemDraw.o: $(UPPDIR1)CtrlCore/SystemDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69459,6 +70011,7 @@ $(OutDir_CtrlCore)Frame.o: $(UPPDIR1)CtrlCore/Frame.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69576,6 +70129,7 @@ $(OutDir_CtrlCore)CtrlMt.o: $(UPPDIR1)CtrlCore/CtrlMt.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69693,6 +70247,7 @@ $(OutDir_CtrlCore)Ctrl.o: $(UPPDIR1)CtrlCore/Ctrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69811,6 +70366,7 @@ $(OutDir_CtrlCore)CtrlAttr.o: $(UPPDIR1)CtrlCore/CtrlAttr.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -69928,6 +70484,7 @@ $(OutDir_CtrlCore)CtrlChild.o: $(UPPDIR1)CtrlCore/CtrlChild.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70045,6 +70602,7 @@ $(OutDir_CtrlCore)CtrlFrame.o: $(UPPDIR1)CtrlCore/CtrlFrame.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70162,6 +70720,7 @@ $(OutDir_CtrlCore)CtrlPos.o: $(UPPDIR1)CtrlCore/CtrlPos.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70279,6 +70838,7 @@ $(OutDir_CtrlCore)CtrlDraw.o: $(UPPDIR1)CtrlCore/CtrlDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70396,6 +70956,7 @@ $(OutDir_CtrlCore)CtrlMouse.o: $(UPPDIR1)CtrlCore/CtrlMouse.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70513,6 +71074,7 @@ $(OutDir_CtrlCore)CtrlKbd.o: $(UPPDIR1)CtrlCore/CtrlKbd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70630,6 +71192,7 @@ $(OutDir_CtrlCore)CtrlTimer.o: $(UPPDIR1)CtrlCore/CtrlTimer.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70747,6 +71310,7 @@ $(OutDir_CtrlCore)CtrlClip.o: $(UPPDIR1)CtrlCore/CtrlClip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70864,6 +71428,7 @@ $(OutDir_CtrlCore)LocalLoop.o: $(UPPDIR1)CtrlCore/LocalLoop.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -70981,6 +71546,7 @@ $(OutDir_CtrlCore)Preedit.o: $(UPPDIR1)CtrlCore/Preedit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71098,6 +71664,7 @@ $(OutDir_CtrlCore)CtrlCoreInit.o: $(UPPDIR1)CtrlCore/CtrlCoreInit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71217,6 +71784,7 @@ $(OutDir_CtrlCore)TopWindow.o: $(UPPDIR1)CtrlCore/TopWindow.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71334,6 +71902,7 @@ $(OutDir_CtrlCore)DrawWin32.o: $(UPPDIR1)CtrlCore/DrawWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71451,6 +72020,7 @@ $(OutDir_CtrlCore)DrawOpWin32.o: $(UPPDIR1)CtrlCore/DrawOpWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71568,6 +72138,7 @@ $(OutDir_CtrlCore)DrawTextWin32.o: $(UPPDIR1)CtrlCore/DrawTextWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71685,6 +72256,7 @@ $(OutDir_CtrlCore)ImageWin32.o: $(UPPDIR1)CtrlCore/ImageWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71802,6 +72374,7 @@ $(OutDir_CtrlCore)MetaFile.o: $(UPPDIR1)CtrlCore/MetaFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -71919,6 +72492,7 @@ $(OutDir_CtrlCore)UtilWin32.o: $(UPPDIR1)CtrlCore/UtilWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72036,6 +72610,7 @@ $(OutDir_CtrlCore)Win32Ctrl.o: $(UPPDIR1)CtrlCore/Win32Ctrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72153,6 +72728,7 @@ $(OutDir_CtrlCore)Win32Wnd.o: $(UPPDIR1)CtrlCore/Win32Wnd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72270,6 +72846,7 @@ $(OutDir_CtrlCore)Win32Clip.o: $(UPPDIR1)CtrlCore/Win32Clip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72388,6 +72965,7 @@ $(OutDir_CtrlCore)Win32DnD.o: $(UPPDIR1)CtrlCore/Win32DnD.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72505,6 +73083,7 @@ $(OutDir_CtrlCore)Win32Proc.o: $(UPPDIR1)CtrlCore/Win32Proc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72622,6 +73201,7 @@ $(OutDir_CtrlCore)TopWin32.o: $(UPPDIR1)CtrlCore/TopWin32.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72739,6 +73319,7 @@ $(OutDir_CtrlCore)DHCtrl.o: $(UPPDIR1)CtrlCore/DHCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72856,6 +73437,7 @@ $(OutDir_CtrlCore)DrawX11.o: $(UPPDIR1)CtrlCore/DrawX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -72973,6 +73555,7 @@ $(OutDir_CtrlCore)DrawOpX11.o: $(UPPDIR1)CtrlCore/DrawOpX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73090,6 +73673,7 @@ $(OutDir_CtrlCore)DrawTextX11.o: $(UPPDIR1)CtrlCore/DrawTextX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73207,6 +73791,7 @@ $(OutDir_CtrlCore)ImageX11.o: $(UPPDIR1)CtrlCore/ImageX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73324,6 +73909,7 @@ $(OutDir_CtrlCore)UtilX11.o: $(UPPDIR1)CtrlCore/UtilX11.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73441,6 +74027,7 @@ $(OutDir_CtrlCore)X11Ctrl.o: $(UPPDIR1)CtrlCore/X11Ctrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73558,6 +74145,7 @@ $(OutDir_CtrlCore)X11Wnd.o: $(UPPDIR1)CtrlCore/X11Wnd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73675,6 +74263,7 @@ $(OutDir_CtrlCore)X11Proc.o: $(UPPDIR1)CtrlCore/X11Proc.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73792,6 +74381,7 @@ $(OutDir_CtrlCore)X11Clip.o: $(UPPDIR1)CtrlCore/X11Clip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -73909,6 +74499,7 @@ $(OutDir_CtrlCore)X11DnD.o: $(UPPDIR1)CtrlCore/X11DnD.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74026,6 +74617,7 @@ $(OutDir_CtrlCore)X11Top.o: $(UPPDIR1)CtrlCore/X11Top.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74143,6 +74735,7 @@ $(OutDir_CtrlCore)X11ImgClip.o: $(UPPDIR1)CtrlCore/X11ImgClip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74260,6 +74853,7 @@ $(OutDir_CtrlCore)X11App.o: $(UPPDIR1)CtrlCore/X11App.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74377,6 +74971,7 @@ $(OutDir_CtrlCore)X11DHCtrl.o: $(UPPDIR1)CtrlCore/X11DHCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74494,6 +75089,7 @@ $(OutDir_CtrlCore)GtkDrawOp.o: $(UPPDIR1)CtrlCore/GtkDrawOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74611,6 +75207,7 @@ $(OutDir_CtrlCore)GtkDrawText.o: $(UPPDIR1)CtrlCore/GtkDrawText.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74728,6 +75325,7 @@ $(OutDir_CtrlCore)GtkDrawImage.o: $(UPPDIR1)CtrlCore/GtkDrawImage.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74845,6 +75443,7 @@ $(OutDir_CtrlCore)GdkImage.o: $(UPPDIR1)CtrlCore/GdkImage.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -74962,6 +75561,7 @@ $(OutDir_CtrlCore)GtkUtil.o: $(UPPDIR1)CtrlCore/GtkUtil.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75079,6 +75679,7 @@ $(OutDir_CtrlCore)GtkX11Util.o: $(UPPDIR1)CtrlCore/GtkX11Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75196,6 +75797,7 @@ $(OutDir_CtrlCore)GtkCtrl.o: $(UPPDIR1)CtrlCore/GtkCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75313,6 +75915,7 @@ $(OutDir_CtrlCore)GtkCapture.o: $(UPPDIR1)CtrlCore/GtkCapture.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75430,6 +76033,7 @@ $(OutDir_CtrlCore)GtkCSD.o: $(UPPDIR1)CtrlCore/GtkCSD.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75547,6 +76151,7 @@ $(OutDir_CtrlCore)GtkWnd.o: $(UPPDIR1)CtrlCore/GtkWnd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75664,6 +76269,7 @@ $(OutDir_CtrlCore)GtkCreate.o: $(UPPDIR1)CtrlCore/GtkCreate.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75781,6 +76387,7 @@ $(OutDir_CtrlCore)GtkEvent.o: $(UPPDIR1)CtrlCore/GtkEvent.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -75898,6 +76505,7 @@ $(OutDir_CtrlCore)GtkTop.o: $(UPPDIR1)CtrlCore/GtkTop.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76015,6 +76623,7 @@ $(OutDir_CtrlCore)GtkClip.o: $(UPPDIR1)CtrlCore/GtkClip.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76133,6 +76742,7 @@ $(OutDir_CtrlCore)GtkDnD.o: $(UPPDIR1)CtrlCore/GtkDnD.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76250,6 +76860,7 @@ $(OutDir_CtrlCore)GtkApp.o: $(UPPDIR1)CtrlCore/GtkApp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76367,6 +76978,7 @@ $(OutDir_CtrlCore)CocoCtrl.o: $(UPPDIR1)CtrlCore/CocoCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76484,6 +77096,7 @@ $(OutDir_CtrlCore)CocoWnd.o: $(UPPDIR1)CtrlCore/CocoWnd.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76601,6 +77214,7 @@ $(OutDir_CtrlCore)CocoTop.o: $(UPPDIR1)CtrlCore/CocoTop.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76718,6 +77332,7 @@ $(OutDir_CtrlCore)CocoChSysInit.o: $(UPPDIR1)CtrlCore/CocoChSysInit.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76835,6 +77450,7 @@ $(OutDir_CtrlCore)ParseRTF.o: $(UPPDIR1)CtrlCore/ParseRTF.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -76952,6 +77568,7 @@ $(OutDir_CtrlCore)EncodeRTF.o: $(UPPDIR1)CtrlCore/EncodeRTF.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77207,6 +77824,7 @@ $(OutDir_plugin_bmp)Bmp.o: $(UPPDIR1)plugin/bmp/Bmp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77309,6 +77927,7 @@ $(OutDir_plugin_bmp)BmpWrite.o: $(UPPDIR1)plugin/bmp/BmpWrite.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77411,6 +78030,7 @@ $(OutDir_plugin_bmp)Icon.o: $(UPPDIR1)plugin/bmp/Icon.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77513,6 +78133,7 @@ $(OutDir_plugin_bmp)BmpReg.o: $(UPPDIR1)plugin/bmp/BmpReg.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77626,6 +78247,7 @@ $(OutDir_RichText)Object.o: $(UPPDIR1)RichText/Object.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77738,6 +78360,7 @@ $(OutDir_RichText)RichImage.o: $(UPPDIR1)RichText/RichImage.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77850,6 +78473,7 @@ $(OutDir_RichText)ParaData.o: $(UPPDIR1)RichText/ParaData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -77962,6 +78586,7 @@ $(OutDir_RichText)ParaType.o: $(UPPDIR1)RichText/ParaType.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78074,6 +78699,7 @@ $(OutDir_RichText)ParaPaint.o: $(UPPDIR1)RichText/ParaPaint.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78187,6 +78813,7 @@ $(OutDir_RichText)HeaderFooter.o: $(UPPDIR1)RichText/HeaderFooter.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78299,6 +78926,7 @@ $(OutDir_RichText)TxtData.o: $(UPPDIR1)RichText/TxtData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78411,6 +79039,7 @@ $(OutDir_RichText)TxtPaint.o: $(UPPDIR1)RichText/TxtPaint.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78523,6 +79152,7 @@ $(OutDir_RichText)TxtOp.o: $(UPPDIR1)RichText/TxtOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78635,6 +79265,7 @@ $(OutDir_RichText)Format.o: $(UPPDIR1)RichText/Format.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78747,6 +79378,7 @@ $(OutDir_RichText)TableCell.o: $(UPPDIR1)RichText/TableCell.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78859,6 +79491,7 @@ $(OutDir_RichText)TableLayout.o: $(UPPDIR1)RichText/TableLayout.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -78971,6 +79604,7 @@ $(OutDir_RichText)TablePaint.o: $(UPPDIR1)RichText/TablePaint.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79083,6 +79717,7 @@ $(OutDir_RichText)TableData.o: $(UPPDIR1)RichText/TableData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79195,6 +79830,7 @@ $(OutDir_RichText)TextPaint.o: $(UPPDIR1)RichText/TextPaint.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79307,6 +79943,7 @@ $(OutDir_RichText)TextStyle.o: $(UPPDIR1)RichText/TextStyle.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79419,6 +80056,7 @@ $(OutDir_RichText)TextData.o: $(UPPDIR1)RichText/TextData.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79531,6 +80169,7 @@ $(OutDir_RichText)TextTable.o: $(UPPDIR1)RichText/TextTable.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79643,6 +80282,7 @@ $(OutDir_RichText)EncodeQtf.o: $(UPPDIR1)RichText/EncodeQtf.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79755,6 +80395,7 @@ $(OutDir_RichText)ParseQtf.o: $(UPPDIR1)RichText/ParseQtf.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79867,6 +80508,7 @@ $(OutDir_RichText)EncodeHTML.o: $(UPPDIR1)RichText/EncodeHTML.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -79979,6 +80621,7 @@ $(OutDir_RichText)ParseHTML.o: $(UPPDIR1)RichText/ParseHTML.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -80091,6 +80734,7 @@ $(OutDir_RichText)Util.o: $(UPPDIR1)RichText/Util.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -80265,6 +80909,7 @@ $(OutDir_ide_IconDes)IconDraw.o: $(UPPDIR1)ide/IconDes/IconDraw.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -80451,6 +81096,7 @@ $(OutDir_ide_IconDes)AlphaCtrl.o: $(UPPDIR1)ide/IconDes/AlphaCtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -80637,6 +81283,7 @@ $(OutDir_ide_IconDes)RGBACtrl.o: $(UPPDIR1)ide/IconDes/RGBACtrl.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -80823,6 +81470,7 @@ $(OutDir_ide_IconDes)ImageOp.o: $(UPPDIR1)ide/IconDes/ImageOp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81009,6 +81657,7 @@ $(OutDir_ide_IconDes)Paint.o: $(UPPDIR1)ide/IconDes/Paint.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81196,6 +81845,7 @@ $(OutDir_ide_IconDes)Event.o: $(UPPDIR1)ide/IconDes/Event.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81382,6 +82032,7 @@ $(OutDir_ide_IconDes)IconDes.o: $(UPPDIR1)ide/IconDes/IconDes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81568,6 +82219,7 @@ $(OutDir_ide_IconDes)List.o: $(UPPDIR1)ide/IconDes/List.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81754,6 +82406,7 @@ $(OutDir_ide_IconDes)Image.o: $(UPPDIR1)ide/IconDes/Image.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -81940,6 +82593,7 @@ $(OutDir_ide_IconDes)Smoothen.o: $(UPPDIR1)ide/IconDes/Smoothen.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -82126,6 +82780,7 @@ $(OutDir_ide_IconDes)Text.o: $(UPPDIR1)ide/IconDes/Text.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -82312,6 +82967,7 @@ $(OutDir_ide_IconDes)Bar.o: $(UPPDIR1)ide/IconDes/Bar.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -82499,6 +83155,7 @@ $(OutDir_ide_IconDes)EditPos.o: $(UPPDIR1)ide/IconDes/EditPos.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -82685,6 +83342,7 @@ $(OutDir_ide_IconDes)ImlFile.o: $(UPPDIR1)ide/IconDes/ImlFile.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -82871,6 +83529,7 @@ $(OutDir_ide_IconDes)IdeIconDes.o: $(UPPDIR1)ide/IconDes/IdeIconDes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -83103,6 +83762,7 @@ $(OutDir_ide_IconDes)IdeDes.o: $(UPPDIR1)ide/IconDes/IdeDes.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -83317,6 +83977,7 @@ $(OutDir_plugin_gif)gifupp.o: $(UPPDIR1)plugin/gif/gifupp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -83418,6 +84079,7 @@ $(OutDir_plugin_gif)gif.o: $(UPPDIR1)plugin/gif/gif.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -83527,6 +84189,7 @@ $(OutDir_plugin_jpg)jpgupp.o: $(UPPDIR1)plugin/jpg/jpgupp.cpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
@@ -83633,6 +84296,7 @@ $(OutDir_plugin_jpg)jpgreg.o: $(UPPDIR1)plugin/jpg/jpgreg.icpp \
 	$(UPPDIR1)Core/AString.hpp \
 	$(UPPDIR1)Core/Atomic.h \
 	$(UPPDIR1)Core/BiCont.h \
+	$(UPPDIR1)Core/BinUndoRedo.h \
 	$(UPPDIR1)Core/Callback.h \
 	$(UPPDIR1)Core/CallbackN.i \
 	$(UPPDIR1)Core/CallbackNP.i \
