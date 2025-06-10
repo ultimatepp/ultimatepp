@@ -430,7 +430,7 @@ bool TopWindow::IsCustomTitleBar() const
 
 TopWindow& TopWindow::CustomTitleBar(int cy)
 {
-	custom_titlebar = true;
+	custom_titlebar = is_custom_titlebar_available__;
 	custom_titlebar_cy = cy;
 	return *this;
 }

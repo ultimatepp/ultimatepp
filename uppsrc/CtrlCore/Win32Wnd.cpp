@@ -91,12 +91,6 @@ void Ctrl::EndSession()
 	endsession = true;
 }
 
-template <class U, class V>
-void AutoCast(U& a, V b)
-{
-	a = (U)b;
-}
-
 #ifndef flagDLL
 #ifndef PLATFORM_WINCE
 LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -109,10 +103,8 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		static BOOL (WINAPI *ShutdownBlockReasonCreate)(HWND hWnd, LPCWSTR pwszReason);
 		static BOOL (WINAPI *ShutdownBlockReasonDestroy)(HWND hWnd);
 		ONCELOCK {
-			if(HMODULE hDLL = LoadLibrary ("user32")) {
-				AutoCast(ShutdownBlockReasonCreate, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
-				AutoCast(ShutdownBlockReasonDestroy, GetProcAddress(hDLL, "ShutdownBlockReasonDestroy"));
-			}
+			DllFn(ShutdownBlockReasonCreate, "user32", "ShutdownBlockReasonCreate");
+			DllFn(ShutdownBlockReasonDestroy, "user32", "ShutdownBlockReasonDestroy");
 		}
 		if(ShutdownBlockReasonCreate)
 			ShutdownBlockReasonCreate(hwnd, ToSystemCharsetW(t_("waiting for user response")));

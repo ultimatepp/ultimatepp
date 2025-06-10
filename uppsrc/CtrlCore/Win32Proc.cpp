@@ -219,7 +219,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		CurrentMousePos = p;
 	
 	auto topwin = dynamic_cast<TopWindow *>(this);
-	bool custom_titlebar = topwin && topwin->custom_titlebar;
+	bool custom_titlebar = topwin && topwin->custom_titlebar && IsWin11();;
 
 	Rect titlebar_rect = Null;
 	int titlebar_button_width = 0;
