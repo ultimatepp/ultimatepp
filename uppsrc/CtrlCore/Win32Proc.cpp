@@ -139,7 +139,7 @@ void Ctrl::PaintWinBarBackground(SystemDraw& w, const Rect& clip)
 	bool custom_titlebar = false;
 	auto topwin = dynamic_cast<TopWindow *>(this);
 	HWND hwnd = GetHWND();
-	if(topwin && topwin->custom_titlebar && hwnd) {
+	if(topwin && topwin->IsCustomTitleBar() && hwnd) {
 		Rect r = GetTitleBarRect(topwin);
 		w.DrawRect(r, IsDarkTheme() ? Color(26, 34, 39) : Color(238, 244, 249));
 	}
@@ -150,7 +150,7 @@ void Ctrl::PaintWinBar(SystemDraw& w, const Rect& clip)
 	bool custom_titlebar = false;
 	auto topwin = dynamic_cast<TopWindow *>(this);
 	HWND hwnd = GetHWND();
-	if(topwin && topwin->custom_titlebar && hwnd) {
+	if(topwin && topwin->IsCustomTitleBar() && hwnd) {
 		Rect r = GetTitleBarRect(topwin);
 		int height = r.GetHeight();
 		bool maximized = IsMaximized(hwnd);
@@ -195,7 +195,7 @@ void Ctrl::SyncCustomTitleBars()
 {
 	for(Ctrl *q : GetTopWindows()) {
 		auto topwin = dynamic_cast<TopWindow *>(q);
-		if(topwin && topwin->custom_titlebar && topwin->active_titlebar_button >= 0) {
+		if(topwin && topwin->IsCustomTitleBar() && topwin->active_titlebar_button >= 0) {
 			HWND hwnd = topwin->GetHWND();
 			if(hwnd) {
 				Point p;
@@ -219,7 +219,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		CurrentMousePos = p;
 	
 	auto topwin = dynamic_cast<TopWindow *>(this);
-	bool custom_titlebar = topwin && topwin->custom_titlebar && IsWin11();;
+	bool custom_titlebar = topwin && topwin->IsCustomTitleBar();
 
 	Rect titlebar_rect = Null;
 	int titlebar_button_width = 0;

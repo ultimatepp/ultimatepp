@@ -684,7 +684,7 @@ public:
 	bool      browser_closeesc;
 	bool      bookmark_pos;
 
-	FrameTop<StaticBarArea> bararea;
+	FrameTop<StaticBarArea> bararea, bararea_tool;
 	ParentCtrl              barrect; // to do custom caption clipping
 	CursorInfoCtrl          display, display_main;
 	ImageCtrl               indeximage, indeximage2;

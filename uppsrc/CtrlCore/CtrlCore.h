@@ -1111,7 +1111,7 @@ public:
 	void             RemoveFrame(CtrlFrame& frm);
 	void             InsertFrame(int i, CtrlFrame& frm);
 	int              FindFrame(CtrlFrame& frm) const;
-	int              GetFrameCount() const   { return multi_frame ? frame.multi.count : frame.frame ? 1 : 0; }
+	int              GetFrameCount() const               { return multi_frame ? frame.multi.count : frame.frame ? 1 : 0; }
 	void             ClearFrames();
 
 	bool        IsOpen() const;
@@ -1593,22 +1593,21 @@ public:
 template <class T>
 class FrameLR : public FrameCtrl<T> {
 public:
-	virtual void FrameAddSize(Size& sz) { sz.cx += (cx ? cx : sz.cy) * this->IsShown(); }
+	virtual void FrameAddSize(Size& sz) { sz.cx += Nvl(cx, FrameButtonWidth()) * this->IsShown(); }
 
 protected:
-	int cx;
+	int cx = Null;
 
 public:
 	FrameLR& Width(int _cx)             { cx = _cx; this->RefreshParentLayout(); return *this; }
 	int      GetWidth() const           { return cx; }
-	FrameLR()                           { cx = 0; }
 };
 
 template <class T>
 class FrameLeft : public FrameLR<T> {
 public:
 	virtual void FrameLayout(Rect& r) {
-		LayoutFrameLeft(r, this, this->cx ? this->cx : FrameButtonWidth());
+		LayoutFrameLeft(r, this, Nvl(this->cx, FrameButtonWidth()));
 	}
 };
 
@@ -1616,29 +1615,28 @@ template <class T>
 class FrameRight : public FrameLR<T> {
 public:
 	virtual void FrameLayout(Rect& r) {
-		LayoutFrameRight(r, this, this->cx ? this->cx : FrameButtonWidth());
+		LayoutFrameRight(r, this, Nvl(this->cx, FrameButtonWidth()));
 	}
 };
 
 template <class T>
 class FrameTB : public FrameCtrl<T> {
 public:
-	virtual void FrameAddSize(Size& sz) { sz.cy += (cy ? cy : sz.cx) * this->IsShown(); }
+	virtual void FrameAddSize(Size& sz) { sz.cy += Nvl(cy, sz.cx) * this->IsShown(); }
 
 protected:
-	int cy;
+	int cy = Null;
 
 public:
 	FrameTB& Height(int _cy)            { cy = _cy; this->RefreshParentLayout(); return *this; }
 	int      GetHeight() const          { return cy; }
-	FrameTB()                           { cy = 0; }
 };
 
 template <class T>
 class FrameTop : public FrameTB<T> {
 public:
 	virtual void FrameLayout(Rect& r) {
-		LayoutFrameTop(r, this, this->cy ? this->cy : r.Width());
+		LayoutFrameTop(r, this, Nvl(this->cy, r.Width()));
 	}
 };
 
@@ -1646,7 +1644,7 @@ template <class T>
 class FrameBottom : public FrameTB<T> {
 public:
 	virtual void FrameLayout(Rect& r) {
-		LayoutFrameBottom(r, this, this->cy ? this->cy : r.Width());
+		LayoutFrameBottom(r, this, Nvl(this->cy, r.Width()));
 	}
 };
 

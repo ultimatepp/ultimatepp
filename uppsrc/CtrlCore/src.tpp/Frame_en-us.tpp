@@ -1,5 +1,4 @@
 topic "Frame";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Frame";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 Frame]]}}&]
 [s9; [^topic`:`/`/CtrlCore`/srcdoc`/AboutFrames`$en`-us^ Frames] are 
@@ -213,8 +213,8 @@ trlFrame]&]
 [*@4 T]>_&]
 [s2; This class extends CtrlFrame class with width attribute and 
 serves as base class to classes placing Ctrl at the left or right 
-size of parent Ctrl frame. Width is initialized to 0. 0 as width 
-indicates that width is equal to the height.&]
+size of parent Ctrl frame. Width is initialized to Null. Null 
+as width indicates that width is equal to FrameButtonWidth().&]
 [s2; &]
 [s7; [%-*C@4 T]-|Ctrl type.&]
 [s0; &]
@@ -257,8 +257,8 @@ rameLR<T>] &]
 [*@4 T]>_&]
 [s2; This class extends CtrlFrame class with height attribute and 
 serves as base class to classes placing Ctrl as the top or bottom 
-side of parent Ctrl frame. Height is initialized to 0. 0 as height 
-indicates that height is equal to the width.&]
+side of parent Ctrl frame. Height is initialized to Null. Null 
+as height indicates that height is equal to the width.&]
 [s7; [%-*C@4 T]-|Ctrl type.&]
 [s0; &]
 [s0;%- [%%/ Derived from][%%  ][^topic`:`/`/CtrlCore`/src`/Frame`$en`-us`#`:`:FrameCtrl`:`:template `<class T`> class FrameCtrl^ F

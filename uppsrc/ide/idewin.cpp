@@ -328,6 +328,8 @@ void Ide::SetupBars()
 	if(IsCustomTitleBar()) {
 		bararea.Height(GetCustomTitleBarMetrics().height);
 		barrect.Add(display_main);
+		bararea_tool.Height(0);
+		AddFrame(bararea_tool); // this is just for case that windows is overlapping and not wide enough
 	}
 
 #endif
@@ -352,9 +354,20 @@ void Ide::Layout()
 
 		if(toolbar_in_row) {
 			int tw = toolbar.GetWidth();
-			x += DPI(4);
-			toolbar.LeftPos(x, tw).VCenterPos(tcy);
-			x += tw;
+			int bah = 0;
+			if(barrect.GetSize().cx > tw + mw + Zx(150) + Zx(200)) {
+				x += DPI(4);
+				barrect.Add(toolbar.LeftPos(x, tw).VCenterPos(tcy));
+				x += tw;
+				toolbar.Transparent();
+			}
+			else {
+				bararea_tool.Add(toolbar.SizePos());
+				bah = tcy;
+				toolbar.NoTransparent();
+			}
+			if(bararea_tool.GetHeight() != bah)
+				bararea_tool.Height(bah);
 		}
 		
 		int cx = Zx(150);
