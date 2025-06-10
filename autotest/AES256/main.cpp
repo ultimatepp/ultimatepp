@@ -81,5 +81,23 @@ CONSOLE_APP_MAIN
 			DeleteFile(filename);
 	}
 
+    // Thread stress test
+    {
+        const int TCOUNT = CPU_Cores() + 4;
+        const int ITER   = 100;
+        const String data = "Thread-sensitive secret data goes here.";
+        std::atomic<int> fail(0);
+		CoFor(TCOUNT, [&](int i) {
+			for(int j = 0; j < ITER; j++) {
+				String enc = AES256Encrypt(data, password);
+				String dec = AES256Decrypt(enc, password);
+                if(enc.IsVoid() || dec != data)
+                        fail++;
+			}
+		});
+        ASSERT(fail == 0);
+    }
+
+
 	LOG("================ OK");
 }

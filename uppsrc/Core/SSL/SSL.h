@@ -165,14 +165,32 @@ public:
     String GetErrorDesc() const                                         { return err; }
 
 private:
+    bool   Init(Stream& in);
+    bool   DeriveKey(const String& password, const String& salt, byte *key, int keylen);
+    bool   Enc0(Stream& in, const byte* key, Stream& out);
+    bool   Dec0(Stream& in, const byte* key, Stream& out);
+    
+    // Encryption
+    bool   GenerateSaltAndIV(String& salt, String& iv);
+    int    WriteHeader(Stream& out, const String& salt, const String& iv);
+    bool   EncryptStream(Stream& in, Stream& out, int64& processed);
+    bool   FinalizeEncryption(Stream& out, int64& processed);
+
+    // Decryption
+    bool   ReadHeader(Stream& in, String& salt, String& iv);
+    bool   DecryptStream(Stream& in, Stream& out, int64& processed);
+    bool   ReadTag(Stream& in, String& tag);
+    bool   SetGcmTag(const String& tag);
+    bool   FinalizeDecryption(Stream& out);
+    
     bool   EncDec(bool enc, const String& in, const String& pwd, String& out);
     void   SetError(const String& txt);
 
-    EVP_CIPHER_CTX* ctx;
-    EVP_CIPHER*     cipher;
-    int             chunksize;
-    int             iteration;
-    String          err;
+    EVP_CIPHER_CTX*   ctx;
+    const EVP_CIPHER* cipher;
+    int               chunksize;
+    int               iteration;
+    String            err;
 };
 
 String AES256Encrypt(const String& in, const String& password, Gate<int64, int64> WhenProgress = Null);
