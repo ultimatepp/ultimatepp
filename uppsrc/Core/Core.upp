@@ -90,6 +90,8 @@ file
 	Speller.cpp,
 	LocalProcess.h,
 	LocalProcess.cpp,
+	BinUndoRedo.h,
+	BinUndoRedo.cpp,
 	Containers readonly separator,
 	Topt.h,
 	Range.h,

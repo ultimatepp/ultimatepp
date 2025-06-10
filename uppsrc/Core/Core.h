@@ -394,6 +394,8 @@ class JsonIO;
 
 #include "LocalProcess.h"
 
+#include "BinUndoRedo.h"
+
 #include "Inet.h"
 
 #include "Win32Util.h"
