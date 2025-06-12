@@ -93,6 +93,7 @@ void AnnotationItem::Serialize(Stream& s)
 	  % type
 	  % id
 	  % pretty
+	  % pretty0
 	  % nspace
 	  % uname
 	  % nest
@@ -127,6 +128,7 @@ String CachedAnnotationPath(const String& source_file, const String& defines, co
 	  << defines
 	  << includes
 	  << master_file
+	  << "version 2.1"
 #ifdef _DEBUG
 	  << "debug" // to have different codebase for development
 #endif

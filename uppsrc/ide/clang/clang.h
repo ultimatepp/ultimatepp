@@ -138,7 +138,8 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String id; // Upp::Class::Method(Upp::Point p)
 	String name; // Method
 	String type; // for String x, Upp::String, surely valid for variables only
-	String pretty; // void Class::Method(Point p)
+	String pretty; // void Class::Method(Point p), cleaned up for Navigator (instead of class Foo just Foo)
+	String pretty0; // original
 	String nspace; // Upp
 	String uname; // METHOD
 	String nest; // Upp::Class

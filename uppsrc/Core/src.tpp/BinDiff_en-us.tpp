@@ -21,14 +21,14 @@ st] String[@(0.0.255) `&] [*@3 base], [@(0.0.255) const] String[@(0.0.255) `&]
 [s4; &]
 [s5;:Upp`:`:BinUndiff`(const String`&`,const String`&`): String [* BinUndiff]([@(0.0.255) c
 onst] String[@(0.0.255) `&] [*@3 base], [@(0.0.255) const] String[@(0.0.255) `&] 
-[*@3 bin])&]
-[s2;%% With [%-*@3 bin] being the return value of [* BinDiff] restores 
+[*@3 bin`_diff])&]
+[s2;%% With [%-*@3 bin`_diff] being the return value of [* BinDiff] restores 
 [* data] with given [%-*@3 base].&]
 [s3; &]
-[s3; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 BinUndoRedo]]}}&]
 [s0; &]
-[s1;:Upp`:`:BinUndoRedo: [*3 BinUndoRedo]&]
+[s1;:Upp`:`:BinUndoRedo: [*@(0.0.255)3 class ][*3 BinUndoRedo]&]
 [s2; Efficiently stores a list of similar String data. Standard usage 
 for implementing Undo/Redo `- application would serialize the 
 snapshot of content into binary String then use [* Commit ]to store 

@@ -1,5 +1,5 @@
 String BinDiff(const String& base, const String& data);
-String BinUndiff(const String& base, const String& bin);
+String BinUndiff(const String& base, const String& bin_diff);
 
 class BinUndoRedo {
 	String         commit;
