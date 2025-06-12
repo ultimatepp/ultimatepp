@@ -416,7 +416,18 @@ void Ide::DoDisplay()
 	}
 
 	display.Set(s);
-	display_main.Set("[g$Y  [@b \1" + GetVarsName() + "\1]: [* " + main + " ");
+	if(IsExternalMode()) {
+		String m = UnixPath(main);
+		while(GetTextSize(" " + m + " ", StdFont()).cx > Zx(150)) {
+			int q = m.Find('/');
+			if(q < 0)
+				break;
+			m = m.Mid(q + 1);
+		}
+		display_main.Set("[g$Y  [* " + m + " ");
+	}
+	else
+		display_main.Set("[g$Y  [@b \1" + GetVarsName() + "\1]: [* " + main + " ");
 }
 
 void SetupError(ArrayCtrl& error, const char *s)
