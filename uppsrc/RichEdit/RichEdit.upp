@@ -27,6 +27,17 @@ file
 	RichEdit.t charset "UTF-8",
 	RichEdit.lay,
 	RichEdit.iml,
+	Diagram readonly separator,
+	DiagramEditor.h,
+	DiagramEditor.cpp,
+	DiagramMouse.cpp,
+	DiagramCursor.cpp,
+	Ops.cpp,
+	Bar.cpp,
+	Text.cpp,
+	DiagramClip.cpp,
+	Diagram.iml,
+	Diagram.lay,
 	Info readonly separator,
 	Copying;
 

@@ -308,6 +308,7 @@ void RichEdit::StdBar(Bar& menu)
 			}
 		}
 		LoadImageTool(menu);
+		InsertDiagramTool(menu);
 	}
 }
 

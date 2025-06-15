@@ -32,6 +32,17 @@ void RichEdit::InsertImage()
 	ClipPaste(clip, "image/raw");
 }
 
+void RichEdit::InsertDiagram()
+{
+	TopWindow app;
+	app.Icon(DiagramImg::Diagram());
+	app.Title("Diagram");
+	app.Sizeable().Zoomable();
+	DiagramEditor de;
+	app.Add(de.SizePos());
+	app.Execute();
+}
+
 bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 {
 	if(IsReadOnly())

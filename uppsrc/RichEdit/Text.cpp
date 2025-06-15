@@ -1,0 +1,77 @@
+#include "RichEdit.h"
+
+namespace Upp {
+
+bool DiaRichEdit::Key(dword key, int count)
+{
+	if(key == K_ENTER) {
+		WhenEnter();
+		return true;
+	}
+	if(key == K_ESCAPE) {
+		WhenEsc();
+		return true;
+	}
+	if(findarg(key, K_SHIFT|K_ENTER, K_CTRL|K_ENTER) >= 0)
+		key = K_ENTER;
+	
+	return RichEdit::Key(key, count);
+}
+
+void DiagramEditor::SyncEditor()
+{
+	if(edit_text && cursor >= 0) {
+		text_editor.SetEditable(); // to enable toolbar widgets
+		text_editor.Floating(-Diagram::TextZoom().AsDouble() * GetZoom());
+		text_editor.OverridePaper(CursorItem().paper);
+		text_editor.Show();
+	}
+	else {
+		text_editor.Hide();
+		text_editor.SetReadOnly(); // to disable toolbar widgets
+		return;
+	}
+	SyncEditorRect();
+}
+
+void DiagramEditor::SyncEditorRect()
+{
+	Rectf r = CursorItem().GetTextEditRect();
+	r = GetZoom() * r;
+	r.Offset(-(Pointf)(Point)sb * GetZoom());
+	Upp::Zoom z = Diagram::TextZoom();
+	z.m *= GetZoom();
+	int cy = max(30, text_editor.Get().GetHeight(z, r.GetWidth()) + DPI(10));
+	r.top = r.CenterPoint().y - cy / 2;
+	r.bottom = r.top + cy;
+	r.left -= DPI(2);
+	r.right += DPI(2) + ScrollBarSize();
+	
+	int q = GetSize().cx - r.right;
+	if(q < 0)
+		r.Offset(q, 0);
+	if(r.left < 0)
+		r.left = 0;
+	text_editor.SetRect(r);
+}
+
+void DiagramEditor::StartText()
+{
+	FinishText();
+	edit_text = true;
+	Sync();
+	text_editor.SetFocus();
+	text_editor.SetQTF("[= " + CursorItem().qtf);
+	text_editor.Select(0, text_editor.GetLength());
+	SyncEditorRect();
+}
+
+void DiagramEditor::FinishText()
+{
+	if(edit_text && cursor >= 0)
+		CursorItem().qtf = AsQTF(text_editor.Get(), CHARSET_UTF8, QTF_BODY|QTF_NOCHARSET|QTF_NOLANG|QTF_NOSTYLES);
+	edit_text = false;
+	Sync();
+}
+
+}

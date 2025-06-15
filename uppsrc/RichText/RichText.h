@@ -6,7 +6,7 @@
 #include <plugin/png/png.h>
 
 namespace Upp {
-
+	
 #define IMAGECLASS RichTextImg
 #define IMAGEFILE <RichText/RichText.iml>
 #include <Draw/iml_header.h>
@@ -42,6 +42,8 @@ struct Zoom {
 
 	friend int operator/(int x, Zoom z)  { return z.m ? iscale(x, z.d, z.m) : 0; }
 };
+
+#include "Diagram.h"
 
 inline bool IsNull(Zoom z) { return (z.m | z.d) == 0; }
 
