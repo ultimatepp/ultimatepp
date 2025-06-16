@@ -38,6 +38,7 @@ file
 	Diagram readonly separator,
 	Diagram.h,
 	Diagram.cpp,
+	RichDiagram.cpp,
 	Info readonly separator,
 	srcdoc.tpp,
 	src.tpp,

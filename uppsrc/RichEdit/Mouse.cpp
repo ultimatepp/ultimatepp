@@ -372,10 +372,27 @@ void RichEdit::LeftDouble(Point p, dword flags)
 		if(objectpos == c) {
 			RichObject object = GetObject();
 			if(!object) return;
-			RichObject o = object;
-			o.DefaultAction(context);
-			if(object.GetSerialId() != o.GetSerialId())
+			if(object.GetTypeName() == "qdf") {
+				TopWindow app;
+				app.Icon(DiagramImg::Diagram());
+				app.Title("Diagram");
+				app.Sizeable().Zoomable();
+				DiagramEditor de;
+				de.Load(ZDecompress(~object.GetData()));
+				app.Add(de.SizePos());
+				app.Execute();
+				RichText clip;
+				RichPara p;
+				RichObject o = RichObject("qdf", ZCompress(de.Save()));
+				o.InitSize(0, 0);
 				ReplaceObject(o);
+			}
+			else {
+				RichObject o = object;
+				o.DefaultAction(context);
+				if(object.GetSerialId() != o.GetSerialId())
+					ReplaceObject(o);
+			}
 		}
 		else {
 			RichPos rp = cursorp;
