@@ -321,6 +321,7 @@ void Ide::SetupFormat() {
 	ide.kde.Hide();
 	ide.mate.Hide();
 	ide.lxde.Hide();
+	ide.xfce.Hide();
 #else
 	#ifdef PLATFORM_BSD
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/konsole -e");
