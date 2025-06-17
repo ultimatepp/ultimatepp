@@ -315,7 +315,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.id = id;
 		r.pretty0 = kind == CXCursor_MacroDefinition ? r.name
 	                : FetchString(clang_getCursorPrettyPrinted(cursor, pp_pretty));
-		r.pretty = kind == CXCursor_MacroDefinition ? r.name : r.pretty0;
+		r.pretty = kind == CXCursor_MacroDefinition ? r.name : CleanupPretty(r.pretty0);
 		r.definition = clang_isCursorDefinition(cursor);
 		r.nspace = ci.Nspace();
 		r.bases = ci.Bases();
