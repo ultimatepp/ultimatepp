@@ -322,6 +322,16 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		p.pos = (int)(s - ~signature);
 		p.type = ITEM_TEXT;
 		p.pari = pari;
+
+		auto Pname = [&] {
+			if(lastidi >= 0) {
+				if(was_type)
+					part[lastidi].type = ITEM_PNAME;
+				lastidi = -1;
+			}
+			was_type = false;
+		};
+
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
 			while(s[n] >= '0' && s[n] <= '9' || (s[n] == 'x' || s[n] == 'X'))
@@ -379,17 +389,14 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		if(sOperatorTab[(byte)*s]) {
 			while(sOperatorTab[(byte)s[n]])
 				n++;
+			if(*s == '=' && par == 0) {
+				Pname();
+				p.pari = -1;
+				pari++;
+			}
 			p.type = ITEM_CPP;
 		}
 		else {
-			auto Pname = [&] {
-				if(lastidi >= 0) {
-					if(was_type)
-						part[lastidi].type = ITEM_PNAME;
-					lastidi = -1;
-				}
-				was_type = false;
-			};
 			p.type = ITEM_SIGN;
 			if(pari >= 0) {
 				if(*s == '(' || *s == '<')
