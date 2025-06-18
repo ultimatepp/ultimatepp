@@ -120,10 +120,6 @@ void Ide::Usage(const String& id, const String& name, Point ref_pos)
 	if(IsNull(id))
 		return;
 	
-	DDUMP(name);
-	DDUMP(id);
-	DDUMP(ref_pos);
-	
 	ResetFileLine();
 
 	int li = editor.GetCursorLine();
