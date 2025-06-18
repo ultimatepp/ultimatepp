@@ -20,6 +20,7 @@ file
 	Workspace.cpp,
 	usc.cpp,
 	BinObj.cpp,
+	Signature.cpp,
 	Host readonly separator,
 	Host.h,
 	Host.cpp,

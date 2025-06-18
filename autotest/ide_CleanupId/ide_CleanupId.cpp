@@ -1,4 +1,4 @@
-#include <ide/ide.h>
+#include <ide/Core/Core.h>
 
 using namespace Upp;
 
@@ -7,7 +7,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 #if 0
-	String s = CleanupId("Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)");
+	String s = CleanupId("int (*test)(int (*test)())");
 	DDUMP(s);
 	return;
 #endif
@@ -23,7 +23,8 @@ CONSOLE_APP_MAIN
 		"main(int argc, const char *argv[])",
 		"Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)",
 		"template <class C> auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))",
-		"inline void Foo()"
+		"inline void Foo()",
+		"int (*test)(int (*test)())"
 	}) {
 		DLOG("======");
 		DLOG(s);

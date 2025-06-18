@@ -1,0 +1,50 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\ide_CleanupId.exe 18.06.2025 15:41:39, user: mirek
+
+======
+Foo1::operator<<(int)
+id: Foo1::operator<<(int)
+pretty: Foo1::operator<<(int)
+======
+Foo1::operator<(int)
+id: Foo1::operator<(int)
+pretty: Foo1::operator<(int)
+======
+Upp::Index<Upp::String>::Find(const Upp::String &k) const
+id: Upp::Index::Find(const String&)const
+pretty: Upp::Index<Upp::String>::Find(const Upp::String& k) const
+======
+clang_PrintingPolicy_setProperty(CXPrintingPolicy Policy, enum CXPrintingPolicyProperty Property, unsigned int Value) __attribute__((dllimport))
+id: clang_PrintingPolicy_setProperty(CXPrintingPolicy,CXPrintingPolicyProperty,unsigned int)
+pretty: clang_PrintingPolicy_setProperty(CXPrintingPolicy Policy, enum CXPrintingPolicyProperty Property, unsigned int Value)
+======
+Foo1::Method()
+id: Foo1::Method()
+pretty: Foo1::Method()
+======
+Foo3<int>::Foo3() noexcept
+id: Foo3::Foo3()
+pretty: Foo3<int>::Foo3()
+======
+Foo1::operator*(int)
+id: Foo1::operator*(int)
+pretty: Foo1::operator*(int)
+======
+main(int argc, const char *argv[])
+id: main(int,const char*[])
+pretty: main(int argc, const char *argv[])
+======
+Ns::EditText(int &s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
+id: Ns::EditText(int&,const char*,const char*,int(*)(int),int,bool)
+pretty: Ns::EditText(int& s, const char *title, const char *label, int (*f)(int), int maxlen, bool notnull)
+======
+template <class C> auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
+id: SubRange(C&&,int,int)
+pretty: template <class C> auto SubRange(C&& c, int pos, int count)
+======
+inline void Foo()
+id: Foo()
+pretty: void Foo()
+======
+int (*test)(int (*test)())
+id: int(*test)(int(*)())
+pretty: int (*test)(int (*test)())

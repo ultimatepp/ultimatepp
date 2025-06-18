@@ -14,7 +14,6 @@ file
 	libclang.cpp,
 	util.cpp,
 	macros.cpp,
-	Signature.cpp,
 	clang.cpp,
 	Visitor.cpp,
 	CurrentFile.cpp,
