@@ -396,7 +396,7 @@ public:
 	
 	Vector<String> PickResult();
 	
-	StringsStreamOut(int part_size = 4096*1024);
+	StringsStreamOut(int part_size = 1024*1024 - 128); // - 128 - leave some space for header in huge block
 };
 
 class StringsStreamIn : public Stream {

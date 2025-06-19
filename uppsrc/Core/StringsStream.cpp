@@ -75,8 +75,14 @@ StringsStreamIn::StringsStreamIn(const Vector<String>& part)
 
 void StringsStreamIn::ResetBuffer()
 {
-	ptr = buffer = (byte *)part[i].begin();
-	rdlim = (byte *)part[i].end();
+	if(i < part.GetCount()) {
+		ptr = buffer = (byte *)part[i].begin();
+		rdlim = (byte *)part[i].end();
+	}
+	else {
+		static byte nothing;
+		ptr = buffer = rdlim = &nothing;
+	}
 }
 
 int StringsStreamIn::_Term()

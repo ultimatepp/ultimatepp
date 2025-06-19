@@ -37,6 +37,8 @@ CONSOLE_APP_MAIN
 	
 	LoadFromStrings(data2, s);
 	
+	DDUMP(data2.GetCount());
+	
 	ASSERT(data == data2);
 	
 	LOG("=============== OK");

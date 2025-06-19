@@ -24,7 +24,7 @@ chunks which is potentially faster for repeated operation.]&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:StringsStreamOut`:`:StringsStreamOut`(int`): [* StringsStreamOut]([@(0.0.255) i
-nt] [*@3 part`_size] [@(0.0.255) `=] [@3 4096] [@(0.0.255) `*][@3 1024])&]
+nt] [*@3 part`_size] [@(0.0.255) `=] [@N 1024`*1024 `- 256])&]
 [s2;%% Constructor `- [*@3 pa][%-*@3 rt`_size] is the size of data chunk.&]
 [s3; &]
 [s4; &]
