@@ -376,6 +376,50 @@ public:
 	String GetKey(int groupIndex, int keyIndex)                  { return settings[groupIndex].GetKey(keyIndex); }
 };
 
+// ------------------- Multipart memory streams --------------
+
+class StringsStreamOut : public Stream {
+protected:
+	virtual  void  _Put(int w);
+	virtual  void  _Put(const void *data, dword size);
+
+private:
+	int            part_size;
+	StringBuffer   wdata;
+	Vector<String> part;
+	
+	void           ResetBuffer();
+
+public:
+	virtual  int64 GetSize() const;
+	virtual  bool  IsOpen() const;
+	
+	Vector<String> PickResult();
+	
+	StringsStreamOut(int part_size = 4096*1024);
+};
+
+class StringsStreamIn : public Stream {
+protected:
+	virtual  int   _Term();
+	virtual  int   _Get();
+	virtual  dword _Get(void *data, dword size);
+
+public:
+	virtual  int64 GetSize() const;
+	virtual  bool  IsOpen() const;
+
+private:
+	const Vector<String>& part;
+	int                   i;
+	int64                 size;
+	
+	void                  ResetBuffer();
+
+public:
+	StringsStreamIn(const Vector<String>& part);
+};
+
 // ------------------- Advanced streaming --------------------
 
 void CheckedSerialize(const Event<Stream&> serialize, Stream& stream, int version = Null);
@@ -415,6 +459,19 @@ String StoreAsString(T& x) {
 template <class T>
 bool LoadFromString(T& x, const String& s) {
 	StringStream ss(s);
+	return Load(x, ss);
+}
+
+template <class T>
+Vector<String> StoreAsStrings(T& x) {
+	StringsStreamOut ss;
+	Store(x, ss);
+	return ss.PickResult();
+}
+
+template <class T>
+bool LoadFromStrings(T& x, const Vector<String>& s) {
+	StringsStreamIn ss(s);
 	return Load(x, ss);
 }
 
