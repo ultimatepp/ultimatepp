@@ -84,7 +84,6 @@ private:
 	void   SetPrinterMode();
 	void   Reset();
 	void   SetOrg();
-	friend HPALETTE GetQlibPalette();
 	void   DotsMode();
 
 	static void      InitColors();

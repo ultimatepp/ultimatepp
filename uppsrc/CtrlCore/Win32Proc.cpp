@@ -423,7 +423,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			fullrefresh = false;
 			if(IsVisible()) {
 				SystemDraw draw(dc);
-				HPALETTE hOldPal;
 				painting = true;
 				UpdateArea(draw, Rect(ps.rcPaint));
 				painting = false;
