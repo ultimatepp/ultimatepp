@@ -688,7 +688,6 @@ private:
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
 	void    RemoveFullRefresh();
 	static void FullRefreshCleanup();
-	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
 	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);

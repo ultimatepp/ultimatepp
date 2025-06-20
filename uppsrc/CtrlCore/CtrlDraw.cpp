@@ -389,37 +389,6 @@ void CombineArea(Vector<Rect>& area, const Rect& r)
 	area.Add(r);
 }
 
-void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip)
-{
-	GuiLock __;
-	LTIMING("GatherTransparentAreas");
-	Point off = r.TopLeft();
-	Point viewpos = off + GetView().TopLeft();
-	r.Inflate(overpaint);
-	Rect notr = GetVoidRect();
-	if(notr.IsEmpty())
-		notr = GetOpaqueRect();
-	notr += viewpos;
-	if(!IsShown() || r.IsEmpty() || !clip.Intersects(r) || !w.IsPainting(r))
-		return;
-	if(notr.IsEmpty())
-		CombineArea(area, r & clip);
-	else {
-		if(notr != r) {
-			CombineArea(area, clip & Rect(r.left, r.top, notr.left, r.bottom));
-			CombineArea(area, clip & Rect(notr.right, r.top, r.right, r.bottom));
-			CombineArea(area, clip & Rect(notr.left, r.top, notr.right, notr.top));
-			CombineArea(area, clip & Rect(notr.left, notr.bottom, notr.right, r.bottom));
-		}
-		for(Ctrl& q : *this) {
-			Point qoff = q.InView() ? viewpos : off;
-			Rect qr = q.GetRect() + qoff;
-			if(clip.Intersects(qr))
-				q.GatherTransparentAreas(area, w, qr, clip);
-		}
-	}
-}
-
 void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
 {
 	GuiLock __;
