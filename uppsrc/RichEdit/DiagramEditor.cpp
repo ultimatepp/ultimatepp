@@ -22,14 +22,12 @@ DiagramEditor::DiagramEditor()
 	ink.ColorImage(DiagramImg::Ink())
 	   .NullImage(DiagramImg::InkNull())
 	   .StaticImage(DiagramImg::InkA());
-	ink.NotNull();
 	ink.Tip(t_("Line color"));
 	ink << [=] { SetAttrs(); };
 
 	paper.ColorImage(DiagramImg::Paper())
 	   .NullImage(DiagramImg::PaperNull())
 	   .StaticImage(DiagramImg::PaperA());
-	paper.NotNull();
 	paper.Tip(t_("Background color"));
 	paper << [=] { SetAttrs(); };
 	
@@ -211,7 +209,7 @@ String DiagramEditor::Save() const
 {
 	StringBuffer r;
 	data.Save(r);
-	return r;
+	return String(r);
 }
 
 bool DiagramEditor::Load(const String& s)

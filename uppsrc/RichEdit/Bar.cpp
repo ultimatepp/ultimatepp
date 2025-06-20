@@ -18,7 +18,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(b, "Copy", CtrlImg::copy(), [=] { Copy(); })
 	   .Key(K_CTRL_INSERT)
 	   .Key(K_CTRL_C);
-	bar.Add(IsClipboardAvailableText(), "Paste", CtrlImg::paste(), [=] { Paste(); })
+	bar.Add(IsClipboardAvailableText() || IsClipboardAvailable("dib"), "Paste", CtrlImg::paste(), [=] { Paste(); })
 	   .Key(K_SHIFT_INSERT)
 	   .Key(K_CTRL_V);
 	bar.Add(b, "Delete", CtrlImg::remove(), [=] { Delete(); })

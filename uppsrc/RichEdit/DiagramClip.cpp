@@ -30,19 +30,28 @@ void DiagramEditor::Cut()
 
 void DiagramEditor::Paste()
 {
-	String txt = ReadClipboardText();
-	try {
-		CParser p(txt);
-		while(!p.IsEof()) {
-			DiagramItem m;
-			m.Load(p);
-			int ii = data.item.GetCount();
-			data.item << m;
-			SetCursor(ii);
-		}
+	if(IsClipboardAvailable("dib")) {
+		data.img = ReadClipboardImage();
+		data.img_hd = IsUHDMode();
+		Commit();
 	}
-	catch(CParser::Error) {}
+	else {
+		String txt = ReadClipboardText();
+		try {
+			CParser p(txt);
+			while(!p.IsEof()) {
+				DiagramItem m;
+				m.Load(p);
+				int ii = data.item.GetCount();
+				data.item << m;
+				SetCursor(ii);
+			}
+		}
+		catch(CParser::Error) {}
+	}
 	Commit();
+	SetBar();
+	Sync();
 }
 
 void DiagramEditor::Duplicate()

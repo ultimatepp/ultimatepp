@@ -72,6 +72,8 @@ private:
 
 struct Diagram {
 	Array<DiagramItem> item;
+	Image img;
+	bool  img_hd = false;
 	
 	struct PaintInfo {
 		bool       editor = false;

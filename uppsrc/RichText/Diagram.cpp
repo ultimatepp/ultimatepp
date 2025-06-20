@@ -243,6 +243,8 @@ void DiagramItem::Save(StringBuffer& r) const
 	if(qtf.GetCount())
 		r << " " << AsCString(qtf);
 	auto col = [&](Color c) {
+		if(IsNull(c))
+			return String("null");
 		return Format("%02x%02x%02x", (int)c.GetR(), (int)c.GetG(), (int)c.GetB());
 	};
 	if(ink != Black())
@@ -272,6 +274,8 @@ void DiagramItem::Load(CParser& p)
 	p2.x = p.ReadDouble();
 	p2.y = p.ReadDouble();
 	auto col = [&] {
+		if(p.Id("null"))
+			return Color(Null);
 		dword x = p.ReadNumber(16);
 		return Color(byte(x >> 16), byte(x >> 8), byte(x));
 	};
@@ -319,12 +323,20 @@ Size Diagram::GetSize() const
 	}
 	
 	Sizef fsz = br + tl;
-
-	return Size(ceil(fsz.cx), ceil(fsz.cy));
+	Sizef isz = img.GetSize();
+	if(img_hd)
+		isz /= 2;
+	
+	return Size(ceil(max(isz.cx, fsz.cx)), ceil(max(isz.cy, fsz.cy)));
 }
 
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
+	w.Begin();
+	if(img_hd)
+		w.Scale(0.5);
+	w.DrawImage(0, 0, img);
+	w.End();
 	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
@@ -340,11 +352,17 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 
 void Diagram::Serialize(Stream& s)
 {
-	s % item;
+	s % img % item;
 }
 
 void Diagram::Save(StringBuffer& r) const
 {
+	if(!IsNull(img)) {
+		r << "bk_image ";
+		if(img_hd)
+			r << "HD ";
+		r << AsCString(Base64Encode(PNGEncoder().SaveString(img))) << ";\n";
+	}
 	for(const DiagramItem& m : item) {
 		m.Save(r);
 		r << '\n';
@@ -355,7 +373,13 @@ void Diagram::Load(CParser& p)
 {
 	item.Clear();
 	while(!p.IsEof())
-		item.Add().Load(p);
+		if(p.Id("bk_image")) {
+			img_hd = p.Id("HD");
+			img = StreamRaster::LoadStringAny(Base64Decode(p.ReadString()));
+			p.Char(';');
+		}
+		else
+			item.Add().Load(p);
 }
 
 }
