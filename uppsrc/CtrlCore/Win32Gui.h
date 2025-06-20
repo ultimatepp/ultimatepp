@@ -105,10 +105,6 @@ protected:
 public:
 	static Rect GetVirtualScreenArea();
 
-	static void SetAutoPalette(bool ap);
-	static bool AutoPalette();
-	bool PaletteMode()                                  { return palette; }
-
 	static void Flush()                                 { GdiFlush(); }
 
 	static Image Win32IconCursor(LPCSTR id, int iconsize, bool cursor);
@@ -258,7 +254,6 @@ inline void     DrawEllipse(HDC hdc, const Rect& rc)              { Ellipse(hdc,
 inline void     DrawRect(HDC hdc, const Rect& rc)                 { Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom); }
 
 HDC      ScreenHDC();
-HPALETTE GetQlibPalette();
 
 Image Win32Icon(LPCSTR id, int iconsize = 0);
 Image Win32Icon(int id, int iconsize = 0);

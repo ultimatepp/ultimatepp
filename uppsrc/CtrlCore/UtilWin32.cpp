@@ -6,11 +6,6 @@ namespace Upp {
 
 SystemDraw&  ScreenInfo();
 
-bool ScreenInPaletteMode()
-{
-	return ScreenInfo().PaletteMode();
-}
-
 }
 
 #endif

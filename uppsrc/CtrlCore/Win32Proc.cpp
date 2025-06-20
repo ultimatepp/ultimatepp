@@ -401,22 +401,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			}
 		}
 		break;
-	case WM_PALETTECHANGED:
-		if((HWND)wParam == hwnd)
-			break;
-	case WM_QUERYNEWPALETTE:
-		if(!SystemDraw::AutoPalette()) break;
-		{
-			HDC hDC = GetDC(hwnd);
-			HPALETTE hOldPal = SelectPalette(hDC, GetQlibPalette(), FALSE);
-			int i = RealizePalette(hDC);
-			SelectPalette(hDC, hOldPal, TRUE);
-			RealizePalette(hDC);
-			ReleaseDC(hwnd, hDC);
-			LLOG("Realized " << i << " colors");
-			if(i) InvalidateRect(hwnd, NULL, TRUE);
-			return i;
-		}
 	case WM_ERASEBKGND:
 		if(erasebg) {
 			HDC hdc = (HDC)(wParam);
@@ -440,15 +424,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(IsVisible()) {
 				SystemDraw draw(dc);
 				HPALETTE hOldPal;
-				if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
-					hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
-					int n = RealizePalette(dc);
-					LLOG("In paint realized " << n << " colors");
-				}
 				painting = true;
 				UpdateArea(draw, Rect(ps.rcPaint));
-				if(draw.PaletteMode() && SystemDraw::AutoPalette())
-					SelectPalette(dc, hOldPal, TRUE);
 				painting = false;
 			}
 			EndPaint(hwnd, &ps);

@@ -33,36 +33,6 @@ Size SystemDraw::GetNativeDpi() const
 	return nativeDpi;
 }
 
-#ifndef PLATFORM_WINCE
-void Add(LOGPALETTE *pal, int r, int g, int b)
-{
-	pal->palPalEntry[pal->palNumEntries].peRed   = min(r, 255);
-	pal->palPalEntry[pal->palNumEntries].peGreen = min(g, 255);
-	pal->palPalEntry[pal->palNumEntries].peBlue  = min(b, 255);
-	pal->palPalEntry[pal->palNumEntries++].peFlags = PC_NOCOLLAPSE;
-}
-
-HPALETTE GetQlibPalette()
-{
-	static HPALETTE hQlibPalette;
-	if(hQlibPalette) return hQlibPalette;
-	SystemDraw::InitColors();
-	LOGPALETTE *pal = (LOGPALETTE *) new byte[sizeof(LOGPALETTE) + 256 * sizeof(PALETTEENTRY)];
-	pal->palNumEntries = 0;
-	pal->palVersion    = 0x300;
-	for(int r = 0; r < 6; r++)
-		for(int g = 0; g < 6; g++)
-			for(int b = 0; b < 6; b++)
-				Add(pal, 255 * r / 5, 255 * g / 5, 255 * b / 5);
-	for(int q = 0; q <= 16; q++)
-		Add(pal, 16 * q, 16 * q, 16 * q);
-	Add(pal, GetRValue(sLightGray), GetGValue(sLightGray), GetBValue(sLightGray));
-	hQlibPalette = CreatePalette(pal);
-	delete[] pal;
-	return hQlibPalette;
-}
-#endif
-
 SystemDraw& ScreenInfo()
 {
 	static ScreenDraw sd(true);
@@ -78,43 +48,9 @@ HDC ScreenHDC()
 	return hdc;
 }
 
-static bool _AutoPalette = true;
-bool SystemDraw::AutoPalette() { return _AutoPalette; }
-void SystemDraw::SetAutoPalette(bool ap) { _AutoPalette = ap; }
-
 COLORREF SystemDraw::GetColor(Color c) const {
 	COLORREF color = c;
-#ifdef PLATFORM_WINCE
 	return color;
-#else
-	if(!palette)
-		return color;
-	static Index<dword> *SColor;
-	ONCELOCK {
-		static Index<dword> StaticColor;
-		StaticColor << RGB(0x00, 0x00, 0x00) << RGB(0x80, 0x00, 0x00) << RGB(0x00, 0x80, 0x00)
-					<< RGB(0x80, 0x80, 0x00) << RGB(0x00, 0x00, 0x80) << RGB(0x80, 0x00, 0x80)
-					<< RGB(0x00, 0x80, 0x80) << RGB(0xC0, 0xC0, 0xC0) << RGB(0xC0, 0xDC, 0xC0)
-					<< RGB(0xA6, 0xCA, 0xF0) << RGB(0xFF, 0xFB, 0xF0) << RGB(0xA0, 0xA0, 0xA4)
-					<< RGB(0x80, 0x80, 0x80) << RGB(0xFF, 0x00, 0x00) << RGB(0x00, 0xFF, 0x00)
-					<< RGB(0xFF, 0xFF, 0x00) << RGB(0x00, 0x00, 0xFF) << RGB(0xFF, 0x00, 0xFF)
-					<< RGB(0x00, 0xFF, 0xFF) << RGB(0xFF, 0xFF, 0xFF);
-		SColor = &StaticColor;
-	}
-	if(color16 || !AutoPalette())
-		return GetNearestColor(handle, color);
-	if(SColor->Find(color) >= 0)
-		return color;
-	if(color == sLightGray)
-		return PALETTEINDEX(216 + 17);
-	int r = GetRValue(color);
-	int g = GetGValue(color);
-	int b = GetBValue(color);
-	return PALETTEINDEX(r == g && g == b ? (r + 8) / 16 + 216
-		                                 : (r + 25) / 51 * 36 +
-		                                   (g + 25) / 51 * 6 +
-		                                   (b + 25) / 51);
-#endif
 }
 
 void SystemDraw::InitColors()
@@ -368,12 +304,6 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 	dcMem = ::CreateCompatibleDC(handle);
 	ASSERT(hbmp);
 	ASSERT(handle);
-#ifndef PLATFORM_WINCE
-	if(AutoPalette()) {
-		::SelectPalette(handle, GetQlibPalette(), FALSE);
-		::RealizePalette(handle);
-	}
-#endif
 	hbmpold = (HBITMAP) ::SelectObject(handle, hbmp);
 	Init();
 	InitClip(size);
@@ -406,16 +336,8 @@ void BackDraw::Destroy() {
 
 ScreenDraw::ScreenDraw(bool ic) {
 	GuiLock __;
-#ifdef PLATFORM_WINCE
-	Attach(CreateDC(NULL, NULL, NULL, NULL));
-#else
 	Attach(ic ? CreateIC("DISPLAY", NULL, NULL, NULL) : CreateDC("DISPLAY", NULL, NULL, NULL));
 	InitClip(GetVirtualScreenArea());
-	if(AutoPalette()) {
-		SelectPalette(handle, GetQlibPalette(), TRUE);
-		RealizePalette(handle);
-	}
-#endif
 }
 
 ScreenDraw::~ScreenDraw() {
