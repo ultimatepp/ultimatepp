@@ -267,6 +267,13 @@ Ctrl *Ctrl::GetDragAndDropTarget()
 	return dndctrl;
 }
 
+bool IsClipboardAvailableImage()
+{
+	GuiLock __;
+	PasteClip d = Ctrl::Clipboard();
+	return IsAvailableImage(d);
+}
+
 void AppendClipboard(const char *format, const ClipData& data)
 {
 	AppendClipboard(format, data.data, data.render);
