@@ -391,13 +391,6 @@ Image GetImage(PasteClip& clip)
 	return Null;
 }
 
-bool IsClipboardAvailableImage()
-{
-	GuiLock __;
-	PasteClip d = Ctrl::Clipboard();
-	return IsAvailableImage(d);
-}
-
 Image ReadClipboardImage()
 {
 	GuiLock __;

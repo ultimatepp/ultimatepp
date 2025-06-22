@@ -468,7 +468,6 @@ CursorInfoCtrl::CursorInfoCtrl()
 struct FitTextDisplay : Display {
 	void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override {
 		Font font = StdFont();
-		int x = r.left;
 		WString txt = (~q).ToWString();
 		Size tsz;
 		for(;;) {

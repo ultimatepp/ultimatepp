@@ -105,7 +105,6 @@ DiagramEditor::DiagramEditor()
 void DiagramEditor::Paint(Draw& w)
 {
 	RTIMING("Paint");
-	Size sz = GetSize();
 	DrawPainter iw(w, GetSize());
 	iw.Co();
 	iw.Clear(SWhite());
