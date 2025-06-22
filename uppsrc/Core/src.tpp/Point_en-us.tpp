@@ -1,5 +1,4 @@
 topic "Point";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Point";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Point`_]]}}&]
 [s3; &]
@@ -51,7 +51,11 @@ ointf]&]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor List]]}}&]
 [s3;%- &]
 [s5;:Point`_`:`:Point`_`(`):%- [* Point`_]()&]
-[s2; Creates an uninitialized [%-* Point`_].&]
+[s0;l288;%- Creates a new [* Point`_] object with all its coordinates, 
+x and y, set to 0. This places the point at the origin (0,0).&]
+[s2;%- &]
+[s2;%- Consequently, calling the [*^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:IsZero`(`)const^ I
+sZero()] method on such a [* Point`_] object will return true.&]
 [s3; &]
 [s4;%- &]
 [s5;:Point`_`:`:Point`_`(const Value`&`):%- [* Point`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
@@ -349,4 +353,4 @@ vl[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , ][^`:`:Point`_^@(
 ][@3 b][@(64) )]&]
 [s2; Returns [%-*@3 b] if [%-*@3 a] is Null, [%-*@3 a] otherwise.&]
 [s3; &]
-[s0; ]
+[s0; ]]

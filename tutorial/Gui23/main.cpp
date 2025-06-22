@@ -3,7 +3,7 @@
 using namespace Upp;
 
 struct RandomRectCtrl : public Ctrl {
-	Rect  rect = Rect(Size(0, 0));
+	Rect  rect;
 	Color color;
 	
 	void Paint(Draw& w) override {
