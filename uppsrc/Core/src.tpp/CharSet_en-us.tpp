@@ -75,7 +75,7 @@ of characters that do not exist in target charset.&]
 [s5;:SetDefaultCharset`(byte`): [@(0.0.255) void]_[* SetDefaultCharset]([_^byte^ byte]_[*@3 c
 harset])&]
 [s2;%% Sets the default [%-*@3 charset]. This is to support legacy 
-application; new applications should always use UTF8.&]
+applications; new applications should always use UTF8.&]
 [s3;%% &]
 [s4; &]
 [s5;:ResolveCharset`(byte`): [_^byte^ byte]_[* ResolveCharset]([_^byte^ byte]_[*@3 charset])&]

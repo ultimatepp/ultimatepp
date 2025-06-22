@@ -36,7 +36,7 @@ force_inline dword FetchUtf8(const char *&_s, bool nolim, const char *_lim, bool
 	dword code = *s;
 	if(code < 0x80) {
 		_s++;
-		return *s;
+		return code;
 	}
 	else
 	if(code >= 0xC2) {
