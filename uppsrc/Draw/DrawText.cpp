@@ -242,8 +242,6 @@ Size GetTextSize(const char *text, byte charset, Font font, int n)
 	   && font.GetFace() != Font::SYMBOL
 #endif
 	) {
-		DDUMP(text);
-		DDUMP(GetTextSize(TextUnicode(text, n, charset, font), font));
 		Size sz;
 		sz.cx = 0;
 		const char *lim = text + (n < 0 ? strlen(text) : n);
@@ -254,9 +252,6 @@ Size GetTextSize(const char *text, byte charset, Font font, int n)
 			n--;
 		}
 		sz.cy = font.GetCy();
-		DDUMP(font);
-		DDUMP(sz);
-		DLOG("==========");
 		return sz;
 	}
 	else
