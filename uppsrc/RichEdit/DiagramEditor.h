@@ -12,6 +12,26 @@ struct DiaRichEdit : RichEdit {
 	Event<> WhenEsc;
 };
 
+struct ColumnPopUp : Ctrl {
+	int  columns = 4;
+	Size isz = Size(64, 32);
+	int  count = 18;
+	int  cursor = -1;
+
+	void Paint(Draw& w) override;
+	void MouseMove(Point p, dword keyflags) override;
+	void LeftUp(Point, dword keyflags) override;
+	void MouseLeave() override;
+	void Deactivate() override;
+	
+	void PopUp(Point p, Ctrl *owner);
+	
+	Event<int>                    WhenSelect;
+	Event<Draw&, Size, int, bool> WhenPaintItem;
+	
+	ColumnPopUp();
+};
+
 class DiagramEditor : public Ctrl, Diagram::PaintInfo {
 public:
 	void Paint(Draw& w) override;
@@ -29,22 +49,32 @@ public:
 private:
 	Diagram data;
 	
+	int            mode; // -1 select, 0 line, >0 shape
 	Point          draghandle = Point(0, 0);
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
 	Rect           dragfrom = Rect(0, 0, 0, 0);
+	bool           newitem = false;
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid
 	bool           edit_text = false; // text editor is visible
-	bool           creating = false; // right-click adding new item (allow resize)
 	int            zoom_percent = 100;
 
 	BinUndoRedo       undoredo;
 	
 	int         tool = 0;
 	ToolBar     toolbar;
-	DropList    shape, line_start, line_end, line_width, line_dash;
+	
+	ColumnPopUp   shape_popup;
+	int           shape_i = 1;
+
+	ColumnPopUp   start_cap;
+	ColumnPopUp   end_cap;
+	int           line_start = 0;
+	int           line_end = 0;
+	
+	DropList    line_width, line_dash;
 	DiaRichEdit text_editor;
 
 	ColorButton ink, paper;
@@ -77,6 +107,11 @@ private:
 	void   Zoom();
 	double GetZoom() const               { return DPI(1) * 0.01 * zoom_percent; }
 	void   Map(Point& p);
+	Image  MakeIcon(DiagramItem& m, Size isz);
+	Size   IconSz()                      { return Size(DPI(24), GetStdFontCy()); }
+	Image  ShapeIcon(int i);
+	Image  CapIcon(int start, int end);
+
 	
 	void   SetAttrs();
 	void   GetAttrs();

@@ -33,8 +33,10 @@ DiagramEditor::DiagramEditor()
 	
 	int cy = GetStdFontCy();
 	
+	Size shape_sz = Size(DPI(24), cy);
+	
 	auto MakeImage = [=](DiagramItem& m) -> Image {
-		ImagePainter iw(DPI(24), cy);
+		ImagePainter iw(shape_sz);
 		iw.Scale(DPI(1));
 		iw.Clear();
 		m.Paint(iw);
@@ -42,49 +44,52 @@ DiagramEditor::DiagramEditor()
 	};
 	
 	cy /= DPI(1);
-
-	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
-		DiagramItem m;
-		m.p1 = Point(2, 2);
-		m.p2 = Point(23, cy - 2);
-		m.width = DPI(1);
-		m.shape = i;
-		shape.Add(i, MakeImage(m));
-	}
-	shape << [=] { SetAttrs(); };
 	
-	struct Dialine : DiagramItem {
-		Dialine() {
-			shape = SHAPE_LINE;
-			p1.y = p2.y = 7;
-			p1.x = -9999;
-			p2.x = 9999;
-		}
+	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
+		int x = DPI(2);
+		int y = DPI(1);
+		if(sel)
+			w.DrawImage(x, y, m, SColorHighlightText());
+		else
+			w.DrawImage(x, y, m);
+	};
+
+	shape_popup.count = DiagramItem::SHAPE_COUNT - 1;
+	shape_popup.columns = 3;
+	shape_popup.isz = shape_sz + Size(DPI(4), DPI(2));
+	shape_popup.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+		PopPaint(w, ShapeIcon(ii + 1), sel);
+	};
+	shape_popup.WhenSelect = [=](int i) {
+		mode = shape_i = i + 1;
+		SetBar();
+		SetAttrs();
+	};
+
+	start_cap.count = DiagramItem::CAP_COUNT;
+	start_cap.columns = 3;
+	start_cap.isz = shape_sz + Size(DPI(4), DPI(2));
+	start_cap.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+		PopPaint(w, CapIcon(ii, 0), sel);
+	};
+	start_cap.WhenSelect = [=](int i) {
+		line_start = i;
+		SetBar();
+		SetAttrs();
+	};
+
+	end_cap.count = DiagramItem::CAP_COUNT;
+	end_cap.columns = 3;
+	end_cap.isz = shape_sz + Size(DPI(4), DPI(2));
+	end_cap.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+		PopPaint(w, CapIcon(0, ii), sel);
+	};
+	end_cap.WhenSelect = [=](int i) {
+		line_end = i;
+		SetBar();
+		SetAttrs();
 	};
 	
-	auto LDL = [=](DropList& dl, bool left) {
-		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
-			Dialine m;
-			m.line_end = m.line_start = i;
-			
-			if(left)
-				m.p1.x = 8;
-			else
-				m.p2.x = 16;
-			
-			dl.Add(i, MakeImage(m));
-		}
-		dl << [=] { SetAttrs(); };
-	};
-	
-	LDL(line_start, true);
-	LDL(line_end, false);
-
-	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
-		Dialine m;
-		m.dash = i;
-		line_dash.Add(i, MakeImage(m));
-	}
 	line_dash << [=] { SetAttrs(); };
 	
 	for(int i = 0; i < 10; i++)
@@ -100,6 +105,54 @@ DiagramEditor::DiagramEditor()
 	sb.WhenScroll << [=] { Sync(); };
 	
 	editor = true;
+}
+
+Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
+{
+	struct IconMaker : ImageMaker {
+		Size         isz;
+		DiagramItem& m;
+		String Key() const override {
+			return StoreAsString(m) + String((byte *)&isz, sizeof(isz));
+		}
+		Image Make() const override {
+			ImagePainter iw(isz);
+			iw.Clear();
+			m.Paint(iw);
+			return iw;
+		}
+		
+		IconMaker(DiagramItem& m) : m(m) {}
+	};
+	
+	IconMaker mk(m);
+	mk.isz = isz;
+	return MakeImage(mk);
+}
+
+Image DiagramEditor::ShapeIcon(int i)
+{
+	Size isz = IconSz();
+	DiagramItem m;
+	m.p1 = Point(2, 2);
+	m.p2 = Point(isz.cx - 2, isz.cy - 2);
+	m.width = DPI(1);
+	m.shape = i;
+	m.paper = Null;
+	return MakeIcon(m, isz);
+}
+
+Image DiagramEditor::CapIcon(int start, int end)
+{
+	Size isz = IconSz();
+	DiagramItem m;
+	m.p1 = Point(DPI(4), isz.cy / 2);
+	m.p2 = Point(isz.cx - DPI(4), isz.cy / 2);
+	m.shape = 0;
+	m.width = DPI(1);
+	m.line_start = start;
+	m.line_end = end;
+	return MakeIcon(m, isz);
 }
 
 void DiagramEditor::Paint(Draw& w)
@@ -230,7 +283,6 @@ void DiagramEditor::Reset()
 	doselection = false;
 	grid = true;
 	edit_text = false;
-	creating = false;
 	ResetUndo();
 	Sync();
 }

@@ -33,6 +33,7 @@ file
 	DiagramMouse.cpp,
 	DiagramCursor.cpp,
 	Ops.cpp,
+	ColumnPopUp.cpp,
 	Bar.cpp,
 	Text.cpp,
 	DiagramClip.cpp,

@@ -6,7 +6,7 @@ void DiagramEditor::SetAttrs()
 {
 	for(int i = 0; i < sel.GetCount(); i++) {
 		DiagramItem& m = data.item[sel[i]];
-		m.shape = ~shape;
+		m.shape = shape_i;
 		m.line_start = ~line_start;
 		m.line_end = ~line_end;
 		m.width = ~line_width;
@@ -21,7 +21,7 @@ void DiagramEditor::SetAttrs()
 void DiagramEditor::GetAttrs()
 {
 	DiagramItem& m = CursorItem();
-	shape <<= m.shape;
+	shape_i <<= m.shape;
 	line_start <<= m.line_start;
 	line_end <<= m.line_end;
 	line_width <<= m.width;

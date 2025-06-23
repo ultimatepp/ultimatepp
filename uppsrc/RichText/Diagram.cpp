@@ -238,7 +238,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 
 void DiagramItem::Save(StringBuffer& r) const
 {
-	r << Shape[clamp(shape, 0, Shape.GetCount())] << ' ';
+	r << Shape[clamp(shape, 0, Shape.GetCount() - 1)] << ' ';
 	r << p1.x << ' ' << p1.y << ' ' << p2.x << ' ' << p2.y;
 	if(qtf.GetCount())
 		r << " " << AsCString(qtf);
