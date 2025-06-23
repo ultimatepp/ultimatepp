@@ -55,17 +55,17 @@ void Animate(Ctrl& c, int x, int y, int cx, int cy, int type)
 	Animate(c, RectC(x, y, cx, cy), type);
 }
 
-void Animate(Event<double> update, int duration)
+void Animate(Event<double> update, int duration_ms)
 {
-	if(duration < 1)
+	if(duration_ms < 1)
 		return;
 
 	int start = msecs();
 	for(;;) {
         int elapsed = msecs() - start;
-        if(elapsed > duration)
+        if(elapsed > duration_ms)
             break;
-        double t = min(1.0, (double) elapsed / (double) duration);
+        double t = min(1.0, (double) elapsed / (double) duration_ms);
         t = t * t * (3 - 2 * t);  // Ease-in-out (smoother movement).
         update(t);
         Ctrl::ProcessEvents();
@@ -74,7 +74,7 @@ void Animate(Event<double> update, int duration)
     update(1);
 }
 
-void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration)
+void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration_ms)
 {
 	Vector<Rect> data;
 	for(const Ptr<Ctrl>& c : ctrls)
@@ -84,7 +84,7 @@ void Animate(Vector<Ptr<Ctrl>>& ctrls, const Vector<Rect>& targets, int duration
 		for(int i = 0; i < ctrls.GetCount(); i++)
 			if(ctrls[i])
 				ctrls[i]->SetRect(data[i]);
-	}, duration);
+	}, duration_ms);
 }
 
 bool CtrlLibDisplayError(const Value& e) {
