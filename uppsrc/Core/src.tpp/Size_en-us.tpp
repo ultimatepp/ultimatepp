@@ -1,5 +1,4 @@
 topic "Size";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Size";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Size`_]]}}&]
 [s3; &]
@@ -50,7 +50,11 @@ f]&]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
 [s3;%- &]
 [s5;:Size`_`:`:Size`_`(`):%- [* Size`_]()&]
-[s2; Creates an uninitialized [* Size`_].&]
+[s2; Creates a new [* Size`_] object with both its dimensions, cx (width) 
+and cy (height), set to 0.&]
+[s0;l288; &]
+[s0;l288; Consequently, calling the [*^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:IsEmpty`(`)const^ I
+sEmpty()] method on such a [* Size`_] object will return true.&]
 [s3; &]
 [s4; &]
 [s5;:Size`_`:`:Size`_`(const Value`&`):%- [* Size`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
@@ -315,4 +319,4 @@ and ][%-* cy][%-  equal to the square of ][%-*@3 a][%-* .cy].&]
 ]Length[@(64) (]Size`_[@(64) _][@3 a][@(64) )]&]
 [s2; Returns the hypotenuse of the triangle described by [%-*@3 a].&]
 [s3; &]
-[s0; ]
+[s0; ]]
