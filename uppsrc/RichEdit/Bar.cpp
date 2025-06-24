@@ -47,28 +47,9 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add("Zoom", MakeZoomIcon(0.01 * zoom_percent), [=]{ Zoom(); });
 	bar.Add("Snap to grid", DiagramImg::Grid(), [=] { grid = !grid; SetBar(); }).Check(grid);
 	bar.Separator();
-	bar.Add(DiagramImg::SelectMode(), [=] {
-		mode = -1;
-		SetBar();
-	}).Check(mode < 0);
-	
-	bar.Gap();
-	bar.Add(ShapeIcon(shape_i), [=]{
-			mode = shape_i;
-			SetBar();
-			SetAttrs();
-		})
-	   .Check(mode > 0);
-	bar.Add(Upp::CtrlsImg::kDA(), [=] { shape_popup.PopUp(GetMousePos(), this); });
-	bar.Gap();
-	
-	bar.Add(Upp::CtrlsImg::kDA(), [=] { start_cap.PopUp(GetMousePos(), this); });
-	bar.Add(CapIcon(line_start, line_end), [=] {
-		mode = 0;
-		SetBar();
-	}).Check(mode == 0);
-	bar.Add(Upp::CtrlsImg::kDA(), [=] { end_cap.PopUp(GetMousePos(), this); });
-
+	bar.Add(b, shape, DPI(50));
+	bar.Add(line, line_start, DPI(50));
+	bar.Add(line, line_end, DPI(50));
 	bar.Add(b, line_width, DPI(50));
 	bar.Add(b, line_dash, DPI(50));
 	bar.Add(b, ink);

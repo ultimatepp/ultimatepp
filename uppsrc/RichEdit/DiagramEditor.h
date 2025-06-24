@@ -7,7 +7,7 @@
 
 struct DiaRichEdit : RichEdit {
 	bool Key(dword key, int count) override;
-	
+
 	Event<> WhenEnter;
 	Event<> WhenEsc;
 };
@@ -17,18 +17,21 @@ struct ColumnPopUp : Ctrl {
 	Size isz = Size(64, 32);
 	int  count = 18;
 	int  cursor = -1;
+	int  code = -1;
 
 	void Paint(Draw& w) override;
 	void MouseMove(Point p, dword keyflags) override;
 	void LeftUp(Point, dword keyflags) override;
 	void MouseLeave() override;
 	void Deactivate() override;
-	
+
 	void PopUp(Point p, Ctrl *owner);
-	
+
+	int  Execute();
+
 	Event<int>                    WhenSelect;
 	Event<Draw&, Size, int, bool> WhenPaintItem;
-	
+
 	ColumnPopUp();
 };
 
@@ -48,13 +51,11 @@ public:
 
 private:
 	Diagram data;
-	
-	int            mode; // -1 select, 0 line, >0 shape
+
 	Point          draghandle = Point(0, 0);
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
 	Rect           dragfrom = Rect(0, 0, 0, 0);
-	bool           newitem = false;
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid
@@ -62,23 +63,14 @@ private:
 	int            zoom_percent = 100;
 
 	BinUndoRedo       undoredo;
-	
+
 	int         tool = 0;
 	ToolBar     toolbar;
-	
-	ColumnPopUp   shape_popup;
-	int           shape_i = 1;
-
-	ColumnPopUp   start_cap;
-	ColumnPopUp   end_cap;
-	int           line_start = 0;
-	int           line_end = 0;
-	
-	DropList    line_width, line_dash;
+	DropList    shape, line_start, line_end, line_width, line_dash;
 	DiaRichEdit text_editor;
 
 	ColorButton ink, paper;
-	
+
 	ScrollBars  sb;
 
 	void               CancelSelection();
@@ -112,11 +104,11 @@ private:
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
 
-	
+
 	void   FixPositions();
 	void   SetAttrs();
 	void   GetAttrs();
-	
+
 	void   Copy();
 	void   Cut();
 	void   Paste();

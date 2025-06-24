@@ -5,6 +5,7 @@ namespace Upp {
 ColumnPopUp::ColumnPopUp()
 {
 	SetFrame(BlackFrame());
+	WhenSelect = [=](int i) { code = i; };
 }
 
 void ColumnPopUp::Paint(Draw& w)
@@ -52,10 +53,22 @@ void ColumnPopUp::PopUp(Point p, Ctrl *owner)
 {
 	if(IsOpen())
 		Close();
+	// TODO: Workspace
 	Size sz = AddFrameSize(columns * isz.cx, (count + columns - 1) / columns * isz.cy);
 	SetRect(p.x, p.y, sz.cx, sz.cy);
 	Ctrl::PopUp(owner);
 }
+
+int ColumnPopUp::Execute()
+{
+	PopUp(GetMousePos(), GetActiveCtrl());
+	code = -1;
+	EventLoop(this);
+	if(IsOpen())
+		Close();
+	return code;
+}
+
 
 void ColumnPopUp::Deactivate()
 {

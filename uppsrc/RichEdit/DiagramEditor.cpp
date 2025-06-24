@@ -9,7 +9,7 @@ namespace Upp {
 DiagramEditor::DiagramEditor()
 {
 	AddFrame(toolbar);
-	
+
 	Add(text_editor);
 	text_editor.NoRuler().ViewBorder(0);
 	text_editor.WhenRefreshBar = [=] { SetBar(); };
@@ -18,7 +18,7 @@ DiagramEditor::DiagramEditor()
 	text_editor.WhenAction << [=] {
 		SyncEditorRect();
 	};
-	
+
 	ink.ColorImage(DiagramImg::Ink())
 	   .NullImage(DiagramImg::InkNull())
 	   .StaticImage(DiagramImg::InkA());
@@ -30,11 +30,11 @@ DiagramEditor::DiagramEditor()
 	   .StaticImage(DiagramImg::PaperA());
 	paper.Tip(t_("Background color"));
 	paper << [=] { SetAttrs(); };
-	
+
 	int cy = GetStdFontCy();
-	
+
 	Size shape_sz = Size(DPI(24), cy);
-	
+
 	auto MakeImage = [=](DiagramItem& m) -> Image {
 		ImagePainter iw(shape_sz);
 		iw.Scale(DPI(1));
@@ -42,68 +42,65 @@ DiagramEditor::DiagramEditor()
 		m.Paint(iw);
 		return iw;
 	};
-	
+
 	cy /= DPI(1);
-	
-	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
-		int x = DPI(2);
-		int y = DPI(1);
-		if(sel)
-			w.DrawImage(x, y, m, SColorHighlightText());
-		else
-			w.DrawImage(x, y, m);
+
+	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
+		DiagramItem m;
+		m.p1 = Point(2, 2);
+		m.p2 = Point(23, cy - 2);
+		m.width = DPI(1);
+		m.shape = i;
+		shape.Add(i, MakeImage(m));
+	}
+	shape << [=] { SetAttrs(); };
+
+	struct Dialine : DiagramItem {
+		Dialine() {
+			shape = SHAPE_LINE;
+			p1.y = p2.y = 7;
+			p1.x = -9999;
+			p2.x = 9999;
+		}
 	};
 
-	shape_popup.count = DiagramItem::SHAPE_COUNT - 1;
-	shape_popup.columns = 3;
-	shape_popup.isz = shape_sz + Size(DPI(4), DPI(2));
-	shape_popup.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, ShapeIcon(ii + 1), sel);
-	};
-	shape_popup.WhenSelect = [=](int i) {
-		mode = shape_i = i + 1;
-		SetBar();
-		SetAttrs();
+	auto LDL = [=](DropList& dl, bool left) {
+		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
+			Dialine m;
+			m.line_end = m.line_start = i;
+
+			if(left)
+				m.p1.x = 8;
+			else
+				m.p2.x = 16;
+
+			dl.Add(i, MakeImage(m));
+		}
+		dl << [=] { SetAttrs(); };
 	};
 
-	start_cap.count = DiagramItem::CAP_COUNT;
-	start_cap.columns = 3;
-	start_cap.isz = shape_sz + Size(DPI(4), DPI(2));
-	start_cap.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, CapIcon(ii, 0), sel);
-	};
-	start_cap.WhenSelect = [=](int i) {
-		line_start = i;
-		SetBar();
-		SetAttrs();
-	};
+	LDL(line_start, true);
+	LDL(line_end, false);
 
-	end_cap.count = DiagramItem::CAP_COUNT;
-	end_cap.columns = 3;
-	end_cap.isz = shape_sz + Size(DPI(4), DPI(2));
-	end_cap.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, CapIcon(0, ii), sel);
-	};
-	end_cap.WhenSelect = [=](int i) {
-		line_end = i;
-		SetBar();
-		SetAttrs();
-	};
-	
+	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
+		Dialine m;
+		m.dash = i;
+		line_dash.Add(i, MakeImage(m));
+	}
 	line_dash << [=] { SetAttrs(); };
-	
+
 	for(int i = 0; i < 10; i++)
 		line_width.Add(i);
 	line_width << [=] { SetAttrs(); };
 
 	ResetUndo();
 	Sync();
-	
+
 	sb.AutoHide();
 	sb.WithSizeGrip();
 	AddFrame(sb);
 	sb.WhenScroll << [=] { Sync(); };
-	
+
 	editor = true;
 }
 
@@ -121,10 +118,10 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 			m.Paint(iw);
 			return iw;
 		}
-		
+
 		IconMaker(DiagramItem& m) : m(m) {}
 	};
-	
+
 	IconMaker mk(m);
 	mk.isz = isz;
 	return MakeImage(mk);
@@ -171,7 +168,7 @@ void DiagramEditor::Paint(Draw& w)
 		iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(30).Italic(), SLtGray());
 
 	data.Paint(iw, *this);
-	
+
 	if(HasCapture() && doselection) {
 		Rect r(dragstart, dragcurrent);
 		r.Normalize();

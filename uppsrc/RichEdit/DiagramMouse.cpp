@@ -17,7 +17,7 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 				return Point(-1, -1);
 			if(Distance(m.p2, p) < 6)
 				return Point(1, 1);
-			
+
 		}
 		else {
 			Rect r = m.GetRect();
@@ -62,14 +62,14 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	for(int i = 0; i < data.item.GetCount(); i++)
 		if(data.item[i].IsTextClick(p))
 			return Image::IBeam();
-	
+
 	int i = FindItem(p);
 
 	Point h = HasCapture() ? draghandle : IsCursor() ? GetHandle(cursor, p) : Null;
 
 	if(IsNull(h))
 		return Image::Arrow();
-	
+
 	if(HasCapture() && i >= 0 && data.item[i].IsLine())
 		return Image::Arrow();
 
@@ -103,7 +103,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 
 	SetCapture();
 
-	if(IsCursor()) { // resize
+	if(IsCursor()) {
 		Point h = GetHandle(cursor, p);
 		if(h.x || h.y) {
 			draghandle = h;
@@ -112,9 +112,12 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		}
 	}
 
-	newitem = false;
+	if((keyflags & K_CTRL) == 0) {
+		sel.Clear();
+		cursor = -1;
+	}
 	int i = FindItem(p);
-	if(i >= 0) { // start moving selection
+	if(i >= 0) {
 		SetCursor(i);
 		dragfrom = GetCursorRect();
 		if(dragfrom.Contains(p)) {
@@ -124,22 +127,9 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			draghandle = Null;
 		}
 	}
-	else
-	if(mode < 0) { // rectangular selection
+	else {
 		sel.Clear();
 		doselection = true;
-	}
-	else { // add new item
-		CancelSelection();
-		DiagramItem& m = data.item.Add();
-		m.p1 = m.p2 = p;
-		m.shape = mode;
-		dragstart = p;
-		draghandle = Point(1, 1);
-		newitem = true;
-		SetAttrs();
-		SetCursor(data.item.GetCount() - 1);
-		Sync();
 	}
 
 	Sync();
@@ -185,7 +175,6 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				(draghandle.x < 0 ? m.p1.x : m.p2.x) = p.x;
 			if(draghandle.y)
 				(draghandle.y < 0 ? m.p1.y : m.p2.y) = p.y;
-			DDUMP(m.GetRect());
 		}
 		m.FixPosition();
 		Sync();
@@ -197,32 +186,47 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 	Map(p);
 
 	Sync();
-	if(!doselection && IsCursor() && newitem) { // avoid empty items
-		DiagramItem& m = CursorItem();
-		if(Distance(m.p1, m.p2) < 4) {
-			m.p1 -= Pointf(32, 32);
-			m.p2 += Pointf(32, 32);
-			m.FixPosition();
-		}
-	}
 	doselection = false;
 	Commit();
-	if(Distance(dragstart, p) < 2) {
-		if((keyflags & K_CTRL) == 0) {
-			sel.Clear();
-			sel.FindAdd(cursor);
-		}
-		if(CursorItem().IsTextClick(p) && !newitem)
-			StartText();
+	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p)) {
+		StartText();
+		return;
 	}
-	newitem = false;
 }
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
 {
 	Map(p);
-	
+
+	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
+		int x = DPI(2);
+		int y = DPI(1);
+		if(sel)
+			w.DrawImage(x, y, m, SColorHighlightText());
+		else
+			w.DrawImage(x, y, m);
+	};
+
 	FinishText();
+
+	ColumnPopUp shape;
+	shape.count = DiagramItem::SHAPE_COUNT;
+	shape.columns = 3;
+	shape.isz = IconSz() + Size(DPI(4), DPI(4));
+	shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+		PopPaint(w, ShapeIcon(ii), sel);
+	};
+
+	int si = shape.Execute();
+
+	DiagramItem& m = data.item.Add();
+	if(grid)
+		p = p / 16 * 16;
+	m.p1 = Pointf(p) - Pointf(64, 32);
+	m.p2 = Pointf(p) + Pointf(64, 32);
+	m.shape = si;
+	SetAttrs();
+	SetCursor(data.item.GetCount() - 1);
 	Sync();
 }
 
