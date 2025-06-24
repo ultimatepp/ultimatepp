@@ -5,12 +5,9 @@ namespace Upp {
 void DiagramEditor::SetCursor(int i)
 {
 	cursor = i;
-	if(i < 0) {
-		ink <<= Black();
-		paper <<= Black();
-	}
-	else
-		sel.FindAdd(i);
+	if(i < 0)
+		return;
+	sel.FindAdd(i);
 	GetAttrs();
 }
 

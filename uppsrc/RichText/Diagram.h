@@ -57,6 +57,8 @@ struct DiagramItem : Point2 {
 	bool IsTextClick(Point p) const;
 	Rect GetTextEditRect() const;
 
+	void FixPosition();
+
 	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % line_start % line_end % dash; }
 
 	void Reset();

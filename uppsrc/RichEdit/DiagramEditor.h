@@ -113,6 +113,7 @@ private:
 	Image  CapIcon(int start, int end);
 
 	
+	void   FixPositions();
 	void   SetAttrs();
 	void   GetAttrs();
 	

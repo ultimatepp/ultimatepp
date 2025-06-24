@@ -45,6 +45,20 @@ void Point2::Normalize()
 		Swap(p1.y, p2.y);
 }
 
+void DiagramItem::FixPosition()
+{
+	double x = min(p1.x, p2.x);
+	if(x < 0) {
+		p1.x -= x;
+		p2.x -= x;
+	}
+	double y = min(p1.y, p2.y);
+	if(y < 0) {
+		p1.y -= y;
+		p2.y -= y;
+	}
+}
+
 bool DiagramItem::IsClick(Point p) const
 {
 	if(IsLine())
@@ -307,6 +321,7 @@ void DiagramItem::Load(CParser& p)
 		else
 			p.Skip();
 	}
+	FixPosition();
 }
 
 Size Diagram::GetSize() const
@@ -332,12 +347,12 @@ Size Diagram::GetSize() const
 
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
-	w.Begin();
+/*	w.Begin();
 	if(img_hd)
 		w.Scale(0.5);
 	w.DrawImage(0, 0, img);
 	w.End();
-	for(int i = 0; i < item.GetCount(); i++) {
+*/	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
 			style = Display::CURSOR;
@@ -357,13 +372,13 @@ void Diagram::Serialize(Stream& s)
 
 void Diagram::Save(StringBuffer& r) const
 {
-	if(!IsNull(img)) {
+/*	if(!IsNull(img)) {
 		r << "bk_image ";
 		if(img_hd)
 			r << "HD ";
 		r << AsCString(Base64Encode(PNGEncoder().SaveString(img))) << ";\n";
 	}
-	for(const DiagramItem& m : item) {
+*/	for(const DiagramItem& m : item) {
 		m.Save(r);
 		r << '\n';
 	}

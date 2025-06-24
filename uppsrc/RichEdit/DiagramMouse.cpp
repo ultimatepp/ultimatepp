@@ -103,7 +103,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 
 	SetCapture();
 
-	if(IsCursor()) {
+	if(IsCursor()) { // resize
 		Point h = GetHandle(cursor, p);
 		if(h.x || h.y) {
 			draghandle = h;
@@ -112,13 +112,9 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		}
 	}
 
-	if((keyflags & K_CTRL) == 0) {
-		sel.Clear();
-		cursor = -1;
-	}
 	newitem = false;
 	int i = FindItem(p);
-	if(i >= 0) {
+	if(i >= 0) { // start moving selection
 		SetCursor(i);
 		dragfrom = GetCursorRect();
 		if(dragfrom.Contains(p)) {
@@ -129,14 +125,15 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		}
 	}
 	else
-	if(mode < 0) {
+	if(mode < 0) { // rectangular selection
 		sel.Clear();
 		doselection = true;
 	}
-	else {
+	else { // add new item
 		CancelSelection();
 		DiagramItem& m = data.item.Add();
 		m.p1 = m.p2 = p;
+		m.shape = mode;
 		dragstart = p;
 		draghandle = Point(1, 1);
 		newitem = true;
@@ -152,7 +149,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 {
 	Map(p);
 
-	if(HasCapture() && doselection) {
+	if(HasCapture() && doselection) { // do rectangular selection
 		dragcurrent = p;
 		Rect r(dragstart, dragcurrent);
 		r.Normalize();
@@ -170,7 +167,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		DiagramItem& m = CursorItem();
 		if(grid)
 			p = m.IsLine() ? p / 16 * 16 : p / 8 * 8;
-		if(IsNull(draghandle)) {
+		if(IsNull(draghandle)) { // move selection
 			Point offset = p - dragstart;
 			Rect to = dragfrom.Offseted(offset);
 			m.p1 = to.TopLeft();
@@ -179,6 +176,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
 					(Point2 &)data.item[ii] = sdragfrom[i].Offseted(offset);
+					data.item[ii].FixPosition();
 				}
 			}
 		}
@@ -187,7 +185,9 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				(draghandle.x < 0 ? m.p1.x : m.p2.x) = p.x;
 			if(draghandle.y)
 				(draghandle.y < 0 ? m.p1.y : m.p2.y) = p.y;
+			DDUMP(m.GetRect());
 		}
+		m.FixPosition();
 		Sync();
 	}
 }
@@ -197,56 +197,32 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 	Map(p);
 
 	Sync();
-	if(!doselection && IsCursor() && newitem) {
+	if(!doselection && IsCursor() && newitem) { // avoid empty items
 		DiagramItem& m = CursorItem();
 		if(Distance(m.p1, m.p2) < 4) {
-			m.p1 -= Pointf(-10, -10);
-			m.p2 += Pointf(10, 10);
+			m.p1 -= Pointf(32, 32);
+			m.p2 += Pointf(32, 32);
+			m.FixPosition();
 		}
 	}
 	doselection = false;
 	Commit();
-	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p) && !newitem) {
-		StartText();
-		return;
+	if(Distance(dragstart, p) < 2) {
+		if((keyflags & K_CTRL) == 0) {
+			sel.Clear();
+			sel.FindAdd(cursor);
+		}
+		if(CursorItem().IsTextClick(p) && !newitem)
+			StartText();
 	}
 	newitem = false;
-	if(mode >= 0) {
-		mode = -1;
-		SetBar();
-	}
 }
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
 {
 	Map(p);
+	
 	FinishText();
-	DiagramItem s;
-	s.p1 = Point(0, 0);
-	s.p2 = Point(256, 64);
-	if(IsCursor())
-		s = CursorItem();
-	else
-	if(data.item.GetCount())
-		s = data.item.Top();
-	CancelSelection();
-	DiagramItem& m = data.item.Add();
-	m = s;
-	Pointf pf = p;
-	if(m.IsLine()) {
-		m.p1 = pf + Pointf(-50, 0);
-		m.p2 = m.p1 + Pointf(100, 0);
-	}
-	else {
-		Sizef sz = m.GetRect().GetSize();
-		m.p1 = p - sz / 2;
-		if(grid)
-			m.p1 = 8 * (Point)m.p1 / 8;
-		m.p2 = m.p1 + s.GetRect().GetSize();
-	}
-	m.qtf.Clear();
-	dragstart = p;
-	SetCursor(data.item.GetCount() - 1);
 	Sync();
 }
 
