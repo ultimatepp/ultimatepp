@@ -17,7 +17,6 @@ struct ColumnPopUp : Ctrl {
 	Size isz = Size(64, 32);
 	int  count = 18;
 	int  cursor = -1;
-	int  code = -1;
 
 	void Paint(Draw& w) override;
 	void MouseMove(Point p, dword keyflags) override;

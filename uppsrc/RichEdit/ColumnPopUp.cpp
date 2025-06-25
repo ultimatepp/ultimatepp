@@ -5,7 +5,6 @@ namespace Upp {
 ColumnPopUp::ColumnPopUp()
 {
 	SetFrame(BlackFrame());
-	WhenSelect = [=](int i) { code = i; };
 }
 
 void ColumnPopUp::Paint(Draw& w)
@@ -62,11 +61,10 @@ void ColumnPopUp::PopUp(Point p, Ctrl *owner)
 int ColumnPopUp::Execute()
 {
 	PopUp(GetMousePos(), GetActiveCtrl());
-	code = -1;
 	EventLoop(this);
 	if(IsOpen())
 		Close();
-	return code;
+	return cursor;
 }
 
 

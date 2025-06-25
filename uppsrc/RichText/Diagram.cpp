@@ -162,21 +162,22 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		Pointf a2 = p2;
 		if(d > 20) { // enough length to have caps
 			if(line_start == CAP_ARROW)
-				a1 += v * 8;
+				a1 += v * 4 * width;
 			if(line_end == CAP_ARROW)
-				a2 -= v * 8;
+				a2 -= v * 4 * width;
 		}
 		
 		w.Move(a1).Line(a2);
 		DoDash();
-		w.Stroke(width, ink);
+		w.LineCap(LINECAP_ROUND).Stroke(width, ink);
 		
 		Pointf o = Orthogonal(v);
 		if(d > 20) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
+				Pointf oo = width * 2 * o;
 				switch(k) {
 				case CAP_ARROW:
-					w.Move(p).Line(a + 4 * o).Line(a - 4 * o).Fill(ink);
+					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
 					break;
 				case CAP_CIRCLE:
 					w.Circle(p, 5).Fill(ink);
@@ -214,6 +215,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		int txt_cy = txt.GetHeight(zoom, GetRect().GetWidth());
 		Rectf r(p1, p2);
 		r.Normalize();
+		r.Deflate(width / 2);
 		Pointf c = r.CenterPoint();
 		int sz = min(r.Width(), r.Height());
 		switch(shape) {

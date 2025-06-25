@@ -112,10 +112,6 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		}
 	}
 
-	if((keyflags & K_CTRL) == 0) {
-		sel.Clear();
-		cursor = -1;
-	}
 	int i = FindItem(p);
 	if(i >= 0) {
 		SetCursor(i);
@@ -129,6 +125,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 	}
 	else {
 		sel.Clear();
+		SetCursor(-1);
 		doselection = true;
 	}
 
@@ -178,6 +175,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		}
 		m.FixPosition();
 		Sync();
+		return;
 	}
 }
 
@@ -188,9 +186,15 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 	Sync();
 	doselection = false;
 	Commit();
-	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p)) {
-		StartText();
-		return;
+	if(Distance(dragstart, p) < 2) {
+		if((keyflags & K_CTRL) == 0) {
+			sel.Clear();
+			SetCursor(cursor);
+		}
+		if(CursorItem().IsTextClick(p)) {
+			StartText();
+			return;
+		}
 	}
 }
 
