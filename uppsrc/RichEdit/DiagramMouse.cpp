@@ -44,21 +44,11 @@ int   DiagramEditor::FindItem(Point p) const
 	double mina = INT_MAX;
 	for(int i = data.item.GetCount() - 1; i >= 0; i--) {
 		Rectf r = data.item[i].GetRect();
-		DLOG("==========================");
-		DDUMP(i);
-		DDUMP(r);
-		DDUMP(p);
-		DDUMP(data.item[i].IsLine());
-		DDUMP(data.item[i].GetRect().Inflated(5).Contains(p));
-		DDUMP(data.item[i].IsClick(p));
 		if(data.item[i].IsClick(p) || data.item[i].IsTextClick(p)) {
 			double a = r.Width() * r.Height();
-			DDUMP(a);
-			DDUMP(mina);
 			if(a < mina) {
 				mina = a;
 				mini = i;
-				DDUMP(mini);
 			}
 		}
 	}
@@ -121,6 +111,11 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			return;
 		}
 	}
+	
+	if(sel.GetCount() == 1 && !(keyflags & K_CTRL)) {
+		sel.Clear();
+		cursor = -1;
+	}
 
 	int i = FindItem(p);
 	if(i >= 0) {
@@ -134,8 +129,10 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		}
 	}
 	else {
-		sel.Clear();
-		SetCursor(-1);
+		if(!(keyflags & K_CTRL)) {
+			sel.Clear();
+			SetCursor(-1);
+		}
 		doselection = true;
 	}
 
@@ -196,16 +193,8 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 	Sync();
 	doselection = false;
 	Commit();
-	if(Distance(dragstart, p) < 2) {
-		if((keyflags & K_CTRL) == 0) {
-			sel.Clear();
-			SetCursor(cursor);
-		}
-		if(CursorItem().IsTextClick(p)) {
-			StartText();
-			return;
-		}
-	}
+	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p))
+		StartText();
 }
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
