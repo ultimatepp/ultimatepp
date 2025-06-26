@@ -47,8 +47,8 @@ DiagramEditor::DiagramEditor()
 
 	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
 		DiagramItem m;
-		m.p1 = Point(2, 2);
-		m.p2 = Point(23, cy - 2);
+		m.pt[0] = Point(2, 2);
+		m.pt[1] = Point(23, cy - 2);
 		m.width = DPI(1);
 		m.shape = i;
 		shape.Add(i, MakeImage(m));
@@ -58,9 +58,9 @@ DiagramEditor::DiagramEditor()
 	struct Dialine : DiagramItem {
 		Dialine() {
 			shape = SHAPE_LINE;
-			p1.y = p2.y = 7;
-			p1.x = -9999;
-			p2.x = 9999;
+			pt[0].y = pt[1].y = 7;
+			pt[0].x = -9999;
+			pt[1].x = 9999;
 		}
 	};
 
@@ -70,9 +70,9 @@ DiagramEditor::DiagramEditor()
 			m.line_end = m.line_start = i;
 
 			if(left)
-				m.p1.x = 8;
+				m.pt[0].x = 8;
 			else
-				m.p2.x = 16;
+				m.pt[1].x = 16;
 
 			dl.Add(i, MakeImage(m));
 		}
@@ -131,8 +131,8 @@ Image DiagramEditor::ShapeIcon(int i)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.p1 = Point(2, 2);
-	m.p2 = Point(isz.cx - 2, isz.cy - 2);
+	m.pt[0] = Point(2, 2);
+	m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
 	m.width = DPI(1);
 	m.shape = i;
 	m.paper = Null;
@@ -143,8 +143,8 @@ Image DiagramEditor::CapIcon(int start, int end)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.p1 = Point(DPI(4), isz.cy / 2);
-	m.p2 = Point(isz.cx - DPI(4), isz.cy / 2);
+	m.pt[0] = Point(DPI(4), isz.cy / 2);
+	m.pt[1] = Point(isz.cx - DPI(4), isz.cy / 2);
 	m.shape = 0;
 	m.width = DPI(1);
 	m.line_start = start;

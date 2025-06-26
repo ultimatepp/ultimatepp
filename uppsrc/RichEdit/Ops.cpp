@@ -76,8 +76,8 @@ void DiagramEditor::Align(bool horz, int align)
 		if(ii != cursor) {
 			DiagramItem& m = data.item[ii];
 			m.Normalize();
-			Pointf& p1 = m.p1;
-			Pointf& p2 = m.p2;
+			Pointf& p1 = m.pt[0];
+			Pointf& p2 = m.pt[1];
 			double sz = abs(HoVe(p2) - HoVe(p1));
 			if(align == ALIGN_LEFT) {
 				HoVe(p1) = HoVe(cp1);

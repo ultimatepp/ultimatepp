@@ -13,9 +13,9 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 	if(i >= 0) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
-			if(Distance(m.p1, p) < 6)
+			if(Distance(m.pt[0], p) < 6)
 				return Point(-1, -1);
-			if(Distance(m.p2, p) < 6)
+			if(Distance(m.pt[1], p) < 6)
 				return Point(1, 1);
 
 		}
@@ -44,11 +44,21 @@ int   DiagramEditor::FindItem(Point p) const
 	double mina = INT_MAX;
 	for(int i = data.item.GetCount() - 1; i >= 0; i--) {
 		Rectf r = data.item[i].GetRect();
+		DLOG("==========================");
+		DDUMP(i);
+		DDUMP(r);
+		DDUMP(p);
+		DDUMP(data.item[i].IsLine());
+		DDUMP(data.item[i].GetRect().Inflated(5).Contains(p));
+		DDUMP(data.item[i].IsClick(p));
 		if(data.item[i].IsClick(p) || data.item[i].IsTextClick(p)) {
 			double a = r.Width() * r.Height();
+			DDUMP(a);
+			DDUMP(mina);
 			if(a < mina) {
 				mina = a;
 				mini = i;
+				DDUMP(mini);
 			}
 		}
 	}
@@ -143,7 +153,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		sel.Clear();
 		KillCursor();
 		for(int i = 0; i < data.item.GetCount(); i++)
-			if(r.Contains(data.item[i].p1) && r.Contains(data.item[i].p2)) {
+			if(r.Contains(data.item[i].pt[0]) && r.Contains(data.item[i].pt[1])) {
 				sel.FindAdd(i);
 				SetCursor(i);
 			}
@@ -157,8 +167,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		if(IsNull(draghandle)) { // move selection
 			Point offset = p - dragstart;
 			Rect to = dragfrom.Offseted(offset);
-			m.p1 = to.TopLeft();
-			m.p2 = to.BottomRight();
+			m.pt[0] = to.TopLeft();
+			m.pt[1] = to.BottomRight();
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
@@ -169,9 +179,9 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		}
 		else {
 			if(draghandle.x)
-				(draghandle.x < 0 ? m.p1.x : m.p2.x) = p.x;
+				(draghandle.x < 0 ? m.pt[0].x : m.pt[1].x) = p.x;
 			if(draghandle.y)
-				(draghandle.y < 0 ? m.p1.y : m.p2.y) = p.y;
+				(draghandle.y < 0 ? m.pt[0].y : m.pt[1].y) = p.y;
 		}
 		m.FixPosition();
 		Sync();
@@ -222,12 +232,17 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	};
 
 	int si = shape.Execute();
+	
+	if(si < 0)
+		return;
+	
+	CancelSelection();
 
 	DiagramItem& m = data.item.Add();
 	if(grid)
 		p = p / 16 * 16;
-	m.p1 = Pointf(p) - Pointf(64, 32);
-	m.p2 = Pointf(p) + Pointf(64, 32);
+	m.pt[0] = Pointf(p) - Pointf(64, 32);
+	m.pt[1] = Pointf(p) + Pointf(64, 32);
 	m.shape = si;
 	SetAttrs();
 	SetCursor(data.item.GetCount() - 1);

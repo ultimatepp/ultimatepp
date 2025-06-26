@@ -39,30 +39,30 @@ void DiagramItem::Reset()
 
 void Point2::Normalize()
 {
-	if(p1.x > p2.x)
-		Swap(p1.x, p2.x);
-	if(p1.y > p2.y)
-		Swap(p1.y, p2.y);
+	if(pt[0].x > pt[1].x)
+		Swap(pt[0].x, pt[1].x);
+	if(pt[0].y > pt[1].y)
+		Swap(pt[0].y, pt[1].y);
 }
 
 void DiagramItem::FixPosition()
 {
-	double x = min(p1.x, p2.x);
+	double x = min(pt[0].x, pt[1].x);
 	if(x < 0) {
-		p1.x -= x;
-		p2.x -= x;
+		pt[0].x -= x;
+		pt[1].x -= x;
 	}
-	double y = min(p1.y, p2.y);
+	double y = min(pt[0].y, pt[1].y);
 	if(y < 0) {
-		p1.y -= y;
-		p2.y -= y;
+		pt[0].y -= y;
+		pt[1].y -= y;
 	}
 }
 
 bool DiagramItem::IsClick(Point p) const
 {
 	if(IsLine())
-		return DistanceFromSegment(p, p1, p2) < width + 20;
+		return DistanceFromSegment(p, pt[0], pt[1]) < width + 20;
 	else
 		return GetRect().Inflated(5).Contains(p);
 }
@@ -75,16 +75,18 @@ bool DiagramItem::IsTextClick(Point p0) const
 	Rect r = GetRect();
 	Rect page;
 	Pointf p;
+	int cx = Distance(pt[0], pt[1]);
+	if(cx < 16)
+		return false;
 	if(IsLine()) {
-		int cx = Distance(p1, p2);
 		int txt_cy = txt.GetHeight(zoom, cx);
 		Pointf sp;
-		double dist = DistanceFromSegment(p0, p1, p2, &sp);
+		double dist = DistanceFromSegment(p0, pt[0], pt[1], &sp);
 		p.y = txt_cy + 10 - dist;
 		if(p0.y >= sp.y) // only consider text above
 			return false;
-		p.x = Distance(p1.x < p2.x ? p1 : p2, sp);
-		if(dist < 25 && abs(p.x - cx / 2) < 10)
+		p.x = Distance(pt[0].x < pt[1].x ? pt[0] : pt[1], sp);
+		if(dist < 25 && abs(p.x - cx / 2) < min(10, cx / 8))
 			return true;
 		p = p / z;
 		page.top = 0;
@@ -96,8 +98,9 @@ bool DiagramItem::IsTextClick(Point p0) const
 		r = RectC(r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth(), txt_cy);
 		Rect r2 = r;
 		int x = r.CenterPoint().x;
-		r2.left = x - 20;
-		r2.right = x + 20;
+		int dx = min(20, int(abs(pt[0].x - pt[1].x) / 6));
+		r2.left = x - dx;
+		r2.right = x + dx;
 		if(r2.Contains(p0))
 			return true;
 		if(!r.Contains(p0))
@@ -113,8 +116,8 @@ bool DiagramItem::IsTextClick(Point p0) const
 Rect DiagramItem::GetTextEditRect() const
 {
 	if(IsLine()) {
-		int   d = max(10, int(Distance(p1, p2) + 0.5));
-		Point c = (p1 + p2) / 2;
+		int d = max(10, int(Distance(pt[0], pt[1]) + 0.5));
+		Point c = (pt[0] + pt[1]) / 2;
 		return Rect(c.x - d / 2, c.y, c.x + d, c.y);
 	}
 	return GetRect();
@@ -141,25 +144,25 @@ void DiagramItem::Paint(Painter& w, dword style) const
 	Color sel2 = Blend(SColorHighlight(), SWhite());
 	
 	if(IsLine()) {
-		Pointf v = p2 - p1;
+		Pointf v = pt[1] - pt[0];
 		if(style) {
-			w.Move(p1).Line(p2).EndPath();
+			w.Move(pt[0]).Line(pt[1]).EndPath();
 			w.Begin();
 			if((style & EDITOR) && width == 0)
 				w.Dash("5 1").Stroke(1, 100 * sel2);
 			if(style & (Display::CURSOR | Display::SELECT)) {
 				w.LineCap(LINECAP_ROUND).Stroke(width + 12, (style & Display::SELECT ? 30 : 200) * sel2);
 				double r = (width + 12) / 2 - 1;
-				w.Circle(p1, r).Fill(sel1);
-				w.Circle(p2, r).Fill(sel1);
+				w.Circle(pt[0], r).Fill(sel1);
+				w.Circle(pt[1], r).Fill(sel1);
 			}
 			w.End();
 		}
 		double d = Length(v);
 		v = Upp::Normalize(v);
 
-		Pointf a1 = p1;
-		Pointf a2 = p2;
+		Pointf a1 = pt[0];
+		Pointf a2 = pt[1];
 		if(d > 20) { // enough length to have caps
 			if(line_start == CAP_ARROW)
 				a1 += v * 4 * width;
@@ -184,21 +187,21 @@ void DiagramItem::Paint(Painter& w, dword style) const
 					break;
 				}
 			};
-			PaintCap(line_start, p1, a1 + v);
-			PaintCap(line_end, p2, a2 - v);
+			PaintCap(line_start, pt[0], a1 + v);
+			PaintCap(line_end, pt[1], a2 - v);
 		}
 		 
-		int cx = Distance(p1, p2);
+		int cx = Distance(pt[0], pt[1]);
 		int txt_cy = txt.GetHeight(zoom, cx);
 		
 		w.Begin();
-		double angle = Bearing(p2 - p1);
+		double angle = Bearing(pt[1] - pt[0]);
 		if(angle >= -M_PI / 2 && angle <= M_PI / 2) {
-			w.Translate(p1 - o * (txt_cy + 10));
+			w.Translate(pt[0] - o * (txt_cy + 10));
 			w.Rotate(angle);
 		}
 		else {
-			w.Translate(p2 + o * (txt_cy + 10));
+			w.Translate(pt[1] + o * (txt_cy + 10));
 			w.Rotate(angle + M_PI);
 		}
 		txt.Paint(zoom, w, 0, 0, cx);
@@ -213,7 +216,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		}
 
 		int txt_cy = txt.GetHeight(zoom, GetRect().GetWidth());
-		Rectf r(p1, p2);
+		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
 		Pointf c = r.CenterPoint();
@@ -255,7 +258,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 void DiagramItem::Save(StringBuffer& r) const
 {
 	r << Shape[clamp(shape, 0, Shape.GetCount() - 1)] << ' ';
-	r << p1.x << ' ' << p1.y << ' ' << p2.x << ' ' << p2.y;
+	r << pt[0].x << ' ' << pt[0].y << ' ' << pt[1].x << ' ' << pt[1].y;
 	if(qtf.GetCount())
 		r << " " << AsCString(qtf);
 	auto col = [&](Color c) {
@@ -285,10 +288,10 @@ void DiagramItem::Load(CParser& p)
 	if(q < 0)
 		p.ThrowError("Unknown element");
 	shape = q;
-	p1.x = p.ReadDouble();
-	p1.y = p.ReadDouble();
-	p2.x = p.ReadDouble();
-	p2.y = p.ReadDouble();
+	this->pt[0].x = p.ReadDouble();
+	this->pt[0].y = p.ReadDouble();
+	this->pt[1].x = p.ReadDouble();
+	this->pt[1].y = p.ReadDouble();
 	auto col = [&] {
 		if(p.Id("null"))
 			return Color(Null);
@@ -331,12 +334,12 @@ Size Diagram::GetSize() const
 	if(item.GetCount() == 0)
 		return Size(0, 0);
 	Pointf tl, br;
-	tl = br = item[0].p1;
+	tl = br = item[0].pt[0];
 	for(const DiagramItem& m : item) {
-		tl.x = min(tl.x, m.p1.x, m.p2.x);
-		tl.y = min(tl.y, m.p1.y, m.p2.y);
-		br.x = max(br.x, m.p1.x, m.p2.x);
-		br.y = max(br.y, m.p1.y, m.p2.y);
+		tl.x = min(tl.x, m.pt[0].x, m.pt[1].x);
+		tl.y = min(tl.y, m.pt[0].y, m.pt[1].y);
+		br.x = max(br.x, m.pt[0].x, m.pt[1].x);
+		br.y = max(br.y, m.pt[0].y, m.pt[1].y);
 	}
 	
 	Sizef fsz = br + tl;

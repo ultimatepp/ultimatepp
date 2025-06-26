@@ -72,8 +72,8 @@ void DiagramEditor::Duplicate()
 	for(int i : sel) {
 		DiagramItem& m = data.item[q++];
 		m = data.item[i];
-		m.p1 += offset;
-		m.p2 += offset;
+		m.pt[0] += offset;
+		m.pt[1] += offset;
 	}
 	sel.Clear();
 	for(int i = p; i < data.item.GetCount(); i++) {

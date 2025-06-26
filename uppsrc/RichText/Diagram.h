@@ -1,14 +1,13 @@
 struct Point2 : Moveable<Point2> {
-	Pointf p1;
-	Pointf p2;
+	Pointf  pt[2];
 
-	void    Offset(Pointf p)         { p1 += p; p2 += p; }
+	void    Offset(Pointf p)         { pt[0] += p; pt[1] += p; }
 	Point2  Offseted(Pointf p) const { Point2 r = *this; r.Offset(p); return r; }
 	void    Normalize();
-	Rectf   GetRect() const          { return Rect(p1, p2).Normalized(); }
-	String  ToString() const         { return String() << p1 << " - " << p2; }
+	Rectf   GetRect() const          { return Rectf(pt[0], pt[1]).Normalized(); }
+	String  ToString() const         { return String() << pt[0] << " - " << pt[1]; }
 	
-	void    Serialize(Stream& s)     { s % p1 % p2; }
+	void    Serialize(Stream& s)     { s % pt[0] % pt[1]; }
 };
 
 struct DiagramItem : Point2 {
