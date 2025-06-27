@@ -193,8 +193,8 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 	Sync();
 	doselection = false;
 	Commit();
-	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p))
-		StartText();
+//	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p))
+//		StartText();
 }
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
