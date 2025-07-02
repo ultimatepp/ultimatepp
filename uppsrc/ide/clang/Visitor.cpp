@@ -320,7 +320,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.nspace = ci.Nspace();
 		r.bases = ci.Bases();
 		r.isvirtual = kind == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
-		r.isstatic = clang_Cursor_getStorageClass(cursor) == CX_SC_Static;
+		r.isstatic = (IsFunction(r.kind) || IsVariable(r.kind)) && clang_Cursor_getStorageClass(cursor) == CX_SC_Static;
 
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
