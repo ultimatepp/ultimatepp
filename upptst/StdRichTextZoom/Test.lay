@@ -1,0 +1,6 @@
+LAYOUT(TestLayout, 448, 292)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("Standard size label")).LeftPosZ(4, 104).TopPosZ(4, 19))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("\001[g Standard size label QTF")).LeftPosZ(112, 156).TopPosZ(4, 19))
+	ITEM(Upp::RichTextCtrl, text, LeftPosZ(280, 156).TopPosZ(4, 19))
+END_LAYOUT
+
