@@ -5,7 +5,7 @@
 
 using namespace Upp;
 
-#define LAYOUTFILE <Test/Test.lay>
+#define LAYOUTFILE <StdRichTextZoom/Test.lay>
 #include <CtrlCore/lay.h>
 
 class Test : public WithTestLayout<TopWindow> {
