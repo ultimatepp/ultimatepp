@@ -59,10 +59,11 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 {
 	Map(p);
 
+/*
 	for(int i = 0; i < data.item.GetCount(); i++)
 		if(data.item[i].IsTextClick(p))
 			return Image::IBeam();
-
+*/
 	int i = FindItem(p);
 
 	Point h = HasCapture() ? draghandle : IsCursor() ? GetHandle(cursor, p) : Null;
@@ -175,10 +176,12 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			}
 		}
 		else {
-			if(draghandle.x)
-				(draghandle.x < 0 ? m.pt[0].x : m.pt[1].x) = p.x;
-			if(draghandle.y)
-				(draghandle.y < 0 ? m.pt[0].y : m.pt[1].y) = p.y;
+			auto Do = [](int h, double& a1, double& a2, double a) {
+				if(a)
+					(h < 0 ? a1 : a2) = a;
+			};
+			Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
+			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 		}
 		m.FixPosition();
 		Sync();
@@ -211,6 +214,30 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	};
 
 	FinishText();
+	
+	if(IsCursor()) {
+		DiagramItem& m = CursorItem();
+		if(m.IsLine()) {
+			Point h = GetHandle(cursor, p);
+			if(h.x) {
+				int i = h.x > 0;
+				ColumnPopUp shape;
+				shape.count = DiagramItem::CAP_COUNT;
+				shape.columns = 3;
+				shape.isz = IconSz() + Size(DPI(4), DPI(4));
+				shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+					PopPaint(w, i == 0 ? CapIcon(ii, 0) : CapIcon(0, ii), sel);
+				};
+				int cap = shape.Execute();
+				if(cap < 0)
+					return;
+				m.cap[i] = cap;
+				GetAttrs();
+				Sync();
+				return;
+			}
+		}
+	}
 
 	ColumnPopUp shape;
 	shape.count = DiagramItem::SHAPE_COUNT;
@@ -227,7 +254,14 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	
 	CancelSelection();
 
-	DiagramItem& m = data.item.Add();
+	int i = data.item.GetCount();
+	if(si == 0) { // insert lines before shapes
+		i = 0;
+		while(i < data.item.GetCount() && data.item[i].IsLine())
+			i++;
+		data.item.Insert(i);
+	}
+	DiagramItem& m = data.item.At(i);
 	if(grid)
 		p = p / 16 * 16;
 	m.pt[0] = Pointf(p) - Pointf(64, 32);

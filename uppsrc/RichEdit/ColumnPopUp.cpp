@@ -52,8 +52,12 @@ void ColumnPopUp::PopUp(Point p, Ctrl *owner)
 {
 	if(IsOpen())
 		Close();
-	// TODO: Workspace
 	Size sz = AddFrameSize(columns * isz.cx, (count + columns - 1) / columns * isz.cy);
+	Rect r = owner ? owner->GetWorkArea() : GetWorkArea();
+	if(p.x + sz.cx > r.right)
+		p.x = max(r.right - sz.cx, 0);
+	if(p.y + sz.cy > r.bottom)
+		p.y = max(r.bottom - sz.cy, 0);
 	SetRect(p.x, p.y, sz.cx, sz.cy);
 	Ctrl::PopUp(owner);
 }
@@ -66,7 +70,6 @@ int ColumnPopUp::Execute()
 		Close();
 	return cursor;
 }
-
 
 void ColumnPopUp::Deactivate()
 {

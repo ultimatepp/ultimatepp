@@ -44,8 +44,7 @@ struct DiagramItem : Point2 {
 		EDITOR = 0x8000
 	};
 	
-	int line_start = CAP_NONE;
-	int line_end = CAP_NONE;
+	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
 	void Paint(Painter& w, dword style = 0) const;
@@ -58,7 +57,7 @@ struct DiagramItem : Point2 {
 
 	void FixPosition();
 
-	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % line_start % line_end % dash; }
+	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash; }
 
 	void Reset();
 	void Save(StringBuffer& r) const;

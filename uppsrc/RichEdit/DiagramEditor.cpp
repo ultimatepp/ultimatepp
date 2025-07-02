@@ -67,7 +67,7 @@ DiagramEditor::DiagramEditor()
 	auto LDL = [=](DropList& dl, bool left) {
 		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
 			Dialine m;
-			m.line_end = m.line_start = i;
+			m.cap[0] = m.cap[1] = i;
 
 			if(left)
 				m.pt[0].x = 8;
@@ -147,8 +147,8 @@ Image DiagramEditor::CapIcon(int start, int end)
 	m.pt[1] = Point(isz.cx - DPI(4), isz.cy / 2);
 	m.shape = 0;
 	m.width = DPI(1);
-	m.line_start = start;
-	m.line_end = end;
+	m.cap[0] = start;
+	m.cap[1] = end;
 	return MakeIcon(m, isz);
 }
 

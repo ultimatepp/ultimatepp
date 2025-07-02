@@ -32,8 +32,7 @@ void DiagramItem::Reset()
 	ink = Black();
 	paper = White();
 	
-	line_start = CAP_NONE;
-	line_end = CAP_NONE;
+	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
 }
 
@@ -57,6 +56,17 @@ void DiagramItem::FixPosition()
 		pt[0].y -= y;
 		pt[1].y -= y;
 	}
+/*	Sizef sz = GetRect().GetSize();
+	if(max(sz.cx, sz.cy) < 8) {
+		auto Fix = [](double& a1, double& a2) {
+			int d = a2 - a1;
+			if(abs(d) < 8)
+				a2 = a1 + sgn(d) * 8;
+		};
+		Fix(pt[0].x, pt[1].x);
+		Fix(pt[0].y, pt[1].y);
+	}
+*/
 }
 
 bool DiagramItem::IsClick(Point p) const
@@ -164,9 +174,9 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		Pointf a1 = pt[0];
 		Pointf a2 = pt[1];
 		if(d > 20) { // enough length to have caps
-			if(line_start == CAP_ARROW)
+			if(cap[0] == CAP_ARROW)
 				a1 += v * 4 * width;
-			if(line_end == CAP_ARROW)
+			if(cap[1] == CAP_ARROW)
 				a2 -= v * 4 * width;
 		}
 		
@@ -187,8 +197,8 @@ void DiagramItem::Paint(Painter& w, dword style) const
 					break;
 				}
 			};
-			PaintCap(line_start, pt[0], a1 + v);
-			PaintCap(line_end, pt[1], a2 - v);
+			PaintCap(cap[0], pt[0], a1 + v);
+			PaintCap(cap[1], pt[1], a2 - v);
 		}
 		 
 		int cx = Distance(pt[0], pt[1]);
@@ -272,10 +282,10 @@ void DiagramItem::Save(StringBuffer& r) const
 		r << " paper " << col(paper);
 	if(width != 2)
 		r << " width " << width;
-	if(line_start != CAP_NONE)
-		r << " start " << LineCap[clamp(line_start, 0, LineCap.GetCount())];
-	if(line_end != CAP_NONE)
-		r << " end " << LineCap[clamp(line_end, 0, LineCap.GetCount())];
+	if(cap[0] != CAP_NONE)
+		r << " start " << LineCap[clamp(cap[0], 0, LineCap.GetCount())];
+	if(cap[1] != CAP_NONE)
+		r << " end " << LineCap[clamp(cap[1], 0, LineCap.GetCount())];
 	if(dash)
 		r << " dash " << dash;
 	r << ";";
@@ -299,7 +309,7 @@ void DiagramItem::Load(CParser& p)
 		return Color(byte(x >> 16), byte(x >> 8), byte(x));
 	};
 	for(;;) {
-		auto cap = [&] { return max(LineCap.Find(p.ReadId()), 0); };
+		auto Cap = [&] { return max(LineCap.Find(p.ReadId()), 0); };
 		if(p.Char(';'))
 			break;
 		else
@@ -316,10 +326,10 @@ void DiagramItem::Load(CParser& p)
 			width = clamp(p.ReadDouble(), 0.0, 50.0);
 		else
 		if(p.Id("start"))
-			line_start = cap();
+			cap[0] = Cap();
 		else
 		if(p.Id("end"))
-			line_end = cap();
+			cap[1] = Cap();
 		else
 		if(p.Id("dash"))
 			dash = clamp(p.ReadInt(), 0, (int)DASH_COUNT);
@@ -352,12 +362,12 @@ Size Diagram::GetSize() const
 
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
-/*	w.Begin();
+	w.Begin();
 	if(img_hd)
 		w.Scale(0.5);
 	w.DrawImage(0, 0, img);
 	w.End();
-*/	for(int i = 0; i < item.GetCount(); i++) {
+	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
 			style = Display::CURSOR;
@@ -377,13 +387,13 @@ void Diagram::Serialize(Stream& s)
 
 void Diagram::Save(StringBuffer& r) const
 {
-/*	if(!IsNull(img)) {
+	if(!IsNull(img)) {
 		r << "bk_image ";
 		if(img_hd)
 			r << "HD ";
 		r << AsCString(Base64Encode(PNGEncoder().SaveString(img))) << ";\n";
 	}
-*/	for(const DiagramItem& m : item) {
+	for(const DiagramItem& m : item) {
 		m.Save(r);
 		r << '\n';
 	}
