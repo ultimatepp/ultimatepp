@@ -165,14 +165,32 @@ public:
     String GetErrorDesc() const                                         { return err; }
 
 private:
+    bool   Init(Stream& in);
+    bool   DeriveKey(const String& password, const String& salt, byte *key, int keylen);
+    bool   Enc0(Stream& in, const byte* key, Stream& out);
+    bool   Dec0(Stream& in, const byte* key, Stream& out);
+    
+    // Encryption
+    bool   GenerateSaltAndIV(String& salt, String& iv);
+    int    WriteHeader(Stream& out, const String& salt, const String& iv);
+    bool   EncryptStream(Stream& in, Stream& out, int64& processed);
+    bool   FinalizeEncryption(Stream& out, int64& processed);
+
+    // Decryption
+    bool   ReadHeader(Stream& in, String& salt, String& iv);
+    bool   DecryptStream(Stream& in, Stream& out, int64& processed);
+    bool   ReadTag(Stream& in, String& tag);
+    bool   SetGcmTag(const String& tag);
+    bool   FinalizeDecryption(Stream& out);
+    
     bool   EncDec(bool enc, const String& in, const String& pwd, String& out);
     void   SetError(const String& txt);
 
-    EVP_CIPHER_CTX* ctx;
-    EVP_CIPHER*     cipher;
-    int             chunksize;
-    int             iteration;
-    String          err;
+    EVP_CIPHER_CTX*   ctx;
+    const EVP_CIPHER* cipher;
+    int               chunksize;
+    int               iteration;
+    String            err;
 };
 
 String AES256Encrypt(const String& in, const String& password, Gate<int64, int64> WhenProgress = Null);
@@ -183,4 +201,17 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 // Secure buffer
 #include "Buffer.hpp"
 
+// Secure Random Generator
+String SecureRandom(int n);
+String SecureNonce(int n);
+
+inline String GetAESGCMNonce()          { return SecureNonce(12); }  // 12 bytes, optimal for AES-GCM
+inline String GetChaChaPoly1305Nonce()  { return SecureNonce(12); }  // 12 bytes, standard for ChaCha20-Poly1305
+inline String GetTLSNonce()             { return SecureNonce(12); }  // 12 bytes, used in TLS 1.2/1.3
+inline String GetAESCCMNonce()          { return SecureNonce(13); }  // 13 bytes, max size for AES-CCM
+inline String GetJWTNonce()             { return SecureNonce(16); }  // 16 bytes, good for JWT
+inline String GetOAuthNonce()           { return SecureNonce(16); }  // 16 bytes, common for OAuth
+inline String GetOCSPNonce()            { return SecureNonce(20); }  // 20 bytes, OCSP nonce extension
+inline String GetECDSANonce()           { return SecureNonce(32); }  // 32 bytes, for ECDSA signatures
+inline String GetDTLSCookie()           { return SecureNonce(32); }  // 32 bytes, DTLS cookie
 }
