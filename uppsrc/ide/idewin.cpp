@@ -349,7 +349,8 @@ void Ide::Layout()
 	
 		int x = 0;
 
-		menubar.LeftPos(0, mw).VCenterPos(menubar.GetStdHeight());
+		int mh = menubar.GetStdHeight();
+		menubar.LeftPos(0, mw).TopPos((cm.height - mh) / 2, mh);
 		x += mw;
 
 		if(toolbar_in_row) {
