@@ -35,7 +35,7 @@ public:
 	String       Name();
 	String       Id();
 	String       Bases();
-	
+
 	CXCursor     GetCursor()                 { return cursor; }
 
 	ClangCursorInfo(CXCursor cursor, CXPrintingPolicy pp_id);
@@ -316,7 +316,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		r.nspace = ci.Nspace();
 		r.bases = ci.Bases();
 		r.isvirtual = kind == CXCursor_CXXMethod && clang_CXXMethod_isVirtual(cursor);
-		r.isstatic = clang_Cursor_getStorageClass(cursor) == CX_SC_Static;
+		r.isstatic = (IsFunction(r.kind) || IsVariable(r.kind)) && clang_Cursor_getStorageClass(cursor) == CX_SC_Static;
 
 		if(findarg(r.kind, CXCursor_Constructor, CXCursor_Destructor) >= 0) {
 			int q = r.id.Find('(');
@@ -352,7 +352,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 			if(findarg(ci.Kind(), CXCursor_CXXBaseSpecifier, CXCursor_TemplateRef) < 0) // suppress template untyping for : WithDlgLayout<TopWindow>
 				q = tfn.Find(ref_loc);
 			ClangCursorInfo ref_ci(q >= 0 ? tfn[q].cursor : ref, pp_id);
-			
+
 			ReferenceItem rm;
 			rm.pos = sl.pos;
 			rm.id = ref_ci.Id();
@@ -376,7 +376,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 				info.GetAdd(sl.path).refs.Add(rm);
 			}
 		};
-		
+
 		if(clang_getCursorKind(ref) == CXCursor_OverloadedDeclRef)
 			for(unsigned int i = 0; i < clang_getNumOverloadedDecls(ref); i++)
 				AddRef(clang_getOverloadedDecl(ref, i));
