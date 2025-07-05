@@ -371,7 +371,7 @@ void UppHubDlg::Sync()
 	}
 	else {
 		qtf << "[* \1" << n->description << "\1]";
-		qtf << (loading ? "&[/ Loading more information]" : "&[/ Failed to get ]\1" + n->readme);
+		qtf << (loading ? String("&[/ Loading more information]") : String("&[/ Failed to get ]\1") + n->readme);
 	}
 	info <<= qtf;
 }

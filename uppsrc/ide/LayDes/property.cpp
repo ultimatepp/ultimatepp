@@ -124,7 +124,7 @@ struct IntProperty : public EditorProperty<EditInt> {
 	}
 	virtual String Save() const {
 		int q = ~editor;
-		return IsNull(q) ? "Null" : AsString(q);
+		return IsNull(q) ? String("Null") : AsString(q);
 	}
 
 	static ItemProperty *Create() { return new IntProperty; }
