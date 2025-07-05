@@ -114,7 +114,7 @@ bool Pdb::VisualisePretty(Visual& result, Pdb::Val val, dword flags)
 {
 	auto ResultCount = [&](int64 count) {
 		result.Cat("[", SLtBlue);
-		result.Cat(count == INT64_MAX ? ">10000" : AsString(count), SRed);
+		result.Cat(count == INT64_MAX ? String(">10000") : AsString(count), SRed);
 		result.Cat("] ", SLtBlue);
 	};
 	
