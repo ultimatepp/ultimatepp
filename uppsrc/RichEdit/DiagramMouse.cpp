@@ -161,7 +161,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	if(HasCapture() && IsCursor()) {
 		DiagramItem& m = CursorItem();
 		if(grid)
-			p = m.IsLine() ? p / 16 * 16 : p / 8 * 8;
+			p = m.IsLine() ? p / 8 * 8 : p / 16 * 16;
 		if(IsNull(draghandle)) { // move selection
 			Point offset = p - dragstart;
 			Rect to = dragfrom.Offseted(offset);
@@ -267,7 +267,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	m.pt[0] = Pointf(p) - Pointf(64, 32);
 	m.pt[1] = Pointf(p) + Pointf(64, 32);
 	m.shape = si;
-	SetAttrs();
+	SetAttrs(ATTR_ALL);
 	SetCursor(data.item.GetCount() - 1);
 	Sync();
 }

@@ -8,7 +8,7 @@ GUI_APP_MAIN
 	app.Sizeable().Zoomable();
 	DiagramEditor de;
 	app.Add(de.SizePos());
-	String fn = "c:/xxx/test.qdf";
+	String fn = GetHomeDirFile("test.qdf");
 	de.Load(LoadFile(fn));
 	app.Run();
 	SaveFile(fn, de.Save());

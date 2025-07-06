@@ -2,17 +2,24 @@
 
 namespace Upp {
 
-void DiagramEditor::SetAttrs()
+void DiagramEditor::SetAttrs(dword attrs)
 {
 	for(int i = 0; i < sel.GetCount(); i++) {
 		DiagramItem& m = data.item[sel[i]];
-		m.shape = ~shape;
-		m.cap[0] = ~line_start;
-		m.cap[1] = ~line_end;
-		m.width = ~line_width;
-		m.dash = ~line_dash;
-		m.ink = ~ink;
-		m.paper = ~paper;
+		if(attrs & ATTR_SHAPE)
+			m.shape = ~shape;
+		if(attrs & ATTR_CAP0)
+			m.cap[0] = ~line_start;
+		if(attrs & ATTR_CAP1)
+			m.cap[1] = ~line_end;
+		if(attrs & ATTR_WIDTH)
+			m.width = ~line_width;
+		if(attrs & ATTR_DASH)
+			m.dash = ~line_dash;
+		if(attrs & ATTR_INK)
+			m.ink = ~ink;
+		if(attrs & ATTR_PAPER)
+			m.paper = ~paper;
 	}
 	Sync();
 	Commit();

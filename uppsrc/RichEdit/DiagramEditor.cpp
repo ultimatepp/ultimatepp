@@ -23,13 +23,13 @@ DiagramEditor::DiagramEditor()
 	   .NullImage(DiagramImg::InkNull())
 	   .StaticImage(DiagramImg::InkA());
 	ink.Tip(t_("Line color"));
-	ink << [=] { SetAttrs(); };
+	ink << [=] { SetAttrs(ATTR_INK); };
 
 	paper.ColorImage(DiagramImg::Paper())
 	   .NullImage(DiagramImg::PaperNull())
 	   .StaticImage(DiagramImg::PaperA());
 	paper.Tip(t_("Background color"));
-	paper << [=] { SetAttrs(); };
+	paper << [=] { SetAttrs(ATTR_PAPER); };
 
 	int cy = GetStdFontCy();
 
@@ -53,7 +53,7 @@ DiagramEditor::DiagramEditor()
 		m.shape = i;
 		shape.Add(i, MakeImage(m));
 	}
-	shape << [=] { SetAttrs(); };
+	shape << [=] { SetAttrs(ATTR_SHAPE); };
 
 	struct Dialine : DiagramItem {
 		Dialine() {
@@ -76,7 +76,7 @@ DiagramEditor::DiagramEditor()
 
 			dl.Add(i, MakeImage(m));
 		}
-		dl << [=] { SetAttrs(); };
+		dl << [=] { SetAttrs(ATTR_CAP0 + !left); };
 	};
 
 	LDL(line_start, true);
@@ -87,11 +87,11 @@ DiagramEditor::DiagramEditor()
 		m.dash = i;
 		line_dash.Add(i, MakeImage(m));
 	}
-	line_dash << [=] { SetAttrs(); };
+	line_dash << [=] { SetAttrs(ATTR_DASH); };
 
 	for(int i = 0; i < 10; i++)
 		line_width.Add(i);
-	line_width << [=] { SetAttrs(); };
+	line_width << [=] { SetAttrs(ATTR_WIDTH); };
 
 	ResetUndo();
 	Sync();

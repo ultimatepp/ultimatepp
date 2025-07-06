@@ -105,7 +105,17 @@ private:
 
 
 	void   FixPositions();
-	void   SetAttrs();
+	enum {
+		ATTR_SHAPE = 0x0001,
+		ATTR_CAP0 = 0x0002,
+		ATTR_CAP1 = 0x0004,
+		ATTR_WIDTH = 0x0008,
+		ATTR_DASH = 0x0010,
+		ATTR_INK = 0x0020,
+		ATTR_PAPER = 0x0040,
+		ATTR_ALL = 0xffffffff
+	};
+	void   SetAttrs(dword attr);
 	void   GetAttrs();
 
 	void   Copy();

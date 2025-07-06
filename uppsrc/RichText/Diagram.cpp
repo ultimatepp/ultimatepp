@@ -260,7 +260,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 			break;
 		}
 		DoDash();
-		w.Stroke(width, ink).Fill(paper);
+		w.Fill(paper).Stroke(width, ink);
 		txt.Paint(zoom, w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth());
 	}
 }
