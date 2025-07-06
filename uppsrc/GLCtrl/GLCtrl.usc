@@ -1,0 +1,27 @@
+namespace Upp;
+
+ctrl GLCtrl {
+	group "Graphics";
+	
+	GetStdSize() { return Size(170, 130); }
+	Frame SetFrame = default;
+	
+	Paint(w)
+	{
+		r = GetRect();
+		w.DrawRect(r, :SBlack);
+		
+		font = Arial(12).Bold();
+		right_text = "2D | 3D";
+		tn = GetTextSize(right_text, font);
+		if (r.right >= 130 && r.bottom >= 130) {
+			w.DrawText(r.left + 10, r.top + 10, "OpenGL", font, :SWhite);
+			w.DrawText(r.right - 10 - tn.cx, r.top + 10, right_text, font, :SWhite);
+		}
+		
+		poffset = 20;
+		w.DrawLine(r.left + poffset, r.bottom - poffset, r.right / 2, r.top + tn.cy, 7, :SGreen);
+		w.DrawLine(r.right - poffset, r.bottom - poffset, r.right / 2, r.top + tn.cy, 7, :SGreen);
+		w.DrawLine(r.left + poffset, r.bottom - poffset, r.right - poffset, r.bottom - poffset, 7, :SGreen);
+	}
+}

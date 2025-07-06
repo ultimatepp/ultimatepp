@@ -39,8 +39,6 @@ void InitializeGlew();
 
 
 class GLCtrl : public Ctrl {
-	typedef GLCtrl CLASSNAME;
-
 public:
 	Image  MouseEvent(int event, Point p, int zdelta, dword keyflags) override;
 #ifdef PLATFORM_POSIX
