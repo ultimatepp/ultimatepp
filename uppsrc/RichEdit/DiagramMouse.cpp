@@ -202,6 +202,8 @@ void DiagramEditor::LeftUp(Point p, dword keyflags)
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
 {
+	LeftDown(p, keyflags);
+
 	Map(p);
 
 	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
@@ -221,17 +223,33 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 			Point h = GetHandle(cursor, p);
 			if(h.x) {
 				int i = h.x > 0;
-				ColumnPopUp shape;
-				shape.count = DiagramItem::CAP_COUNT;
-				shape.columns = 3;
-				shape.isz = IconSz() + Size(DPI(4), DPI(4));
-				shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+				ColumnPopUp menu;
+				menu.count = DiagramItem::CAP_COUNT;
+				menu.columns = 3;
+				menu.isz = IconSz() + Size(DPI(4), DPI(4));
+				menu.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
 					PopPaint(w, i == 0 ? CapIcon(ii, 0) : CapIcon(0, ii), sel);
 				};
-				int cap = shape.Execute();
+				int cap = menu.Execute();
 				if(cap < 0)
 					return;
 				m.cap[i] = cap;
+				GetAttrs();
+				Sync();
+				return;
+			}
+			if(m.IsClick(p)) {
+				ColumnPopUp menu;
+				menu.count = DiagramItem::DASH_COUNT;
+				menu.columns = 4;
+				menu.isz = IconSz() + Size(DPI(4), DPI(4));
+				menu.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
+					PopPaint(w, DashIcon(ii), sel);
+				};
+				int dash = menu.Execute();
+				if(dash < 0)
+					return;
+				m.dash = dash;
 				GetAttrs();
 				Sync();
 				return;
@@ -254,6 +272,21 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	
 	CancelSelection();
 
+	if(grid)
+		p = p / 16 * 16;
+	Pointf cp = Null;
+	if(si == DiagramItem::SHAPE_LINE) {
+		double mind = DBL_MAX;
+		for(const DiagramItem& m : data.item)
+			for(Pointf c : m.GetConnections()) {
+				double d = Squared(c - (Pointf)p);
+				if(d < mind) {
+					cp = c;
+					mind = d;
+				}
+			}
+	}
+
 	int i = data.item.GetCount();
 	if(si == 0) { // insert lines before shapes
 		i = 0;
@@ -262,13 +295,17 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		data.item.Insert(i);
 	}
 	DiagramItem& m = data.item.At(i);
-	if(grid)
-		p = p / 16 * 16;
-	m.pt[0] = Pointf(p) - Pointf(64, 32);
-	m.pt[1] = Pointf(p) + Pointf(64, 32);
+	if(IsNull(cp)) {
+		m.pt[0] = Pointf(p) - Pointf(64, 32);
+		m.pt[1] = Pointf(p) + Pointf(64, 32);
+	}
+	else {
+		m.pt[0] = cp;
+		m.pt[1] = p;
+	}
 	m.shape = si;
 	SetAttrs(ATTR_ALL);
-	SetCursor(data.item.GetCount() - 1);
+	SetCursor(i);
 	Sync();
 }
 

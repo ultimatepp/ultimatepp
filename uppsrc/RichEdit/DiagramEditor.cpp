@@ -66,6 +66,8 @@ DiagramEditor::DiagramEditor()
 
 	auto LDL = [=](DropList& dl, bool left) {
 		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
+			dl.Add(i, CapIcon(left ? i : 0, left ? 0 : i));
+		#if 0
 			Dialine m;
 			m.cap[0] = m.cap[1] = i;
 
@@ -75,8 +77,10 @@ DiagramEditor::DiagramEditor()
 				m.pt[1].x = 16;
 
 			dl.Add(i, MakeImage(m));
+		#endif
 		}
 		dl << [=] { SetAttrs(ATTR_CAP0 + !left); };
+		dl <<= 0;
 	};
 
 	LDL(line_start, true);
@@ -114,6 +118,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		}
 		Image Make() const override {
 			ImagePainter iw(isz);
+			iw.Scale(DPI(1));
 			iw.Clear();
 			m.Paint(iw);
 			return iw;
@@ -143,12 +148,24 @@ Image DiagramEditor::CapIcon(int start, int end)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pt[0] = Point(DPI(4), isz.cy / 2);
-	m.pt[1] = Point(isz.cx - DPI(4), isz.cy / 2);
-	m.shape = 0;
-	m.width = DPI(1);
+	m.pt[0] = Point(DPI(6), isz.cy / 2);
+	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
+	m.shape = DiagramItem::SHAPE_LINE;
+	m.width = DPI(2);
 	m.cap[0] = start;
 	m.cap[1] = end;
+	return MakeIcon(m, isz);
+}
+
+Image DiagramEditor::DashIcon(int i)
+{
+	Size isz = IconSz();
+	DiagramItem m;
+	m.pt[0] = Point(DPI(6), isz.cy / 2);
+	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
+	m.shape = DiagramItem::SHAPE_LINE;
+	m.width = DPI(2);
+	m.dash = i;
 	return MakeIcon(m, isz);
 }
 

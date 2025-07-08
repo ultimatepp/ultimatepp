@@ -69,6 +69,20 @@ void DiagramItem::FixPosition()
 */
 }
 
+Vector<Pointf> DiagramItem::GetConnections() const
+{
+	Vector<Pointf> p;
+	if(IsLine()) {
+		p << pt[0] << pt[1];
+		return p;
+	}
+	Rectf r = GetRect();
+	p << r.TopCenter() << r.BottomCenter();
+	if(shape != SHAPE_PARALLELOGRAM)
+		p << r.CenterLeft() << r.CenterRight();
+	return p;
+}
+
 bool DiagramItem::IsClick(Point p) const
 {
 	if(IsLine())
@@ -139,7 +153,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 	
 	RichText txt = ParseQTF(qtf);
 
-	static Vector<double> dashes[4] = { { 0 }, { 1 }, { 2 }, { 1, 2 } };
+	static Vector<double> dashes[4] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 } };
 	
 	auto DoDash = [&] {
 		if(dash) {
@@ -173,7 +187,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 
 		Pointf a1 = pt[0];
 		Pointf a2 = pt[1];
-		if(d > 20) { // enough length to have caps
+		if(d > 4 * width) { // enough length to have caps
 			if(cap[0] == CAP_ARROW)
 				a1 += v * 4 * width;
 			if(cap[1] == CAP_ARROW)
@@ -185,9 +199,9 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		w.LineCap(LINECAP_ROUND).Stroke(width, ink);
 		
 		Pointf o = Orthogonal(v);
-		if(d > 20) {
+		if(d > 4 * width) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
-				Pointf oo = width * 2 * o;
+				Pointf oo = max(3.0, width * 2) * o;
 				switch(k) {
 				case CAP_ARROW:
 					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
@@ -224,7 +238,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 			w.RoundedRectangle(GetRect().Inflated(2), 5)
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
 		}
-
+		
 		int txt_cy = txt.GetHeight(zoom, GetRect().GetWidth());
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
@@ -262,6 +276,10 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		DoDash();
 		w.Fill(paper).Stroke(width, ink);
 		txt.Paint(zoom, w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth());
+
+		if(style & EDITOR)
+			for(Pointf p : GetConnections())
+				w.Circle(p, 4).Stroke(1, 128 * SColorHighlight());
 	}
 }
 

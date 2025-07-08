@@ -102,6 +102,7 @@ private:
 	Size   IconSz()                      { return Size(DPI(24), GetStdFontCy()); }
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
+	Image  DashIcon(int i);
 
 
 	void   FixPositions();

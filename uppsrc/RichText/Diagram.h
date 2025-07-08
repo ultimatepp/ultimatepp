@@ -50,6 +50,8 @@ struct DiagramItem : Point2 {
 	void Paint(Painter& w, dword style = 0) const;
 	
 	bool IsLine() const              { return shape == SHAPE_LINE; }
+	
+	Vector<Pointf> GetConnections() const;
 
 	bool IsClick(Point p) const;
 	bool IsTextClick(Point p) const;
