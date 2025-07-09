@@ -168,10 +168,17 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		if(grid)
 			p = m.IsLine() ? p / 8 * 8 : p / 16 * 16;
 		if(IsNull(draghandle)) { // move selection
-			Point offset = p - dragstart;
-			Rect to = dragfrom.Offseted(offset);
-			m.pt[0] = to.TopLeft();
-			m.pt[1] = to.BottomRight();
+			Rectf to = dragfrom.Offseted(p - dragstart);
+			Pointf tp = to.TopLeft();
+			DLOG("=======");
+			DDUMP(tp);
+			if(grid)
+				tp = (Point)tp / 16 * 16;
+			DDUMP(tp);
+			Sizef sz = to.GetSize();
+			m.pt[0] = tp;
+			m.pt[1] = tp + sz;
+			Pointf offset = tp - dragfrom.TopLeft();
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {

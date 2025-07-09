@@ -41,7 +41,8 @@ struct DiagramItem : Point2 {
 	};
 	
 	enum {
-		EDITOR = 0x8000
+		EDITOR = 0x8000,
+		GRID   = 0x4000
 	};
 	
 	int cap[2] = { CAP_NONE, CAP_NONE };
@@ -79,6 +80,7 @@ struct Diagram {
 	
 	struct PaintInfo {
 		bool       editor = false;
+		bool       display_grid = false;
 		int        cursor = -1;
 		Index<int> sel;
 	};

@@ -164,8 +164,8 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		}
 	};
 	
-	Color sel1 = SColorHighlight();
-	Color sel2 = Blend(SColorHighlight(), SWhite());
+	RGBA sel1 = 150 * SColorHighlight();
+	RGBA sel2 = 100 * SColorHighlight();
 	
 	if(IsLine()) {
 		Pointf v = pt[1] - pt[0];
@@ -280,7 +280,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		w.Fill(paper).Stroke(width, ink);
 		txt.Paint(zoom, w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth());
 
-		if(style & EDITOR)
+		if(style & GRID)
 			for(Pointf p : GetConnections())
 				w.Circle(p, 4).Stroke(1, 190 * SColorHighlight());
 	}
@@ -397,6 +397,8 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style = Display::SELECT;
 		if(p.editor)
 			style |= DiagramItem::EDITOR;
+		if(p.display_grid)
+			style |= DiagramItem::GRID;
 		item[i].Paint(w, style);
 	}
 }

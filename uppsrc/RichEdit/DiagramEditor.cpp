@@ -183,6 +183,17 @@ void DiagramEditor::Paint(Draw& w)
 
 	if(data.item.GetCount() == 0)
 		iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(30).Italic(), SLtGray());
+	
+	if(display_grid)
+		for(int x = 0; x < dsz.cx; x += 8)
+			for(int y = 0; y < dsz.cy; y += 8) {
+				if(((x | y) & 15) == 0) {
+					iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 100));
+					iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 100));
+				}
+				else
+					iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
+			}
 
 	data.Paint(iw, *this);
 

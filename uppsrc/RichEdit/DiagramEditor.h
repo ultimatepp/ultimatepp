@@ -54,7 +54,7 @@ private:
 	Point          draghandle = Point(0, 0);
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
-	Rect           dragfrom = Rect(0, 0, 0, 0);
+	Rectf          dragfrom = Rect(0, 0, 0, 0);
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid
@@ -85,7 +85,7 @@ private:
 	bool               IsCursor() const   { return cursor >= 0 && cursor < data.item.GetCount(); }
 	DiagramItem&       CursorItem();
 	const DiagramItem& CursorItem() const { return const_cast<DiagramEditor *>(this)->CursorItem(); }
-	Rect   GetCursorRect() const          { return IsCursor() ? data.item[cursor].GetRect() : Null; }
+	Rectf  GetCursorRect() const          { return IsCursor() ? data.item[cursor].GetRect() : Null; }
 	void   SetCursor(int i);
 	void   KillCursor()                   { SetCursor(-1); }
 	Point  GetHandle(int item, Point p) const;
