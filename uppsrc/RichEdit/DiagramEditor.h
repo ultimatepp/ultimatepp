@@ -60,8 +60,17 @@ private:
 	bool           grid = true; // snap to grid
 	bool           edit_text = false; // text editor is visible
 	int            zoom_percent = 100;
+	
+	struct Cn : Moveable<Cn> {
+		int mi; // item index
+		int ci; // connection index
+		int li; // line item index
+		int pi; // point index
+	};
+	
+	Vector<Cn>     conns; // connections, created at the drag start, updates line connections
 
-	BinUndoRedo       undoredo;
+	BinUndoRedo    undoredo;
 
 	int         tool = 0;
 	ToolBar     toolbar;
@@ -103,6 +112,8 @@ private:
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
 	Image  DashIcon(int i);
+	void   PrepareConns();
+	void   UseConns();
 
 
 	void   FixPositions();

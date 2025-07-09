@@ -224,6 +224,7 @@ void DiagramEditor::Commit()
 		SetBar();
 		Sync();
 	}
+	conns.Clear();
 }
 
 String DiagramEditor::GetCurrent()

@@ -98,6 +98,8 @@ void DiagramEditor::LeftDouble(Point p, dword keyflags)
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
 {
+	conns.Clear();
+
 	Map(p);
 
 	FinishText();
@@ -110,6 +112,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		if(h.x || h.y) {
 			draghandle = h;
 			Sync();
+			PrepareConns();
 			return;
 		}
 	}
@@ -127,6 +130,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			sdragfrom.SetCount(sel.GetCount());
 			for(int i = 0; i < sel.GetCount(); i++)
 				sdragfrom[i] = data.item[sel[i]];
+			PrepareConns();
 			draghandle = Null;
 		}
 	}
@@ -185,6 +189,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 		}
 		m.FixPosition();
+		UseConns();
 		Sync();
 		return;
 	}
@@ -192,6 +197,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 
 void DiagramEditor::LeftUp(Point p, dword keyflags)
 {
+	conns.Clear();
+
 	Map(p);
 
 	Sync();

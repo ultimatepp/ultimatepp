@@ -105,6 +105,47 @@ void DiagramEditor::Align(bool horz, int align)
 	Commit();
 }
 
+void DiagramEditor::PrepareConns()
+{
+	conns.Clear();
+	VectorMap<Pointf, Vector<Tuple<int, int>>> map;
+	for(int pass = 0; pass < 2; pass++)
+		for(int i = 0; i < data.item.GetCount(); i++) {
+			const DiagramItem& m = data.item[i];
+			if(m.IsLine() == pass) {
+				Vector<Pointf> cp = m.GetConnections();
+				for(int j = 0; j < cp.GetCount(); j++)
+					map.GetAdd(cp[j]) << MakeTuple(i, j);
+			}
+		}
+	for(int i = 0; i < data.item.GetCount(); i++) {
+		const DiagramItem& m = data.item[i];
+		if(m.IsLine()) {
+			for(int j = 0; j < 2; j++) {
+				auto *q = map.FindPtr(m.pt[j]);
+				if(q) {
+					for(auto w : *q) {
+						Cn& c = conns.Add();
+						c.mi = w.a;
+						c.ci = w.b;
+						c.li = i;
+						c.pi = j;
+					}
+				}
+			}
+		}
+	}
+}
+
+void DiagramEditor::UseConns()
+{
+	for(const Cn& cn: conns)
+		if(sel.Find(cn.li) < 0)
+			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
+}
+
+
+
 /* TODO remove
 
 struct SizeDlg : WithSizeLayout<TopWindow> {

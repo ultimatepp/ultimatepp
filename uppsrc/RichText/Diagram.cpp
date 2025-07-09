@@ -282,7 +282,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 
 		if(style & EDITOR)
 			for(Pointf p : GetConnections())
-				w.Circle(p, 4).Stroke(1, 128 * SColorHighlight());
+				w.Circle(p, 4).Stroke(1, 190 * SColorHighlight());
 	}
 }
 

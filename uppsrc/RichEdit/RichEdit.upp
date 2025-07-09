@@ -32,7 +32,7 @@ file
 	DiagramEditor.cpp,
 	DiagramMouse.cpp,
 	DiagramCursor.cpp,
-	Ops.cpp,
+	DiagramOps.cpp,
 	ColumnPopUp.cpp,
 	Bar.cpp,
 	Text.cpp,
