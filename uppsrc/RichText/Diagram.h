@@ -37,7 +37,7 @@ struct DiagramItem : Point2 {
 	};
 	
 	enum Dash {
-		DASH_COUNT = 4
+		DASH_COUNT = 5
 	};
 	
 	enum {

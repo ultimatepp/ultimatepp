@@ -43,9 +43,10 @@ int   DiagramEditor::FindItem(Point p) const
 	int mini = -1;
 	double mina = INT_MAX;
 	for(int i = data.item.GetCount() - 1; i >= 0; i--) {
-		Rectf r = data.item[i].GetRect();
-		if(data.item[i].IsClick(p) || data.item[i].IsTextClick(p)) {
-			double a = r.Width() * r.Height();
+		const DiagramItem& m = data.item[i];
+		Rectf r = m.GetRect();
+		if(m.IsClick(p) || m.IsTextClick(p)) {
+			double a = m.IsLine() ? 0 : r.Width() * r.Height();
 			if(a < mina) {
 				mina = a;
 				mini = i;
@@ -177,7 +178,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		}
 		else {
 			auto Do = [](int h, double& a1, double& a2, double a) {
-				if(a)
+				if(h)
 					(h < 0 ? a1 : a2) = a;
 			};
 			Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
@@ -303,8 +304,8 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.pt[0] = cp;
 		m.pt[1] = p;
 	}
-	m.shape = si;
 	SetAttrs(ATTR_ALL);
+	m.shape = si;
 	SetCursor(i);
 	Sync();
 }

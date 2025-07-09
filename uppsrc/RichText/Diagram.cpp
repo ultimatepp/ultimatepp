@@ -86,7 +86,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 bool DiagramItem::IsClick(Point p) const
 {
 	if(IsLine())
-		return DistanceFromSegment(p, pt[0], pt[1]) < width + 20;
+		return DistanceFromSegment(p, pt[0], pt[1]) < width + 10;
 	else
 		return GetRect().Inflated(5).Contains(p);
 }
@@ -153,7 +153,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 	
 	RichText txt = ParseQTF(qtf);
 
-	static Vector<double> dashes[4] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 } };
+	static Vector<double> dashes[5] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 1, 2 } };
 	
 	auto DoDash = [&] {
 		if(dash) {
@@ -196,13 +196,16 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		
 		w.Move(a1).Line(a2);
 		DoDash();
-		w.LineCap(LINECAP_ROUND).Stroke(width, ink);
+		w.Stroke(width, ink);
 		
 		Pointf o = Orthogonal(v);
 		if(d > 4 * width) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
 				Pointf oo = max(3.0, width * 2) * o;
 				switch(k) {
+				case CAP_NONE:
+					w.Circle(p, width / 2).Fill(ink);
+					break;
 				case CAP_ARROW:
 					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
 					break;
