@@ -188,8 +188,8 @@ void DiagramEditor::Paint(Draw& w)
 		for(int x = 0; x < dsz.cx; x += 8)
 			for(int y = 0; y < dsz.cy; y += 8) {
 				if(((x | y) & 15) == 0) {
-					iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 100));
-					iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 100));
+					iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 60));
+					iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 60));
 				}
 				else
 					iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));

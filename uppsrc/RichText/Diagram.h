@@ -48,7 +48,7 @@ struct DiagramItem : Point2 {
 	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
-	void Paint(Painter& w, dword style = 0) const;
+	void Paint(Painter& w, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	
 	bool IsLine() const              { return shape == SHAPE_LINE; }
 	

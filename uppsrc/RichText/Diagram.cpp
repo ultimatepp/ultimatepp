@@ -147,7 +147,7 @@ Rect DiagramItem::GetTextEditRect() const
 	return GetRect();
 }
 
-void DiagramItem::Paint(Painter& w, dword style) const
+void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) const
 {
 	Zoom zoom = Diagram::TextZoom();
 	
@@ -165,7 +165,7 @@ void DiagramItem::Paint(Painter& w, dword style) const
 	};
 	
 	RGBA sel1 = 150 * SColorHighlight();
-	RGBA sel2 = 100 * SColorHighlight();
+	RGBA sel2 = 150 * Gray();
 	
 	if(IsLine()) {
 		Pointf v = pt[1] - pt[0];
@@ -281,8 +281,12 @@ void DiagramItem::Paint(Painter& w, dword style) const
 		txt.Paint(zoom, w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth());
 
 		if(style & GRID)
-			for(Pointf p : GetConnections())
-				w.Circle(p, 4).Stroke(1, 190 * SColorHighlight());
+			for(Pointf p : GetConnections()) {
+				w.Circle(p, 5);
+				if(conn && conn->Find(p) >= 0)
+					w.Fill(128 * SYellow());
+				w.Stroke(1, 190 * SColorHighlight());
+			}
 	}
 }
 
@@ -388,6 +392,11 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 		w.Scale(0.5);
 	w.DrawImage(0, 0, img);
 	w.End();
+	Index<Pointf> conn;
+	if(p.display_grid)
+		for(const DiagramItem& m : item)
+			if(m.IsLine())
+				conn << m.pt[0] << m.pt[1];
 	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
@@ -399,7 +408,7 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style |= DiagramItem::EDITOR;
 		if(p.display_grid)
 			style |= DiagramItem::GRID;
-		item[i].Paint(w, style);
+		item[i].Paint(w, style, &conn);
 	}
 }
 
