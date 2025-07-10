@@ -435,7 +435,7 @@ ColorPopUp::ColorPopUp()
 	voidtext = t_("(none)");
 	
 	settext.SetImage(CtrlImg::color_edit());
-	settext << [=] {
+	settext << [this] {
 		String text;
 		if(!IsNull(color) && color != VoidColor())
 			text = ColorToHtml(color);
