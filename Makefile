@@ -63021,7 +63021,7 @@ $(OutDir_RichEdit)DiagramCursor.o: $(UPPDIR1)RichEdit/DiagramCursor.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/DiagramCursor.cpp -o $(OutDir_RichEdit)DiagramCursor.o
 
-$(OutDir_RichEdit)Ops.o: $(UPPDIR1)RichEdit/Ops.cpp \
+$(OutDir_RichEdit)DiagramOps.o: $(UPPDIR1)RichEdit/DiagramOps.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
 	$(UPPDIR1)Core/AString.hpp \
@@ -63167,7 +63167,7 @@ $(OutDir_RichEdit)Ops.o: $(UPPDIR1)RichEdit/Ops.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
-	$(UPPDIR1)RichEdit/Ops.cpp \
+	$(UPPDIR1)RichEdit/DiagramOps.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
 	$(UPPDIR1)RichEdit/RichEdit.lay \
@@ -63179,7 +63179,7 @@ $(OutDir_RichEdit)Ops.o: $(UPPDIR1)RichEdit/Ops.cpp \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
 	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/Ops.cpp -o $(OutDir_RichEdit)Ops.o
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/DiagramOps.cpp -o $(OutDir_RichEdit)DiagramOps.o
 
 $(OutDir_RichEdit)ColumnPopUp.o: $(UPPDIR1)RichEdit/ColumnPopUp.cpp \
 	$(UPPDIR1)Core/Algo.h \
@@ -63844,7 +63844,7 @@ $(OutDir_RichEdit)RichEdit.a: \
 	$(OutDir_RichEdit)DiagramEditor.o \
 	$(OutDir_RichEdit)DiagramMouse.o \
 	$(OutDir_RichEdit)DiagramCursor.o \
-	$(OutDir_RichEdit)Ops.o \
+	$(OutDir_RichEdit)DiagramOps.o \
 	$(OutDir_RichEdit)ColumnPopUp.o \
 	$(OutDir_RichEdit)Bar.o \
 	$(OutDir_RichEdit)Text.o \
@@ -63872,7 +63872,7 @@ $(OutDir_RichEdit)RichEdit.a: \
 		$(OutDir_RichEdit)DiagramEditor.o \
 		$(OutDir_RichEdit)DiagramMouse.o \
 		$(OutDir_RichEdit)DiagramCursor.o \
-		$(OutDir_RichEdit)Ops.o \
+		$(OutDir_RichEdit)DiagramOps.o \
 		$(OutDir_RichEdit)ColumnPopUp.o \
 		$(OutDir_RichEdit)Bar.o \
 		$(OutDir_RichEdit)Text.o \
