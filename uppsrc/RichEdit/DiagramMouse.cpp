@@ -170,11 +170,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		if(IsNull(draghandle)) { // move selection
 			Rectf to = dragfrom.Offseted(p - dragstart);
 			Pointf tp = to.TopLeft();
-			DLOG("=======");
-			DDUMP(tp);
 			if(grid)
 				tp = (Point)tp / 16 * 16;
-			DDUMP(tp);
 			Sizef sz = to.GetSize();
 			m.pt[0] = tp;
 			m.pt[1] = tp + sz;
