@@ -55,22 +55,26 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(line_dash, DPI(50));
 	bar.Add(ink);
 	bar.Add(paper);
-	bar.Gap();
+	bar.Separator();
 	Size isz = IconSz();
-	DiagramItem m;
-	m.pt[0] = Point(2, 2);
-	m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
-	m.width = ~line_width;
-	m.dash = ~line_dash;
-	m.shape = ~shape;
-	m.ink = ~ink;
-	m.paper = ~paper;
-	m.cap[0] = ~line_start;
-	m.cap[1] = ~line_end;
-	bar.Add(MakeIcon(m, isz), [=]{
+	for(int i = 0; i < tool_count; i++) {
+		DiagramItem m = tl[i];
+		m.pt[0] = Point(2, 2);
+		m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
+		m.width = log(m.width + 1);
+		bar.Add(MakeIcon(m, isz), [=] {
+			CancelSelection();
+			if(tool == i)
+				tool = -1;
+			else {
+				tool = i;
+				GetAttrs(tl[i]);
+			}
 			SetBar();
-		//	SetAttrs();
-		});
+		})
+		.Key(get_i(i, K_1, K_2, K_3, K_4))
+		.Check(tool == i);
+	}
 	bar.Break();
 //	ink.DarkContent(IsDarkContent());
 	text_editor.FontTools(bar);

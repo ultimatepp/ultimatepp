@@ -96,6 +96,9 @@ DiagramEditor::DiagramEditor()
 	for(int i = 0; i < 10; i++)
 		line_width.Add(i);
 	line_width << [=] { SetAttrs(ATTR_WIDTH); };
+	
+	tl[0].shape = DiagramItem::SHAPE_LINE;
+	tl[1].shape = DiagramItem::SHAPE_ROUNDRECT;
 
 	ResetUndo();
 	Sync();
@@ -112,22 +115,20 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 {
 	struct IconMaker : ImageMaker {
 		Size         isz;
-		DiagramItem& m;
+		DiagramItem  m;
 		String Key() const override {
-			return StoreAsString(m) + String((byte *)&isz, sizeof(isz));
+			return StoreAsString(const_cast<DiagramItem&>(m)) + String((byte *)&isz, sizeof(isz));
 		}
 		Image Make() const override {
 			ImagePainter iw(isz);
-			iw.Scale(DPI(1));
 			iw.Clear();
 			m.Paint(iw);
 			return iw;
 		}
-
-		IconMaker(DiagramItem& m) : m(m) {}
 	};
 
-	IconMaker mk(m);
+	IconMaker mk;
+	mk.m = m;
 	mk.isz = isz;
 	return MakeImage(mk);
 }
@@ -181,8 +182,10 @@ void DiagramEditor::Paint(Draw& w)
 	Size dsz = data.GetSize();
 	iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy).Stroke(0.2, SColorHighlight());
 
-	if(data.item.GetCount() == 0)
-		iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(30).Italic(), SLtGray());
+	if(data.item.GetCount() == 0) {
+		iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
+		iw.DrawText(DPI(30), DPI(50), "Double-click to edit text", ArialZ(10).Italic(), SLtGray());
+	}
 	
 	if(display_grid)
 		for(int x = 0; x < dsz.cx; x += 8)
@@ -311,6 +314,24 @@ void DiagramEditor::Reset()
 	edit_text = false;
 	ResetUndo();
 	Sync();
+}
+
+bool DiagramEditor::Key(dword key, int count)
+{
+	switch(key) {
+	case K_ESCAPE:
+		if(tool >= 0) {
+			tool = -1;
+			SetBar();
+			return true;
+		}
+		if(IsCursor()) {
+			KillCursor();
+			return true;
+		}
+		break;
+	}
+	return Ctrl::Key(key, count);
 }
 
 }

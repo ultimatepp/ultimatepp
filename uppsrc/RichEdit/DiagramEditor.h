@@ -46,6 +46,7 @@ public:
 	void RightUp(Point p, dword keyflags) override;
 	void HorzMouseWheel(Point p, int zdelta, dword keyflags) override;
 	void MouseWheel(Point p, int zdelta, dword keyflags) override;
+	bool Key(dword key, int count) override;
 	void Layout() override;
 
 private:
@@ -68,16 +69,21 @@ private:
 		int pi; // point index
 	};
 	
+	bool           moving = false; // moving hysteresis
+	
 	Vector<Cn>     conns; // connections, created at the drag start, updates line connections
 
 	BinUndoRedo    undoredo;
 
-	int         tool = 0;
 	ToolBar     toolbar;
 	DropList    shape, line_start, line_end, line_width, line_dash;
 	DiaRichEdit text_editor;
 
 	ColorButton ink, paper;
+	
+	int         tool = -1;
+	int         tool_count = 2; // TODO
+	DiagramItem tl[2];
 
 	ScrollBars  sb;
 
@@ -114,6 +120,8 @@ private:
 	Image  DashIcon(int i);
 	void   PrepareConns();
 	void   UseConns();
+	void   Grid(int shape, Point& p);
+	void   Grid(const DiagramItem& m, Point& p) { Grid(m.shape, p); }
 
 
 	void   FixPositions();
@@ -127,8 +135,12 @@ private:
 		ATTR_PAPER = 0x0040,
 		ATTR_ALL = 0xffffffff
 	};
+	void   SetAttrs(DiagramItem& m, dword attrs);
 	void   SetAttrs(dword attr);
+	void   GetAttrs(const DiagramItem& m);
 	void   GetAttrs();
+
+	DiagramItem& AddItem(int shape);
 
 	void   Copy();
 	void   Cut();

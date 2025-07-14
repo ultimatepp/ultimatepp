@@ -2,32 +2,69 @@
 
 namespace Upp {
 
+void DiagramEditor::SetCursor(int i)
+{
+	cursor = i;
+	if(i < 0) {
+		sel.Clear();
+		return;
+	}
+	sel.FindAdd(i);
+	GetAttrs();
+}
+
+DiagramItem& DiagramEditor::CursorItem()
+{
+	static DiagramItem nil;
+	if(cursor >= 0 && cursor < data.item.GetCount())
+		return data.item[cursor];
+	return nil;
+}
+
+DiagramItem& DiagramEditor::AddItem(int shape)
+{
+	int i = data.item.GetCount();
+	if(shape == 0) { // insert lines before shapes
+		i = 0;
+		while(i < data.item.GetCount() && data.item[i].IsLine())
+			i++;
+		data.item.Insert(i);
+	}
+	DiagramItem& m = data.item.At(i);
+	SetCursor(i);
+	return m;
+}
+
+void DiagramEditor::SetAttrs(DiagramItem& m, dword attrs)
+{
+	if(attrs & ATTR_SHAPE)
+		m.shape = ~shape;
+	if(attrs & ATTR_CAP0)
+		m.cap[0] = ~line_start;
+	if(attrs & ATTR_CAP1)
+		m.cap[1] = ~line_end;
+	if(attrs & ATTR_WIDTH)
+		m.width = ~line_width;
+	if(attrs & ATTR_DASH)
+		m.dash = ~line_dash;
+	if(attrs & ATTR_INK)
+		m.ink = ~ink;
+	if(attrs & ATTR_PAPER)
+		m.paper = ~paper;
+}
+
 void DiagramEditor::SetAttrs(dword attrs)
 {
-	for(int i = 0; i < sel.GetCount(); i++) {
-		DiagramItem& m = data.item[sel[i]];
-		if(attrs & ATTR_SHAPE)
-			m.shape = ~shape;
-		if(attrs & ATTR_CAP0)
-			m.cap[0] = ~line_start;
-		if(attrs & ATTR_CAP1)
-			m.cap[1] = ~line_end;
-		if(attrs & ATTR_WIDTH)
-			m.width = ~line_width;
-		if(attrs & ATTR_DASH)
-			m.dash = ~line_dash;
-		if(attrs & ATTR_INK)
-			m.ink = ~ink;
-		if(attrs & ATTR_PAPER)
-			m.paper = ~paper;
-	}
+	for(int i = 0; i < sel.GetCount(); i++)
+		SetAttrs(data.item[sel[i]], attrs);
+	if(tool >= 0)
+		SetAttrs(tl[tool], attrs);
 	Sync();
 	Commit();
 }
 
-void DiagramEditor::GetAttrs()
+void DiagramEditor::GetAttrs(const DiagramItem& m)
 {
-	DiagramItem& m = CursorItem();
 	shape <<= m.shape;
 	line_start <<= m.cap[0];
 	line_end <<= m.cap[1];
@@ -35,6 +72,12 @@ void DiagramEditor::GetAttrs()
 	line_dash <<= m.dash;
 	ink <<= m.ink;
 	paper <<= m.paper;
+}
+
+
+void DiagramEditor::GetAttrs()
+{
+	GetAttrs(CursorItem());
 }
 
 void DiagramEditor::MoveFrontBack(bool back)

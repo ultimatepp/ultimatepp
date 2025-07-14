@@ -92,12 +92,19 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 
 void DiagramEditor::LeftDouble(Point p, dword keyflags)
 {
-	if(IsCursor())
+	if(IsCursor() && !(keyflags & K_CTRL))
 		StartText();
+}
+
+void DiagramEditor::Grid(int shape, Point& p)
+{
+	p = shape == DiagramItem::SHAPE_LINE ? p / 8 * 8 : p / 16 * 16;
 }
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
 {
+	moving = false;
+
 	conns.Clear();
 
 	Map(p);
@@ -106,6 +113,17 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 	dragstart = dragcurrent = p;
 
 	SetCapture();
+	
+	if(tool >= 0) {
+		KillCursor();
+		DiagramItem& m = AddItem(tl[tool].shape);
+		m = tl[tool];
+		Grid(m, p);
+		m.pt[0] = m.pt[1] = p;
+		m.FixPosition();
+		draghandle = Point(1, 1);
+		return;
+	}
 
 	if(IsCursor()) {
 		Point h = GetHandle(cursor, p);
@@ -124,14 +142,24 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 
 	int i = FindItem(p);
 	if(i >= 0) {
-		SetCursor(i);
-		dragfrom = GetCursorRect();
-		if(dragfrom.Contains(p)) {
-			sdragfrom.SetCount(sel.GetCount());
-			for(int i = 0; i < sel.GetCount(); i++)
-				sdragfrom[i] = data.item[sel[i]];
-			PrepareConns();
-			draghandle = Null;
+		if((keyflags & K_CTRL) && sel.Find(i) >= 0) {
+			sel.RemoveKey(i);
+			if(sel.GetCount())
+				SetCursor(sel.Top());
+			else
+				KillCursor();
+		}
+		else
+			SetCursor(i);
+		if(IsCursor()) {
+			dragfrom = GetCursorRect();
+			if(dragfrom.Contains(p)) {
+				sdragfrom.SetCount(sel.GetCount());
+				for(int i = 0; i < sel.GetCount(); i++)
+					sdragfrom[i] = data.item[sel[i]];
+				PrepareConns();
+				draghandle = Null;
+			}
 		}
 	}
 	else {
@@ -163,10 +191,10 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		Sync();
 		return;
 	}
-	if(HasCapture() && IsCursor()) {
+	if(HasCapture() && IsCursor() && (moving || Distance(dragstart, p) >= 8)) {
+		moving = true;
 		DiagramItem& m = CursorItem();
-		if(grid)
-			p = m.IsLine() ? p / 8 * 8 : p / 16 * 16;
+		Grid(m, p);
 		if(IsNull(draghandle)) { // move selection
 			Rectf to = dragfrom.Offseted(p - dragstart);
 			Pointf tp = to.TopLeft();
@@ -199,23 +227,16 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	}
 }
 
-void DiagramEditor::LeftUp(Point p, dword keyflags)
+void DiagramEditor::LeftUp(Point, dword)
 {
 	conns.Clear();
-
-	Map(p);
-
 	Sync();
-	doselection = false;
+	moving = doselection = false;
 	Commit();
-//	if(Distance(dragstart, p) < 2 && CursorItem().IsTextClick(p))
-//		StartText();
 }
 
 void DiagramEditor::RightDown(Point p, dword keyflags)
 {
-	LeftDown(p, keyflags);
-
 	Map(p);
 
 	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
@@ -228,10 +249,12 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	};
 
 	FinishText();
-	
-	if(IsCursor()) {
-		DiagramItem& m = CursorItem();
+
+	int ii = FindItem(p);
+	if(ii >= 0) {
+		DiagramItem& m = data.item[ii];
 		if(m.IsLine()) {
+			SetCursor(ii);
 			Point h = GetHandle(cursor, p);
 			if(h.x) {
 				int i = h.x > 0;
@@ -284,9 +307,8 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	
 	CancelSelection();
 
-	if(grid)
-		p = p / 16 * 16;
-	Pointf cp = Null;
+	Grid(si, p);
+	Pointf cp = Null; // connect line with nearest connection point
 	if(si == DiagramItem::SHAPE_LINE) {
 		double mind = DBL_MAX;
 		for(const DiagramItem& m : data.item)
@@ -299,17 +321,10 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 			}
 	}
 
-	int i = data.item.GetCount();
-	if(si == 0) { // insert lines before shapes
-		i = 0;
-		while(i < data.item.GetCount() && data.item[i].IsLine())
-			i++;
-		data.item.Insert(i);
-	}
-	DiagramItem& m = data.item.At(i);
+	DiagramItem& m = AddItem(si);
 	if(IsNull(cp)) {
-		m.pt[0] = Pointf(p) - Pointf(64, 32);
-		m.pt[1] = Pointf(p) + Pointf(64, 32);
+		m.pt[0] = p;
+		m.pt[1] = p + Point(128, 64);
 	}
 	else {
 		m.pt[0] = cp;
@@ -317,7 +332,6 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	}
 	SetAttrs(ATTR_ALL);
 	m.shape = si;
-	SetCursor(i);
 	Sync();
 }
 

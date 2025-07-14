@@ -311,27 +311,27 @@ void  ToolButton::LeftDown(Point, dword)
 {
 	Refresh();
 	if(repeat)
-		WhenAction();
+		Action();
 }
 
 void  ToolButton::LeftRepeat(Point, dword)
 {
 	Refresh();
 	if(repeat)
-		WhenAction();
+		Action();
 }
 
 void  ToolButton::LeftUp(Point, dword)
 {
 	Refresh();
 	if(!repeat)
-		WhenAction();
+		Action();
 }
 
 bool  ToolButton::HotKey(dword key)
 {
 	if(key == accel) {
-		WhenAction();
+		Action();
 		return true;
 	}
 	return false;
