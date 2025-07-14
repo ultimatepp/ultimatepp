@@ -77,9 +77,10 @@ GUI_APP_MAIN
 ### TheIDE
 
 Standard part of U++ framework is integrated development environment, TheIDE.
-
 <p align="center">
-  <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" width="80%" height="80%">
+    <picture>
+        <img alt="TheIDE - U++ Integrated Developemnt Enviroment" src="/uppbox/uppweb/Resources/Images/TheIDE.png" width="80%" height="80%">
+    </picture>
 </p>
 
 ### Additional examples
