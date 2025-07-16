@@ -48,6 +48,8 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add("Snap to grid", DiagramImg::Grid(), [=] { grid = !grid; SetBar(); }).Check(grid);
 	bar.Add("Display grid", DiagramImg::DisplayGrid(), [=] { display_grid = !display_grid; SetBar(); Refresh(); }).Check(display_grid);
 	bar.Separator();
+	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
+	bar.Separator();
 	bar.Add(shape, DPI(50));
 	bar.Add(line_start, DPI(50));
 	bar.Add(line_end, DPI(50));

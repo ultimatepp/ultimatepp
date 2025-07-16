@@ -74,6 +74,7 @@ private:
 };
 
 struct Diagram {
+	Sizef              size = Null; // Null - auto
 	Array<DiagramItem> item;
 	Image img;
 	bool  img_hd = false;

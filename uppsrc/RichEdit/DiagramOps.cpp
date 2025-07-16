@@ -183,13 +183,9 @@ void DiagramEditor::PrepareConns()
 void DiagramEditor::UseConns()
 {
 	for(const Cn& cn: conns)
-		if(sel.Find(cn.li) < 0)
+		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0)
 			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
 }
-
-
-
-/* TODO remove
 
 struct SizeDlg : WithSizeLayout<TopWindow> {
 	SizeDlg();
@@ -203,6 +199,7 @@ struct SizeDlg : WithSizeLayout<TopWindow> {
 
 Size SizeDlg::sz[] =
 {
+	Null,
 	Size(1250, 1000),
 	Size(1600, 900),
 	Size(1600, 800),
@@ -222,9 +219,7 @@ Size SizeDlg::Get() const
 void SizeDlg::Sync()
 {
 	Size sz = Get();
-	cx <<= sz.cx;
-	cy <<= sz.cy;
-	bool b = ~size == 4;
+	bool b = ~size == 5;
 	cx.Enable(b);
 	cy.Enable(b);
 }
@@ -233,8 +228,8 @@ void SizeDlg::Set(Size sz)
 {
 	cx <<= sz.cx;
 	cy <<= sz.cy;
-	int i = FindIndex(SubRange(sz, __countof(sz)), sz);
-	size = i < 0 ? 4 : i;
+	int i = FindIndex(SubRange(SizeDlg::sz, __countof(SizeDlg::sz)), sz);
+	size <<= i < 0 ? 5 : i;
 	Sync();
 }
 
@@ -247,11 +242,11 @@ SizeDlg::SizeDlg()
 void DiagramEditor::ChangeSize()
 {
 	SizeDlg dlg;
-	dlg.Set(data.sz);
+	dlg.Set(data.size);
 	if(dlg.ExecuteOK()) {
-		data.sz = dlg.Get();
+		data.size = dlg.Get();
 		Commit();
 	}
 }
-*/
+
 }

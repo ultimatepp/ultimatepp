@@ -2,8 +2,8 @@
 #define IMAGEFILE <RichEdit/Diagram.iml>
 #include <Draw/iml_header.h>
 
-//#define LAYOUTFILE <Diagram/Diagram.lay>
-//#include <CtrlCore/lay.h>
+#define LAYOUTFILE <RichEdit/Diagram.lay>
+#include <CtrlCore/lay.h>
 
 struct DiaRichEdit : RichEdit {
 	bool Key(dword key, int count) override;
@@ -52,6 +52,7 @@ public:
 private:
 	Diagram data;
 
+	Point          sizehandle = Point(0, 0);
 	Point          draghandle = Point(0, 0);
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
@@ -94,6 +95,7 @@ private:
 	Rectf  GetCursorRect() const          { return IsCursor() ? data.item[cursor].GetRect() : Null; }
 	void   SetCursor(int i);
 	void   KillCursor()                   { SetCursor(-1); }
+	Point  GetSizeHandle(Point p) const;
 	Point  GetHandle(int item, Point p) const;
 	void   TheBar(Bar& bar);
 	void   SetBar();
@@ -122,6 +124,7 @@ private:
 	void   UseConns();
 	void   Grid(int shape, Point& p);
 	void   Grid(const DiagramItem& m, Point& p) { Grid(m.shape, p); }
+	void   ChangeSize();
 
 
 	void   FixPositions();

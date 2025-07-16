@@ -7,6 +7,17 @@ void DiagramEditor::Map(Point& p)
 	p = (Pointf)p / GetZoom() + (Pointf)(Point)sb;
 }
 
+Point DiagramEditor::GetSizeHandle(Point p) const
+{
+	Point h = { 0, 0 };
+	Size sz = data.GetSize();
+	if(abs(sz.cx - p.x) < 8)
+		h.x = 1;
+	if(abs(sz.cy - p.y) < 8)
+		h.y = 1;
+	return h;
+}
+
 Point DiagramEditor::GetHandle(int i, Point p) const
 { // -1 top/left, 1 right/botom
 	Point h(0, 0);
@@ -65,9 +76,17 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 		if(data.item[i].IsTextClick(p))
 			return Image::IBeam();
 */
+	Point h = GetSizeHandle(p);
+	if(h.x && h.y)
+		return Image::SizeBottomRight();
+	if(h.x)
+		return Image::SizeHorz();
+	if(h.y)
+		return Image::SizeVert();
+
 	int i = FindItem(p);
 
-	Point h = HasCapture() ? draghandle : IsCursor() ? GetHandle(cursor, p) : Null;
+	h = HasCapture() ? draghandle : IsCursor() ? GetHandle(cursor, p) : Null;
 
 	if(IsNull(h))
 		return Image::Arrow();
@@ -104,7 +123,7 @@ void DiagramEditor::Grid(int shape, Point& p)
 void DiagramEditor::LeftDown(Point p, dword keyflags)
 {
 	moving = false;
-
+	
 	conns.Clear();
 
 	Map(p);
@@ -113,6 +132,10 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 	dragstart = dragcurrent = p;
 
 	SetCapture();
+
+	sizehandle = GetSizeHandle(p);
+	if(sizehandle.x || sizehandle.y)
+		return;
 	
 	if(tool >= 0) {
 		KillCursor();
@@ -153,13 +176,14 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			SetCursor(i);
 		if(IsCursor()) {
 			dragfrom = GetCursorRect();
-			if(dragfrom.Contains(p)) {
-				sdragfrom.SetCount(sel.GetCount());
-				for(int i = 0; i < sel.GetCount(); i++)
-					sdragfrom[i] = data.item[sel[i]];
-				PrepareConns();
-				draghandle = Null;
-			}
+			sdragfrom.SetCount(sel.GetCount());
+			for(int i = 0; i < sel.GetCount(); i++)
+				sdragfrom[i] = data.item[sel[i]];
+			PrepareConns();
+			draghandle = Null;
+			Point h = GetHandle(cursor, p);
+			if(h.x || h.y)
+				draghandle = h;
 		}
 	}
 	else {
@@ -188,6 +212,16 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				sel.FindAdd(i);
 				SetCursor(i);
 			}
+		Sync();
+		return;
+	}
+	if(HasCapture() && (sizehandle.x || sizehandle.y)) {
+		if(IsNull(data.size))
+			data.size = data.GetSize();
+		if(sizehandle.x)
+			data.size.cx = p.x;
+		if(sizehandle.y)
+			data.size.cy = p.y;
 		Sync();
 		return;
 	}

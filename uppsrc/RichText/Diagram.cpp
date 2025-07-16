@@ -203,7 +203,9 @@ void DiagramItem::Load(CParser& p)
 }
 
 Size Diagram::GetSize() const
-{ // TODO: Negatives?
+{
+	if(!IsNull(size))
+		return size;
 	if(item.GetCount() == 0)
 		return Size(0, 0);
 	Pointf tl, br;
@@ -252,11 +254,13 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 
 void Diagram::Serialize(Stream& s)
 {
-	s % img % item;
+	s % img % item % size;
 }
 
 void Diagram::Save(StringBuffer& r) const
 {
+	if(!IsNull(size))
+		r << "size " << size.cx << " " << size.cy << ";\n";
 	if(!IsNull(img)) {
 		r << "bk_image ";
 		if(img_hd)
@@ -273,6 +277,12 @@ void Diagram::Load(CParser& p)
 {
 	item.Clear();
 	while(!p.IsEof())
+		if(p.Id("size")) {
+			size.cx = clamp(p.ReadInt(), 1, 10000);
+			size.cy = clamp(p.ReadInt(), 1, 10000);
+			p.Char(';');
+		}
+		else
 		if(p.Id("bk_image")) {
 			img_hd = p.Id("HD");
 			img = StreamRaster::LoadStringAny(Base64Decode(p.ReadString()));
