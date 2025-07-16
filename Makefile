@@ -624,6 +624,7 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -860,6 +861,7 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -1096,6 +1098,7 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -1332,6 +1335,7 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -1568,6 +1572,7 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -1804,6 +1809,7 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -2040,6 +2046,7 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -2276,6 +2283,7 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -2512,6 +2520,7 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -2748,6 +2757,7 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -2984,6 +2994,7 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -3220,6 +3231,7 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -3456,6 +3468,7 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -3692,6 +3705,7 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -3928,6 +3942,7 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -4164,6 +4179,7 @@ $(OutDir_ide)AssistDisplay.o: $(UPPDIR1)ide/AssistDisplay.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -4400,6 +4416,7 @@ $(OutDir_ide)IncludeTrick.o: $(UPPDIR1)ide/IncludeTrick.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -4636,6 +4653,7 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -4872,6 +4890,7 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -5108,6 +5127,7 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -5344,6 +5364,7 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -5580,6 +5601,7 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -5816,6 +5838,7 @@ $(OutDir_ide)Usage.o: $(UPPDIR1)ide/Usage.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -6052,6 +6075,7 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -6288,6 +6312,7 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -6524,6 +6549,7 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -6760,6 +6786,7 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -6996,6 +7023,7 @@ $(OutDir_ide)Events.o: $(UPPDIR1)ide/Events.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -7232,6 +7260,7 @@ $(OutDir_ide)NavDlg.o: $(UPPDIR1)ide/NavDlg.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -7468,6 +7497,7 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -7704,6 +7734,7 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -7940,6 +7971,7 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -8176,6 +8208,7 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -8412,6 +8445,7 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -8648,6 +8682,7 @@ $(OutDir_ide)InsertImage.o: $(UPPDIR1)ide/InsertImage.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -8884,6 +8919,7 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -9120,6 +9156,7 @@ $(OutDir_ide)Sequence.o: $(UPPDIR1)ide/Sequence.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -9356,6 +9393,7 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -9592,6 +9630,7 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -9828,6 +9867,7 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -10065,6 +10105,7 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -10301,6 +10342,7 @@ $(OutDir_ide)background.o: $(UPPDIR1)ide/background.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -10538,6 +10580,7 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -10775,6 +10818,7 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -11175,6 +11219,7 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -11411,6 +11456,7 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -11647,6 +11693,7 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -11883,6 +11930,7 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -12119,6 +12167,7 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -12355,6 +12404,7 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -12591,6 +12641,7 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -12827,6 +12878,7 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -13063,6 +13115,7 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -13299,6 +13352,7 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -13535,6 +13589,7 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -13771,6 +13826,7 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -14010,6 +14066,7 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -14246,6 +14303,7 @@ $(OutDir_ide)SetupGIT.o: $(UPPDIR1)ide/SetupGIT.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -14482,6 +14540,7 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -14718,6 +14777,7 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -14954,6 +15014,7 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -15192,6 +15253,7 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -15428,6 +15490,7 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -15664,6 +15727,7 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -15900,6 +15964,7 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -16136,6 +16201,7 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -16372,6 +16438,7 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -16608,6 +16675,7 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -16844,6 +16912,7 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -17080,6 +17149,7 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -17316,6 +17386,7 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -17552,6 +17623,7 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -17788,6 +17860,7 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -18024,6 +18097,7 @@ $(OutDir_ide)DirRepoDiff.o: $(UPPDIR1)ide/DirRepoDiff.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -18219,6 +18293,7 @@ $(OutDir_ide_Common)ComDlg.o: $(UPPDIR1)ide/Common/ComDlg.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -18404,6 +18479,7 @@ $(OutDir_ide_Common)Module.o: $(UPPDIR1)ide/Common/Module.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -18589,6 +18665,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -20212,6 +20289,7 @@ $(OutDir_ide_LayDes)sdiff.o: $(UPPDIR1)ide/LayDes/sdiff.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -20412,6 +20490,7 @@ $(OutDir_ide_LayDes)laylib.o: $(UPPDIR1)ide/LayDes/laylib.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -20612,6 +20691,7 @@ $(OutDir_ide_LayDes)layusc.o: $(UPPDIR1)ide/LayDes/layusc.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -20812,6 +20892,7 @@ $(OutDir_ide_LayDes)property.o: $(UPPDIR1)ide/LayDes/property.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -21012,6 +21093,7 @@ $(OutDir_ide_LayDes)textprop.o: $(UPPDIR1)ide/LayDes/textprop.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -21212,6 +21294,7 @@ $(OutDir_ide_LayDes)fontprop.o: $(UPPDIR1)ide/LayDes/fontprop.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -21412,6 +21495,7 @@ $(OutDir_ide_LayDes)propane.o: $(UPPDIR1)ide/LayDes/propane.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -21612,6 +21696,7 @@ $(OutDir_ide_LayDes)item.o: $(UPPDIR1)ide/LayDes/item.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -21812,6 +21897,7 @@ $(OutDir_ide_LayDes)layout.o: $(UPPDIR1)ide/LayDes/layout.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -22012,6 +22098,7 @@ $(OutDir_ide_LayDes)visgen.o: $(UPPDIR1)ide/LayDes/visgen.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -22213,6 +22300,7 @@ $(OutDir_ide_LayDes)laydes.o: $(UPPDIR1)ide/LayDes/laydes.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -22413,6 +22501,7 @@ $(OutDir_ide_LayDes)layfile.o: $(UPPDIR1)ide/LayDes/layfile.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -22644,6 +22733,7 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -24935,6 +25025,7 @@ $(OutDir_ide_Debuggers)Terminal.o: $(UPPDIR1)ide/Debuggers/Terminal.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -25128,6 +25219,7 @@ $(OutDir_ide_Debuggers)Disas.o: $(UPPDIR1)ide/Debuggers/Disas.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -25322,6 +25414,7 @@ $(OutDir_ide_Debuggers)GdbCmd.o: $(UPPDIR1)ide/Debuggers/GdbCmd.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -25515,6 +25608,7 @@ $(OutDir_ide_Debuggers)GdbData.o: $(UPPDIR1)ide/Debuggers/GdbData.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -25708,6 +25802,7 @@ $(OutDir_ide_Debuggers)Gdb.o: $(UPPDIR1)ide/Debuggers/Gdb.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -25901,6 +25996,7 @@ $(OutDir_ide_Debuggers)GdbMem.o: $(UPPDIR1)ide/Debuggers/GdbMem.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -26186,6 +26282,7 @@ $(OutDir_ide_Debuggers)Cpu.o: $(UPPDIR1)ide/Debuggers/Cpu.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -26379,6 +26476,7 @@ $(OutDir_ide_Debuggers)Debug.o: $(UPPDIR1)ide/Debuggers/Debug.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -26572,6 +26670,7 @@ $(OutDir_ide_Debuggers)Mem.o: $(UPPDIR1)ide/Debuggers/Mem.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -26765,6 +26864,7 @@ $(OutDir_ide_Debuggers)Sym.o: $(UPPDIR1)ide/Debuggers/Sym.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -26958,6 +27058,7 @@ $(OutDir_ide_Debuggers)Exp.o: $(UPPDIR1)ide/Debuggers/Exp.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -27151,6 +27252,7 @@ $(OutDir_ide_Debuggers)PrettyUpp.o: $(UPPDIR1)ide/Debuggers/PrettyUpp.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -27344,6 +27446,7 @@ $(OutDir_ide_Debuggers)PrettyStd.o: $(UPPDIR1)ide/Debuggers/PrettyStd.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -27537,6 +27640,7 @@ $(OutDir_ide_Debuggers)Scripts.o: $(UPPDIR1)ide/Debuggers/Scripts.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -27730,6 +27834,7 @@ $(OutDir_ide_Debuggers)Pretty.o: $(UPPDIR1)ide/Debuggers/Pretty.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -27923,6 +28028,7 @@ $(OutDir_ide_Debuggers)Visualise.o: $(UPPDIR1)ide/Debuggers/Visualise.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -28116,6 +28222,7 @@ $(OutDir_ide_Debuggers)Data.o: $(UPPDIR1)ide/Debuggers/Data.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -28309,6 +28416,7 @@ $(OutDir_ide_Debuggers)Tree.o: $(UPPDIR1)ide/Debuggers/Tree.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -28502,6 +28610,7 @@ $(OutDir_ide_Debuggers)Stack.o: $(UPPDIR1)ide/Debuggers/Stack.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -28695,6 +28804,7 @@ $(OutDir_ide_Debuggers)Code.o: $(UPPDIR1)ide/Debuggers/Code.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -28889,6 +28999,7 @@ $(OutDir_ide_Debuggers)Pdb.o: $(UPPDIR1)ide/Debuggers/Pdb.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -29132,6 +29243,7 @@ $(OutDir_ide_Browser)Util.o: $(UPPDIR1)ide/Browser/Util.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -29324,6 +29436,7 @@ $(OutDir_ide_Browser)TopicBase.o: $(UPPDIR1)ide/Browser/TopicBase.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -29516,6 +29629,7 @@ $(OutDir_ide_Browser)File.o: $(UPPDIR1)ide/Browser/File.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -29708,6 +29822,7 @@ $(OutDir_ide_Browser)Topic.o: $(UPPDIR1)ide/Browser/Topic.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -29900,6 +30015,7 @@ $(OutDir_ide_Browser)Template.o: $(UPPDIR1)ide/Browser/Template.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -30092,6 +30208,7 @@ $(OutDir_ide_Browser)Link.o: $(UPPDIR1)ide/Browser/Link.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -30285,6 +30402,7 @@ $(OutDir_ide_Browser)TopicWin.o: $(UPPDIR1)ide/Browser/TopicWin.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -30515,6 +30633,7 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -30713,6 +30832,7 @@ $(OutDir_ide_Browser)CodeRef.o: $(UPPDIR1)ide/Browser/CodeRef.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -30943,6 +31063,7 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -45416,6 +45537,7 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -45652,6 +45774,7 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -45888,6 +46011,7 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -46124,6 +46248,7 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -46360,6 +46485,7 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -46596,6 +46722,7 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -46832,6 +46959,7 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -47068,6 +47196,7 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -48615,6 +48744,7 @@ $(OutDir_ide_MacroManager)MacroManager.o: $(UPPDIR1)ide/MacroManager/MacroManage
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -49982,6 +50112,7 @@ $(OutDir_ide_clang)libclang.o: $(UPPDIR1)ide/clang/libclang.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -50168,6 +50299,7 @@ $(OutDir_ide_clang)util.o: $(UPPDIR1)ide/clang/util.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -50354,6 +50486,7 @@ $(OutDir_ide_clang)macros.o: $(UPPDIR1)ide/clang/macros.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -50540,6 +50673,7 @@ $(OutDir_ide_clang)clang.o: $(UPPDIR1)ide/clang/clang.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -50726,6 +50860,7 @@ $(OutDir_ide_clang)Visitor.o: $(UPPDIR1)ide/clang/Visitor.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -50912,6 +51047,7 @@ $(OutDir_ide_clang)CurrentFile.o: $(UPPDIR1)ide/clang/CurrentFile.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -51142,6 +51278,7 @@ $(OutDir_ide_clang)Indexer.o: $(UPPDIR1)ide/clang/Indexer.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -59637,6 +59774,7 @@ $(OutDir_RichEdit)Ruler.o: $(UPPDIR1)RichEdit/Ruler.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -59797,6 +59935,7 @@ $(OutDir_RichEdit)UnitEdit.o: $(UPPDIR1)RichEdit/UnitEdit.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -59958,6 +60097,7 @@ $(OutDir_RichEdit)Editor.o: $(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Editor.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -60119,6 +60259,7 @@ $(OutDir_RichEdit)Speller.o: $(UPPDIR1)RichEdit/Speller.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -60279,6 +60420,7 @@ $(OutDir_RichEdit)Kbd.o: $(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Kbd.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -60439,6 +60581,7 @@ $(OutDir_RichEdit)Mouse.o: $(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Mouse.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -60600,6 +60743,7 @@ $(OutDir_RichEdit)Cursor.o: $(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Cursor.cpp \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -60759,6 +60903,7 @@ $(OutDir_RichEdit)Undo.o: $(UPPDIR1)RichEdit/Undo.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -60919,6 +61064,7 @@ $(OutDir_RichEdit)Modify.o: $(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Modify.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -61079,6 +61225,7 @@ $(OutDir_RichEdit)Formating.o: $(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Formating.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -61239,6 +61386,7 @@ $(OutDir_RichEdit)FormatDlg.o: $(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/FormatDlg.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -61399,6 +61547,7 @@ $(OutDir_RichEdit)ParaFormat.o: $(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/ParaFormat.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -61559,6 +61708,7 @@ $(OutDir_RichEdit)TableUndo.o: $(UPPDIR1)RichEdit/TableUndo.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -61719,6 +61869,7 @@ $(OutDir_RichEdit)Table.o: $(UPPDIR1)RichEdit/Table.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -61879,6 +62030,7 @@ $(OutDir_RichEdit)Find.o: $(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/Find.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -62039,6 +62191,7 @@ $(OutDir_RichEdit)Tool.o: $(UPPDIR1)RichEdit/Tool.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -62200,6 +62353,7 @@ $(OutDir_RichEdit)Clip.o: $(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Clip.cpp \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -62359,6 +62513,7 @@ $(OutDir_RichEdit)StyleKeys.o: $(UPPDIR1)RichEdit/StyleKeys.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -62519,6 +62674,7 @@ $(OutDir_RichEdit)HeaderFooter.o: $(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/HeaderFooter.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -62680,6 +62836,7 @@ $(OutDir_RichEdit)DiagramEditor.o: $(UPPDIR1)RichEdit/DiagramEditor.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.cpp \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -62840,6 +62997,7 @@ $(OutDir_RichEdit)DiagramMouse.o: $(UPPDIR1)RichEdit/DiagramMouse.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/DiagramMouse.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -63000,6 +63158,7 @@ $(OutDir_RichEdit)DiagramOps.o: $(UPPDIR1)RichEdit/DiagramOps.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/DiagramOps.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -63161,6 +63320,7 @@ $(OutDir_RichEdit)ColumnPopUp.o: $(UPPDIR1)RichEdit/ColumnPopUp.cpp \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/ColumnPopUp.cpp \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -63320,6 +63480,7 @@ $(OutDir_RichEdit)DiagramBar.o: $(UPPDIR1)RichEdit/DiagramBar.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramBar.cpp \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -63480,6 +63641,7 @@ $(OutDir_RichEdit)Text.o: $(UPPDIR1)RichEdit/Text.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -63640,6 +63802,7 @@ $(OutDir_RichEdit)DiagramClip.o: $(UPPDIR1)RichEdit/DiagramClip.cpp \
 	$(UPPDIR1)Painter/Painting.h \
 	$(UPPDIR1)plugin/png/png.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramClip.cpp \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
@@ -83203,6 +83366,7 @@ $(OutDir_ide_IconDes)IconDraw.o: $(UPPDIR1)ide/IconDes/IconDraw.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -83393,6 +83557,7 @@ $(OutDir_ide_IconDes)AlphaCtrl.o: $(UPPDIR1)ide/IconDes/AlphaCtrl.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -83583,6 +83748,7 @@ $(OutDir_ide_IconDes)RGBACtrl.o: $(UPPDIR1)ide/IconDes/RGBACtrl.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -83773,6 +83939,7 @@ $(OutDir_ide_IconDes)ImageOp.o: $(UPPDIR1)ide/IconDes/ImageOp.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -83964,6 +84131,7 @@ $(OutDir_ide_IconDes)Paint.o: $(UPPDIR1)ide/IconDes/Paint.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -84154,6 +84322,7 @@ $(OutDir_ide_IconDes)Event.o: $(UPPDIR1)ide/IconDes/Event.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -84344,6 +84513,7 @@ $(OutDir_ide_IconDes)IconDes.o: $(UPPDIR1)ide/IconDes/IconDes.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -84534,6 +84704,7 @@ $(OutDir_ide_IconDes)List.o: $(UPPDIR1)ide/IconDes/List.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -84724,6 +84895,7 @@ $(OutDir_ide_IconDes)Image.o: $(UPPDIR1)ide/IconDes/Image.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -84914,6 +85086,7 @@ $(OutDir_ide_IconDes)Smoothen.o: $(UPPDIR1)ide/IconDes/Smoothen.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -85104,6 +85277,7 @@ $(OutDir_ide_IconDes)Text.o: $(UPPDIR1)ide/IconDes/Text.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -85295,6 +85469,7 @@ $(OutDir_ide_IconDes)Bar.o: $(UPPDIR1)ide/IconDes/Bar.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -85485,6 +85660,7 @@ $(OutDir_ide_IconDes)EditPos.o: $(UPPDIR1)ide/IconDes/EditPos.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -85675,6 +85851,7 @@ $(OutDir_ide_IconDes)ImlFile.o: $(UPPDIR1)ide/IconDes/ImlFile.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -85905,6 +86082,7 @@ $(OutDir_ide_IconDes)IdeIconDes.o: $(UPPDIR1)ide/IconDes/IdeIconDes.cpp \
 	$(UPPDIR1)Report/Report.h \
 	$(UPPDIR1)Report/Report.lay \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
@@ -86101,6 +86279,7 @@ $(OutDir_ide_IconDes)IdeDes.o: $(UPPDIR1)ide/IconDes/IdeDes.cpp \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
+	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
