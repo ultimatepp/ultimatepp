@@ -333,6 +333,8 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
 		PopPaint(w, ShapeIcon(ii), sel);
 	};
+	
+	tool = -1;
 
 	int si = shape.Execute();
 	

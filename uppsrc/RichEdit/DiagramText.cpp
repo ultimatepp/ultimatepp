@@ -20,6 +20,8 @@ bool DiaRichEdit::Key(dword key, int count)
 
 void DiagramEditor::SyncEditor()
 {
+	text_editor.AllowDarkContent(allow_dark_content);
+	text_editor.DarkContent(dark_content);
 	if(edit_text && cursor >= 0) {
 		text_editor.SetEditable(); // to enable toolbar widgets
 		text_editor.Floating(-Diagram::TextZoom().AsDouble() * GetZoom());

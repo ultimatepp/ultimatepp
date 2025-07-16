@@ -48,9 +48,13 @@ public:
 	void MouseWheel(Point p, int zdelta, dword keyflags) override;
 	bool Key(dword key, int count) override;
 	void Layout() override;
+	void Skin() override;
 
 private:
-	Diagram data;
+	Diagram        data;
+
+	bool           allow_dark_content = false;
+	bool           dark_content = false;
 
 	Point          sizehandle = Point(0, 0);
 	Point          draghandle = Point(0, 0);
@@ -87,6 +91,9 @@ private:
 	DiagramItem tl[2];
 
 	ScrollBars  sb;
+
+	void SetupDark(ColorPusher& c) const;
+	bool IsDarkContent() const;
 
 	void               CancelSelection();
 	bool               IsCursor() const   { return cursor >= 0 && cursor < data.item.GetCount(); }
@@ -157,6 +164,9 @@ private:
 public:
 	String Save() const;
 	bool   Load(const String& s);
+
+	DiagramEditor& DarkContent(bool b = true);
+	DiagramEditor& AllowDarkContent(bool b = true);
 
 	DiagramEditor();
 };

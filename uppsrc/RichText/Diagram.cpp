@@ -248,6 +248,8 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style |= DiagramItem::EDITOR;
 		if(p.display_grid)
 			style |= DiagramItem::GRID;
+		if(p.dark)
+			style |= DiagramItem::DARK;
 		item[i].Paint(w, style, &conn);
 	}
 }

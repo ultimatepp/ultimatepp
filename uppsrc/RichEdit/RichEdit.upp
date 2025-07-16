@@ -34,7 +34,7 @@ file
 	DiagramOps.cpp,
 	ColumnPopUp.cpp,
 	DiagramBar.cpp,
-	Text.cpp,
+	DiagramText.cpp,
 	DiagramClip.cpp,
 	Diagram.iml,
 	Diagram.lay,

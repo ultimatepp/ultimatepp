@@ -55,7 +55,9 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(line_end, DPI(50));
 	bar.Add(line_width, DPI(50));
 	bar.Add(line_dash, DPI(50));
+	ink.DarkContent(IsDarkContent());
 	bar.Add(ink);
+	paper.DarkContent(IsDarkContent());
 	bar.Add(paper);
 	bar.Separator();
 	Size isz = IconSz();
@@ -78,7 +80,6 @@ void DiagramEditor::TheBar(Bar& bar)
 		.Check(tool == i);
 	}
 	bar.Break();
-//	ink.DarkContent(IsDarkContent());
 	text_editor.FontTools(bar);
 	text_editor.InkTool(bar);
 	text_editor.PaperTool(bar);

@@ -686,7 +686,6 @@ void RichEdit::Skin()
 	SetLastCharFormat(last_format);
 }
 
-
 void RichEditWithToolBar::TheBar(Bar& bar)
 {
 	DefaultBar(bar, extended);

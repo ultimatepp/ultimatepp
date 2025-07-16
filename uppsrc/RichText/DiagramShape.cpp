@@ -18,8 +18,17 @@ Vector<Pointf> DiagramItem::GetConnections() const
 
 void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) const
 {
-	Zoom zoom = Diagram::TextZoom();
+	bool dark = style & DARK;
 	
+	auto SC = [&](Color c) { return dark ? DarkThemeCached(c) : c; };
+
+	Color ink = SC(this->ink);
+	Color paper = SC(this->paper);
+	
+	PaintInfo pi;
+	pi.darktheme = dark;
+	pi.zoom = Diagram::TextZoom();
+
 	RichText txt = ParseQTF(qtf);
 
 	static Vector<double> dashes[5] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 1, 2 } };
@@ -96,7 +105,7 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		}
 		 
 		int cx = Distance(pt[0], pt[1]);
-		int txt_cy = txt.GetHeight(zoom, cx);
+		int txt_cy = txt.GetHeight(pi.zoom, cx);
 		
 		w.Begin();
 		double angle = Bearing(pt[1] - pt[0]);
@@ -108,7 +117,7 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			w.Translate(pt[1] + o * (txt_cy + 10));
 			w.Rotate(angle + M_PI);
 		}
-		txt.Paint(zoom, w, 0, 0, cx);
+		txt.Paint(w, 0, 0, cx, pi);
 		w.End();
 	}
 	else {
@@ -119,7 +128,7 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
 		}
 		
-		int txt_cy = txt.GetHeight(zoom, GetRect().GetWidth());
+		int txt_cy = txt.GetHeight(pi.zoom, GetRect().GetWidth());
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
@@ -157,7 +166,7 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		w.Fill(paper);
 		Stroke();
 		
-		txt.Paint(zoom, w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth());
+		txt.Paint(w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth(), pi);
 
 		if(style & GRID)
 			for(Pointf p : GetConnections()) {

@@ -29,73 +29,18 @@ DiagramEditor::DiagramEditor()
 	   .NullImage(DiagramImg::PaperNull())
 	   .StaticImage(DiagramImg::PaperA());
 	paper.Tip(t_("Background color"));
+
 	paper << [=] { SetAttrs(ATTR_PAPER); };
-
-	int cy = GetStdFontCy();
-
-	Size shape_sz = Size(DPI(24), cy);
-
-	auto MakeImage = [=](DiagramItem& m) -> Image {
-		ImagePainter iw(shape_sz);
-		iw.Scale(DPI(1));
-		iw.Clear();
-		m.Paint(iw);
-		return iw;
-	};
-
-	cy /= DPI(1);
-
-	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
-		DiagramItem m;
-		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(23, cy - 2);
-		m.width = DPI(1);
-		m.shape = i;
-		shape.Add(i, MakeImage(m));
-	}
 	shape << [=] { SetAttrs(ATTR_SHAPE); };
 
-	struct Dialine : DiagramItem {
-		Dialine() {
-			shape = SHAPE_LINE;
-			pt[0].y = pt[1].y = 7;
-			pt[0].x = -9999;
-			pt[1].x = 9999;
-		}
-	};
-
-	auto LDL = [=](DropList& dl, bool left) {
-		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
-			dl.Add(i, CapIcon(left ? i : 0, left ? 0 : i));
-		#if 0
-			Dialine m;
-			m.cap[0] = m.cap[1] = i;
-
-			if(left)
-				m.pt[0].x = 8;
-			else
-				m.pt[1].x = 16;
-
-			dl.Add(i, MakeImage(m));
-		#endif
-		}
-		dl << [=] { SetAttrs(ATTR_CAP0 + !left); };
-		dl <<= 0;
-	};
-
-	LDL(line_start, true);
-	LDL(line_end, false);
-
-	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
-		Dialine m;
-		m.dash = i;
-		line_dash.Add(i, MakeImage(m));
-	}
-	line_dash << [=] { SetAttrs(ATTR_DASH); };
+	line_start << [=] { SetAttrs(ATTR_CAP0); };
+	line_end << [=] { SetAttrs(ATTR_CAP1); };
 
 	for(int i = 0; i < 10; i++)
 		line_width.Add(i);
 	line_width << [=] { SetAttrs(ATTR_WIDTH); };
+
+	line_dash << [=] { SetAttrs(ATTR_DASH); };
 	
 	tl[0].shape = DiagramItem::SHAPE_LINE;
 	tl[1].shape = DiagramItem::SHAPE_ROUNDRECT;
@@ -111,18 +56,95 @@ DiagramEditor::DiagramEditor()
 	editor = true;
 }
 
+void DiagramEditor::SetupDark(ColorPusher& c) const
+{
+	c.AllowDarkContent(allow_dark_content);
+	c.DarkContent(dark_content);
+}
+
+bool DiagramEditor::IsDarkContent() const
+{
+	return dark_content || allow_dark_content && IsDarkTheme();
+}
+
+DiagramEditor& DiagramEditor::DarkContent(bool b)
+{
+	dark_content = b;
+	Sync();
+	return *this;
+}
+
+DiagramEditor& DiagramEditor::AllowDarkContent(bool b)
+{
+	allow_dark_content = b;
+	Sync();
+	return *this;
+}
+
+void DiagramEditor::Skin()
+{
+	SetBar();
+
+	int cy = GetStdFontCy();
+
+	cy /= DPI(1);
+
+	Size shape_sz = Size(DPI(24), cy);
+
+	shape.ClearList();
+	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
+		DiagramItem m;
+		m.pt[0] = Point(2, 2);
+		m.pt[1] = Point(23, cy - 2);
+		m.width = DPI(1);
+		m.shape = i;
+		shape.Add(i, MakeIcon(m, shape_sz));
+	}
+
+	struct Dialine : DiagramItem {
+		Dialine() {
+			shape = SHAPE_LINE;
+			pt[0].y = pt[1].y = 7;
+			pt[0].x = -9999;
+			pt[1].x = 9999;
+		}
+	};
+
+	auto LDL = [=](DropList& dl, bool left) {
+		dl.ClearList();
+		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
+			dl.Add(i, CapIcon(left ? i : 0, left ? 0 : i));
+		}
+	};
+
+	LDL(line_start, true);
+	LDL(line_end, false);
+
+	line_dash.ClearList();
+	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
+		Dialine m;
+		m.dash = i;
+		line_dash.Add(i, MakeIcon(m, shape_sz));
+	}
+}
+
 Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 {
 	struct IconMaker : ImageMaker {
 		Size         isz;
 		DiagramItem  m;
+		bool         dark;
 		String Key() const override {
-			return StoreAsString(const_cast<DiagramItem&>(m)) + String((byte *)&isz, sizeof(isz));
+			String key = StoreAsString(const_cast<DiagramItem&>(m));
+			RawCat(key, isz);
+			RawCat(key, dark);
+			return key;
 		}
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			m.Paint(iw);
+			DDUMP(dark);
+			m.Paint(iw, dark ? DiagramItem::DARK : 0);
 			return iw;
 		}
 	};
@@ -130,6 +152,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 	IconMaker mk;
 	mk.m = m;
 	mk.isz = isz;
+	mk.dark = IsDarkContent();
 	return MakeImage(mk);
 }
 
@@ -198,6 +221,7 @@ void DiagramEditor::Paint(Draw& w)
 					iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
 			}
 
+	dark = IsDarkContent();
 	data.Paint(iw, *this);
 
 	if(HasCapture() && doselection) {

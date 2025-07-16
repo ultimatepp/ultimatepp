@@ -7,6 +7,7 @@ GUI_APP_MAIN
 	TopWindow app;
 	app.Sizeable().Zoomable();
 	DiagramEditor de;
+	de.AllowDarkContent();
 	app.Add(de.SizePos());
 	String fn = GetHomeDirFile("test.qdf");
 	de.Load(LoadFile(fn));
