@@ -63496,7 +63496,7 @@ $(OutDir_RichEdit)DiagramBar.o: $(UPPDIR1)RichEdit/DiagramBar.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/DiagramBar.cpp -o $(OutDir_RichEdit)DiagramBar.o
 
-$(OutDir_RichEdit)Text.o: $(UPPDIR1)RichEdit/Text.cpp \
+$(OutDir_RichEdit)DiagramText.o: $(UPPDIR1)RichEdit/DiagramText.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
 	$(UPPDIR1)Core/AString.hpp \
@@ -63643,10 +63643,10 @@ $(OutDir_RichEdit)Text.o: $(UPPDIR1)RichEdit/Text.cpp \
 	$(UPPDIR1)RichEdit/Diagram.iml \
 	$(UPPDIR1)RichEdit/Diagram.lay \
 	$(UPPDIR1)RichEdit/DiagramEditor.h \
+	$(UPPDIR1)RichEdit/DiagramText.cpp \
 	$(UPPDIR1)RichEdit/RichEdit.h \
 	$(UPPDIR1)RichEdit/RichEdit.iml \
 	$(UPPDIR1)RichEdit/RichEdit.lay \
-	$(UPPDIR1)RichEdit/Text.cpp \
 	$(UPPDIR1)RichText/Diagram.h \
 	$(UPPDIR1)RichText/Para.h \
 	$(UPPDIR1)RichText/RichText.h \
@@ -63655,7 +63655,7 @@ $(OutDir_RichEdit)Text.o: $(UPPDIR1)RichEdit/Text.cpp \
 	$(UPPDIR1)RichText/Text.h \
 	$(UPPDIR1)RichText/Txt.h \
 	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/Text.cpp -o $(OutDir_RichEdit)Text.o
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_RichEdit)  $(UPPDIR1)RichEdit/DiagramText.cpp -o $(OutDir_RichEdit)DiagramText.o
 
 $(OutDir_RichEdit)DiagramClip.o: $(UPPDIR1)RichEdit/DiagramClip.cpp \
 	$(UPPDIR1)Core/Algo.h \
@@ -63843,7 +63843,7 @@ $(OutDir_RichEdit)RichEdit.a: \
 	$(OutDir_RichEdit)DiagramOps.o \
 	$(OutDir_RichEdit)ColumnPopUp.o \
 	$(OutDir_RichEdit)DiagramBar.o \
-	$(OutDir_RichEdit)Text.o \
+	$(OutDir_RichEdit)DiagramText.o \
 	$(OutDir_RichEdit)DiagramClip.o
 	$(AR) $(OutDir_RichEdit)RichEdit.a \
 		$(OutDir_RichEdit)Ruler.o \
@@ -63870,7 +63870,7 @@ $(OutDir_RichEdit)RichEdit.a: \
 		$(OutDir_RichEdit)DiagramOps.o \
 		$(OutDir_RichEdit)ColumnPopUp.o \
 		$(OutDir_RichEdit)DiagramBar.o \
-		$(OutDir_RichEdit)Text.o \
+		$(OutDir_RichEdit)DiagramText.o \
 		$(OutDir_RichEdit)DiagramClip.o
 
 $(OutDir_plugin_png):
