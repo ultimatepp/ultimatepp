@@ -49211,7 +49211,6 @@ $(OutDir_Core_SSL)Util.o: $(UPPDIR1)Core/SSL/Util.cpp \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/SSL/Util.cpp \
 	$(UPPDIR1)Core/Stream.h \
@@ -49302,7 +49301,6 @@ $(OutDir_Core_SSL)InitExit.o: $(UPPDIR1)Core/SSL/InitExit.cpp \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/InitExit.cpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/Stream.h \
@@ -49393,7 +49391,6 @@ $(OutDir_Core_SSL)Socket.o: $(UPPDIR1)Core/SSL/Socket.cpp \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/Socket.cpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/Stream.h \
@@ -49484,7 +49481,6 @@ $(OutDir_Core_SSL)P7S.o: $(UPPDIR1)Core/SSL/P7S.cpp \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/P7S.cpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/Stream.h \
@@ -49576,7 +49572,6 @@ $(OutDir_Core_SSL)AES.o: $(UPPDIR1)Core/SSL/AES.cpp \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
 	$(UPPDIR1)Core/SSL/AES.cpp \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/Stream.h \
 	$(UPPDIR1)Core/String.h \
@@ -49666,7 +49661,6 @@ $(OutDir_Core_SSL)SSL.o: $(UPPDIR1)Core/SSL/SSL.icpp \
 	$(UPPDIR1)Core/Sort.h \
 	$(UPPDIR1)Core/Sorted.h \
 	$(UPPDIR1)Core/SplitMerge.h \
-	$(UPPDIR1)Core/SSL/Buffer.hpp \
 	$(UPPDIR1)Core/SSL/SSL.h \
 	$(UPPDIR1)Core/SSL/SSL.icpp \
 	$(UPPDIR1)Core/Stream.h \
