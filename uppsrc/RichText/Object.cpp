@@ -100,29 +100,14 @@ Size RichObjectType::GetPixelSize(const Value& data, void *context) const
 
 Size RichObjectType::GetPixelSize(const Value& data) const { return Size(1, 1); }
 
-void RichObjectType::Paint(const Value& data, Draw& w, Size sz, Color ink, void *context) const
-{
-	Paint(data, w, sz, ink);
-}
+void RichObjectType::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const {}
 
-void RichObjectType::Paint(const Value& data, Draw& w, Size sz, Color ink) const {}
-
-Image RichObjectType::ToImage(int64 serial_id, const Value& data, Size sz, Color ink) const
-{
-	return ToImage(serial_id, data, sz, ink, NULL);
-}
-
-Image RichObjectType::ToImage(int64, const Value& data, Size sz, Color ink, void *context) const
+Image RichObjectType::ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const
 {
 	ImageAnyDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
-	Paint(data, iw, sz, ink, context);
+	Paint(data, iw, sz, pi);
 	return iw;
-}
-
-String RichObjectType::GetLink(const Value& data, Point pt, Size sz) const
-{
-	return GetLink(data, pt, sz, NULL);
 }
 
 String RichObjectType::GetLink(const Value& data, Point pt, Size sz, void *context) const
@@ -164,10 +149,10 @@ void RichObject::Register(const char *name, RichObjectType *type)
 	Map().FindAdd(name, type);
 }
 
-void RichObject::Paint(Draw& w, Size sz, Color ink, void *context) const
+void RichObject::Paint(Draw& w, Size sz, const RichObjectPaintInfo& pi) const
 {
 	if(type)
-		type->Paint(data, w, sz, ink, context);
+		type->Paint(data, w, sz, pi);
 	else {
 		w.DrawRect(sz, SColorFace());
 		DrawFrame(w, sz, SColorText());
@@ -175,13 +160,13 @@ void RichObject::Paint(Draw& w, Size sz, Color ink, void *context) const
 	}
 }
 
-Image RichObject::ToImage(Size sz, Color ink, void *context) const
+Image RichObject::ToImage(Size sz, const RichObjectPaintInfo& pi) const
 {
 	if(type)
-		return type->ToImage(serial, data, sz, ink, context);
+		return type->ToImage(serial, data, sz, pi);
 	else {
 		ImageAnyDraw w(sz);
-		Paint(w, sz, ink, context);
+		Paint(w, sz, pi);
 		return w;
 	}
 }
@@ -299,12 +284,12 @@ RichObject::RichObject(const String& type, const Value& data, Size maxsize)
 
 struct RichObjectTypeDrawingCls : public RichObjectType
 {
-	virtual String GetTypeName(const Value&) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Value  Read(const String& s) const;
-	virtual String Write(const Value& v) const;
+	String GetTypeName(const Value&) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Value  Read(const String& s) const override;
+	String Write(const Value& v) const override;
 
 	struct Data	{
 		void    Serialize(Stream& stream);
@@ -379,7 +364,7 @@ String RichObjectTypeDrawingCls::Write(const Value& v) const
 	return Null;
 }
 
-void RichObjectTypeDrawingCls::Paint(const Value& data, Draw& w, Size sz) const
+void RichObjectTypeDrawingCls::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo&) const
 {
 	w.DrawRect(sz, White);
 	if(IsTypeRaw<Data>(data))
@@ -402,12 +387,12 @@ INITBLOCK {
 
 struct RichObjectTypePNGCls : public RichObjectType
 {
-	virtual String GetTypeName(const Value&) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Value  Read(const String& s) const;
-	virtual String Write(const Value& v) const;
+	String GetTypeName(const Value&) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Value  Read(const String& s) const override;
+	String Write(const Value& v) const override;
 };
 
 RichObjectType *RichObjectTypePNG() { return &Single<RichObjectTypePNGCls>(); }
@@ -463,7 +448,7 @@ String RichObjectTypePNGCls::Write(const Value& v) const
 	return v;
 }
 
-void RichObjectTypePNGCls::Paint(const Value& data, Draw& w, Size sz) const
+void RichObjectTypePNGCls::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo&) const
 {
 	if(IsString(data)) {
 		StringStream strm(data);

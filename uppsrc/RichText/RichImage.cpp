@@ -6,16 +6,16 @@ namespace Upp {
 #ifdef NEWIMAGE
 
 struct RichImage : public RichObjectType {
-	virtual String GetTypeName(const Value& v) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz, Color, void *) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, Color, void *) const;
+	String GetTypeName(const Value& v) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Image  ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const override;
 
-	virtual bool   Accept(PasteClip& clip);
-	virtual Value  Read(PasteClip& clip);
-	virtual String GetClipFmts() const;
-	virtual String GetClip(const Value& data, const String& fmt) const;
+	bool   Accept(PasteClip& clip) override;
+	Value  Read(PasteClip& clip) override;
+	String GetClipFmts() const override;
+	String GetClip(const Value& data, const String& fmt) const override;
 
 	typedef RichImage CLASSNAME;
 };
@@ -81,13 +81,13 @@ Size   RichImage::GetPhysicalSize(const Value& data) const
 	return sz;
 }
 
-void   RichImage::Paint(const Value& data, Draw& w, Size sz, Color, void *) const
+void   RichImage::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo&) const
 {
 	Image x = LoadImageFromString(data);
 	w.DrawImage(0, 0, sz.cx, sz.cy, x);
 }
 
-Image  RichImage::ToImage(int64, const Value& data, Size sz, Color, void *) const
+Image  RichImage::ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo&) const
 {
 	return Rescale(LoadImageFromString(data), sz);
 }
@@ -105,13 +105,13 @@ RichObject CreateImageObject(const Image& img, int cx, int cy)
 }
 
 struct RichPNG : public RichObjectType {
-	virtual String GetTypeName(const Value& v) const;
-	virtual Value  Read(const String& s) const;
-	virtual String Write(const Value& v) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
+	String GetTypeName(const Value& v) const override;
+	Value  Read(const String& s) const override;
+	String Write(const Value& v) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Image  ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const override;
 };
 
 String RichPNG::GetTypeName(const Value& v) const
@@ -148,7 +148,7 @@ Size RichPNG::GetPixelSize(const Value& data) const
 	return Image(data).GetDots();
 }
 
-void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
+void RichPNG::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& ) const
 {
 	if(IsString(data)) {
 		w.DrawRect(sz, SColorFace());
@@ -161,11 +161,11 @@ void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
 	w.DrawImage(0, 0, outsz.cx, outsz.cy, x);
 }
 
-Image RichPNG::ToImage(int64, const Value& data, Size sz, void *) const
+Image RichPNG::ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const
 {
 	if(IsString(data)) {
 		ImageAnyDraw iw(sz);
-		Paint(data, iw, sz);
+		Paint(data, iw, sz, pi);
 		return iw;
 	}
 	Image x = Image(data);
@@ -178,13 +178,13 @@ INITBLOCK {
 };
 
 struct RichRawImage : public RichObjectType {
-	virtual String GetTypeName(const Value& v) const;
-	virtual Value  Read(const String& s) const;
-	virtual String Write(const Value& v) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz, Color, void *) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, Color, void *) const;
+	String GetTypeName(const Value& v) const override;
+	Value  Read(const String& s) const override;
+	String Write(const Value& v) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Image  ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const override;
 };
 
 String RichRawImage::GetTypeName(const Value& v) const
@@ -233,7 +233,7 @@ Size RichRawImage::GetPixelSize(const Value& data) const
 	return Size(0, 0);
 }
 
-void RichRawImage::Paint(const Value& data, Draw& w, Size sz, Color ink, void *) const
+void RichRawImage::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -253,10 +253,10 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, Color ink, void *)
 	}
 	else
 	if(IsSVG(s))
-		w.DrawImage(0, 0, RenderSVGImage(sz, s, ink));
+		w.DrawImage(0, 0, RenderSVGImage(sz, s, pi.ink));
 }
 
-Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, Color ink, void *) const
+Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, const RichObjectPaintInfo& pi) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -279,7 +279,7 @@ Image RichRawImage::ToImage(int64 serial_id, const Value& data, Size sz, Color i
 	}
 	else
 	if(IsString(data) && IsSVG(~data))
-		return RenderSVGImage(sz, ~data, ink);
+		return RenderSVGImage(sz, ~data, pi.ink);
 	return Null;
 }
 
@@ -295,12 +295,12 @@ RichObject CreateRawImageObject(const String& s, int cx, int cy)
 }
 
 struct RichImlImage : public RichObjectType {
-	virtual String GetTypeName(const Value& v) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(int64, const Value& data, Size sz, void *) const;
-	virtual bool   IsText() const;
+	String GetTypeName(const Value& v) const override;
+	Size   GetPhysicalSize(const Value& data) const override;
+	Size   GetPixelSize(const Value& data) const override;
+	void   Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const override;
+	Image  ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo& pi) const override;
+	bool   IsText() const override;
 	
 	Image Get(const Value& v) const;
 };
@@ -330,12 +330,12 @@ Size RichImlImage::GetPixelSize(const Value& data) const
 	return Get(data).GetSize();
 }
 
-void RichImlImage::Paint(const Value& data, Draw& w, Size sz) const
+void RichImlImage::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo&) const
 {
 	w.DrawImage(0, 0, sz.cx, sz.cy, Get(data));
 }
 
-Image RichImlImage::ToImage(int64, const Value& data, Size sz, void *) const
+Image RichImlImage::ToImage(int64, const Value& data, Size sz, const RichObjectPaintInfo&) const
 {
 	return Rescale(Get(data), sz);
 }
