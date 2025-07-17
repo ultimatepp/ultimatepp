@@ -87,15 +87,13 @@ void DiagramEditor::Skin()
 
 	int cy = GetStdFontCy();
 
-	cy /= DPI(1);
-
 	Size shape_sz = Size(DPI(24), cy);
 
 	shape.ClearList();
 	for(int i = 0; i < DiagramItem::SHAPE_COUNT; i++) {
 		DiagramItem m;
 		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(23, cy - 2);
+		m.pt[1] = Point(shape_sz.cx - 2, cy - 2);
 		m.width = DPI(1);
 		m.shape = i;
 		shape.Add(i, MakeIcon(m, shape_sz));
@@ -143,7 +141,6 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			DDUMP(dark);
 			m.Paint(iw, dark ? DiagramItem::DARK : 0);
 			return iw;
 		}

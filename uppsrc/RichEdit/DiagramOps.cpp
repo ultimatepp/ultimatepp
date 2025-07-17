@@ -209,9 +209,8 @@ Size SizeDlg::sz[] =
 Size SizeDlg::Get() const
 {
 	int q = ~size;
-	if(q >= 0 && q < __countof(sz)) {
+	if(q >= 0 && q < __countof(sz))
 		return sz[q];
-	}
 	auto cl = [](int x) { return clamp(x, 64, 10000); };
 	return Size(cl(~cx), cl(~cy));
 }

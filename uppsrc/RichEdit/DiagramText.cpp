@@ -25,7 +25,10 @@ void DiagramEditor::SyncEditor()
 	if(edit_text && cursor >= 0) {
 		text_editor.SetEditable(); // to enable toolbar widgets
 		text_editor.Floating(-Diagram::TextZoom().AsDouble() * GetZoom());
-		text_editor.OverridePaper(CursorItem().paper);
+		Color p = CursorItem().paper;
+		if(IsDarkContent())
+			p = DarkThemeCached(p);
+		text_editor.OverridePaper(p);
 		text_editor.Show();
 	}
 	else {
