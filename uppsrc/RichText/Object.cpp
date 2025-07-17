@@ -306,8 +306,7 @@ struct RichObjectTypeDrawingCls : public RichObjectType
 	virtual Value  Read(const String& s) const;
 	virtual String Write(const Value& v) const;
 
-	struct Data
-	{
+	struct Data	{
 		void    Serialize(Stream& stream);
 
 		Drawing drawing;

@@ -8,6 +8,7 @@ struct RichDiagram : public RichObjectType {
 	virtual String Write(const Value& v) const;
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
+
 	virtual void   Paint(const Value& data, Draw& w, Size sz, Color, void *) const;
 	virtual Image  ToImage(int64, const Value& data, Size sz, Color, void *) const;
 

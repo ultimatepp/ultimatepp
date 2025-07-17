@@ -136,6 +136,11 @@ struct PageDraw {
 class RichObject;
 class Bar;
 
+struct RichObjectPaintInfo {
+	void *context;
+	Color ink;
+};
+
 struct RichObjectType {
 	virtual String GetTypeName(const Value& v) const = 0;
 	virtual String GetCreateName() const;
@@ -151,11 +156,12 @@ struct RichObjectType {
 	virtual Size   GetDefaultSize(const Value& data, Size maxsize, void *context) const;
 	virtual Size   GetPhysicalSize(const Value& data, void *context) const;
 	virtual Size   GetPixelSize(const Value& data, void *context) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz, Color ink, void *context) const;
-	virtual Image  ToImage(int64 serial_id, const Value& data, Size sz, Color ink, void *context) const;
 	virtual void   Menu(Bar& bar, RichObject& ex, void *context) const;
 	virtual void   DefaultAction(RichObject& ex, void *context) const;
 	virtual String GetLink(const Value& data, Point pt, Size sz, void *context) const;
+
+	virtual void   Paint(const Value& data, Draw& w, Size sz, Color ink, void *context) const;
+	virtual Image  ToImage(int64 serial_id, const Value& data, Size sz, Color ink, void *context) const;
 	
 	Size           StdDefaultSize(const Value& data, Size maxsize, void *context) const;
 
