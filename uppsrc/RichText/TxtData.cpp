@@ -103,11 +103,11 @@ void RichTxt::SetRefresh(int parti)
 
 void RichTxt::SetRefreshFrom(int parti)
 {
-	r_type = FROM;
 	if(r_type == NONE)
 		r_parti = parti;
 	else
 		r_parti = min(parti, r_parti);
+	r_type = FROM;
 }
 
 void RichTxt::Put(int i, const RichPara& p, const RichStyle& s)

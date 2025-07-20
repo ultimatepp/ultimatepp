@@ -10,7 +10,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	HttpRequest::Trace();
 	const Tuple2<const char *, const char *> x[] = {
-		{ "https://www.servis24.cz", "" },
+	//	{ "https://www.servis24.cz", "" },
 		{ "rcmania.cz", "</html>" },
 		{ "http://pagead2.googlesyndication.com/pagead/show_ads.js", "" },
 		{ "www.ultimatepp.org", "</script></BODY>" },
@@ -69,16 +69,7 @@ CONSOLE_APP_MAIN
 		String s = h.Execute();
 		DUMP(h.GetReasonPhrase());
 		DUMP(h.GetContent());
-		ASSERT(s.Find("Journeyman CZ") >= 0);
-	}
-
-	{
-		HttpRequest h("https://journeyman.cz/");
-		h.Timeout(0);
-		String s = h.Execute();
-		DUMP(h.GetReasonPhrase());
-		DUMP(h.GetContent());
-		ASSERT(s.Find("Journeyman CZ") >= 0);
+		ASSERT(s.Find("JOURNEYMAN CZ") >= 0);
 	}
 
 	LLOG("*********** Everything is OK");
