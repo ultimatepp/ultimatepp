@@ -118,12 +118,15 @@ void DiagramEditor::Align(bool horz, int align)
 		return horz ? p.x : p.y;
 	};
 
+	Pointf sz0 = (Point)data.GetSize();
+	double dsz = HoVe(sz0);
 	Rect cr = GetCursorRect();
 	Pointf cp1 = cr.TopLeft();
 	Pointf cp2 = cr.BottomRight();
 	double csz = HoVe(cp2) - HoVe(cp1);
+	PrepareConns();
 	for(int ii : sel) {
-		if(ii != cursor) {
+		if(ii != cursor || align == ALIGN_NULL) {
 			DiagramItem& m = data.item[ii];
 			m.Normalize();
 			Pointf& p1 = m.pt[0];
@@ -143,8 +146,13 @@ void DiagramEditor::Align(bool horz, int align)
 			}
 			if(align == ALIGN_JUSTIFY)
 				HoVe(p2) = HoVe(p1) + csz;
+			if(align == ALIGN_NULL) {
+				HoVe(p1) = (dsz - csz) / 2;
+				HoVe(p2) = HoVe(p1) + csz;
+			}
 		}
 	}
+	UseConns();
 	Commit();
 }
 

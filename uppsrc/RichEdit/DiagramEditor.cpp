@@ -54,6 +54,8 @@ DiagramEditor::DiagramEditor()
 	sb.WhenScroll << [=] { Sync(); };
 
 	editor = true;
+	
+	GetAttrs(DiagramItem());
 }
 
 void DiagramEditor::SetupDark(ColorPusher& c) const
@@ -269,7 +271,12 @@ String DiagramEditor::GetCurrent()
 
 bool DiagramEditor::SetCurrent(const String& s)
 {
+	KillCursor();
+//	DLOG("===========");
+//	DDUMP(data.item.GetCount());
 	bool b = LoadFromString(data, s);
+//	DDUMP(data.item.GetCount());
+//	DDUMP(cursor);
 	Sync();
 	return b;
 }

@@ -263,9 +263,10 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 
 void DiagramEditor::LeftUp(Point, dword)
 {
+	moving = doselection = false;
+	tool = -1;
 	conns.Clear();
 	Sync();
-	moving = doselection = false;
 	Commit();
 }
 
@@ -343,13 +344,14 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	
 	CancelSelection();
 
+	Point p0 = p;
 	Grid(si, p);
 	Pointf cp = Null; // connect line with nearest connection point
 	if(si == DiagramItem::SHAPE_LINE) {
 		double mind = DBL_MAX;
 		for(const DiagramItem& m : data.item)
 			for(Pointf c : m.GetConnections()) {
-				double d = Squared(c - (Pointf)p);
+				double d = Squared(c - (Pointf)p0);
 				if(d < mind) {
 					cp = c;
 					mind = d;
@@ -366,8 +368,8 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.pt[0] = cp;
 		m.pt[1] = p;
 	}
-	SetAttrs(ATTR_ALL);
-	m.shape = si;
+	m.shape = si; // shape must be set to avoid Normalise
+	SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
 	Sync();
 }
 

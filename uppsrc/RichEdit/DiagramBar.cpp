@@ -31,6 +31,9 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(b, "Move back", DiagramImg::MoveBack(), [=] { MoveFrontBack(true); });
 	bar.Add(b, "Move front", DiagramImg::MoveFront(), [=] { MoveFrontBack(false); });
 	bar.Separator();
+	bar.Add(b, DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
+	bar.Add(b, DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
+	bar.Separator();
 	bool multi = sel.GetCount() > 1;
 	bar.Add(multi, "Align left", DiagramImg::AlignLeft(), [=] { Align(true, ALIGN_LEFT); });
 	bar.Add(multi, "Horizontal center", DiagramImg::AlignHCenter(), [=] { Align(true, ALIGN_CENTER); });
