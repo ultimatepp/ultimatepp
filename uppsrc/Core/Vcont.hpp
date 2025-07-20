@@ -14,7 +14,7 @@ void StreamContainerRaw(Stream& s, T& cont)
 		while(n > 0) {
 			int count = min(n, 65536);
 			int q = cont.GetCount();
-			cont.SetCount(q + count);
+			cont.InsertN(q, count);
 			s.SerializeRaw(cont.begin() + q, count);
 			n -= count;
 		}
