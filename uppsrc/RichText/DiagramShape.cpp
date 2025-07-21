@@ -2,6 +2,12 @@
 
 namespace Upp {
 
+Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
+                                     "ellipse", "diamond", "oval", "parallelogram",
+                                     "arrow_left", "arrow_right", "arrow_horz",
+                                     "arrow_down", "arrow_up", "arrow_vert",
+};
+
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
@@ -124,8 +130,8 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 	}
 	else {
 		if(style & (Display::CURSOR | Display::SELECT)) {
-			w.RoundedRectangle(GetRect(), 5)
-			 .Fill((style & Display::SELECT ? 30 : 200) * sel2);
+//			w.RoundedRectangle(GetRect(), 5)
+//			 .Fill((style & Display::SELECT ? 30 : 200) * sel2);
 			w.RoundedRectangle(GetRect().Inflated(2), 5)
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
 		}
@@ -136,10 +142,14 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		Rect text_rect = r.Deflated(width + 2, 0);
 		Pointf c = r.CenterPoint();
 		double sz = min(r.Width(), r.Height());
-		double arrow_width = min(r.Width() / 2, r.Height() / 2);
+		double arrow_width = min(r.Width() / 3, r.Height() / 2);
 		double h4 = r.Height() / 4;
 		double th4 = r.top + h4;
-		double hm4 = r.bottom - h4;
+		double bh4 = r.bottom - h4;
+		double arrow_height = min(r.Height() / 3, r.Width() / 2);
+		double w4 = r.Width() / 4;
+		double lw4 = r.left + w4;
+		double rw4 = r.right - w4;
 		switch(shape) {
 		case SHAPE_ROUNDRECT:
 			w.RoundedRectangle(r.left, r.top, r.GetWidth(), r.GetHeight(), sz > 30 ? 8 : sz > 15 ? 4 : 2);
@@ -171,8 +181,8 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 				 .Line(a, r.top)
 				 .Line(a, th4)
 				 .Line(r.right, th4)
-				 .Line(r.right, hm4)
-				 .Line(a, hm4)
+				 .Line(r.right, bh4)
+				 .Line(a, bh4)
 				 .Line(a, r.bottom)
 				 .Close();
 			}
@@ -185,9 +195,76 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 				 .Line(a, r.top)
 				 .Line(a, th4)
 				 .Line(r.left, th4)
-				 .Line(r.left, hm4)
-				 .Line(a, hm4)
+				 .Line(r.left, bh4)
+				 .Line(a, bh4)
 				 .Line(a, r.bottom)
+				 .Close();
+			}
+			break;
+		case SHAPE_ARROWHORZ:
+			 {
+				double a1 = r.left + arrow_width;
+				text_rect.left += int(arrow_width / 3);
+				double a2 = r.right - arrow_width;
+				text_rect.right -= int(arrow_width / 3);
+				w.Move(r.left, r.top + r.Height() / 2)
+				 .Line(a1, r.top)
+				 .Line(a1, th4)
+				 .Line(a2, th4)
+				 .Line(a2, r.top)
+				 .Line(r.right, r.top + r.Height() / 2)
+				 .Line(a2, r.bottom)
+				 .Line(a2, bh4)
+				 .Line(a1, bh4)
+				 .Line(a1, r.bottom)
+				 .Close();
+			}
+			break;
+		case SHAPE_ARROWUP: {
+				double a = r.top + arrow_height;
+				text_rect.left += w4;
+				text_rect.right -= w4;
+				text_rect.top += 3 * arrow_height / 4;
+				w.Move(r.left + r.Width() / 2, r.top)
+				 .Line(r.right, a)
+				 .Line(rw4, a)
+				 .Line(rw4, r.bottom)
+				 .Line(lw4, r.bottom)
+				 .Line(lw4, a)
+				 .Line(r.left, a)
+				 .Close();
+			}
+			break;
+		case SHAPE_ARROWDOWN: {
+				double a = r.bottom - arrow_height;
+				text_rect.left += w4;
+				text_rect.right -= w4;
+				text_rect.bottom -= 3 * arrow_height / 4;
+				w.Move(r.left + r.Width() / 2, r.bottom)
+				 .Line(r.right, a)
+				 .Line(rw4, a)
+				 .Line(rw4, r.top)
+				 .Line(lw4, r.top)
+				 .Line(lw4, a)
+				 .Line(r.left, a)
+				 .Close();
+			}
+			break;
+		case SHAPE_ARROWVERT: {
+				double a1 = r.top + arrow_height;
+				double a2 = r.bottom - arrow_height;
+				text_rect.left += w4;
+				text_rect.right -= w4;
+				w.Move(r.left + r.Width() / 2, r.top)
+				 .Line(r.right, a1)
+				 .Line(rw4, a1)
+				 .Line(rw4, a2)
+				 .Line(r.right, a2)
+				 .Line(r.left + r.Width() / 2, r.bottom)
+				 .Line(r.left, a2)
+				 .Line(lw4, a2)
+				 .Line(lw4, a1)
+				 .Line(r.left, a1)
 				 .Close();
 			}
 			break;
