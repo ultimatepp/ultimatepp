@@ -5,6 +5,8 @@ namespace Upp {
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
+	if(shape > SHAPE_PARALLELOGRAM)
+		return p;
 	if(IsLine()) {
 		p << pt[0] << pt[1];
 		return p;
@@ -128,12 +130,16 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
 		}
 		
-		int txt_cy = txt.GetHeight(pi.zoom, GetRect().GetWidth());
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
+		Rect text_rect = r.Deflated(width + 2, 0);
 		Pointf c = r.CenterPoint();
-		int sz = min(r.Width(), r.Height());
+		double sz = min(r.Width(), r.Height());
+		double arrow_width = min(r.Width() / 2, r.Height() / 2);
+		double h4 = r.Height() / 4;
+		double th4 = r.top + h4;
+		double hm4 = r.bottom - h4;
 		switch(shape) {
 		case SHAPE_ROUNDRECT:
 			w.RoundedRectangle(r.left, r.top, r.GetWidth(), r.GetHeight(), sz > 30 ? 8 : sz > 15 ? 4 : 2);
@@ -158,6 +164,33 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			w.Move(r.left + r.Width() / 6, r.top).Line(r.right, r.top)
 			 .Line(r.right - r.Width() / 6, r.bottom).Line(r.left, r.bottom).Close();
 			break;
+		case SHAPE_ARROWLEFT: {
+				double a = r.left + arrow_width;
+				text_rect.left += int(arrow_width / 3);
+				w.Move(r.left, r.top + r.Height() / 2)
+				 .Line(a, r.top)
+				 .Line(a, th4)
+				 .Line(r.right, th4)
+				 .Line(r.right, hm4)
+				 .Line(a, hm4)
+				 .Line(a, r.bottom)
+				 .Close();
+			}
+			break;
+		case SHAPE_ARROWRIGHT:
+			 {
+				double a = r.right - arrow_width;
+				text_rect.right -= int(arrow_width / 3);
+				w.Move(r.right, r.top + r.Height() / 2)
+				 .Line(a, r.top)
+				 .Line(a, th4)
+				 .Line(r.left, th4)
+				 .Line(r.left, hm4)
+				 .Line(a, hm4)
+				 .Line(a, r.bottom)
+				 .Close();
+			}
+			break;
 		default:
 			w.Rectangle(r);
 			break;
@@ -166,7 +199,8 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		w.Fill(paper);
 		Stroke();
 		
-		txt.Paint(w, r.left, r.top + (r.GetHeight() - txt_cy) / 2, r.GetWidth(), pi);
+		int txt_cy = txt.GetHeight(pi.zoom, text_rect.GetWidth());
+		txt.Paint(w, text_rect.left, text_rect.top + (text_rect.GetHeight() - txt_cy) / 2, text_rect.GetWidth(), pi);
 
 		if(style & GRID)
 			for(Pointf p : GetConnections()) {

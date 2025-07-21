@@ -22,7 +22,7 @@ double DistanceFromSegment(Pointf P, Pointf P0, Pointf P1, Pointf *p = NULL)
 }
 
 Index<String> DiagramItem::LineCap = { "none", "arrow", "round" };
-Index<String> DiagramItem::Shape = { "line", "rect", "round_rect", "ellipse", "diamond", "oval", "parallelogram" };
+Index<String> DiagramItem::Shape = { "line", "rect", "round_rect", "ellipse", "diamond", "oval", "parallelogram", "arrow_left", "arrow_right" };
 
 void DiagramItem::Reset()
 {

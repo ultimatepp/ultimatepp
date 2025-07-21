@@ -368,7 +368,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.pt[0] = cp;
 		m.pt[1] = p;
 	}
-	m.shape = si; // shape must be set to avoid Normalise
+	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
 	SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
 	Sync();
 }
