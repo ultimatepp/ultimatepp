@@ -38,7 +38,24 @@ ValueMaker`::Make to obtain the Value and stores it to the cache.
 Note that this function allows full reentrancy (from various 
 threads as well as recursive calls (through Make method) in single 
 thread&]
+[s2; &]
+[s4;%- &]
+[s5;:Upp`:`:MakeValue`(const K`&`,const M`&`):%- [@(0.0.255) template] 
+<[@(0.0.255) class] K, [@(0.0.255) class] M> Value [* MakeValue]([@(0.0.255) const] 
+K[@(0.0.255) `&] [*@3 k], [@(0.0.255) const] M[@(0.0.255) `&] [*@3 m])&]
+[s2; This is similar to variant with ValueMaker, however virtual 
+methods Key and Make are substituted with lambdas [%-*@3 k] and 
+[%-*@3 m].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:MakeValueTL`(const K`&`,const M`&`):%- [@(0.0.255) template] 
+<[@(0.0.255) class] K, [@(0.0.255) class] M> Value [* MakeValueTL]([@(0.0.255) const] 
+K[@(0.0.255) `&] [*@3 k], [@(0.0.255) const] M[@(0.0.255) `&] [*@3 m])&]
+[s2; Similar to MakeValue([%-*@3 k], [%-*@3 m]) but adds smaller per`-thread 
+cache, which is then accessed without mutex, making the operation 
+faster. This can have speed advantage in very specific cases 
+`- use with caution and benchmark.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:IsValueCacheActive`(`):%- [@(0.0.255) bool]_[* IsValueCacheActive]()&]
 [s2; Returns true if it is still possible to use Value Cache. This 

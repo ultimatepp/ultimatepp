@@ -4,6 +4,7 @@ namespace Upp {
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
+                                     "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
 };
@@ -174,7 +175,26 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			w.Move(r.left + r.Width() / 6, r.top).Line(r.right, r.top)
 			 .Line(r.right - r.Width() / 6, r.bottom).Line(r.left, r.bottom).Close();
 			break;
-		case SHAPE_ARROWLEFT: {
+		case SHAPE_TRIANGLE: {
+				text_rect.left  += int(r.Width() / 4);
+				text_rect.right -= int(r.Width() / 4);
+				text_rect.top += int(r.Width() / 3);
+				w.Move(r.left + r.Width() / 2, r.top)
+				 .Line(r.right, r.bottom)
+				 .Line(r.left, r.bottom)
+				 .Close();
+			}
+			break;
+		case SHAPE_ITRIANGLE: {
+				text_rect.left  += int(r.Width() / 4);
+				text_rect.right -= int(r.Width() / 4);
+				text_rect.bottom -= int(r.Width() / 3);
+				w.Move(r.left + r.Width() / 2, r.bottom)
+				 .Line(r.right, r.top)
+				 .Line(r.left, r.top)
+				 .Close();
+			}
+			break;		case SHAPE_ARROWLEFT: {
 				double a = r.left + arrow_width;
 				text_rect.left += int(arrow_width / 3);
 				w.Move(r.left, r.top + r.Height() / 2)

@@ -322,6 +322,33 @@ bool GetPanoseNumber(Font font, byte *panose)
 	return true;
 }
 
+bool HasCodepoint(Font font, int c)
+{
+	Value v = MakeValue(
+		[&] {
+			StringBuffer h;
+			RawCat(h, font);
+			return (String)h;
+		},
+		[&](Value& v) {
+			Vector<Tuple<int, int>>& ranges = CreateRawValue<Vector<Tuple<int, int>>>(v);
+			ReadCmap(font, [&](int start, int end, int) {
+				if(ranges.GetCount() && ranges.Top().b + 1 == start) // often we get sequence like { 1, 2 }, { 3, 4 } - optimize by joining
+					ranges.Top().b = end;
+				else
+					ranges.Add({ start, end });
+			});
+			ranges.Shrink();
+			return ranges.GetCount() * sizeof(Tuple<int, int>);
+		}
+	);
+    const Vector<Tuple<int, int>>& ranges = v.To<Vector<Tuple<int, int>>>();
+	for(Tuple<int, int> r : ranges)
+		if(c >= r.a && c <= r.b)
+			return true;
+	return false;
+}
+
 struct sFontMetricsReplacement {
 	Font src;
 	Font dst;
@@ -430,7 +457,8 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		StableIndexSort(distance, candidate);
 		for(int fi : candidate) {
 			f.Face(fi);
-			if(IsNormal_nc(f, chr)) {
+			if(HasCodepoint(f, chr)) {
+//			if(IsNormal_nc(f, chr)) {
 				int a = fnt.GetAscent();
 				int d = fnt.GetDescent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...

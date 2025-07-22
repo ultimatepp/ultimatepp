@@ -992,6 +992,7 @@ enum {
 bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, dword flags = 0);
 bool ReadCmap(Font font, Event<int, int, int> range, dword flags = 0);
 bool GetPanoseNumber(Font font, byte *panose);
+bool HasCodepoint(Font font, int c);
 
 }
 

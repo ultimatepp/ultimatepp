@@ -68,7 +68,8 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 								gp.move = gp.pos = Null;
 								gp.tolerance = tolerance;
 								PaintCharacter(gp, Pointf(0, 0), ch, fnt);
-								int sz = gp.glyph.GetCount() * 4;
+								int sz = gp.glyph.GetCount() * sizeof(float);
+								gp.glyph.Shrink();
 								v = RawPickToValue(pick(gp.glyph));
 								return sz;
 	});
