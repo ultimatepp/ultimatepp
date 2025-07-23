@@ -266,8 +266,17 @@ String MakeBuild::OutDir(const Index<String>& cfg, const String& package, const 
 	String outdir = GetUppOut();
 	if(output_per_assembly)
 		outdir = AppendFileName(outdir, GetAssemblyId());
-	if(!use_target)
-		outdir = AppendFileName(outdir, package);
+	if(!use_target) {
+		if(IsExternalMode()) {
+			String h = package;
+			int q = h.Find(':');
+			if(q >= 0)
+				h = h.Mid(q + 1);
+			outdir = AppendFileName(outdir, Filter(h, [](int c) { return findarg(c, '/', '\\') >= 0 ? '.' : c; }));
+		}
+		else
+			outdir = AppendFileName(outdir, package);
+	}
 	outdir = AppendFileName(outdir, GetFileTitle(method) + "." + Join(x, "."));
 	outdir = Filter(outdir, CharFilterSlash);
 	return outdir;

@@ -36,6 +36,8 @@ file
 	DiagramBar.cpp,
 	DiagramText.cpp,
 	DiagramClip.cpp,
+	SelectSymbol.cpp,
+	UnicodeSymbols.cpp,
 	Diagram.iml,
 	Diagram.lay,
 	Info readonly separator,

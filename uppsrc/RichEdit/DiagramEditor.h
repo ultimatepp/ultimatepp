@@ -34,6 +34,10 @@ struct ColumnPopUp : Ctrl {
 	ColumnPopUp();
 };
 
+const VectorMap<String, Vector<Tuple<int, String>>>& UnicodeSymbols();
+
+bool SelectUnicodeSymbol(int& codepoint, Font& font);
+
 class DiagramEditor : public Ctrl, Diagram::PaintInfo {
 public:
 	void Paint(Draw& w) override;

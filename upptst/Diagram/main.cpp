@@ -4,6 +4,12 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
+	int cp;
+	Font fnt;
+	SelectUnicodeSymbol(cp, fnt);
+	return;
+	
+	
 	TopWindow app;
 	app.Sizeable().Zoomable();
 	DiagramEditor de;
