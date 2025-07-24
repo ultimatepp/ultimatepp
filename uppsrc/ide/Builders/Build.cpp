@@ -212,6 +212,9 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 			for(int j = 0; j < pkg.include.GetCount(); j++)
 				b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
 		}
+		if(IsExternalMode()) // just add everything..
+			for(int i = 0; i < wspc.GetCount(); i++)
+				b->include.Add(PackageDirectory(wspc[i]));
 		b->libpath = SplitDirs(bm.Get("LIB", ""));
 		b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
 		b->c_options = bm.Get("COMMON_C_OPTIONS", "");

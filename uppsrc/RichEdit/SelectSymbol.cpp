@@ -45,7 +45,6 @@ void SelectSymbolDlg::Variants(int codepoint)
 			qtf << "[!" << fnt.GetFaceName() << "! " << WString(codepoint, 1) << "] ";
 		}
 	}
-	DDUMP(qtf);
 	variants.SetQTF(qtf);
 }
 
