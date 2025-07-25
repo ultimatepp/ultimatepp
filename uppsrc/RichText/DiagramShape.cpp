@@ -4,6 +4,7 @@ namespace Upp {
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
+                                     "cylinder",
                                      "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
@@ -12,7 +13,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_PARALLELOGRAM)
+	if(shape > SHAPE_CYLINDER)
 		return p;
 	if(IsLine()) {
 		p << pt[0] << pt[1];
@@ -144,13 +145,17 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		Pointf c = r.CenterPoint();
 		double sz = min(r.Width(), r.Height());
 		double arrow_width = min(r.Width() / 3, r.Height() / 2);
-		double h4 = r.Height() / 4;
+		double h = r.GetHeight();
+		double h4 = h / 4;
 		double th4 = r.top + h4;
 		double bh4 = r.bottom - h4;
 		double arrow_height = min(r.Height() / 3, r.Width() / 2);
-		double w4 = r.Width() / 4;
+		double w1 = r.GetWidth();
+		double w2 = w1 / 2;
+		double w4 = w1 / 4;
 		double lw4 = r.left + w4;
 		double rw4 = r.right - w4;
+		double hc, thc, bhc; // cylinder
 		switch(shape) {
 		case SHAPE_ROUNDRECT:
 			w.RoundedRectangle(r.left, r.top, r.GetWidth(), r.GetHeight(), sz > 30 ? 8 : sz > 15 ? 4 : 2);
@@ -175,6 +180,17 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			w.Move(r.left + r.Width() / 6, r.top).Line(r.right, r.top)
 			 .Line(r.right - r.Width() / 6, r.bottom).Line(r.left, r.bottom).Close();
 			break;
+		case SHAPE_CYLINDER:
+			text_rect.top += int(w1 / 4);
+			hc = h / 6;
+			thc = r.top + hc;
+			bhc = r.bottom - hc;
+			w.Move(r.left, thc)
+			 .Arc(r.left + w2, thc, w2, hc, M_PI, M_PI)
+			 .Line(r.right, bhc)
+			 .Arc(r.left + w2, bhc, w2, hc, 0, M_PI)
+			 .Line(r.left, bhc);
+			 break;
 		case SHAPE_TRIANGLE: {
 				text_rect.left  += int(r.Width() / 4);
 				text_rect.right -= int(r.Width() / 4);
@@ -194,7 +210,8 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 				 .Line(r.left, r.top)
 				 .Close();
 			}
-			break;		case SHAPE_ARROWLEFT: {
+			break;
+		case SHAPE_ARROWLEFT: {
 				double a = r.left + arrow_width;
 				text_rect.left += int(arrow_width / 3);
 				w.Move(r.left, r.top + r.Height() / 2)
@@ -295,6 +312,15 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		DoDash();
 		w.Fill(paper);
 		Stroke();
+		
+		switch(shape) {
+		case SHAPE_CYLINDER:
+			w.Move(r.left, thc)
+			 .Arc(r.left + w2, thc, w2, hc, M_PI, -M_PI);
+			DoDash();
+			Stroke();
+			break;
+		}
 		
 		int txt_cy = txt.GetHeight(pi.zoom, text_rect.GetWidth());
 		txt.Paint(w, text_rect.left, text_rect.top + (text_rect.GetHeight() - txt_cy) / 2, text_rect.GetWidth(), pi);
