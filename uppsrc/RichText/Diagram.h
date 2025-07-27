@@ -16,6 +16,8 @@ struct DiagramItem : Point2 {
 	double width;
 	Color  ink;
 	Color  paper;
+	Sizef  size;
+	String data;
 	
 	enum {
 		SHAPE_LINE,
@@ -34,6 +36,7 @@ struct DiagramItem : Point2 {
 		SHAPE_ARROWDOWN,
 		SHAPE_ARROWUP,
 		SHAPE_ARROWVERT,
+		SHAPE_SVGPATH,
 		SHAPE_COUNT,
 	};
 	

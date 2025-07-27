@@ -30,6 +30,8 @@ void DiagramItem::Reset()
 	width = 2;
 	ink = Black();
 	paper = White();
+	data.Clear();
+	size = Null;
 	
 	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
@@ -138,6 +140,10 @@ void DiagramItem::Save(StringBuffer& r) const
 			return String("null");
 		return Format("%02x%02x%02x", (int)c.GetR(), (int)c.GetG(), (int)c.GetB());
 	};
+	if(data.GetCount())
+		r << " data " << AsCString(data);
+	if(!IsNull(size))
+		r << " size " << size.cx << ' ' << size.cy;
 	if(ink != Black())
 		r << " ink " << col(ink);
 	if(paper != White())
@@ -195,6 +201,14 @@ void DiagramItem::Load(CParser& p)
 		else
 		if(p.Id("dash"))
 			dash = clamp(p.ReadInt(), 0, (int)DASH_COUNT);
+		else
+		if(p.Id("data"))
+			data = p.ReadString();
+		else
+		if(p.Id("size")) {
+			size.cx = p.ReadDouble();
+			size.cy = p.ReadDouble();
+		}
 		else
 			p.Skip();
 	}

@@ -8,6 +8,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
+                                     "svgpath",
 };
 
 Vector<Pointf> DiagramItem::GetConnections() const
@@ -305,6 +306,14 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 				 .Close();
 			}
 			break;
+		case SHAPE_SVGPATH:
+			if(data.GetCount() && !IsNull(size)) {
+				w.Begin();
+				w.Offset(r.TopLeft());
+				w.Scale(w1 / size.cx, h / size.cy);
+				w.Path(data);
+			}
+			break;
 		default:
 			w.Rectangle(r);
 			break;
@@ -319,6 +328,10 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 			 .Arc(r.left + w2, thc, w2, hc, M_PI, -M_PI);
 			DoDash();
 			Stroke();
+			break;
+		case SHAPE_SVGPATH:
+			if(data.GetCount() && !IsNull(size))
+				w.End();
 			break;
 		}
 		

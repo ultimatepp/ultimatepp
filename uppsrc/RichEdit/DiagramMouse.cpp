@@ -332,7 +332,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	shape.columns = 3;
 	shape.isz = IconSz() + Size(DPI(4), DPI(4));
 	shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, ShapeIcon(ii), sel);
+		PopPaint(w, ii == DiagramItem::SHAPE_SVGPATH ? DiagramImg::FontSvg() : ShapeIcon(ii), sel);
 	};
 	
 	tool = -1;
@@ -341,6 +341,14 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	
 	if(si < 0)
 		return;
+
+	Sizef size;
+	String svgpath;
+	if(si == DiagramItem::SHAPE_SVGPATH) {
+		svgpath = SelectFontSymbolSvg(size);
+		if(IsNull(svgpath))
+			return;
+	}
 	
 	CancelSelection();
 
@@ -369,7 +377,16 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.pt[1] = p;
 	}
 	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
-	SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
+	m.data = svgpath;
+	m.size = size;
+	if(si == DiagramItem::SHAPE_SVGPATH) {
+		m.ink = Null;
+		m.paper = Black();
+		m.pt[1] = m.pt[0] + size;
+		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK));
+	}
+	else
+		SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
 	Sync();
 }
 

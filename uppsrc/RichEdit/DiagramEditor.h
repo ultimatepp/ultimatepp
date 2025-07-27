@@ -36,7 +36,7 @@ struct ColumnPopUp : Ctrl {
 
 const VectorMap<String, Vector<Tuple<int, String>>>& UnicodeSymbols();
 
-bool SelectUnicodeSymbol(int& codepoint, Font& font);
+String SelectFontSymbolSvg(Sizef& sz);
 
 class DiagramEditor : public Ctrl, Diagram::PaintInfo {
 public:
@@ -127,7 +127,7 @@ private:
 	double GetZoom() const               { return DPI(1) * 0.01 * zoom_percent; }
 	void   Map(Point& p);
 	Image  MakeIcon(DiagramItem& m, Size isz);
-	Size   IconSz()                      { return Size(DPI(24), GetStdFontCy()); }
+	Size   IconSz()                      { return Size(DPI(24), DPI(16)); }
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
 	Image  DashIcon(int i);
