@@ -1,0 +1,38 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -I./uppsrc -I./uppsrc/Core/SSL
+LDFLAGS = -lssl -lcrypto
+
+# Find all Core source files
+CORE_SOURCES = $(shell find uppsrc/Core -name "*.cpp" | grep -v "/SSL/")
+SSL_SOURCES = uppsrc/Core/SSL/AES.cpp
+TEST_SOURCE = test_aes_compatibility.cpp
+
+# Object files
+CORE_OBJECTS = $(CORE_SOURCES:.cpp=.o)
+SSL_OBJECTS = $(SSL_SOURCES:.cpp=.o)
+TEST_OBJECT = $(TEST_SOURCE:.cpp=.o)
+
+TARGET = test_aes_compatibility
+
+.PHONY: all clean test
+
+all: $(TARGET)
+
+$(TARGET): $(TEST_OBJECT) $(SSL_OBJECTS) $(CORE_OBJECTS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+test: $(TARGET)
+	./$(TARGET)
+
+clean:
+	rm -f $(TARGET) $(TEST_OBJECT) $(SSL_OBJECTS) $(CORE_OBJECTS)
+
+# Simple test compilation (just the essentials)
+simple:
+	$(CXX) $(CXXFLAGS) $(TEST_SOURCE) $(SSL_SOURCES) $(LDFLAGS) -o $(TARGET)_simple
+
+test-simple: simple
+	./$(TARGET)_simple
