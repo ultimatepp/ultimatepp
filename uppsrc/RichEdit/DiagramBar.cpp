@@ -79,7 +79,7 @@ void DiagramEditor::TheBar(Bar& bar)
 			}
 			SetBar();
 		})
-		.Key(get_i(i, K_1, K_2, K_3, K_4))
+		.Key(get_i(i, K_CTRL_1, K_CTRL_2, K_CTRL_3, K_CTRL_4))
 		.Check(tool == i);
 	}
 	bar.Break();

@@ -73,7 +73,7 @@ struct DiagramItem : Point2 {
 
 	void FixPosition();
 
-	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash; }
+	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % size % data; }
 
 	void Reset();
 	void Save(StringBuffer& r) const;

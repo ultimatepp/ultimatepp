@@ -85,6 +85,9 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 		return Image::SizeVert();
 
 	int i = FindItem(p);
+	
+	if(HasCapture() && doselection)
+		return Image::Arrow();
 
 	h = HasCapture() ? draghandle : IsCursor() ? GetHandle(cursor, p) : Null;
 
