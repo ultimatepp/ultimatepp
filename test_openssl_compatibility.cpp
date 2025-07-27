@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <fstream>
+#include <sys/utsname.h>
 #include <openssl/opensslv.h>
 #include <openssl/evp.h>
 #include <openssl/rand.h>
@@ -16,8 +18,90 @@ void print_hex(const unsigned char* data, size_t len) {
     }
 }
 
+std::string read_file_content(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) return "";
+    
+    std::string line, content;
+    while (std::getline(file, line)) {
+        if (!content.empty()) content += " ";
+        content += line;
+    }
+    return content;
+}
+
+std::string detect_os_distribution() {
+    // Try to detect Linux distribution
+    std::string os_release = read_file_content("/etc/os-release");
+    if (!os_release.empty()) {
+        if (os_release.find("Ubuntu") != std::string::npos) return "Ubuntu (Debian-based)";
+        if (os_release.find("Debian") != std::string::npos) return "Debian (Debian-based)";
+        if (os_release.find("Red Hat") != std::string::npos) return "Red Hat (RPM-based)";
+        if (os_release.find("CentOS") != std::string::npos) return "CentOS (RPM-based)";
+        if (os_release.find("Rocky") != std::string::npos) return "Rocky Linux (RPM-based)";
+        if (os_release.find("Fedora") != std::string::npos) return "Fedora (RPM-based)";
+        if (os_release.find("openSUSE") != std::string::npos) return "openSUSE (RPM-based)";
+        if (os_release.find("Arch") != std::string::npos) return "Arch Linux";
+        if (os_release.find("Alpine") != std::string::npos) return "Alpine Linux";
+    }
+    
+    // Fallback checks
+    if (read_file_content("/etc/debian_version").size() > 0) return "Debian-based (unknown variant)";
+    if (read_file_content("/etc/redhat-release").size() > 0) return "Red Hat-based (unknown variant)";
+    
+    return "Unknown Linux distribution";
+}
+
+std::string find_openssl_library() {
+    // Common OpenSSL library locations
+    const char* locations[] = {
+        "/usr/lib/x86_64-linux-gnu/libssl.so",
+        "/usr/lib64/libssl.so",
+        "/usr/lib/libssl.so",
+        "/lib/x86_64-linux-gnu/libssl.so",
+        "/lib64/libssl.so",
+        "/lib/libssl.so",
+        "/usr/local/lib/libssl.so",
+        "/opt/openssl/lib/libssl.so"
+    };
+    
+    for (const char* loc : locations) {
+        std::ifstream file(loc);
+        if (file.good()) {
+            return std::string(loc);
+        }
+    }
+    
+    return "Not found in common locations";
+}
+
+void print_system_info() {
+    std::cout << "=== System Information ===" << std::endl;
+    
+    // Get kernel and system info
+    struct utsname sys_info;
+    if (uname(&sys_info) == 0) {
+        std::cout << "OS: " << sys_info.sysname << std::endl;
+        std::cout << "Kernel: " << sys_info.release << " " << sys_info.version << std::endl;
+        std::cout << "Architecture: " << sys_info.machine << std::endl;
+        std::cout << "Hostname: " << sys_info.nodename << std::endl;
+    }
+    
+    // Detect distribution
+    std::cout << "Distribution: " << detect_os_distribution() << std::endl;
+    
+    // OpenSSL information
+    std::cout << "OpenSSL compile-time version: " << OPENSSL_VERSION_TEXT << std::endl;
+    std::cout << "OpenSSL version number: 0x" << std::hex << OPENSSL_VERSION_NUMBER << std::dec << std::endl;
+    std::cout << "OpenSSL library location: " << find_openssl_library() << std::endl;
+    
+    std::cout << "=============================" << std::endl << std::endl;
+}
+
 // Simple test to verify our OpenSSL compatibility approach works
 int main() {
+    print_system_info();
+    
     std::cout << "Testing OpenSSL AES-256-GCM compatibility..." << std::endl;
     std::cout << "OpenSSL version: " << OPENSSL_VERSION_TEXT << std::endl;
     std::cout << "OpenSSL version number: 0x" << std::hex << OPENSSL_VERSION_NUMBER << std::dec << std::endl;
