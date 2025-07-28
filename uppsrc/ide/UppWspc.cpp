@@ -37,7 +37,7 @@ String WorkspaceWork::PackageFileA(const String& pn) {
 		String nm;
 		String cfg = ConfigFile("cfg");
 		for(const char *s = main; *s; s++)
-			nm.Cat(*s == '\\' || *s == '/' ? '$' : *s);
+			nm.Cat(findarg(*s, '\\', '/', ':') >= 0 ? '$' : *s);
 		RealizeDirectory(cfg);
 		return AppendFileName(cfg, ForceExt(nm + '@' + GetVarsName(), ".aux"));
 	}
@@ -334,7 +334,6 @@ void WorkspaceWork::PackageCursor()
 	if(actualpackage != METAPACKAGE)
 		filelist.WhenBar = THISBACK(FileMenu);
 	repo_dirs = RepoDirs(true).GetCount();
-
 }
 
 Vector<String> WorkspaceWork::RepoDirs(bool actual)
