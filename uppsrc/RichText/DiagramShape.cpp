@@ -8,7 +8,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
-                                     "svgpath",
+                                     "svgpath", "image"
 };
 
 Vector<Pointf> DiagramItem::GetConnections() const
@@ -27,7 +27,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	return p;
 }
 
-void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) const
+void DiagramItem::Paint(Painter& w, const VectorMap<int, String>& data, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
 	
@@ -142,198 +142,211 @@ void DiagramItem::Paint(Painter& w, dword style, const Index<Pointf> *conn) cons
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
-		Rect text_rect = r.Deflated(width + 2, 0);
-		Pointf c = r.CenterPoint();
-		double sz = min(r.Width(), r.Height());
-		double arrow_width = min(r.Width() / 3, r.Height() / 2);
-		double h = r.GetHeight();
-		double h4 = h / 4;
-		double th4 = r.top + h4;
-		double bh4 = r.bottom - h4;
-		double arrow_height = min(r.Height() / 3, r.Width() / 2);
+
+		w.Begin();
+		w.Offset(r.left, r.top);
+
 		double w1 = r.GetWidth();
+		double h = r.GetHeight();
+
+		double cx = r.GetWidth();
+		double cy = r.GetHeight();
+
+		Rect text_rect = r.Deflated(width + 2, 0);
+
+		double sz = min(cx, cy);
+		double arrow_width = min(cx / 3, cy / 3);
+		double arrow_height = min(cx / 3, cy / 3);
+		double h2 = h / 2;
+		double h4 = h / 4;
+		double bh4 = h - h4;
 		double w2 = w1 / 2;
 		double w4 = w1 / 4;
-		double lw4 = r.left + w4;
-		double rw4 = r.right - w4;
+		Pointf m(w2, h2);
 		double hc, thc, bhc; // cylinder
 		switch(shape) {
 		case SHAPE_ROUNDRECT:
-			w.RoundedRectangle(r.left, r.top, r.GetWidth(), r.GetHeight(), sz > 30 ? 8 : sz > 15 ? 4 : 2);
+			w.RoundedRectangle(0, 0, w1, h, sz > 30 ? 8 : sz > 15 ? 4 : 2);
 			break;
 		case SHAPE_OVAL:
-			if(r.GetWidth() > r.GetHeight()) {
-				double ra = r.GetHeight() / 2;
-				w.Move(r.left + ra, r.top)
-				 .Line(r.right - ra, r.top)
-				 .Arc(r.right - ra, r.top + ra, ra, -M_PI / 2, M_PI)
-				 .Line(r.left + ra, r.bottom)
-				 .Arc(r.left + ra, r.top + ra, ra, M_PI / 2, M_PI);
+			if(w1 > h) {
+				double ra = h2;
+				w.Move(ra, 0)
+				 .Line(w1 - ra, 0)
+				 .Arc(w1 - ra, 0 + ra, ra, -M_PI / 2, M_PI)
+				 .Line(ra, cy)
+				 .Arc(ra, 0 + ra, ra, M_PI / 2, M_PI);
 				break;
 			}
 		case SHAPE_ELLIPSE:
-			w.Ellipse(r);
+			w.Ellipse(m.x, m.y, w2, h2);
 			break;
 		case SHAPE_DIAMOND:
-			w.Move(c.x, r.top).Line(r.right, c.y).Line(c.x, r.bottom).Line(r.left, c.y).Close();
+			w.Move(m.x, 0).Line(cx, m.y).Line(m.x, cy).Line(0, m.y).Close();
 			break;
 		case SHAPE_PARALLELOGRAM:
-			w.Move(r.left + r.Width() / 6, r.top).Line(r.right, r.top)
-			 .Line(r.right - r.Width() / 6, r.bottom).Line(r.left, r.bottom).Close();
+			w.Move(cx / 6, 0).Line(cx, 0).Line(5 * cx / 6, cy).Line(0, cy).Close();
 			break;
 		case SHAPE_CYLINDER:
 			text_rect.top += int(w1 / 4);
 			hc = h / 6;
-			thc = r.top + hc;
-			bhc = r.bottom - hc;
-			w.Move(r.left, thc)
-			 .Arc(r.left + w2, thc, w2, hc, M_PI, M_PI)
-			 .Line(r.right, bhc)
-			 .Arc(r.left + w2, bhc, w2, hc, 0, M_PI)
-			 .Line(r.left, bhc);
+			thc = 0 + hc;
+			bhc = cy - hc;
+			w.Move(0, thc)
+			 .Arc(0 + w2, thc, w2, hc, M_PI, M_PI)
+			 .Line(cx, bhc)
+			 .Arc(0 + w2, bhc, w2, hc, 0, M_PI)
+			 .Line(0, bhc);
 			 break;
 		case SHAPE_TRIANGLE: {
-				text_rect.left  += int(r.Width() / 4);
-				text_rect.right -= int(r.Width() / 4);
-				text_rect.top += int(r.Width() / 3);
-				w.Move(r.left + r.Width() / 2, r.top)
-				 .Line(r.right, r.bottom)
-				 .Line(r.left, r.bottom)
-				 .Close();
+				text_rect.left  += w4;
+				text_rect.right -= w4;
+				text_rect.top += int(cx / 3);
+				w.Move(w2, 0).Line(cx, cy).Line(0, cy).Close();
 			}
 			break;
 		case SHAPE_ITRIANGLE: {
-				text_rect.left  += int(r.Width() / 4);
-				text_rect.right -= int(r.Width() / 4);
-				text_rect.bottom -= int(r.Width() / 3);
-				w.Move(r.left + r.Width() / 2, r.bottom)
-				 .Line(r.right, r.top)
-				 .Line(r.left, r.top)
-				 .Close();
+				text_rect.left  += int(cx / 4);
+				text_rect.right -= int(cx / 4);
+				text_rect.bottom -= int(cx / 3);
+				w.Move(w2, cy).Line(cx, 0).Line(0, 0).Close();
 			}
 			break;
 		case SHAPE_ARROWLEFT: {
-				double a = r.left + arrow_width;
+				double a = 0 + arrow_width;
 				text_rect.left += int(arrow_width / 3);
-				w.Move(r.left, r.top + r.Height() / 2)
-				 .Line(a, r.top)
-				 .Line(a, th4)
-				 .Line(r.right, th4)
-				 .Line(r.right, bh4)
-				 .Line(a, bh4)
-				 .Line(a, r.bottom)
-				 .Close();
+				w.Move(0, h2).Line(a, 0).Line(a, h4).Line(cx, h4)
+				 .Line(cx, bh4).Line(a, bh4).Line(a, cy).Close();
 			}
 			break;
 		case SHAPE_ARROWRIGHT:
 			 {
-				double a = r.right - arrow_width;
+				double a = cx - arrow_width;
 				text_rect.right -= int(arrow_width / 3);
-				w.Move(r.right, r.top + r.Height() / 2)
-				 .Line(a, r.top)
-				 .Line(a, th4)
-				 .Line(r.left, th4)
-				 .Line(r.left, bh4)
+				w.Move(cx, cy / 2)
+				 .Line(a, 0)
+				 .Line(a, h4)
+				 .Line(0, h4)
+				 .Line(0, bh4)
 				 .Line(a, bh4)
-				 .Line(a, r.bottom)
+				 .Line(a, cy)
 				 .Close();
 			}
 			break;
 		case SHAPE_ARROWHORZ:
 			 {
-				double a1 = r.left + arrow_width;
+				double a1 = 0 + arrow_width;
 				text_rect.left += int(arrow_width / 3);
-				double a2 = r.right - arrow_width;
+				double a2 = cx - arrow_width;
 				text_rect.right -= int(arrow_width / 3);
-				w.Move(r.left, r.top + r.Height() / 2)
-				 .Line(a1, r.top)
-				 .Line(a1, th4)
-				 .Line(a2, th4)
-				 .Line(a2, r.top)
-				 .Line(r.right, r.top + r.Height() / 2)
-				 .Line(a2, r.bottom)
+				w.Move(0, h2)
+				 .Line(a1, 0)
+				 .Line(a1, h4)
+				 .Line(a2, h4)
+				 .Line(a2, 0)
+				 .Line(cx, h2)
+				 .Line(a2, cy)
 				 .Line(a2, bh4)
 				 .Line(a1, bh4)
-				 .Line(a1, r.bottom)
+				 .Line(a1, cy)
 				 .Close();
 			}
 			break;
 		case SHAPE_ARROWUP: {
-				double a = r.top + arrow_height;
+				double a = arrow_height;
 				text_rect.left += w4;
 				text_rect.right -= w4;
 				text_rect.top += 3 * arrow_height / 4;
-				w.Move(r.left + r.Width() / 2, r.top)
-				 .Line(r.right, a)
-				 .Line(rw4, a)
-				 .Line(rw4, r.bottom)
-				 .Line(lw4, r.bottom)
-				 .Line(lw4, a)
-				 .Line(r.left, a)
+				w.Move(w2, 0)
+				 .Line(cx, a)
+				 .Line(cx - w4, a)
+				 .Line(cx - w4, cy)
+				 .Line(w4, cy)
+				 .Line(w4, a)
+				 .Line(0, a)
 				 .Close();
 			}
 			break;
 		case SHAPE_ARROWDOWN: {
-				double a = r.bottom - arrow_height;
+				double a = cy - arrow_height;
 				text_rect.left += w4;
 				text_rect.right -= w4;
 				text_rect.bottom -= 3 * arrow_height / 4;
-				w.Move(r.left + r.Width() / 2, r.bottom)
-				 .Line(r.right, a)
-				 .Line(rw4, a)
-				 .Line(rw4, r.top)
-				 .Line(lw4, r.top)
-				 .Line(lw4, a)
-				 .Line(r.left, a)
+				w.Move(0 + cx / 2, cy)
+				 .Line(cx, a)
+				 .Line(cx - w4, a)
+				 .Line(cx - w4, 0)
+				 .Line(w4, 0)
+				 .Line(w4, a)
+				 .Line(0, a)
 				 .Close();
 			}
 			break;
 		case SHAPE_ARROWVERT: {
-				double a1 = r.top + arrow_height;
-				double a2 = r.bottom - arrow_height;
+				double a1 = 0 + arrow_height;
+				double a2 = cy - arrow_height;
 				text_rect.left += w4;
 				text_rect.right -= w4;
-				w.Move(r.left + r.Width() / 2, r.top)
-				 .Line(r.right, a1)
-				 .Line(rw4, a1)
-				 .Line(rw4, a2)
-				 .Line(r.right, a2)
-				 .Line(r.left + r.Width() / 2, r.bottom)
-				 .Line(r.left, a2)
-				 .Line(lw4, a2)
-				 .Line(lw4, a1)
-				 .Line(r.left, a1)
+				w.Move(0 + cx / 2, 0)
+				 .Line(cx, a1)
+				 .Line(cx - w4, a1)
+				 .Line(cx - w4, a2)
+				 .Line(cx, a2)
+				 .Line(0 + cx / 2, cy)
+				 .Line(0, a2)
+				 .Line(w4, a2)
+				 .Line(w4, a1)
+				 .Line(0, a1)
 				 .Close();
 			}
 			break;
 		case SHAPE_SVGPATH:
 			if(data.GetCount() && !IsNull(size)) {
-				w.Begin();
-				w.Offset(r.TopLeft());
 				w.Scale(w1 / size.cx, h / size.cy);
-				w.Path(data);
+				w.Path(data.Get(blob_id, String()));
+			}
+			break;
+		case SHAPE_IMAGE:
+			if(data.GetCount()) {
+				String s = data.Get(blob_id, String());
+				if(s.GetCount()) {
+					StringStream ss(s);
+					One<StreamRaster> r = StreamRaster::OpenAny(ss);
+					if(r) {
+						w.DrawImage(0, 0, cx, cy, r->GetImage());
+					}
+					else
+					if(IsSVG(s)) {
+						Rectf f = GetSVGBoundingBox(s);
+						Sizef isz = f.GetSize();
+						w.Scale(cx / f.GetWidth(), cy / f.GetHeight());
+						w.Translate(-f.left, -f.top);
+						RenderSVG(w, s, Event<String, String&>(), paper);
+					}
+				}
 			}
 			break;
 		default:
-			w.Rectangle(r);
+			w.Rectangle(0, 0, cx, cy);
 			break;
 		}
-		DoDash();
-		w.Fill(paper);
-		Stroke();
+		
+		if(shape != SHAPE_IMAGE) {
+			DoDash();
+			w.Fill(paper);
+			Stroke();
+		}
 		
 		switch(shape) {
 		case SHAPE_CYLINDER:
-			w.Move(r.left, thc)
-			 .Arc(r.left + w2, thc, w2, hc, M_PI, -M_PI);
+			w.Move(0, thc)
+			 .Arc(0 + w2, thc, w2, hc, M_PI, -M_PI);
 			DoDash();
 			Stroke();
 			break;
-		case SHAPE_SVGPATH:
-			if(data.GetCount() && !IsNull(size))
-				w.End();
-			break;
 		}
+		
+		w.End();
 		
 		int txt_cy = txt.GetHeight(pi.zoom, text_rect.GetWidth());
 		txt.Paint(w, text_rect.left, text_rect.top + (text_rect.GetHeight() - txt_cy) / 2, text_rect.GetWidth(), pi);

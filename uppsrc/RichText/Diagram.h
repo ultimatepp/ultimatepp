@@ -17,7 +17,7 @@ struct DiagramItem : Point2 {
 	Color  ink;
 	Color  paper;
 	Sizef  size;
-	String data;
+	int    blob_id;
 	
 	enum {
 		SHAPE_LINE,
@@ -37,6 +37,7 @@ struct DiagramItem : Point2 {
 		SHAPE_ARROWUP,
 		SHAPE_ARROWVERT,
 		SHAPE_SVGPATH,
+		SHAPE_IMAGE,
 		SHAPE_COUNT,
 	};
 	
@@ -61,7 +62,7 @@ struct DiagramItem : Point2 {
 	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
-	void Paint(Painter& w, dword style = 0, const Index<Pointf> *conn = nullptr) const;
+	void Paint(Painter& w, const VectorMap<int, String>& data, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	
 	bool IsLine() const              { return shape == SHAPE_LINE; }
 	
@@ -73,10 +74,10 @@ struct DiagramItem : Point2 {
 
 	void FixPosition();
 
-	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % size % data; }
+	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % size % blob_id; }
 
 	void Reset();
-	void Save(StringBuffer& r) const;
+	void Save(StringBuffer& r, int blob_id) const;
 	void Load(CParser& p);
 	
 	DiagramItem() { Reset(); }
@@ -87,10 +88,11 @@ private:
 };
 
 struct Diagram {
-	Size               size = Null; // Null - auto
-	Array<DiagramItem> item;
-	Image img;
-	bool  img_hd = false;
+	Size                     size = Null; // Null - auto
+	Array<DiagramItem>       item;
+	Image                    img;
+	bool                     img_hd = false;
+	VectorMap<int, String> blob;
 	
 	struct PaintInfo {
 		bool       editor = false;
@@ -102,6 +104,7 @@ struct Diagram {
 	
 	Size  GetSize() const;
 	void  Paint(Painter& w, const PaintInfo& pi) const;
+	int   AddBlob(const String& data);
 	void  Serialize(Stream& s);
 	void  Save(StringBuffer& r) const;
 	void  Load(CParser& p);

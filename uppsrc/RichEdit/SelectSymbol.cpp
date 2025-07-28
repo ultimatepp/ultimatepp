@@ -83,6 +83,7 @@ void SelectSymbolDlg::Variants(int codepoint)
 {
 	String qtf = "[A5 ";
 	Index<Image> h;
+	svg.Clear();
 	for(int i = 0; i < Font::GetFaceCount(); i++) {
 		Font fnt(i, 10);
 		if(HasCodepoint(fnt, codepoint)) {

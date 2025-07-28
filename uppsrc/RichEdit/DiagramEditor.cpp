@@ -144,7 +144,8 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			m.Paint(iw, dark ? DiagramItem::DARK : 0);
+			VectorMap<int, String> data;
+			m.Paint(iw, data, dark ? DiagramItem::DARK : 0);
 			return iw;
 		}
 	};
@@ -253,6 +254,7 @@ void DiagramEditor::ResetUndo()
 
 void DiagramEditor::Commit()
 {
+	RTIMING("Commit");
 	if(IsCursor()) {
 		DiagramItem& m = CursorItem();
 		if(!m.IsLine())

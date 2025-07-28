@@ -17,8 +17,10 @@ void DiagramEditor::Delete()
 void DiagramEditor::Copy()
 {
 	StringBuffer cb;
-	for(int i : sel)
-		data.item[i].Save(cb);
+	for(int i : sel) {
+		const DiagramItem& m = data.item[i];
+		m.Save(cb, m.blob_id);
+	}
 	WriteClipboardText(cb);
 }
 

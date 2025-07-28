@@ -278,12 +278,11 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	Map(p);
 
 	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
-		int x = DPI(2);
-		int y = DPI(1);
+		Point p = Rect(IconSz()).CenterPos(m.GetSize());
 		if(sel)
-			w.DrawImage(x, y, m, SColorHighlightText());
+			w.DrawImage(p.x, p.y, m, SColorHighlightText());
 		else
-			w.DrawImage(x, y, m);
+			w.DrawImage(p.x, p.y, m);
 	};
 
 	FinishText();
@@ -335,7 +334,10 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	shape.columns = 3;
 	shape.isz = IconSz() + Size(DPI(4), DPI(4));
 	shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, ii == DiagramItem::SHAPE_SVGPATH ? DiagramImg::FontSvg() : ShapeIcon(ii), sel);
+		PopPaint(w, ii == DiagramItem::SHAPE_SVGPATH ? DiagramImg::FontSvg() :
+		            ii == DiagramItem::SHAPE_IMAGE   ? CtrlImg::open()
+		                                             : ShapeIcon(ii),
+		         sel && ii != DiagramItem::SHAPE_IMAGE);
 	};
 	
 	tool = -1;
@@ -346,11 +348,38 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		return;
 
 	Sizef size;
-	String svgpath;
+	String mdata;
 	if(si == DiagramItem::SHAPE_SVGPATH) {
-		svgpath = SelectFontSymbolSvg(size);
-		if(IsNull(svgpath))
+		mdata = SelectFontSymbolSvg(size);
+		if(IsNull(mdata))
 			return;
+	}
+
+	if(si == DiagramItem::SHAPE_IMAGE) {
+		String path = SelectFileOpen("Images (*.png *.gif *.jpg *.bmp *.svg)\t*.png *.gif *.jpg *.bmp *.svg");
+
+		if(GetFileLength(path) > 17000000) {
+			Exclamation("Image is too large!");
+			return;
+		}
+		mdata = LoadFile(path);
+		if(IsNull(mdata))
+			return;
+		size = Null;
+		if(IsSVG(mdata)) {
+			Rectf f = GetSVGBoundingBox(mdata);
+			size = f.GetSize();
+		}
+		else {
+			StringStream ss(mdata);
+			One<StreamRaster> r = StreamRaster::OpenAny(ss);
+			if(r)
+				size = r->GetSize();
+		}
+		if(IsNull(size)) {
+			Exclamation(Format(t_("Unsupported image format in file [* \1%s\1]."), path));
+			return;
+		}
 	}
 	
 	CancelSelection();
@@ -380,8 +409,17 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.pt[1] = p;
 	}
 	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
-	m.data = svgpath;
+	if(mdata.GetCount())
+		m.blob_id = data.AddBlob(mdata);
 	m.size = size;
+	if(si == DiagramItem::SHAPE_IMAGE) {
+		m.ink = Null;
+		m.paper = Black();
+		m.width = 0;
+		m.pt[1] = m.pt[0] + size;
+		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK|ATTR_WIDTH));
+	}
+	else
 	if(si == DiagramItem::SHAPE_SVGPATH) {
 		m.ink = Null;
 		m.paper = Black();

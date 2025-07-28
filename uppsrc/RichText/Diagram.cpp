@@ -30,7 +30,7 @@ void DiagramItem::Reset()
 	width = 2;
 	ink = Black();
 	paper = White();
-	data.Clear();
+	blob_id = 0;
 	size = Null;
 	
 	cap[0] = cap[1] = CAP_NONE;
@@ -129,7 +129,7 @@ Rect DiagramItem::GetTextEditRect() const
 	return GetRect();
 }
 
-void DiagramItem::Save(StringBuffer& r) const
+void DiagramItem::Save(StringBuffer& r, int blob_id) const
 {
 	r << Shape[clamp(shape, 0, Shape.GetCount() - 1)] << ' ';
 	r << pt[0].x << ' ' << pt[0].y << ' ' << pt[1].x << ' ' << pt[1].y;
@@ -140,8 +140,8 @@ void DiagramItem::Save(StringBuffer& r) const
 			return String("null");
 		return Format("%02x%02x%02x", (int)c.GetR(), (int)c.GetG(), (int)c.GetB());
 	};
-	if(data.GetCount())
-		r << " data " << AsCString(data);
+	if(blob_id)
+		r << " blob_id " << blob_id;
 	if(!IsNull(size))
 		r << " size " << size.cx << ' ' << size.cy;
 	if(ink != Black())
@@ -202,8 +202,8 @@ void DiagramItem::Load(CParser& p)
 		if(p.Id("dash"))
 			dash = clamp(p.ReadInt(), 0, (int)DASH_COUNT);
 		else
-		if(p.Id("data"))
-			data = p.ReadString();
+		if(p.Id("blob_id"))
+			blob_id = p.ReadInt();
 		else
 		if(p.Id("size")) {
 			size.cx = p.ReadDouble();
@@ -238,6 +238,19 @@ Size Diagram::GetSize() const
 	return Size(ceil(max(isz.cx, fsz.cx)), ceil(max(isz.cy, fsz.cy)));
 }
 
+int Diagram::AddBlob(const String& data_)
+{
+	int newid = 1;
+	for(const auto& kv : ~blob) {
+		if(kv.value == data_)
+			return kv.key;
+		newid = max(newid, kv.key + 1);
+	}
+
+	blob.Add(newid, data_);
+	return newid;
+}
+
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
 	w.Begin();
@@ -263,7 +276,7 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style |= DiagramItem::GRID;
 		if(p.dark)
 			style |= DiagramItem::DARK;
-		item[i].Paint(w, style, &conn);
+		item[i].Paint(w, blob, style, &conn);
 	}
 }
 
@@ -282,15 +295,33 @@ void Diagram::Save(StringBuffer& r) const
 			r << "HD ";
 		r << AsCString(Base64Encode(PNGEncoder().SaveString(img))) << ";\n";
 	}
+	VectorMap<int64, String> sd;
 	for(const DiagramItem& m : item) {
-		m.Save(r);
+		int id = 0;
+		if(m.blob_id) {
+			int q = blob.Find(m.blob_id);
+			if(q >= 0) {
+				id = sd.Find(m.blob_id);
+				if(id < 0) {
+					sd.Add(m.blob_id, blob[q]);
+					id = sd.GetCount();
+				}
+				else
+					id++;
+			}
+		}
+		m.Save(r, id);
 		r << '\n';
 	}
+
+	for(int i = 0; i < sd.GetCount(); i++)
+		r << "blob " << i + 1 << " " << AsCString(Base64Encode(sd[i]), 1000, "   ") << ";\n";
 }
 
 void Diagram::Load(CParser& p)
 {
 	item.Clear();
+	blob.Clear();
 	while(!p.IsEof())
 		if(p.Id("size")) {
 			size.cx = clamp(p.ReadInt(), 1, 10000);
@@ -301,6 +332,13 @@ void Diagram::Load(CParser& p)
 		if(p.Id("bk_image")) {
 			img_hd = p.Id("HD");
 			img = StreamRaster::LoadStringAny(Base64Decode(p.ReadString()));
+			p.Char(';');
+		}
+		else
+		if(p.Id("blob")) {
+			int id = p.ReadInt();
+			String data = Base64Decode(p.ReadString());
+			blob.Add(id, data);
 			p.Char(';');
 		}
 		else
