@@ -17,7 +17,7 @@ struct DiagramItem : Point2 {
 	Color  ink;
 	Color  paper;
 	Sizef  size;
-	int    blob_id;
+	String blob_id;
 	
 	enum {
 		SHAPE_LINE,
@@ -57,12 +57,13 @@ struct DiagramItem : Point2 {
 		EDITOR = 0x8000,
 		GRID   = 0x4000,
 		DARK   = 0x2000,
+		FAST   = 0x1000,
 	};
 	
 	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
-	void Paint(Painter& w, const VectorMap<int, String>& data, dword style = 0, const Index<Pointf> *conn = nullptr) const;
+	void Paint(Painter& w, const VectorMap<String, String>& data, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	
 	bool IsLine() const              { return shape == SHAPE_LINE; }
 	
@@ -77,7 +78,7 @@ struct DiagramItem : Point2 {
 	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % size % blob_id; }
 
 	void Reset();
-	void Save(StringBuffer& r, int blob_id) const;
+	void Save(StringBuffer& r) const;
 	void Load(CParser& p);
 	
 	DiagramItem() { Reset(); }
@@ -88,26 +89,27 @@ private:
 };
 
 struct Diagram {
-	Size                     size = Null; // Null - auto
-	Array<DiagramItem>       item;
-	Image                    img;
-	bool                     img_hd = false;
-	VectorMap<int, String> blob;
+	Size                      size = Null; // Null - auto
+	Array<DiagramItem>        item;
+	Image                     img;
+	bool                      img_hd = false;
+	VectorMap<String, String> blob;
 	
 	struct PaintInfo {
 		bool       editor = false;
 		bool       display_grid = false;
 		int        cursor = -1;
 		bool       dark = false;
+		bool       fast = false;
 		Index<int> sel;
 	};
 	
-	Size  GetSize() const;
-	void  Paint(Painter& w, const PaintInfo& pi) const;
-	int   AddBlob(const String& data);
-	void  Serialize(Stream& s);
-	void  Save(StringBuffer& r) const;
-	void  Load(CParser& p);
+	Size   GetSize() const;
+	void   Paint(Painter& w, const PaintInfo& pi) const;
+	String AddBlob(const String& data);
+	void   Serialize(Stream& s);
+	void   Save(StringBuffer& r) const;
+	void   Load(CParser& p);
 
 	static Zoom TextZoom() { return Zoom(96, 600); }
 };

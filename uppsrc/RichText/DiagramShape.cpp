@@ -27,7 +27,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	return p;
 }
 
-void DiagramItem::Paint(Painter& w, const VectorMap<int, String>& data, dword style, const Index<Pointf> *conn) const
+void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
 	
@@ -308,20 +308,38 @@ void DiagramItem::Paint(Painter& w, const VectorMap<int, String>& data, dword st
 			break;
 		case SHAPE_IMAGE:
 			if(data.GetCount()) {
+				if(style & FAST) {
+					w.DrawRect(0, 0, cx, cy, Gray());
+					break;
+				}
 				String s = data.Get(blob_id, String());
 				if(s.GetCount()) {
 					StringStream ss(s);
-					One<StreamRaster> r = StreamRaster::OpenAny(ss);
-					if(r) {
-						w.DrawImage(0, 0, cx, cy, r->GetImage());
-					}
-					else
 					if(IsSVG(s)) {
 						Rectf f = GetSVGBoundingBox(s);
 						Sizef isz = f.GetSize();
 						w.Scale(cx / f.GetWidth(), cy / f.GetHeight());
 						w.Translate(-f.left, -f.top);
 						RenderSVG(w, s, Event<String, String&>(), paper);
+					}
+					else {
+						Value v = MakeValue(
+							[&] {
+								return blob_id;
+							},
+							[&](Value& v) {
+								v = Null;
+								One<StreamRaster> r = StreamRaster::OpenAny(ss);
+								if(r) {
+									Image m = r->GetImage();
+									v = m;
+									return int(m.GetLength() * sizeof(RGBA));
+								}
+								return 0;
+							}
+						);
+						if(v.Is<Image>())
+							w.DrawImage(0, 0, cx, cy, v);
 					}
 				}
 			}

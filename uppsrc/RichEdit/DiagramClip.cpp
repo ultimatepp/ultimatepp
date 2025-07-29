@@ -19,7 +19,7 @@ void DiagramEditor::Copy()
 	StringBuffer cb;
 	for(int i : sel) {
 		const DiagramItem& m = data.item[i];
-		m.Save(cb, m.blob_id);
+		m.Save(cb);
 	}
 	WriteClipboardText(cb);
 }

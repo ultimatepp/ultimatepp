@@ -70,6 +70,7 @@ private:
 	bool           grid = true; // snap to grid
 	bool           edit_text = false; // text editor is visible
 	int            zoom_percent = 100;
+	int            paint_ms = 0;
 	
 	struct Cn : Moveable<Cn> {
 		int mi; // item index
@@ -79,6 +80,7 @@ private:
 	};
 	
 	bool           moving = false; // moving hysteresis
+	bool           moved = false; // move detection (for fast paints)
 	
 	Vector<Cn>     conns; // connections, created at the drag start, updates line connections
 

@@ -125,7 +125,7 @@ void DiagramEditor::Grid(int shape, Point& p)
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
 {
-	moving = false;
+	moved = moving = false;
 	
 	conns.Clear();
 
@@ -203,6 +203,8 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 void DiagramEditor::MouseMove(Point p, dword keyflags)
 {
 	Map(p);
+
+	moved = moved || p != dragstart;
 
 	if(HasCapture() && doselection) { // do rectangular selection
 		dragcurrent = p;

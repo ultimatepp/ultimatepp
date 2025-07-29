@@ -87,7 +87,6 @@ void DiagramEditor::Skin()
 {
 	SetBar();
 
-
 	Size icon_sz = IconSz();
 	shape.ClearList();
 	shape.SetLineCy(icon_sz.cy);
@@ -144,7 +143,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			VectorMap<int, String> data;
+			VectorMap<String, String> data;
 			m.Paint(iw, data, dark ? DiagramItem::DARK : 0);
 			return iw;
 		}
@@ -196,40 +195,46 @@ Image DiagramEditor::DashIcon(int i)
 
 void DiagramEditor::Paint(Draw& w)
 {
-	RTIMING("Paint");
-	DrawPainter iw(w, GetSize());
-	iw.Co();
-	iw.Clear(SWhite());
-
-	iw.Scale(GetZoom());
-	iw.Offset(-(Point)sb);
-	Size dsz = data.GetSize();
-	iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy).Stroke(0.2, SColorHighlight());
-
-	if(data.item.GetCount() == 0) {
-		iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
-		iw.DrawText(DPI(30), DPI(50), "Double-click to edit text", ArialZ(10).Italic(), SLtGray());
-	}
+	fast = HasCapture() && paint_ms > 50 && moved;
+	int t0 = msecs();
+	{
+		DrawPainter iw(w, GetSize());
+		iw.Co();
+		iw.Clear(SWhite());
 	
-	if(display_grid)
-		for(int x = 0; x < dsz.cx; x += 8)
-			for(int y = 0; y < dsz.cy; y += 8) {
-				if(((x | y) & 15) == 0) {
-					iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 60));
-					iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 60));
+		iw.Scale(GetZoom());
+		iw.Offset(-(Point)sb);
+		Size dsz = data.GetSize();
+		iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy).Stroke(0.2, SColorHighlight());
+	
+		if(data.item.GetCount() == 0) {
+			iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
+			iw.DrawText(DPI(30), DPI(50), "Double-click to edit text", ArialZ(10).Italic(), SLtGray());
+		}
+		
+		if(display_grid)
+			for(int x = 0; x < dsz.cx; x += 8)
+				for(int y = 0; y < dsz.cy; y += 8) {
+					if(((x | y) & 15) == 0) {
+						iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 60));
+						iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 60));
+					}
+					else
+						iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
 				}
-				else
-					iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
-			}
-
-	dark = IsDarkContent();
-	data.Paint(iw, *this);
-
-	if(HasCapture() && doselection) {
-		Rect r(dragstart, dragcurrent);
-		r.Normalize();
-		iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());
+	
+		dark = IsDarkContent();
+		data.Paint(iw, *this);
+	
+		if(HasCapture() && doselection) {
+			Rect r(dragstart, dragcurrent);
+			r.Normalize();
+			iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());
+		}
+	
 	}
+	if(!fast)
+		paint_ms = msecs() - t0;
 }
 
 void DiagramEditor::Sync()
@@ -254,7 +259,6 @@ void DiagramEditor::ResetUndo()
 
 void DiagramEditor::Commit()
 {
-	RTIMING("Commit");
 	if(IsCursor()) {
 		DiagramItem& m = CursorItem();
 		if(!m.IsLine())
