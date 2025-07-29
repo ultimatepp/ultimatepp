@@ -26,9 +26,24 @@ topic "Roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Release history&]
-[s3; 2025.1 (rev. 17799) (Mar 2025)&]
+[s3; 2025.1.1 (rev. 17810) (July 2025)&]
 [s5; [*/ Current stable release]&]
 [s5;*/ &]
+[s5; This is the first hotfix for the 2025.1 release. We highly recommend 
+all users install this version, especially those running the 
+latest Linux distributions with LLVM 20 or newer.&]
+[s5;*/ &]
+[s0; [* Core]&]
+[s0; &]
+[s0;i150;O0; Fix warnings on Clang 20 related to non trivial memcall 
+in Topt.h&]
+[s0; &]
+[s0; [* ide]&]
+[s0;* &]
+[s0;i150;O0; Fix immediate Assist`+`+ crash on Clang 20&]
+[s5;*/ &]
+[s3; 2025.1 (rev. 17799) (Mar 2025)&]
+[s5; &]
 [s0; [* Core]&]
 [s0;* &]
 [s0;i150;O0; In Posix .log files moved to .local/state/u`+`+/log&]
