@@ -31,7 +31,6 @@ void DiagramItem::Reset()
 	ink = Black();
 	paper = White();
 	blob_id = 0;
-	size = Null;
 	
 	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
@@ -142,8 +141,6 @@ void DiagramItem::Save(StringBuffer& r) const
 	};
 	if(blob_id.GetCount())
 		r << " blob_id " << AsCString(blob_id);
-	if(!IsNull(size))
-		r << " size " << size.cx << ' ' << size.cy;
 	if(ink != Black())
 		r << " ink " << col(ink);
 	if(paper != White())
@@ -205,11 +202,6 @@ void DiagramItem::Load(CParser& p)
 		if(p.Id("blob_id"))
 			blob_id = p.ReadString();
 		else
-		if(p.Id("size")) {
-			size.cx = p.ReadDouble();
-			size.cy = p.ReadDouble();
-		}
-		else
 			p.Skip();
 	}
 	FixPosition();
@@ -245,6 +237,40 @@ String Diagram::AddBlob(const String& data)
 	return id;
 }
 
+String Diagram::GetBlob(const String& id) const
+{
+	return blob.Get(id, Null);
+}
+
+Image Diagram::GetBlobImage(const String& id) const
+{
+	Value v = MakeValue(
+		[&] {
+			return id;
+		},
+		[&](Value& v) {
+			Image m = StreamRaster::LoadStringAny(GetBlob(id));
+			v = m;
+			return int(m.GetLength() * sizeof(RGBA));
+		}
+	);
+	return v.Is<Image>() ? (Image)v : Image();
+}
+
+Rectf Diagram::GetBlobSvgPathBoundingBox(const String id) const
+{
+	Value v = MakeValue(
+		[&] {
+			return id;
+		},
+		[&](Value& v) {
+			v = GetSVGPathBoundingBox(GetBlob(id));
+			return 32;
+		}
+	);
+	return v.Is<Rectf>() ? (Rectf)v : (Rectf)Null;
+}
+
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
 	w.Begin();
@@ -272,7 +298,7 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style |= DiagramItem::DARK;
 		if(p.fast)
 			style |= DiagramItem::FAST;
-		item[i].Paint(w, blob, style, &conn);
+		item[i].Paint(w, *this, style, &conn);
 	}
 }
 

@@ -143,8 +143,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			VectorMap<String, String> data;
-			m.Paint(iw, data, dark ? DiagramItem::DARK : 0);
+			m.Paint(iw, Diagram(), dark ? DiagramItem::DARK : 0);
 			return iw;
 		}
 	};

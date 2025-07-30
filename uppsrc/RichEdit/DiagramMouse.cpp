@@ -413,7 +413,6 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
 	if(mdata.GetCount())
 		m.blob_id = data.AddBlob(mdata);
-	m.size = size;
 	if(si == DiagramItem::SHAPE_IMAGE) {
 		m.ink = Null;
 		m.paper = Black();

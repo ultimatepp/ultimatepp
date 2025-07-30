@@ -27,7 +27,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	return p;
 }
 
-void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword style, const Index<Pointf> *conn) const
+void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
 	
@@ -300,19 +300,22 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 				 .Close();
 			}
 			break;
-		case SHAPE_SVGPATH:
-			if(data.GetCount() && !IsNull(size)) {
-				w.Scale(w1 / size.cx, h / size.cy);
-				w.Path(data.Get(blob_id, String()));
+		case SHAPE_SVGPATH: {
+				Rectf bb = diagram.GetBlobSvgPathBoundingBox(blob_id);
+				Sizef size = bb.GetSize();
+				if(size.cx > 0 && size.cy > 0) {
+					w.Scale(w1 / size.cx, h / size.cy);
+					w.Offset(-bb.TopLeft());
+					w.Path(diagram.GetBlob(blob_id));
+				}
 			}
 			break;
-		case SHAPE_IMAGE:
-			if(data.GetCount()) {
+		case SHAPE_IMAGE: {
 				if(style & FAST) {
 					w.DrawRect(0, 0, cx, cy, Gray());
 					break;
 				}
-				String s = data.Get(blob_id, String());
+				String s = diagram.GetBlob(blob_id);
 				if(s.GetCount()) {
 					StringStream ss(s);
 					if(IsSVG(s)) {
