@@ -115,7 +115,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			PaintCap(cap[1], pt[1], a2 - v);
 		}
 		 
-		int cx = Distance(pt[0], pt[1]);
+		int cx = (int)Distance(pt[0], pt[1]);
 		int txt_cy = txt.GetHeight(pi.zoom, cx);
 		
 		w.Begin();
@@ -144,7 +144,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		r.Deflate(width / 2);
 
 		w.Begin();
-		w.Offset(r.left, r.top);
+		w.Translate(r.left, r.top);
 
 		double w1 = r.GetWidth();
 		double h = r.GetHeight();
@@ -152,7 +152,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		double cx = r.GetWidth();
 		double cy = r.GetHeight();
 
-		Rect text_rect = r.Deflated(width + 2, 0);
+		Rectf text_rect = r.Deflated(width + 2, 0);
 
 		double sz = min(cx, cy);
 		double arrow_width = min(cx / 3, cy / 3);
@@ -312,7 +312,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			break;
 		case SHAPE_IMAGE: {
 				if(style & FAST) {
-					w.DrawRect(0, 0, cx, cy, Gray());
+					w.Rectangle(0, 0, cx, cy).Fill(Gray());
 					break;
 				}
 				String s = diagram.GetBlob(blob_id);
@@ -341,8 +341,10 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 								return 0;
 							}
 						);
-						if(v.Is<Image>())
-							w.DrawImage(0, 0, cx, cy, v);
+						if(v.Is<Image>()) {
+							Image img = v;
+							w.Rectangle(0, 0, cx, cy).Fill(img, Xform2D::Scale(cx / img.GetWidth(), cy / img.GetHeight()));
+						}
 					}
 				}
 			}
@@ -369,8 +371,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		
 		w.End();
 		
-		int txt_cy = txt.GetHeight(pi.zoom, text_rect.GetWidth());
-		txt.Paint(w, text_rect.left, text_rect.top + (text_rect.GetHeight() - txt_cy) / 2, text_rect.GetWidth(), pi);
+		Rect tr = text_rect;
+		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
+		txt.Paint(w, tr.left, tr.top + (tr.GetHeight() - txt_cy) / 2, tr.GetWidth(), pi);
 
 		if(style & GRID)
 			for(Pointf p : GetConnections()) {

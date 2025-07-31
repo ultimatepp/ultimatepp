@@ -80,7 +80,7 @@ bool DiagramItem::IsTextClick(Point p0) const
 	Rect r = GetRect();
 	Rect page;
 	Pointf p;
-	int cx = Distance(pt[0], pt[1]);
+	int cx = (int)Distance(pt[0], pt[1]);
 	if(cx < 16)
 		return false;
 	if(IsLine()) {
@@ -96,7 +96,7 @@ bool DiagramItem::IsTextClick(Point p0) const
 		p = p / z;
 		page.top = 0;
 		page.left = 0;
-		page.right = cx / z;
+		page.right = int(cx / z);
 	}
 	else {
 		int txt_cy = txt.GetHeight(zoom, r.GetWidth());
@@ -227,7 +227,7 @@ Size Diagram::GetSize() const
 	if(img_hd)
 		isz /= 2;
 	
-	return Size(ceil(max(isz.cx, fsz.cx)), ceil(max(isz.cy, fsz.cy)));
+	return Size((int)ceil(max(isz.cx, fsz.cx)), (int)ceil(max(isz.cy, fsz.cy)));
 }
 
 String Diagram::AddBlob(const String& data)

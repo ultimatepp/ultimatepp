@@ -45,14 +45,15 @@ void DiagramEditor::SyncEditorRect()
 	r = GetZoom() * r;
 	r.Offset(-(Pointf)(Point)sb * GetZoom());
 	Upp::Zoom z = Diagram::TextZoom();
-	z.m *= GetZoom();
-	int cy = max(30, text_editor.Get().GetHeight(z, r.GetWidth()) + DPI(10));
+	z.m = int(z.m * GetZoom());
+
+	int cy = max(30, text_editor.Get().GetHeight(z, (int)r.GetWidth()) + DPI(10));
 	r.top = r.CenterPoint().y - cy / 2;
 	r.bottom = r.top + cy;
 	r.left -= DPI(2);
 	r.right += DPI(2) + ScrollBarSize();
 	
-	int q = GetSize().cx - r.right;
+	int q = GetSize().cx - (int)r.right;
 	if(q < 0)
 		r.Offset(q, 0);
 	if(r.left < 0)

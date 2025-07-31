@@ -163,7 +163,7 @@ void DiagramEditor::PrepareConns()
 	for(int pass = 0; pass < 2; pass++)
 		for(int i = 0; i < data.item.GetCount(); i++) {
 			const DiagramItem& m = data.item[i];
-			if(m.IsLine() == pass) {
+			if((int)m.IsLine() == pass) {
 				Vector<Pointf> cp = m.GetConnections();
 				for(int j = 0; j < cp.GetCount(); j++)
 					map.GetAdd(cp[j]) << MakeTuple(i, j);

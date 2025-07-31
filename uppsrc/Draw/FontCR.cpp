@@ -339,7 +339,7 @@ bool HasCodepoint(Font font, int c)
 					ranges.Add({ start, end });
 			});
 			ranges.Shrink();
-			return ranges.GetCount() * sizeof(Tuple<int, int>);
+			return int(ranges.GetCount() * sizeof(Tuple<int, int>));
 		}
 	);
     const Vector<Tuple<int, int>>& ranges = v.To<Vector<Tuple<int, int>>>();
