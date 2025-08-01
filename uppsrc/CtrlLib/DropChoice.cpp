@@ -6,7 +6,7 @@ DropChoice::DropChoice() {
 	always_drop = hide_drop = false;
 	AddButton().Main() <<= THISBACK(Drop);
 	NoDisplay();
-	list.WhenSelect = [=] { Select(); };
+	list.WhenSelect = [this] { Select(); };
 	dropfocus = true;
 	EnableDrop(false);
 	dropwidth = 0;
@@ -21,7 +21,7 @@ void DropChoice::AddTo(Ctrl& _owner)
 	owner = &_owner;
 
 	if(auto *ef = dynamic_cast<EditField *>(owner))
-		ef->WhenPaper = [=](Color c) { MultiButtonFrame::SetPaper(c); };
+		ef->WhenPaper = [this](Color c) { MultiButtonFrame::SetPaper(c); };
 }
 
 void DropChoice::EnableDrop(bool b)
