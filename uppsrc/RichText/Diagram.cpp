@@ -249,6 +249,8 @@ Size Diagram::GetSize() const
 
 String Diagram::AddBlob(const String& data)
 {
+	if(IsNull(data))
+		return Null;
 	String id = MD5String(data);
 	blob.GetAdd(id) = data;
 	return id;

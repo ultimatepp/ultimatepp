@@ -32,10 +32,18 @@ void DiagramEditor::Cut()
 
 void DiagramEditor::Paste()
 {
-	if(IsClipboardAvailable("dib")) {
-		data.img = ReadClipboardImage();
-		data.img_hd = IsUHDMode();
-		Commit();
+	if(IsClipboardAvailableImage()) {
+		Image img = ReadClipboardImage();
+		if(IsNull(img))
+			return;
+		Sizef sz = img.GetSize();
+		int ii = data.item.GetCount();
+		DiagramItem& m = data.item.Add();
+		m.shape = DiagramItem::SHAPE_IMAGE;
+		m.blob_id = data.AddBlob(PNGEncoder().SaveString(img));
+		m.pt[0] = Rectf(Sizef(data.GetSize())).CenterPos(sz);
+		m.pt[1] = m.pt[0] + sz;
+		SetCursor(ii);
 	}
 	else {
 		String txt = ReadClipboardText();
