@@ -141,6 +141,7 @@ private:
 
 
 	void   FixPositions();
+	void   ForEach(Event<DiagramItem&> fn);
 	enum {
 		ATTR_SHAPE = 0x0001,
 		ATTR_CAP0 = 0x0002,
@@ -155,6 +156,8 @@ private:
 	void   SetAttrs(dword attr);
 	void   GetAttrs(const DiagramItem& m);
 	void   GetAttrs();
+
+	void   ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2);
 
 	DiagramItem& AddItem(int shape);
 

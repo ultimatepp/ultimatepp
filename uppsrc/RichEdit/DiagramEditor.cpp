@@ -289,8 +289,8 @@ bool DiagramEditor::SetCurrent(const String& s)
 
 void DiagramEditor::CancelSelection()
 {
-	FinishText();
 	sel.Clear();
+	FinishText();
 	KillCursor();
 	Sync();
 }

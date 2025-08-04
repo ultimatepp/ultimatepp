@@ -53,14 +53,21 @@ void DiagramEditor::SetAttrs(DiagramItem& m, dword attrs)
 		m.paper = ~paper;
 }
 
-void DiagramEditor::SetAttrs(dword attrs)
+void DiagramEditor::ForEach(Event<DiagramItem&> fn)
 {
-	for(int i = 0; i < sel.GetCount(); i++)
-		SetAttrs(data.item[sel[i]], attrs);
-	if(tool >= 0)
-		SetAttrs(tl[tool], attrs);
+	for(int ii : sel)
+		fn(data.item[ii]);
 	Sync();
 	Commit();
+}
+
+void DiagramEditor::SetAttrs(dword attrs)
+{
+	if(tool >= 0)
+		SetAttrs(tl[tool], attrs);
+	ForEach([&](DiagramItem& m) {
+		SetAttrs(m, attrs);
+	});
 }
 
 void DiagramEditor::GetAttrs(const DiagramItem& m)
@@ -193,6 +200,15 @@ void DiagramEditor::UseConns()
 	for(const Cn& cn: conns)
 		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0)
 			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
+}
+
+void DiagramEditor::ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2)
+{
+	m.Normalize();
+	Sizef sz = m.GetRect().GetSize();
+	Sizef sz0 = m.GetStdSize(data);
+	sz1 = Sizef(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
+	sz2 = Sizef(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
 }
 
 struct SizeDlg : WithSizeLayout<TopWindow> {

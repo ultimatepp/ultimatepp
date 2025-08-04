@@ -43,7 +43,7 @@ void DiagramEditor::Paste()
 			CParser p(txt);
 			while(!p.IsEof()) {
 				DiagramItem m;
-				m.Load(p);
+				m.Load(p, data);
 				int ii = data.item.GetCount();
 				data.item << m;
 				SetCursor(ii);

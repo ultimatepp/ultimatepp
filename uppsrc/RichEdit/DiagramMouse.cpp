@@ -258,6 +258,28 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			};
 			Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
 			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
+			if(m.aspect_ratio && !m.IsLine()) {
+				m.Normalize();
+				Sizef sz = m.GetRect().GetSize();
+				Sizef sz0 = m.GetStdSize(data);
+				Sizef sz1(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
+				Sizef sz2(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
+				if(draghandle.y == 0)
+					sz = sz1;
+				else
+				if(draghandle.x == 0)
+					sz = sz2;
+				else
+					sz = sz1.cx > sz2.cx ? sz1 : sz2;
+				if(draghandle.x < 0)
+					m.pt[0].x = m.pt[1].x - sz.cx;
+				else
+					m.pt[1].x = m.pt[0].x + sz.cx;
+				if(draghandle.y < 0)
+					m.pt[0].y = m.pt[1].y - sz.cx;
+				else
+					m.pt[1].y = m.pt[0].y + sz.cx;
+			}
 		}
 		m.FixPosition();
 		UseConns();
@@ -400,31 +422,32 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 				}
 			}
 	}
+	
+	Size sz;
 
 	DiagramItem& m = AddItem(si);
+	if(mdata.GetCount())
+		m.blob_id = data.AddBlob(mdata);
+	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
+	Sizef szf = m.GetStdSize(data);
 	if(IsNull(cp)) {
 		m.pt[0] = p;
-		m.pt[1] = p + Point(128, 64);
+		m.pt[1] = p + szf;
 	}
 	else {
 		m.pt[0] = cp;
 		m.pt[1] = p;
 	}
-	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
-	if(mdata.GetCount())
-		m.blob_id = data.AddBlob(mdata);
 	if(si == DiagramItem::SHAPE_IMAGE) {
 		m.ink = Null;
 		m.paper = Black();
 		m.width = 0;
-		m.pt[1] = m.pt[0] + size;
 		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK|ATTR_WIDTH));
 	}
 	else
 	if(si == DiagramItem::SHAPE_SVGPATH) {
 		m.ink = Null;
 		m.paper = Black();
-		m.pt[1] = m.pt[0] + size;
 		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK));
 	}
 	else

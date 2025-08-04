@@ -31,6 +31,9 @@ void DiagramItem::Reset()
 	ink = Black();
 	paper = White();
 	blob_id = 0;
+	flip_horz = false;
+	flip_vert = false;
+	aspect_ratio = false;
 	
 	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
@@ -142,9 +145,9 @@ void DiagramItem::Save(StringBuffer& r) const
 	if(blob_id.GetCount())
 		r << " blob_id " << AsCString(blob_id);
 	if(ink != Black())
-		r << " ink " << col(ink);
+		r << " stroke " << col(ink);
 	if(paper != White())
-		r << " paper " << col(paper);
+		r << " fill " << col(paper);
 	if(width != 2)
 		r << " width " << width;
 	if(cap[0] != CAP_NONE)
@@ -153,10 +156,16 @@ void DiagramItem::Save(StringBuffer& r) const
 		r << " end " << LineCap[clamp(cap[1], 0, LineCap.GetCount())];
 	if(dash)
 		r << " dash " << dash;
+	if(flip_vert)
+		r << " flip_vert";
+	if(flip_horz)
+		r << " flip_horz";
+	if(aspect_ratio)
+		r << " aspect_ratio";
 	r << ";";
 }
 
-void DiagramItem::Load(CParser& p)
+void DiagramItem::Load(CParser& p, const Diagram& diagram)
 {
 	Reset();
 	int q = Shape.Find(p.ReadId());
@@ -181,14 +190,23 @@ void DiagramItem::Load(CParser& p)
 		if(p.IsString())
 			qtf = p.ReadString();
 		else
-		if(p.Id("ink"))
+		if(p.Id("stroke"))
 			ink = col();
 		else
-		if(p.Id("paper"))
+		if(p.Id("fill"))
 			paper = col();
 		else
 		if(p.Id("width"))
 			width = clamp(p.ReadDouble(), 0.0, 50.0);
+		else
+		if(p.Id("flip_vert"))
+			flip_vert = true;
+		else
+		if(p.Id("flip_horz"))
+			flip_horz = true;
+		else
+		if(p.Id("aspect_ratio"))
+			aspect_ratio = true;
 		else
 		if(p.Id("start"))
 			cap[0] = Cap();
@@ -204,7 +222,6 @@ void DiagramItem::Load(CParser& p)
 		else
 			p.Skip();
 	}
-	FixPosition();
 }
 
 Size Diagram::GetSize() const
@@ -257,7 +274,7 @@ Image Diagram::GetBlobImage(const String& id) const
 	return v.Is<Image>() ? (Image)v : Image();
 }
 
-Rectf Diagram::GetBlobSvgPathBoundingBox(const String id) const
+Rectf Diagram::GetBlobSvgPathBoundingBox(const String& id) const
 {
 	Value v = MakeValue(
 		[&] {
@@ -363,7 +380,7 @@ void Diagram::Load(CParser& p)
 			p.Char(';');
 		}
 		else
-			item.Add().Load(p);
+			item.Add().Load(p, *this);
 }
 
 }
