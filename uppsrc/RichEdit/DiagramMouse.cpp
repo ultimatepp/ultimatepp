@@ -260,28 +260,26 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 			if(m.aspect_ratio && !m.IsLine()) {
 				m.Normalize();
-				Sizef sz = m.GetRect().GetSize();
-				Sizef sz0 = m.GetStdSize(data);
-				Sizef sz1(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
-				Sizef sz2(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
+				Sizef sz1, sz2;
+				ComputeAspectSize(m, sz1, sz2);
+				Sizef sz;
 				if(draghandle.y == 0)
 					sz = sz1;
 				else
 				if(draghandle.x == 0)
 					sz = sz2;
 				else
-					sz = sz1.cx > sz2.cx ? sz1 : sz2;
+					sz = sz1.cx < sz2.cx ? sz1 : sz2;
 				if(draghandle.x < 0)
 					m.pt[0].x = m.pt[1].x - sz.cx;
 				else
 					m.pt[1].x = m.pt[0].x + sz.cx;
 				if(draghandle.y < 0)
-					m.pt[0].y = m.pt[1].y - sz.cx;
+					m.pt[0].y = m.pt[1].y - sz.cy;
 				else
-					m.pt[1].y = m.pt[0].y + sz.cx;
+					m.pt[1].y = m.pt[0].y + sz.cy;
 			}
 		}
-		m.FixPosition();
 		UseConns();
 		Sync();
 		return;

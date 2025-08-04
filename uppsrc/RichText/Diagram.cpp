@@ -59,6 +59,12 @@ void DiagramItem::FixPosition()
 		pt[0].y -= y;
 		pt[1].y -= y;
 	}
+	auto Clamp = [](Pointf& p) {
+		p.x = clamp(p.x, 0.0, 10000.0);
+		p.y = clamp(p.y, 0.0, 10000.0);
+	};
+	Clamp(pt[0]);
+	Clamp(pt[1]);
 	if(IsLine())
 		return;
 	if(pt[1].x - pt[0].x < 8)
@@ -222,6 +228,7 @@ void DiagramItem::Load(CParser& p, const Diagram& diagram)
 		else
 			p.Skip();
 	}
+	FixPosition();
 }
 
 Size Diagram::GetSize() const

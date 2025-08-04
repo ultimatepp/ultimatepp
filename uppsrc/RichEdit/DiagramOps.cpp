@@ -53,6 +53,12 @@ void DiagramEditor::SetAttrs(DiagramItem& m, dword attrs)
 		m.paper = ~paper;
 }
 
+void DiagramEditor::ForEachConst(Event<const DiagramItem&> fn) const
+{
+	for(int ii : sel)
+		fn(data.item[ii]);
+}
+
 void DiagramEditor::ForEach(Event<DiagramItem&> fn)
 {
 	for(int ii : sel)

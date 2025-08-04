@@ -141,6 +141,7 @@ private:
 
 
 	void   FixPositions();
+	void   ForEachConst(Event<const DiagramItem&> fn) const;
 	void   ForEach(Event<DiagramItem&> fn);
 	enum {
 		ATTR_SHAPE = 0x0001,

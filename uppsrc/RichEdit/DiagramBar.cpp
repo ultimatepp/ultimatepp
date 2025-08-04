@@ -65,7 +65,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bool fh = b;
 	bool fv = b;
 	bool ar = b;
-	ForEach([&](DiagramItem& m) {
+	ForEachConst([&](const DiagramItem& m) {
 		fh = fh && m.flip_horz;
 		fv = fv && m.flip_vert;
 		ar = ar && m.aspect_ratio;
@@ -84,7 +84,7 @@ void DiagramEditor::TheBar(Bar& bar)
 			if(m.aspect_ratio && !m.IsLine()) {
 				Sizef sz1, sz2;
 				ComputeAspectSize(m, sz1, sz2);
-				m.pt[1] = m.pt[0] + (sz1.cx > sz2.cx ? sz1 : sz2);
+				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
 			}
 		});
 	})
