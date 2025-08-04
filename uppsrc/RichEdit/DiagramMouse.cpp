@@ -51,20 +51,10 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 
 int   DiagramEditor::FindItem(Point p) const
 {
-	int mini = -1;
-	double mina = INT_MAX;
-	for(int i = data.item.GetCount() - 1; i >= 0; i--) {
-		const DiagramItem& m = data.item[i];
-		Rectf r = m.GetRect();
-		if(m.IsClick(p) || m.IsTextClick(p)) {
-			double a = m.IsLine() ? 0 : r.Width() * r.Height();
-			if(a < mina) {
-				mina = a;
-				mini = i;
-			}
-		}
-	}
-	return mini;
+	for(int i = data.item.GetCount() - 1; i >= 0; i--)
+		if(data.item[i].IsClick(p))
+			return i;
+	return -1;
 }
 
 Image DiagramEditor::CursorImage(Point p, dword keyflags)
@@ -120,7 +110,8 @@ void DiagramEditor::LeftDouble(Point p, dword keyflags)
 
 void DiagramEditor::Grid(int shape, Point& p)
 {
-	p = shape == DiagramItem::SHAPE_LINE ? p / 8 * 8 : p / 16 * 16;
+	if(grid && !GetShift())
+		p = shape == DiagramItem::SHAPE_LINE ? p / 8 * 8 : p / 16 * 16;
 }
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
@@ -182,7 +173,10 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			sdragfrom.SetCount(sel.GetCount());
 			for(int i = 0; i < sel.GetCount(); i++)
 				sdragfrom[i] = data.item[sel[i]];
-			PrepareConns();
+			if(sel.GetCount() > 1 || !CursorItem().IsLine())
+				PrepareConns();
+			else
+				conns.Clear();
 			draghandle = Null;
 			Point h = GetHandle(cursor, p);
 			if(h.x || h.y)
@@ -446,6 +440,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	if(si == DiagramItem::SHAPE_SVGPATH) {
 		m.ink = Null;
 		m.paper = Black();
+		m.width = 0;
 		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK));
 	}
 	else

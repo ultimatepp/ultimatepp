@@ -14,7 +14,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_CYLINDER)
+	if(shape > SHAPE_ITRIANGLE)
 		return p;
 	if(IsLine()) {
 		p << pt[0] << pt[1];
@@ -22,8 +22,12 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	}
 	Rectf r = GetRect();
 	p << r.TopCenter() << r.BottomCenter();
-	if(shape != SHAPE_PARALLELOGRAM)
+	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE, SHAPE_ITRIANGLE) < 0)
 		p << r.CenterLeft() << r.CenterRight();
+	if(shape == SHAPE_TRIANGLE)
+		p << r.BottomLeft() << r.BottomRight();
+	if(shape == SHAPE_ITRIANGLE)
+		p << r.TopLeft() << r.TopRight();
 	return p;
 }
 
