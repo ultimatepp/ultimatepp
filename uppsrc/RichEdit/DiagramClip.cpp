@@ -16,12 +16,16 @@ void DiagramEditor::Delete()
 
 void DiagramEditor::Copy()
 {
+	Diagram clip;
 	StringBuffer cb;
 	for(int i : sel) {
 		const DiagramItem& m = data.item[i];
-		m.Save(cb);
+		clip.item << m;
+		clip.AddBlob(data.GetBlob(m.blob_id));
 	}
-	WriteClipboardText(cb);
+	StringBuffer r;
+	clip.Save(r);
+	WriteClipboardText(String(r));
 }
 
 void DiagramEditor::Cut()
@@ -47,17 +51,19 @@ void DiagramEditor::Paste()
 	}
 	else {
 		String txt = ReadClipboardText();
+		Diagram clip;
+		CParser p(txt);
 		try {
-			CParser p(txt);
-			while(!p.IsEof()) {
-				DiagramItem m;
-				m.Load(p, data);
-				int ii = data.item.GetCount();
-				data.item << m;
-				SetCursor(ii);
-			}
+			clip.Load(p);
 		}
-		catch(CParser::Error) {}
+		catch(CParser::Error) {
+		}
+		for(DiagramItem& m : clip.item) {
+			int ii = data.item.GetCount();
+			data.item << m;
+			data.AddBlob(clip.GetBlob(m.blob_id));
+			SetCursor(ii);
+		}
 	}
 	Commit();
 	SetBar();
