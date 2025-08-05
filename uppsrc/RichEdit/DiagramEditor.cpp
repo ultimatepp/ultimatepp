@@ -303,18 +303,6 @@ void DiagramEditor::Zoom()
 	Sync();
 }
 
-void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
-	if(keyflags & K_CTRL) {
-		zoom_percent = clamp((zoom_percent / 25 + sgn(zdelta)) * 25, 25, 400);
-		Sync();
-		return;
-	}
-	if(keyflags & K_SHIFT)
-		sb.WheelX(zdelta);
-	else
-		sb.WheelY(zdelta);
-}
-
 void DiagramEditor::HorzMouseWheel(Point, int zdelta, dword)
 {
 	sb.WheelX(zdelta);

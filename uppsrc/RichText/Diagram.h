@@ -22,6 +22,7 @@ struct DiagramItem : Point2 {
 	bool   flip_horz;
 	bool   flip_vert;
 	bool   aspect_ratio;
+	double rotate;
 	
 	enum {
 		SHAPE_LINE,

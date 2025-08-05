@@ -103,6 +103,27 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	return Image::Arrow();
 }
 
+void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
+	if(keyflags & K_ALT) {
+		if(IsCursor()) {
+			DiagramItem& m = CursorItem();
+			m.rotate = ((int(m.rotate) + sgn(zdelta) * 15) / 15 * 15) % 360;
+			Commit();
+			Sync();
+		}
+		return;
+	}
+	if(keyflags & K_CTRL) {
+		zoom_percent = clamp((zoom_percent / 25 + sgn(zdelta)) * 25, 25, 400);
+		Sync();
+		return;
+	}
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
+		sb.WheelY(zdelta);
+}
+
 void DiagramEditor::LeftDouble(Point p, dword keyflags)
 {
 	if(IsCursor() && !(keyflags & K_CTRL))

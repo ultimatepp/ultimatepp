@@ -138,20 +138,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		w.End();
 	}
 	else {
-		if(style & (Display::CURSOR | Display::SELECT)) {
-			w.RoundedRectangle(GetRect().Inflated(2), 5)
-			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
-			w.RoundedRectangle(GetRect().Inflated(1), 2)
-			 .Stroke(2, Gray());
-		}
-		
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
-
-		w.Begin();
-		w.Translate(r.left, r.top);
-		
 		double w1 = r.GetWidth();
 		double h = r.GetHeight();
 
@@ -170,6 +159,22 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		double w4 = w1 / 4;
 		Pointf m(w2, h2);
 		double hc, thc, bhc; // cylinder
+
+		w.Begin();
+		w.Translate(r.left, r.top);
+		if(rotate) {
+			w.Translate(w2, h2);
+			w.Rotate(M_2PI * rotate / 360);
+			w.Translate(-w2, -h2);
+		}
+
+		if(style & (Display::CURSOR | Display::SELECT)) {
+			w.RoundedRectangle(-2, -2, w1 + 4, h + 4, 5)
+			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
+			w.RoundedRectangle(-1, -1, w1 + 2, h + 2, 2)
+			 .Stroke(2, Gray());
+		}
+
 
 		if(flip_horz) {
 			// flip horz

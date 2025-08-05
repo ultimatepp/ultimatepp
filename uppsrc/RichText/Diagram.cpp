@@ -34,6 +34,7 @@ void DiagramItem::Reset()
 	flip_horz = false;
 	flip_vert = false;
 	aspect_ratio = false;
+	rotate = 0;
 	
 	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
