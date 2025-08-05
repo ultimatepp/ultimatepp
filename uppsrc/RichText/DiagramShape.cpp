@@ -141,6 +141,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		if(style & (Display::CURSOR | Display::SELECT)) {
 			w.RoundedRectangle(GetRect().Inflated(2), 5)
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
+			w.RoundedRectangle(GetRect().Inflated(1), 2)
+			 .Stroke(2, Gray());
 		}
 		
 		Rectf r(pt[0], pt[1]);

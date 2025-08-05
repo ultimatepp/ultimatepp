@@ -74,7 +74,7 @@ struct DiagramItem : Point2 {
 	
 	Vector<Pointf> GetConnections() const;
 
-	bool IsClick(Point p) const;
+	bool IsClick(Point p, const Diagram& diagram, bool relaxed = false) const;
 	bool IsTextClick(Point p) const;
 	Rect GetTextEditRect() const;
 

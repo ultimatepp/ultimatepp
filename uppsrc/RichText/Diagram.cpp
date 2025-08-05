@@ -73,12 +73,35 @@ void DiagramItem::FixPosition()
 		pt[1].y = pt[0].y + 8;
 }
 
-bool DiagramItem::IsClick(Point p) const
+bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
 {
 	if(IsLine())
 		return DistanceFromSegment(p, pt[0], pt[1]) < width + 10;
-	else
-		return GetRect().Inflated(5).Contains(p);
+	Rectf rect = GetRect();
+	if(!rect.Contains(p))
+		return false;
+	if(shape == SHAPE_IMAGE || relaxed)
+		return true;
+	Image test = MakeValue(
+		[&] {
+			return String((const char *)&shape, sizeof(shape));
+		},
+		[&](Value& v) {
+			ImagePainter p(64, 64);
+			p.Clear(RGBAZero());
+			DiagramItem m = *this;
+			m.paper = Blue();
+			m.ink = Blue();
+			m.pt[0] = Pointf(0, 0);
+			m.pt[1] = Pointf(64, 64);
+			m.Paint(p, diagram);
+			Image img = p.GetResult();
+			v = img;
+			return img.GetLength() * sizeof(RGBA);
+		}
+	).To<Image>();
+	return test[clamp(int(64 * (p.y - rect.top) / rect.GetHeight()), 0, 63)]
+	           [clamp(int(64 * (p.x - rect.left) / rect.GetWidth()), 0, 63)].a;
 }
 
 bool DiagramItem::IsTextClick(Point p0) const

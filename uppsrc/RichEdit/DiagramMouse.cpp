@@ -51,9 +51,10 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 
 int   DiagramEditor::FindItem(Point p) const
 {
-	for(int i = data.item.GetCount() - 1; i >= 0; i--)
-		if(data.item[i].IsClick(p))
-			return i;
+	for(int pass = 0; pass < 2; pass++)
+		for(int i = data.item.GetCount() - 1; i >= 0; i--)
+			if(data.item[i].IsClick(p, data, pass))
+				return i;
 	return -1;
 }
 
@@ -326,7 +327,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 				Sync();
 				return;
 			}
-			if(m.IsClick(p)) {
+			if(m.IsClick(p, data)) {
 				ColumnPopUp menu;
 				menu.count = DiagramItem::DASH_COUNT;
 				menu.columns = 4;
