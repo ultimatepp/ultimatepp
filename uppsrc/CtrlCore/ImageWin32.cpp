@@ -561,9 +561,10 @@ Image Win32Cursor(int id)
 	return Win32Cursor(MAKEINTRESOURCE(id));
 }
 
-HICON SystemDraw::IconWin32(const Image& img, bool cursor)
+HICON SystemDraw::IconWin32(const Image& img_, bool cursor)
 {
 	GuiLock __;
+	Image img = Unmultiply(img_); // it seems like Win32 wants them unmultiplied...
 	if(img.IsEmpty())
 		return NULL;
 	if(cursor) {

@@ -241,7 +241,7 @@ void DiagramEditor::Sync()
 	Refresh();
 	SetBar();
 	sb.SetTotal(data.GetSize() + Point(10, 10));
-	sb.SetPage(GetSize() / GetZoom());
+	sb.SetPage(sb.GetReducedViewSize() / GetZoom());
 	sb.SetLine(8, 8);
 	SyncEditor();
 }

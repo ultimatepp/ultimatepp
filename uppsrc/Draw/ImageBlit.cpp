@@ -87,21 +87,9 @@ int Premultiply(RGBA *t, const RGBA *s, size_t len)
 	const RGBA *e = s + len;
 	while(s < e) {
 		if(s->a != 255) {
-			while(s < e) {
-				byte a = s->a;
-				if(s->a != 0 && s->a != 255) {
-					while(s < e)
-						*t++ = Premultiply(*s++);
-					return IMAGE_ALPHA;
-				}
-				t->r = a & s->r;
-				t->g = a & s->g;
-				t->b = a & s->b;
-				t->a = s->a;
-				s++;
-				t++;
-			}
-			return IMAGE_MASK;
+			while(s < e)
+				*t++ = Premultiply(*s++);
+			return IMAGE_ALPHA;
 		}
 		*t++ = *s++;
 	}

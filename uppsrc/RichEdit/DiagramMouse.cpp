@@ -18,9 +18,10 @@ Point DiagramEditor::GetSizeHandle(Point p) const
 	return h;
 }
 
-Point DiagramEditor::GetHandle(int i, Point p) const
+Point DiagramEditor::GetHandle(int i, Point p_) const
 { // -1 top/left, 1 right/botom
 	Point h(0, 0);
+	Pointf p = p_;
 	if(i >= 0) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
@@ -32,6 +33,12 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 		}
 		else {
 			Rect r = m.GetRect();
+
+			p -= r.CenterPoint();
+			r -= r.CenterPoint();
+			
+			p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+
 			Rect rr = r.Inflated(5);
 			r.Deflate(min(10, r.GetWidth() / 2), min(10, r.GetHeight() / 2));
 			if(rr.Contains(p)) {
@@ -91,16 +98,53 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	int m = h.x * h.y;
 	if((h.x || h.y) && i >= 0 && data.item[i].IsLine())
 		return Image::SizeAll();
+	double rot;
 	if(m > 0)
-		return Image::SizeBottomRight();
+		rot = - M_PI / 4;
+	else
 	if(m < 0)
-		return Image::SizeBottomLeft();
+		rot = M_PI / 4;
+	else
 	if(h.x)
-		return Image::SizeHorz();
+		rot = M_PI / 2;
+	else
 	if(h.y)
-		return Image::SizeVert();
-
-	return Image::Arrow();
+		rot = 0;
+	else
+		return Image::Arrow();
+	
+	rot += M_2PI * CursorItem().rotate / 360;
+	
+	return MakeValue(
+		[&] { return String((const char *)&rot, sizeof(rot)); },
+		[&] (Value& v) {
+			ImagePainter w(DPI(32, 32));
+			w.Clear();
+			const double x1 = 10;
+			const double x2 = 14;
+			const double x3 = 18;
+			const double x4 = 22;
+			const double y1 = 2;
+			const double y2 = 11;
+			const double y3 = 21;
+			const double y4 = 30;
+			const double m = 16;
+			w.Scale(DPI(1));
+			w.Translate(m, m);
+			w.Rotate(rot);
+			w.Translate(-m, -m);
+			w.Move(m, y1).Line(x4, y2).Line(x3, y2).Line(x3, y3).Line(x4, y3)
+			 .Line(m, y4).Line(x1, y3).Line(x2, y3).Line(x2, y2).Line(x1, y2)
+			 .Close();
+			w.Stroke(2, White());
+			w.Fill(White());
+			w.Stroke(1, Black());
+			Image img = w.GetResult();
+			SetHotSpots(img, DPI(16, 16));
+			v = img;
+			return img.GetLength() * sizeof(RGBA);
+		}
+	).To<Image>();
 }
 
 void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
