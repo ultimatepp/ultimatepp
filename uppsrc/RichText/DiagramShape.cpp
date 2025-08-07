@@ -147,7 +147,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		double cx = r.GetWidth();
 		double cy = r.GetHeight();
 
-		Rectf text_rect = r.Deflated(width + 2, 0);
+		Rectf text_rect = r.Deflated(width + 2, 0).Offseted(-r.TopLeft());
 
 		double sz = min(cx, cy);
 		double arrow_width = min(cx / 3, cy / 3);
@@ -394,8 +394,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			break;
 		}
 		
-		w.End();
-		
 		Rect tr = text_rect;
 		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
 		txt.Paint(w, tr.left, tr.top + (tr.GetHeight() - txt_cy) / 2, tr.GetWidth(), pi);
@@ -407,6 +405,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 					w.Fill(128 * SYellow());
 				w.Stroke(1, 190 * SColorHighlight());
 			}
+
+		w.End();
 	}
 }
 

@@ -316,28 +316,46 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				if(h)
 					(h < 0 ? a1 : a2) = a;
 			};
-			Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
-			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
-			if(m.aspect_ratio && !m.IsLine()) {
-				m.Normalize();
-				Sizef sz1, sz2;
-				ComputeAspectSize(m, sz1, sz2);
-				Sizef sz;
-				if(draghandle.y == 0)
-					sz = sz1;
-				else
-				if(draghandle.x == 0)
-					sz = sz2;
-				else
-					sz = sz1.cx < sz2.cx ? sz1 : sz2;
-				if(draghandle.x < 0)
-					m.pt[0].x = m.pt[1].x - sz.cx;
-				else
-					m.pt[1].x = m.pt[0].x + sz.cx;
-				if(draghandle.y < 0)
-					m.pt[0].y = m.pt[1].y - sz.cy;
-				else
-					m.pt[1].y = m.pt[0].y + sz.cy;
+			if(m.IsLine()) {
+				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
+				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
+			}
+			else {
+				bool rotated = m.rotate && !m.IsLine();
+				Rectf r = m.GetRect();
+				Pointf cp(draghandle.x < 0 ? r.right : r.left, draghandle.y < 0 ? r.bottom : r.top);
+				if(rotated) {
+					p -= cp;
+					r -= cp;
+					p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+				}
+				Do(draghandle.x, r.left, r.right, p.x);
+				Do(draghandle.y, r.top, r.bottom, p.y);
+				if(m.aspect_ratio && !m.IsLine() && 0) {
+					m.Normalize();
+					Sizef sz1, sz2;
+					ComputeAspectSize(m, sz1, sz2);
+					Sizef sz;
+					if(draghandle.y == 0)
+						sz = sz1;
+					else
+					if(draghandle.x == 0)
+						sz = sz2;
+					else
+						sz = sz1.cx < sz2.cx ? sz1 : sz2;
+					if(draghandle.x < 0)
+						m.pt[0].x = m.pt[1].x - sz.cx;
+					else
+						m.pt[1].x = m.pt[0].x + sz.cx;
+					if(draghandle.y < 0)
+						m.pt[0].y = m.pt[1].y - sz.cy;
+					else
+						m.pt[1].y = m.pt[0].y + sz.cy;
+				}
+				if(rotated)
+					r += cp;
+				m.pt[0] = r.TopLeft();
+				m.pt[1] = r.BottomRight();
 			}
 		}
 		UseConns();
