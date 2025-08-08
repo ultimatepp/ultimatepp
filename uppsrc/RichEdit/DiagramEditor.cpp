@@ -204,7 +204,11 @@ void DiagramEditor::Paint(Draw& w)
 		iw.Scale(GetZoom());
 		iw.Offset(-(Point)sb);
 		Size dsz = data.GetSize();
-		iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy).Stroke(0.2, SColorHighlight());
+		iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy);
+		if(IsNull(data.size))
+		   iw.Dash("2").Stroke(1, Gray());
+		else
+		   iw.Stroke(0.2, SColorHighlight());
 	
 		if(data.item.GetCount() == 0) {
 			iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());

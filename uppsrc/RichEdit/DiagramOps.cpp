@@ -222,7 +222,7 @@ struct SizeDlg : WithSizeLayout<TopWindow> {
 
 	static Size sz[];
 
-	void Set(Size sz);
+	void Set(Size sz, Size asz);
 	Size Get() const;
 	void Sync();
 };
@@ -253,10 +253,10 @@ void SizeDlg::Sync()
 	cy.Enable(b);
 }
 
-void SizeDlg::Set(Size sz)
+void SizeDlg::Set(Size sz, Size asz)
 {
-	cx <<= sz.cx;
-	cy <<= sz.cy;
+	cx <<= asz.cx;
+	cy <<= asz.cy;
 	int i = FindIndex(SubRange(SizeDlg::sz, __countof(SizeDlg::sz)), sz);
 	size <<= i < 0 ? 5 : i;
 	Sync();
@@ -271,7 +271,7 @@ SizeDlg::SizeDlg()
 void DiagramEditor::ChangeSize()
 {
 	SizeDlg dlg;
-	dlg.Set(data.size);
+	dlg.Set(data.size, data.GetSize());
 	if(dlg.ExecuteOK()) {
 		data.size = dlg.Get();
 		Commit();

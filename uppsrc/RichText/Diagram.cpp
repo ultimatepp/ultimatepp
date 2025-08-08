@@ -172,6 +172,8 @@ void DiagramItem::Save(StringBuffer& r) const
 			return String("null");
 		return Format("%02x%02x%02x", (int)c.GetR(), (int)c.GetG(), (int)c.GetB());
 	};
+	if(rotate)
+		r << " rotate " << rotate;
 	if(blob_id.GetCount())
 		r << " blob_id " << AsCString(blob_id);
 	if(ink != Black())
@@ -220,6 +222,9 @@ void DiagramItem::Load(CParser& p, const Diagram& diagram)
 		if(p.IsString())
 			qtf = p.ReadString();
 		else
+		if(p.Id("rotate"))
+			rotate = clamp(p.ReadDouble(), -360.0, 360.0);
+		else
 		if(p.Id("stroke"))
 			ink = col();
 		else
@@ -262,15 +267,32 @@ Size Diagram::GetSize() const
 	if(item.GetCount() == 0)
 		return Size(0, 0);
 	Pointf tl, br;
-	tl = br = item[0].pt[0];
+	tl = br = item[0].GetRect().TopLeft();
 	for(const DiagramItem& m : item) {
-		tl.x = min(tl.x, m.pt[0].x, m.pt[1].x);
-		tl.y = min(tl.y, m.pt[0].y, m.pt[1].y);
-		br.x = max(br.x, m.pt[0].x, m.pt[1].x);
-		br.y = max(br.y, m.pt[0].y, m.pt[1].y);
+		Rectf r = m.GetRect();
+		Pointf cp = r.CenterPoint();
+		Xform2D rot;
+		if(m.rotate)
+			rot = Xform2D::Rotation(M_2PI * m.rotate / 360);
+		auto Do = [&](Pointf p) {
+			if(m.rotate) {
+				p -= cp;
+				p = rot.Transform(p);
+				p += cp;
+			}
+			tl.x = min(tl.x, p.x);
+			tl.y = min(tl.y, p.y);
+			br.x = max(br.x, p.x);
+			br.y = max(br.y, p.y);
+		};
+		Do(r.TopLeft());
+		Do(r.TopRight());
+		Do(r.BottomLeft());
+		Do(r.BottomRight());
 	}
 	
 	Sizef fsz = br + tl;
+
 	Sizef isz = img.GetSize();
 	if(img_hd)
 		isz /= 2;

@@ -10,6 +10,8 @@ void DiagramEditor::Map(Point& p)
 Point DiagramEditor::GetSizeHandle(Point p) const
 {
 	Point h = { 0, 0 };
+	if(IsNull(data.size)) // automatic size - no resize
+		return h;
 	Size sz = data.GetSize();
 	if(abs(sz.cx - p.x) < 8)
 		h.x = 1;
@@ -74,7 +76,7 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 		if(data.item[i].IsTextClick(p))
 			return Image::IBeam();
 */
-	Point h = GetSizeHandle(p);
+	Point h = HasCapture() ? sizehandle : GetSizeHandle(p);
 	if(h.x && h.y)
 		return Image::SizeBottomRight();
 	if(h.x)
@@ -177,7 +179,7 @@ void DiagramEditor::LeftDouble(Point p, dword keyflags)
 void DiagramEditor::Grid(int shape, Point& p)
 {
 	if(grid && !GetShift())
-		p = shape == DiagramItem::SHAPE_LINE ? p / 8 * 8 : p / 16 * 16;
+		p = shape == DiagramItem::SHAPE_LINE ? (p + Point(3, 3)) / 8 * 8 : (p + Point(7, 7)) / 16 * 16;
 }
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
@@ -281,6 +283,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		return;
 	}
 	if(HasCapture() && (sizehandle.x || sizehandle.y)) {
+		Grid(DiagramItem::SHAPE_RECT, p);
 		if(IsNull(data.size))
 			data.size = data.GetSize();
 		if(sizehandle.x)
@@ -323,11 +326,11 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			else {
 				bool rotated = m.rotate && !m.IsLine();
 				Rectf r = m.GetRect();
-				Pointf cp(draghandle.x < 0 ? r.right : r.left, draghandle.y < 0 ? r.bottom : r.top);
+				Pointf cp = r.CenterPoint();
 				if(rotated) {
 					p -= cp;
-					r -= cp;
 					p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+					p += cp;
 				}
 				Do(draghandle.x, r.left, r.right, p.x);
 				Do(draghandle.y, r.top, r.bottom, p.y);
@@ -352,8 +355,6 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					else
 						m.pt[1].y = m.pt[0].y + sz.cy;
 				}
-				if(rotated)
-					r += cp;
 				m.pt[0] = r.TopLeft();
 				m.pt[1] = r.BottomRight();
 			}

@@ -14,7 +14,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_ITRIANGLE)
+	if(shape > SHAPE_ITRIANGLE || rotate)
 		return p;
 	if(IsLine()) {
 		p << pt[0] << pt[1];
@@ -28,6 +28,15 @@ Vector<Pointf> DiagramItem::GetConnections() const
 		p << r.BottomLeft() << r.BottomRight();
 	if(shape == SHAPE_ITRIANGLE)
 		p << r.TopLeft() << r.TopRight();
+	if(rotate) {
+		Xform2D rot = Xform2D::Rotation(M_2PI * rotate / 360);
+		Pointf c = r.CenterPoint();
+		for(Pointf& x : p) {
+			x -= c;
+			x = rot.Transform(x);
+			x += c;
+		}
+	}
 	return p;
 }
 
@@ -398,15 +407,15 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
 		txt.Paint(w, tr.left, tr.top + (tr.GetHeight() - txt_cy) / 2, tr.GetWidth(), pi);
 
-		if(style & GRID)
+		w.End();
+
+		if((style & GRID) && !rotate)
 			for(Pointf p : GetConnections()) {
 				w.Circle(p, 5);
 				if(conn && conn->Find(p) >= 0)
 					w.Fill(128 * SYellow());
 				w.Stroke(1, 190 * SColorHighlight());
 			}
-
-		w.End();
 	}
 }
 
