@@ -91,15 +91,17 @@ void SelectSymbolDlg::Variants(int codepoint)
 			String svgpath = AsSvgPath(fnt, codepoint, szf0);
 			Size szf = szf0 * DPI(1);
 			Size sz((int)ceil(szf.cx), (int)ceil(szf.cy));
-			ImagePainter sw(sz);
-			sw.Clear();
-			sw.Scale(DPI(1));
-			sw.Path(svgpath).Fill(SBlack());
-			Image img = sw;
-			if(h.Find(img) < 0) {
-				qtf << "[^" << h.GetCount() << "^ " << " " << AsQTF(CreatePNGObject(img, sz.cx, sz.cy)) << "], ";
-				h.Add(img);
-				svg.Add(MakeTuple(szf0, svgpath));
+			if(svgpath.GetCount() && sz.cx > 0 && sz.cy > 0) {
+				ImagePainter sw(sz);
+				sw.Clear();
+				sw.Scale(DPI(1));
+				sw.Path(svgpath).Fill(SBlack());
+				Image img = sw;
+				if(h.Find(img) < 0) {
+					qtf << "[^" << h.GetCount() << "^ " << " " << AsQTF(CreatePNGObject(img, sz.cx, sz.cy)) << "], ";
+					h.Add(img);
+					svg.Add(MakeTuple(szf0, svgpath));
+				}
 			}
 		}
 	}
