@@ -78,7 +78,7 @@ void Stroker::Line(const Pointf& p3)
 
 	Pointf v2 = p3 - p2;
 	double l = Length(v2);
-	if(l < 1e-30)
+	if(l < 1e-15)
 		return;
 	Pointf o2 = Orthogonal(v2) * w2 / l;
 	Pointf a2 = p2 + o2;

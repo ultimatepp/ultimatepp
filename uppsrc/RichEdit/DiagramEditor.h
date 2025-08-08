@@ -65,6 +65,7 @@ private:
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
 	Rectf          dragfrom = Rect(0, 0, 0, 0);
+	double         base_rotate = 0;
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid

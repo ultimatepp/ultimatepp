@@ -182,6 +182,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
 			w.RoundedRectangle(-1, -1, w1 + 2, h + 2, 2)
 			 .Stroke(2, Gray());
+			if(style & Display::CURSOR)
+				w.Circle(0, h, 6).Stroke(1, Red());
 		}
 
 

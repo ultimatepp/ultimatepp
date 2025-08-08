@@ -100,6 +100,10 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	int m = h.x * h.y;
 	if((h.x || h.y) && i >= 0 && data.item[i].IsLine())
 		return Image::SizeAll();
+	
+	if(h.x == -1 && h.y == 1)
+		return DiagramImg::RotateCursor();
+	
 	double rot;
 	if(m > 0)
 		rot = - M_PI / 4;
@@ -192,6 +196,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 
 	FinishText();
 	dragstart = dragcurrent = p;
+	base_rotate = CursorItem().rotate;
 
 	SetCapture();
 
@@ -296,6 +301,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	if(HasCapture() && IsCursor() && (moving || Distance(dragstart, p) >= 8)) {
 		moving = true;
 		DiagramItem& m = CursorItem();
+		Pointf p0 = p;
 		Grid(m, p);
 		if(IsNull(draghandle)) { // move selection
 			Rectf to = dragfrom.Offseted(p - dragstart);
@@ -319,14 +325,21 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				if(h)
 					(h < 0 ? a1 : a2) = a;
 			};
+			Rectf r = m.GetRect();
+			Pointf cp = r.CenterPoint();
 			if(m.IsLine()) {
 				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
 				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 			}
+			else
+			if(draghandle.x == -1 && draghandle.y == 1) {
+				Pointf bl = Xform2D::Rotation(M_2PI * base_rotate / 360).Transform(r.BottomLeft() - cp);
+				m.rotate = base_rotate + 180.0 * (Bearing((Pointf)p0 - cp) - Bearing(bl)) / M_PI;
+				if(grid && !GetShift())
+					m.rotate = int(m.rotate + 360 + 7) / 15 * 15;
+			}
 			else {
 				bool rotated = m.rotate && !m.IsLine();
-				Rectf r = m.GetRect();
-				Pointf cp = r.CenterPoint();
 				if(rotated) {
 					p -= cp;
 					p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
