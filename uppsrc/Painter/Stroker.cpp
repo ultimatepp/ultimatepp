@@ -6,6 +6,7 @@ namespace Upp {
 
 void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin, const Rectf& preclip_)
 {
+	LLOG("Init");
 	linecap = _linecap;
 	linejoin = _linejoin;
 	preclip = preclip_;
@@ -58,7 +59,7 @@ void Stroker::Line(const Pointf& p3)
 	if(IsNull(p2)) {
 		Pointf v = p3 - p1;
 		double l = Length(v);
-		if(l < 1e-30)
+		if(l < 1e-8) // lower precision to accomodate Arc precision issue
 			return;
 		p2 = p3;
 		v1 = v;
@@ -77,14 +78,14 @@ void Stroker::Line(const Pointf& p3)
 
 	Pointf v2 = p3 - p2;
 	double l = Length(v2);
-	if(l < 1e-30)
+	if(l < 1e-15)
 		return;
 	Pointf o2 = Orthogonal(v2) * w2 / l;
 	Pointf a2 = p2 + o2;
 	Pointf b2 = p2 - o2;
 
 	double d = v1.y * v2.x - v2.y * v1.x;
-	if(d > 1e-30) {
+	if(d > 1e-15) {
 		Pointf ts = a1 + v1 * (v2.y * (a1.x - a2.x) - v2.x * (a1.y - a2.y)) / d;
 		PutMove(a1);
 		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
@@ -101,7 +102,7 @@ void Stroker::Line(const Pointf& p3)
 		PutLine(b1);
 	}
 	else
-	if(d < -1e-30) {
+	if(d < -1e-15) {
 		Pointf ts = b2 + v2 * (v1.y * (a2.x - a1.x) - v1.x * (a2.y - a1.y)) / d;
 		PutMove(b2);
 		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {

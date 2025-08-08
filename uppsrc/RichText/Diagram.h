@@ -10,14 +10,19 @@ struct Point2 : Moveable<Point2> {
 	void    Serialize(Stream& s)     { s % pt[0] % pt[1]; }
 };
 
+struct Diagram;
+
 struct DiagramItem : Point2 {
 	int    shape;
 	String qtf;
 	double width;
 	Color  ink;
 	Color  paper;
-	Sizef  size;
 	String blob_id;
+	bool   flip_horz;
+	bool   flip_vert;
+	bool   aspect_ratio;
+	double rotate;
 	
 	enum {
 		SHAPE_LINE,
@@ -63,23 +68,24 @@ struct DiagramItem : Point2 {
 	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
-	void Paint(Painter& w, const VectorMap<String, String>& data, dword style = 0, const Index<Pointf> *conn = nullptr) const;
+	void  Paint(Painter& w, const Diagram& diagram, dword style = 0, const Index<Pointf> *conn = nullptr) const;
+	Sizef GetStdSize(const Diagram& diagram) const;
 	
 	bool IsLine() const              { return shape == SHAPE_LINE; }
 	
 	Vector<Pointf> GetConnections() const;
 
-	bool IsClick(Point p) const;
+	bool IsClick(Point p, const Diagram& diagram, bool relaxed = false) const;
 	bool IsTextClick(Point p) const;
 	Rect GetTextEditRect() const;
 
 	void FixPosition();
 
-	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % size % blob_id; }
+	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
 
 	void Reset();
 	void Save(StringBuffer& r) const;
-	void Load(CParser& p);
+	void Load(CParser& p, const Diagram& diagram);
 	
 	DiagramItem() { Reset(); }
 
@@ -107,6 +113,9 @@ struct Diagram {
 	Size   GetSize() const;
 	void   Paint(Painter& w, const PaintInfo& pi) const;
 	String AddBlob(const String& data);
+	String GetBlob(const String& id) const;
+	Image  GetBlobImage(const String& id) const;
+	Rectf  GetBlobSvgPathBoundingBox(const String& id) const;
 	void   Serialize(Stream& s);
 	void   Save(StringBuffer& r) const;
 	void   Load(CParser& p);

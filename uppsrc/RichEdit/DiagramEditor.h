@@ -65,6 +65,7 @@ private:
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
 	Rectf          dragfrom = Rect(0, 0, 0, 0);
+	double         base_rotate = 0;
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid
@@ -141,6 +142,8 @@ private:
 
 
 	void   FixPositions();
+	void   ForEachConst(Event<const DiagramItem&> fn) const;
+	void   ForEach(Event<DiagramItem&> fn);
 	enum {
 		ATTR_SHAPE = 0x0001,
 		ATTR_CAP0 = 0x0002,
@@ -155,6 +158,8 @@ private:
 	void   SetAttrs(dword attr);
 	void   GetAttrs(const DiagramItem& m);
 	void   GetAttrs();
+
+	void   ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2);
 
 	DiagramItem& AddItem(int shape);
 

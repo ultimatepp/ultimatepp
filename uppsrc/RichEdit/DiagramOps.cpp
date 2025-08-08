@@ -53,14 +53,27 @@ void DiagramEditor::SetAttrs(DiagramItem& m, dword attrs)
 		m.paper = ~paper;
 }
 
-void DiagramEditor::SetAttrs(dword attrs)
+void DiagramEditor::ForEachConst(Event<const DiagramItem&> fn) const
 {
-	for(int i = 0; i < sel.GetCount(); i++)
-		SetAttrs(data.item[sel[i]], attrs);
-	if(tool >= 0)
-		SetAttrs(tl[tool], attrs);
+	for(int ii : sel)
+		fn(data.item[ii]);
+}
+
+void DiagramEditor::ForEach(Event<DiagramItem&> fn)
+{
+	for(int ii : sel)
+		fn(data.item[ii]);
 	Sync();
 	Commit();
+}
+
+void DiagramEditor::SetAttrs(dword attrs)
+{
+	if(tool >= 0)
+		SetAttrs(tl[tool], attrs);
+	ForEach([&](DiagramItem& m) {
+		SetAttrs(m, attrs);
+	});
 }
 
 void DiagramEditor::GetAttrs(const DiagramItem& m)
@@ -163,7 +176,7 @@ void DiagramEditor::PrepareConns()
 	for(int pass = 0; pass < 2; pass++)
 		for(int i = 0; i < data.item.GetCount(); i++) {
 			const DiagramItem& m = data.item[i];
-			if(m.IsLine() == pass) {
+			if((int)m.IsLine() == pass) {
 				Vector<Pointf> cp = m.GetConnections();
 				for(int j = 0; j < cp.GetCount(); j++)
 					map.GetAdd(cp[j]) << MakeTuple(i, j);
@@ -195,12 +208,21 @@ void DiagramEditor::UseConns()
 			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
 }
 
+void DiagramEditor::ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2)
+{
+	m.Normalize();
+	Sizef sz = m.GetRect().GetSize();
+	Sizef sz0 = m.GetStdSize(data);
+	sz1 = Sizef(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
+	sz2 = Sizef(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
+}
+
 struct SizeDlg : WithSizeLayout<TopWindow> {
 	SizeDlg();
 
 	static Size sz[];
 
-	void Set(Size sz);
+	void Set(Size sz, Size asz);
 	Size Get() const;
 	void Sync();
 };
@@ -231,10 +253,10 @@ void SizeDlg::Sync()
 	cy.Enable(b);
 }
 
-void SizeDlg::Set(Size sz)
+void SizeDlg::Set(Size sz, Size asz)
 {
-	cx <<= sz.cx;
-	cy <<= sz.cy;
+	cx <<= asz.cx;
+	cy <<= asz.cy;
 	int i = FindIndex(SubRange(SizeDlg::sz, __countof(SizeDlg::sz)), sz);
 	size <<= i < 0 ? 5 : i;
 	Sync();
@@ -249,7 +271,7 @@ SizeDlg::SizeDlg()
 void DiagramEditor::ChangeSize()
 {
 	SizeDlg dlg;
-	dlg.Set(data.size);
+	dlg.Set(data.size, data.GetSize());
 	if(dlg.ExecuteOK()) {
 		data.size = dlg.Get();
 		Commit();

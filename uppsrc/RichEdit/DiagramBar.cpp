@@ -49,7 +49,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	bar.Add("Zoom", MakeZoomIcon(0.01 * zoom_percent), [=]{ Zoom(); });
 	bar.Add("Snap to grid", DiagramImg::Grid(), [=] { grid = !grid; SetBar(); }).Check(grid);
-	bar.Add("Display grid", DiagramImg::DisplayGrid(), [=] { display_grid = !display_grid; SetBar(); Refresh(); }).Check(display_grid);
+	bar.Add("Display grid and connections", DiagramImg::DisplayGrid(), [=] { display_grid = !display_grid; SetBar(); Refresh(); }).Check(display_grid);
 	bar.Separator();
 	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
 	bar.Separator();
@@ -62,6 +62,33 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(ink);
 	paper.DarkContent(IsDarkContent());
 	bar.Add(paper);
+	bool fh = b;
+	bool fv = b;
+	bool ar = b;
+	ForEachConst([&](const DiagramItem& m) {
+		fh = fh && m.flip_horz;
+		fv = fv && m.flip_vert;
+		ar = ar && m.aspect_ratio;
+	});
+	bar.Add(b, "Flip Horizontal", DiagramImg::FlipHorz(), [=] {
+		ForEach([&](DiagramItem& m) { m.flip_horz = !m.flip_horz; });
+	})
+	.Check(fh);
+	bar.Add(b, "Flip Vertical", DiagramImg::FlipVert(), [=] {
+		ForEach([&](DiagramItem& m) { m.flip_vert = !m.flip_vert; });
+	})
+	.Check(fv);
+	bar.Add(b, "Aspect Ratio", DiagramImg::Aspect(), [=] {
+		ForEach([&](DiagramItem& m) {
+			m.aspect_ratio = !m.aspect_ratio;
+			if(m.aspect_ratio && !m.IsLine()) {
+				Sizef sz1, sz2;
+				ComputeAspectSize(m, sz1, sz2);
+				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
+			}
+		});
+	})
+	.Check(ar);
 	bar.Separator();
 	Size isz = IconSz();
 	for(int i = 0; i < tool_count; i++) {

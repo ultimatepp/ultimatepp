@@ -16,12 +16,16 @@ void DiagramEditor::Delete()
 
 void DiagramEditor::Copy()
 {
+	Diagram clip;
 	StringBuffer cb;
 	for(int i : sel) {
 		const DiagramItem& m = data.item[i];
-		m.Save(cb);
+		clip.item << m;
+		clip.AddBlob(data.GetBlob(m.blob_id));
 	}
-	WriteClipboardText(cb);
+	StringBuffer r;
+	clip.Save(r);
+	WriteClipboardText(String(r));
 }
 
 void DiagramEditor::Cut()
@@ -32,24 +36,34 @@ void DiagramEditor::Cut()
 
 void DiagramEditor::Paste()
 {
-	if(IsClipboardAvailable("dib")) {
-		data.img = ReadClipboardImage();
-		data.img_hd = IsUHDMode();
-		Commit();
+	if(IsClipboardAvailableImage()) {
+		Image img = ReadClipboardImage();
+		if(IsNull(img))
+			return;
+		Sizef sz = img.GetSize();
+		int ii = data.item.GetCount();
+		DiagramItem& m = data.item.Add();
+		m.shape = DiagramItem::SHAPE_IMAGE;
+		m.blob_id = data.AddBlob(PNGEncoder().SaveString(img));
+		m.pt[0] = Rectf(Sizef(data.GetSize())).CenterPos(sz);
+		m.pt[1] = m.pt[0] + sz;
+		SetCursor(ii);
 	}
 	else {
 		String txt = ReadClipboardText();
+		Diagram clip;
+		CParser p(txt);
 		try {
-			CParser p(txt);
-			while(!p.IsEof()) {
-				DiagramItem m;
-				m.Load(p);
-				int ii = data.item.GetCount();
-				data.item << m;
-				SetCursor(ii);
-			}
+			clip.Load(p);
 		}
-		catch(CParser::Error) {}
+		catch(CParser::Error) {
+		}
+		for(DiagramItem& m : clip.item) {
+			int ii = data.item.GetCount();
+			data.item << m;
+			data.AddBlob(clip.GetBlob(m.blob_id));
+			SetCursor(ii);
+		}
 	}
 	Commit();
 	SetBar();

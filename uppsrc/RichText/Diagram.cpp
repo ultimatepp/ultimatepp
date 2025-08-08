@@ -31,7 +31,10 @@ void DiagramItem::Reset()
 	ink = Black();
 	paper = White();
 	blob_id = 0;
-	size = Null;
+	flip_horz = false;
+	flip_vert = false;
+	aspect_ratio = false;
+	rotate = 0;
 	
 	cap[0] = cap[1] = CAP_NONE;
 	dash = 0;
@@ -57,6 +60,12 @@ void DiagramItem::FixPosition()
 		pt[0].y -= y;
 		pt[1].y -= y;
 	}
+	auto Clamp = [](Pointf& p) {
+		p.x = clamp(p.x, 0.0, 10000.0);
+		p.y = clamp(p.y, 0.0, 10000.0);
+	};
+	Clamp(pt[0]);
+	Clamp(pt[1]);
 	if(IsLine())
 		return;
 	if(pt[1].x - pt[0].x < 8)
@@ -65,12 +74,35 @@ void DiagramItem::FixPosition()
 		pt[1].y = pt[0].y + 8;
 }
 
-bool DiagramItem::IsClick(Point p) const
+bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
 {
 	if(IsLine())
 		return DistanceFromSegment(p, pt[0], pt[1]) < width + 10;
-	else
-		return GetRect().Inflated(5).Contains(p);
+	Rectf rect = GetRect();
+	if(!rect.Contains(p))
+		return false;
+	if(shape == SHAPE_IMAGE || relaxed)
+		return true;
+	Image test = MakeValue(
+		[&] {
+			return String((const char *)&shape, sizeof(shape));
+		},
+		[&](Value& v) {
+			ImagePainter p(64, 64);
+			p.Clear(RGBAZero());
+			DiagramItem m = *this;
+			m.paper = Blue();
+			m.ink = Blue();
+			m.pt[0] = Pointf(0, 0);
+			m.pt[1] = Pointf(64, 64);
+			m.Paint(p, diagram);
+			Image img = p.GetResult();
+			v = img;
+			return img.GetLength() * sizeof(RGBA);
+		}
+	).To<Image>();
+	return test[clamp(int(64 * (p.y - rect.top) / rect.GetHeight()), 0, 63)]
+	           [clamp(int(64 * (p.x - rect.left) / rect.GetWidth()), 0, 63)].a;
 }
 
 bool DiagramItem::IsTextClick(Point p0) const
@@ -81,7 +113,7 @@ bool DiagramItem::IsTextClick(Point p0) const
 	Rect r = GetRect();
 	Rect page;
 	Pointf p;
-	int cx = Distance(pt[0], pt[1]);
+	int cx = (int)Distance(pt[0], pt[1]);
 	if(cx < 16)
 		return false;
 	if(IsLine()) {
@@ -97,7 +129,7 @@ bool DiagramItem::IsTextClick(Point p0) const
 		p = p / z;
 		page.top = 0;
 		page.left = 0;
-		page.right = cx / z;
+		page.right = int(cx / z);
 	}
 	else {
 		int txt_cy = txt.GetHeight(zoom, r.GetWidth());
@@ -140,14 +172,14 @@ void DiagramItem::Save(StringBuffer& r) const
 			return String("null");
 		return Format("%02x%02x%02x", (int)c.GetR(), (int)c.GetG(), (int)c.GetB());
 	};
+	if(rotate)
+		r << " rotate " << rotate;
 	if(blob_id.GetCount())
 		r << " blob_id " << AsCString(blob_id);
-	if(!IsNull(size))
-		r << " size " << size.cx << ' ' << size.cy;
 	if(ink != Black())
-		r << " ink " << col(ink);
+		r << " stroke " << col(ink);
 	if(paper != White())
-		r << " paper " << col(paper);
+		r << " fill " << col(paper);
 	if(width != 2)
 		r << " width " << width;
 	if(cap[0] != CAP_NONE)
@@ -156,10 +188,16 @@ void DiagramItem::Save(StringBuffer& r) const
 		r << " end " << LineCap[clamp(cap[1], 0, LineCap.GetCount())];
 	if(dash)
 		r << " dash " << dash;
+	if(flip_vert)
+		r << " flip_vert";
+	if(flip_horz)
+		r << " flip_horz";
+	if(aspect_ratio)
+		r << " aspect_ratio";
 	r << ";";
 }
 
-void DiagramItem::Load(CParser& p)
+void DiagramItem::Load(CParser& p, const Diagram& diagram)
 {
 	Reset();
 	int q = Shape.Find(p.ReadId());
@@ -184,14 +222,26 @@ void DiagramItem::Load(CParser& p)
 		if(p.IsString())
 			qtf = p.ReadString();
 		else
-		if(p.Id("ink"))
+		if(p.Id("rotate"))
+			rotate = clamp(p.ReadDouble(), -360.0, 360.0);
+		else
+		if(p.Id("stroke"))
 			ink = col();
 		else
-		if(p.Id("paper"))
+		if(p.Id("fill"))
 			paper = col();
 		else
 		if(p.Id("width"))
 			width = clamp(p.ReadDouble(), 0.0, 50.0);
+		else
+		if(p.Id("flip_vert"))
+			flip_vert = true;
+		else
+		if(p.Id("flip_horz"))
+			flip_horz = true;
+		else
+		if(p.Id("aspect_ratio"))
+			aspect_ratio = true;
 		else
 		if(p.Id("start"))
 			cap[0] = Cap();
@@ -205,11 +255,6 @@ void DiagramItem::Load(CParser& p)
 		if(p.Id("blob_id"))
 			blob_id = p.ReadString();
 		else
-		if(p.Id("size")) {
-			size.cx = p.ReadDouble();
-			size.cy = p.ReadDouble();
-		}
-		else
 			p.Skip();
 	}
 	FixPosition();
@@ -222,27 +267,80 @@ Size Diagram::GetSize() const
 	if(item.GetCount() == 0)
 		return Size(0, 0);
 	Pointf tl, br;
-	tl = br = item[0].pt[0];
+	tl = br = item[0].GetRect().TopLeft();
 	for(const DiagramItem& m : item) {
-		tl.x = min(tl.x, m.pt[0].x, m.pt[1].x);
-		tl.y = min(tl.y, m.pt[0].y, m.pt[1].y);
-		br.x = max(br.x, m.pt[0].x, m.pt[1].x);
-		br.y = max(br.y, m.pt[0].y, m.pt[1].y);
+		Rectf r = m.GetRect();
+		Pointf cp = r.CenterPoint();
+		Xform2D rot;
+		if(m.rotate)
+			rot = Xform2D::Rotation(M_2PI * m.rotate / 360);
+		auto Do = [&](Pointf p) {
+			if(m.rotate) {
+				p -= cp;
+				p = rot.Transform(p);
+				p += cp;
+			}
+			tl.x = min(tl.x, p.x);
+			tl.y = min(tl.y, p.y);
+			br.x = max(br.x, p.x);
+			br.y = max(br.y, p.y);
+		};
+		Do(r.TopLeft());
+		Do(r.TopRight());
+		Do(r.BottomLeft());
+		Do(r.BottomRight());
 	}
 	
 	Sizef fsz = br + tl;
+
 	Sizef isz = img.GetSize();
 	if(img_hd)
 		isz /= 2;
 	
-	return Size(ceil(max(isz.cx, fsz.cx)), ceil(max(isz.cy, fsz.cy)));
+	return Size((int)ceil(max(isz.cx, fsz.cx)), (int)ceil(max(isz.cy, fsz.cy)));
 }
 
 String Diagram::AddBlob(const String& data)
 {
+	if(IsNull(data))
+		return Null;
 	String id = MD5String(data);
 	blob.GetAdd(id) = data;
 	return id;
+}
+
+String Diagram::GetBlob(const String& id) const
+{
+	return blob.Get(id, Null);
+}
+
+Image Diagram::GetBlobImage(const String& id) const
+{
+	Value v = MakeValue(
+		[&] {
+			return id;
+		},
+		[&](Value& v) {
+			Image m = StreamRaster::LoadStringAny(GetBlob(id));
+			v = m;
+			return int(m.GetLength() * sizeof(RGBA));
+		}
+	);
+	return v.Is<Image>() ? (Image)v : Image();
+}
+
+Rectf Diagram::GetBlobSvgPathBoundingBox(const String& id) const
+{
+	Value v = MakeValue(
+		[&] {
+			return id;
+		},
+		[&](Value& v) {
+			v = GetSVGPathBoundingBox(GetBlob(id));
+			return 32;
+		}
+	);
+	return v.Is<Rectf>() ? (Rectf)v : (Rectf)Null;
 }
 
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
@@ -272,7 +370,7 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 			style |= DiagramItem::DARK;
 		if(p.fast)
 			style |= DiagramItem::FAST;
-		item[i].Paint(w, blob, style, &conn);
+		item[i].Paint(w, *this, style, &conn);
 	}
 }
 
@@ -337,7 +435,7 @@ void Diagram::Load(CParser& p)
 			p.Char(';');
 		}
 		else
-			item.Add().Load(p);
+			item.Add().Load(p, *this);
 }
 
 }

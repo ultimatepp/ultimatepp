@@ -43,7 +43,7 @@ int DataFinder::FindLongest(const char *s, const char *e, int& len) const
 		if(end - q > len && q[len] == s[len]) {
 			q += 8;
 			const char *t = s + 8;
-			int l = memeq8len(q, t, min(end - q, e - t)) + 8;
+			int l = (int)min(memeq8len(q, t, min(end - q, e - t)) + 8, (size_t)INT_MAX);
 			if(l > len) {
 				len = l;
 				found = p;

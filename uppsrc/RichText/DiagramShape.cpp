@@ -14,7 +14,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_CYLINDER)
+	if(shape > SHAPE_ITRIANGLE || rotate)
 		return p;
 	if(IsLine()) {
 		p << pt[0] << pt[1];
@@ -22,12 +22,25 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	}
 	Rectf r = GetRect();
 	p << r.TopCenter() << r.BottomCenter();
-	if(shape != SHAPE_PARALLELOGRAM)
+	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE, SHAPE_ITRIANGLE) < 0)
 		p << r.CenterLeft() << r.CenterRight();
+	if(shape == SHAPE_TRIANGLE)
+		p << r.BottomLeft() << r.BottomRight();
+	if(shape == SHAPE_ITRIANGLE)
+		p << r.TopLeft() << r.TopRight();
+	if(rotate) {
+		Xform2D rot = Xform2D::Rotation(M_2PI * rotate / 360);
+		Pointf c = r.CenterPoint();
+		for(Pointf& x : p) {
+			x -= c;
+			x = rot.Transform(x);
+			x += c;
+		}
+	}
 	return p;
 }
 
-void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword style, const Index<Pointf> *conn) const
+void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
 	
@@ -56,9 +69,11 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 	RGBA sel1 = 150 * SColorHighlight();
 	RGBA sel2 = 150 * Gray();
 	
+	double stroke = width;
+	
 	auto Stroke = [&] {
-		if(width)
-			w.Stroke(width, ink);
+		if(stroke)
+			w.Stroke(stroke, ink);
 		else
 		if(style & GRID)
 			w.Stroke(0.2, sel1);
@@ -115,7 +130,7 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 			PaintCap(cap[1], pt[1], a2 - v);
 		}
 		 
-		int cx = Distance(pt[0], pt[1]);
+		int cx = (int)Distance(pt[0], pt[1]);
 		int txt_cy = txt.GetHeight(pi.zoom, cx);
 		
 		w.Begin();
@@ -132,27 +147,16 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 		w.End();
 	}
 	else {
-		if(style & (Display::CURSOR | Display::SELECT)) {
-//			w.RoundedRectangle(GetRect(), 5)
-//			 .Fill((style & Display::SELECT ? 30 : 200) * sel2);
-			w.RoundedRectangle(GetRect().Inflated(2), 5)
-			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
-		}
-		
 		Rectf r(pt[0], pt[1]);
 		r.Normalize();
 		r.Deflate(width / 2);
-
-		w.Begin();
-		w.Offset(r.left, r.top);
-
 		double w1 = r.GetWidth();
 		double h = r.GetHeight();
 
 		double cx = r.GetWidth();
 		double cy = r.GetHeight();
 
-		Rect text_rect = r.Deflated(width + 2, 0);
+		Rectf text_rect = r.Deflated(width + 2, 0).Offseted(-r.TopLeft());
 
 		double sz = min(cx, cy);
 		double arrow_width = min(cx / 3, cy / 3);
@@ -164,6 +168,37 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 		double w4 = w1 / 4;
 		Pointf m(w2, h2);
 		double hc, thc, bhc; // cylinder
+
+		w.Begin();
+		w.Translate(r.left, r.top);
+		if(rotate) {
+			w.Translate(w2, h2);
+			w.Rotate(M_2PI * rotate / 360);
+			w.Translate(-w2, -h2);
+		}
+
+		if(style & (Display::CURSOR | Display::SELECT)) {
+			w.RoundedRectangle(-2, -2, w1 + 4, h + 4, 5)
+			 .Stroke(6, (style & Display::SELECT ? 30 : 200) * sel1);
+			w.RoundedRectangle(-1, -1, w1 + 2, h + 2, 2)
+			 .Stroke(2, Gray());
+			if(style & Display::CURSOR)
+				w.Circle(0, h, 6).Stroke(1, Red());
+		}
+
+
+		if(flip_horz) {
+			// flip horz
+			w.Translate(cx, 0);
+			w.Scale(-1, 1);
+		}
+
+		if(flip_vert) {
+			// flip horz
+			w.Translate(0, cy);
+			w.Scale(1, -1);
+		}
+
 		switch(shape) {
 		case SHAPE_ROUNDRECT:
 			w.RoundedRectangle(0, 0, w1, h, sz > 30 ? 8 : sz > 15 ? 4 : 2);
@@ -300,21 +335,24 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 				 .Close();
 			}
 			break;
-		case SHAPE_SVGPATH:
-			if(data.GetCount() && !IsNull(size)) {
-				w.Scale(w1 / size.cx, h / size.cy);
-				w.Path(data.Get(blob_id, String()));
+		case SHAPE_SVGPATH: {
+				Rectf bb = diagram.GetBlobSvgPathBoundingBox(blob_id);
+				Sizef size = bb.GetSize();
+				if(size.cx > 0 && size.cy > 0) {
+					w.Scale(w1 / size.cx, h / size.cy);
+					stroke *= min(size.cx / w1, size.cy / h);
+					w.Translate(-bb.TopLeft());
+					w.Path(diagram.GetBlob(blob_id));
+				}
 			}
 			break;
-		case SHAPE_IMAGE:
-			if(data.GetCount()) {
+		case SHAPE_IMAGE: {
 				if(style & FAST) {
-					w.DrawRect(0, 0, cx, cy, Gray());
+					w.Rectangle(0, 0, cx, cy).Fill(Gray());
 					break;
 				}
-				String s = data.Get(blob_id, String());
+				String s = diagram.GetBlob(blob_id);
 				if(s.GetCount()) {
-					StringStream ss(s);
 					if(IsSVG(s)) {
 						Rectf f = GetSVGBoundingBox(s);
 						Sizef isz = f.GetSize();
@@ -323,6 +361,7 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 						RenderSVG(w, s, Event<String, String&>(), paper);
 					}
 					else {
+						StringStream ss(s);
 						Value v = MakeValue(
 							[&] {
 								return blob_id;
@@ -338,8 +377,10 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 								return 0;
 							}
 						);
-						if(v.Is<Image>())
-							w.DrawImage(0, 0, cx, cy, v);
+						if(v.Is<Image>()) {
+							Image img = v;
+							w.Rectangle(0, 0, cx, cy).Fill(img, Xform2D::Scale(cx / img.GetWidth(), cy / img.GetHeight()));
+						}
 					}
 				}
 			}
@@ -364,12 +405,13 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 			break;
 		}
 		
-		w.End();
-		
-		int txt_cy = txt.GetHeight(pi.zoom, text_rect.GetWidth());
-		txt.Paint(w, text_rect.left, text_rect.top + (text_rect.GetHeight() - txt_cy) / 2, text_rect.GetWidth(), pi);
+		Rect tr = text_rect;
+		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
+		txt.Paint(w, tr.left, tr.top + (tr.GetHeight() - txt_cy) / 2, tr.GetWidth(), pi);
 
-		if(style & GRID)
+		w.End();
+
+		if((style & GRID) && !rotate)
 			for(Pointf p : GetConnections()) {
 				w.Circle(p, 5);
 				if(conn && conn->Find(p) >= 0)
@@ -377,6 +419,48 @@ void DiagramItem::Paint(Painter& w, const VectorMap<String, String>& data, dword
 				w.Stroke(1, 190 * SColorHighlight());
 			}
 	}
+}
+
+Sizef DiagramItem::GetStdSize(const Diagram& diagram) const
+{
+	switch(shape) {
+	case SHAPE_SVGPATH:
+		return diagram.GetBlobSvgPathBoundingBox(blob_id).GetSize();
+	case SHAPE_IMAGE: {
+			String s = diagram.GetBlob(blob_id);
+			if(s.GetCount()) {
+				if(IsSVG(s))
+					return GetSVGBoundingBox(s).GetSize();
+				else {
+					StringStream ss(s);
+					Value v = MakeValue(
+						[&] {
+							return blob_id;
+						},
+						[&](Value& v) {
+							v = Null;
+							One<StreamRaster> r = StreamRaster::OpenAny(ss);
+							if(r) {
+								v = r->GetSize();
+								return 32;
+							}
+							return 0;
+						}
+					);
+					if(v.Is<Size>())
+						return v.To<Size>();
+				}
+			}
+		}
+	}
+
+	if(shape == SHAPE_CYLINDER)
+		return Size(100, 128);
+
+	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWUP, SHAPE_ARROWVERT) >= 0)
+		return Size(64, 128);
+
+	return Size(128, 64);
 }
 
 }

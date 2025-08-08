@@ -10,6 +10,8 @@ void DiagramEditor::Map(Point& p)
 Point DiagramEditor::GetSizeHandle(Point p) const
 {
 	Point h = { 0, 0 };
+	if(IsNull(data.size)) // automatic size - no resize
+		return h;
 	Size sz = data.GetSize();
 	if(abs(sz.cx - p.x) < 8)
 		h.x = 1;
@@ -18,9 +20,10 @@ Point DiagramEditor::GetSizeHandle(Point p) const
 	return h;
 }
 
-Point DiagramEditor::GetHandle(int i, Point p) const
+Point DiagramEditor::GetHandle(int i, Point p_) const
 { // -1 top/left, 1 right/botom
 	Point h(0, 0);
+	Pointf p = p_;
 	if(i >= 0) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
@@ -32,6 +35,12 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 		}
 		else {
 			Rect r = m.GetRect();
+
+			p -= r.CenterPoint();
+			r -= r.CenterPoint();
+			
+			p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+
 			Rect rr = r.Inflated(5);
 			r.Deflate(min(10, r.GetWidth() / 2), min(10, r.GetHeight() / 2));
 			if(rr.Contains(p)) {
@@ -51,20 +60,11 @@ Point DiagramEditor::GetHandle(int i, Point p) const
 
 int   DiagramEditor::FindItem(Point p) const
 {
-	int mini = -1;
-	double mina = INT_MAX;
-	for(int i = data.item.GetCount() - 1; i >= 0; i--) {
-		const DiagramItem& m = data.item[i];
-		Rectf r = m.GetRect();
-		if(m.IsClick(p) || m.IsTextClick(p)) {
-			double a = m.IsLine() ? 0 : r.Width() * r.Height();
-			if(a < mina) {
-				mina = a;
-				mini = i;
-			}
-		}
-	}
-	return mini;
+	for(int pass = 0; pass < 2; pass++)
+		for(int i = data.item.GetCount() - 1; i >= 0; i--)
+			if(data.item[i].IsClick(p, data, pass))
+				return i;
+	return -1;
 }
 
 Image DiagramEditor::CursorImage(Point p, dword keyflags)
@@ -76,7 +76,7 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 		if(data.item[i].IsTextClick(p))
 			return Image::IBeam();
 */
-	Point h = GetSizeHandle(p);
+	Point h = HasCapture() ? sizehandle : GetSizeHandle(p);
 	if(h.x && h.y)
 		return Image::SizeBottomRight();
 	if(h.x)
@@ -100,16 +100,78 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	int m = h.x * h.y;
 	if((h.x || h.y) && i >= 0 && data.item[i].IsLine())
 		return Image::SizeAll();
+	
+	if(h.x == -1 && h.y == 1)
+		return DiagramImg::RotateCursor();
+	
+	double rot;
 	if(m > 0)
-		return Image::SizeBottomRight();
+		rot = - M_PI / 4;
+	else
 	if(m < 0)
-		return Image::SizeBottomLeft();
+		rot = M_PI / 4;
+	else
 	if(h.x)
-		return Image::SizeHorz();
+		rot = M_PI / 2;
+	else
 	if(h.y)
-		return Image::SizeVert();
+		rot = 0;
+	else
+		return Image::Arrow();
+	
+	rot += M_2PI * CursorItem().rotate / 360;
+	
+	return MakeValue(
+		[&] { return String((const char *)&rot, sizeof(rot)); },
+		[&] (Value& v) {
+			ImagePainter w(DPI(32, 32));
+			w.Clear();
+			const double x1 = 10;
+			const double x2 = 14;
+			const double x3 = 18;
+			const double x4 = 22;
+			const double y1 = 2;
+			const double y2 = 11;
+			const double y3 = 21;
+			const double y4 = 30;
+			const double m = 16;
+			w.Scale(DPI(1));
+			w.Translate(m, m);
+			w.Rotate(rot);
+			w.Translate(-m, -m);
+			w.Move(m, y1).Line(x4, y2).Line(x3, y2).Line(x3, y3).Line(x4, y3)
+			 .Line(m, y4).Line(x1, y3).Line(x2, y3).Line(x2, y2).Line(x1, y2)
+			 .Close();
+			w.Stroke(2, White());
+			w.Fill(White());
+			w.Stroke(1, Black());
+			Image img = w.GetResult();
+			SetHotSpots(img, DPI(16, 16));
+			v = img;
+			return img.GetLength() * sizeof(RGBA);
+		}
+	).To<Image>();
+}
 
-	return Image::Arrow();
+void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
+	if(keyflags & K_ALT) {
+		if(IsCursor()) {
+			DiagramItem& m = CursorItem();
+			m.rotate = ((int(m.rotate) + sgn(zdelta) * 15) / 15 * 15) % 360;
+			Commit();
+			Sync();
+		}
+		return;
+	}
+	if(keyflags & K_CTRL) {
+		zoom_percent = clamp((zoom_percent / 25 + sgn(zdelta)) * 25, 25, 400);
+		Sync();
+		return;
+	}
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
+		sb.WheelY(zdelta);
 }
 
 void DiagramEditor::LeftDouble(Point p, dword keyflags)
@@ -120,7 +182,8 @@ void DiagramEditor::LeftDouble(Point p, dword keyflags)
 
 void DiagramEditor::Grid(int shape, Point& p)
 {
-	p = shape == DiagramItem::SHAPE_LINE ? p / 8 * 8 : p / 16 * 16;
+	if(grid && !GetShift())
+		p = shape == DiagramItem::SHAPE_LINE ? (p + Point(3, 3)) / 8 * 8 : (p + Point(7, 7)) / 16 * 16;
 }
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
@@ -133,6 +196,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 
 	FinishText();
 	dragstart = dragcurrent = p;
+	base_rotate = CursorItem().rotate;
 
 	SetCapture();
 
@@ -182,7 +246,10 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 			sdragfrom.SetCount(sel.GetCount());
 			for(int i = 0; i < sel.GetCount(); i++)
 				sdragfrom[i] = data.item[sel[i]];
-			PrepareConns();
+			if(sel.GetCount() > 1 || !CursorItem().IsLine())
+				PrepareConns();
+			else
+				conns.Clear();
 			draghandle = Null;
 			Point h = GetHandle(cursor, p);
 			if(h.x || h.y)
@@ -221,6 +288,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		return;
 	}
 	if(HasCapture() && (sizehandle.x || sizehandle.y)) {
+		Grid(DiagramItem::SHAPE_RECT, p);
 		if(IsNull(data.size))
 			data.size = data.GetSize();
 		if(sizehandle.x)
@@ -233,6 +301,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	if(HasCapture() && IsCursor() && (moving || Distance(dragstart, p) >= 8)) {
 		moving = true;
 		DiagramItem& m = CursorItem();
+		Pointf p0 = p;
 		Grid(m, p);
 		if(IsNull(draghandle)) { // move selection
 			Rectf to = dragfrom.Offseted(p - dragstart);
@@ -256,10 +325,53 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				if(h)
 					(h < 0 ? a1 : a2) = a;
 			};
-			Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
-			Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
+			Rectf r = m.GetRect();
+			Pointf cp = r.CenterPoint();
+			if(m.IsLine()) {
+				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
+				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
+			}
+			else
+			if(draghandle.x == -1 && draghandle.y == 1) {
+				Pointf bl = Xform2D::Rotation(M_2PI * base_rotate / 360).Transform(r.BottomLeft() - cp);
+				m.rotate = base_rotate + 180.0 * (Bearing((Pointf)p0 - cp) - Bearing(bl)) / M_PI;
+				if(grid && !GetShift())
+					m.rotate = int(m.rotate + 360 + 7) / 15 * 15;
+			}
+			else {
+				bool rotated = m.rotate && !m.IsLine();
+				if(rotated) {
+					p -= cp;
+					p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+					p += cp;
+				}
+				Do(draghandle.x, r.left, r.right, p.x);
+				Do(draghandle.y, r.top, r.bottom, p.y);
+				if(m.aspect_ratio && !m.IsLine() && 0) {
+					m.Normalize();
+					Sizef sz1, sz2;
+					ComputeAspectSize(m, sz1, sz2);
+					Sizef sz;
+					if(draghandle.y == 0)
+						sz = sz1;
+					else
+					if(draghandle.x == 0)
+						sz = sz2;
+					else
+						sz = sz1.cx < sz2.cx ? sz1 : sz2;
+					if(draghandle.x < 0)
+						m.pt[0].x = m.pt[1].x - sz.cx;
+					else
+						m.pt[1].x = m.pt[0].x + sz.cx;
+					if(draghandle.y < 0)
+						m.pt[0].y = m.pt[1].y - sz.cy;
+					else
+						m.pt[1].y = m.pt[0].y + sz.cy;
+				}
+				m.pt[0] = r.TopLeft();
+				m.pt[1] = r.BottomRight();
+			}
 		}
-		m.FixPosition();
 		UseConns();
 		Sync();
 		return;
@@ -312,7 +424,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 				Sync();
 				return;
 			}
-			if(m.IsClick(p)) {
+			if(m.IsClick(p, data)) {
 				ColumnPopUp menu;
 				menu.count = DiagramItem::DASH_COUNT;
 				menu.columns = 4;
@@ -400,32 +512,33 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 				}
 			}
 	}
+	
+	Size sz;
 
 	DiagramItem& m = AddItem(si);
+	if(mdata.GetCount())
+		m.blob_id = data.AddBlob(mdata);
+	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
+	Sizef szf = m.GetStdSize(data);
 	if(IsNull(cp)) {
 		m.pt[0] = p;
-		m.pt[1] = p + Point(128, 64);
+		m.pt[1] = p + szf;
 	}
 	else {
 		m.pt[0] = cp;
 		m.pt[1] = p;
 	}
-	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
-	if(mdata.GetCount())
-		m.blob_id = data.AddBlob(mdata);
-	m.size = size;
 	if(si == DiagramItem::SHAPE_IMAGE) {
 		m.ink = Null;
 		m.paper = Black();
 		m.width = 0;
-		m.pt[1] = m.pt[0] + size;
 		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK|ATTR_WIDTH));
 	}
 	else
 	if(si == DiagramItem::SHAPE_SVGPATH) {
 		m.ink = Null;
 		m.paper = Black();
-		m.pt[1] = m.pt[0] + size;
+		m.width = 0;
 		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK));
 	}
 	else

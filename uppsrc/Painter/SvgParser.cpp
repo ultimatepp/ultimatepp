@@ -584,7 +584,7 @@ void GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox)
 Rectf GetSVGBoundingBox(const char *svg)
 {
 	NilPainter nil;
-	Rectf bb;
+	Rectf bb = Null;
 	if(!ParseSVG(nil, svg, Event<String, String&>(), &bb, Black()))
 		return Null;
 	return bb;

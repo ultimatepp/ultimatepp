@@ -56,7 +56,7 @@ void StringsStreamOut::_Put(const void *data, dword sz)
 Vector<String> StringsStreamOut::PickResult()
 {
 	if(ptr != buffer) {
-		wdata.SetLength(ptr - buffer);
+		wdata.SetLength(int(ptr - buffer));
 		part.Add(wdata);
 	}
 	return pick(part);

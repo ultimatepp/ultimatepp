@@ -143,8 +143,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 		Image Make() const override {
 			ImagePainter iw(isz);
 			iw.Clear();
-			VectorMap<String, String> data;
-			m.Paint(iw, data, dark ? DiagramItem::DARK : 0);
+			m.Paint(iw, Diagram(), dark ? DiagramItem::DARK : 0);
 			return iw;
 		}
 	};
@@ -205,7 +204,11 @@ void DiagramEditor::Paint(Draw& w)
 		iw.Scale(GetZoom());
 		iw.Offset(-(Point)sb);
 		Size dsz = data.GetSize();
-		iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy).Stroke(0.2, SColorHighlight());
+		iw.Move(dsz.cx, 0).Line(dsz.cx, dsz.cy).Line(0, dsz.cy);
+		if(IsNull(data.size))
+		   iw.Dash("2").Stroke(1, Gray());
+		else
+		   iw.Stroke(0.2, SColorHighlight());
 	
 		if(data.item.GetCount() == 0) {
 			iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
@@ -242,7 +245,7 @@ void DiagramEditor::Sync()
 	Refresh();
 	SetBar();
 	sb.SetTotal(data.GetSize() + Point(10, 10));
-	sb.SetPage(GetSize() / GetZoom());
+	sb.SetPage(sb.GetReducedViewSize() / GetZoom());
 	sb.SetLine(8, 8);
 	SyncEditor();
 }
@@ -290,8 +293,8 @@ bool DiagramEditor::SetCurrent(const String& s)
 
 void DiagramEditor::CancelSelection()
 {
-	FinishText();
 	sel.Clear();
+	FinishText();
 	KillCursor();
 	Sync();
 }
@@ -302,18 +305,6 @@ void DiagramEditor::Zoom()
 	if(zoom_percent > 400)
 		zoom_percent = 25;
 	Sync();
-}
-
-void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
-	if(keyflags & K_CTRL) {
-		zoom_percent = clamp((zoom_percent / 25 + sgn(zdelta)) * 25, 25, 400);
-		Sync();
-		return;
-	}
-	if(keyflags & K_SHIFT)
-		sb.WheelX(zdelta);
-	else
-		sb.WheelY(zdelta);
 }
 
 void DiagramEditor::HorzMouseWheel(Point, int zdelta, dword)
