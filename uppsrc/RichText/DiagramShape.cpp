@@ -355,7 +355,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				if(s.GetCount()) {
 					if(IsSVG(s)) {
 						Rectf f = GetSVGBoundingBox(s);
-						Sizef isz = f.GetSize();
 						w.Scale(cx / f.GetWidth(), cy / f.GetHeight());
 						w.Translate(-f.left, -f.top);
 						RenderSVG(w, s, Event<String, String&>(), paper);

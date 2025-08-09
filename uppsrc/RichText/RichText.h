@@ -287,6 +287,7 @@ struct PaintInfo {
 	bool    indexentrybg;
 	bool    usecache;
 	bool    sizetracking;
+	bool    mono_glyphs;
 	Color   showcodes;
 	Bits  (*spellingchecker)(const RichPara& para);
 	int     highlightpara;

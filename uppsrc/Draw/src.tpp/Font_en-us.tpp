@@ -168,6 +168,11 @@ normally returns), it is replaced with standard font height.&]
 [s2; Sets or unsets bold/italic/undeline/strikeout modes.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:Font`:`:NoColor`(`): Font[@(0.0.255) `&] [* NoColor]()&]
+[s2;%% If used, suppresses replacement of glyphs with color versions 
+(e.g. for emoji).&]
+[s3; &]
+[s4; &]
 [s5;:Font`:`:NonAntiAliased`(`): [_^Font^ Font][@(0.0.255) `&]_[* NonAntiAliased]()&]
 [s5;:Font`:`:NoNonAntiAliased`(`): [_^Font^ Font][@(0.0.255) `&]_[* NoNonAntiAliased]()&]
 [s5;:Font`:`:NonAntiAliased`(bool`): [_^Font^ Font][@(0.0.255) `&]_[* NonAntiAliased]([@(0.0.255) b
@@ -182,6 +187,11 @@ should not be used when painting the font.&]
 [s5;:Font`:`:IsUnderline`(`)const: [@(0.0.255) bool]_[* IsUnderline]()_[@(0.0.255) const]&]
 [s5;:Font`:`:IsStrikeout`(`)const: [@(0.0.255) bool]_[* IsStrikeout]()_[@(0.0.255) const]&]
 [s2; Tests whether bold/italic/underline/strikeout is active.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Font`:`:IsNoColor`(`)const: [@(0.0.255) bool] [* IsNoColor]() 
+[@(0.0.255) const]&]
+[s2;%% Tests whether NoColor is active .&]
 [s3; &]
 [s4; &]
 [s5;:Font`:`:IsNonAntiAliased`(`)const: [@(0.0.255) bool]_[* IsNonAntiAliased]()_[@(0.0.255) c

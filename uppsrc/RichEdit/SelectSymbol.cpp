@@ -58,6 +58,7 @@ SelectSymbolDlg::SelectSymbolDlg()
 
 	symbols.NoHyperlinkDecoration();
 	symbols.WhenLink << [=](const String& s) { Variants(Atoi(s)); };
+	symbols.MonoGlyphs();
 
 	result = -1;
 	variants.NoHyperlinkDecoration();

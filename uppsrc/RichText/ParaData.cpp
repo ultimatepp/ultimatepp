@@ -61,6 +61,7 @@ PaintInfo::PaintInfo()
 	showlabels = false;
 	shrink_oversized_objects = false;
 	textcolor = Null;
+	mono_glyphs = false;
 	DrawSelection = [] (Draw& w, int x, int y, int cx, int cy) {
 		w.DrawRect(x, y, cx, cy, InvertColor);
 	};
