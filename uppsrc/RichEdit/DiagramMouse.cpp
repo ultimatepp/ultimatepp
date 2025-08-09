@@ -70,6 +70,9 @@ int   DiagramEditor::FindItem(Point p) const
 Image DiagramEditor::CursorImage(Point p, dword keyflags)
 {
 	Map(p);
+	
+	if(edit_text)
+		return Image::Arrow();
 
 /*
 	for(int i = 0; i < data.item.GetCount(); i++)

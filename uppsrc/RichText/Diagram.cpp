@@ -79,6 +79,12 @@ bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
 	if(IsLine())
 		return DistanceFromSegment(p, pt[0], pt[1]) < width + 10;
 	Rectf rect = GetRect();
+	Pointf cp = rect.CenterPoint();
+	if(rotate) {
+		p -= cp;
+		p = Xform2D::Rotation(-M_PI * rotate / 180).Transform(p);
+		p += cp;
+	}
 	if(!rect.Contains(p))
 		return false;
 	if(shape == SHAPE_IMAGE || relaxed)

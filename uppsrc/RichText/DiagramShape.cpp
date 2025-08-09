@@ -187,6 +187,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		}
 
 
+		w.Begin();
 		if(flip_horz) {
 			// flip horz
 			w.Translate(cx, 0);
@@ -405,6 +406,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			break;
 		}
 		
+		w.End();
+	
 		Rect tr = text_rect;
 		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
 		txt.Paint(w, tr.left, tr.top + (tr.GetHeight() - txt_cy) / 2, tr.GetWidth(), pi);
