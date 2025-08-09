@@ -247,7 +247,6 @@ Size SizeDlg::Get() const
 
 void SizeDlg::Sync()
 {
-	Size sz = Get();
 	bool b = ~size == 5;
 	cx.Enable(b);
 	cy.Enable(b);

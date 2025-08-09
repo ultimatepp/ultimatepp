@@ -5,7 +5,6 @@ namespace Upp {
 void DiagramEditor::TheBar(Bar& bar)
 {
 	bool b = IsCursor();
-	bool line = b && CursorItem().IsLine();
 
 	bar.Add(undoredo.IsUndo(), CtrlImg::undo(), [=] { SetCurrent(undoredo.Undo(GetCurrent())); })
 	   .Key(K_CTRL_Z);
