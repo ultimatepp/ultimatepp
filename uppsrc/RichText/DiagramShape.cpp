@@ -189,13 +189,11 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 		w.Begin();
 		if(flip_horz) {
-			// flip horz
 			w.Translate(cx, 0);
 			w.Scale(-1, 1);
 		}
 
 		if(flip_vert) {
-			// flip horz
 			w.Translate(0, cy);
 			w.Scale(1, -1);
 		}
@@ -406,6 +404,17 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		}
 		
 		w.End();
+		
+		Rectf tr2 = text_rect;
+		if(flip_horz) {
+			text_rect.right = cx - tr2.left;
+			text_rect.left = cx - tr2.right;
+		}
+
+		if(flip_vert) {
+			text_rect.top = cy - tr2.bottom;
+			text_rect.bottom = cy - tr2.top;
+		}
 	
 		Rect tr = text_rect;
 		int txt_cy = txt.GetHeight(pi.zoom, tr.GetWidth());
