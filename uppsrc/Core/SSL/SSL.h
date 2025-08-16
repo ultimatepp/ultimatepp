@@ -4,6 +4,11 @@
 #include <openssl/conf.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
+#include <openssl/evp.h>
+#include <openssl/opensslv.h>
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#include <openssl/kdf.h>
+#endif
 
 namespace Upp {
 	
@@ -143,8 +148,6 @@ String SslToString(X509_NAME *name);
 Date   Asn1ToDate(ASN1_STRING *time);
 String Asn1ToString(ASN1_STRING *s);
 
-#ifdef EVP_PKEY_KEYMGMT
-
 constexpr const int AES_GCM_MIN_ITERATION     = 10000;
 constexpr const int AES_GCM_MAX_ITERATION     = 1000000;
 constexpr const int AES_GCM_DEFAULT_ITERATION = 100000;
@@ -184,7 +187,5 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 
 // Secure buffer
 #include "Buffer.hpp"
-
-#endif
 
 }
