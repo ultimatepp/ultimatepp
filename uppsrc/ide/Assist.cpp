@@ -752,7 +752,7 @@ void AssistEditor::Assist(bool macros)
 					AssistItem& f = assist_item.Add();
 					(AutoCompleteItem&)f = m;
 					f.uname = ToUpper(f.name);
-					f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? "<macros>" : f.parent);
+					f.typei = assist_type.FindAdd(f.kind == CXCursor_MacroDefinition ? String("<macros>") : f.parent);
 				}
 			PopUpAssist();
 		});

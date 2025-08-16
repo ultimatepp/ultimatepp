@@ -19,7 +19,7 @@ String FormatFont(Font font)
 		txt << (h ? "StdFontZ" : "StdFont");
 		break;
 	}
-	txt << '(' << (h ? Format("%d)", h) : ")");
+	txt << "(" << (h ? Format("%d)", h) : String(")"));
 	if(font.IsBold())
 		txt << ".Bold()";
 	if(font.IsItalic())
