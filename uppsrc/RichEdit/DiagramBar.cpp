@@ -7,8 +7,11 @@ void DiagramEditor::TheBar(Bar& bar)
 	bool b = IsCursor();
 
 	bar.Add(undoredo.IsUndo(), CtrlImg::undo(), [=] { SetCurrent(undoredo.Undo(GetCurrent())); })
+	   .Key(K_ALT_BACKSPACE)
 	   .Key(K_CTRL_Z);
 	bar.Add(undoredo.IsRedo(), CtrlImg::redo(), [=] { SetCurrent(undoredo.Redo(GetCurrent())); })
+	   .Key(K_SHIFT|K_ALT_BACKSPACE)
+	   .Key(K_CTRL_Y)
 	   .Key(K_SHIFT|K_CTRL_Z);
 	bar.Separator();
 	bar.Add(b, "Cut", CtrlImg::cut(), [=] { Cut(); })

@@ -404,16 +404,6 @@ void Ide::Activate()
 
 bool Ide::Key(dword key, int count)
 {
-	dword *k = IdeKeys::AK_DELLINE().key;
-	if(key == k[0] || key == k[1]) {
-		editor.DeleteLine();
-		return true;
-	}
-	k = IdeKeys::AK_CUTLINE().key;
-	if(key == k[0] || key == k[1]) {
-		editor.CutLine();
-		return true;
-	}
 	switch(key) {
 	case K_ALT|K_CTRL_UP:
 	case K_ALT|K_CTRL_DOWN:

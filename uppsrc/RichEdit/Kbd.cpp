@@ -100,9 +100,12 @@ bool RichEdit::Key(dword key, int count)
 		}
 		break;
 	case K_CTRL_Z:
+	case K_ALT_BACKSPACE:
 		Undo();
 		return true;
 	case K_SHIFT_CTRL_Z:
+	case K_SHIFT|K_ALT_BACKSPACE:
+	case K_CTRL_Y:
 		Redo();
 		return true;
 	case K_ENTER: {

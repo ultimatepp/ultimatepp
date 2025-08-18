@@ -36,6 +36,7 @@ void LayDes::EditBar(Bar& bar)
 	   .Key(K_ALT_BACKSPACE)
 	   .Key(K_CTRL_Z);
 	bar.Add(islayout && CurrentLayout().IsRedo(), "Redo", CtrlImg::redo(), THISBACK(Redo))
+	   .Key(K_CTRL_Y)
 	   .Key(K_SHIFT|K_ALT_BACKSPACE)
 	   .Key(K_SHIFT_CTRL_Z);
 	bar.MenuSeparator();
