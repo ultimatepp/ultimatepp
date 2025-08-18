@@ -29,7 +29,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	if(shape == SHAPE_ITRIANGLE)
 		p << r.TopLeft() << r.TopRight();
 	if(rotate) {
-		Xform2D rot = Xform2D::Rotation(M_2PI * rotate / 360);
+		Xform2D rot = Rotation();
 		Pointf c = r.CenterPoint();
 		for(Pointf& x : p) {
 			x -= c;

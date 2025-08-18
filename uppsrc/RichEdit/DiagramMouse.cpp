@@ -39,7 +39,7 @@ Point DiagramEditor::GetHandle(int i, Point p_) const
 			p -= r.CenterPoint();
 			r -= r.CenterPoint();
 			
-			p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+			p = m.Rotation(-1).Transform(p);
 
 			Rect rr = r.Inflated(5);
 			r.Deflate(min(10, r.GetWidth() / 2), min(10, r.GetHeight() / 2));
@@ -328,6 +328,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				if(h)
 					(h < 0 ? a1 : a2) = a;
 			};
+			if(!m.IsLine())
+				m.Normalize();
 			Rectf r = m.GetRect();
 			Pointf cp = r.CenterPoint();
 			if(m.IsLine()) {
@@ -336,16 +338,17 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			}
 			else
 			if(draghandle.x == -1 && draghandle.y == 1) {
-				Pointf bl = Xform2D::Rotation(M_2PI * base_rotate / 360).Transform(r.BottomLeft() - cp);
+				Pointf bl = Xform2D::Rotation(M_PI * base_rotate / 180.0).Transform(r.BottomLeft() - cp);
 				m.rotate = base_rotate + 180.0 * (Bearing((Pointf)p0 - cp) - Bearing(bl)) / M_PI;
 				if(grid && !GetShift())
 					m.rotate = int(m.rotate + 360 + 7) / 15 * 15;
 			}
 			else {
-				bool rotated = m.rotate && !m.IsLine();
+				bool rotated = m.rotate;
 				if(rotated) {
 					p -= cp;
-					p = Xform2D::Rotation(-M_2PI * m.rotate / 360).Transform(p);
+					r -= cp;
+					p = m.Rotation(-1).Transform(p);
 					p += cp;
 				}
 				Do(draghandle.x, r.left, r.right, p.x);
@@ -371,6 +374,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					else
 						m.pt[1].y = m.pt[0].y + sz.cy;
 				}
+				if(rotated)
+					r += cp;
 				m.pt[0] = r.TopLeft();
 				m.pt[1] = r.BottomRight();
 			}

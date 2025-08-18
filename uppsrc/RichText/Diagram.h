@@ -71,7 +71,7 @@ struct DiagramItem : Point2 {
 	void  Paint(Painter& w, const Diagram& diagram, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	Sizef GetStdSize(const Diagram& diagram) const;
 	
-	bool IsLine() const              { return shape == SHAPE_LINE; }
+	bool IsLine() const               { return shape == SHAPE_LINE; }
 	
 	Vector<Pointf> GetConnections() const;
 
@@ -80,8 +80,10 @@ struct DiagramItem : Point2 {
 	Rect GetTextEditRect() const;
 
 	void FixPosition();
+	
+	Xform2D Rotation(int d = 1) const { return Xform2D::Rotation(d * M_PI * rotate / 180); }
 
-	void Serialize(Stream& s)        { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
+	void Serialize(Stream& s)         { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
 
 	void Reset();
 	void Save(StringBuffer& r) const;

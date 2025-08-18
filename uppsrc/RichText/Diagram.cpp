@@ -82,7 +82,7 @@ bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
 	Pointf cp = rect.CenterPoint();
 	if(rotate) {
 		p -= cp;
-		p = Xform2D::Rotation(-M_PI * rotate / 180).Transform(p);
+		p = Rotation(-1).Transform(p);
 		p += cp;
 	}
 	if(!rect.Contains(p))
@@ -279,7 +279,7 @@ Size Diagram::GetSize() const
 		Pointf cp = r.CenterPoint();
 		Xform2D rot;
 		if(m.rotate)
-			rot = Xform2D::Rotation(M_2PI * m.rotate / 360);
+			rot = m.Rotation();
 		auto Do = [&](Pointf p) {
 			if(m.rotate) {
 				p -= cp;

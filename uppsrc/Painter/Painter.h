@@ -165,10 +165,10 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool absolute) = 0;
 
 protected:
-	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
-	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
+	void   DoArc0(double theta, double th_sweep, const Xform2D& m, double scale = 1);
+	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle, double scale = 1);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
-	                 const Pointf& p, const Pointf& p0);
+	                 const Pointf& p, const Pointf& p0, double scale = 1);
 	void   DrawLineStroke(int width, Color color);
 
 public:

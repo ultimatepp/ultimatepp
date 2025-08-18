@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-void Painter::DoArc0(double theta, double th_sweep, const Xform2D& m)
+void Painter::DoArc0(double theta, double th_sweep, const Xform2D& m, double scale)
 {
 	int nsegs = int(ceil(fabs(th_sweep / (M_PI * 0.5 + 0.001))));
 	for(int i = 0; i < nsegs; i++) {
@@ -18,16 +18,16 @@ void Painter::DoArc0(double theta, double th_sweep, const Xform2D& m)
 	}
 }
 
-void Painter::DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle)
+void Painter::DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle, double scale)
 {
 	Xform2D m = Xform2D::Scale(r.x, r.y);
 	m = m * Xform2D::Translation(c.x, c.y);
 	Line(m.Transform(cos(angle), sin(angle)));
-	DoArc0(angle, sweep, m);
+	DoArc0(angle, sweep, m, scale);
 }
 
 void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
-                       const Pointf& p1, const Pointf& p0)
+                       const Pointf& p1, const Pointf& p0, double scale)
 {
 	Pointf r(fabs(rr.x), fabs(rr.y));
 	Xform2D m = Xform2D::Rotation(-xangle);
@@ -61,7 +61,7 @@ void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	m.x *= r;
 	m.y *= r;
 	m = Xform2D::Translation(c.x, c.y) * m;
-	DoArc0(theta, th_sweep, m);
+	DoArc0(theta, th_sweep, m, scale);
 }
 
 }
