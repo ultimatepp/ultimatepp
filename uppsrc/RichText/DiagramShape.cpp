@@ -2,6 +2,8 @@
 
 namespace Upp {
 
+Index<String> DiagramItem::LineCap = { "none", "arrow", "round", "dim" };
+
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
                                      "cylinder",
@@ -100,9 +102,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		Pointf a1 = pt[0];
 		Pointf a2 = pt[1];
 		if(d > 4 * width) { // enough length to have caps
-			if(cap[0] == CAP_ARROW)
+			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
 				a1 += v * 4 * width;
-			if(cap[1] == CAP_ARROW)
+			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
 				a2 -= v * 4 * width;
 		}
 		
@@ -118,6 +120,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				case CAP_NONE:
 					w.Circle(p, width / 2).Fill(ink);
 					break;
+				case CAP_DIM:
+					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
 				case CAP_ARROW:
 					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
 					break;

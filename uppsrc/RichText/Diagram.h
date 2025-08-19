@@ -50,6 +50,7 @@ struct DiagramItem : Point2 {
 		CAP_NONE,
 		CAP_ARROW,
 		CAP_CIRCLE,
+		CAP_DIM,
 		
 		CAP_COUNT
 	};

@@ -21,8 +21,6 @@ double DistanceFromSegment(Pointf P, Pointf P0, Pointf P1, Pointf *p = NULL)
 	return Distance(P, sp);
 }
 
-Index<String> DiagramItem::LineCap = { "none", "arrow", "round" };
-
 void DiagramItem::Reset()
 {
 	shape = SHAPE_RECT;
