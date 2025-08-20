@@ -10,6 +10,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
+                                     "arc",
                                      "svgpath", "image"
 };
 
@@ -331,17 +332,27 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				double a2 = cy - arrow_height;
 				text_rect.left += w4;
 				text_rect.right -= w4;
-				w.Move(0 + cx / 2, 0)
+				w.Move(cx / 2, 0)
 				 .Line(cx, a1)
 				 .Line(cx - w4, a1)
 				 .Line(cx - w4, a2)
 				 .Line(cx, a2)
-				 .Line(0 + cx / 2, cy)
+				 .Line(cx / 2, cy)
 				 .Line(0, a2)
 				 .Line(w4, a2)
 				 .Line(w4, a1)
 				 .Line(0, a1)
 				 .Close();
+			}
+			break;
+		case SHAPE_ARC:
+			if(w2 > 0) {
+				double a = (sqr(w2) - sqr(cy)) / (2 * cy);
+				double f = atan(w2 / a);
+				if(a >= 0)
+					w.Move(0, cy).Arc(w2, a + cy, a + cy, -M_PI / 2 - f, 2 * f);
+				else
+					w.Move(0, cy).Arc(w2, cy, w2, cy, M_PI, M_PI);
 			}
 			break;
 		case SHAPE_SVGPATH: {
@@ -400,7 +411,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		
 		if(shape != SHAPE_IMAGE) {
 			DoDash();
-			w.Fill(paper);
+			if(shape != SHAPE_ARC)
+				w.Fill(paper);
 			Stroke();
 		}
 		

@@ -41,8 +41,10 @@ struct DiagramItem : Point2 {
 		SHAPE_ARROWDOWN,
 		SHAPE_ARROWUP,
 		SHAPE_ARROWVERT,
-		SHAPE_SVGPATH,
-		SHAPE_IMAGE,
+		SHAPE_ARC,
+
+		SHAPE_SVGPATH, // must be last - 1
+		SHAPE_IMAGE, // must be last
 		SHAPE_COUNT,
 	};
 	
