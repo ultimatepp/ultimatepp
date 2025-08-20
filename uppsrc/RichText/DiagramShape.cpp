@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-Index<String> DiagramItem::LineCap = { "none", "arrow", "round", "dim" };
+Index<String> DiagramItem::LineCap = { "none", "arrow", "round", "dim", "T" };
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
@@ -119,6 +119,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				switch(k) {
 				case CAP_NONE:
 					w.Circle(p, width / 2).Fill(ink);
+					break;
+				case CAP_T:
+					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
 					break;
 				case CAP_DIM:
 					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);

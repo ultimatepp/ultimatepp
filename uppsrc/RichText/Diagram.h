@@ -51,6 +51,7 @@ struct DiagramItem : Point2 {
 		CAP_ARROW,
 		CAP_CIRCLE,
 		CAP_DIM,
+		CAP_T,
 		
 		CAP_COUNT
 	};
