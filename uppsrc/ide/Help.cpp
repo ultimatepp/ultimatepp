@@ -265,8 +265,10 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 {
 	String current = GetCurrent();
 	String topic = t;
+	DDUMP(topic);
 	if(*topic == '#')
 		topic = current + topic;
+	DDUMP(topic);
 	recent_topic = topic;
 	internal = (byte)*topic < 32;
 	if(topic[0] == ':' && topic[1] == ':') {
@@ -291,16 +293,14 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 		if(lbl.GetCount())
 			topic << '#' << lbl;
 	}
+	if(topic.StartsWith("topic://ide/app/"))
+		return GetTopic(topic);
 	TopicLink tl = ParseTopicLink(topic);
 	if(!IsNull(tl.package)) {
 		int q = tl.topic.ReverseFind('$');
 		if(q >= 0)
 			tl.topic.Set(q, '_');
-		Topic t;
-		if(tl.topic.StartsWith("topic://ide/app/"))
-			t = GetTopic(tl.topic);
-		else
-			t = ReadTopic(LoadFile(AppendFileName(
+		Topic t = ReadTopic(LoadFile(AppendFileName(
 							AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"),
 							tl.topic + ".tpp")));
 		t.label = tl.label;
