@@ -43,6 +43,12 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	return p;
 }
 
+const Vector<double>& DiagramItem::GetDash(int i)
+{
+	static Vector<double> dashes[10] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 2, 1 }, { 2, 1, 1, 1 }, { 3, 1 }, { 1, 3 }, { 1, 4 }, { 2, 5 } };
+	return dashes[clamp(i, 0, 9)];
+}
+
 void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
@@ -58,11 +64,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 	RichText txt = ParseQTF(qtf);
 
-	static Vector<double> dashes[5] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 1, 2 } };
-	
 	auto DoDash = [&] {
 		if(dash) {
-			Vector<double> d = clone(dashes[clamp(dash, 0, __countof(dashes))]);
+			Vector<double> d = clone(GetDash(dash));
 			for(double& h : d)
 				h *= width;
 			w.Dash(d, 0);

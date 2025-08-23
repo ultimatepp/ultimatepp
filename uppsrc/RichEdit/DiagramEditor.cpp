@@ -31,17 +31,22 @@ DiagramEditor::DiagramEditor()
 	paper.Tip(t_("Background color"));
 
 	paper << [=] { SetAttrs(ATTR_PAPER); };
-	shape << [=] { SetAttrs(ATTR_SHAPE); };
-
-	line_start << [=] { SetAttrs(ATTR_CAP0); };
-	line_end << [=] { SetAttrs(ATTR_CAP1); };
-
-	for(int i = 0; i < 10; i++)
-		line_width.Add(i);
-	line_width << [=] { SetAttrs(ATTR_WIDTH); };
-
-	line_dash << [=] { SetAttrs(ATTR_DASH); };
+	shape << [=] { SetAttrs(ATTR_SHAPE); SetFocus();};
+	Shapes(shape.popup);
+	shape.popup.count = DiagramItem::SHAPE_SVGPATH;
 	
+	Caps(line_start.popup, true);
+	Caps(line_end.popup, false);
+	line_start << [=] { SetAttrs(ATTR_CAP0); SetFocus(); };
+	line_end << [=] { SetAttrs(ATTR_CAP1); SetFocus(); };
+
+
+	Widths(line_width.popup);
+	line_width << [=] { SetAttrs(ATTR_WIDTH); SetFocus(); };
+
+	Dashes(line_dash.popup);
+	line_dash << [=] { SetAttrs(ATTR_DASH); SetFocus(); };
+
 	tl[0].shape = DiagramItem::SHAPE_LINE;
 	tl[1].shape = DiagramItem::SHAPE_ROUNDRECT;
 
@@ -54,7 +59,7 @@ DiagramEditor::DiagramEditor()
 	sb.WhenScroll << [=] { Sync(); };
 
 	editor = true;
-	
+
 	GetAttrs(DiagramItem());
 }
 
@@ -86,7 +91,7 @@ DiagramEditor& DiagramEditor::AllowDarkContent(bool b)
 void DiagramEditor::Skin()
 {
 	SetBar();
-
+/*
 	Size icon_sz = IconSz();
 	shape.ClearList();
 	shape.SetLineCy(icon_sz.cy);
@@ -126,70 +131,7 @@ void DiagramEditor::Skin()
 		m.dash = i;
 		line_dash.Add(i, MakeIcon(m, icon_sz));
 	}
-}
-
-Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
-{
-	struct IconMaker : ImageMaker {
-		Size         isz;
-		DiagramItem  m;
-		bool         dark;
-		String Key() const override {
-			String key = StoreAsString(const_cast<DiagramItem&>(m));
-			RawCat(key, isz);
-			RawCat(key, dark);
-			return key;
-		}
-		Image Make() const override {
-			ImagePainter iw(isz);
-			iw.Clear();
-			m.Paint(iw, Diagram(), dark ? DiagramItem::DARK : 0);
-			return iw;
-		}
-	};
-
-	IconMaker mk;
-	mk.m = m;
-	mk.isz = isz;
-	mk.dark = IsDarkContent();
-	return MakeImage(mk);
-}
-
-Image DiagramEditor::ShapeIcon(int i)
-{
-	Size isz = IconSz();
-	DiagramItem m;
-	m.pt[0] = Point(2, 2);
-	m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
-	m.width = DPI(1);
-	m.shape = i;
-	m.paper = Null;
-	return MakeIcon(m, isz);
-}
-
-Image DiagramEditor::CapIcon(int start, int end)
-{
-	Size isz = IconSz();
-	DiagramItem m;
-	m.pt[0] = Point(DPI(6), isz.cy / 2);
-	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
-	m.shape = DiagramItem::SHAPE_LINE;
-	m.width = DPI(2);
-	m.cap[0] = start;
-	m.cap[1] = end;
-	return MakeIcon(m, isz);
-}
-
-Image DiagramEditor::DashIcon(int i)
-{
-	Size isz = IconSz();
-	DiagramItem m;
-	m.pt[0] = Point(DPI(6), isz.cy / 2);
-	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
-	m.shape = DiagramItem::SHAPE_LINE;
-	m.width = DPI(2);
-	m.dash = i;
-	return MakeIcon(m, isz);
+*/
 }
 
 void DiagramEditor::Paint(Draw& w)
@@ -200,7 +142,7 @@ void DiagramEditor::Paint(Draw& w)
 		DrawPainter iw(w, GetSize());
 		iw.Co();
 		iw.Clear(SWhite());
-	
+
 		iw.Scale(GetZoom());
 		iw.Offset(-(Point)sb);
 		Size dsz = data.GetSize();
@@ -209,12 +151,12 @@ void DiagramEditor::Paint(Draw& w)
 		   iw.Dash("2").Stroke(1, Gray());
 		else
 		   iw.Stroke(0.2, SColorHighlight());
-	
+
 		if(data.item.GetCount() == 0) {
 			iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
 			iw.DrawText(DPI(30), DPI(50), "Double-click to edit text", ArialZ(10).Italic(), SLtGray());
 		}
-		
+
 		if(display_grid)
 			for(int x = 0; x < dsz.cx; x += 8)
 				for(int y = 0; y < dsz.cy; y += 8) {
@@ -225,16 +167,16 @@ void DiagramEditor::Paint(Draw& w)
 					else
 						iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
 				}
-	
+
 		dark = IsDarkContent();
 		data.Paint(iw, *this);
-	
+
 		if(HasCapture() && doselection) {
 			Rect r(dragstart, dragcurrent);
 			r.Normalize();
 			iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());
 		}
-	
+
 	}
 	if(!fast)
 		paint_ms = msecs() - t0;
@@ -244,7 +186,7 @@ void DiagramEditor::Sync()
 {
 	Refresh();
 	SetBar();
-	sb.SetTotal(data.GetSize() + Point(10, 10));
+	sb.SetTotal(data.GetEditSize() + Point(10, 10));
 	sb.SetPage(sb.GetReducedViewSize() / GetZoom());
 	sb.SetLine(8, 8);
 	SyncEditor();

@@ -219,6 +219,7 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 	}
 
 	if(IsCursor()) {
+		drag_cp = CursorItem().GetRect().CenterPoint();
 		Point h = GetHandle(cursor, p);
 		if(h.x || h.y) {
 			draghandle = h;
@@ -331,29 +332,29 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			if(!m.IsLine())
 				m.Normalize();
 			Rectf r = m.GetRect();
-			Pointf cp = r.CenterPoint();
 			if(m.IsLine()) {
 				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
 				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 			}
 			else
 			if(draghandle.x == -1 && draghandle.y == 1) {
-				Pointf bl = Xform2D::Rotation(M_PI * base_rotate / 180.0).Transform(r.BottomLeft() - cp);
-				m.rotate = base_rotate + 180.0 * (Bearing((Pointf)p0 - cp) - Bearing(bl)) / M_PI;
+				Pointf bl = Xform2D::Rotation(M_PI * base_rotate / 180.0).Transform(r.BottomLeft() - drag_cp);
+				m.rotate = base_rotate + 180.0 * (Bearing((Pointf)p0 - drag_cp) - Bearing(bl)) / M_PI;
 				if(grid && !GetShift())
-					m.rotate = int(m.rotate + 360 + 7) / 15 * 15;
+					m.rotate = (int(m.rotate + 360 + 7) / 15 * 15) % 360;
 			}
 			else {
 				bool rotated = m.rotate;
 				if(rotated) {
-					p -= cp;
-					r -= cp;
-					p = m.Rotation(-1).Transform(p);
-					p += cp;
+					DLOG("======");
+					DDUMP(p);
+					p = m.Rotation(-1).Transform(Pointf(p) - drag_cp) + drag_cp;
+					DDUMP(p);
+					DDUMP(r);
 				}
 				Do(draghandle.x, r.left, r.right, p.x);
 				Do(draghandle.y, r.top, r.bottom, p.y);
-				if(m.aspect_ratio && !m.IsLine() && 0) {
+				if(m.aspect_ratio && 0) {
 					m.Normalize();
 					Sizef sz1, sz2;
 					ComputeAspectSize(m, sz1, sz2);
@@ -374,8 +375,6 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					else
 						m.pt[1].y = m.pt[0].y + sz.cy;
 				}
-				if(rotated)
-					r += cp;
 				m.pt[0] = r.TopLeft();
 				m.pt[1] = r.BottomRight();
 			}
@@ -399,14 +398,6 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 {
 	Map(p);
 
-	auto PopPaint = [=](Draw& w, const Image& m, bool sel) {
-		Point p = Rect(IconSz()).CenterPos(m.GetSize());
-		if(sel)
-			w.DrawImage(p.x, p.y, m, SColorHighlightText());
-		else
-			w.DrawImage(p.x, p.y, m);
-	};
-
 	FinishText();
 
 	int ii = FindItem(p);
@@ -418,12 +409,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 			if(h.x) {
 				int i = h.x > 0;
 				ColumnPopUp menu;
-				menu.count = DiagramItem::CAP_COUNT;
-				menu.columns = 3;
-				menu.isz = IconSz() + Size(DPI(4), DPI(4));
-				menu.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-					PopPaint(w, i == 0 ? CapIcon(ii, 0) : CapIcon(0, ii), sel);
-				};
+				Caps(menu, i == 0);
 				int cap = menu.Execute();
 				if(cap < 0)
 					return;
@@ -434,16 +420,20 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 			}
 			if(m.IsClick(p, data)) {
 				ColumnPopUp menu;
-				menu.count = DiagramItem::DASH_COUNT;
-				menu.columns = 4;
-				menu.isz = IconSz() + Size(DPI(4), DPI(4));
+				Dashes(menu);
+				menu.count = DiagramItem::DASH_COUNT + 15;
+				menu.columns = 5;
 				menu.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-					PopPaint(w, DashIcon(ii), sel);
+					PopPaint(w, ii < DiagramItem::DASH_COUNT ? DashIcon(ii) : WidthIcon(ii - DiagramItem::DASH_COUNT), sel);
 				};
-				int dash = menu.Execute();
-				if(dash < 0)
+
+				int n = menu.Execute();
+				if(n < 0)
 					return;
-				m.dash = dash;
+				if(n < DiagramItem::DASH_COUNT)
+					m.dash = n;
+				else
+					m.width = n - DiagramItem::DASH_COUNT;
 				GetAttrs();
 				Sync();
 				return;
@@ -452,15 +442,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	}
 
 	ColumnPopUp shape;
-	shape.count = DiagramItem::SHAPE_COUNT;
-	shape.columns = 3;
-	shape.isz = IconSz() + Size(DPI(4), DPI(4));
-	shape.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-		PopPaint(w, ii == DiagramItem::SHAPE_SVGPATH ? DiagramImg::FontSvg() :
-		            ii == DiagramItem::SHAPE_IMAGE   ? CtrlImg::open()
-		                                             : ShapeIcon(ii),
-		         sel && ii != DiagramItem::SHAPE_IMAGE);
-	};
+	Shapes(shape);
 	
 	tool = -1;
 
