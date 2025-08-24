@@ -12,10 +12,7 @@ struct DiaRichEdit : RichEdit {
 	Event<> WhenEsc;
 };
 
-struct ColumnPopUp : Ctrl {
-	int  columns = 4;
-	Size isz = Size(64, 32);
-	int  count = 18;
+class ColumnPopUp : public Ctrl {
 	int  cursor = -1;
 
 	void Paint(Draw& w) override;
@@ -24,9 +21,15 @@ struct ColumnPopUp : Ctrl {
 	void MouseLeave() override;
 	void Deactivate() override;
 
-	void PopUp(Point p, Ctrl *owner);
+public:
+	void PopUp(const Rect& sr, Ctrl *owner);
 
+	int Execute(const Rect& sr, Ctrl *owner);
 	int  Execute();
+
+	int  columns = 4;
+	Size isz = Size(64, 32);
+	int  count = 18;
 
 	Event<int>                    WhenSelect;
 	Event<Draw&, Size, int, bool> WhenPaintItem;
@@ -55,6 +58,13 @@ public:
 	void Skin() override;
 
 private:
+	struct DropColumns : public MultiButton, public Display {
+		ColumnPopUp popup;
+		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
+		
+		DropColumns();
+	};
+
 	Diagram        data;
 
 	bool           allow_dark_content = false;
@@ -65,6 +75,7 @@ private:
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
 	Rectf          dragfrom = Rect(0, 0, 0, 0);
+	Pointf         drag_cp = Point(0, 0);
 	double         base_rotate = 0;
 	Vector<Point2> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
@@ -88,7 +99,7 @@ private:
 	BinUndoRedo    undoredo;
 
 	ToolBar     toolbar;
-	DropList    shape, line_start, line_end, line_width, line_dash;
+	DropColumns shape, line_start, line_end, line_dash, line_width;
 	DiaRichEdit text_editor;
 
 	ColorButton ink, paper;
@@ -134,11 +145,17 @@ private:
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
 	Image  DashIcon(int i);
+	Image  WidthIcon(int i);
 	void   PrepareConns();
 	void   UseConns();
 	void   Grid(int shape, Point& p);
 	void   Grid(const DiagramItem& m, Point& p) { Grid(m.shape, p); }
 	void   ChangeSize();
+	void   PopPaint(Draw& w, const Image& m, bool sel);
+	void   Shapes(ColumnPopUp& shape);
+	void   Caps(ColumnPopUp& m, bool left);
+	void   Dashes(ColumnPopUp& m);
+	void   Widths(ColumnPopUp& m);
 
 
 	void   FixPositions();

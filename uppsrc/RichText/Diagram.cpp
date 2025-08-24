@@ -21,8 +21,6 @@ double DistanceFromSegment(Pointf P, Pointf P0, Pointf P1, Pointf *p = NULL)
 	return Distance(P, sp);
 }
 
-Index<String> DiagramItem::LineCap = { "none", "arrow", "round" };
-
 void DiagramItem::Reset()
 {
 	shape = SHAPE_RECT;
@@ -266,13 +264,12 @@ void DiagramItem::Load(CParser& p, const Diagram& diagram)
 	FixPosition();
 }
 
-Size Diagram::GetSize() const
+void Diagram::GetSize0(Pointf& tl, Pointf& br) const
 {
-	if(!IsNull(size))
-		return size;
-	if(item.GetCount() == 0)
-		return Size(0, 0);
-	Pointf tl, br;
+	if(item.GetCount() == 0) {
+		tl = br = Pointf(0, 0);
+		return;
+	}
 	tl = br = item[0].GetRect().TopLeft();
 	for(const DiagramItem& m : item) {
 		Rectf r = m.GetRect();
@@ -286,6 +283,8 @@ Size Diagram::GetSize() const
 				p = rot.Transform(p);
 				p += cp;
 			}
+			p.x = max(p.x, 0.0);
+			p.y = max(p.y, 0.0);
 			tl.x = min(tl.x, p.x);
 			tl.y = min(tl.y, p.y);
 			br.x = max(br.x, p.x);
@@ -297,13 +296,32 @@ Size Diagram::GetSize() const
 		Do(r.BottomRight());
 	}
 	
+}
+
+Size Diagram::GetEditSize() const
+{
+	Pointf tl, br;
+	GetSize0(tl, br);
+	Size sz(int(ceil(br.x)), int(ceil(br.y)));
+	return IsNull(size) ? sz : Size(max(sz.cx, size.cx), max(sz.cy, size.cy));
+}
+
+Size Diagram::GetSize() const
+{
+	if(!IsNull(size))
+		return size;
+	Pointf tl, br;
+	GetSize0(tl, br);
 	Sizef fsz = br + tl;
 
 	Sizef isz = img.GetSize();
 	if(img_hd)
 		isz /= 2;
+
+	const double lim = 0.5 * INT_MAX;
 	
-	return Size((int)ceil(max(isz.cx, fsz.cx)), (int)ceil(max(isz.cy, fsz.cy)));
+	return Size((int)clamp(ceil(max(isz.cx, fsz.cx)), 0.0, lim),
+	            (int)clamp(ceil(max(isz.cy, fsz.cy)), 0.0, lim));
 }
 
 String Diagram::AddBlob(const String& data)

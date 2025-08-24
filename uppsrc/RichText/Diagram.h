@@ -41,8 +41,10 @@ struct DiagramItem : Point2 {
 		SHAPE_ARROWDOWN,
 		SHAPE_ARROWUP,
 		SHAPE_ARROWVERT,
-		SHAPE_SVGPATH,
-		SHAPE_IMAGE,
+		SHAPE_ARC,
+
+		SHAPE_SVGPATH, // must be last - 1
+		SHAPE_IMAGE, // must be last
 		SHAPE_COUNT,
 	};
 	
@@ -50,12 +52,15 @@ struct DiagramItem : Point2 {
 		CAP_NONE,
 		CAP_ARROW,
 		CAP_CIRCLE,
+		CAP_DISC,
+		CAP_DIM,
+		CAP_T,
 		
 		CAP_COUNT
 	};
 	
 	enum Dash {
-		DASH_COUNT = 5
+		DASH_COUNT = 10
 	};
 	
 	enum {
@@ -70,6 +75,8 @@ struct DiagramItem : Point2 {
 
 	void  Paint(Painter& w, const Diagram& diagram, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	Sizef GetStdSize(const Diagram& diagram) const;
+
+	static const Vector<double>& GetDash(int i);
 	
 	bool IsLine() const               { return shape == SHAPE_LINE; }
 	
@@ -111,7 +118,8 @@ struct Diagram {
 		bool       fast = false;
 		Index<int> sel;
 	};
-	
+
+	Size   GetEditSize() const;
 	Size   GetSize() const;
 	void   Paint(Painter& w, const PaintInfo& pi) const;
 	String AddBlob(const String& data);
@@ -123,4 +131,7 @@ struct Diagram {
 	void   Load(CParser& p);
 
 	static Zoom TextZoom() { return Zoom(96, 600); }
+	
+private:
+	void GetSize0(Pointf& tl, Pointf& br) const;
 };

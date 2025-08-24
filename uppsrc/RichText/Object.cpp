@@ -448,13 +448,13 @@ String RichObjectTypePNGCls::Write(const Value& v) const
 	return v;
 }
 
-void RichObjectTypePNGCls::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo&) const
+void RichObjectTypePNGCls::Paint(const Value& data, Draw& w, Size sz, const RichObjectPaintInfo& pi) const
 {
 	if(IsString(data)) {
 		StringStream strm(data);
 		One<StreamRaster> ras = StreamRaster::OpenAny(strm);
 		if(!!ras) {
-			w.DrawRect(sz, White);
+			w.DrawRect(sz, pi.dark ? Black() : White());
 			w.DrawImage(Rect(sz), ras->GetImage());
 			return;
 		}

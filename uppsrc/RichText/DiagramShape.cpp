@@ -2,12 +2,15 @@
 
 namespace Upp {
 
+Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim", "T" };
+
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
                                      "cylinder",
                                      "triangle1", "triangle2",
                                      "arrow_left", "arrow_right", "arrow_horz",
                                      "arrow_down", "arrow_up", "arrow_vert",
+                                     "arc",
                                      "svgpath", "image"
 };
 
@@ -40,6 +43,12 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	return p;
 }
 
+const Vector<double>& DiagramItem::GetDash(int i)
+{
+	static Vector<double> dashes[10] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 2, 1 }, { 2, 1, 1, 1 }, { 3, 1 }, { 1, 3 }, { 1, 4 }, { 2, 5 } };
+	return dashes[clamp(i, 0, 9)];
+}
+
 void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const Index<Pointf> *conn) const
 {
 	bool dark = style & DARK;
@@ -55,11 +64,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 	RichText txt = ParseQTF(qtf);
 
-	static Vector<double> dashes[5] = { { 0 }, { 1, 1 }, { 2 }, { 1, 2 }, { 1, 2 } };
-	
 	auto DoDash = [&] {
 		if(dash) {
-			Vector<double> d = clone(dashes[clamp(dash, 0, __countof(dashes))]);
+			Vector<double> d = clone(GetDash(dash));
 			for(double& h : d)
 				h *= width;
 			w.Dash(d, 0);
@@ -100,9 +107,9 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		Pointf a1 = pt[0];
 		Pointf a2 = pt[1];
 		if(d > 4 * width) { // enough length to have caps
-			if(cap[0] == CAP_ARROW)
+			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
 				a1 += v * 4 * width;
-			if(cap[1] == CAP_ARROW)
+			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
 				a2 -= v * 4 * width;
 		}
 		
@@ -118,11 +125,19 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				case CAP_NONE:
 					w.Circle(p, width / 2).Fill(ink);
 					break;
+				case CAP_T:
+					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
+					break;
+				case CAP_DIM:
+					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
 				case CAP_ARROW:
 					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
 					break;
-				case CAP_CIRCLE:
+				case CAP_DISC:
 					w.Circle(p, 5).Fill(ink);
+					break;
+				case CAP_CIRCLE:
+					w.Circle(p, 5).Fill(paper).Stroke(1, ink);
 					break;
 				}
 			};
@@ -321,17 +336,27 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				double a2 = cy - arrow_height;
 				text_rect.left += w4;
 				text_rect.right -= w4;
-				w.Move(0 + cx / 2, 0)
+				w.Move(cx / 2, 0)
 				 .Line(cx, a1)
 				 .Line(cx - w4, a1)
 				 .Line(cx - w4, a2)
 				 .Line(cx, a2)
-				 .Line(0 + cx / 2, cy)
+				 .Line(cx / 2, cy)
 				 .Line(0, a2)
 				 .Line(w4, a2)
 				 .Line(w4, a1)
 				 .Line(0, a1)
 				 .Close();
+			}
+			break;
+		case SHAPE_ARC:
+			if(w2 > 0) {
+				double a = (sqr(w2) - sqr(cy)) / (2 * cy);
+				double f = atan(w2 / a);
+				if(a >= 0)
+					w.Move(0, cy).Arc(w2, a + cy, a + cy, -M_PI / 2 - f, 2 * f);
+				else
+					w.Move(0, cy).Arc(w2, cy, w2, cy, M_PI, M_PI);
 			}
 			break;
 		case SHAPE_SVGPATH: {
@@ -390,7 +415,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		
 		if(shape != SHAPE_IMAGE) {
 			DoDash();
-			w.Fill(paper);
+			if(shape != SHAPE_ARC)
+				w.Fill(paper);
 			Stroke();
 		}
 		

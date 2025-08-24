@@ -265,10 +265,8 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 {
 	String current = GetCurrent();
 	String topic = t;
-	DDUMP(topic);
 	if(*topic == '#')
 		topic = current + topic;
-	DDUMP(topic);
 	recent_topic = topic;
 	internal = (byte)*topic < 32;
 	if(topic[0] == ':' && topic[1] == ':') {

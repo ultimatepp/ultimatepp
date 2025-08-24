@@ -48,49 +48,39 @@ void ColumnPopUp::MouseLeave()
 	Refresh();
 }
 
-void ColumnPopUp::PopUp(Point p, Ctrl *owner)
+void ColumnPopUp::PopUp(const Rect& sr, Ctrl *owner)
 {
 	if(IsOpen())
 		Close();
 	Size sz = AddFrameSize(columns * isz.cx, (count + columns - 1) / columns * isz.cy);
+	Point p = sr.BottomLeft();
 	Rect r = owner ? owner->GetWorkArea() : GetWorkArea();
 	if(p.x + sz.cx > r.right)
 		p.x = max(r.right - sz.cx, 0);
 	if(p.y + sz.cy > r.bottom)
-		p.y = max(r.bottom - sz.cy, 0);
+		p.y = max(sr.top - sz.cy, 0);
 	SetRect(p.x, p.y, sz.cx, sz.cy);
 	Ctrl::PopUp(owner);
 }
 
-int ColumnPopUp::Execute()
+int ColumnPopUp::Execute(const Rect& sr, Ctrl *owner)
 {
-	PopUp(GetMousePos(), GetActiveCtrl());
+	PopUp(sr, owner);
 	EventLoop(this);
 	if(IsOpen())
 		Close();
 	return cursor;
 }
 
+int ColumnPopUp::Execute()
+{
+	Point p = GetMousePos();
+	return Execute(Rect(p, p), GetActiveCtrl());
+}
+
 void ColumnPopUp::Deactivate()
 {
 	Close();
 }
-
-struct MyApp : TopWindow {
-	ColumnPopUp dl;
-
-	void LeftDown(Point p, dword keyflags) override {
-		dl.PopUp(GetScreenView().TopLeft() + p, this);
-	}
-
-	
-	MyApp() {
-		dl.WhenPaintItem = [=](Draw& w, Size sz, int ii, bool sel) {
-			w.DrawText(0, 0, AsString(ii), StdFont(), sel ? SColorHighlightText() : SColorText());
-		};
-		dl.WhenSelect = [=](int i) { PromptOK(AsString(i)); };
-//		Add(dl.SizePos());
-	}
-};
 
 };
