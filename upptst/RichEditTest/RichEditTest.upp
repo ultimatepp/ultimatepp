@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	RichEdit,
+	PdfDraw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -55,11 +55,12 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
 	bar.Separator();
-	bar.Add(shape, DPI(45));
-	bar.Add(line_start, DPI(45));
-	bar.Add(line_end, DPI(45));
-	bar.Add(line_width, DPI(45));
-	bar.Add(line_dash, DPI(45));
+	int icx = shape.AddFrameSize(IconSz()).cx;
+	bar.Add(shape, icx);
+	bar.Add(line_start, icx);
+	bar.Add(line_end, icx);
+	bar.Add(line_width, icx);
+	bar.Add(line_dash, icx);
 	ink.DarkContent(IsDarkContent());
 	bar.Add(ink);
 	paper.DarkContent(IsDarkContent());

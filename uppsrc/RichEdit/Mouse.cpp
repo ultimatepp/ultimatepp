@@ -371,6 +371,7 @@ void RichEdit::LeftDouble(Point p, dword flags)
 	if(c >= 0) {
 		if(objectpos == c) {
 			RichObject object = GetObject();
+			Size osz = object.GetSize();
 			if(!object) return;
 			if(object.GetTypeName() == "qdf") {
 				TopWindow app;
@@ -384,7 +385,7 @@ void RichEdit::LeftDouble(Point p, dword flags)
 				RichText clip;
 				RichPara p;
 				RichObject o = RichObject("qdf", ZCompress(de.Save()));
-				o.InitSize(0, 0);
+				o.SetSize(osz);
 				ReplaceObject(o);
 			}
 			else {

@@ -23,9 +23,9 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 	};
 
 	IconMaker mk;
+	m.ink = SColorText();
 	mk.m = m;
 	mk.isz = isz;
-	mk.dark = IsDarkContent();
 	return MakeImage(mk);
 }
 
@@ -57,7 +57,7 @@ Image DiagramEditor::CapIcon(int start, int end)
 Image DiagramEditor::DashIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)); },
+		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[=](Value& v) {
 			Size isz = IconSz();
 			ImagePainter p(isz);
@@ -69,7 +69,7 @@ Image DiagramEditor::DashIcon(int i)
 			p.Move(DPI(2), isz.cy / 2 - (i & 1) * 0.5)
 			 .RelLine(isz.cx - DPI(4), 0)
 			 .Dash(h, 0)
-			 .Stroke(DPI(2), dark ? White() : Black());
+			 .Stroke(DPI(2), SColorText());
 			Image m = p;
 			v = m;
 			return m.GetLength() * sizeof(RGBA);
@@ -80,15 +80,14 @@ Image DiagramEditor::DashIcon(int i)
 Image DiagramEditor::WidthIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)); },
+		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[=](Value& v) {
 			Size isz = IconSz();
-			Color ink = dark ? White() : Black();
 			ImagePainter p(isz);
 			p.Clear();
 			p.Move(DPI(2), isz.cy / 2.0 - (i & 1) * 0.5)
 			 .RelLine(isz.cx - DPI(4), 0)
-			 .Stroke(i, ink);
+			 .Stroke(i, SColorText());
 			Image m = p;
 			v = m;
 			return m.GetLength() * sizeof(RGBA);
