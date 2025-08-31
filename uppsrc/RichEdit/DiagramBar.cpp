@@ -55,7 +55,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
 	bar.Separator();
-	int icx = shape.AddFrameSize(IconSz()).cx;
+	int icx = IconSz().cx + DPI(4) + DPI(18);
 	bar.Add(shape, icx);
 	bar.Add(line_start, icx);
 	bar.Add(line_end, icx);

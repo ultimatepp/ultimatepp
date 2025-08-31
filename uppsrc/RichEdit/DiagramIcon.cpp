@@ -24,6 +24,7 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 
 	IconMaker mk;
 	m.ink = SColorText();
+	mk.dark = IsDarkTheme();
 	mk.m = m;
 	mk.isz = isz;
 	return MakeImage(mk);
