@@ -18,8 +18,26 @@ bool DiaRichEdit::Key(dword key, int count)
 	return RichEdit::Key(key, count);
 }
 
+void DiaRichEdit::PasteFilter(RichText& txt, const String& fmt)
+{
+	if(GetLength() + txt.GetLength() > 2000) {
+		txt.Clear();
+		return;
+	}
+
+	struct RichTextRemoveObjects : RichText::UpdateIterator {
+		virtual int operator()(int pos, RichPara& para) {
+			para.part.RemoveIf([&](int i) { return para[i].object; });
+			return UPDATE;
+		}
+	} h;
+	
+	txt.Iterate(h);
+}
+
 void DiagramEditor::SyncEditor()
 {
+	text_editor.AllowObjects(false);
 	text_editor.AllowDarkContent(allow_dark_content);
 	text_editor.DarkContent(dark_content);
 	if(edit_text && cursor >= 0) {
@@ -77,6 +95,7 @@ void DiagramEditor::FinishText()
 {
 	if(edit_text && cursor >= 0)
 		CursorItem().qtf = AsQTF(text_editor.Get(), CHARSET_UTF8, QTF_BODY|QTF_NOCHARSET|QTF_NOLANG|QTF_NOSTYLES);
+	
 	edit_text = false;
 	Sync();
 }

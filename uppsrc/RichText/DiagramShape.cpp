@@ -2,7 +2,8 @@
 
 namespace Upp {
 
-Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim", "T" };
+Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim", "T",
+                                               "arrowL", "circleL", "discL", "dimL", "TL" };
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
@@ -111,6 +112,10 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				a1 += v * 4 * width;
 			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
 				a2 -= v * 4 * width;
+			if(findarg(cap[0], CAP_ARROWL, CAP_DIML) >= 0)
+				a1 += v * 12 * width;
+			if(findarg(cap[1], CAP_ARROWL, CAP_DIML) >= 0)
+				a2 -= v * 12 * width;
 		}
 		
 		w.Move(a1).Line(a2);
@@ -121,6 +126,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		if(d > 4 * width) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
 				Pointf oo = max(3.0, width * 2) * o;
+				Pointf ool = max(6.0, width * 2) * o;
 				switch(k) {
 				case CAP_NONE:
 					w.Circle(p, width / 2).Fill(ink);
@@ -138,6 +144,20 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 					break;
 				case CAP_CIRCLE:
 					w.Circle(p, 5).Fill(paper).Stroke(1, ink);
+					break;
+				case CAP_TL:
+					w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+					break;
+				case CAP_DIML:
+					w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+				case CAP_ARROWL:
+					w.Move(p).Line(a + ool).Line(a - ool).Fill(ink);
+					break;
+				case CAP_DISCL:
+					w.Circle(p, 8).Fill(ink);
+					break;
+				case CAP_CIRCLEL:
+					w.Circle(p, 8).Fill(paper).Stroke(1, ink);
 					break;
 				}
 			};

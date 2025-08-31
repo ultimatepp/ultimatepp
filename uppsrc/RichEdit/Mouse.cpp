@@ -307,8 +307,10 @@ void RichEdit::StdBar(Bar& menu)
 				ObjectTool(menu);
 			}
 		}
-		LoadImageTool(menu);
-		InsertDiagramTool(menu);
+		if(allow_objects) {
+			LoadImageTool(menu);
+			InsertDiagramTool(menu);
+		}
 	}
 }
 

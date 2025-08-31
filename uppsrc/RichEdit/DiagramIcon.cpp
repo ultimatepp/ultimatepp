@@ -48,7 +48,7 @@ Image DiagramEditor::CapIcon(int start, int end)
 	m.pt[0] = Point(DPI(6), isz.cy / 2);
 	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
 	m.shape = DiagramItem::SHAPE_LINE;
-	m.width = DPI(2);
+	m.width = DPI(1);
 	m.cap[0] = start;
 	m.cap[1] = end;
 	return MakeIcon(m, isz);

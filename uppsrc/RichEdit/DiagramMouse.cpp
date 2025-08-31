@@ -325,14 +325,14 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			}
 		}
 		else {
-			auto Do = [](int h, double& a1, double& a2, double a) {
-				if(h)
-					(h < 0 ? a1 : a2) = a;
-			};
 			if(!m.IsLine())
 				m.Normalize();
 			Rectf r = m.GetRect();
 			if(m.IsLine()) {
+				auto Do = [](int h, double& a1, double& a2, double a) {
+					if(h)
+						(h < 0 ? a1 : a2) = a;
+				};
 				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
 				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
 			}
@@ -345,15 +345,16 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			}
 			else {
 				bool rotated = m.rotate;
-				if(rotated) {
-					DLOG("======");
-					DDUMP(p);
+				r -= drag_cp;
+				if(rotated)
 					p = m.Rotation(-1).Transform(Pointf(p) - drag_cp) + drag_cp;
-					DDUMP(p);
-					DDUMP(r);
-				}
-				Do(draghandle.x, r.left, r.right, p.x);
-				Do(draghandle.y, r.top, r.bottom, p.y);
+				Sizef hsz = r.GetSize() / 2;
+				auto Do = [](int h, double& hsz, double a, double cp) {
+					if(h)
+						hsz = abs(a - cp);
+				};
+				Do(draghandle.x, hsz.cx, p.x, drag_cp.x);
+				Do(draghandle.y, hsz.cy, p.y, drag_cp.y);
 				if(m.aspect_ratio && 0) {
 					m.Normalize();
 					Sizef sz1, sz2;
@@ -375,8 +376,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					else
 						m.pt[1].y = m.pt[0].y + sz.cy;
 				}
-				m.pt[0] = r.TopLeft();
-				m.pt[1] = r.BottomRight();
+				m.pt[0] = drag_cp - hsz;
+				m.pt[1] = drag_cp + hsz;
 			}
 		}
 		UseConns();

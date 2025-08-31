@@ -524,7 +524,9 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 				lngc.GetAdd(p.format.language, 0)++;
 			}
 		dword lang = lngc.GetCount() ? lngc.GetKey(FindMax(lngc.GetValues())) : 0;
-		qtf << "[";
+		bool bracket = !(options & QTF_NOCHARSET) || lang && !(options & QTF_NOLANG);
+		if(bracket)
+			qtf << "[";
 		if(!(options & QTF_NOCHARSET)) {
 			qtf << "{";
 			if(charset == CHARSET_UTF8)
@@ -541,7 +543,8 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 		}
 		if(lang && !(options & QTF_NOLANG))
 			qtf << "%" << LNGAsText(SetLNGCharset(lang, CHARSET_DEFAULT));
-		qtf << " ";
+		if(bracket)
+			qtf << " ";
 		if(crlf)
 			qtf << "\r\n";
 		RichStyle defstyle;
@@ -549,12 +552,9 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 
 		QTFEncodeTxt(qtf, text, text.GetStyles(), defstyle, options, sm, charset, lang);
 
-		qtf << "]";
+		if(bracket)
+			qtf << "]";
 	}
-
-	if(options & QTF_NOSTYLES) // remove redundant []
-		while(qtf.StartsWith("[ ") && qtf.EndsWith("]"))
-			qtf = qtf.Mid(2, qtf.GetCount() - 3);
 
 	return qtf;
 }

@@ -12,6 +12,8 @@ RichObject RichEdit::Adjust(RichObject o)
 
 void RichEdit::InsertImage()
 {
+	if(!allow_objects)
+		return;
 	if(!imagefs.ExecuteOpen(t_("Open image from file")))
 		return;
 	String fn = ~imagefs;
@@ -34,6 +36,9 @@ void RichEdit::InsertImage()
 
 void RichEdit::InsertDiagram()
 {
+	if(!allow_objects)
+		return;
+
 	TopWindow app;
 	app.Icon(DiagramImg::Diagram());
 	app.Title("Diagram");

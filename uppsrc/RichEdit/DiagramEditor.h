@@ -5,9 +5,11 @@
 #define LAYOUTFILE <RichEdit/Diagram.lay>
 #include <CtrlCore/lay.h>
 
-struct DiaRichEdit : RichEdit {
+class DiaRichEdit : public RichEdit {
 	bool Key(dword key, int count) override;
+	void PasteFilter(RichText& txt, const String& fmt) override;
 
+public:
 	Event<> WhenEnter;
 	Event<> WhenEsc;
 };

@@ -3,7 +3,8 @@ uses
 	RichEdit;
 
 file
-	main.cpp;
+	main.cpp,
+	app.tpp;
 
 mainconfig
 	"" = "GUI";

@@ -310,6 +310,7 @@ private:
 	
 	PaintInfo                paint_info;
 	bool                     ignore_physical_size;
+	bool                     allow_objects = true;
 	
 	bool                     pixel_mode = false;
 	bool                     dark_content = false;
@@ -860,6 +861,7 @@ public:
 	RichEdit&       DarkContent(bool b = true);
 	RichEdit&       AllowDarkContent(bool b = true);
 	RichEdit&       OverridePaper(Color p);
+	RichEdit&       AllowObjects(bool b)                   { allow_objects = b; return *this; }
 
 	struct UndoInfo {
 		int              undoserial;
