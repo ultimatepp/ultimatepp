@@ -27,9 +27,9 @@ Point DiagramEditor::GetHandle(int i, Point p_) const
 	if(i >= 0) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
-			if(Distance(m.pt[0], p) < 6)
+			if(Distance(m.pos, p) < 6)
 				return Point(-1, -1);
-			if(Distance(m.pt[1], p) < 6)
+			if(Distance(m.pos + m.size, p) < 6)
 				return Point(1, 1);
 
 		}
@@ -183,10 +183,10 @@ void DiagramEditor::LeftDouble(Point p, dword keyflags)
 		StartText();
 }
 
-void DiagramEditor::Grid(int shape, Point& p)
+void DiagramEditor::Grid(Point& p)
 {
 	if(grid && !GetShift())
-		p = shape == DiagramItem::SHAPE_LINE ? (p + Point(3, 3)) / 8 * 8 : (p + Point(7, 7)) / 16 * 16;
+		p = (p + Point(3, 3)) / 8 * 8;
 }
 
 void DiagramEditor::LeftDown(Point p, dword keyflags)
@@ -211,15 +211,16 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		KillCursor();
 		DiagramItem& m = AddItem(tl[tool].shape);
 		m = tl[tool];
-		Grid(m, p);
-		m.pt[0] = m.pt[1] = p;
+		Grid(p);
+		m.pos = p;
+		m.size = Sizef(0, 0);
 		m.FixPosition();
 		draghandle = Point(1, 1);
 		return;
 	}
 
 	if(IsCursor()) {
-		drag_cp = CursorItem().GetRect().CenterPoint();
+		drag_cp = CursorItem().pos;
 		Point h = GetHandle(cursor, p);
 		if(h.x || h.y) {
 			draghandle = h;
@@ -246,10 +247,10 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 		else
 			SetCursor(i);
 		if(IsCursor()) {
-			dragfrom = GetCursorRect();
+			dragfrom = CursorItem().pos;
 			sdragfrom.SetCount(sel.GetCount());
 			for(int i = 0; i < sel.GetCount(); i++)
-				sdragfrom[i] = data.item[sel[i]];
+				sdragfrom[i] = data.item[sel[i]].pos;
 			if(sel.GetCount() > 1 || !CursorItem().IsLine())
 				PrepareConns();
 			else
@@ -279,20 +280,22 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 
 	if(HasCapture() && doselection) { // do rectangular selection
 		dragcurrent = p;
-		Rect r(dragstart, dragcurrent);
+		Rectf r(dragstart, dragcurrent);
 		r.Normalize();
 		sel.Clear();
 		KillCursor();
-		for(int i = 0; i < data.item.GetCount(); i++)
-			if(r.Contains(data.item[i].pt[0]) && r.Contains(data.item[i].pt[1])) {
+		for(int i = 0; i < data.item.GetCount(); i++) {
+			Rectf m = data.item[i].GetRect();
+			if(r.Contains(m.TopLeft()) && r.Contains(m.BottomRight())) {
 				sel.FindAdd(i);
 				SetCursor(i);
 			}
+		}
 		Sync();
 		return;
 	}
 	if(HasCapture() && (sizehandle.x || sizehandle.y)) {
-		Grid(DiagramItem::SHAPE_RECT, p);
+		Grid(p);
 		if(IsNull(data.size))
 			data.size = data.GetSize();
 		if(sizehandle.x)
@@ -306,20 +309,14 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		moving = true;
 		DiagramItem& m = CursorItem();
 		Pointf p0 = p;
-		Grid(m, p);
+		Grid(p);
 		if(IsNull(draghandle)) { // move selection
-			Rectf to = dragfrom.Offseted(p - dragstart);
-			Pointf tp = to.TopLeft();
-			if(grid)
-				tp = (Point)tp / 16 * 16;
-			Sizef sz = to.GetSize();
-			m.pt[0] = tp;
-			m.pt[1] = tp + sz;
-			Pointf offset = tp - dragfrom.TopLeft();
+			Pointf offset = Point(p - dragstart);
+			m.pos = dragfrom + offset;
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
-					(Point2 &)data.item[ii] = sdragfrom[i].Offseted(offset);
+					data.item[ii].pos = sdragfrom[i] + offset;
 					data.item[ii].FixPosition();
 				}
 			}
@@ -333,8 +330,10 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					if(h)
 						(h < 0 ? a1 : a2) = a;
 				};
-				Do(draghandle.x, m.pt[0].x, m.pt[1].x, p.x);
-				Do(draghandle.y, m.pt[0].y, m.pt[1].y, p.y);
+				Pointf p2 = m.pos + m.size;
+				Do(draghandle.x, m.pos.x, p2.x, p.x);
+				Do(draghandle.y, m.pos.y, p2.y, p.y);
+				m.size = p2 - m.pos;
 			}
 			else
 			if(draghandle.x == -1 && draghandle.y == 1) {
@@ -355,6 +354,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				};
 				Do(draghandle.x, hsz.cx, p.x, drag_cp.x);
 				Do(draghandle.y, hsz.cy, p.y, drag_cp.y);
+			#if 0
 				if(m.aspect_ratio && 0) {
 					m.Normalize();
 					Sizef sz1, sz2;
@@ -376,8 +376,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 					else
 						m.pt[1].y = m.pt[0].y + sz.cy;
 				}
-				m.pt[0] = drag_cp - hsz;
-				m.pt[1] = drag_cp + hsz;
+			#endif
+				m.size = hsz;
 			}
 		}
 		UseConns();
@@ -392,153 +392,6 @@ void DiagramEditor::LeftUp(Point, dword)
 	tool = -1;
 	conns.Clear();
 	Sync();
-	Commit();
-}
-
-void DiagramEditor::RightDown(Point p, dword keyflags)
-{
-	Map(p);
-
-	FinishText();
-
-	int ii = FindItem(p);
-	if(ii >= 0) {
-		DiagramItem& m = data.item[ii];
-		if(m.IsLine()) {
-			SetCursor(ii);
-			Point h = GetHandle(cursor, p);
-			if(h.x) {
-				int i = h.x > 0;
-				ColumnPopUp menu;
-				Caps(menu, i == 0);
-				int cap = menu.Execute();
-				if(cap < 0)
-					return;
-				m.cap[i] = cap;
-				GetAttrs();
-				Sync();
-				return;
-			}
-			if(m.IsClick(p, data)) {
-				ColumnPopUp menu;
-				Dashes(menu);
-				menu.count = DiagramItem::DASH_COUNT + 15;
-				menu.columns = 5;
-				menu.WhenPaintItem = [=](Draw& w, Size isz, int ii, bool sel) {
-					PopPaint(w, ii < DiagramItem::DASH_COUNT ? DashIcon(ii) : WidthIcon(ii - DiagramItem::DASH_COUNT), sel);
-				};
-
-				int n = menu.Execute();
-				if(n < 0)
-					return;
-				if(n < DiagramItem::DASH_COUNT)
-					m.dash = n;
-				else
-					m.width = n - DiagramItem::DASH_COUNT;
-				GetAttrs();
-				Sync();
-				return;
-			}
-		}
-	}
-
-	ColumnPopUp shape;
-	Shapes(shape);
-	
-	tool = -1;
-
-	int si = shape.Execute();
-	
-	if(si < 0)
-		return;
-
-	Sizef size;
-	String mdata;
-	if(si == DiagramItem::SHAPE_SVGPATH) {
-		mdata = SelectFontSymbolSvg(size);
-		if(IsNull(mdata))
-			return;
-	}
-
-	if(si == DiagramItem::SHAPE_IMAGE) {
-		String path = SelectFileOpen("Images (*.png *.gif *.jpg *.bmp *.svg)\t*.png *.gif *.jpg *.bmp *.svg");
-
-		if(GetFileLength(path) > 17000000) {
-			Exclamation("Image is too large!");
-			return;
-		}
-		mdata = LoadFile(path);
-		if(IsNull(mdata))
-			return;
-		size = Null;
-		if(IsSVG(mdata)) {
-			Rectf f = GetSVGBoundingBox(mdata);
-			size = f.GetSize();
-		}
-		else {
-			StringStream ss(mdata);
-			One<StreamRaster> r = StreamRaster::OpenAny(ss);
-			if(r)
-				size = r->GetSize();
-		}
-		if(IsNull(size)) {
-			Exclamation(Format(t_("Unsupported image format in file [* \1%s\1]."), path));
-			return;
-		}
-	}
-	
-	CancelSelection();
-
-	Point p0 = p;
-	Grid(si, p);
-	Pointf cp = Null; // connect line with nearest connection point
-	if(si == DiagramItem::SHAPE_LINE) {
-		double mind = DBL_MAX;
-		for(const DiagramItem& m : data.item)
-			for(Pointf c : m.GetConnections()) {
-				double d = Squared(c - (Pointf)p0);
-				if(d < mind) {
-					cp = c;
-					mind = d;
-				}
-			}
-	}
-	
-	Size sz;
-
-	DiagramItem& m = AddItem(si);
-	if(mdata.GetCount())
-		m.blob_id = data.AddBlob(mdata);
-	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
-	Sizef szf = m.GetStdSize(data);
-	if(IsNull(cp)) {
-		m.pt[0] = p;
-		m.pt[1] = p + szf;
-	}
-	else {
-		m.pt[0] = cp;
-		m.pt[1] = p;
-	}
-	if(si == DiagramItem::SHAPE_IMAGE) {
-		m.ink = Null;
-		m.paper = Black();
-		m.width = 0;
-		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK|ATTR_WIDTH));
-	}
-	else
-	if(si == DiagramItem::SHAPE_SVGPATH) {
-		m.ink = Null;
-		m.paper = Black();
-		m.width = 0;
-		SetAttrs(ATTR_ALL & ~(ATTR_SHAPE|ATTR_PAPER|ATTR_INK));
-	}
-	else
-		SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
-	Sync();
-}
-
-void DiagramEditor::RightUp(Point, dword keyflags)
-{
 	Commit();
 }
 

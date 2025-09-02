@@ -45,8 +45,8 @@ void DiagramEditor::Paste()
 		DiagramItem& m = data.item.Add();
 		m.shape = DiagramItem::SHAPE_IMAGE;
 		m.blob_id = data.AddBlob(PNGEncoder().SaveString(img));
-		m.pt[0] = Rectf(Sizef(data.GetSize())).CenterPos(sz);
-		m.pt[1] = m.pt[0] + sz;
+		m.pos = Rectf(Sizef(data.GetSize())).CenterPos(sz);
+		m.size = sz;
 		SetCursor(ii);
 	}
 	else {
@@ -88,8 +88,7 @@ void DiagramEditor::Duplicate()
 	for(int i : sel) {
 		DiagramItem& m = data.item[q++];
 		m = data.item[i];
-		m.pt[0] += offset;
-		m.pt[1] += offset;
+		m.pos += offset;
 	}
 	sel.Clear();
 	for(int i = p; i < data.item.GetCount(); i++) {

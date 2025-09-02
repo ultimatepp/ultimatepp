@@ -76,10 +76,10 @@ private:
 	Point          draghandle = Point(0, 0);
 	Point          dragstart = Point(0, 0);
 	Point          dragcurrent = Point(0, 0);
-	Rectf          dragfrom = Rect(0, 0, 0, 0);
+	Pointf         dragfrom = Point(0, 0);
 	Pointf         drag_cp = Point(0, 0);
 	double         base_rotate = 0;
-	Vector<Point2> sdragfrom;
+	Vector<Pointf> sdragfrom;
 	bool           doselection = false; // we are doing rect selection
 	bool           grid = true; // snap to grid
 	bool           edit_text = false; // text editor is visible
@@ -150,8 +150,7 @@ private:
 	Image  WidthIcon(int i);
 	void   PrepareConns();
 	void   UseConns();
-	void   Grid(int shape, Point& p);
-	void   Grid(const DiagramItem& m, Point& p) { Grid(m.shape, p); }
+	void   Grid(Point& p);
 	void   ChangeSize();
 	void   PopPaint(Draw& w, const Image& m, bool sel);
 	void   Shapes(ColumnPopUp& shape);

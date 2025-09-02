@@ -34,8 +34,8 @@ Image DiagramEditor::ShapeIcon(int i)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pt[0] = Point(2, 2);
-	m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
+	m.pos = Point(2, 2);
+	m.size = Size(isz.cx - 4, isz.cy - 4);
 	m.width = DPI(1);
 	m.shape = i;
 	m.paper = Null;
@@ -46,8 +46,8 @@ Image DiagramEditor::CapIcon(int start, int end)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pt[0] = Point(DPI(6), isz.cy / 2);
-	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
+	m.pos = Point(DPI(6), isz.cy / 2);
+	m.size = Size(isz.cx - DPI(12), isz.cy / 2);
 	m.shape = DiagramItem::SHAPE_LINE;
 	m.width = DPI(1);
 	m.cap[0] = start;

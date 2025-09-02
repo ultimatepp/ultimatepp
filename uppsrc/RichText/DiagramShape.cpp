@@ -21,7 +21,7 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	if(shape > SHAPE_ITRIANGLE || rotate)
 		return p;
 	if(IsLine()) {
-		p << pt[0] << pt[1];
+		p << pos << pos + size;
 		return p;
 	}
 	Rectf r = GetRect();
@@ -88,25 +88,26 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 	};
 	
 	if(IsLine()) {
-		Pointf v = pt[1] - pt[0];
 		if(style) {
-			w.Move(pt[0]).Line(pt[1]).EndPath();
+			w.Move(pos).RelLine(size).EndPath();
 			w.Begin();
 			if((style & EDITOR) && width == 0)
 				w.Dash("5 1").Stroke(1, 100 * sel2);
 			if(style & (Display::CURSOR | Display::SELECT)) {
 				w.LineCap(LINECAP_ROUND).Stroke(width + 12, (style & Display::SELECT ? 30 : 200) * sel2);
 				double r = (width + 12) / 2 - 1;
-				w.Circle(pt[0], r).Fill(sel1);
-				w.Circle(pt[1], r).Fill(sel1);
+				w.Circle(pos, r).Fill(sel1);
+				w.Circle(pos + size, r).Fill(sel1);
 			}
 			w.End();
 		}
+		
+		Pointf v = size;
 		double d = Length(v);
 		v = Upp::Normalize(v);
 
-		Pointf a1 = pt[0];
-		Pointf a2 = pt[1];
+		Pointf a1 = pos;
+		Pointf a2 = pos + size;
 		if(d > 4 * width) { // enough length to have caps
 			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
 				a1 += v * 4 * width;
@@ -161,28 +162,28 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 					break;
 				}
 			};
-			PaintCap(cap[0], pt[0], a1 + v);
-			PaintCap(cap[1], pt[1], a2 - v);
+			PaintCap(cap[0], pos, a1 + v);
+			PaintCap(cap[1], pos + size, a2 - v);
 		}
 		 
-		int cx = (int)Distance(pt[0], pt[1]);
+		int cx = (int)d;
 		int txt_cy = txt.GetHeight(pi.zoom, cx);
 		
 		w.Begin();
-		double angle = Bearing(pt[1] - pt[0]);
+		double angle = Bearing(size);
 		if(angle >= -M_PI / 2 && angle <= M_PI / 2) {
-			w.Translate(pt[0] - o * (txt_cy + 10));
+			w.Translate(pos - o * (txt_cy + 10));
 			w.Rotate(angle);
 		}
 		else {
-			w.Translate(pt[1] + o * (txt_cy + 10));
+			w.Translate(pos + size + o * (txt_cy + 10));
 			w.Rotate(angle + M_PI);
 		}
 		txt.Paint(w, 0, 0, cx, pi);
 		w.End();
 	}
 	else {
-		Rectf r(pt[0], pt[1]);
+		Rectf r = GetRect();
 		r.Normalize();
 		r.Deflate(width / 2);
 		double w1 = r.GetWidth();

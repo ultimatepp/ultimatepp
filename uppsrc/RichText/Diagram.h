@@ -1,18 +1,9 @@
-struct Point2 : Moveable<Point2> {
-	Pointf  pt[2];
-
-	void    Offset(Pointf p)         { pt[0] += p; pt[1] += p; }
-	Point2  Offseted(Pointf p) const { Point2 r = *this; r.Offset(p); return r; }
-	void    Normalize();
-	Rectf   GetRect() const          { return Rectf(pt[0], pt[1]).Normalized(); }
-	String  ToString() const         { return String() << pt[0] << " - " << pt[1]; }
-	
-	void    Serialize(Stream& s)     { s % pt[0] % pt[1]; }
-};
-
 struct Diagram;
 
-struct DiagramItem : Point2 {
+struct DiagramItem {
+	Pointf pos;
+	Sizef  size;
+	
 	int    shape;
 	String qtf;
 	double width;
@@ -79,6 +70,11 @@ struct DiagramItem : Point2 {
 	int cap[2] = { CAP_NONE, CAP_NONE };
 	int dash = 0;
 
+	void    Offset(Pointf p)         { pos += p; }
+	void    Normalize();
+	Rectf   GetRect() const          { return IsLine() ? Rectf(pos, size) : Rectf(pos - size, pos + size); }
+	String  ToString() const         { return String() << pos << " " << size; }
+
 	void  Paint(Painter& w, const Diagram& diagram, dword style = 0, const Index<Pointf> *conn = nullptr) const;
 	Sizef GetStdSize(const Diagram& diagram) const;
 
@@ -96,7 +92,7 @@ struct DiagramItem : Point2 {
 	
 	Xform2D Rotation(int d = 1) const { return Xform2D::Rotation(d * M_PI * rotate / 180); }
 
-	void Serialize(Stream& s)         { Point2::Serialize(s); s % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
+	void Serialize(Stream& s)         { s % pos % size % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
 
 	void Reset();
 	void Save(StringBuffer& r) const;

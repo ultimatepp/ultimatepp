@@ -142,8 +142,9 @@ void DiagramEditor::Align(bool horz, int align)
 		if(ii != cursor || align == ALIGN_NULL) {
 			DiagramItem& m = data.item[ii];
 			m.Normalize();
-			Pointf& p1 = m.pt[0];
-			Pointf& p2 = m.pt[1];
+			Rectf r = m.GetRect();
+			Pointf p1 = r.TopLeft();
+			Pointf p2 = r.BottomRight();
 			double sz = abs(HoVe(p2) - HoVe(p1));
 			if(align == ALIGN_LEFT) {
 				HoVe(p1) = HoVe(cp1);
@@ -163,6 +164,14 @@ void DiagramEditor::Align(bool horz, int align)
 				HoVe(p1) = (dsz - csz) / 2;
 				HoVe(p2) = HoVe(p1) + csz;
 			}
+			if(m.IsLine()) {
+				m.pos = p1;
+				m.size = p2 - p1;
+			}
+			else {
+				m.pos = (p1 + p2) / 2;
+				m.size = Pointf(abs(p1.x - p2.x), abs(p1.y - p2.y)) / 2;
+			}
 		}
 	}
 	UseConns();
@@ -170,7 +179,8 @@ void DiagramEditor::Align(bool horz, int align)
 }
 
 void DiagramEditor::PrepareConns()
-{
+{ _DBG_
+#if 0
 	conns.Clear();
 	VectorMap<Pointf, Vector<Tuple<int, int>>> map;
 	for(int pass = 0; pass < 2; pass++)
@@ -199,13 +209,14 @@ void DiagramEditor::PrepareConns()
 			}
 		}
 	}
+#endif
 }
 
 void DiagramEditor::UseConns()
 {
-	for(const Cn& cn: conns)
-		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0)
-			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
+//	for(const Cn& cn: conns)
+//		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0)
+//			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
 }
 
 void DiagramEditor::ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2)

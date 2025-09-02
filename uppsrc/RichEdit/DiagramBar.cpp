@@ -86,8 +86,8 @@ void DiagramEditor::TheBar(Bar& bar)
 			m.aspect_ratio = !m.aspect_ratio;
 			if(m.aspect_ratio && !m.IsLine()) {
 				Sizef sz1, sz2;
-				ComputeAspectSize(m, sz1, sz2);
-				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
+				ComputeAspectSize(m, sz1, sz2);_DBG_
+//				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
 			}
 		});
 	})
@@ -96,8 +96,8 @@ void DiagramEditor::TheBar(Bar& bar)
 	Size isz = IconSz();
 	for(int i = 0; i < tool_count; i++) {
 		DiagramItem m = tl[i];
-		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
+		m.pos = Point(2, 2);
+		m.size = Size(isz.cx - 4, isz.cy - 4);
 		m.width = log(m.width + 1);
 		bar.Add(MakeIcon(m, isz), [=] {
 			CancelSelection();
