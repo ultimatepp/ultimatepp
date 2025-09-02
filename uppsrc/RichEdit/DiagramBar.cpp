@@ -96,8 +96,14 @@ void DiagramEditor::TheBar(Bar& bar)
 	Size isz = IconSz();
 	for(int i = 0; i < tool_count; i++) {
 		DiagramItem m = tl[i];
-		m.pos = Point(2, 2);
-		m.size = Size(isz.cx - 4, isz.cy - 4);
+		if(m.IsLine()) {
+			m.pos = Point(2, 2);
+			m.size = Size(isz.cx - 4, isz.cy - 4);
+		}
+		else {
+			m.pos = Pointf(Point(isz)) / 2;
+			m.size = m.pos - 2;
+		}
 		m.width = log(m.width + 1);
 		bar.Add(MakeIcon(m, isz), [=] {
 			CancelSelection();

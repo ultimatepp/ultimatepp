@@ -52,7 +52,7 @@ void DiagramItem::FixPosition()
 	pos.x = clamp(pos.x, 0.0, 100000.0);
 	pos.y = clamp(pos.y, 0.0, 100000.0);
 	size.cx = clamp(size.cx, 8.0, 100000.0);
-	size.cx = max(size.cx, 8.0, 100000.0);
+	size.cy = clamp(size.cy, 8.0, 100000.0);
 }
 
 bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
@@ -389,7 +389,7 @@ void Diagram::Serialize(Stream& s)
 
 void Diagram::Save(StringBuffer& r) const
 {
-	r << "QDF 1.0\n";
+	r << "QDF 1.0;\n";
 	if(!IsNull(size))
 		r << "size " << size.cx << " " << size.cy << ";\n";
 	if(!IsNull(img)) {

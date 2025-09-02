@@ -7,10 +7,8 @@ Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim",
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
-                                     "cylinder",
-                                     "triangle1", "triangle2",
-                                     "arrow_left", "arrow_right", "arrow_horz",
-                                     "arrow_down", "arrow_up", "arrow_vert",
+                                     "cylinder", "triangle",
+                                     "arrow_right", "arrow_horz", "arrow_down", "arrow_vert",
                                      "arc",
                                      "svgpath", "image"
 };
@@ -18,7 +16,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_ITRIANGLE || rotate)
+	if(shape > SHAPE_TRIANGLE || rotate)
 		return p;
 	if(IsLine()) {
 		p << pos << pos + size;
@@ -26,12 +24,10 @@ Vector<Pointf> DiagramItem::GetConnections() const
 	}
 	Rectf r = GetRect();
 	p << r.TopCenter() << r.BottomCenter();
-	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE, SHAPE_ITRIANGLE) < 0)
+	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE) < 0)
 		p << r.CenterLeft() << r.CenterRight();
 	if(shape == SHAPE_TRIANGLE)
 		p << r.BottomLeft() << r.BottomRight();
-	if(shape == SHAPE_ITRIANGLE)
-		p << r.TopLeft() << r.TopRight();
 	if(rotate) {
 		Xform2D rot = Rotation();
 		Pointf c = r.CenterPoint();
@@ -275,20 +271,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				w.Move(w2, 0).Line(cx, cy).Line(0, cy).Close();
 			}
 			break;
-		case SHAPE_ITRIANGLE: {
-				text_rect.left  += int(cx / 4);
-				text_rect.right -= int(cx / 4);
-				text_rect.bottom -= int(cx / 3);
-				w.Move(w2, cy).Line(cx, 0).Line(0, 0).Close();
-			}
-			break;
-		case SHAPE_ARROWLEFT: {
-				double a = 0 + arrow_width;
-				text_rect.left += int(arrow_width / 3);
-				w.Move(0, h2).Line(a, 0).Line(a, h4).Line(cx, h4)
-				 .Line(cx, bh4).Line(a, bh4).Line(a, cy).Close();
-			}
-			break;
 		case SHAPE_ARROWRIGHT:
 			 {
 				double a = cx - arrow_width;
@@ -319,21 +301,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				 .Line(a2, bh4)
 				 .Line(a1, bh4)
 				 .Line(a1, cy)
-				 .Close();
-			}
-			break;
-		case SHAPE_ARROWUP: {
-				double a = arrow_height;
-				text_rect.left += w4;
-				text_rect.right -= w4;
-				text_rect.top += 3 * arrow_height / 4;
-				w.Move(w2, 0)
-				 .Line(cx, a)
-				 .Line(cx - w4, a)
-				 .Line(cx - w4, cy)
-				 .Line(w4, cy)
-				 .Line(w4, a)
-				 .Line(0, a)
 				 .Close();
 			}
 			break;
@@ -515,7 +482,7 @@ Sizef DiagramItem::GetStdSize(const Diagram& diagram) const
 	if(shape == SHAPE_CYLINDER)
 		return Size(100, 128);
 
-	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWUP, SHAPE_ARROWVERT) >= 0)
+	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWVERT) >= 0)
 		return Size(64, 128);
 
 	return Size(128, 64);

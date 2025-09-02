@@ -312,7 +312,6 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		Grid(p);
 		if(IsNull(draghandle)) { // move selection
 			Pointf offset = Point(p - dragstart);
-			m.pos = dragfrom + offset;
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
