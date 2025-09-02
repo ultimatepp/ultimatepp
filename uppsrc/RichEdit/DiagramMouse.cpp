@@ -189,6 +189,13 @@ void DiagramEditor::Grid(Point& p)
 		p = (p + Point(3, 3)) / 8 * 8;
 }
 
+void DiagramEditor::Grid(Pointf& p)
+{
+	Point pp = p;
+	Grid(pp);
+	p = pp;
+}
+
 void DiagramEditor::LeftDown(Point p, dword keyflags)
 {
 	moved = moving = false;
@@ -308,19 +315,20 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	if(HasCapture() && IsCursor() && (moving || Distance(dragstart, p) >= 8)) {
 		moving = true;
 		DiagramItem& m = CursorItem();
-		Pointf p0 = p;
-		Grid(p);
 		if(IsNull(draghandle)) { // move selection
 			Pointf offset = Point(p - dragstart);
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
 					data.item[ii].pos = sdragfrom[i] + offset;
+					Grid(data.item[ii].pos);
 					data.item[ii].FixPosition();
 				}
 			}
 		}
 		else {
+			Pointf p0 = p;
+			Grid(p);
 			if(!m.IsLine())
 				m.Normalize();
 			Rectf r = m.GetRect();

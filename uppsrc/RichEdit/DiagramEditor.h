@@ -151,6 +151,7 @@ private:
 	void   PrepareConns();
 	void   UseConns();
 	void   Grid(Point& p);
+	void   Grid(Pointf& p);
 	void   ChangeSize();
 	void   PopPaint(Draw& w, const Image& m, bool sel);
 	void   Shapes(ColumnPopUp& shape);
