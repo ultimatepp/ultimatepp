@@ -345,13 +345,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 			}
 			else {
 				bool rotated = m.rotate;
-				if(rotated) {
-					DLOG("======");
-					DDUMP(p);
+				if(rotated)
 					p = m.Rotation(-1).Transform(Pointf(p) - drag_cp) + drag_cp;
-					DDUMP(p);
-					DDUMP(r);
-				}
 				Do(draghandle.x, r.left, r.right, p.x);
 				Do(draghandle.y, r.top, r.bottom, p.y);
 				if(m.aspect_ratio && 0) {

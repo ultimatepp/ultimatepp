@@ -36,18 +36,19 @@ int sAddNode(TreeCtrl& tree, int parent_id, const Value& id, const String& name,
 	else
 	if(v.Is<ValueMap>()) {
 		ValueMap m = v;
-		parent_id = tree.Add(parent_id, IdeCommonImg::JsonStruct(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeCommonImg::JsonStruct(), id, "[G1 [* " + name + ':');
 		for(int i = 0; i < m.GetCount(); i++)
-			sAddNode(tree, parent_id, m.GetKey(i), "[@B \1" + String(m.GetKey(i)) + "\1:]", m.GetValue(i));
+			sAddNode(tree, parent_id, m.GetKey(i), "[@B \1" + String(m.GetKey(i)) + "\1]", m.GetValue(i));
 	}
 	else
 	if(v.Is<ValueArray>()) {
-		parent_id = tree.Add(parent_id, IdeCommonImg::JsonArray(), id, "[G1 [* " + name);
+		parent_id = tree.Add(parent_id, IdeCommonImg::JsonArray(), id,
+		                     "[G1 [* " + name + "]\1[" + AsString(v.GetCount()) + "]:\1");
 		for(int i = 0; i < v.GetCount(); i++)
-			sAddNode(tree, parent_id, i, "[@c " + AsString(i) + ":]", v[i]);
+			sAddNode(tree, parent_id, i, "[@c " + AsString(i) + "]", v[i]);
 	}
 	else {
-		String qtf = "[G1 [* " + name + "]";
+		String qtf = "[G1 [* " + name + ":]";
 		Image img = IdeCommonImg::JsonNumber();
 		if(IsString(v)) {
 			img = IdeCommonImg::JsonString();
