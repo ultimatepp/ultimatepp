@@ -33,8 +33,8 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(b, "Move back", DiagramImg::MoveBack(), [=] { MoveFrontBack(true); });
 	bar.Add(b, "Move front", DiagramImg::MoveFront(), [=] { MoveFrontBack(false); });
 	bar.Separator();
-	bar.Add(b, DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
-	bar.Add(b, DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
+	bar.Add(b, "Horizontal center", DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
+	bar.Add(b, "Vertical center", DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
 	bar.Separator();
 	bool multi = sel.GetCount() > 1;
 	bar.Add(multi, "Align left", DiagramImg::AlignLeft(), [=] { Align(true, ALIGN_LEFT); });
@@ -86,8 +86,8 @@ void DiagramEditor::TheBar(Bar& bar)
 			m.aspect_ratio = !m.aspect_ratio;
 			if(m.aspect_ratio && !m.IsLine()) {
 				Sizef sz1, sz2;
-				ComputeAspectSize(m, sz1, sz2);_DBG_
-//				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
+				ComputeAspectSize(m, sz1, sz2);
+				m.size = (sz1.cx < sz2.cx ? sz1 : sz2) / 2;
 			}
 		});
 	})

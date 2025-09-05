@@ -97,11 +97,11 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	if(IsNull(h))
 		return Image::Arrow();
 
-	if(HasCapture() && i >= 0 && data.item[i].IsLine())
+	if(HasCapture() && IsCursor() && CursorItem().IsLine())
 		return Image::Arrow();
 
 	int m = h.x * h.y;
-	if((h.x || h.y) && i >= 0 && data.item[i].IsLine())
+	if((h.x || h.y)  && IsCursor() && CursorItem().IsLine())
 		return Image::SizeAll();
 	
 	if(h.x == -1 && h.y == 1)
@@ -109,7 +109,7 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	
 	double rot;
 	if(m > 0)
-		rot = - M_PI / 4;
+		rot = -M_PI / 4;
 	else
 	if(m < 0)
 		rot = M_PI / 4;
@@ -317,6 +317,9 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		DiagramItem& m = CursorItem();
 		if(IsNull(draghandle)) { // move selection
 			Pointf offset = Point(p - dragstart);
+			Pointf p = dragfrom + offset;
+			Grid(p);
+			offset = p - dragfrom;
 			for(int i = 0; i < sel.GetCount(); i++) {
 				int ii = sel[i];
 				if(ii >= 0 && ii < data.item.GetCount() && i < sdragfrom.GetCount()) {
@@ -361,30 +364,12 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				};
 				Do(draghandle.x, hsz.cx, p.x, drag_cp.x);
 				Do(draghandle.y, hsz.cy, p.y, drag_cp.y);
-			#if 0
-				if(m.aspect_ratio && 0) {
-					m.Normalize();
+				m.size = hsz;
+				if(m.aspect_ratio) {
 					Sizef sz1, sz2;
 					ComputeAspectSize(m, sz1, sz2);
-					Sizef sz;
-					if(draghandle.y == 0)
-						sz = sz1;
-					else
-					if(draghandle.x == 0)
-						sz = sz2;
-					else
-						sz = sz1.cx < sz2.cx ? sz1 : sz2;
-					if(draghandle.x < 0)
-						m.pt[0].x = m.pt[1].x - sz.cx;
-					else
-						m.pt[1].x = m.pt[0].x + sz.cx;
-					if(draghandle.y < 0)
-						m.pt[0].y = m.pt[1].y - sz.cy;
-					else
-						m.pt[1].y = m.pt[0].y + sz.cy;
+					m.size = (draghandle.x && draghandle.y && sz1.cx < sz2.cx || draghandle.x ? sz1 : sz2) / 2;
 				}
-			#endif
-				m.size = hsz;
 			}
 		}
 		UseConns();

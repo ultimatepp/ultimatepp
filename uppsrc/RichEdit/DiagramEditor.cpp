@@ -91,47 +91,6 @@ DiagramEditor& DiagramEditor::AllowDarkContent(bool b)
 void DiagramEditor::Skin()
 {
 	SetBar();
-/*
-	Size icon_sz = IconSz();
-	shape.ClearList();
-	shape.SetLineCy(icon_sz.cy);
-	for(int i = 0; i < DiagramItem::SHAPE_SVGPATH; i++) {
-		DiagramItem m;
-		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(icon_sz.cx - 2, icon_sz.cy - 2);
-		m.width = DPI(1);
-		m.shape = i;
-		shape.Add(i, MakeIcon(m, icon_sz));
-	}
-
-	struct Dialine : DiagramItem {
-		Dialine() {
-			shape = SHAPE_LINE;
-			pt[0].y = pt[1].y = 7;
-			pt[0].x = -9999;
-			pt[1].x = 9999;
-		}
-	};
-
-	auto LDL = [=](DropList& dl, bool left) {
-		dl.SetLineCy(icon_sz.cy);
-		dl.ClearList();
-		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
-			dl.Add(i, CapIcon(left ? i : 0, left ? 0 : i));
-		}
-	};
-
-	LDL(line_start, true);
-	LDL(line_end, false);
-
-	line_dash.ClearList();
-	line_dash.SetLineCy(icon_sz.cy);
-	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
-		Dialine m;
-		m.dash = i;
-		line_dash.Add(i, MakeIcon(m, icon_sz));
-	}
-*/
 }
 
 void DiagramEditor::Paint(Draw& w)

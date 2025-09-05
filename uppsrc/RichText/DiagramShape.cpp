@@ -16,7 +16,7 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_TRIANGLE || rotate)
+	if(shape > SHAPE_TRIANGLE)
 		return p;
 	if(IsLine()) {
 		p << pos << pos + size;
@@ -436,7 +436,11 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 		w.End();
 
-		if((style & GRID) && !rotate)
+		DDUMP(pos);
+		DDUMP(size);
+		DDUMP(GetRect());
+		DDUMP(GetConnections());
+		if((style & GRID))
 			for(Pointf p : GetConnections()) {
 				w.Circle(p, 5);
 				if(conn && conn->Find(p) >= 0)
@@ -480,7 +484,7 @@ Sizef DiagramItem::GetStdSize(const Diagram& diagram) const
 	}
 
 	if(shape == SHAPE_CYLINDER)
-		return Size(100, 128);
+		return Size(96, 128);
 
 	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWVERT) >= 0)
 		return Size(64, 128);

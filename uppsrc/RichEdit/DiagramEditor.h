@@ -178,7 +178,7 @@ private:
 	void   GetAttrs(const DiagramItem& m);
 	void   GetAttrs();
 
-	void   ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2);
+	void   ComputeAspectSize(DiagramItem& m, Sizef& sz_cx, Sizef& sz_cy);
 
 	DiagramItem& AddItem(int shape);
 

@@ -362,7 +362,9 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 	if(p.display_grid)
 		for(const DiagramItem& m : item)
 			if(m.IsLine())
-				conn << m.pos << m.pos + size;
+				conn << m.pos << m.pos + m.size;
+	DLOG("=============================");
+	DDUMP(conn);
 	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
