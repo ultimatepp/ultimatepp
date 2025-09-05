@@ -336,13 +336,23 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				m.Normalize();
 			Rectf r = m.GetRect();
 			if(m.IsLine()) {
-				auto Do = [](int h, double& a1, double& a2, double a) {
-					if(h)
-						(h < 0 ? a1 : a2) = a;
-				};
+				Pointf pf = p;
+				if(!GetShift()) {
+					double d0 = SquaredDistance(p0, pf);
+					for(const DiagramItem& m : data.item)
+						for(Pointf cs : m.GetConnections()) {
+							double d1 = SquaredDistance(p0, cs);
+							if(d1 < d0) {
+								d0 = d1;
+								pf = cs;
+							}
+						}
+				}
 				Pointf p2 = m.pos + m.size;
-				Do(draghandle.x, m.pos.x, p2.x, p.x);
-				Do(draghandle.y, m.pos.y, p2.y, p.y);
+				if(draghandle.x < 0)
+					m.pos = pf;
+				else
+					p2 = pf;
 				m.size = p2 - m.pos;
 			}
 			else
