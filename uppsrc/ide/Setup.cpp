@@ -321,6 +321,7 @@ void Ide::SetupFormat() {
 	ide.kde.Hide();
 	ide.mate.Hide();
 	ide.lxde.Hide();
+	ide.xfce.Hide();
 #else
 	#ifdef PLATFORM_BSD
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/local/bin/konsole -e");
@@ -445,6 +446,7 @@ void Ide::SetupFormat() {
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)
 		(ide.toolbar_in_row, toolbar_in_row)
+		(ide.disable_custom_caption, disable_custom_caption)
 		(ide.splash_screen, splash_screen)
 		(ide.sort, sort)
 		(ide.mute_sounds, mute_sounds)

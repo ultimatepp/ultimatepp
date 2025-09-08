@@ -2,6 +2,25 @@
 
 namespace Upp {
 
+DropList::DropList()
+{
+	displayall = false;
+	valueconvert = &NoConvert();
+	valuedisplay = NULL;
+	dropfocus = false;
+	notnull = false;
+	alwaysdrop = false;
+	SetupDropPush();
+	NoInitFocus();
+	EnableDrop(false);
+	list.WhenSelect = THISBACK(Select);
+	list.WhenCancel = THISBACK(Cancel);
+	dropwidth = 0;
+	usewheel = true;
+}
+
+DropList::~DropList() {}
+
 int DropList::FindKey(const Value& k) const
 {
 	return key.Find(k);
@@ -262,25 +281,6 @@ DropList& DropList::AlwaysDrop(bool e)
 		EnableDrop();
 	return *this;
 }
-
-DropList::DropList()
-{
-	displayall = false;
-	valueconvert = &NoConvert();
-	valuedisplay = NULL;
-	dropfocus = false;
-	notnull = false;
-	alwaysdrop = false;
-	SetupDropPush();
-	NoInitFocus();
-	EnableDrop(false);
-	list.WhenSelect = THISBACK(Select);
-	list.WhenCancel = THISBACK(Cancel);
-	dropwidth = 0;
-	usewheel = true;
-}
-
-DropList::~DropList() {}
 
 void Append(DropList& list, const VectorMap<Value, Value>& values)
 {

@@ -32,11 +32,11 @@ String SaveMainConf(const String& main_conf);
 
 class MakeBuild {
 public:
-	virtual void ConsoleShow() = 0; //		ShowConsole();	console.Sync();
-	virtual void ConsoleSync() = 0; // console.Sync()
+	virtual void ConsoleShow() = 0;
+	virtual void ConsoleSync() = 0;
 	virtual void ConsoleClear() = 0;
 	virtual void SetupDefaultMethod() = 0;
-	virtual Vector<String> PickErrors() = 0; //console.PickErrors()
+	virtual Vector<String> PickErrors() = 0;
 	virtual void BeginBuilding(bool clear_console) = 0;
 	virtual void SetErrorEditor() = 0;
 	virtual void EndBuilding(bool ok) = 0;

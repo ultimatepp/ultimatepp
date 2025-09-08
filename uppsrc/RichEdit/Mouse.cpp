@@ -308,6 +308,7 @@ void RichEdit::StdBar(Bar& menu)
 			}
 		}
 		LoadImageTool(menu);
+		InsertDiagramTool(menu);
 	}
 }
 
@@ -370,11 +371,29 @@ void RichEdit::LeftDouble(Point p, dword flags)
 	if(c >= 0) {
 		if(objectpos == c) {
 			RichObject object = GetObject();
+			Size osz = object.GetSize();
 			if(!object) return;
-			RichObject o = object;
-			o.DefaultAction(context);
-			if(object.GetSerialId() != o.GetSerialId())
+			if(object.GetTypeName() == "qdf") {
+				TopWindow app;
+				app.Icon(DiagramImg::Diagram());
+				app.Title("Diagram");
+				app.Sizeable().Zoomable();
+				DiagramEditor de;
+				de.Load(ZDecompress(~object.GetData()));
+				app.Add(de.SizePos());
+				app.Execute();
+				RichText clip;
+				RichPara p;
+				RichObject o = RichObject("qdf", ZCompress(de.Save()));
+				o.InitSize(osz.cx, osz.cy);
 				ReplaceObject(o);
+			}
+			else {
+				RichObject o = object;
+				o.DefaultAction(context);
+				if(object.GetSerialId() != o.GetSerialId())
+					ReplaceObject(o);
+			}
 		}
 		else {
 			RichPos rp = cursorp;

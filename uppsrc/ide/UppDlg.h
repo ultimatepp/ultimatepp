@@ -121,7 +121,6 @@ public:
 
 private:
     void OnUpp();
-    void Sync();
 
 private:
     bool               new_base;
@@ -156,6 +155,7 @@ struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	ArrayCtrl         alist;
 	ProgressIndicator progress;
 	StatusBar         lists_status;
+	bool              alist_external = false;
 	
 	Vector<String> nest_list;
 
@@ -488,3 +488,5 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 };
 
 void EditPackages(const char *main, const char *startwith, String& cfg);
+
+String SelectExternalPackage(const String& from = Null);

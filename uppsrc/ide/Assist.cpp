@@ -1028,6 +1028,16 @@ bool isaid(int c)
 bool AssistEditor::Key(dword key, int count)
 {
 	CloseTip();
+	dword *k = IdeKeys::AK_DELLINE().key;
+	if(key == k[0] || key == k[1]) {
+		DeleteLine();
+		return true;
+	}
+	k = IdeKeys::AK_CUTLINE().key;
+	if(key == k[0] || key == k[1]) {
+		CutLine();
+		return true;
+	}
 #ifdef _DEBUG
 	if(key == K_F12) {
 		DLOG("==================");

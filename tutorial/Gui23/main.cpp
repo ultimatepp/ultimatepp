@@ -46,12 +46,17 @@ struct MyAppWindow : public WithMyAppLayout<TopWindow> {
 		if (random_rect_ctrl.rect.IsEmpty()) {
 			start_stop_btn.SetLabel("Stop!");
 			
+			// When the user clicks the "Start" button, OnTimer() is immediately executed after
+			// all related events have been processed, to generate and display a random rectangle.
+			SetTimeCallback(0, [=] { OnTimer(); });
+			
+			// Calls OnTimer() every two seconds to update the random position of a rectangle.
 			SetTimeCallback(-2000, [=] { OnTimer(); });
 		} else {
 			KillTimeCallback();
 			
 			start_stop_btn.SetLabel("Start!");
-			random_rect_ctrl.rect = {};
+			random_rect_ctrl.rect.Clear();
 			random_rect_ctrl.Refresh();
 		}
 	}

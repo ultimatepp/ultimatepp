@@ -91,12 +91,6 @@ void Ctrl::EndSession()
 	endsession = true;
 }
 
-template <class U, class V>
-void AutoCast(U& a, V b)
-{
-	a = (U)b;
-}
-
 #ifndef flagDLL
 #ifndef PLATFORM_WINCE
 LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -109,10 +103,8 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		static BOOL (WINAPI *ShutdownBlockReasonCreate)(HWND hWnd, LPCWSTR pwszReason);
 		static BOOL (WINAPI *ShutdownBlockReasonDestroy)(HWND hWnd);
 		ONCELOCK {
-			if(HMODULE hDLL = LoadLibrary ("user32")) {
-				AutoCast(ShutdownBlockReasonCreate, GetProcAddress(hDLL, "ShutdownBlockReasonCreate"));
-				AutoCast(ShutdownBlockReasonDestroy, GetProcAddress(hDLL, "ShutdownBlockReasonDestroy"));
-			}
+			DllFn(ShutdownBlockReasonCreate, "user32", "ShutdownBlockReasonCreate");
+			DllFn(ShutdownBlockReasonDestroy, "user32", "ShutdownBlockReasonDestroy");
 		}
 		if(ShutdownBlockReasonCreate)
 			ShutdownBlockReasonCreate(hwnd, ToSystemCharsetW(t_("waiting for user response")));
@@ -183,6 +175,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	case WM_TIMER:
 		TimerProc(msecs());
 		AnimateCaret();
+		SyncCustomTitleBars();
 		break;
 	case WM_RENDERFORMAT:
 		RenderFormat((dword)wParam);
@@ -227,11 +220,14 @@ void Ctrl::InstallPanicBox()
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 }
 
+extern bool is_custom_titlebar_available__;
+extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
+
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
 	LLOG("InitWin32");
-
+	
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 //	RLOGBLOCK("Ctrl::InitWin32");
 	sMainThreadId = GetCurrentThreadId();
@@ -287,6 +283,19 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 #undef ILOG
 
 	GlobalBackPaint();
+
+	is_custom_titlebar_available__ = IsWin11();
+
+	custom_titlebar_metrics__ = [=](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
+		if(!tw->custom_titlebar)
+			return;
+		m.height = GetWin32TitleBarHeight(tw);
+		m.lm = 0;
+		Image icon = tw->GetIcon();
+		if(!IsNull(icon))
+			m.lm = DPI(4) + min(icon.GetWidth(), 32);
+		m.rm = (tw->IsZoomable() ? 3 : 1) * GetWin32TitleBarButtonWidth();
+	};
 	
 	EnterGuiMutex();
 }

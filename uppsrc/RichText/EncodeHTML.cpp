@@ -363,7 +363,9 @@ String DefaultHtmlObjectSaver::GetHtml(const RichObject& object, const String& l
 	if(abs(100 * (psz.cx - sz.cx) / sz.cx) < imtolerance)
 		sz = psz;
 	PNGEncoder png;
-	png.SaveFile(AppendFileName(outdir, name), object.ToImage(psz, SBlack()));
+	RichObjectPaintInfo pi;
+	pi.ink = SBlack();
+	png.SaveFile(AppendFileName(outdir, name), object.ToImage(psz, pi));
 	String el = "</a>";
 	if(IsNull(link)) {
 		if(psz.cx * psz.cy != 0)

@@ -212,6 +212,9 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 			for(int j = 0; j < pkg.include.GetCount(); j++)
 				b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
 		}
+		if(IsExternalMode()) // just add everything..
+			for(int i = 0; i < wspc.GetCount(); i++)
+				b->include.Add(PackageDirectory(wspc[i]));
 		b->libpath = SplitDirs(bm.Get("LIB", ""));
 		b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
 		b->c_options = bm.Get("COMMON_C_OPTIONS", "");
@@ -266,8 +269,17 @@ String MakeBuild::OutDir(const Index<String>& cfg, const String& package, const 
 	String outdir = GetUppOut();
 	if(output_per_assembly)
 		outdir = AppendFileName(outdir, GetAssemblyId());
-	if(!use_target)
-		outdir = AppendFileName(outdir, package);
+	if(!use_target) {
+		if(IsExternalMode()) {
+			String h = package;
+			int q = h.Find(':');
+			if(q >= 0)
+				h = h.Mid(q + 1);
+			outdir = AppendFileName(outdir, Filter(h, [](int c) { return findarg(c, '/', '\\') >= 0 ? '.' : c; }));
+		}
+		else
+			outdir = AppendFileName(outdir, package);
+	}
 	outdir = AppendFileName(outdir, GetFileTitle(method) + "." + Join(x, "."));
 	outdir = Filter(outdir, CharFilterSlash);
 	return outdir;

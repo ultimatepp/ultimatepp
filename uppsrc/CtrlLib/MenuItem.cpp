@@ -698,7 +698,7 @@ Size TopMenuItem::GetMinSize() const
 
 int TopMenuItem::GetStdHeight(Font font)
 {
-	return font.Info().GetHeight() + Zy(7);
+	return font.GetCy() + Zy(5);
 }
 
 void TopMenuItem::SyncState()

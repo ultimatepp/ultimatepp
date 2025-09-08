@@ -213,7 +213,6 @@ void Draw::DrawText(int x, int y, const String& text, Font font, Color ink, cons
 
 Size GetTextSize(const wchar *text, Font font, int n)
 {
-	FontInfo fi = font.Info();
 	if(n < 0)
 		n = strlen__(text);
 	Size sz;
@@ -221,11 +220,11 @@ Size GetTextSize(const wchar *text, Font font, int n)
 	const wchar *wtext = (const wchar *)text;
 	while(n > 0) {
 		if(*wtext >= ' ')
-			sz.cx += fi[*wtext];
+			sz.cx += font[*wtext];
 		n--;
 		wtext++;
 	}
-	sz.cy = fi.GetHeight();
+	sz.cy = font.GetCy();
 	return sz;
 }
 
@@ -236,7 +235,27 @@ Size GetTextSize(const WString& text, Font font)
 
 Size GetTextSize(const char *text, byte charset, Font font, int n)
 {
-	return GetTextSize(TextUnicode(text, n, charset, font), font);
+		return GetTextSize(TextUnicode(text, n, charset, font), font);
+
+	if(ResolveCharset(charset) == CHARSET_UTF8
+#ifdef PLATFORM_WIN32
+	   && font.GetFace() != Font::SYMBOL
+#endif
+	) {
+		Size sz;
+		sz.cx = 0;
+		const char *lim = text + (n < 0 ? strlen(text) : n);
+		while(text < lim) {
+			int c = FetchUtf8(text, lim);
+			if(c >= ' ')
+				sz.cx += font[c];
+			n--;
+		}
+		sz.cy = font.GetCy();
+		return sz;
+	}
+	else
+		return GetTextSize(TextUnicode(text, n, charset, font), font);
 }
 
 Size GetTextSize(const char *text, Font font, int n)

@@ -45,6 +45,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		if(!IsNull(f.paper) && !highlight && IsNull(pi.textcolor))
 			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y, pi.ResolvePaper(f.paper));
 		Font fnt = f;
+		if(pi.mono_glyphs)
+			fnt.NoColor();
 		int zht = z * tabs(f.GetHeight());
 		int ssa = 0;
 		int ssd = 0;
@@ -157,6 +159,7 @@ struct RichObjectImageMaker : ImageMaker {
 	RichObject object;
 	Size       sz;
 	Color      ink;
+	bool       dark = false;
 	void       *context;
 
 	virtual String Key() const;
@@ -170,12 +173,17 @@ String RichObjectImageMaker::Key() const
 	RawCat(b, sz);
 	RawCat(b, context);
 	RawCat(b, ink);
+	RawCat(b, dark);
 	return String(b);
 }
 
 Image RichObjectImageMaker::Make() const
 {
-	return object.ToImage(sz, ink, context);
+	RichObjectPaintInfo pi;
+	pi.ink = ink;
+	pi.context = context;
+	pi.dark = dark;
+	return object.ToImage(sz, pi);
 }
 
 void RichPara::DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int style)
@@ -311,11 +319,17 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 								im.object = o;
 								im.sz = sz;
 								im.ink = (*i)->ink;
+								im.dark = pi.darktheme;
 								im.context = pi.context;
 								draw.DrawImage(0, 0, MakeImagePaintOnly(im));
 							}
-							else
-								o.Paint(draw, sz, (*i)->ink, pi.context);
+							else {
+								RichObjectPaintInfo oi;
+								oi.ink = (*i)->ink;
+								oi.context = pi.context;
+								oi.dark = pi.darktheme;
+								o.Paint(draw, sz, oi);
+							}
 						draw.End();
 					}
 					i++;

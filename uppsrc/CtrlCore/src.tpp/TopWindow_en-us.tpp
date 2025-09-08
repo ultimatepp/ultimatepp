@@ -505,6 +505,40 @@ e.g. in task switcher and other places (platform specific).&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:TopWindow`:`:CustomTitleBar`(int`): TopWindow[@(0.0.255) `&] 
+[* CustomTitleBar]([@(0.0.255) int] [*@3 min`_cy] [@(0.0.255) `=] [@3 0])&]
+[s2;%% Attempts to activate where window client area extends into 
+its titlebar area. Window controls and icon still work (eating 
+some space on sides that can be queried by GetTitleBarMetrics). 
+[%-*@3 min`_cy] suggests minimal height of title bar area (so that 
+it will fit requested features), host might ignore this suggestion. 
+Windows title is not drawn.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TopWindow`:`:IsCustomTitleBar`(`)const: [@(0.0.255) bool] 
+[* IsCustomTitleBar]() [@(0.0.255) const]&]
+[s2;%% Returns true if custom titlebar is active. (it can be inactive 
+even when CustomTitleBar was called).&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TopWindow`:`:GetCustomTitleBarMetrics`(`)const: CustomTitleBarMetrics 
+[* GetCustomTitleBarMetrics]() [@(0.0.255) const]&]
+[s2;%% Returns custom titlebar metrics based on active window features. 
+It works even before the window is opened. Returns&]
+[s0;l288;%% &]
+[s0;l288;%% -|struct CustomTitleBarMetrics `{&]
+[s2;%% -|-|int   [@(0.0.255) lm];&]
+[s2;%% -|-|int   [@(0.0.255) rm];&]
+[s2;%% -|-|int   [@(0.0.255) height];&]
+[s2;%% -|-|Color [@(0.0.255) background];&]
+[s2;%% -|`};&]
+[s2;%% &]
+[s2;%% where [@(0.0.255) lm ]/ [@(0.0.255) rm ]are spaces consumed by 
+windows decoration on the left / right side of area, [@(0.0.255) height 
+]is the height of title bar and background is a color that host 
+would use to draw the background of title bar area.&]
+[s3; &]
+[s4; &]
 [s5;:TopWindow`:`:SerializePlacement`(Stream`&`,bool`): [@(0.0.255) void]_[* SerializePla
 cement]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) bool]_[*@3 reminimize]_`=_[@(0.0.255) f
 alse])&]

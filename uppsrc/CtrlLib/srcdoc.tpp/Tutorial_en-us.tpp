@@ -1775,7 +1775,7 @@ be achieved with the previously described methods.&]
 [s0;l320;C%- &]
 [s0;l320;%- [*C@(0.0.255) struct][C  RandomRectCtrl ][C@(0.0.255) :][C  ][*C@(0.0.255) public][C  
 Ctrl `{]&]
-[s0;l320;%- [C     Rect  rect;]&]
+[s0;l320;%- [C     Rect  rect ][C@(0.0.255) `=][C  Rect(Size(][C@3 0][C , ][C@3 0][C ));]&]
 [s0;l320;%- [C     Color color;]&]
 [s0;l320;%- [C     ]&]
 [s0;l320;%- [C     ][*C@(0.0.255) void][C  Paint(Draw][C@(0.0.255) `&][C  w) 
@@ -1832,14 +1832,22 @@ upon Ctrl destruction.]&]
 ][C IsEmpty()) `{]&]
 [s0;l320;%- [C             start`_stop`_btn][C@(0.0.255) .][C SetLabel(][C@3 `"Stop!`"][C );]&]
 [s0;l320;%- [C             ]&]
+[s0;l320;%- [C             ][/C@4 // When the user clicks the `"Start`" 
+button, OnTimer() is immediately executed after]&]
+[s0;l320;%- [C             ][/C@4 // all related events have been processed, 
+to generate and display a random rectangle.]&]
+[s0;l320;%- [C             ][*_C SetTimeCallback(][*_C@3 0][*_C , ][*_C@(0.0.255) `[`=`]][*_C  
+`{ OnTimer(); `});]&]
+[s0;l320;%- [C             ]&]
+[s0;l320;%- [C             ][/C@4 // Calls OnTimer() every two seconds 
+to update the random position of a rectangle.]&]
 [s0;l320;%- [C             ][*_C SetTimeCallback(][*_C@(0.0.255) `-][*_C@3 2000][*_C , 
 ][*_C@(0.0.255) `[`=`]][*_C  `{ OnTimer(); `});]&]
 [s0;l320;%- [C         `} ][*C@(0.0.255) else][C  `{]&]
 [s0;l320;%- [C             ][*_C KillTimeCallback();]&]
 [s0;l320;%- [C             ]&]
 [s0;l320;%- [C             start`_stop`_btn][C@(0.0.255) .][C SetLabel(][C@3 `"Start!`"][C );]&]
-[s0;l320;%- [C             random`_rect`_ctrl][C@(0.0.255) .][C rect ][C@(0.0.255) `=][C  
-`{`};]&]
+[s0;l320;%- [C             random`_rect`_ctrl][C@(0.0.255) .][C rect.Clear();]&]
 [s0;l320;%- [C             random`_rect`_ctrl][C@(0.0.255) .][C Refresh();]&]
 [s0;l320;%- [C         `}]&]
 [s0;l320;%- [C     `}]&]

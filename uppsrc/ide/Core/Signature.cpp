@@ -1,4 +1,4 @@
-#include "clang.h"
+#include "Core.h"
 
 #define LTIMING(x)
 
@@ -47,12 +47,12 @@ bool IsBasicType(const String& id)
 
 bool IsIgnored(const String& id)
 {
-	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "final", "template", "enum" };
+	static Index<String> kt = { "class", "struct", "union", "noexcept", "override", "final", "template", "enum", "__attribute__" };
 	return kt.Find(id) >= 0;
 }
 
 String CleanupId(const char *s)
-{ // removes unnecessary spaces, removes parameter names
+{ // removes unnecessary spaces, removes parameter names, makes clang ids consistent
 	StringBuffer mm;
 	bool was_param_type = false;
 	bool was_id = false;
@@ -82,18 +82,32 @@ String CleanupId(const char *s)
 			};
 
 			String id;
-			while(iscid(*s) || *s == ':') {
-				id.Cat(*s++);
-				if(*s == '<') {
-					if(id.GetCount() == 8 && IsOperator(id))
-						break;
-					if(id.GetCount() > 8) {
-						const char *s = ~id + id.GetCount() - 8;
-						if(IsOperator(s) && !iscid(s[-1]))
+			for(;;) {
+				if(iscid(*s)) {
+					id.Cat(*s++);
+					if(*s == '<') {
+						if(id.GetCount() == 8 && IsOperator(id))
 							break;
+						if(id.GetCount() > 8) {
+							const char *s = ~id + id.GetCount() - 8;
+							if(IsOperator(s) && !iscid(s[-1]))
+								break;
+						}
+						SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
 					}
-					SkipT(); // Skip template arguments like in Foo<Bar>::Method() -> Foo::Method
 				}
+				else
+				if(*s == ':' && s[1] == ':') {
+					if(inparams)
+						id.Clear(); // remove qualification from parameters (it is inconsistent with libclang)
+					else {
+						id.Cat(':');
+						id.Cat(':');
+					}
+					s += 2;
+				}
+				else
+					break;
 			}
 			if(id == s_attribute) {
 				while(*s == ' ')
@@ -160,8 +174,9 @@ String CleanupId(const char *s)
 					was_param_type = false;
 					operator_def = false;
 				}
-				if(s[1] == '*') { // function pointer, e.g. int(*)(int)
+				if(s[1] == '*' && inparams) { // function pointer, e.g. int(*)(int)
 					was_param_type = false;  // prevent skipping   ^^^
+					mm.Cat('(');
 					while(*s && *s != ')') {
 						if(*s == '*') // exclude any names
 							mm.Cat(*s);
@@ -322,6 +337,16 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		p.pos = (int)(s - ~signature);
 		p.type = ITEM_TEXT;
 		p.pari = pari;
+
+		auto Pname = [&] {
+			if(lastidi >= 0) {
+				if(was_type)
+					part[lastidi].type = ITEM_PNAME;
+				lastidi = -1;
+			}
+			was_type = false;
+		};
+
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
 			while(s[n] >= '0' && s[n] <= '9' || (s[n] == 'x' || s[n] == 'X'))
@@ -379,17 +404,14 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 		if(sOperatorTab[(byte)*s]) {
 			while(sOperatorTab[(byte)s[n]])
 				n++;
+			if(*s == '=' && par == 0) {
+				Pname();
+				p.pari = -1;
+				pari++;
+			}
 			p.type = ITEM_CPP;
 		}
 		else {
-			auto Pname = [&] {
-				if(lastidi >= 0) {
-					if(was_type)
-						part[lastidi].type = ITEM_PNAME;
-					lastidi = -1;
-				}
-				was_type = false;
-			};
 			p.type = ITEM_SIGN;
 			if(pari >= 0) {
 				if(*s == '(' || *s == '<')
@@ -459,94 +481,4 @@ String SignatureQtf(const String& name, const String& pretty, int pari)
 		qtf << ']';
 	}
 	return qtf + "]";
-}
-
-String GetClass(const AnnotationItem& m)
-{
-	String cls = m.id;
-	int q;
-	if(m.kind == CXCursor_Constructor) {
-		q = cls.Find("::" + m.name + "(");
-		if(q >= 0)
-			q += 2;
-	}
-	else
-	if(m.kind == CXCursor_Destructor) {
-		q = cls.Find('~');
-	}
-	else
-		q = FindId(cls, m.name);
-
-	if(q >= 0) {
-		cls.Trim(q);
-		if(m.nspace.GetCount())
-			cls.TrimStart(m.nspace + "::");
-		return cls;
-	}
-	
-	return Null;
-}
-
-String GetNameFromId(const String& id)
-{
-	String name;
-	try {
-		CParser p(id);
-		while(!p.IsEof())
-			if(p.IsId())
-				name = p.ReadId();
-			else
-			if(!p.Char(':'))
-				break;
-	}
-	catch(CParser::Error) {}
-	return name;
-}
-
-String MakeDefinition(const AnnotationItem& m, const String& klass)
-{
-	String result;
-	String pretty = m.pretty;
-	pretty.TrimStart("static ");
-	int q = FindId(pretty, m.name);
-	if(q < 0)
-		result << pretty;
-	else
-		result << pretty.Mid(0, q) << klass << pretty.Mid(q);
-
-	const char *s = result;
-	int lvl = 0;
-	String r;
-	while(*s) {
-		if(*s == '(')
-			lvl++;
-		if(*s == ')')
-			lvl--;
-		if(lvl == 1 && *s == '=') { // skip default parameter
-			while(r.GetCount() && s[-1] == ' ') {
-				s--;
-				r.TrimLast();
-			}
-			while(*s) {
-				if((*s == ',' || *s == ')') && lvl == 1) {
-					r.Cat(*s++);
-					break;
-				}
-				if(*s == '(')
-					lvl++;
-				if(*s == ')')
-					lvl--;
-				s++;
-			}
-		}
-		else
-			r.Cat(*s++);
-	}
-	r << "\n{\n}\n\n";
-	return r;
-}
-
-String MakeDefinition(const AnnotationItem& m)
-{
-	return MakeDefinition(m, GetClass(m));
 }

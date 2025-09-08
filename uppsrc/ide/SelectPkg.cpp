@@ -11,7 +11,16 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	bool b = GetCurrentName().GetCount();
 	menu.Add("New package..", [=] { OnNew(); });
 	menu.Separator();
-	if(!IsExternalMode()) {
+	if(IsExternalMode()) {
+		menu.Add(b, "Delete package..", [=] {
+			String p = PackageFile(GetCurrentName());
+			if(FileExists(p) && PromptYesNo("Delete package?")) {
+				DeleteFile(p);
+				Load();
+			}
+		});
+	}
+	else {
 		menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
 		menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
 		menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
@@ -292,6 +301,10 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	};
 
 	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
+
+	String exf = VarFilePath("[external]");
+	if(!FileExists(exf))
+		SaveFile(exf, "SOURCE_MASKS = \"*.cpp *.h *.hpp *.c *.cxx *.cc *.m *.mm *.cs *.java *.js *.ts *.tsx *.jsx\";");
 }
 
 String SelectPackageDlg::LRUFilePath()
@@ -302,13 +315,18 @@ String SelectPackageDlg::LRUFilePath()
 void SelectPackageDlg::LoadLRU()
 {
 	LoadFromFile(lru, LRUFilePath());
+	Index<Tuple<String, String>> lu; // prevent duplicates, \ vs /
+	for(auto h : lru) {
+		h.b = UnixPath(h.b);
+		lu.FindAdd(h);
+	}
+	lru = lu.PickKeys();
 }
 
 void SelectPackageDlg::StoreLRU(const String& p)
 {
 	auto q = Tuple(GetVarsName(), p);
 	LoadLRU();
-	LoadFromFile(lru, p);
 	int i = FindIndex(lru, q);
 	if(i >= 0)
 		lru.Remove(i);
@@ -483,6 +501,18 @@ void SelectPackageDlg::OnFilter()
 	SyncList(Null);
 }
 
+String SelectExternalPackage(const String& from)
+{
+	FileSel fs;
+	fs.ActiveDir(GetHomeDirectory());
+	LoadFromGlobal(fs, "PackageDirSelector");
+	if(from.GetCount())
+		fs.ActiveDir(from);
+	bool b = fs.ExecuteSelectDir("Select package directory");
+	StoreToGlobal(fs, "PackageDirSelector");
+	return b ? ~fs : String::GetVoid();
+}
+
 void SelectPackageDlg::OnBase()
 {
 	if(!finished && !canceled) {
@@ -490,10 +520,26 @@ void SelectPackageDlg::OnBase()
 		if(splitter.IsShown())
 			nest <<= nest.GetCount() ? 0 : ALL;
 		Load();
+		newu.SetLabel(IsExternalMode() ? "New project" : "New package");
 	}
 }
 
 void SelectPackageDlg::OnNew() {
+	if(IsExternalMode()) {
+		String n = SelectExternalPackage();
+		if(IsNull(n))
+			return;
+		String f = PackageFile(n);
+		if(!FileExists(f)) {
+			Package p;
+			p.config.Add();
+			p.Save(f);
+		}
+		selected = n;
+		selected_nest.Clear();
+		Break(IDYES);
+		return;
+	}
 	TemplateDlg dlg;
 	LoadFromGlobal(dlg, "NewPackage");
 	dlg.Load(GetUppDirsRaw(), ~kind == MAIN);
@@ -553,29 +599,31 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	;
 	bar.Add(base.IsCursor(), "Edit assembly..", THISBACK(OnBaseEdit))
 		.Key(K_CTRL_ENTER);
-	bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
-		.Key(K_CTRL_DELETE);
-	bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
-	Vector<String> dirs = SplitDirs(GetVar("UPP"));
-	if(dirs.GetCount()) {
-		bar.Separator();
-		for(String s : dirs)
-			bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
-	}
-	Vector<String> d = GetRepoDirs();
-	if(HasGit()) {
-		bar.Separator();
-		bar.Add("Clone U++ GitHub sources..", [=] {
-			String vars = base.Get(0);
-			SetupGITMaster();
-			SyncBase(vars);
-		});
-	}
-	if(d.GetCount()) {
-		bar.Separator();
-		for(int i = 0; i < d.GetCount(); i++)
-			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
-		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
+	if(!IsExternalMode()) {
+		bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
+			.Key(K_CTRL_DELETE);
+		bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
+		Vector<String> dirs = SplitDirs(GetVar("UPP"));
+		if(dirs.GetCount()) {
+			bar.Separator();
+			for(String s : dirs)
+				bar.Add("Terminal at " + s, [=] { TheIde()->LaunchTerminal(s); });
+		}
+		Vector<String> d = GetRepoDirs();
+		if(HasGit()) {
+			bar.Separator();
+			bar.Add("Clone U++ GitHub sources..", [=] {
+				String vars = base.Get(0);
+				SetupGITMaster();
+				SyncBase(vars);
+			});
+		}
+		if(d.GetCount()) {
+			bar.Separator();
+			for(int i = 0; i < d.GetCount(); i++)
+				bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, d[i]));
+			bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepoDirs));
+		}
 	}
 }
 
@@ -590,6 +638,14 @@ void SelectPackageDlg::OnBaseEdit()
 {
 	if(!base.IsCursor())
 		return;
+	if(IsExternalMode()) {
+		WithExtSetupLayout<TopWindow> dlg;
+		CtrlLayoutOKCancel(dlg, "External mode settings");
+		dlg.source_masks <<= GetVar("SOURCE_MASKS");
+		if(dlg.ExecuteOK())
+			SetVar("SOURCE_MASKS", ~dlg.source_masks);
+		return;
+	}
 	String vars = base.Get(0), oldvars = vars;
 	if(BaseSetup(vars)) {
 		if(vars != oldvars)
@@ -809,20 +865,40 @@ void SelectPackageDlg::Load(const String& find)
 			LoadVars(assembly);
 			if(GetVar("_all") == "1")
 				nest <<= ALL;
+			else
+				nest <<= 0;
+			if(alist_external != IsExternalMode()) {
+				alist_external = IsExternalMode();
+				alist.ColumnWidths(alist_external ? "300 0 200": "108 79 317");
+			}
+			alist.HeaderTab(1).Show(!alist_external);
 			SyncFilter();
 		}
 		Vector<String> upp = GetUppDirsRaw();
-		bool external = IsExternalMode();
 		packages.Clear();
 		list.AddFrame(lists_status);
 		loading = true;
 		data.Clear();
 		Index<String> dir_exists;
 		String cache_path = CachePath(GetVarsName());
-		LoadFromFile(data, cache_path);
-		data.SetCount(upp.GetCount());
-		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (additional package candidates)
-			ScanFolder(upp[i], data[i], upp[i], dir_exists, Null);
+		if(IsExternalMode()) {
+			upp << "";
+			for(FindFile ff(ConfigFile("external") + "/*.*"); ff; ff.Next())
+				if(ff.IsFile()) {
+					String dir = DecodePathFromFileName(ff.GetName());
+					if(DirectoryExists(dir)) {
+						PkData& d = data.At(0).GetAdd(dir);
+						d.package = dir;
+						d.ispackage = true;
+					}
+				}
+		}
+		else {
+			LoadFromFile(data, cache_path);
+			data.SetCount(upp.GetCount());
+			for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (additional package candidates)
+				ScanFolder(upp[i], data[i], upp[i], dir_exists, Null);
+		}
 		int update = msecs();
 		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
 			ArrayMap<String, PkData>& nest = data[i];
@@ -839,8 +915,8 @@ void SelectPackageDlg::Load(const String& find)
 
 				PkData& d = nest[i];
 				String path = nest.GetKey(i);
-				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
-					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
+				if((IsExternalMode() || NormalizePath(path).StartsWith(nest_dir)) && DirectoryExists(path)) {
+					String upp_path = PackageFile(d.package);
 					LSLOW(); // this is used for testing only, normally it is NOP
 					Time tm = FileGetTime(upp_path);
 					if(IsNull(tm)) // .upp file does not exist - not a package
@@ -859,9 +935,6 @@ void SelectPackageDlg::Load(const String& find)
 					}
 					else
 						d.ispackage = true;
-
-					if(external && !d.ispackage) // in external mode folders with sources are packages
-						d.ispackage = IsDirectoryExternalPackage(path);
 
 					if(d.ispackage) {
 						String icon_path;
@@ -887,7 +960,8 @@ void SelectPackageDlg::Load(const String& find)
 			nest.Sweep();
 		}
 
-		StoreToFile(data, cache_path);
+		if(!IsExternalMode())
+			StoreToFile(data, cache_path);
 		list.RemoveFrame(lists_status);
 		while(IsSplashOpen())
 			ProcessEvents();
@@ -905,7 +979,8 @@ void SelectPackageDlg::SyncBase(String initvars)
 	Vector<String> varlist;
 	for(FindFile ff(ConfigFile("*.var")); ff; ff.Next())
 		if(ff.IsFile()) {
-			varlist.Add(GetFileTitle(ff.GetName()));
+			String n = ff.GetName();
+			varlist.Add(GetFileTitle(n));
 		}
 
 	Sort(varlist, &PackageLess);

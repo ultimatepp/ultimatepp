@@ -1,0 +1,11 @@
+uses
+	Core,
+	ide/Core;
+
+file
+	Etalon.log,
+	ide_CleanupId.cpp;
+
+mainconfig
+	"" = "";
+

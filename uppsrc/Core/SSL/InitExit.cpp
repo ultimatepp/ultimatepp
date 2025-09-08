@@ -100,7 +100,6 @@ EXITBLOCK
 	MemoryIgnoreLeaksBlock __;
 	CONF_modules_unload(1);
 	EVP_cleanup();
-	ENGINE_cleanup();
 	CRYPTO_cleanup_all_ex_data();
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
 	STACK_OF(SSL_COMP) *pCOMP = SSL_COMP_get_compression_methods();

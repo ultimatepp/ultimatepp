@@ -63,7 +63,12 @@ as [* Rect`_].&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s3; &]
 [s5;:Rect`_`:`:Rect`_`(`): [* Rect`_]()&]
-[s2;%% Creates an uninitialized [* Rect`_].&]
+[s2;%% Creates a new [* Rect`_] object with all its coordinates, left, 
+top, right, and bottom, set to 0. Such a rectangle has no width 
+or height, sitting right at the (0,0) origin.&]
+[s0;l288;%% &]
+[s0;l288;%% Consequently, calling the [*^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:IsEmpty`(`)const^ I
+sEmpty()] method on such a [* Rect`_] object will return true.&]
 [s3; &]
 [s4; &]
 [s5;:Rect`_`:`:Rect`_`(const Value`&`): [* Rect`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&

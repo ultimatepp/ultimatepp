@@ -372,71 +372,11 @@ void ShowRepaintRect(SystemDraw& w, const Rect& r, Color c)
 	}
 }
 
-bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild)
-{
-	GuiLock __;
-	LTIMING("PaintOpaqueAreas");
-	if(!IsShown() || r.IsEmpty() || !r.Intersects(clip) || !w.IsPainting(r))
-		return true;
-	Point off = r.TopLeft();
-	Point viewpos = off + GetView().TopLeft();
-	if(backpaint == EXCLUDEPAINT)
-		return w.ExcludeClip(r);
-	Rect cview = clip & (GetView() + off);
-	for(Ctrl& q : *this)
-		if(!q.PaintOpaqueAreas(w, q.GetRect() + (q.InView() ? viewpos : off),
-		                       q.InView() ? cview : clip))
-			return false;
-	if(nochild && (GetLastChild() || GetNext()))
-		return true;
-	Rect opaque = (GetOpaqueRect() + viewpos) & clip;
-	if(opaque.IsEmpty())
-		return true;
-#ifdef SYSTEMDRAW
-	if(backpaint == FULLBACKPAINT && !dynamic_cast<BackDraw *>(&w))
-#else
-	if(backpaint == FULLBACKPAINT && !w.IsBack())
-#endif
-	{
-		ShowRepaintRect(w, opaque, LtRed());
-		BackDraw bw;
-		bw.Create(w, opaque.GetSize());
-		bw.Offset(viewpos - opaque.TopLeft());
-		bw.SetPaintingDraw(w, opaque.TopLeft());
-		{
-			LEVELCHECK(bw, this);
-			Paint(bw);
-			PaintCaret(bw);
-			DOLEVELCHECK;
-		}
-		bw.Put(w, opaque.TopLeft());
-	}
-	else {
-		w.Clip(opaque);
-		ShowRepaintRect(w, opaque, Green());
-		w.Offset(viewpos);
-		{
-			LEVELCHECK(w, this);
-			Paint(w);
-			PaintCaret(w);
-			DOLEVELCHECK;
-		}
-		w.End();
-		w.End();
-	}
-	LLOG("Exclude " << opaque);
-	return w.ExcludeClip(opaque);
-}
-
-inline int Area(const Rect& r)
-{
-	return r.GetHeight() * r.GetWidth();
-}
-
 void CombineArea(Vector<Rect>& area, const Rect& r)
 {
 	LTIMING("CombineArea");
 	if(r.IsEmpty()) return;
+	auto Area = [](const Rect& r) {	return r.GetHeight() * r.GetWidth(); };
 	int ra = Area(r);
 	for(int i = 0; i < area.GetCount(); i++) {
 		Rect ur = r | area[i];
@@ -447,37 +387,6 @@ void CombineArea(Vector<Rect>& area, const Rect& r)
 		}
 	}
 	area.Add(r);
-}
-
-void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip)
-{
-	GuiLock __;
-	LTIMING("GatherTransparentAreas");
-	Point off = r.TopLeft();
-	Point viewpos = off + GetView().TopLeft();
-	r.Inflate(overpaint);
-	Rect notr = GetVoidRect();
-	if(notr.IsEmpty())
-		notr = GetOpaqueRect();
-	notr += viewpos;
-	if(!IsShown() || r.IsEmpty() || !clip.Intersects(r) || !w.IsPainting(r))
-		return;
-	if(notr.IsEmpty())
-		CombineArea(area, r & clip);
-	else {
-		if(notr != r) {
-			CombineArea(area, clip & Rect(r.left, r.top, notr.left, r.bottom));
-			CombineArea(area, clip & Rect(notr.right, r.top, r.right, r.bottom));
-			CombineArea(area, clip & Rect(notr.left, r.top, notr.right, notr.top));
-			CombineArea(area, clip & Rect(notr.left, notr.bottom, notr.right, r.bottom));
-		}
-		for(Ctrl& q : *this) {
-			Point qoff = q.InView() ? viewpos : off;
-			Rect qr = q.GetRect() + qoff;
-			if(clip.Intersects(qr))
-				q.GatherTransparentAreas(area, w, qr, clip);
-		}
-	}
 }
 
 void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
@@ -504,8 +413,17 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << ", clip: " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
+	auto DoCtrlPaint = [&](SystemDraw& w, const Rect& clip) {
+	#ifdef PLATFORM_WIN32
+		PaintWinBarBackground(w, clip);
+	#endif
+		CtrlPaint(w, clip);
+	#ifdef PLATFORM_WIN32
+		PaintWinBar(w, clip);
+	#endif
+	};
 	if(globalbackbuffer) {
-		CtrlPaint(draw, clip);
+		DoCtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 		return;
 	}
@@ -515,35 +433,12 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		bw.Create(draw, clip.GetSize());
 		bw.Offset(-clip.TopLeft());
 		bw.SetPaintingDraw(draw, clip.TopLeft());
-		CtrlPaint(bw, clip);
+		DoCtrlPaint(bw, clip);
 		bw.Put(draw, clip.TopLeft());
 		LLOG("========== END (FULLBACKPAINT)");
 		return;
 	}
-/*	if(backpaint == TRANSPARENTBACKPAINT) {
-		LLOG("TransparentBackpaint");
-		Vector<Rect> area;
-		GatherTransparentAreas(area, draw, GetRect().GetSize(), clip);
-		for(int i = 0; i < area.GetCount(); i++) {
-			Rect ar = area[i];
-			LLOG("Painting area: " << ar);
-			ShowRepaintRect(draw, ar, LtBlue());
-			BackDraw bw;
-			bw.Create(draw, ar.GetSize());
-			bw.Offset(-ar.TopLeft());
-			bw.SetPaintingDraw(draw, ar.TopLeft());
-			CtrlPaint(bw, ar);
-			bw.Put(draw, ar.TopLeft());
-			if(!draw.ExcludeClip(ar)) {
-				LLOG("========== END");
-				return;
-			}
-		}
-		PaintOpaqueAreas(draw, GetRect().GetSize(), clip);
-		LLOG("========== END");
-		return;
-	}*/
-	CtrlPaint(draw, clip);
+	DoCtrlPaint(draw, clip);
 	LLOG("========== END");
 }
 

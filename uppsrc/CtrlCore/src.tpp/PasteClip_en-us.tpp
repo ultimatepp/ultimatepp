@@ -73,6 +73,14 @@ onst]_[@(0.0.255) char]_`*[*@3 fmt])_[@(0.0.255) const]&]
 [s2;%% Returns true when data source offers data in format [%-*@3 fmt].&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:PasteClip`:`:IsAnyAvailable`(const char`*`)const: [@(0.0.255) bool] 
+[* IsAnyAvailable]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 fmt]) 
+[@(0.0.255) const]&]
+[s2;%% Parameter [%-*@3 fmt] contains a list of format identifiers 
+separated by semicolon. If any of them is available in the PasteClip, 
+function returns true.&]
+[s3; &]
+[s4; &]
 [s5;:PasteClip`:`:Get`(const char`*`)const: [_^String^ String]_[* Get]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 fmt])_[@(0.0.255) const]&]
 [s2;%% Returns binary data rendered in [%-*@3 fmt].&]

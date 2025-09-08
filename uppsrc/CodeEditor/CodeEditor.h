@@ -441,6 +441,7 @@ public:
 
 	void   MakeTabsOrSpaces(bool tabs);
 	void   MakeLineEnds();
+	void   ConvertToOverrides();
 
 	void   CopyWord();
 	void   SwapChars();

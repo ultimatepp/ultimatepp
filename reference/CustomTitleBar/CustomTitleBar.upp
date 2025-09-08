@@ -1,0 +1,11 @@
+description "Demonstrates how to implement and use a custom title bar\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

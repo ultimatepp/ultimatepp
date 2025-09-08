@@ -561,9 +561,10 @@ Image Win32Cursor(int id)
 	return Win32Cursor(MAKEINTRESOURCE(id));
 }
 
-HICON SystemDraw::IconWin32(const Image& img, bool cursor)
+HICON SystemDraw::IconWin32(const Image& img_, bool cursor)
 {
 	GuiLock __;
+	Image img = img_;
 	if(img.IsEmpty())
 		return NULL;
 	if(cursor) {
@@ -571,6 +572,7 @@ HICON SystemDraw::IconWin32(const Image& img, bool cursor)
 		if(id)
 			return (HICON)LoadCursor(0, id);
 	}
+	img = Unmultiply(img); // it seems like Win32 wants them unmultiplied...
 	Size sz = img.GetSize();
 	ICONINFO iconinfo;
 	iconinfo.fIcon = !cursor;

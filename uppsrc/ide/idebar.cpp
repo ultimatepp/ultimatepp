@@ -170,6 +170,8 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Convert all tabs to spaces");
 	menu.Add(b, AK_LINEENDINGS, THISBACK(EditMakeLineEnds))
 		.Help("Remove tabs and spaces at line endings");
+	menu.Add(b && editor.IsSelection(), AK_CONVERTOOVERRIDE, [=] { editor.ConvertToOverrides(); })
+		.Help("Convert virtual function declarations to override (removes virtual, adds override)");
 	menu.Add(b, AK_TRANSLATESTRING, THISBACK(TranslateString))
 		.Help("Mark the current selection as translated string");
 	menu.Add(b, AK_SWAPCHARS, THISBACK(SwapChars))
@@ -501,9 +503,9 @@ void Ide::Project(Bar& menu)
 	{
 		mainconfiglist.Enable(idestate == EDITING);
 		buildmode.Enable(idestate == EDITING);
-		menu.Add(mainconfiglist, HorzLayoutZoom(180));
+		menu.Add(mainconfiglist, HorzLayoutZoom(140));
 		menu.Gap(4);
-		menu.Add(buildmode, HorzLayoutZoom(180));
+		menu.Add(buildmode, HorzLayoutZoom(140));
 		menu.Separator();
 	}
 	if(!IsEditorMode()) {
@@ -1067,6 +1069,7 @@ void Ide::SetBar()
 {
 	SetMenuBar();
 	SetToolBar();
+	RefreshLayout();
 }
 
 void Ide::SetMenuBar()

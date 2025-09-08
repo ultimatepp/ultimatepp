@@ -57,6 +57,14 @@ bool PasteClip::Accept()
 	return paste;
 }
 
+bool PasteClip::IsAnyAvailable(const char *fmt) const
+{
+	for(String f : Split(fmt, ';'))
+		if(IsAvailable(f))
+			return true;
+	return false;
+}
+
 bool   PasteClip::Accept(const char *_fmt)
 {
 	Vector<String> f = Split(_fmt, ';');
@@ -257,6 +265,13 @@ Ctrl *Ctrl::GetDragAndDropTarget()
 {
 	GuiLock __;
 	return dndctrl;
+}
+
+bool IsClipboardAvailableImage()
+{
+	GuiLock __;
+	PasteClip d = Ctrl::Clipboard();
+	return IsAvailableImage(d);
 }
 
 void AppendClipboard(const char *format, const ClipData& data)

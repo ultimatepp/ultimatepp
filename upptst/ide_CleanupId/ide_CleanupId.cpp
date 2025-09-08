@@ -27,8 +27,8 @@ CONSOLE_APP_MAIN
 	}) {
 		DLOG("======");
 		DLOG(s);
-		DLOG(CleanupId(s));
-		DLOG(CleanupPretty(s));
+		DLOG("id: " << CleanupId(s));
+		DLOG("pretty: " << CleanupPretty(s));
 	}
 	
 	CheckLogEtalon();

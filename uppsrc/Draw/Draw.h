@@ -57,7 +57,8 @@ class Font : public ValueType<Font, FONT_V, Moveable<Font> >{
 		FONT_UNDERLINE = 0x2000,
 		FONT_STRIKEOUT = 0x1000,
 		FONT_NON_ANTI_ALIASED = 0x800,
-		FONT_TRUE_TYPE_ONLY = 0x400
+		FONT_TRUE_TYPE_ONLY = 0x400,
+		FONT_NOCOLOR = 0x200
 	};
 
 	static Font AStdFont;
@@ -127,6 +128,7 @@ public:
 	bool   IsItalic() const         { return v.flags & FONT_ITALIC; }
 	bool   IsUnderline() const      { return v.flags & FONT_UNDERLINE; }
 	bool   IsStrikeout() const      { return v.flags & FONT_STRIKEOUT; }
+	bool   IsNoColor() const        { return v.flags & FONT_NOCOLOR; }
 	bool   IsNonAntiAliased() const { return v.flags & FONT_NON_ANTI_ALIASED; } // deprecated
 	bool   IsTrueTypeOnly() const   { return v.flags & FONT_TRUE_TYPE_ONLY; } // deprecated
 	String GetFaceName() const;
@@ -154,6 +156,7 @@ public:
 	Font& NonAntiAliased()          { v.flags |= FONT_NON_ANTI_ALIASED; return *this; }
 	Font& NoNonAntiAliased()        { v.flags &= ~FONT_NON_ANTI_ALIASED; return *this; } // deprecated
 	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); } // deprecated
+	Font& NoColor()                 { v.flags |= FONT_NOCOLOR; return *this; }
 	Font& TrueTypeOnly()            { v.flags |= FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
 	Font& NoTrueTypeOnly()          { v.flags &= ~FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
 	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); } // deprecated
@@ -992,6 +995,7 @@ enum {
 bool ReadCmap(const char *ptr, int count, Event<int, int, int> range, dword flags = 0);
 bool ReadCmap(Font font, Event<int, int, int> range, dword flags = 0);
 bool GetPanoseNumber(Font font, byte *panose);
+bool HasCodepoint(Font font, int c);
 
 }
 

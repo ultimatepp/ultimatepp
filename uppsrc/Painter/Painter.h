@@ -165,10 +165,10 @@ protected:
 	virtual void   BeginOnPathOp(double q, bool absolute) = 0;
 
 protected:
-	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
-	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
+	void   DoArc0(double theta, double th_sweep, const Xform2D& m, double scale = 1);
+	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle, double scale = 1);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
-	                 const Pointf& p, const Pointf& p0);
+	                 const Pointf& p, const Pointf& p0, double scale = 1);
 	void   DrawLineStroke(int width, Color color);
 
 public:
@@ -344,7 +344,7 @@ public:
 	Painter& RoundedRectangle(const Rectf& rc, double r)                           { return RoundedRectangle(rc, r, r); }
 	Painter& RoundedRectangle(Pointf p1, Pointf p2, double r)                      { return RoundedRectangle(p1, p2, r, r); }
 	Painter& Ellipse(double x, double y, double rx, double ry);
-	Painter& Ellipse(const Rectf& r)                                               { return Ellipse(r.left, r.top, r.Width(), r.Height()); }
+	Painter& Ellipse(const Rectf& r)                                               { Pointf c = r.CenterPoint(); return Ellipse(c.x, c.y, r.Width() / 2, r.Height() / 2); }
 	Painter& Ellipse(Pointf p1, Pointf p2)                                         { return Ellipse(Rectf(p1, p2)); }
 	Painter& Circle(double x, double y, double r);
 	Painter& Circle(Pointf p, double r)                                            { return Circle(p.x, p.y, r); }

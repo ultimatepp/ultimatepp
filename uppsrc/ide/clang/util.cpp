@@ -104,3 +104,93 @@ int FindId(const String& s, const String& id) {
 		q++;
 	}
 };
+
+String GetClass(const AnnotationItem& m)
+{
+	String cls = m.id;
+	int q;
+	if(m.kind == CXCursor_Constructor) {
+		q = cls.Find("::" + m.name + "(");
+		if(q >= 0)
+			q += 2;
+	}
+	else
+	if(m.kind == CXCursor_Destructor) {
+		q = cls.Find('~');
+	}
+	else
+		q = FindId(cls, m.name);
+
+	if(q >= 0) {
+		cls.Trim(q);
+		if(m.nspace.GetCount())
+			cls.TrimStart(m.nspace + "::");
+		return cls;
+	}
+	
+	return Null;
+}
+
+String GetNameFromId(const String& id)
+{
+	String name;
+	try {
+		CParser p(id);
+		while(!p.IsEof())
+			if(p.IsId())
+				name = p.ReadId();
+			else
+			if(!p.Char(':'))
+				break;
+	}
+	catch(CParser::Error) {}
+	return name;
+}
+
+String MakeDefinition(const AnnotationItem& m, const String& klass)
+{
+	String result;
+	String pretty = m.pretty;
+	pretty.TrimStart("static ");
+	int q = FindId(pretty, m.name);
+	if(q < 0)
+		result << pretty;
+	else
+		result << pretty.Mid(0, q) << klass << pretty.Mid(q);
+
+	const char *s = result;
+	int lvl = 0;
+	String r;
+	while(*s) {
+		if(*s == '(')
+			lvl++;
+		if(*s == ')')
+			lvl--;
+		if(lvl == 1 && *s == '=') { // skip default parameter
+			while(r.GetCount() && s[-1] == ' ') {
+				s--;
+				r.TrimLast();
+			}
+			while(*s) {
+				if((*s == ',' || *s == ')') && lvl == 1) {
+					r.Cat(*s++);
+					break;
+				}
+				if(*s == '(')
+					lvl++;
+				if(*s == ')')
+					lvl--;
+				s++;
+			}
+		}
+		else
+			r.Cat(*s++);
+	}
+	r << "\n{\n}\n\n";
+	return r;
+}
+
+String MakeDefinition(const AnnotationItem& m)
+{
+	return MakeDefinition(m, GetClass(m));
+}

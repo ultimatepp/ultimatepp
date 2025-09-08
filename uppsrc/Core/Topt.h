@@ -174,7 +174,7 @@ inline constexpr bool is_upp_guest = false;
 template <class T>
 inline typename std::enable_if_t<is_trivially_relocatable<T>> Relocate(T *dst, T *src)
 {
-	memcpy(dst, src, sizeof(T));
+	memcpy(reinterpret_cast<void *>(dst), reinterpret_cast<void *>(src), sizeof(T));
 }
 
 template <class T>
@@ -189,7 +189,7 @@ template <class T>
 inline void InsertRelocate(T *dst, T *src, int n)
 {
 	if constexpr(is_trivially_relocatable<T>)
-		memmove(dst, src, n * sizeof(T));
+		memmove(reinterpret_cast<void *>(dst), reinterpret_cast<void *>(src), n * sizeof(T));
 	else {
 		static_assert(is_upp_guest<T>);
 		if(n <= 0)
@@ -209,7 +209,7 @@ template <class T>
 inline void RemoveRelocate(T *dst, T *src, int n)
 {
 	if constexpr(is_trivially_relocatable<T>)
-		memmove(dst, src, n * sizeof(T));
+		memmove(reinterpret_cast<void *>(dst), reinterpret_cast<void *>(src), n * sizeof(T));
 	else {
 		static_assert(is_upp_guest<T>);
 		T *lim = src + n;

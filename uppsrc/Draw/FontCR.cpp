@@ -322,6 +322,33 @@ bool GetPanoseNumber(Font font, byte *panose)
 	return true;
 }
 
+bool HasCodepoint(Font font, int c)
+{
+	Value v = MakeValue(
+		[&] {
+			StringBuffer h;
+			RawCat(h, font);
+			return (String)h;
+		},
+		[&](Value& v) {
+			Vector<Tuple<int, int>>& ranges = CreateRawValue<Vector<Tuple<int, int>>>(v);
+			ReadCmap(font, [&](int start, int end, int) {
+				if(ranges.GetCount() && ranges.Top().b + 1 == start) // often we get sequence like { 1, 2 }, { 3, 4 } - optimize by joining
+					ranges.Top().b = end;
+				else
+					ranges.Add({ start, end });
+			});
+			ranges.Shrink();
+			return int(ranges.GetCount() * sizeof(Tuple<int, int>));
+		}
+	);
+    const Vector<Tuple<int, int>>& ranges = v.To<Vector<Tuple<int, int>>>();
+	for(Tuple<int, int> r : ranges)
+		if(c >= r.a && c <= r.b)
+			return true;
+	return false;
+}
+
 struct sFontMetricsReplacement {
 	Font src;
 	Font dst;
@@ -356,7 +383,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		fnt.Face(Font::SANSSERIF); // otherwise devangari font is used, which looks off
 #endif
 
-	bool prefer_color = PreferColorEmoji(chr);
+	bool prefer_color = PreferColorEmoji(chr) && !fnt.IsNoColor();
 	static VectorMap<int, sRFace *> rface[2]; // face index to font info
 	static Vector<int> color[2]; // colorimg faces
 	static bool all_loaded;
@@ -419,8 +446,11 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		ChrBit(chr);
 		for(int i = 0; i < rface[pass].GetCount(); i++)
 			if(rface[pass][i]->coverage[wi] & bit) {
-				distance.Add(PanoseDistance(rface[pass][i]->panose, panose));
-				candidate.Add(rface[pass].GetKey(i));
+				int fi = rface[pass].GetKey(i);
+				if(!fnt.IsNoColor() || !(Font::GetFaceInfo(fi) & Font::COLORIMG)) {
+					distance.Add(PanoseDistance(rface[pass][i]->panose, panose));
+					candidate.Add(fi);
+				}
 			}
 		if(prefer_color)
 			for(int fi : color[pass]) {
@@ -430,7 +460,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		StableIndexSort(distance, candidate);
 		for(int fi : candidate) {
 			f.Face(fi);
-			if(IsNormal_nc(f, chr)) {
+			if(HasCodepoint(f, chr)) {
 				int a = fnt.GetAscent();
 				int d = fnt.GetDescent();
 				static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...

@@ -104,9 +104,10 @@ void RichEdit::Paint(Draw& w)
 	p_size = sz;
 	Rect tr = GetTextRect();
 	Zoom zoom = GetZoom();
-	w.DrawRect(sz, IsDarkContent() ? SColorPaper() : White());
+	w.DrawRect(sz, Nvl(override_paper, IsDarkContent() ? SColorPaper() : White()));
 	PageY py = text.GetHeight(pagesz);
-	Color showcodesa = IsDarkContent() ? DarkTheme(showcodes) : showcodes;
+	bool dark = IsDarkContent() || !IsNull(override_paper) && IsDark(override_paper);
+	Color showcodesa = dark ? DarkTheme(showcodes) : showcodes;
 	{
 		EditPageDraw pw(w);
 		pw.x = tr.left;
@@ -131,7 +132,7 @@ void RichEdit::Paint(Draw& w)
 		pi.sizetracking = sizetracking;
 		pi.showcodes = showcodesa;
 		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
-		pi.hyperlink = IsDarkContent() ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
+		pi.hyperlink = dark ? DarkTheme(LtBlue()) : LtBlue(); // because we have white paper even in dark mode
 		pi.darktheme = IsDarkContent();
 		
 		if(spellcheck)
@@ -268,8 +269,12 @@ void RichEdit::Layout()
 		SetPage(Size(max(sz.cx, 5) / DPI(1) * 8 * 100 / zoom, INT_MAX));
 	else
 	if(!IsNull(floating_zoom)) {
-		Zoom m = GetRichTextStdScreenZoom();
-		SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
+		if(floating_zoom > 0) {
+			Zoom m = GetRichTextStdScreenZoom();
+			SetPage(Size(int(1 / floating_zoom * m.d / m.m * sz.cx), INT_MAX));
+		}
+		else
+			SetPage(Size(int(-1 / floating_zoom * sz.cx), INT_MAX));
 	}
 	sb.SetPage(sz.cy > 10 ? sz.cy - 4 : sz.cy);
 	SetupRuler();
@@ -681,7 +686,6 @@ void RichEdit::Skin()
 	SetLastCharFormat(last_format);
 }
 
-
 void RichEditWithToolBar::TheBar(Bar& bar)
 {
 	DefaultBar(bar, extended);
@@ -730,6 +734,13 @@ RichEdit& RichEdit::AllowDarkContent(bool b)
 	allow_dark_content = b;
 	Refresh();
 	DoRefreshBar();
+	return *this;
+}
+
+RichEdit& RichEdit::OverridePaper(Color p)
+{
+	override_paper = p;
+	Refresh();
 	return *this;
 }
 

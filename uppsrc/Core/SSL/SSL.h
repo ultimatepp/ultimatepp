@@ -3,7 +3,7 @@
 #include <openssl/ssl.h>
 #include <openssl/conf.h>
 #include <openssl/err.h>
-#include <openssl/engine.h>
+#include <openssl/rand.h>
 
 namespace Upp {
 	
@@ -143,6 +143,8 @@ String SslToString(X509_NAME *name);
 Date   Asn1ToDate(ASN1_STRING *time);
 String Asn1ToString(ASN1_STRING *s);
 
+#ifdef EVP_PKEY_KEYMGMT
+
 constexpr const int AES_GCM_MIN_ITERATION     = 10000;
 constexpr const int AES_GCM_MAX_ITERATION     = 1000000;
 constexpr const int AES_GCM_DEFAULT_ITERATION = 100000;
@@ -153,7 +155,7 @@ public:
     virtual ~Aes256Gcm();
 
     Aes256Gcm& Iteration(int n)                                         { iteration = clamp(n, AES_GCM_MIN_ITERATION, AES_GCM_MAX_ITERATION); return *this; }
-    Aes256Gcm& Chunksize(int sz)                                        { chunksize = clamp(sz, 128, INT_MAX); return *this; }
+    Aes256Gcm& ChunkSize(int sz)                                        { chunksize = clamp(sz, 128, INT_MAX); return *this; }
 
     bool Encrypt(Stream& in, const String& password, Stream& out);
     bool Encrypt(const String& in, const String& password, String& out) { return EncDec(true, in, password, out); }
@@ -179,5 +181,10 @@ String AES256Encrypt(const String& in, const String& password, Gate<int64, int64
 String AES256Decrypt(const String& in, const String& password, Gate<int64, int64> WhenProgress = Null);
 bool AES256Encrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
 bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, int64> WhenProgress = Null);
+
+// Secure buffer
+#include "Buffer.hpp"
+
+#endif
 
 }

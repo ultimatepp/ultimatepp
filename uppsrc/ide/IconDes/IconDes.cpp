@@ -68,7 +68,7 @@ void IconDes::SetSb()
 	magnify = max(magnify, 1);
 	if(IsCurrent()) {
 		sb.SetTotal(GetImageSize());
-		sb.SetPage(GetSize() / magnify);
+		sb.SetPage(sb.GetReducedViewSize() / magnify);
 	}
 }
 

@@ -1,0 +1,16 @@
+LAYOUT(SizeLayout, 212, 164)
+	ITEM(Upp::Switch, size, SetLabel(t_("Automatic\n1250x1000 (4:3)\n1600x900 (16:9)\n1600x800 (2:1)\n1000x1250 (3:4)\nCustom")).LeftPosZ(8, 192).TopPosZ(8, 112))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("x")).LeftPosZ(92, 40).TopPosZ(104, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditInt>, cx, NotNull(true).LeftPosZ(24, 64).TopPosZ(104, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditInt>, cy, NotNull(true).LeftPosZ(100, 64).TopPosZ(104, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(68, 64).TopPosZ(136, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(138, 64).TopPosZ(136, 24))
+END_LAYOUT
+
+LAYOUT(SelectSymbolLayout, 596, 572)
+	ITEM(Upp::Switch, group, SetLabel(t_("All\nSymbols\nArrows\nShapes\nDingbats\nMathematical")).LeftPosZ(208, 400).TopPosZ(4, 19))
+	ITEM(Upp::EditString, search, LeftPosZ(4, 184).TopPosZ(4, 19))
+	ITEM(Upp::RichTextView, symbols, LeftPosZ(4, 588).TopPosZ(28, 432))
+	ITEM(Upp::RichTextView, variants, LeftPosZ(4, 588).TopPosZ(464, 104))
+END_LAYOUT
+

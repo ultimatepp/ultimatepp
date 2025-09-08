@@ -98,10 +98,13 @@ void IconDes::EditBar(Bar& bar)
 	   .Check(paste_mode == PASTE_BACK);
 	bar.Separator();
 	bar.Add(c && c->undo.GetCount(), "Undo", CtrlImg::undo(), THISBACK(Undo))
+	   .Key(K_ALT_BACKSPACE)
 	   .Key(K_CTRL_Z)
 	   .Repeat();
 	bar.Add(c && c->redo.GetCount(), "Redo", CtrlImg::redo(), THISBACK(Redo))
+	   .Key(K_CTRL_Y)
 	   .Key(K_SHIFT_CTRL_Z)
+	   .Key(K_SHIFT|K_ALT_BACKSPACE)
 	   .Repeat();
 }
 

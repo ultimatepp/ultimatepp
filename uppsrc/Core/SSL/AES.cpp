@@ -1,5 +1,7 @@
 #include "SSL.h"
 
+#ifdef EVP_PKEY_KEYMGMT
+
 // Encrypts a string using AES-256-GCM with PBKDF2 key derivation
 // Format of encrypted data: "GCMv1__" + salt(16) + iv(12) + ciphertext + tag(16)
 
@@ -223,7 +225,8 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 			throw Exc("Decryption aborted");
 		
 		while(remaining > 0) {
-			String chunk = in.Get(min((int64) chunksize, remaining));
+			int64 csz = min(static_cast<int64>(chunksize), remaining);
+			String chunk = in.Get(static_cast<int>(csz)); // Chunk size is guaranteed to be smaller than INT_MAX
 			if(chunk.IsEmpty())
 				break;
 			
@@ -331,3 +334,5 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 	
 	
 }
+
+#endif

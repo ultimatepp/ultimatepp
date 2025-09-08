@@ -216,13 +216,21 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 		qtf << "[s4 &]";
 	String st = str ? "[s2;" : "[s1;";
 	String k = st + ":" + DeQtf(m.id) + ": ";
+	String pretty = m.pretty;
+	if(IsStruct(m.kind)) {
+		pretty = m.pretty0; // because otherwise it is just a name
+		int q = pretty.ReverseFind("{");
+		if(q)
+			pretty.Trim(q);
+		pretty = TrimBoth(pretty);
+	}
 	if(IsTemplate(m.kind) && str) {
 		int q = 0;
 		int w = 0;
-		while(q < m.pretty.GetLength()) {
-			if(m.pretty[q] == '<')
+		while(q < pretty.GetLength()) {
+			if(pretty[q] == '<')
 				w++;
-			if(m.pretty[q] == '>') {
+			if(pretty[q] == '>') {
 				w--;
 				if(w == 0) {
 					q++;
@@ -231,15 +239,15 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 			}
 			q++;
 		}
-		qtf << "[s2:noref: " << DecoratedItem(m.name, m.pretty.Mid(0, q)) << "&][s2 " << k;
-		if(q < m.pretty.GetLength()) {
-			while((byte)m.pretty[q] <= 32)
+		qtf << "[s2:noref: " << DecoratedItem(m.name, pretty.Mid(0, q)) << "&][s2 " << k;
+		if(q < pretty.GetLength()) {
+			while((byte)pretty[q] <= 32)
 				q++;
-			qtf << DecoratedItem(m.name, m.pretty.Mid(q));
+			qtf << DecoratedItem(m.name, pretty.Mid(q));
 		}
 	}
 	else
-		qtf << k << DecoratedItem(m.name, m.pretty);
+		qtf << k << DecoratedItem(m.name, pretty);
 
 	qtf << "&]";
 	if(onlyhdr)
@@ -248,12 +256,12 @@ String CreateQtf(const AnnotationItem& m, const String& lang, bool onlyhdr = fal
 	qtf << "[s3%" << lang << " ";
 
 	if(!str) {
-		Vector<ItemTextPart> n = ParsePretty(m.name, m.pretty);
+		Vector<ItemTextPart> n = ParsePretty(m.name, pretty);
 		if(!str) {
 			bool was;
 			for(const auto& h : n)
 				if(h.type == ITEM_PNAME) {
-					qtf << " [%-*@r \1" << m.pretty.Mid(h.pos, h.len) << "\1]";
+					qtf << " [%-*@r \1" << pretty.Mid(h.pos, h.len) << "\1]";
 					was = true;
 				}
 			if(was)

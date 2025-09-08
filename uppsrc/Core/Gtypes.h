@@ -60,7 +60,7 @@ struct Size_ : Moveable< Size_<T> > {
 
 	String        ToString() const;
 
-	Size_() {}
+	Size_() : cx(0), cy(0) {}
 	Size_(T cx, T cy) : cx(cx), cy(cy) {}
 
 	Size_(const Size_<int>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}	
@@ -171,7 +171,7 @@ struct Point_ : Moveable< Point_<T> > {
 
 	String        ToString() const;
 
-	Point_() {}
+	Point_() : x(0), y(0) {}
 	Point_(T x, T y) : x(x), y(y) {}
 
 	Point_(const Point_<int>& pt) : x((T)pt.x), y((T)pt.y) {}
@@ -361,7 +361,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 	String ToString() const;
 
-	Rect_()                                     {}
+	Rect_()                                     { Set(0, 0, 0, 0); }
 	Rect_(T l, T t, T r, T b)                   { Set(l, t, r, b); }
 	Rect_(Pt a, Pt b)                           { Set(a, b); }
 	Rect_(Pt a, Sz sz)                          { Set(a, sz); }

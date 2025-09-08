@@ -28,6 +28,7 @@ void BufferPainter::EndOp()
 		onpathstack.Drop();
 		pathlen = pathlenstack.Pop();
 	}
+	current = Null;
 }
 
 void   BufferPainter::TransformOp(const Xform2D& m)

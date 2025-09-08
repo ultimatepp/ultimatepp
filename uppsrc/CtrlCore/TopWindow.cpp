@@ -421,6 +421,46 @@ TopWindow& TopWindow::Icon(const Image& smallicon, const Image& _largeicon)
 	return *this;
 }
 
+bool is_custom_titlebar_available__;
+
+bool TopWindow::IsCustomTitleBar() const
+{
+	return custom_titlebar && is_custom_titlebar_available__;
+}
+
+TopWindow& TopWindow::CustomTitleBar(int cy)
+{
+	custom_titlebar = is_custom_titlebar_available__;
+	custom_titlebar_cy = cy;
+	return *this;
+}
+
+Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__ =
+[](const TopWindow *, TopWindow::CustomTitleBarMetrics& m) {
+	m.lm = m.rm = m.height = 0;
+	m.background = SColorPaper();
+};
+
+TopWindow::CustomTitleBarMetrics TopWindow::GetCustomTitleBarMetrics() const
+{
+	CustomTitleBarMetrics m;
+	custom_titlebar_metrics__(this, m);
+	return m;
+}
+
+static bool sIsDragArea(Ctrl& w, Point p)
+{
+	for(Ctrl& q : w)
+		if(q.GetScreenRect().Contains(p))
+			return q.IsIgnoreMouse() || sIsDragArea(q, p);
+	return false;
+}
+
+bool TopWindow::IsCustomTitleBarDragArea(Point p)
+{
+	return sIsDragArea(*this, p + GetScreenRect().TopLeft());
+}
+
 TopWindow& TopWindow::ToolWindow(bool b)
 {
 	tool = b;
@@ -505,6 +545,8 @@ TopWindow::TopWindow()
 	dokeys = true;
 	fullscreen = frameless = urgent = false;
 	close_rejects = false;
+	custom_titlebar = false;
+	custom_titlebar_cy = 0;
 }
 
 TopWindow::~TopWindow()

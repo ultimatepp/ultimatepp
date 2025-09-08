@@ -1754,7 +1754,10 @@ Image SynthetisePathIcon(const String& path)
 	iw.Clear(RGBAZero());
 	int x = FoldHash(GetHashValue(path));
 	auto cl = [](int x) { return 128 + (x & 127); };
-	iw.Circle(DPI(8), DPI(8), DPI(7)).Fill(Color(cl(x), cl(x >> 7), cl(x >> 14))).Stroke(1, SBlack());
+	Color c = Color(cl(x), cl(x >> 7), cl(x >> 14));
+	iw.Circle(DPI(8), DPI(8), DPI(7))
+	  .Fill(DPI(5), DPI(5), Blend(White(), c, 100), DPI(8), DPI(8), c)
+	  .Stroke(1, SBlack());
 	WString s = GetFileTitle(path).ToWString();
 	if(s.GetCount()) {
 		s = s.Mid(0, 1);
@@ -2000,7 +2003,7 @@ bool FileSel::Execute(int _mode) {
 			h.Add(NormalizePath(~places.Get(i, 0)));
 		if(h.Find(d) < 0) {
 			LoadFromGlobal(glru, "GlobalFileSelectorLRU");
-			LruAdd(glru, d, 5);
+			LruAdd(glru, d, 12);
 			StoreToGlobal(glru, "GlobalFileSelectorLRU");
 		}
 	}
