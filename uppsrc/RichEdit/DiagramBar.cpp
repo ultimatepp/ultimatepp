@@ -119,11 +119,31 @@ void DiagramEditor::TheBar(Bar& bar)
 		.Check(tool == i);
 	}
 	bar.Break();
-	text_editor.FontTools(bar);
-	text_editor.InkTool(bar);
-	text_editor.PaperTool(bar);
+	RichEdit& be = edit_text ? text_editor : editor_bar;
+	if(!edit_text) {
+		if(sel.GetCount()) {
+			editor_bar.formatinfo = GetSelectionFormatInfo();
+			editor_bar.SetEditable();
+			editor_bar.ShowFormat();
+			editor_bar.diagram_bar_hack = true;
+			editor_bar.WhenSel = [=] {
+				for(int i : sel) {
+					String& qtf = data.item[i].qtf;
+					RichText txt = ParseQTF(qtf);
+					txt.ApplyFormatInfo(0, editor_bar.formatinfo, txt.GetLength());
+					qtf = AsQTF(txt, CHARSET_UTF8, QTF_BODY|QTF_NOCHARSET|QTF_NOLANG|QTF_NOSTYLES);
+				}
+				Sync();
+			};
+		}
+		else
+			editor_bar.SetReadOnly();
+	}
+	be.FontTools(bar);
+	be.InkTool(bar);
+	be.PaperTool(bar);
 	bar.Separator();
-	text_editor.ParaTools(bar);
+	be.ParaTools(bar);
 }
 
 void DiagramEditor::SetBar()

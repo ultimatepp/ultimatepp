@@ -26,6 +26,10 @@ void RichEdit::ApplyFormat(dword charvalid, dword paravalid)
 {
 	if(IsReadOnly())
 		return;
+	if(diagram_bar_hack) {
+		WhenSel();
+		return;
+	}
 	RichText::FormatInfo f = formatinfo;
 	f.charvalid = charvalid;
 	f.paravalid = paravalid;

@@ -103,6 +103,7 @@ private:
 	ToolBar     toolbar;
 	DropColumns shape, line_start, line_end, line_dash, line_width;
 	DiaRichEdit text_editor;
+	RichEdit    editor_bar; // misusing RichEdit to implement selection bar
 
 	ColorButton ink, paper;
 	
@@ -159,6 +160,7 @@ private:
 	void   Dashes(ColumnPopUp& m);
 	void   Widths(ColumnPopUp& m);
 
+	RichText::FormatInfo GetSelectionFormatInfo() const;
 
 	void   FixPositions();
 	void   ForEachConst(Event<const DiagramItem&> fn) const;

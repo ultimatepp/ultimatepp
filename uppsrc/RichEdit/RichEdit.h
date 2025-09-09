@@ -319,6 +319,8 @@ private:
 	bool                     show_zoom = false;
 	
 	Color                    override_paper = Null;
+	
+	bool                     diagram_bar_hack = false; // if true, calls WhenSel in ApplyFormat
 
 	static int fh[];
 
@@ -676,6 +678,7 @@ private:
 	friend class StyleKeysDlg;
 	friend class StyleManager;
 	friend class ParaFormatting;
+	friend class DiagramEditor;
 
 	using Ctrl::Accept;
 

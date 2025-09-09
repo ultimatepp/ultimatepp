@@ -1,7 +1,7 @@
 #include "RichEdit.h"
 
 namespace Upp {
-
+	
 bool DiaRichEdit::Key(dword key, int count)
 {
 	if(key == K_ENTER) {
@@ -98,6 +98,17 @@ void DiagramEditor::FinishText()
 	
 	edit_text = false;
 	Sync();
+}
+
+RichText::FormatInfo DiagramEditor::GetSelectionFormatInfo() const
+{
+	RichText::FormatInfo fi;
+	if(cursor >= 0)
+		fi = GetFormatInfo(cursor);
+	for(int ci : sel)
+		if(ci != cursor)
+			fi.Combine(ParseQTF(data.item[itemi].qtf).GetFormatInfo(0, text.GetLength()));
+	return fi;
 }
 
 }
