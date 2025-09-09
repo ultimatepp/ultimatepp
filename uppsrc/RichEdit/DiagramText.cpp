@@ -100,6 +100,12 @@ void DiagramEditor::FinishText()
 	Sync();
 }
 
+RichText::FormatInfo DiagramEditor::GetFormatInfo(int itemi) const
+{
+	RichText text = ParseQTF(data.item[itemi].qtf);
+	return text.GetFormatInfo(0, text.GetLength());
+}
+
 RichText::FormatInfo DiagramEditor::GetSelectionFormatInfo() const
 {
 	RichText::FormatInfo fi;
@@ -107,7 +113,7 @@ RichText::FormatInfo DiagramEditor::GetSelectionFormatInfo() const
 		fi = GetFormatInfo(cursor);
 	for(int ci : sel)
 		if(ci != cursor)
-			fi.Combine(ParseQTF(data.item[itemi].qtf).GetFormatInfo(0, text.GetLength()));
+			fi.Combine(GetFormatInfo(ci));
 	return fi;
 }
 

@@ -160,6 +160,7 @@ private:
 	void   Dashes(ColumnPopUp& m);
 	void   Widths(ColumnPopUp& m);
 
+	RichText::FormatInfo GetFormatInfo(int itemi) const;
 	RichText::FormatInfo GetSelectionFormatInfo() const;
 
 	void   FixPositions();

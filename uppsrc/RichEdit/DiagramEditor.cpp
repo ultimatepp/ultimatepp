@@ -91,6 +91,7 @@ DiagramEditor& DiagramEditor::AllowDarkContent(bool b)
 void DiagramEditor::Skin()
 {
 	SetBar();
+	editor_bar.Skin();
 }
 
 void DiagramEditor::Paint(Draw& w)
