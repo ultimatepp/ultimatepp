@@ -124,7 +124,7 @@ void DiagramEditor::Paint(Draw& w)
 		dark = IsDarkContent();
 		data.Paint(iw, *this);
 
-		if(HasCapture() && doselection) {
+		if(HasCapture() && doselection && tool < 0) {
 			Rect r(dragstart, dragcurrent);
 			r.Normalize();
 			iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());

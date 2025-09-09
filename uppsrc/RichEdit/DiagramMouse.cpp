@@ -214,18 +214,6 @@ void DiagramEditor::LeftDown(Point p, dword keyflags)
 	if(sizehandle.x || sizehandle.y)
 		return;
 	
-	if(tool >= 0) {
-		KillCursor();
-		DiagramItem& m = AddItem(tl[tool].shape);
-		m = tl[tool];
-		Grid(p);
-		m.pos = p;
-		m.size = Sizef(0, 0);
-		m.FixPosition();
-		draghandle = Point(1, 1);
-		return;
-	}
-
 	if(IsCursor()) {
 		drag_cp = CursorItem().pos;
 		Point h = GetHandle(cursor, p);
@@ -285,7 +273,40 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 
 	moved = moved || p != dragstart;
 
+	if(HasCapture() && IsCursor() && draghandle == Point(999,999) && tool >= 0) { // adding tool based shape
+		DiagramItem& m = CursorItem();
+		Pointf p0 = dragstart;
+		Grid(p0);
+		Pointf p1 = p;
+		Grid(p1);
+		m.size = p1 - p0;
+		if(m.IsLine())
+			m.pos = p0;
+		else {
+			m.size.cx = max(0.5 * m.size.cx, 4.0);
+			m.size.cy = max(0.5 * m.size.cy, 4.0);
+			m.pos = p0 + m.size;
+			ASSERT(m.pos - m.size == p0);
+			m.FixPosition();
+			ASSERT(m.pos - m.size == p0);
+		}
+		m.FixPosition();
+		Sync();
+		return;
+	}
 	if(HasCapture() && doselection) { // do rectangular selection
+		if(tool >= 0) { // start tool
+			if(Distance(dragstart, p) >= 8) {
+				KillCursor();
+				DiagramItem& m = AddItem(tl[tool].shape);
+				m = tl[tool];
+				Grid(p);
+				m.pos = p;
+				m.size = Sizef(8, 8);
+				draghandle = Point(999,999);
+			}
+			return;
+		}
 		dragcurrent = p;
 		Rectf r(dragstart, dragcurrent);
 		r.Normalize();
@@ -301,7 +322,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		Sync();
 		return;
 	}
-	if(HasCapture() && (sizehandle.x || sizehandle.y)) {
+	if(HasCapture() && (sizehandle.x || sizehandle.y)) { // resize canvas
 		Grid(p);
 		if(IsNull(data.size))
 			data.size = data.GetSize();
@@ -312,6 +333,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 		Sync();
 		return;
 	}
+
 	if(HasCapture() && IsCursor() && (moving || Distance(dragstart, p) >= 8)) {
 		moving = true;
 		DiagramItem& m = CursorItem();
@@ -374,6 +396,8 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 				};
 				Do(draghandle.x, hsz.cx, p.x, drag_cp.x);
 				Do(draghandle.y, hsz.cy, p.y, drag_cp.y);
+				hsz.cx = max(hsz.cx, 8.0);
+				hsz.cy = max(hsz.cy, 8.0);
 				m.size = hsz;
 				if(m.aspect_ratio) {
 					Sizef sz1, sz2;
@@ -391,7 +415,6 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 void DiagramEditor::LeftUp(Point, dword)
 {
 	moving = doselection = false;
-	tool = -1;
 	conns.Clear();
 	Sync();
 	Commit();

@@ -436,10 +436,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 		w.End();
 
-		DDUMP(pos);
-		DDUMP(size);
-		DDUMP(GetRect());
-		DDUMP(GetConnections());
 		if((style & GRID))
 			for(Pointf p : GetConnections()) {
 				w.Circle(p, 5);

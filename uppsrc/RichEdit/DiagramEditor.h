@@ -111,7 +111,7 @@ private:
 	DiagramItem tl[2];
 
 	ScrollBars  sb;
-
+	
 	void SetupDark(ColorPusher& c) const;
 	bool IsDarkContent() const;
 

@@ -49,11 +49,12 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		}
 	}
 
+	tool = -1;
+	SetBar();
+
 	ColumnPopUp shape;
 	Shapes(shape);
 	
-	tool = -1;
-
 	int si = shape.Execute();
 	
 	if(si < 0)

@@ -51,8 +51,10 @@ void DiagramItem::FixPosition()
 	Normalize();
 	pos.x = clamp(pos.x, 0.0, 100000.0);
 	pos.y = clamp(pos.y, 0.0, 100000.0);
-	size.cx = clamp(size.cx, 8.0, 100000.0);
-	size.cy = clamp(size.cy, 8.0, 100000.0);
+	if(IsLine())
+		return;
+	size.cx = clamp(size.cx, 4.0, 100000.0);
+	size.cy = clamp(size.cy, 4.0, 100000.0);
 }
 
 bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
@@ -363,8 +365,6 @@ void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 		for(const DiagramItem& m : item)
 			if(m.IsLine())
 				conn << m.pos << m.pos + m.size;
-	DLOG("=============================");
-	DDUMP(conn);
 	for(int i = 0; i < item.GetCount(); i++) {
 		dword style = 0;
 		if(i == p.cursor)
