@@ -160,7 +160,13 @@ void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {
 	if(keyflags & K_ALT) {
 		if(IsCursor()) {
 			DiagramItem& m = CursorItem();
-			m.rotate = ((int(m.rotate) + sgn(zdelta) * 15) / 15 * 15) % 360;
+			if(m.IsLine()) {
+				int angle = int(Bearing(m.size) * 180 / M_PI);
+				angle = ((angle + 360 + sgn(zdelta) * 15) / 15 * 15) % 360;
+				m.size = Length(m.size) * Polar(angle * M_PI / 180);
+			}
+			else
+				m.rotate = ((int(m.rotate) + sgn(zdelta) * 15) / 15 * 15) % 360;
 			Commit();
 			Sync();
 		}

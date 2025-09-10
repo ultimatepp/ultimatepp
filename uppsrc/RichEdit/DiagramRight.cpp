@@ -78,19 +78,17 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		mdata = LoadFile(path);
 		if(IsNull(mdata))
 			return;
-		size = Null;
+		bool loaded = false;
 		if(IsSVG(mdata)) {
-			Rectf f = GetSVGBoundingBox(mdata);
-			size = f.GetSize();
+			loaded = true;
 		}
 		else {
 			StringStream ss(mdata);
 			One<StreamRaster> r = StreamRaster::OpenAny(ss);
-			if(r)
-				size = r->GetSize();
+			loaded = true;
 		}
 		if(IsNull(size)) {
-			Exclamation(Format(t_("Unsupported image format in file [* \1%s\1]."), path));
+			Exclamation(t_("Unsupported image format."));
 			return;
 		}
 	}
@@ -119,6 +117,8 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		m.blob_id = data.AddBlob(mdata);
 	m.shape = si; // shape must be set before SetAttrs to avoid Normalise
 	Sizef szf = m.GetStdSize(data);
+	while(max(szf.cx, szf.cy) > 1000)
+		szf *= 0.5;
 	if(IsNull(cp)) {
 		m.pos = p;
 		m.size = szf / 2;

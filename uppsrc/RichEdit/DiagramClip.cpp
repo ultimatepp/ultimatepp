@@ -34,21 +34,25 @@ void DiagramEditor::Cut()
 	Delete();
 }
 
+void DiagramEditor::AddImage(Pointf pos, const Image& img)
+{
+	if(IsNull(img))
+		return;
+	Sizef sz = img.GetSize();
+	DiagramItem& m = data.item.Add();
+	m.shape = DiagramItem::SHAPE_IMAGE;
+	m.blob_id = data.AddBlob(PNGEncoder().SaveString(img));
+	m.pos = pos;
+	m.size = sz * 0.5;
+	while(max(m.size.cx, m.size.cy) > 2000)
+		m.size *= 0.5;
+	SetCursor(data.item.GetCount() - 1);
+}
+
 void DiagramEditor::Paste()
 {
-	if(IsClipboardAvailableImage()) {
-		Image img = ReadClipboardImage();
-		if(IsNull(img))
-			return;
-		Sizef sz = img.GetSize();
-		int ii = data.item.GetCount();
-		DiagramItem& m = data.item.Add();
-		m.shape = DiagramItem::SHAPE_IMAGE;
-		m.blob_id = data.AddBlob(PNGEncoder().SaveString(img));
-		m.pos = Rectf(Sizef(data.GetSize())).CenterPos(sz);
-		m.size = sz;
-		SetCursor(ii);
-	}
+	if(IsClipboardAvailableImage())
+		AddImage(Rectf(Sizef(data.GetSize())).CenterPoint(), ReadClipboardImage());
 	else {
 		String txt = ReadClipboardText();
 		Diagram clip;

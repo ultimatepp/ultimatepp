@@ -89,7 +89,7 @@ struct DiagramItem {
 	
 	Xform2D Rotation(int d = 1) const { return Xform2D::Rotation(d * M_PI * rotate / 180); }
 
-	void Serialize(Stream& s)         { s % pos % size % shape % ink % paper % qtf % width % cap[0] % cap[1] % dash % blob_id % flip_horz % flip_vert % aspect_ratio; }
+	void Serialize(Stream& s);
 
 	void Reset();
 	void Save(StringBuffer& r) const;
@@ -123,6 +123,7 @@ struct Diagram {
 	void   Paint(Painter& w, const PaintInfo& pi) const;
 	String AddBlob(const String& data);
 	String GetBlob(const String& id) const;
+	void   SweepBlobs(const Index<String>& keep_ids);
 	Image  GetBlobImage(const String& id) const;
 	Rectf  GetBlobSvgPathBoundingBox(const String& id) const;
 	void   Serialize(Stream& s);

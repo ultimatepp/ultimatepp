@@ -165,36 +165,53 @@ String BinDiff(const String& base, const String& data)
 	return diff;
 }
 
-void BinUndoRedo::Reset(const String& current, const String& ids)
+void BinUndoRedo::Reset(const String& current, const Value& info)
 {
 	undo.Clear();
 	redo.Clear();
 	undosize = 0;
 	commit.data = current;
-	commit.ids = ids;
+	commit.info = info;
 }
 
-bool BinUndoRedo::Commit(const String& current, const String& ids, int limit)
+bool BinUndoRedo::DropUndo()
+{
+	if(undo.GetCount()) {
+		undosize -= undo[0].data.GetCount();
+		undo.Remove(0);
+		return true;
+	}
+	return false;
+}
+
+bool BinUndoRedo::DropRedo()
+{
+	if(redo.GetCount()) {
+		redo.Remove(0);
+		return true;
+	}
+	return false;
+}
+
+bool BinUndoRedo::Commit(const String& current, const Value& info, int limit)
 {
 	bool ret = false;
 	if(redo.GetCount()) {
 		redo.Clear();
 		ret = true;
 	}
-	if(current != commit.data || ids != commit.ids) {
+	if(current != commit.data || info != commit.info) {
 		String u = BinDiff(current, commit.data);
-		while(undo.GetCount() && undosize + u.GetCount() > limit) {
-			undosize -= undo[0].data.GetCount();
-			undosize -= undo[0].ids.GetCount();
-			undo.Remove(0);
-		}
+		while(undosize + u.GetCount() > limit)
+			if(!DropUndo())
+				break;
 		Entry& e = undo.Add();
 		e.data = u;
-		e.ids = commit.ids;
+		e.info = commit.info;
 		undosize += u.GetCount();
-		undosize += ids.GetCount();
+		undosize += info.GetCount();
 		commit.data = current;
-		commit.ids = ids;
+		commit.info = info;
 		ret = true;
 	}
 	return ret;
@@ -205,10 +222,11 @@ String BinUndoRedo::Undo(const String& current)
 	if(undo.GetCount()) {
 		Entry prev = undo.Pop();
 		commit.data = BinUndiff(commit.data, prev.data);
+		commit.info = prev.info;
 		
 		Entry& e = redo.Add();
 		e.data = BinDiff(commit.data, current);
-		e.ids = prev.ids;
+		e.info = prev.info;
 		return commit.data;
 	}
 	return String::GetVoid();
@@ -219,21 +237,14 @@ String BinUndoRedo::Redo(const String& current)
 	if(redo.GetCount()) {
 		Entry next = redo.Pop();
 		commit.data = BinUndiff(commit.data, next.data);
+		commit.info = next.info;
+
 		Entry& e = undo.Add();
 		e.data = BinDiff(commit.data, current);
-		e.ids = next.ids;
+		e.info = next.info;
 		return commit.data;
 	}
 	return String::GetVoid();
-}
-
-void BinUndoRedo::Ids(Event<const String&> fn)
-{
-	fn(commit.ids);
-	for(const Entry& e : undo)
-		fn(e.ids);
-	for(const Entry& e : redo)
-		fn(e.ids);
 }
 
 }

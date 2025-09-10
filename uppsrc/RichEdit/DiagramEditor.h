@@ -159,6 +159,7 @@ private:
 	void   Caps(ColumnPopUp& m, bool left);
 	void   Dashes(ColumnPopUp& m);
 	void   Widths(ColumnPopUp& m);
+	void   AddImage(Pointf pos, const Image& img);
 
 	RichText::FormatInfo GetFormatInfo(int itemi) const;
 	RichText::FormatInfo GetSelectionFormatInfo() const;

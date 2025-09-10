@@ -38,6 +38,22 @@ void DiagramItem::Reset()
 	dash = 0;
 }
 
+void DiagramItem::Serialize(Stream& s)
+{ // used for undo/redo mostly
+	s % pos
+	  % size
+	  % shape
+	  % qtf
+	  % width
+	  % ink
+	  % paper
+	  % blob_id
+	  % flip_horz
+	  % flip_vert
+	  % aspect_ratio
+	  % rotate;
+}
+
 void DiagramItem::Normalize()
 {
 	if(IsLine())
@@ -353,6 +369,11 @@ Rectf Diagram::GetBlobSvgPathBoundingBox(const String& id) const
 	return v.Is<Rectf>() ? (Rectf)v : (Rectf)Null;
 }
 
+void Diagram::SweepBlobs(const Index<String>& keep_ids)
+{
+	blob.RemoveIf([&](int i) { return keep_ids.Find(blob.GetKey(i)) < 0; });
+}
+
 void Diagram::Paint(Painter& w, const Diagram::PaintInfo& p) const
 {
 	w.Begin();
@@ -427,6 +448,9 @@ void Diagram::Load(CParser& p)
 {
 	item.Clear();
 	blob.Clear();
+	img.Clear();
+	img_hd = false;
+	size = Null;
 	while(!p.IsEof())
 		if(p.Id("QDF")) {
 			p.ReadDouble();

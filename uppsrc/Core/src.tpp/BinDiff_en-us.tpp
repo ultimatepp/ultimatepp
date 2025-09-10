@@ -36,19 +36,31 @@ data into BinUndoRedo. Lately, it can retrieve binary String
 with [* Undo]/[* Redo] a serialize it back into content.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:BinUndoRedo`:`:Reset`(const String`&`): [@(0.0.255) void] 
-[* Reset]([@(0.0.255) const] String[@(0.0.255) `&] [*@3 current])&]
+[s5;:Upp`:`:BinUndoRedo`:`:Reset`(const String`&`,const Value`&`): [@(0.0.255) void] 
+[* Reset]([@(0.0.255) const] String[@(0.0.255) `&] [*@3 current], [@(0.0.255) const] 
+Value[@(0.0.255) `&] [*@3 info] [@(0.0.255) `=] Value())&]
 [s2;%% Sets the initial data content. This is typically used after 
-loading the data into application or creating a new content.&]
+loading the data into application or creating a new content. 
+[%-*@3 info] is additional client code information that is associated 
+with each undo/redo step and can be retrieved. Client code might 
+typically use this information to manage resources that are not 
+stored within [%-*@3 current] data.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:Commit`(const String`&`,const Value`&`,int`): [@(0.0.255) bo
+ol] [* Commit]([@(0.0.255) const] String[@(0.0.255) `&] [*@3 current], 
+[@(0.0.255) const] Value[@(0.0.255) `&] [*@3 info], [@(0.0.255) int] 
+[*@3 limit] [@(0.0.255) `=] [@3 4096] [@(0.0.255) `*][@3 1024])&]
 [s5;:Upp`:`:BinUndoRedo`:`:Commit`(const String`&`,int`): [@(0.0.255) bool] 
 [* Commit]([@(0.0.255) const] String[@(0.0.255) `&] [*@3 current], [@(0.0.255) int] 
 [*@3 limit] [@(0.0.255) `=] [@3 4096] [@(0.0.255) `*][@3 1024])&]
 [s2;%% Adds a snapshot of content [%-*@3 current] effectively creating 
 single undo step. [%-*@3 limit] represents maximum memory that 
 can be used to store undo steps (when there is more, oldest steps 
-are dropped).&]
+are dropped). [%-*@3 info] is additional client code information 
+that is associated with each undo/redo step and can be retrieved. 
+Client code might typically use this information to manage resources 
+that are not stored within [%-*@3 current] data.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:BinUndoRedo`:`:IsUndo`(`)const: [@(0.0.255) bool] [* IsUndo]() 
@@ -59,6 +71,39 @@ are dropped).&]
 [s5;:Upp`:`:BinUndoRedo`:`:IsRedo`(`)const: [@(0.0.255) bool] [* IsRedo]() 
 [@(0.0.255) const]&]
 [s2;%% Returns true if undo steps are available..&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:GetUndoCount`(`)const: [@(0.0.255) int] 
+[* GetUndoCount]() [@(0.0.255) const]&]
+[s2;%% Returns the number of undo steps.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:GetRedoCount`(`)const: [@(0.0.255) int] 
+[* GetRedoCount]() [@(0.0.255) const]&]
+[s2;%% Returns the number of redo steps.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:DropUndo`(`): [@(0.0.255) bool] [* DropUndo]()&]
+[s2;%% Deletes oldest undo step.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:DropRedo`(`): [@(0.0.255) bool] [* DropRedo]()&]
+[s2;%% Deletes oldest redo step.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:GetUndoInfo`(int`)const: Value [* GetUndoInfo]([@(0.0.255) int
+] [*@3 i]) [@(0.0.255) const]&]
+[s2;%% Returns the information associated with undo step [%-*@3 i].&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:GetRedoInfo`(int`)const: Value [* GetRedoInfo]([@(0.0.255) int
+] [*@3 i]) [@(0.0.255) const]&]
+[s2;%% Returns the information associated with redo step [%-*@3 i].&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:BinUndoRedo`:`:GetCommitInfo`(`)const: Value [* GetCommitInfo]() 
+[@(0.0.255) const]&]
+[s2;%% Returns the information associated with current commit.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:BinUndoRedo`:`:Undo`(const String`&`): String [* Undo]([@(0.0.255) const] 
