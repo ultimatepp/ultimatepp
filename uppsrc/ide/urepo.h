@@ -2,8 +2,6 @@
 #include <CtrlCore/lay.h>
 
 class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
-	typedef UrepoConsole CLASSNAME;
-	
 	Font font;
 	void AddResult(const String& out);
 	bool canceled = false;

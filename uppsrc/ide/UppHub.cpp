@@ -540,11 +540,18 @@ void UppHubDlg::Update()
 	if(!PromptYesNo("Pull updates for all modules?"))
 		return;
 	UrepoConsole console;
+	
+	bool errors = false;
 	for(const UppHubNest& n : upv) {
 		String dir = GetHubDir() + "/" + n.name;
-		if(DirectoryExists(dir))
-			console.Git(dir, "pull --rebase");
+		if(!DirectoryExists(dir))
+			continue;
+		
+		if (console.Git(dir, "pull --rebase") != 0)
+			errors = true;
 	}
+	if (errors)
+		console.Perform();
 }
 
 void UppHubDlg::Install(const Index<String>& ii_)
