@@ -102,7 +102,7 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 
 	int m = h.x * h.y;
 	if((h.x || h.y)  && IsCursor() && CursorItem().IsLine())
-		return Image::SizeAll();
+		return DiagramImg::LineCursor();
 	
 	if(h.x == -1 && h.y == 1)
 		return DiagramImg::RotateCursor();
@@ -418,8 +418,13 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 	}
 }
 
-void DiagramEditor::LeftUp(Point, dword)
+void DiagramEditor::LeftUp(Point p, dword flags)
 {
+	Map(p);
+	if(!moving && !(flags & K_CTRL)) {
+		sel.Clear();
+		SetCursor(FindItem(p));
+	}
 	moving = doselection = false;
 	conns.Clear();
 	Sync();

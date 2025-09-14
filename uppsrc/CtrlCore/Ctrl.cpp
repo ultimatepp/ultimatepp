@@ -1026,7 +1026,7 @@ String Ctrl::Name0() const {
 	return s;
 }
 
-String Ctrl::Name(Ctrl *ctrl)
+String Ctrl::Name(const Ctrl *ctrl)
 {
 	return Upp::Name(ctrl);
 }
@@ -1057,7 +1057,7 @@ bool   Ctrl::InLoop() const
 bool   Ctrl::InCurrentLoop() const
 {
 	GuiLock __;
-	return GetLoopCtrl() == this;
+	return GetLoopCtrl() && GetLoopCtrl()->GetOwner() == GetOwner();
 }
 
 #ifdef HAS_TopFrameDraw

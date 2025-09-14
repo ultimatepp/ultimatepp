@@ -51,7 +51,9 @@ void DiagramItem::Serialize(Stream& s)
 	  % flip_horz
 	  % flip_vert
 	  % aspect_ratio
-	  % rotate;
+	  % rotate
+	  % cap[0]
+	  % cap[1];
 }
 
 void DiagramItem::Normalize()

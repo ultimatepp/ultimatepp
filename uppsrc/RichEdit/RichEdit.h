@@ -481,6 +481,8 @@ private:
 	
 	RichPara::CharFormat last_format;
 	Image      last_format_img;
+	
+	String     diagram_editor_settings;
 
 	Size       GetZoomedPage() const;
 	int        GetPosY(PageY py) const;
@@ -663,6 +665,8 @@ private:
 	void     BegSelTabFixEnd(bool fix);
 
 	Size     GetPhysicalSize(const RichObject& obj);
+
+	bool     EditDiagram(RichObject& o);
 
 	struct DisplayDefault : public Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,

@@ -81,6 +81,8 @@ int ColumnPopUp::Execute()
 void ColumnPopUp::Deactivate()
 {
 	Close();
+	IgnoreMouseClick();
+	cursor = Null;
 }
 
 };

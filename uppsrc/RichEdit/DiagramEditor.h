@@ -198,6 +198,8 @@ private:
 public:
 	String Save() const;
 	bool   Load(const String& s);
+	
+	void   SerializeSettings(Stream& s);
 
 	DiagramEditor& DarkContent(bool b = true);
 	DiagramEditor& AllowDarkContent(bool b = true);

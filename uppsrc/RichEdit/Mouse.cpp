@@ -376,19 +376,11 @@ void RichEdit::LeftDouble(Point p, dword flags)
 			Size osz = object.GetSize();
 			if(!object) return;
 			if(object.GetTypeName() == "qdf") {
-				TopWindow app;
-				app.Icon(DiagramImg::Diagram());
-				app.Title("Diagram");
-				app.Sizeable().Zoomable();
-				DiagramEditor de;
-				de.Load(ZDecompress(~object.GetData()));
-				app.Add(de.SizePos());
-				app.Execute();
-				RichText clip;
-				RichPara p;
-				RichObject o = RichObject("qdf", ZCompress(de.Save()));
-				o.SetSize(osz);
-				ReplaceObject(o);
+				RichObject o = object;
+				if(EditDiagram(o)) {
+					o.SetSize(osz);
+					ReplaceObject(o);
+				}
 			}
 			else {
 				RichObject o = object;

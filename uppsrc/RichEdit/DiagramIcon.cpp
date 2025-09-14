@@ -162,8 +162,11 @@ void Upp::DiagramEditor::DropColumns::Paint(Draw& w, const Rect& r, const Value&
 DiagramEditor::DropColumns::DropColumns()
 {
 	AddButton().Main().WhenPush << [=] {
-		SetData(popup.Execute(GetScreenRect(), this));
-		Action();
+		int c = popup.Execute(GetScreenRect(), this);
+		if(IsNull(c))
+			return;
+		SetData(c);
+		UpdateAction();
 	};
 	SetDisplay(*this);
 }

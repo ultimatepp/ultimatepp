@@ -63,6 +63,16 @@ DiagramEditor::DiagramEditor()
 	GetAttrs(DiagramItem());
 }
 
+void DiagramEditor::SerializeSettings(Stream& s)
+{
+	int version = 1;
+	
+	s % grid % display_grid;
+
+//	for(int i = 0; i < 2; i++)
+//		s % tl[i];
+}
+
 void DiagramEditor::SetupDark(ColorPusher& c) const
 {
 	c.AllowDarkContent(allow_dark_content);
