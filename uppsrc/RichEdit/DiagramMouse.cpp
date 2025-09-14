@@ -27,9 +27,10 @@ Point DiagramEditor::GetHandle(int i, Point p_) const
 	if(i >= 0) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
-			if(Distance(m.pos, p) < 6)
+			double r = (m.width + 12) / 2 - 1;
+			if(Distance(m.pos, p) <= r)
 				return Point(-1, -1);
-			if(Distance(m.pos + m.size, p) < 6)
+			if(Distance(m.pos + m.size, p) <= r)
 				return Point(1, 1);
 
 		}

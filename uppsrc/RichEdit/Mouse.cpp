@@ -374,11 +374,13 @@ void RichEdit::LeftDouble(Point p, dword flags)
 		if(objectpos == c) {
 			RichObject object = GetObject();
 			Size osz = object.GetSize();
+			Sizef pxsz = object.GetPixelSize();
 			if(!object) return;
 			if(object.GetTypeName() == "qdf") {
 				RichObject o = object;
 				if(EditDiagram(o)) {
-					o.SetSize(osz);
+					Sizef sz = osz / pxsz * o.GetPixelSize();
+					o.SetSize(Size(max((int)round(sz.cx), 1), max((int)round(sz.cy), 1)));
 					ReplaceObject(o);
 				}
 			}

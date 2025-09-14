@@ -83,6 +83,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			w.Stroke(0.2, sel1);
 	};
 	
+	w.Move(0, 0).EndPath(); // this is to start a new path for every item
+
 	if(IsLine()) {
 		if(style) {
 			w.Move(pos).RelLine(size).EndPath();
@@ -109,6 +111,8 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				a1 += v * 4 * width;
 			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
 				a2 -= v * 4 * width;
+		}
+		if(d > 12 * width) { // enough length to have caps
 			if(findarg(cap[0], CAP_ARROWL, CAP_DIML) >= 0)
 				a1 += v * 12 * width;
 			if(findarg(cap[1], CAP_ARROWL, CAP_DIML) >= 0)
@@ -118,7 +122,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		w.Move(a1).Line(a2);
 		DoDash();
 		Stroke();
-		
 		Pointf o = Orthogonal(v);
 		if(d > 4 * width) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
@@ -137,10 +140,10 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
 					break;
 				case CAP_DISC:
-					w.Circle(p, 5).Fill(ink);
+					w.Circle(p, 4 + width / 2).Fill(ink);
 					break;
 				case CAP_CIRCLE:
-					w.Circle(p, 5).Fill(paper).Stroke(1, ink);
+					w.Circle(p, 4 + width / 2).Fill(paper).Stroke(1, ink);
 					break;
 				case CAP_TL:
 					w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
@@ -151,10 +154,10 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 					w.Move(p).Line(a + ool).Line(a - ool).Fill(ink);
 					break;
 				case CAP_DISCL:
-					w.Circle(p, 8).Fill(ink);
+					w.Circle(p, 7 + width / 2).Fill(ink);
 					break;
 				case CAP_CIRCLEL:
-					w.Circle(p, 8).Fill(paper).Stroke(1, ink);
+					w.Circle(p, 7 + width / 2).Fill(paper).Stroke(1, ink);
 					break;
 				}
 			};

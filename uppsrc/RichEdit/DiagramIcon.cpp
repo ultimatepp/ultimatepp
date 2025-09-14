@@ -52,8 +52,9 @@ Image DiagramEditor::CapIcon(int start, int end)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pos = Point(DPI(4), isz.cy / 2);
-	m.size = Size(isz.cx - DPI(8), 0);
+	m.pos = Point(findarg(start, DiagramItem::CAP_CIRCLEL, DiagramItem::CAP_DISCL) >= 0 ? DPI(6) : DPI(4), isz.cy / 2);
+	m.size = Size(isz.cx - (findarg(end, DiagramItem::CAP_CIRCLEL, DiagramItem::CAP_DISCL) >= 0 ? DPI(10) :
+	                        findarg(end, DiagramItem::CAP_CIRCLE, DiagramItem::CAP_DISC) >= 0 ? DPI(8) : DPI(4)), 0);
 	m.shape = DiagramItem::SHAPE_LINE;
 	m.width = DPI(1);
 	m.cap[0] = start;

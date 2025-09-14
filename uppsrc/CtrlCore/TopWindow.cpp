@@ -88,7 +88,6 @@ void TopWindow::DefaultBreak()
 
 void TopWindow::Close()
 {
-	DLOG("CLOSE");
 	if(InLoop()) {
 		if(!InCurrentLoop()) return;
 		DefaultBreak();
