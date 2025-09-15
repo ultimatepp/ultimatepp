@@ -576,7 +576,7 @@ void RichEdit::SerializeSettings(Stream& s)
 			s % k.styleid % k.stylename % k.face % k.height % k.ink % k.paper;
 		}
 	if(version >= 4)
-		s % diagram_editor_settings;
+		s % diagram_editor_settings % diagram_editor_placement;
 }
 
 void RichEdit::Reset()
@@ -756,14 +756,13 @@ bool RichEdit::EditDiagram(RichObject& o)
 	String s = ~o.GetData();
 	if(s.GetCount())
 		de.Load(ZDecompress(~o.GetData()));
-	StringStream in(diagram_editor_settings);
-	de.SerializeSettings(in);
+	LoadFromString([&](Stream& s) { de.SerializeSettings(s); }, diagram_editor_settings);
+	LoadFromString([&](Stream& s) { app.SerializePlacement(s); }, diagram_editor_placement);
 	app << de.SizePos();
 	app.Execute();
 	o = RichObject("qdf", ZCompress(de.Save()));
-	StringStream out;
-	de.SerializeSettings(out);
-	diagram_editor_settings = out;
+	diagram_editor_settings = StoreAsString([&](Stream& s) { de.SerializeSettings(s); });
+	diagram_editor_placement = StoreAsString([&](Stream& s) { app.SerializePlacement(s); });
 	return true;
 }
 

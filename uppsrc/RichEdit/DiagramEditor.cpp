@@ -69,8 +69,8 @@ void DiagramEditor::SerializeSettings(Stream& s)
 	
 	s % grid % display_grid;
 
-//	for(int i = 0; i < 2; i++)
-//		s % tl[i];
+	for(int i = 0; i < 2; i++)
+		s % tl[i];
 }
 
 void DiagramEditor::SetupDark(ColorPusher& c) const

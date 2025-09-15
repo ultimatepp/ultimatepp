@@ -483,6 +483,7 @@ private:
 	Image      last_format_img;
 	
 	String     diagram_editor_settings;
+	String     diagram_editor_placement;
 
 	Size       GetZoomedPage() const;
 	int        GetPosY(PageY py) const;
