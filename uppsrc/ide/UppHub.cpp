@@ -541,19 +541,19 @@ void UppHubDlg::Update()
 		return;
 	UrepoConsole console;
 
-	bool errors = false;
+	int errors = 0;
 	for(const UppHubNest& n : upv) {
 		String dir = GetHubDir() + "/" + n.name;
 		if(!DirectoryExists(dir))
 			continue;
 
 		if(console.Git(dir, "pull --rebase") != 0)
-			errors = true;
+			++errors;
 	}
-	if(!errors)
+	if(errors == 0)
 		return;
 	
-	ErrorOK("Update failed. Review the logs to diagnose and resolve the issues.");
+	ErrorOK(Format("Update failed (%d errors). Review the logs to diagnose and resolve the issues.", errors));
 	console.Perform();
 }
 
