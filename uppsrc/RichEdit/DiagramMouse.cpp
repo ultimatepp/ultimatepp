@@ -422,7 +422,7 @@ void DiagramEditor::MouseMove(Point p, dword keyflags)
 void DiagramEditor::LeftUp(Point p, dword flags)
 {
 	Map(p);
-	if(!moving && !(flags & K_CTRL)) {
+	if(!moving && !(flags & K_CTRL) && !doselection) {
 		sel.Clear();
 		SetCursor(FindItem(p));
 	}
