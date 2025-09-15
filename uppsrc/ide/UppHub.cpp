@@ -552,8 +552,10 @@ void UppHubDlg::Update()
 	}
 	if(errors == 0)
 		return;
-	
-	ErrorOK(Format("Update failed (%d errors). Review the logs to diagnose and resolve the issues.", errors));
+
+	ErrorOK(
+		Format("Update failed (%d errors). Review the logs to diagnose and resolve the issues.",
+	           errors));
 	console.Perform();
 }
 
