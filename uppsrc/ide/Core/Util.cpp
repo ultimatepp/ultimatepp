@@ -32,7 +32,7 @@ String GetGitPath()
 	static String path;
 	ONCELOCK {
 		path = AppendFileName(GetExeFolder(), "\\bin\\mingit\\cmd\\git.exe");
-		path = FileExists(path) ? "\"" + path + "\"" : "git";
+		path = FileExists(path) ? String("\"") + path + "\"" : String("git");
 	}
 	return path;
 #else

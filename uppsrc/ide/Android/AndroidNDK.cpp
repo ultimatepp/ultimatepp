@@ -38,7 +38,7 @@ String AndroidNDK::FindDefaultPlatform() const
 	Sort(platforms, StdGreater<String>());
 	Android::RemoveVersionsNormalization(platforms);
 	
-	return !platforms.IsEmpty() ? platforms[0] : "";
+	return !platforms.IsEmpty() ? platforms[0] : String();
 }
 
 String AndroidNDK::FindDefaultToolchain() const
@@ -51,7 +51,7 @@ String AndroidNDK::FindDefaultToolchain() const
 	}
 	
 	SortIndex(toolchains, StdGreater<String>());
-	return !toolchains.IsEmpty() ? toolchains[toolchains.GetCount()] : "";
+	return !toolchains.IsEmpty() ? toolchains[toolchains.GetCount()] : String();
 }
 
 String AndroidNDK::FindDefaultCppRuntime() const
@@ -116,7 +116,7 @@ String AndroidNDK::GetIncludeDir() const
 	dir << "arch-arm" << DIR_SEPS;
 	dir << "usr" << DIR_SEPS << "include";
 	
-	return DirectoryExists(dir) ? dir : "";
+	return DirectoryExists(dir) ? dir : String();
 }
 
 String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const

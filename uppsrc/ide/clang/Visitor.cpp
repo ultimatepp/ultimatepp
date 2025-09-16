@@ -332,7 +332,7 @@ bool ClangVisitor::ProcessNode(CXCursor cursor)
 		}
 		else {
 			static String op = "operator";
-			int q = FindId(r.id, r.kind == CXCursor_ConversionFunction ? "operator" : r.name);
+			int q = FindId(r.id, r.kind == CXCursor_ConversionFunction ? String("operator") : r.name);
 			if(q >= 0) {
 				r.nest = r.id.Mid(0, q);
 				r.nest.TrimEnd("::");

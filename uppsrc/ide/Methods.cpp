@@ -602,7 +602,7 @@ String BuildMethods::GetSetupPrefix(const String& setupKey) const
 
 String BuildMethods::GetSetupPrefix(const Index<String>& buildersGroup) const
 {
-	return buildersGroup.GetCount() ? GetSetupPrefix(buildersGroup[0]) : "";
+	return buildersGroup.GetCount() ? GetSetupPrefix(buildersGroup[0]) : String();
 }
 
 void BuildMethods::InitSetups()
