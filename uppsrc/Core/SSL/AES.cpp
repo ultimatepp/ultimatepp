@@ -1,7 +1,5 @@
 #include "SSL.h"
 
-#ifdef EVP_PKEY_KEYMGMT
-
 // Encrypts a string using AES-256-GCM with PBKDF2 key derivation
 // Format of encrypted data: "GCMv1__" + salt(16) + iv(12) + ciphertext + tag(16)
 
@@ -362,5 +360,3 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 	
 	
 }
-
-#endif
