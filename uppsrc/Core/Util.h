@@ -475,7 +475,7 @@ bool LoadFromStrings(T& x, const Vector<String>& s) {
 
 void             RegisterGlobalConfig(const char *name);
 void             RegisterGlobalSerialize(const char *name, Event<Stream&> WhenSerialize);
-void             RegisterGlobalConfig(const char *name, Event<>  WhenFlush);
+void             RegisterGlobalConfig(const char *name, Event<> WhenFlush);
 
 String           GetGlobalConfigData(const char *name);
 void             SetGlobalConfigData(const char *name, const String& data);

@@ -57,6 +57,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	int icx = IconSz().cx + DPI(4) + DPI(18);
 	bar.Add(shape, icx);
+	shape.Enable(!(IsCursor() && findarg(CursorItem().shape, DiagramItem::SHAPE_SVGPATH, DiagramItem::SHAPE_IMAGE) >= 0));
 	bar.Add(line_start, icx);
 	bar.Add(line_end, icx);
 	bar.Add(line_width, icx);

@@ -154,6 +154,9 @@ void DiagramEditor::Sync()
 	sb.SetPage(sb.GetReducedViewSize() / GetZoom());
 	sb.SetLine(8, 8);
 	SyncEditor();
+	
+	if(!IsCursor() && findarg((int)~shape, DiagramItem::SHAPE_SVGPATH, DiagramItem::SHAPE_IMAGE) >= 0)
+		shape <<= DiagramItem::SHAPE_ROUNDRECT;
 }
 
 void DiagramEditor::Layout()

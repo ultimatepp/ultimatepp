@@ -106,6 +106,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 		Pointf a1 = pos;
 		Pointf a2 = pos + size;
+		int lim = 4 * width;
 		if(d > 4 * width) { // enough length to have caps
 			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
 				a1 += v * 4 * width;
@@ -113,20 +114,24 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				a2 -= v * 4 * width;
 		}
 		if(d > 12 * width) { // enough length to have caps
-			if(findarg(cap[0], CAP_ARROWL, CAP_DIML) >= 0)
+			if(findarg(cap[0], CAP_ARROWL, CAP_DIML) >= 0) {
 				a1 += v * 12 * width;
-			if(findarg(cap[1], CAP_ARROWL, CAP_DIML) >= 0)
+				lim = 12 * width;
+			}
+			if(findarg(cap[1], CAP_ARROWL, CAP_DIML) >= 0) {
 				a2 -= v * 12 * width;
+				lim = 12 * width;
+			}
 		}
 		
 		w.Move(a1).Line(a2);
 		DoDash();
 		Stroke();
 		Pointf o = Orthogonal(v);
-		if(d > 4 * width) {
+		if(d > lim) {
 			auto PaintCap = [&](int k, Pointf p, Pointf a) {
 				Pointf oo = max(3.0, width * 2) * o;
-				Pointf ool = max(6.0, width * 2) * o;
+				Pointf ool = max(6.0, width * 4) * o;
 				switch(k) {
 				case CAP_NONE:
 					w.Circle(p, width / 2).Fill(ink);

@@ -143,6 +143,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 	else
 		SetAttrs(ATTR_ALL & ~ATTR_SHAPE);
 	Sync();
+	GetAttrs();
 }
 
 void DiagramEditor::RightUp(Point, dword keyflags)
