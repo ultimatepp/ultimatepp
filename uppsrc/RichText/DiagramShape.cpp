@@ -103,72 +103,92 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 		Pointf v = size;
 		double d = Length(v);
 		v = Upp::Normalize(v);
-
+		
 		Pointf a1 = pos;
 		Pointf a2 = pos + size;
-		int lim = 4 * width;
-		if(d > 4 * width) { // enough length to have caps
-			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
-				a1 += v * 4 * width;
-			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
-				a2 -= v * 4 * width;
-		}
-		if(d > 12 * width) { // enough length to have caps
-			if(findarg(cap[0], CAP_ARROWL, CAP_DIML) >= 0) {
-				a1 += v * 12 * width;
-				lim = 12 * width;
+		
+		auto CapDef = [&](int i, double& reserve, double& reduce) {
+			reserve = 0;
+			reduce = 0;
+			switch(cap[i]) {
+			case CAP_DIM:
+			case CAP_ARROW:
+				reserve = reduce = 4 * width;
+				break;
+			case CAP_DISC:
+			case CAP_CIRCLE:
+				reserve = 1.5 * width;
+				break;
+			case CAP_DIML:
+			case CAP_ARROWL:
+				reserve = reduce = 12 * width;
+				break;
+			case CAP_DISCL:
+			case CAP_CIRCLEL:
+				reserve = 2.5 * width;
+				break;
 			}
-			if(findarg(cap[1], CAP_ARROWL, CAP_DIML) >= 0) {
-				a2 -= v * 12 * width;
-				lim = 12 * width;
-			}
+		};
+		
+		bool docap[2];
+		double reserve, reduce;
+		double dd = d;
+		CapDef(0, reserve, reduce);
+		docap[0] = dd > reserve;
+		if(docap[0]) {
+			a1 += v * reduce;
+			dd -= reserve;
 		}
+		CapDef(1, reserve, reduce);
+		docap[1] = dd > reserve;
+		if(docap[1])
+			a2 -= v * reduce;
 		
 		w.Move(a1).Line(a2);
 		DoDash();
 		Stroke();
 		Pointf o = Orthogonal(v);
-		if(d > lim) {
-			auto PaintCap = [&](int k, Pointf p, Pointf a) {
-				Pointf oo = max(3.0, width * 2) * o;
-				Pointf ool = max(6.0, width * 4) * o;
-				switch(k) {
-				case CAP_NONE:
-					w.Circle(p, width / 2).Fill(ink);
-					break;
-				case CAP_T:
-					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
-					break;
-				case CAP_DIM:
-					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
-				case CAP_ARROW:
-					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
-					break;
-				case CAP_DISC:
-					w.Circle(p, 4 + width / 2).Fill(ink);
-					break;
-				case CAP_CIRCLE:
-					w.Circle(p, 4 + width / 2).Fill(paper).Stroke(1, ink);
-					break;
-				case CAP_TL:
-					w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
-					break;
-				case CAP_DIML:
-					w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
-				case CAP_ARROWL:
-					w.Move(p).Line(a + ool).Line(a - ool).Fill(ink);
-					break;
-				case CAP_DISCL:
-					w.Circle(p, 7 + width / 2).Fill(ink);
-					break;
-				case CAP_CIRCLEL:
-					w.Circle(p, 7 + width / 2).Fill(paper).Stroke(1, ink);
-					break;
-				}
-			};
+		auto PaintCap = [&](int k, Pointf p, Pointf a) {
+			Pointf oo = max(3.0, width * 2) * o;
+			Pointf ool = max(6.0, width * 4) * o;
+			switch(k) {
+			case CAP_NONE:
+				w.Circle(p, width / 2).Fill(ink);
+				break;
+			case CAP_T:
+				w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
+				break;
+			case CAP_DIM:
+				w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
+			case CAP_ARROW:
+				w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
+				break;
+			case CAP_DISC:
+				w.Circle(p, 1.5 * width).Fill(ink);
+				break;
+			case CAP_CIRCLE:
+				w.Circle(p, 1.5 * width).Fill(paper).Stroke(1, ink);
+				break;
+			case CAP_TL:
+				w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+				break;
+			case CAP_DIML:
+				w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+			case CAP_ARROWL:
+				w.Move(p).Line(a + ool).Line(a - ool).Fill(ink);
+				break;
+			case CAP_DISCL:
+				w.Circle(p, 2.5 * width).Fill(ink);
+				break;
+			case CAP_CIRCLEL:
+				w.Circle(p, 2.5 * width).Fill(paper).Stroke(1, ink);
+				break;
+			}
+		};
+		if(docap[0])
 			PaintCap(cap[0], pos, a1 + v);
+		if(docap[1])
 			PaintCap(cap[1], pos + size, a2 - v);
-		}
 		 
 		int cx = (int)d;
 		int txt_cy = txt.GetHeight(pi.zoom, cx);
