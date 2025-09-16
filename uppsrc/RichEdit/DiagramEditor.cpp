@@ -63,6 +63,16 @@ DiagramEditor::DiagramEditor()
 	GetAttrs(DiagramItem());
 }
 
+void DiagramEditor::SerializeSettings(Stream& s)
+{
+	int version = 1;
+	
+	s % grid % display_grid;
+
+	for(int i = 0; i < 2; i++)
+		s % tl[i];
+}
+
 void DiagramEditor::SetupDark(ColorPusher& c) const
 {
 	c.AllowDarkContent(allow_dark_content);
@@ -91,47 +101,7 @@ DiagramEditor& DiagramEditor::AllowDarkContent(bool b)
 void DiagramEditor::Skin()
 {
 	SetBar();
-/*
-	Size icon_sz = IconSz();
-	shape.ClearList();
-	shape.SetLineCy(icon_sz.cy);
-	for(int i = 0; i < DiagramItem::SHAPE_SVGPATH; i++) {
-		DiagramItem m;
-		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(icon_sz.cx - 2, icon_sz.cy - 2);
-		m.width = DPI(1);
-		m.shape = i;
-		shape.Add(i, MakeIcon(m, icon_sz));
-	}
-
-	struct Dialine : DiagramItem {
-		Dialine() {
-			shape = SHAPE_LINE;
-			pt[0].y = pt[1].y = 7;
-			pt[0].x = -9999;
-			pt[1].x = 9999;
-		}
-	};
-
-	auto LDL = [=](DropList& dl, bool left) {
-		dl.SetLineCy(icon_sz.cy);
-		dl.ClearList();
-		for(int i = DiagramItem::CAP_NONE; i < DiagramItem::CAP_COUNT; i++) {
-			dl.Add(i, CapIcon(left ? i : 0, left ? 0 : i));
-		}
-	};
-
-	LDL(line_start, true);
-	LDL(line_end, false);
-
-	line_dash.ClearList();
-	line_dash.SetLineCy(icon_sz.cy);
-	for(int i = 0; i < DiagramItem::DASH_COUNT; i++) {
-		Dialine m;
-		m.dash = i;
-		line_dash.Add(i, MakeIcon(m, icon_sz));
-	}
-*/
+	editor_bar.Skin();
 }
 
 void DiagramEditor::Paint(Draw& w)
@@ -159,19 +129,13 @@ void DiagramEditor::Paint(Draw& w)
 
 		if(display_grid)
 			for(int x = 0; x < dsz.cx; x += 8)
-				for(int y = 0; y < dsz.cy; y += 8) {
-					if(((x | y) & 15) == 0) {
-						iw.DrawRect(x - 2, y, 5, 1, Blend(SWhite(), SGreen(), 60));
-						iw.DrawRect(x, y - 2, 1, 5, Blend(SWhite(), SGreen(), 60));
-					}
-					else
-						iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
-				}
+				for(int y = 0; y < dsz.cy; y += 8)
+					iw.DrawRect(x, y, 1, 1, Blend(SWhite(), SGreen()));
 
 		dark = IsDarkContent();
 		data.Paint(iw, *this);
 
-		if(HasCapture() && doselection) {
+		if(HasCapture() && doselection && tool < 0) {
 			Rect r(dragstart, dragcurrent);
 			r.Normalize();
 			iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());
@@ -190,6 +154,9 @@ void DiagramEditor::Sync()
 	sb.SetPage(sb.GetReducedViewSize() / GetZoom());
 	sb.SetLine(8, 8);
 	SyncEditor();
+	
+	if(!IsCursor() && findarg((int)~shape, DiagramItem::SHAPE_SVGPATH, DiagramItem::SHAPE_IMAGE) >= 0)
+		shape <<= DiagramItem::SHAPE_ROUNDRECT;
 }
 
 void DiagramEditor::Layout()
@@ -199,7 +166,11 @@ void DiagramEditor::Layout()
 
 void DiagramEditor::ResetUndo()
 {
-	undoredo.Reset(GetCurrent());
+	Index<Value> blob_ids;
+	for(const DiagramItem& m : data.item)
+		if(m.blob_id.GetCount())
+			blob_ids.FindAdd(m.blob_id);
+	undoredo.Reset(GetCurrent(), ValueArray(blob_ids.PickKeys()));
 }
 
 void DiagramEditor::Commit()
@@ -209,7 +180,48 @@ void DiagramEditor::Commit()
 		if(!m.IsLine())
 			m.Normalize();
 	}
-	if(undoredo.Commit(GetCurrent())) {
+	Index<Value> blob_ids;
+	size_t blobsz = 0;
+	for(const DiagramItem& m : data.item) {
+		if(m.blob_id.GetCount()) {
+			if(blob_ids.Find(m.blob_id) < 0) {
+				blob_ids.Add(m.blob_id);
+				blobsz += data.GetBlob(m.blob_id).GetCount();
+			}
+		}
+	}
+	if(undoredo.Commit(GetCurrent(), ValueArray(clone(blob_ids.GetKeys())))) {
+		size_t limit = max((size_t)20000000, 2 * blobsz);
+		for(;;) { // make sure that blobs are not excessive
+			Index<String> ublob_ids;
+			size_t ublobsz = 0;
+			auto AddIds = [&](const ValueArray& va) {
+				for(Value v : va) {
+					String id = ~v;
+					if(ublob_ids.Find(id) < 0) {
+						ublob_ids.Add(id);
+						ublobsz += data.GetBlob(id).GetCount();
+					}
+				}
+			};
+			AddIds(undoredo.GetCommitInfo());
+			for(int i = 0; i < undoredo.GetUndoCount(); i++)
+				AddIds(undoredo.GetUndoInfo(i));
+			for(int i = 0; i < undoredo.GetRedoCount(); i++)
+				AddIds(undoredo.GetRedoInfo(i));
+			if(ublobsz <= limit) {
+				data.SweepBlobs(ublob_ids); // remove blobs that are not used anymore
+				break;
+			}
+			if(undoredo.GetUndoCount())
+				undoredo.DropUndo();
+			else
+			if(undoredo.GetRedoCount())
+				undoredo.DropRedo();
+			else
+				break;
+		}
+		
 		SetBar();
 		Sync();
 	}
@@ -224,11 +236,7 @@ String DiagramEditor::GetCurrent()
 bool DiagramEditor::SetCurrent(const String& s)
 {
 	KillCursor();
-//	DLOG("===========");
-//	DDUMP(data.item.GetCount());
 	bool b = LoadFromString(data, s);
-//	DDUMP(data.item.GetCount());
-//	DDUMP(cursor);
 	Sync();
 	return b;
 }

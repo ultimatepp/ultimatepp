@@ -142,8 +142,9 @@ void DiagramEditor::Align(bool horz, int align)
 		if(ii != cursor || align == ALIGN_NULL) {
 			DiagramItem& m = data.item[ii];
 			m.Normalize();
-			Pointf& p1 = m.pt[0];
-			Pointf& p2 = m.pt[1];
+			Rectf r = m.GetRect();
+			Pointf p1 = r.TopLeft();
+			Pointf p2 = r.BottomRight();
 			double sz = abs(HoVe(p2) - HoVe(p1));
 			if(align == ALIGN_LEFT) {
 				HoVe(p1) = HoVe(cp1);
@@ -162,6 +163,14 @@ void DiagramEditor::Align(bool horz, int align)
 			if(align == ALIGN_NULL) {
 				HoVe(p1) = (dsz - csz) / 2;
 				HoVe(p2) = HoVe(p1) + csz;
+			}
+			if(m.IsLine()) {
+				m.pos = p1;
+				m.size = p2 - p1;
+			}
+			else {
+				m.pos = (p1 + p2) / 2;
+				m.size = Pointf(abs(p1.x - p2.x), abs(p1.y - p2.y)) / 2;
 			}
 		}
 	}
@@ -185,8 +194,8 @@ void DiagramEditor::PrepareConns()
 	for(int i = 0; i < data.item.GetCount(); i++) {
 		const DiagramItem& m = data.item[i];
 		if(m.IsLine()) {
-			for(int j = 0; j < 2; j++) {
-				auto *q = map.FindPtr(m.pt[j]);
+			auto Add = [&](Pointf p, int j) {
+				auto *q = map.FindPtr(p);
 				if(q) {
 					for(auto w : *q) {
 						Cn& c = conns.Add();
@@ -196,7 +205,9 @@ void DiagramEditor::PrepareConns()
 						c.pi = j;
 					}
 				}
-			}
+			};
+			Add(m.pos, 0);
+			Add(m.pos + m.size, 1);
 		}
 	}
 }
@@ -204,17 +215,24 @@ void DiagramEditor::PrepareConns()
 void DiagramEditor::UseConns()
 {
 	for(const Cn& cn: conns)
-		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0)
-			data.item[cn.li].pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
+		if(sel.Find(cn.li) < 0 && sel.Find(cn.mi) >= 0) {
+			Pointf pt[2];
+			DiagramItem& m = data.item[cn.li];
+			pt[0] = m.pos;
+			pt[1] = pt[0] + m.size;
+			pt[cn.pi] = data.item[cn.mi].GetConnections()[cn.ci];
+			m.pos = pt[0];
+			m.size = pt[1] - m.pos;
+		}
 }
 
-void DiagramEditor::ComputeAspectSize(DiagramItem& m, Sizef& sz1, Sizef& sz2)
+void DiagramEditor::ComputeAspectSize(DiagramItem& m, Sizef& sz_cx, Sizef& sz_cy)
 {
 	m.Normalize();
 	Sizef sz = m.GetRect().GetSize();
 	Sizef sz0 = m.GetStdSize(data);
-	sz1 = Sizef(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
-	sz2 = Sizef(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
+	sz_cx = Sizef(max(sz.cx, 8.0), max(sz0.cy * sz.cx / sz0.cx, 8.0));
+	sz_cy = Sizef(max(sz0.cx * sz.cy / sz0.cy, 8.0), max(sz.cy, 8.0));
 }
 
 struct SizeDlg : WithSizeLayout<TopWindow> {

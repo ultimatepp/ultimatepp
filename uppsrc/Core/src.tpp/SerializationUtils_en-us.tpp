@@ -78,6 +78,32 @@ oad], restores data from the [%-*@3 file].&]
 tore], stores data to the [%-*@3 file].&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:StoreAsString`(Event`): String [* StoreAsString](Event<Stream[@(0.0.255) `&]>
+ [*@3 serialize])&]
+[s2;%% Using [%-*^topic`:`/`/Core`/src`/SerializationUtils`_en`-us`#Upp`:`:Store`(Event`,Stream`&`,int`)^ S
+tore], stores data as String.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LoadFromString`(Event`,const String`&`): [@(0.0.255) bool] 
+[* LoadFromString](Event<Stream[@(0.0.255) `&]> [*@3 serialize], [@(0.0.255) const] 
+String[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Using [%-*^topic`:`/`/Core`/src`/SerializationUtils`_en`-us`#Upp`:`:Load`(Event`,Stream`&`,int`)^ L
+oad], restores data from the String.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:StoreAsStrings`(Event`): Vector<String> [* StoreAsStrings](Event<Stream[@(0.0.255) `&
+]> [*@3 serialize])&]
+[s2;%% Stores data as Vector<String>. Useful in rare cases where 
+stored data is >2GB.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LoadFromStrings`(Event`,const Vector`&`): [@(0.0.255) bool] 
+[* LoadFromStrings](Event<Stream[@(0.0.255) `&]> [*@3 serialize], [@(0.0.255) const] 
+Vector<String>[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Loads data from Vector<String>. Useful in rare cases where 
+stored data is >2GB.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:Load`(T`&`,Stream`&`,int`): [@(0.0.255) template] <[@(0.0.255) class] 
 T> [@(0.0.255) bool] [* Load](T[@(0.0.255) `&] [*@3 x], Stream[@(0.0.255) `&] 
 [*@3 s], [@(0.0.255) int] [*@3 version ][@(0.0.255) `=] [* Null])&]
@@ -121,6 +147,19 @@ tring]_[* StoreAsString]([*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2;%% Restores serialized data from the String (e.g. previously 
 stored by StoreAsString).&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:StoreAsStrings`(T`&`): [@(0.0.255) template] <[@(0.0.255) class] 
+T> Vector<String> [* StoreAsStrings](T[@(0.0.255) `&] [*@3 x])&]
+[s2;%% Stores [%-*@3 x] using its Serialize method a Vector<String>. 
+Useful in rare cases where stored data is >2GB.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LoadFromStrings`(T`&`,const Vector`&`): [@(0.0.255) template] 
+<[@(0.0.255) class] T> [@(0.0.255) bool] [* LoadFromStrings](T[@(0.0.255) `&] 
+[*@3 x], [@(0.0.255) const] Vector<String>[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Restores serialized data from the Vector<String> (previously 
+stored by StoreAsStrings).&]
+[s0;%% &]
 [s0;%% &]
 [s0;%% [*@3;4 Global modular serialization support]&]
 [s0;#%% Modular serialization is a viable option for storing configuration 
@@ -133,7 +172,7 @@ serialization of all such data with single stream.&]
 [s5;:RegisterGlobalConfig`(const char`*`): [@(0.0.255) void]_[* RegisterGlobalConfig]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 name])&]
 [s7;%% Registers name as global configuration key.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:RegisterGlobalSerialize`(const char`*`,Upp`:`:Event`<Upp`:`:Stream`&`>`): [@(0.0.255) v
 oid]_[* RegisterGlobalSerialize]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name], 

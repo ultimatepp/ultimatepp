@@ -38,7 +38,7 @@ nt] [*@3 part`_size] [@(0.0.255) `=] [@N 1024`*1024 `- 256])&]
 ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  Stream]&]
 [s2;%% Input stream corresponding to StringsStreamOut `- reads data 
 from multiple chunks.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:StringsStreamIn`:`:StringsStreamIn`(const Vector`&`): [* StringsStreamIn]([@(0.0.255) c

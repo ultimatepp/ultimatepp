@@ -12,6 +12,8 @@ RichObject RichEdit::Adjust(RichObject o)
 
 void RichEdit::InsertImage()
 {
+	if(!allow_objects)
+		return;
 	if(!imagefs.ExecuteOpen(t_("Open image from file")))
 		return;
 	String fn = ~imagefs;
@@ -34,21 +36,18 @@ void RichEdit::InsertImage()
 
 void RichEdit::InsertDiagram()
 {
-	TopWindow app;
-	app.Icon(DiagramImg::Diagram());
-	app.Title("Diagram");
-	app.Sizeable().Zoomable();
-	DiagramEditor de;
-	app.Add(de.SizePos());
-	app.Execute();
+	if(!allow_objects)
+		return;
 
-	RichText clip;
-	RichPara p;
-	RichObject o = RichObject("qdf", ZCompress(de.Save()));
-	o.InitSize(0, 0);
-	p.Cat(o, formatinfo);
-	clip.Cat(p);
-	ClipPaste(clip, "image/qdf");
+	RichObject o;
+	if(EditDiagram(o)) {
+		RichText clip;
+		RichPara p;
+		o.InitSize(0, 0);
+		p.Cat(o, formatinfo);
+		clip.Cat(p);
+		ClipPaste(clip, "image/qdf");
+	}
 }
 
 bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)

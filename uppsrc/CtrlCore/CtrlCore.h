@@ -1431,7 +1431,7 @@ public:
 	       void   DoSkin();
 
 	String        Name() const;
-	static String Name(Ctrl *ctrl);
+	static String Name(const Ctrl *ctrl);
 
 #ifdef _DEBUG
 	virtual void   Dump() const;

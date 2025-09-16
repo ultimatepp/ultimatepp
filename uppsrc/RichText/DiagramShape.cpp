@@ -2,14 +2,13 @@
 
 namespace Upp {
 
-Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim", "T" };
+Index<String> DiagramItem::LineCap = { "none", "arrow", "circle", "disc", "dim", "T",
+                                               "arrowL", "circleL", "discL", "dimL", "TL" };
 
 Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
                                      "ellipse", "diamond", "oval", "parallelogram",
-                                     "cylinder",
-                                     "triangle1", "triangle2",
-                                     "arrow_left", "arrow_right", "arrow_horz",
-                                     "arrow_down", "arrow_up", "arrow_vert",
+                                     "cylinder", "triangle",
+                                     "arrow_right", "arrow_horz", "arrow_down", "arrow_vert",
                                      "arc",
                                      "svgpath", "image"
 };
@@ -17,20 +16,18 @@ Index<String> DiagramItem::Shape = { "line", "rect", "round_rect",
 Vector<Pointf> DiagramItem::GetConnections() const
 {
 	Vector<Pointf> p;
-	if(shape > SHAPE_ITRIANGLE || rotate)
+	if(shape > SHAPE_TRIANGLE)
 		return p;
 	if(IsLine()) {
-		p << pt[0] << pt[1];
+		p << pos << pos + size;
 		return p;
 	}
 	Rectf r = GetRect();
 	p << r.TopCenter() << r.BottomCenter();
-	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE, SHAPE_ITRIANGLE) < 0)
+	if(findarg(shape, SHAPE_PARALLELOGRAM, SHAPE_TRIANGLE) < 0)
 		p << r.CenterLeft() << r.CenterRight();
 	if(shape == SHAPE_TRIANGLE)
 		p << r.BottomLeft() << r.BottomRight();
-	if(shape == SHAPE_ITRIANGLE)
-		p << r.TopLeft() << r.TopRight();
 	if(rotate) {
 		Xform2D rot = Rotation();
 		Pointf c = r.CenterPoint();
@@ -86,83 +83,131 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 			w.Stroke(0.2, sel1);
 	};
 	
+	w.Move(0, 0).EndPath(); // this is to start a new path for every item
+
 	if(IsLine()) {
-		Pointf v = pt[1] - pt[0];
 		if(style) {
-			w.Move(pt[0]).Line(pt[1]).EndPath();
+			w.Move(pos).RelLine(size).EndPath();
 			w.Begin();
 			if((style & EDITOR) && width == 0)
 				w.Dash("5 1").Stroke(1, 100 * sel2);
 			if(style & (Display::CURSOR | Display::SELECT)) {
 				w.LineCap(LINECAP_ROUND).Stroke(width + 12, (style & Display::SELECT ? 30 : 200) * sel2);
 				double r = (width + 12) / 2 - 1;
-				w.Circle(pt[0], r).Fill(sel1);
-				w.Circle(pt[1], r).Fill(sel1);
+				w.Circle(pos, r).Fill(sel1);
+				w.Circle(pos + size, r).Fill(sel1);
 			}
 			w.End();
 		}
+		
+		Pointf v = size;
 		double d = Length(v);
 		v = Upp::Normalize(v);
-
-		Pointf a1 = pt[0];
-		Pointf a2 = pt[1];
-		if(d > 4 * width) { // enough length to have caps
-			if(findarg(cap[0], CAP_ARROW, CAP_DIM) >= 0)
-				a1 += v * 4 * width;
-			if(findarg(cap[1], CAP_ARROW, CAP_DIM) >= 0)
-				a2 -= v * 4 * width;
+		
+		Pointf a1 = pos;
+		Pointf a2 = pos + size;
+		
+		auto CapDef = [&](int i, double& reserve, double& reduce) {
+			reserve = 0;
+			reduce = 0;
+			switch(cap[i]) {
+			case CAP_DIM:
+			case CAP_ARROW:
+				reserve = reduce = 4 * width;
+				break;
+			case CAP_DISC:
+			case CAP_CIRCLE:
+				reserve = 1.5 * width;
+				break;
+			case CAP_DIML:
+			case CAP_ARROWL:
+				reserve = reduce = 12 * width;
+				break;
+			case CAP_DISCL:
+			case CAP_CIRCLEL:
+				reserve = 2.5 * width;
+				break;
+			}
+		};
+		
+		bool docap[2];
+		double reserve, reduce;
+		double dd = d;
+		CapDef(0, reserve, reduce);
+		docap[0] = dd > reserve;
+		if(docap[0]) {
+			a1 += v * reduce;
+			dd -= reserve;
 		}
+		CapDef(1, reserve, reduce);
+		docap[1] = dd > reserve;
+		if(docap[1])
+			a2 -= v * reduce;
 		
 		w.Move(a1).Line(a2);
 		DoDash();
 		Stroke();
-		
 		Pointf o = Orthogonal(v);
-		if(d > 4 * width) {
-			auto PaintCap = [&](int k, Pointf p, Pointf a) {
-				Pointf oo = max(3.0, width * 2) * o;
-				switch(k) {
-				case CAP_NONE:
-					w.Circle(p, width / 2).Fill(ink);
-					break;
-				case CAP_T:
-					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
-					break;
-				case CAP_DIM:
-					w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
-				case CAP_ARROW:
-					w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
-					break;
-				case CAP_DISC:
-					w.Circle(p, 5).Fill(ink);
-					break;
-				case CAP_CIRCLE:
-					w.Circle(p, 5).Fill(paper).Stroke(1, ink);
-					break;
-				}
-			};
-			PaintCap(cap[0], pt[0], a1 + v);
-			PaintCap(cap[1], pt[1], a2 - v);
-		}
+		auto PaintCap = [&](int k, Pointf p, Pointf a) {
+			Pointf oo = max(3.0, width * 2) * o;
+			Pointf ool = max(6.0, width * 4) * o;
+			switch(k) {
+			case CAP_NONE:
+				w.Circle(p, width / 2).Fill(ink);
+				break;
+			case CAP_T:
+				w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
+				break;
+			case CAP_DIM:
+				w.Move(p - 2 * oo).Line(p + 2 * oo).Stroke(1, ink);
+			case CAP_ARROW:
+				w.Move(p).Line(a + oo).Line(a - oo).Fill(ink);
+				break;
+			case CAP_DISC:
+				w.Circle(p, 1.5 * width).Fill(ink);
+				break;
+			case CAP_CIRCLE:
+				w.Circle(p, 1.5 * width).Fill(paper).Stroke(1, ink);
+				break;
+			case CAP_TL:
+				w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+				break;
+			case CAP_DIML:
+				w.Move(p - 2 * ool).Line(p + 2 * ool).Stroke(1, ink);
+			case CAP_ARROWL:
+				w.Move(p).Line(a + ool).Line(a - ool).Fill(ink);
+				break;
+			case CAP_DISCL:
+				w.Circle(p, 2.5 * width).Fill(ink);
+				break;
+			case CAP_CIRCLEL:
+				w.Circle(p, 2.5 * width).Fill(paper).Stroke(1, ink);
+				break;
+			}
+		};
+		if(docap[0])
+			PaintCap(cap[0], pos, a1 + v);
+		if(docap[1])
+			PaintCap(cap[1], pos + size, a2 - v);
 		 
-		int cx = (int)Distance(pt[0], pt[1]);
+		int cx = (int)d;
 		int txt_cy = txt.GetHeight(pi.zoom, cx);
 		
 		w.Begin();
-		double angle = Bearing(pt[1] - pt[0]);
+		double angle = Bearing(size);
 		if(angle >= -M_PI / 2 && angle <= M_PI / 2) {
-			w.Translate(pt[0] - o * (txt_cy + 10));
+			w.Translate(pos - o * (txt_cy + 10));
 			w.Rotate(angle);
 		}
 		else {
-			w.Translate(pt[1] + o * (txt_cy + 10));
+			w.Translate(pos + size + o * (txt_cy + 10));
 			w.Rotate(angle + M_PI);
 		}
 		txt.Paint(w, 0, 0, cx, pi);
 		w.End();
 	}
 	else {
-		Rectf r(pt[0], pt[1]);
+		Rectf r = GetRect();
 		r.Normalize();
 		r.Deflate(width / 2);
 		double w1 = r.GetWidth();
@@ -254,20 +299,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				w.Move(w2, 0).Line(cx, cy).Line(0, cy).Close();
 			}
 			break;
-		case SHAPE_ITRIANGLE: {
-				text_rect.left  += int(cx / 4);
-				text_rect.right -= int(cx / 4);
-				text_rect.bottom -= int(cx / 3);
-				w.Move(w2, cy).Line(cx, 0).Line(0, 0).Close();
-			}
-			break;
-		case SHAPE_ARROWLEFT: {
-				double a = 0 + arrow_width;
-				text_rect.left += int(arrow_width / 3);
-				w.Move(0, h2).Line(a, 0).Line(a, h4).Line(cx, h4)
-				 .Line(cx, bh4).Line(a, bh4).Line(a, cy).Close();
-			}
-			break;
 		case SHAPE_ARROWRIGHT:
 			 {
 				double a = cx - arrow_width;
@@ -298,21 +329,6 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 				 .Line(a2, bh4)
 				 .Line(a1, bh4)
 				 .Line(a1, cy)
-				 .Close();
-			}
-			break;
-		case SHAPE_ARROWUP: {
-				double a = arrow_height;
-				text_rect.left += w4;
-				text_rect.right -= w4;
-				text_rect.top += 3 * arrow_height / 4;
-				w.Move(w2, 0)
-				 .Line(cx, a)
-				 .Line(cx - w4, a)
-				 .Line(cx - w4, cy)
-				 .Line(w4, cy)
-				 .Line(w4, a)
-				 .Line(0, a)
 				 .Close();
 			}
 			break;
@@ -448,7 +464,7 @@ void DiagramItem::Paint(Painter& w, const Diagram& diagram, dword style, const I
 
 		w.End();
 
-		if((style & GRID) && !rotate)
+		if((style & GRID))
 			for(Pointf p : GetConnections()) {
 				w.Circle(p, 5);
 				if(conn && conn->Find(p) >= 0)
@@ -492,9 +508,9 @@ Sizef DiagramItem::GetStdSize(const Diagram& diagram) const
 	}
 
 	if(shape == SHAPE_CYLINDER)
-		return Size(100, 128);
+		return Size(96, 128);
 
-	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWUP, SHAPE_ARROWVERT) >= 0)
+	if(findarg(shape, SHAPE_CYLINDER, SHAPE_ARROWDOWN, SHAPE_ARROWVERT) >= 0)
 		return Size(64, 128);
 
 	return Size(128, 64);

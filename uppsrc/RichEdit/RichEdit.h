@@ -310,6 +310,7 @@ private:
 	
 	PaintInfo                paint_info;
 	bool                     ignore_physical_size;
+	bool                     allow_objects = true;
 	
 	bool                     pixel_mode = false;
 	bool                     dark_content = false;
@@ -318,6 +319,8 @@ private:
 	bool                     show_zoom = false;
 	
 	Color                    override_paper = Null;
+	
+	bool                     diagram_bar_hack = false; // if true, calls WhenSel in ApplyFormat
 
 	static int fh[];
 
@@ -478,6 +481,9 @@ private:
 	
 	RichPara::CharFormat last_format;
 	Image      last_format_img;
+	
+	String     diagram_editor_settings;
+	String     diagram_editor_placement;
 
 	Size       GetZoomedPage() const;
 	int        GetPosY(PageY py) const;
@@ -661,6 +667,8 @@ private:
 
 	Size     GetPhysicalSize(const RichObject& obj);
 
+	bool     EditDiagram(RichObject& o);
+
 	struct DisplayDefault : public Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q,
 		                   Color ink, Color paper, dword style) const;
@@ -675,6 +683,7 @@ private:
 	friend class StyleKeysDlg;
 	friend class StyleManager;
 	friend class ParaFormatting;
+	friend class DiagramEditor;
 
 	using Ctrl::Accept;
 
@@ -860,6 +869,7 @@ public:
 	RichEdit&       DarkContent(bool b = true);
 	RichEdit&       AllowDarkContent(bool b = true);
 	RichEdit&       OverridePaper(Color p);
+	RichEdit&       AllowObjects(bool b)                   { allow_objects = b; return *this; }
 
 	struct UndoInfo {
 		int              undoserial;

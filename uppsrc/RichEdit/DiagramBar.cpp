@@ -33,8 +33,8 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Add(b, "Move back", DiagramImg::MoveBack(), [=] { MoveFrontBack(true); });
 	bar.Add(b, "Move front", DiagramImg::MoveFront(), [=] { MoveFrontBack(false); });
 	bar.Separator();
-	bar.Add(b, DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
-	bar.Add(b, DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
+	bar.Add(b, "Horizontal center", DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
+	bar.Add(b, "Vertical center", DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
 	bar.Separator();
 	bool multi = sel.GetCount() > 1;
 	bar.Add(multi, "Align left", DiagramImg::AlignLeft(), [=] { Align(true, ALIGN_LEFT); });
@@ -55,11 +55,13 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
 	bar.Separator();
-	bar.Add(shape, DPI(45));
-	bar.Add(line_start, DPI(45));
-	bar.Add(line_end, DPI(45));
-	bar.Add(line_width, DPI(45));
-	bar.Add(line_dash, DPI(45));
+	int icx = IconSz().cx + DPI(4) + DPI(18);
+	bar.Add(shape, icx);
+	shape.Enable(!(IsCursor() && findarg(CursorItem().shape, DiagramItem::SHAPE_SVGPATH, DiagramItem::SHAPE_IMAGE) >= 0));
+	bar.Add(line_start, icx);
+	bar.Add(line_end, icx);
+	bar.Add(line_width, icx);
+	bar.Add(line_dash, icx);
 	ink.DarkContent(IsDarkContent());
 	bar.Add(ink);
 	paper.DarkContent(IsDarkContent());
@@ -86,7 +88,7 @@ void DiagramEditor::TheBar(Bar& bar)
 			if(m.aspect_ratio && !m.IsLine()) {
 				Sizef sz1, sz2;
 				ComputeAspectSize(m, sz1, sz2);
-				m.pt[1] = m.pt[0] + (sz1.cx < sz2.cx ? sz1 : sz2);
+				m.size = (sz1.cx < sz2.cx ? sz1 : sz2) / 2;
 			}
 		});
 	})
@@ -95,8 +97,14 @@ void DiagramEditor::TheBar(Bar& bar)
 	Size isz = IconSz();
 	for(int i = 0; i < tool_count; i++) {
 		DiagramItem m = tl[i];
-		m.pt[0] = Point(2, 2);
-		m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
+		if(m.IsLine()) {
+			m.pos = Point(2, 2);
+			m.size = Size(isz.cx - 4, isz.cy - 4);
+		}
+		else {
+			m.pos = Pointf(Point(isz)) / 2;
+			m.size = m.pos - 2;
+		}
 		m.width = log(m.width + 1);
 		bar.Add(MakeIcon(m, isz), [=] {
 			CancelSelection();
@@ -112,11 +120,31 @@ void DiagramEditor::TheBar(Bar& bar)
 		.Check(tool == i);
 	}
 	bar.Break();
-	text_editor.FontTools(bar);
-	text_editor.InkTool(bar);
-	text_editor.PaperTool(bar);
+	RichEdit& be = edit_text ? text_editor : editor_bar;
+	if(!edit_text) {
+		if(sel.GetCount()) {
+			editor_bar.formatinfo = GetSelectionFormatInfo();
+			editor_bar.SetEditable();
+			editor_bar.ShowFormat();
+			editor_bar.diagram_bar_hack = true;
+			editor_bar.WhenSel = [=] {
+				for(int i : sel) {
+					String& qtf = data.item[i].qtf;
+					RichText txt = ParseQTF(qtf);
+					txt.ApplyFormatInfo(0, editor_bar.formatinfo, txt.GetLength());
+					qtf = AsQTF(txt, CHARSET_UTF8, QTF_BODY|QTF_NOCHARSET|QTF_NOLANG|QTF_NOSTYLES);
+				}
+				Sync();
+			};
+		}
+		else
+			editor_bar.SetReadOnly();
+	}
+	be.FontTools(bar);
+	be.InkTool(bar);
+	be.PaperTool(bar);
 	bar.Separator();
-	text_editor.ParaTools(bar);
+	be.ParaTools(bar);
 }
 
 void DiagramEditor::SetBar()

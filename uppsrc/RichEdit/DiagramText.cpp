@@ -1,7 +1,7 @@
 #include "RichEdit.h"
 
 namespace Upp {
-
+	
 bool DiaRichEdit::Key(dword key, int count)
 {
 	if(key == K_ENTER) {
@@ -18,8 +18,26 @@ bool DiaRichEdit::Key(dword key, int count)
 	return RichEdit::Key(key, count);
 }
 
+void DiaRichEdit::PasteFilter(RichText& txt, const String& fmt)
+{
+	if(GetLength() + txt.GetLength() > 2000) {
+		txt.Clear();
+		return;
+	}
+
+	struct RichTextRemoveObjects : RichText::UpdateIterator {
+		virtual int operator()(int pos, RichPara& para) {
+			para.part.RemoveIf([&](int i) { return para[i].object; });
+			return UPDATE;
+		}
+	} h;
+	
+	txt.Iterate(h);
+}
+
 void DiagramEditor::SyncEditor()
 {
+	text_editor.AllowObjects(false);
 	text_editor.AllowDarkContent(allow_dark_content);
 	text_editor.DarkContent(dark_content);
 	if(edit_text && cursor >= 0) {
@@ -67,7 +85,8 @@ void DiagramEditor::StartText()
 	edit_text = true;
 	Sync();
 	text_editor.SetFocus();
-	text_editor.SetQTF("[= " + CursorItem().qtf);
+	const String& qtf = CursorItem().qtf;
+	text_editor.SetQTF(qtf.GetCount() ? qtf : "[= ");
 	text_editor.Select(0, text_editor.GetLength());
 	SyncEditorRect();
 }
@@ -76,8 +95,26 @@ void DiagramEditor::FinishText()
 {
 	if(edit_text && cursor >= 0)
 		CursorItem().qtf = AsQTF(text_editor.Get(), CHARSET_UTF8, QTF_BODY|QTF_NOCHARSET|QTF_NOLANG|QTF_NOSTYLES);
+	
 	edit_text = false;
 	Sync();
+}
+
+RichText::FormatInfo DiagramEditor::GetFormatInfo(int itemi) const
+{
+	RichText text = ParseQTF(data.item[itemi].qtf);
+	return text.GetFormatInfo(0, text.GetLength());
+}
+
+RichText::FormatInfo DiagramEditor::GetSelectionFormatInfo() const
+{
+	RichText::FormatInfo fi;
+	if(cursor >= 0)
+		fi = GetFormatInfo(cursor);
+	for(int ci : sel)
+		if(ci != cursor)
+			fi.Combine(GetFormatInfo(ci));
+	return fi;
 }
 
 }

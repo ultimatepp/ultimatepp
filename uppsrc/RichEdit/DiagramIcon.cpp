@@ -23,9 +23,10 @@ Image DiagramEditor::MakeIcon(DiagramItem& m, Size isz)
 	};
 
 	IconMaker mk;
+	m.ink = SColorText();
+	mk.dark = IsDarkTheme();
 	mk.m = m;
 	mk.isz = isz;
-	mk.dark = IsDarkContent();
 	return MakeImage(mk);
 }
 
@@ -33,10 +34,16 @@ Image DiagramEditor::ShapeIcon(int i)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pt[0] = Point(2, 2);
-	m.pt[1] = Point(isz.cx - 2, isz.cy - 2);
-	m.width = DPI(1);
 	m.shape = i;
+	if(m.IsLine()) {
+		m.pos = Point(2, 2);
+		m.size = isz - 4;
+	}
+	else {
+		m.pos = Pointf(Point(isz)) / 2;
+		m.size = m.pos - 2;
+	}
+	m.width = DPI(1);
 	m.paper = Null;
 	return MakeIcon(m, isz);
 }
@@ -45,10 +52,11 @@ Image DiagramEditor::CapIcon(int start, int end)
 {
 	Size isz = IconSz();
 	DiagramItem m;
-	m.pt[0] = Point(DPI(6), isz.cy / 2);
-	m.pt[1] = Point(isz.cx - DPI(6), isz.cy / 2);
+	m.pos = Point(findarg(start, DiagramItem::CAP_CIRCLEL, DiagramItem::CAP_DISCL) >= 0 ? DPI(6) : DPI(4), isz.cy / 2);
+	m.size = Size(isz.cx - (findarg(end, DiagramItem::CAP_CIRCLEL, DiagramItem::CAP_DISCL) >= 0 ? DPI(10) :
+	                        findarg(end, DiagramItem::CAP_CIRCLE, DiagramItem::CAP_DISC) >= 0 ? DPI(8) : DPI(4)), 0);
 	m.shape = DiagramItem::SHAPE_LINE;
-	m.width = DPI(2);
+	m.width = DPI(1);
 	m.cap[0] = start;
 	m.cap[1] = end;
 	return MakeIcon(m, isz);
@@ -57,7 +65,7 @@ Image DiagramEditor::CapIcon(int start, int end)
 Image DiagramEditor::DashIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)); },
+		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[=](Value& v) {
 			Size isz = IconSz();
 			ImagePainter p(isz);
@@ -69,7 +77,7 @@ Image DiagramEditor::DashIcon(int i)
 			p.Move(DPI(2), isz.cy / 2 - (i & 1) * 0.5)
 			 .RelLine(isz.cx - DPI(4), 0)
 			 .Dash(h, 0)
-			 .Stroke(DPI(2), dark ? White() : Black());
+			 .Stroke(DPI(2), SColorText());
 			Image m = p;
 			v = m;
 			return m.GetLength() * sizeof(RGBA);
@@ -80,15 +88,14 @@ Image DiagramEditor::DashIcon(int i)
 Image DiagramEditor::WidthIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)); },
+		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[=](Value& v) {
 			Size isz = IconSz();
-			Color ink = dark ? White() : Black();
 			ImagePainter p(isz);
 			p.Clear();
 			p.Move(DPI(2), isz.cy / 2.0 - (i & 1) * 0.5)
 			 .RelLine(isz.cx - DPI(4), 0)
-			 .Stroke(i, ink);
+			 .Stroke(i, SColorText());
 			Image m = p;
 			v = m;
 			return m.GetLength() * sizeof(RGBA);
@@ -156,8 +163,11 @@ void Upp::DiagramEditor::DropColumns::Paint(Draw& w, const Rect& r, const Value&
 DiagramEditor::DropColumns::DropColumns()
 {
 	AddButton().Main().WhenPush << [=] {
-		SetData(popup.Execute(GetScreenRect(), this));
-		Action();
+		int c = popup.Execute(GetScreenRect(), this);
+		if(IsNull(c))
+			return;
+		SetData(c);
+		UpdateAction();
 	};
 	SetDisplay(*this);
 }

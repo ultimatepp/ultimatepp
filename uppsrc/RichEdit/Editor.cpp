@@ -555,7 +555,7 @@ void RichEdit::SpellCheck()
 
 void RichEdit::SerializeSettings(Stream& s)
 {
-	int version = 3;
+	int version = 4;
 	s / version;
 	s % unit;
 	s % showcodes;
@@ -575,6 +575,8 @@ void RichEdit::SerializeSettings(Stream& s)
 			StyleKey& k = stylekey[i];
 			s % k.styleid % k.stylename % k.face % k.height % k.ink % k.paper;
 		}
+	if(version >= 4)
+		s % diagram_editor_settings % diagram_editor_placement;
 }
 
 void RichEdit::Reset()
@@ -742,6 +744,26 @@ RichEdit& RichEdit::OverridePaper(Color p)
 	override_paper = p;
 	Refresh();
 	return *this;
+}
+
+bool RichEdit::EditDiagram(RichObject& o)
+{
+	TopWindow app;
+	app.Icon(DiagramImg::Diagram());
+	app.Title("Diagram");
+	app.Sizeable().Zoomable();
+	DiagramEditor de;
+	String s = ~o.GetData();
+	if(s.GetCount())
+		de.Load(ZDecompress(~o.GetData()));
+	LoadFromString([&](Stream& s) { de.SerializeSettings(s); }, diagram_editor_settings);
+	LoadFromString([&](Stream& s) { app.SerializePlacement(s); }, diagram_editor_placement);
+	app << de.SizePos();
+	app.Execute();
+	o = RichObject("qdf", ZCompress(de.Save()));
+	diagram_editor_settings = StoreAsString([&](Stream& s) { de.SerializeSettings(s); });
+	diagram_editor_placement = StoreAsString([&](Stream& s) { app.SerializePlacement(s); });
+	return true;
 }
 
 RichEdit::RichEdit()

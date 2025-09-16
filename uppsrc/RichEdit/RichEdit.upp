@@ -33,6 +33,7 @@ file
 	DiagramEditor.cpp,
 	DiagramIcon.cpp,
 	DiagramMouse.cpp,
+	DiagramRight.cpp,
 	DiagramOps.cpp,
 	DiagramBar.cpp,
 	DiagramText.cpp,

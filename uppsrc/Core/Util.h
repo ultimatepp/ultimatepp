@@ -428,6 +428,10 @@ bool Load(Event<Stream&> serialize, Stream& stream, int version = Null);
 bool Store(Event<Stream&> serialize, Stream& stream, int version = Null);
 bool LoadFromFile(Event<Stream&> serialize, const char *file = NULL, int version = Null);
 bool StoreToFile(Event<Stream&> serialize, const char *file = NULL, int version = Null);
+String StoreAsString(Event<Stream&> serialize);
+bool   LoadFromString(Event<Stream&> serialize, const String& s);
+Vector<String> StoreAsStrings(Event<Stream&> serialize);
+bool           LoadFromStrings(Event<Stream&> serialize, const Vector<String>& s);
 
 template <class T>
 bool Load(T& x, Stream& s, int version = Null) {
@@ -451,33 +455,27 @@ bool StoreToFile(T& x, const char *name = NULL, int version = Null) {
 
 template <class T>
 String StoreAsString(T& x) {
-	StringStream ss;
-	Store(x, ss);
-	return ss;
+	return StoreAsString([&](Stream& s) { s % x; });
 }
 
 template <class T>
 bool LoadFromString(T& x, const String& s) {
-	StringStream ss(s);
-	return Load(x, ss);
+	return LoadFromString([&](Stream& s) { s % x; }, s);
 }
 
 template <class T>
 Vector<String> StoreAsStrings(T& x) {
-	StringsStreamOut ss;
-	Store(x, ss);
-	return ss.PickResult();
+	return StoreAsStrings([&](Stream& s) { s % x; });
 }
 
 template <class T>
 bool LoadFromStrings(T& x, const Vector<String>& s) {
-	StringsStreamIn ss(s);
-	return Load(x, ss);
+	return LoadFromStrings([&](Stream& s) { s % x; }, s);
 }
 
 void             RegisterGlobalConfig(const char *name);
 void             RegisterGlobalSerialize(const char *name, Event<Stream&> WhenSerialize);
-void             RegisterGlobalConfig(const char *name, Event<>  WhenFlush);
+void             RegisterGlobalConfig(const char *name, Event<> WhenFlush);
 
 String           GetGlobalConfigData(const char *name);
 void             SetGlobalConfigData(const char *name, const String& data);

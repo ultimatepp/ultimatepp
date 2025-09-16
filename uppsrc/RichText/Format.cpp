@@ -132,6 +132,14 @@ void RichTxt::FormatInfo::Combine(const RichPara::Format& fmt)
 		paravalid &= ~NEWHDRFTR;
 }
 
+void RichTxt::FormatInfo::Combine(const FormatInfo& fmt)
+{
+	Combine((const RichPara::Format&)fmt);
+	Combine((const RichPara::CharFormat&)fmt);
+	paravalid &= fmt.paravalid;
+	charvalid &= fmt.charvalid;
+}
+
 void RichTxt::FormatInfo::ApplyTo(RichPara::CharFormat& fmt) const
 {
 	if(charvalid & BOLD)
