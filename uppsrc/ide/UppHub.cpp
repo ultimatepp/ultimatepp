@@ -232,7 +232,7 @@ void UppHubDlg::Menu(Bar& bar)
 		bar.Add("Open " + n->name + " Directory", [=] { ShellOpenFolder(p); });
 		bar.Add("Copy " + n->name + " Directory Path", [=] { WriteClipboardText(p); });
 		if(ide)
-			bar.Add("Terminal at " + n->name + " Directory", [=] { ide->LaunchTerminal(p); });
+			bar.Add("Terminal at " + n->name + " Directory", IdeImg::Terminal(), [=] { ide->LaunchTerminal(p); });
 		sep = true;
 	}
 
@@ -247,7 +247,7 @@ void UppHubDlg::Menu(Bar& bar)
 	bar.Add("Open UppHub Directory", [=] { ShellOpenFolder(hubdir); });
 	bar.Add("Copy UppHub Directory Path", [=] { WriteClipboardText(hubdir); });
 	if(ide)
-		bar.Add("Terminal at UppHub Directory", [=] { ide->LaunchTerminal(hubdir); });
+		bar.Add("Terminal at UppHub Directory", IdeImg::Terminal(), [=] { ide->LaunchTerminal(hubdir); });
 	bar.Separator();
 	bar.Add("Install everything..", [=] {
 		if(!PromptYesNo("Installing everything will take some time and will need a lot of storage space.&[/ Are you sure?"))
