@@ -318,7 +318,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	inclist << " -I$(UPPOUT)"; // build_info.h is created there
 
 	makefile << "\n"
-		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(AppendFileName(uppout, String())), win32)) << "\n"
+		"UPPOUT = " << (exporting ? String("_out/") : GetMakePath(AdjustMakePath(AppendFileName(uppout, String())), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
 		"Macro  = ";
 

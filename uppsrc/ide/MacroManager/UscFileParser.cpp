@@ -79,14 +79,14 @@ void UscFileParser::ReadMacro(CParser& parser, const String& comment, const char
 		FindNextElement(parser);
 		return;
 	}
-	macro.name = String() << (parser.IsString() ? parser.ReadString() : "");
+	macro.name = String() << (parser.IsString() ? parser.ReadString() : String());
 	if(parser.Char(':')) {
 		if(!parser.IsString()) {
 			FindNextElement(parser);
 			return;
 		}
 
-		macro.name << " : " << (parser.IsString() ? parser.ReadString() : "");
+		macro.name << " : " << (parser.IsString() ? parser.ReadString() : String());
 	}
 	if (!parser.IsChar('{'))
 		ReadKeyDesc(parser);
