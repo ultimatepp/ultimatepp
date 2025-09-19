@@ -31,20 +31,20 @@ rectangle without any animation.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Animate`(Event`,int`): [@(0.0.255) void] [* Animate](Event<[@(0.0.255) double]>
- [*@3 update], [@(0.0.255) int] [*@3 duration] [@(0.0.255) `=] [@3 100])&]
+ [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] [@(0.0.255) `=] [@3 100])&]
 [s2;%% Performs GUI animation, repeatedly calling [%-*@3 update] with 
-increasing numbers from the interval 0..1 for [%-*@3 duration] 
+increasing numbers from the interval 0..1 for [%- duration] in 
 milliseconds.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Animate`(Vector`&`,const Vector`&`,int`): [@(0.0.255) void] 
 [* Animate](Vector<Ptr<Ctrl>>[@(0.0.255) `&] [*@3 ctrls], [@(0.0.255) const] 
-Vector<Rect>[@(0.0.255) `&] [*@3 targets], [@(0.0.255) int] [*@3 duration] 
+Vector<Rect>[@(0.0.255) `&] [*@3 targets], [@(0.0.255) int] [*@3 duration`_ms] 
 [@(0.0.255) `=] [@3 100])&]
 [s2;%% Animates the transition of multiple [%-*@3 ctrls] from their 
 current positions to the target positions specified by the [%-*@3 targets] 
 parameter, over a given [%-*@3 duration]. The default duration 
-is 100 miliseconds. The number of ctrls must match the number 
+is 100 milliseconds. The number of ctrls must match the number 
 of the target rectangles otherwise the function will silently 
 return without modifying anything.&]
 [s3; &]
@@ -53,12 +53,12 @@ return without modifying anything.&]
 <[@(0.0.255) class] T>&]
 [s5;:Upp`:`:Animate`(Vector`&`,const Vector`&`,Event`,int`): [@(0.0.255) void] 
 [* Animate](Vector<T>[@(0.0.255) `&] [*@3 data], [@(0.0.255) const] Vector<T>[@(0.0.255) `&
-] [*@3 targets], Event<> [*@3 update], [@(0.0.255) int] [*@3 duration] 
+] [*@3 targets], Event<> [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] 
 [@(0.0.255) `=] [@3 100])&]
 [s2;%% Animates the transition of multiple [%-*@3 data] values from 
 their current positions to the target positions specified by 
 the [%-*@3 targets] parameter, over a given [%-*@3 duration]. The 
-default duration is 100 miliseconds. The number of [%-*@3 data] 
+default duration is 100 milliseconds. The number of [%-*@3 data] 
 values must match the number of the [%-*@3 targets ]values otherwise 
 the function will silently return without modifying anything. 
 After each animation step Animate calls [%-*@3 update].&]
