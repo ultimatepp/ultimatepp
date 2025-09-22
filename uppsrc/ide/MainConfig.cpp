@@ -1,36 +1,70 @@
 #include "ide.h"
 
 struct MainConfigDlg : public WithConfigLayout<TopWindow> {
-	EditString ce, fe;
-	FrameRight<Button> cb;
 	const Workspace& wspc;
 	
-	void FlagDlg();
-
 	bool Perform(const String& startwith);
+	
+	void Sync();
 
 	typedef MainConfigDlg CLASSNAME;
 
 	MainConfigDlg(const Workspace& wspc);
 };
 
-bool SetSw(const String& flag, Ctrl& sw, const char *flg) {
-	if(flag == flg) {
-		sw <<= 1;
-		return true;
-	}
-	return false;
-}
+struct FlagsDlg : WithConfLayout<TopWindow> {
+	Index<String> recognized_flags;
 
-String GetSw(Ctrl& sw, const char *flag) {
-	if((int)~sw)
-		return String(flag) + ' ';
-	return Null;
-}
+	enum { CC_SET, CC_FLAG, CC_PACKAGES, CC_COUNT };
+	
+	void Options();
+	void Flags();
 
-void MainConfigDlg::FlagDlg()
+	void Get(ArrayCtrl& a) { flags <<= a.Get(0); name <<= a.Get(1); Flags(); }
+	void Set(ArrayCtrl& a) { a.Set(0, ~flags); a.Set(1, ~name); Flags(); }
+
+	FlagsDlg();
+};
+
+void FlagsDlg::Options()
 {
-	VectorMap<String, Tuple<String, Index<String>>> flags;
+	Vector<String> flg = SplitFlags0(~~flags);
+
+	String f;
+
+	if(gui)
+		f << "GUI ";
+	if(debugcode)
+		f << "DEBUGCODE ";
+	for(int i = 0; i < accepts.GetCount(); i++)
+		if(accepts.Get(i, CC_SET))
+			f << accepts.Get(i, CC_FLAG) << ' ';
+	
+	for(String s : flg)
+		if(recognized_flags.Find(s) < 0)
+			f << s << ' ';
+	
+	f.TrimEnd(" ");
+	
+	flags <<= f;
+	flags.SetSelection(flags.GetLength());
+}
+
+void FlagsDlg::Flags()
+{
+	Index<String> flg(pick(SplitFlags0(~~flags)));
+	gui <<= flg.Find("GUI") >= 0;
+	debugcode <<= flg.Find("DEBUGCODE") >= 0;
+	
+	for(int i = 0; i < accepts.GetCount(); i++)
+		accepts.Set(i, CC_SET, flg.Find(~~accepts.Get(i, CC_FLAG)) >= 0);
+}
+
+FlagsDlg::FlagsDlg()
+{
+	VectorMap<String, Tuple<String, Index<String>>> code_flags;
+
+	CtrlLayoutOKCancel(*this, "Configuration flags");
 
 	PPInfo pp;
 	pp.SetIncludes(TheIde()->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
@@ -50,7 +84,7 @@ void MainConfigDlg::FlagDlg()
 					String f = m.key;
 					f.TrimStart("flag");
 					if(ignore_flags.Find(f) < 0) {
-						auto& fl = flags.GetAdd(f);
+						auto& fl = code_flags.GetAdd(f);
 						fl.b.FindAdd(pk_name);
 						String comment = m.value;
 						if(comment.GetCount() > fl.a.GetCount())
@@ -58,75 +92,58 @@ void MainConfigDlg::FlagDlg()
 					}
 				}
 	}
-	
-	SortByKey(flags);
-	
-	WithConfLayout<TopWindow> cfg;
-	CtrlLayoutOKCancel(cfg, "Configuration flags");
-	cfg.Sizeable().MaximizeBox();
-	Vector<String> flg = SplitFlags0(~~fe);
+
+	SortByKey(code_flags);
+
+	Sizeable().MaximizeBox();
+
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
-	cfg.accepts.AddColumn("Set").With([](One<Ctrl>& ctrl) {
-		ctrl.Create<Option>().NoWantFocus();
+	accepts.AddColumn("Set").With([=](One<Ctrl>& ctrl) {
+		ctrl.Create<Option>().NoWantFocus() ^= [=] { Options(); };
 	});
-	cfg.accepts.AddColumn("Flag");
-	cfg.accepts.AddColumn("Comment");
-	cfg.accepts.AddColumn("Packages");
-	cfg.accepts.SetLineCy(Zy(20));
-	cfg.accepts.ColumnWidths("29 140 458 117");
-	cfg.accepts.EvenRowColor();
-	cfg.accepts.NoCursor();
+	accepts.AddColumn("Flag");
+	accepts.AddColumn("Comment");
+	accepts.AddColumn("Packages");
+	accepts.SetLineCy(Zy(20));
+	accepts.ColumnWidths("29 140 458 117");
+	accepts.EvenRowColor();
+	accepts.NoCursor();
 	for(int pass = 0; pass < 2; pass++) // second pass for "hidden" flags
-		for(const auto& f : ~flags)
-			if((*f.value.a == '.') == pass) {
-				f.value.a.TrimStart(".");
-				cfg.accepts.Add(false, f.key, AttrText(f.value.a).Italic(pass), Join(f.value.b.GetKeys(), ", "));
+		for(const auto& f : ~code_flags)
+			if(IsNull(f.value.a) == pass) {
+				accepts.Add(false, f.key, AttrText(f.value.a).Italic(pass), Join(f.value.b.GetKeys(), ", "));
+				recognized_flags.FindAdd(f.key);
 			}
 	
-	cfg.other.SetFilter(FlagFilterM);
-	cfg.gui <<= false;
-	cfg.debugcode <<= false;
-	String other;
-	for(int i = 0; i < flg.GetCount(); i++) {
-		String f = flg[i];
-		if(!SetSw(f, cfg.gui, "GUI") &&
-		   !SetSw(f, cfg.debugcode, "DEBUGCODE")) {
-			int x = *f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : cfg.accepts.Find(f, CC_NAME);
-			if(x >= 0)
-				cfg.accepts.Set(x, CC_SET, true);
-			else {
-				if(!other.IsEmpty())
-					other << ' ';
-				other << f;
-			}
-		}
-	}
-	cfg.other <<= other;
-	if(cfg.Run() == IDOK) {
-		String flags;
-		flags
-		    << GetSw(cfg.gui, "GUI")
-		    << GetSw(cfg.debugcode, "DEBUGCODE");
-		for(int i = 0; i < cfg.accepts.GetCount(); i++)
-			if(cfg.accepts.Get(i, CC_SET))
-				flags << cfg.accepts.Get(i, CC_NAME) << ' ';
-		flags << cfg.other.GetText().ToString();
-		fe = Join(SplitFlags0(flags), " ").ToWString();
-	}
+	flags.SetFilter(FlagFilterM);
+	flags << [=] { Flags(); };
+	gui <<= false;
+	debugcode <<= false;
+	gui << [=] { Options(); };
+	debugcode << [=] { Flags(); };
+	recognized_flags.FindAdd("GUI");
+	recognized_flags.FindAdd("DEBUGCODE");
+}
+
+void MainConfigDlg::Sync()
+{
+	bool b = list.IsCursor();
+	insert.Enable(b);
+	remove.Enable(b);
+	duplicate.Enable(b);
+	edit.Enable(b);
+	up.Enable(b);
+	down.Enable(b);
 }
 
 MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	CtrlLayoutOKCancel(*this, "Main package configuration(s)");
 	Sizeable().Zoomable();
-	fe.AddFrame(cb);
-	fe.SetFilter(FlagFilterM);
-//	cb.SetImage(CtrlImg::smallright()).NoWantFocus();
-	cb.SetLabel("..").NoWantFocus();
-	cb <<= THISBACK(FlagDlg);
-	list.AddColumn("Flags", 3).Edit(fe);
-	list.AddColumn("Optional name", 2).Edit(ce);
-	list.Inserting().Appending().Removing().Moving().Duplicating();
-	
+	list.AddColumn("Flags", 3);
+	list.AddColumn("Optional name", 2);
+	list.WhenSel = [=] {
+		Sync();
+	};
 	list.WhenDrag = [=] {
 		list.DoDragAndDrop(InternalClip(list, "main_config-item"), list.GetDragSample(), DND_MOVE);
 	};
@@ -148,23 +165,57 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	};
 
 	add.SetImage(IdeImg::add()) << [=] {
-		list.DoAppend();
+		FlagsDlg cfg;
+		if(cfg.Run() == IDOK) {
+			list.Add(~cfg.flags, ~cfg.name);
+			list.GoEnd();
+		}
 	};
 
 	insert.SetImage(IdeImg::insert()) << [=] {
-		list.DoInsertBefore();
+		if(list.IsCursor()) {
+			FlagsDlg cfg;
+			if(cfg.Run() != IDOK)
+				return;
+			int q = list.GetCursor();
+			list.Insert(q);
+			list.SetCursor(q);
+			cfg.Set(list);
+		}
 	};
 
 	duplicate.SetImage(IdeImg::duplicate()) << [=] {
-		list.DoDuplicate();
+		if(list.IsCursor()) {
+			FlagsDlg cfg;
+			cfg.Get(list);
+			if(cfg.Run() != IDOK)
+				return;
+			int q = list.GetCursor() + 1;
+			list.Insert(q);
+			list.SetCursor(q);
+			cfg.Set(list);
+		}
 	};
 
-	edit.SetImage(IdeImg::pencil()) ^= [=] {
-		list.StartEdit();
+	list.WhenLeftDouble = edit.SetImage(IdeImg::pencil()) ^= [=] {
+		if(list.IsCursor()) {
+			FlagsDlg cfg;
+			cfg.Get(list);
+			if(cfg.Run() != IDOK)
+				return;
+			cfg.Set(list);
+		}
 	};
 
 	remove.SetImage(IdeImg::remove()) << [=] {
-		list.DoRemove();
+		int q = list.GetCursor();
+		if(q >= 0) {
+			list.Remove(q);
+			if(q >= list.GetCount())
+				q--;
+			if(q >= 0)
+				list.SetCursor(q);
+		}
 	};
 	
 	up.SetImage(IdeImg::arrow_up()) << [=] {
@@ -179,6 +230,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 bool MainConfigDlg::Perform(const String& startwith) {
 	list.SetCursor(0);
 	list.FindSetCursor(startwith);
+	Sync();
 	return Run() == IDOK;
 }
 

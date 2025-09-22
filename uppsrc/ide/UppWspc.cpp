@@ -1000,7 +1000,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	menu.Separator();
 	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
 	menu.Add("Copy File Path", callback1(WriteClipboardText, GetActiveFilePath()));
-	menu.Add("Terminal at File Directory", [=] { LaunchTerminal(GetFileDirectory(GetActiveFilePath())); });
+	menu.Add("Terminal at File Directory", IdeImg::Terminal(), [=] { LaunchTerminal(GetFileDirectory(GetActiveFilePath())); });
 	if(IsActiveFile()) {
 		menu.Separator();
 		String p = GetActiveFilePath();
@@ -1197,7 +1197,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 				BuildPackageMenu(menu);
 			}
 			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));
-			menu.Add("Terminal at Package Directory", [=] { LaunchTerminal(GetActivePackageDir()); });
+			menu.Add("Terminal at Package Directory", IdeImg::Terminal(), [=] { LaunchTerminal(GetActivePackageDir()); });
 		}
 	}
 }

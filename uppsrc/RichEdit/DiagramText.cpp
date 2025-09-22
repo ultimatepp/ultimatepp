@@ -86,7 +86,7 @@ void DiagramEditor::StartText()
 	Sync();
 	text_editor.SetFocus();
 	const String& qtf = CursorItem().qtf;
-	text_editor.SetQTF(qtf.GetCount() ? qtf : "[= ");
+	text_editor.SetQTF(qtf.GetCount() ? qtf : String("[= "));
 	text_editor.Select(0, text_editor.GetLength());
 	SyncEditorRect();
 }
