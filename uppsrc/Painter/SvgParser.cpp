@@ -84,7 +84,7 @@ void SvgParser::DoGradient(int gi, bool stroke)
 			r = r / sz;
 		}
 		Xform2D m;
-		
+
 		if(g.radial) {
 			m.x.x = r.x;
 			m.x.y = 0;
@@ -356,6 +356,27 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 			else
 			if(m.IsTag("radialGradient"))
 				ParseGradient(m, true);
+			else if(m.IsTag("style")) {
+				String text = m.GatherText();
+				try {
+					CParser p(text);
+					while(!p.IsEof()) {
+						if(p.Char('.') && p.IsId()) {
+							String id = p.ReadIdh();
+							if(p.Char('{')) {
+								const char *b = p.GetPtr();
+								while(!p.IsChar('}') && !p.IsEof())
+									p.SkipTerm();
+								classes.Add(id, String(b, p.GetPtr()));
+							}
+							p.Char('}');
+						}
+						else
+							p.SkipTerm();
+					}
+				}
+				catch(CParser::Error) {}
+			}
 	}
 	else
 	if(n.IsTag("linearGradient"))
@@ -488,7 +509,7 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 			CParser p(text);
 			while(!p.IsEof()) {
 				if(p.Char('.') && p.IsId()) {
-					String id = p.ReadId();
+					String id = p.ReadIdh();
 					if(p.Char('{')) {
 						const char *b = p.GetPtr();
 						while(!p.IsChar('}') && !p.IsEof())

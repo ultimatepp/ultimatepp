@@ -6,7 +6,9 @@ Painter& Painter::Path(CParser& p)
 {
 	Pointf current(0, 0);
 	bool done = false;
+	int previousCmd = 0;
 	while(!p.IsEof()) {
+		while(p.Char(','));
 		int c = p.GetChar();
 		p.Spaces();
 		bool rel = IsLower(c);
@@ -23,13 +25,14 @@ Painter& Painter::Path(CParser& p)
 				t += current;
 			return t;
 		};
-		auto ReadPoint = [&]() { return ReadPointP(current, rel); };
+		auto ReadPoint = [&] { return ReadPointP(current, rel); };
+		auto IsDouble = [&] { while(p.Char(',')) {} return p.IsDouble2(); };
 		switch(ToUpper(c)) {
 		case 'M':
 			current = ReadPoint();
 			Move(current);
 		case 'L':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				current = ReadPoint();
 				Line(current);
 			}
@@ -40,21 +43,21 @@ Painter& Painter::Path(CParser& p)
 			done = true;
 			break;
 		case 'H':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				current.x = p.ReadDouble() + rel * current.x;
 				Line(current);
 				done = true;
 			}
 			break;
 		case 'V':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				current.y = p.ReadDouble() + rel * current.y;
 				Line(current);
 				done = true;
 			}
 			break;
 		case 'C':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				t1 = ReadPoint();
 				t2 = ReadPoint();
 				current = ReadPoint();
@@ -63,15 +66,20 @@ Painter& Painter::Path(CParser& p)
 			}
 			break;
 		case 'S':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
+				Pointf now = current;
 				t2 = ReadPoint();
 				current = ReadPoint();
-				Cubic(t2, current);
+				if(previousCmd != 'C' && previousCmd != 'S')
+					Cubic(now, t2, current);
+				else
+					Cubic(t2, current);
+				while(p.Char(','));
 				done = true;
 			}
 			break;
 		case 'Q':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				t1 = ReadPoint();
 				current = ReadPoint();
 				Quadratic(t1, current);
@@ -79,14 +87,18 @@ Painter& Painter::Path(CParser& p)
 			}
 			break;
 		case 'T':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
+				Pointf now = current;
 				current = ReadPoint();
-				Quadratic(current);
+				if(previousCmd != 'Q' && previousCmd != 'T')
+					Quadratic(now, current);
+				else
+					Quadratic(current);
 				done = true;
 			}
 			break;
 		case 'A':
-			while(p.IsDouble2()) {
+			while(IsDouble()) {
 				t1 = ReadPointP(Pointf(0, 0), false);
 				double xangle = ReadDouble();
 				auto ReadBool = [&] {
@@ -107,6 +119,8 @@ Painter& Painter::Path(CParser& p)
 				Move(0, 0); // to clear previous path
 			return *this;
 		}
+		
+		previousCmd = ToUpper(c);
 	}
 	if(!done)
 		Move(0, 0); // to clear previous path

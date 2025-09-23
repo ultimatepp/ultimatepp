@@ -121,7 +121,7 @@ SvgView::SvgView()
 
 	Sizeable().Zoomable();
 	
-	AddFrame(splitter.Left(files, 200));
+	AddFrame(splitter.Left(files, DPI(200)));
 
 	dir = GetDataFile("svg");
 }

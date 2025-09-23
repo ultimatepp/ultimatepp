@@ -10,6 +10,7 @@ uses
 file
 	main.cpp,
 	SVG readonly separator,
+	svg\biplane.svg,
 	svg\altum_angelfish_01.svg,
 	svg\brown_fish_01.svg,
 	svg\matrix.svg,
