@@ -75,11 +75,6 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	if(edit_text)
 		return Image::Arrow();
 
-/*
-	for(int i = 0; i < data.item.GetCount(); i++)
-		if(data.item[i].IsTextClick(p))
-			return Image::IBeam();
-*/
 	Point h = HasCapture() ? sizehandle : GetSizeHandle(p);
 	if(h.x && h.y)
 		return Image::SizeBottomRight();
@@ -88,8 +83,6 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	if(h.y)
 		return Image::SizeVert();
 
-	int i = FindItem(p);
-	
 	if(HasCapture() && doselection)
 		return Image::Arrow();
 

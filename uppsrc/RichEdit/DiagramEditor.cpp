@@ -67,6 +67,8 @@ void DiagramEditor::SerializeSettings(Stream& s)
 {
 	int version = 1;
 	
+	s % version;
+	
 	s % grid % display_grid;
 
 	for(int i = 0; i < 2; i++)
