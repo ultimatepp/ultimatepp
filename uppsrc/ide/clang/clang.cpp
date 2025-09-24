@@ -139,7 +139,11 @@ bool Clang::Parse(const String& filename_, const String& content,
 	
 	String cmdline0 = cmdline;
 
-	cmdline << RedefineMacros() << " ";
+#ifdef PLATFORM_WIN32
+	cmdline << " --target=x86_64-w64-windows-gnu -Dlint -Dassist_parser__ ";
+#else
+	cmdline << " -Dassist_parser__ ";
+#endif
 
 	args.Append(Split(cmdline, ' '));
 	

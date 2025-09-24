@@ -21,6 +21,13 @@ delete aarch and arm7 folders and .exe from bin
 
 2022-03-05 CLANG-14
 2024-05-12 CLANG-18
+
+
+BUILDING start MSYS2 MINGW64
+
+$ pacman -S --needed git wget mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja mingw-w64-x86_64-cmake make mingw-w64-x86_64-python3 autoconf libtool
+
+
 ------------------------------------------------------------------
 OpenSSL
 

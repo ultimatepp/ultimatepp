@@ -13,7 +13,6 @@ file
 	clang.dli,
 	libclang.cpp,
 	util.cpp,
-	macros.cpp,
 	clang.cpp,
 	Visitor.cpp,
 	CurrentFile.cpp,
