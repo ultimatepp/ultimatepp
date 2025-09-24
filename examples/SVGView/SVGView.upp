@@ -10,6 +10,7 @@ uses
 file
 	main.cpp,
 	SVG readonly separator,
+	svg\biplane.svg,
 	svg\altum_angelfish_01.svg,
 	svg\brown_fish_01.svg,
 	svg\matrix.svg,
@@ -18,6 +19,7 @@ file
 	svg\rg1024_Presentation_with_girl.svg,
 	svg\symbol.svg,
 	svg\idtest.svg,
+	svg\wooden-easter-egg-holder.svg,
 	svg\yinyang.svg;
 
 mainconfig

@@ -78,7 +78,6 @@ struct SourceLocation : Moveable<SourceLocation> {
 	String ToString() const                        { return path + ": " + AsString(pos); }
 };
 
-String RedefineMacros();
 String GetClangInternalIncludes();
 
 enum AdditionalKinds {

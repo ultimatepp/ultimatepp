@@ -84,7 +84,7 @@ void SvgParser::DoGradient(int gi, bool stroke)
 			r = r / sz;
 		}
 		Xform2D m;
-		
+
 		if(g.radial) {
 			m.x.x = r.x;
 			m.x.y = 0;
@@ -238,6 +238,38 @@ void SvgParser::ParseGradient(const XmlNode& n, bool radial)
 			s.offset = Nvl(StrDbl(m.Attr("offset")), offset);
 		}
 }
+void SvgParser::ParseStyle(const XmlNode& n)
+{
+	String text = n.GatherText();
+	try {
+		CParser p(text);
+		while(!p.IsEof()) {
+			if(p.Char('.') && p.IsId()) {
+				Vector<String> ids;
+				String id = p.ReadIdh();
+				ids.Add(id);
+				while(p.Char(',') && p.Char('.') && p.IsId()) {
+					id = p.ReadIdh();
+					ids.Add(id);
+				}
+
+				if(p.Char('{')) {
+					const char *b = p.GetPtr();
+					while(!p.IsChar('}') && !p.IsEof())
+						p.SkipTerm();
+
+					String style(b, p.GetPtr());
+					for(const String& id : ids)
+						classes.GetAdd(id) << style;
+				}
+				p.Char('}');
+			}
+			else
+				p.SkipTerm();
+		}
+	}
+	catch(CParser::Error) {}
+}
 
 void SvgParser::Poly(const XmlNode& n, bool line)
 {
@@ -356,6 +388,9 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 			else
 			if(m.IsTag("radialGradient"))
 				ParseGradient(m, true);
+			else
+			if(m.IsTag("style"))
+				ParseStyle(m);
 	}
 	else
 	if(n.IsTag("linearGradient"))
@@ -482,27 +517,8 @@ void SvgParser::Element(const XmlNode& n, int depth, bool dosymbols)
 		}
 	}
 	else
-	if(n.IsTag("style")) {
-		String text = n.GatherText();
-		try {
-			CParser p(text);
-			while(!p.IsEof()) {
-				if(p.Char('.') && p.IsId()) {
-					String id = p.ReadId();
-					if(p.Char('{')) {
-						const char *b = p.GetPtr();
-						while(!p.IsChar('}') && !p.IsEof())
-							p.SkipTerm();
-						classes.Add(id, String(b, p.GetPtr()));
-					}
-					p.Char('}');
-				}
-				else
-					p.SkipTerm();
-			}
-		}
-		catch(CParser::Error) {}
-	}
+	if(n.IsTag("style"))
+		ParseStyle(n);
 }
 
 void SvgParser::Items(const XmlNode& n, int depth)
