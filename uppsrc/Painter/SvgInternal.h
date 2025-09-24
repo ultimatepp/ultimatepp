@@ -124,6 +124,7 @@ struct SvgParser {
 	void Items(const XmlNode& n, int depth);
 	void Element(const XmlNode& n, int depth, bool dosymbols = false);
 	void ParseGradient(const XmlNode& n, bool radial);
+	void ParseStyle(const XmlNode& n);
 	void ResolveGradient(int i);
 	void MapIds(const XmlNode& n);
 
