@@ -239,8 +239,8 @@ FileList::File DirDiffDlg::MakeFile(int i)
 	int k = list[i].d;
 	if(IsNull(icn))
 		icn = CtrlImg::File();
-	m.icon = decode(k, FAILED_FILE, MakeImage(icn, [] (const Image& m) { return GetOver(m, DiffImg::Failed()); }),
-	                   PATCHED_FILE, MakeImage(icn, [] (const Image& m) { return GetOver(m, DiffImg::Patched()); }),
+	m.icon = decode(k, FAILED_FILE, AdjustImage(icn, [](const Image& m) { return GetOver(m, DiffImg::Failed()); }),
+	                   PATCHED_FILE, AdjustImage(icn, [](const Image& m) { return GetOver(m, DiffImg::Patched()); }),
 	                   icn);
 	m.name = list[i].a;
 	m.font = decode(k, FAILED_FILE, StdFont().Strikeout().Italic(),

@@ -137,7 +137,7 @@ void SyncUHDMode()
 Image DPI(const Image& img, int expected)
 {
 	if(img.GetSize().cy <= expected && IsUHDMode())
-		return MakeImage(img, Upscale2x);
+		return AdjustImage(img, Upscale2x);
 	return img;
 }
 

@@ -408,7 +408,7 @@ void DrawHighlightImage(Draw& w, int x, int y, const Image& img, bool highlight,
 		w.DrawImage(x, y + 1, img, maskcolor);
 		w.DrawImage(x, y - 1, img, maskcolor);
 	}
-	w.DrawImage(x, y, enabled ? img : MakeImage(img, Etched));
+	w.DrawImage(x, y, enabled ? img : AdjustImage(img, Etched));
 }
 
 Color GradientColor(Color fc, Color tc, int i, int n)

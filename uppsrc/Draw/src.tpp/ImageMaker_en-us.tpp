@@ -51,13 +51,20 @@ the cache or creates and stores to cache). Images are stored
 in the U`+`+ global cache.&]
 [s3;%% &]
 [s4; &]
-[s5;:MakeImage`(const Image`&`,Image`(`*`)`(const Image`&`)`): [_^Image^ Image]_[* MakeIm
-age]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 image], 
-[_^Image^ Image]_(`*[*@3 make])([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 image
-]))&]
-[s2;%% Simplified version for Image making process that does not 
-require other parameters than single input image.&]
-[s3;%% &]
+[s5;:Upp`:`:MakeImage`(T`,M`): [@(0.0.255) template] <[@(0.0.255) class] 
+T, [@(0.0.255) class] M> Image [* MakeImage](T [*@3 key], M [*@3 make])&]
+[s2;%% Templated version of Image maker `- [%-*@3 key] must be lambda 
+that returns String that uniquely describes final Image, [%-*@3 make] 
+must be lambda that returns the final Image.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:AdjustImage`(const Image`&`,Image`(`*`)`(const Image`&`)`): Image 
+[* AdjustImage]([@(0.0.255) const] Image[@(0.0.255) `&] [*@3 image], 
+Image ([@(0.0.255) `*]make)([@(0.0.255) const] Image[@(0.0.255) `&]))&]
+[s2;%% Simplified version for Image making and caching process that 
+does not require other parameters than single input image and 
+function that alters input image to produce the result.&]
+[s3; &]
 [s4; &]
 [s5;:MakeImagePaintOnly`(const ImageMaker`&`): [_^Image^ Image]_[* MakeImagePaintOnly]([@(0.0.255) c
 onst]_[_^ImageMaker^ ImageMaker][@(0.0.255) `&]_[*@3 m])&]

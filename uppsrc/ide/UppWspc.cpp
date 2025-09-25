@@ -13,7 +13,7 @@ Image OverLtRed(const Image& m)
 
 Image ImageOverRed(const Image& m)
 {
-	return MakeImage(m, OverLtRed);
+	return AdjustImage(m, OverLtRed);
 }
 
 Font WorkspaceWork::ListFont()

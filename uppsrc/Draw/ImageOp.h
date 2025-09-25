@@ -170,7 +170,20 @@ void  SysImageRealized(const Image& img); // SystemDraw realized Image handle in
 void  SysImageReleased(const Image& img); // SystemDraw dropped Image handle
 
 Image MakeImage(const ImageMaker& m);
-Image MakeImage(const Image& image, Image (*make)(const Image& image));
+
+template <class T, class M>
+Image MakeImage(T key, M make) {
+	return MakeValue(
+		[&] { return key(); },
+		[&] (Value& v) {
+			Image img = make();
+			v = img;
+			return img.GetLength() * sizeof(RGBA);
+		}
+	).template To<Image>();
+};
+
+Image AdjustImage(const Image& image, Image (*make)(const Image& image));
 
 void SweepMkImageCache(); // deprecated, use AdjustValueCache();
 void SetMakeImageCacheMax(int m); // deprecated, use SetupValueCache

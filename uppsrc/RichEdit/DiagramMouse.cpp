@@ -118,9 +118,9 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 	
 	rot += M_2PI * CursorItem().rotate / 360;
 	
-	return MakeValue(
+	return MakeImage(
 		[&] { return String((const char *)&rot, sizeof(rot)); },
-		[&] (Value& v) {
+		[&] {
 			ImagePainter w(DPI(32, 32));
 			w.Clear();
 			const double x1 = 10;
@@ -144,10 +144,9 @@ Image DiagramEditor::CursorImage(Point p, dword keyflags)
 			w.Stroke(1, Black());
 			Image img = w.GetResult();
 			SetHotSpots(img, DPI(16, 16));
-			v = img;
-			return img.GetLength() * sizeof(RGBA);
+			return img;
 		}
-	).To<Image>();
+	);
 }
 
 void DiagramEditor::MouseWheel(Point, int zdelta, dword keyflags) {

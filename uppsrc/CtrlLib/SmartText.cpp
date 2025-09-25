@@ -126,7 +126,7 @@ void OriDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 void OriDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	Transform(x, y, cx, cy);
-	Image m = MakeImage(img, clockwise ? RotateClockwise : RotateAntiClockwise);
+	Image m = AdjustImage(img, clockwise ? RotateClockwise : RotateAntiClockwise);
 	ptr->DrawImageOp(x, y, cx, cy, m, Size(cx, cy), color);
 }
 

@@ -63,7 +63,7 @@ Image DisImage(const Image& m)
 
 Image DisabledImage(const Image& img, bool dis)
 {
-	return dis ? MakeImage(img, GUI_GlobalStyle() == GUISTYLE_CLASSIC ? Etched : DisImage)
+	return dis ? AdjustImage(img, GUI_GlobalStyle() == GUISTYLE_CLASSIC ? Etched : DisImage)
 	           : img;
 }
 

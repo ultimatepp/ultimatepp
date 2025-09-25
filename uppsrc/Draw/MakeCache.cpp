@@ -94,34 +94,12 @@ Image MakeImagePaintOnly(const ImageMaker& m)
 	return MakeImage__(m, true);
 }
 
-class SimpleImageMaker : public ImageMaker {
-	Image (*make)(const Image& image);
-	Image image;
-
-public:
-	virtual String Key() const;
-	virtual Image  Make() const;
-
-	SimpleImageMaker(const Image& image, Image (*make)(const Image& image))
-	:	make(make),image(image) {}
-};
-
-String SimpleImageMaker::Key() const
+Image AdjustImage(const Image& image, Image (*make)(const Image& image))
 {
-	String key;
-	RawCat(key, image.GetSerialId());
-	RawCat(key, make);
-	return key;
-}
-
-Image SimpleImageMaker::Make() const
-{
-	return (*make)(image);
-}
-
-Image MakeImage(const Image& image, Image (*make)(const Image& image))
-{
-	return MakeImage(SimpleImageMaker(image, make));
+	return MakeImage(
+		[&] { String key; RawCat(key, image.GetSerialId()); RawCat(key, make); return key; },
+		[&] { return (*make)(image); }
+	);
 }
 
 struct sCachedRescale : public ImageMaker
