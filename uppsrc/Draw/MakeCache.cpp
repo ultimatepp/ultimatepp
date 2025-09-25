@@ -102,100 +102,75 @@ Image AdjustImage(const Image& image, Image (*make)(const Image& image))
 	);
 }
 
-struct sCachedRescale : public ImageMaker
+Image CachedRescale_(const Image& img, Size sz, const Rect& src, int filter, bool paintonly)
 {
-	Rect  src;
-	Size  sz;
-	Image img;
-	int   filter;
-
-	virtual String Key() const {
-		StringBuffer h;
-		RawCat(h, src.left);
-		RawCat(h, src.top);
-		RawCat(h, src.right);
-		RawCat(h, src.bottom);
-		RawCat(h, sz.cx);
-		RawCat(h, sz.cy);
-		RawCat(h, img.GetSerialId());
-		RawCat(h, filter);
-		return String(h);
-	}
-
-	virtual Image Make() const {
-		Image im = IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter);
-		ImageBuffer m(im);
-		m.SetHotSpot(sz * (img.GetHotSpot() - src.TopLeft()) / src.GetSize());
-		m.Set2ndSpot(sz * (img.Get2ndSpot() - src.TopLeft()) / src.GetSize());
-		return Image(m);
-	}
-};
-
-Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter)
-{
-	if(m.GetSize() == sz && src == sz)
-		return m;
-	sCachedRescale cr;
-	cr.sz = sz;
-	cr.src = src;
-	cr.img = m;
-	cr.filter = filter;
-	return MakeImage(cr);
+	if(img.GetSize() == sz && src == sz)
+		return img;
+	return MakeImage(
+		[&] {
+			StringBuffer h;
+			RawCat(h, src.left);
+			RawCat(h, src.top);
+			RawCat(h, src.right);
+			RawCat(h, src.bottom);
+			RawCat(h, sz.cx);
+			RawCat(h, sz.cy);
+			RawCat(h, img.GetSerialId());
+			RawCat(h, filter);
+			return String(h);
+		},
+		[&] {
+			Image im = IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter);
+			ImageBuffer m(im);
+			m.SetHotSpot(sz * (img.GetHotSpot() - src.TopLeft()) / src.GetSize());
+			m.Set2ndSpot(sz * (img.Get2ndSpot() - src.TopLeft()) / src.GetSize());
+			return Image(m);
+		},
+		paintonly
+	);
 }
 
-Image CachedRescale(const Image& m, Size sz, int filter)
+Image CachedRescale(const Image& img, Size sz, const Rect& src, int filter)
 {
-	return CachedRescale(m, sz, m.GetSize(), filter);
+	return CachedRescale_(img, sz, src, filter, false);
 }
 
-Image CachedRescalePaintOnly(const Image& m, Size sz, const Rect& src, int filter)
+Image CachedRescale(const Image& img, Size sz, int filter)
 {
-	if(m.GetSize() == sz)
-		return m;
-	sCachedRescale cr;
-	cr.sz = sz;
-	cr.src = src;
-	cr.img = m;
-	cr.filter = filter;
-	return MakeImagePaintOnly(cr);
+	return CachedRescale_(img, sz, img.GetSize(), filter, false);
 }
 
-Image CachedRescalePaintOnly(const Image& m, Size sz, int filter)
+Image CachedRescalePaintOnly(const Image& img, Size sz, const Rect& src, int filter)
 {
-	return CachedRescalePaintOnly(m, sz, m.GetSize(), filter);
+	return CachedRescale_(img, sz, src, filter, true);
 }
 
-struct sColorize : public ImageMaker
+Image CachedRescalePaintOnly(const Image& img, Size sz, int filter)
 {
-	Image img;
-	Color color;
+	return CachedRescale_(img, sz, img.GetSize(), filter, true);
+}
 
-	virtual String Key() const {
-		StringBuffer h;
-		RawCat(h, color);
-		RawCat(h, img.GetSerialId());
-		return String(h);
-	}
-
-	virtual Image Make() const {
-		return SetColorKeepAlpha(img, color);
-	}
-};
+Image CachedSetColorKeepAlpha_(const Image& img, Color color, bool paintonly)
+{
+	return MakeImage(
+		[&] {
+			StringBuffer h; RawCat(h, color); RawCat(h, img.GetSerialId()); return String(h);
+		},
+		[&] {
+			return SetColorKeepAlpha(img, color);
+		},
+		paintonly
+	);
+}
 
 Image CachedSetColorKeepAlpha(const Image& img, Color color)
 {
-	sColorize m;
-	m.img = img;
-	m.color = color;
-	return MakeImage(m);
+	return CachedSetColorKeepAlpha_(img, color, false);
 }
 
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color)
 {
-	sColorize m;
-	m.img = img;
-	m.color = color;
-	return MakeImagePaintOnly(m);
+	return CachedSetColorKeepAlpha_(img, color, true);
 }
 
 }

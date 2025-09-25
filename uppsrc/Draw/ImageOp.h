@@ -172,11 +172,13 @@ void  SysImageReleased(const Image& img); // SystemDraw dropped Image handle
 Image MakeImage(const ImageMaker& m);
 
 template <class T, class M>
-Image MakeImage(T key, M make) {
+Image MakeImage(T key, M make, bool paintonly = false) {
 	return MakeValue(
 		[&] { return key(); },
 		[&] (Value& v) {
 			Image img = make();
+			if(paintonly && !IsNull(img) && img.GetRefCount() == 1)
+				SetPaintOnly__(img);
 			v = img;
 			return img.GetLength() * sizeof(RGBA);
 		}

@@ -51,11 +51,14 @@ the cache or creates and stores to cache). Images are stored
 in the U`+`+ global cache.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:MakeImage`(T`,M`): [@(0.0.255) template] <[@(0.0.255) class] 
-T, [@(0.0.255) class] M> Image [* MakeImage](T [*@3 key], M [*@3 make])&]
+[s5;:Upp`:`:MakeImage`(T`,M`,bool`): [@(0.0.255) template] <[@(0.0.255) class] 
+T, [@(0.0.255) class] M> Image [* MakeImage](T [*@3 key], M [*@3 make], 
+[@(0.0.255) bool] [*@3 paintonly] [@(0.0.255) `=] [@(0.0.255) false])&]
 [s2;%% Templated version of Image maker `- [%-*@3 key] must be lambda 
 that returns String that uniquely describes final Image, [%-*@3 make] 
-must be lambda that returns the final Image.&]
+must be lambda that returns the final Image. If is true, the 
+result image can only be used in Draw`::DrawImage which can save 
+some memory as pixels can be freed after copied to system.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:AdjustImage`(const Image`&`,Image`(`*`)`(const Image`&`)`): Image 
