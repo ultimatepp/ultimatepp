@@ -1559,7 +1559,8 @@ void FileSel::Update() {
 						*preview <<= path;
 				}
 				Time tm = ff[0].last_write_time;
-				filetime = "     " + Format(tm);
+				filetime.AlignCenter();
+				filetime = Format(tm);
 			}
 		}
 	}
