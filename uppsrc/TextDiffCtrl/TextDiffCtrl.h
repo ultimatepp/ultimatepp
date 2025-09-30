@@ -282,6 +282,7 @@ protected:
 	ParentCtrl                 files_pane;
 	FileList                   files;
 	DropList                   recent;
+	DropList                   extension;
 
 	SelectDirButton            seldir1;
 	WithDropChoice<EditString> dir1;

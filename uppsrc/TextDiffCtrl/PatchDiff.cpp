@@ -13,6 +13,7 @@ PatchDiff::PatchDiff()
 	revertright.Remove();
 
 	recent.Hide();
+	extension.Hide();
 
 	left.Height(EditField::GetStdHeight());
 	left.Add(lfile.HSizePosZ(0, 148));
