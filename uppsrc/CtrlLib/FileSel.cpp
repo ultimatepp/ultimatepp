@@ -1754,11 +1754,11 @@ Image SynthetisePathIcon(const String& path)
 	ImagePainter iw(isz);
 	iw.Clear(RGBAZero());
 	int x = FoldHash(GetHashValue(path));
-	auto cl = [](int x) { return 128 + (x & 127); };
+	auto cl = [](int x) { return 100 + (x & 127); };
 	Color c = Color(cl(x), cl(x >> 7), cl(x >> 14));
 	iw.Circle(DPI(8), DPI(8), DPI(7))
-	  .Fill(DPI(5), DPI(5), Blend(White(), c, 100), DPI(8), DPI(8), c)
-	  .Stroke(1, SBlack());
+	  .Fill(DPI(4), DPI(4), Blend(White(), c, 80), DPI(8), DPI(8), DPI(7), c)
+	  .Stroke(1, Gray());
 	WString s = GetFileTitle(path).ToWString();
 	if(s.GetCount()) {
 		s = s.Mid(0, 1);
