@@ -392,7 +392,7 @@ void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 		else
 		if(*p.text == '\2') { // Image support
 			PrettyImage img;
-			memcpy(&img, ~p.text + 1, sizeof(PrettyImage));
+			memcpy((void *)&img, ~p.text + 1, sizeof(PrettyImage));
 			Rect r = RectC(x, y, sz.cx, sz.cy);
 			Image m = DbgImg::Img();
 			if(img.size.cx < 0 || img.size.cx > 10000 || img.size.cy < 0 || img.size.cy > 10000)

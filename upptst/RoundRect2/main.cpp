@@ -14,8 +14,10 @@ struct MyApp : public TopWindow {
 		p.Move(10, 10);
 		p.Arc(10, 10, 0.1, M_PI, M_PI);
 //		p.RoundedRectangle(2, 2, 100, 100, 0.1)
-//		p.Stroke(5, Blue());
-		p.Stroke(0.1, Blue());
+		p.Stroke(5, Blue());
+//		p.Stroke(0.1, Blue());
+
+		p.Circle(20, 20, 10).Stroke(1, Blue());
 	}
 };
 

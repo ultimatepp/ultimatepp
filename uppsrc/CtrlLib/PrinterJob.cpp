@@ -24,7 +24,7 @@ namespace Upp {
 
 struct Win32PrintDlg_ : PRINTDLG {
 	Win32PrintDlg_() {
-		memset(this, 0, sizeof(PRINTDLG));
+		memset((void *)this, 0, sizeof(PRINTDLG));
 		lStructSize = sizeof(PRINTDLG);
 	}
 	~Win32PrintDlg_() {
