@@ -94,7 +94,7 @@ PatchDiff::PatchDiff()
 				FileDelete(file_path);
 			else
 				SaveFile(file_path, patched_file);
-			list[ii].d = 4;
+			list[ii].kind = PATCHED_FILE;
 			files.Set(files.GetCursor(), MakeFile(ii));
 			Refresh();
 		}
@@ -146,6 +146,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 	list.Clear();
 	pi.SetText("Checking files");
 	pi.SetTotal(patch.GetCount());
+	Time now = GetSysTime();
 	for(int i = 0; i < patch.GetCount(); i++) {
 		if(pi.StepCanceled())
 			return false;
@@ -155,7 +156,11 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 		bool pe = h.GetCount();
 		bool x = FileExists(p);
 		bool failed = h.IsVoid();
-		list.Add(MakeTuple(fn, p, p, failed ? 3 : pe && x ? 0 : pe ? 2 : 1));
+		FileInfo& fi = list.Add();
+		fi.file = fn;
+		fi.path1 = fi.path2 = p;
+		fi.kind = failed ? FAILED_FILE : pe && x ? NORMAL_FILE : pe ? NEW_FILE : DELETED_FILE;
+		fi.time1 = fi.time2 = now;
 		if(failed)
 			failed_count++;
 	}
@@ -197,7 +202,7 @@ void PatchDiff::File()
 		file_path = patch.GetPath(ii);
 		if(GetFileLength(file_path) < 4 * 1024 * 1024) {
 			String content = LoadFile(file_path);
-			if(list[ii].d == PATCHED_FILE) {
+			if(list[ii].kind == PATCHED_FILE) {
 				p2 = "[FILE IS PATCHED]";
 				diff.Set(content, content);
 			}

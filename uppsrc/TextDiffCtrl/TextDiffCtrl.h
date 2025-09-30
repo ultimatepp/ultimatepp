@@ -312,7 +312,16 @@ protected:
 	
 	enum { NORMAL_FILE, DELETED_FILE, NEW_FILE, FAILED_FILE, PATCHED_FILE };
 	
-	Array<Tuple<String, String, String, int>> list;
+	struct FileInfo {
+		String file;
+		String path1;
+		String path2;
+		Time   time1;
+		Time   time2;
+		int    kind;
+	};
+	
+	Array<FileInfo> list;
 
 	static bool FileEqual(const String& f1, const String& f2, int& n);
 

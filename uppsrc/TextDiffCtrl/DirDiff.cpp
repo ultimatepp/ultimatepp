@@ -22,7 +22,10 @@ DirDiffDlg::DirDiffDlg()
 	recent.Add(3, "3 Days");
 	recent.Add(7, "7 Days");
 	recent.Add(14, "14 Days");
-	recent.Add(32, "28 Days");
+	recent.Add(28, "28 Days");
+	recent.Add(60, "3 Months");
+	recent.Add(180, "6 Months");
+	recent.Add(365, "1 Year");
 	
 	compare.SetLabel(t_("Compare"));
 	int bcy = max(cy, compare.GetStdSize().cy);
@@ -35,8 +38,8 @@ DirDiffDlg::DirDiffDlg()
 	files_pane.Add(added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
 	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
 	files_pane.Add(removed.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(128, 80));
-	files_pane.Add(recent.TopPos(3 * cy + 3 * div, bcy).RightPos(0, bcx));
-	files_pane.Add(extension.TopPos(3 * cy + 3 * div, bcy).RightPos(bcx + DPI(8), bcx));
+	files_pane.Add(recent.TopPos(3 * cy + 3 * div, bcy).RightPos(0, bcx + Zx(8)));
+	files_pane.Add(extension.TopPos(3 * cy + 3 * div, bcy).RightPos(bcx + Zx(8) + DPI(8), bcx));
 	
 	removed = 1;
 	added = 1;
@@ -72,6 +75,7 @@ DirDiffDlg::DirDiffDlg()
 	added		<< [=] { ShowResult(); };
 	find		<< [=] { ShowResult(); };
 	extension   << [=] { ShowResult(); };
+	recent      << [=] { ShowResult(); };
 	clearFind	<< [=] { find.Clear(); ShowResult();};
 	
 	files.WhenSel = THISBACK(File);
@@ -210,8 +214,6 @@ void DirDiffDlg::Compare()
 	Progress pi(t_("Comparing.."));
 	pi.SetTotal(f.GetCount());
 	
-	Date dlim = IsNull(recent) ? Null : GetSysDate() - (int)~recent;
-
 	list.Clear();
 	Index<String> exts;
 	for(int i = 0; i < f.GetCount(); i++) {
@@ -219,14 +221,19 @@ void DirDiffDlg::Compare()
 			break;
 		String p1 = AppendFileName(~dir1, f[i]);
 		String p2 = AppendFileName(~dir2, f[i]);
-		int n = NORMAL_FILE;
+		int kind = NORMAL_FILE;
 		auto IsGit = [&](const String& path) {
 			return path.Find("/.git/") >= 0 || path.Find("\\.git/") >= 0 || path.Find("\\.git\\") >= 0 || path.Find("/.git\\") >= 0;
 		};
-		if((IsNull(dlim) || FileGetTime(p1) >= dlim || FileGetTime(p2) >= dlim) && !FileEqual(p1, p2, n) &&
-		   !IsGit(p1) && !IsGit(p2)) {
+		if(!FileEqual(p1, p2, kind) && !IsGit(p1) && !IsGit(p2)) {
 			exts.FindAdd(GetFileExt(p1));
-			list.Add(MakeTuple(f[i], p1, p2, n));
+			FileInfo& m = list.Add();
+			m.file = f[i];
+			m.path1 = p1;
+			m.path2 = p2;
+			m.time1 = FileGetTime(p1);
+			m.time2 = FileGetTime(p2);
+			m.kind = kind;
 		}
 	}
 	
@@ -246,14 +253,14 @@ FileList::File DirDiffDlg::MakeFile(int i)
 	m.isdir = false;
 	m.unixexe = false;
 	m.hidden = false;
-	Image icn = WhenIcon(FileExists(list[i].b) ? list[i].b : list[i].c);
-	int k = list[i].d;
+	Image icn = WhenIcon(FileExists(list[i].path1) ? list[i].path1 : list[i].path2);
+	int k = list[i].kind;
 	if(IsNull(icn))
 		icn = CtrlImg::File();
 	m.icon = decode(k, FAILED_FILE, AdjustImage(icn, [](const Image& m) { return GetOver(m, DiffImg::Failed()); }),
 	                   PATCHED_FILE, AdjustImage(icn, [](const Image& m) { return GetOver(m, DiffImg::Patched()); }),
 	                   icn);
-	m.name = list[i].a;
+	m.name = list[i].file;
 	m.font = decode(k, FAILED_FILE, StdFont().Strikeout().Italic(),
 	                   PATCHED_FILE, StdFont().Italic(), StdFont());
 	m.ink = cs[k];
@@ -269,14 +276,19 @@ void DirDiffDlg::ShowResult()
 	files.Clear();
 	String sFind = ToLower(~~find);
 	String ext = ToLower(~~extension);
-	for(int i = 0; i < list.GetCount(); i++)
-	{
-		int n = list[i].d;
-		String fn = ToLower(list[i].a);
-		if((n == NORMAL_FILE && modified || n == DELETED_FILE && removed
-		    || n == NEW_FILE && added || n == FAILED_FILE || n == PATCHED_FILE)
-		   && fn.Find(sFind) >= 0
-		   && fn.EndsWith(ext))
+	Date dlim = IsNull(recent) ? Null : GetSysDate() - (int)~recent;
+	for(int i = 0; i < list.GetCount(); i++) {
+		const FileInfo& fi = list[i];
+		int n = fi.kind;
+		String fn = ToLower(list[i].file);
+		if((IsNull(dlim) || fi.time1 >= dlim || fi.time2 >= dlim) &&
+		   (n == NORMAL_FILE && modified ||
+		    n == DELETED_FILE && removed ||
+		    n == NEW_FILE && added ||
+		    n == FAILED_FILE ||
+		    n == PATCHED_FILE) &&
+		   fn.Find(sFind) >= 0 &&
+		   fn.EndsWith(ext))
 			files.Add(MakeFile(i));
 	}
 	Title(AsString(files.GetCount()) + " files");
