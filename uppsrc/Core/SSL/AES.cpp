@@ -1,7 +1,5 @@
 #include "SSL.h"
 
-#ifdef EVP_PKEY_KEYMGMT
-
 // Encrypts a string using AES-256-GCM with PBKDF2 key derivation
 // Format of encrypted data: "GCMv1__" + salt(16) + iv(12) + ciphertext + tag(16)
 
@@ -22,18 +20,27 @@ namespace {
 Aes256Gcm::Aes256Gcm()
 : iteration(AES_GCM_DEFAULT_ITERATION)
 , chunksize(1024)
+, ctx(nullptr)
+, cipher(nullptr)
 {
+	SslInitThread();
+	
 	ctx = EVP_CIPHER_CTX_new();
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	cipher = EVP_CIPHER_fetch(nullptr, "AES-256-GCM", nullptr);
+#else
+	cipher = const_cast<EVP_CIPHER*>(EVP_aes_256_gcm());
+#endif
 }
 
 Aes256Gcm::~Aes256Gcm()
 {
 	if(ctx)
 		EVP_CIPHER_CTX_free(ctx);
-	
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 	if(cipher)
 		EVP_CIPHER_free(cipher);
+#endif
 }
 
 void Aes256Gcm::SetError(const String& txt)
@@ -81,8 +88,13 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 			throw Exc("PBKDF2: Key derivation failed");
 
 		// Initialize cipher
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 		if(!EVP_EncryptInit_ex2(ctx, cipher, key, iv, nullptr))
 			throw Exc("Cipher initialization failed");
+#else
+		if(!EVP_EncryptInit_ex(ctx, cipher, nullptr, key, iv))
+			throw Exc("Cipher initialization failed");
+#endif
 
 		// Put header
 		out.Put(AES_GCM_FORMAT_PREFIX, AES_GCM_PREFIX_LEN);
@@ -127,12 +139,17 @@ bool Aes256Gcm::Encrypt(Stream& in, const String& password, Stream& out)
 		}
 		
 		// Get GCM tag
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 		OSSL_PARAM params[] = {
 			OSSL_PARAM_construct_octet_string("tag", tag, sizeof(tag)),
 			OSSL_PARAM_construct_end()
 		};
 		if(!EVP_CIPHER_CTX_get_params(ctx, params))
 			throw Exc("Failed to get tag");
+#else
+		if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, sizeof(tag), tag))
+			throw Exc("Failed to get tag");
+#endif
 
 		// Put tag
 		out.Put(tag, sizeof(tag));
@@ -214,9 +231,14 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 			throw Exc("PBKDF2: Key derivation failed");
 		
 		// Init decryption
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 		if(!EVP_DecryptInit_ex2(ctx, cipher, key, iv, nullptr))
 			throw Exc("Initialization failed");
-		
+#else
+		if(!EVP_DecryptInit_ex(ctx, cipher, nullptr, key, iv))
+			throw Exc("Initialization failed");
+#endif
+
 		Buffer<byte> buffer(min((int64) chunksize, ciphertextlen));
 		int    buflen = 0;
 		int64 remaining = ciphertextlen, processed = AES_GCM_ENVELOPE_SIZE;
@@ -251,7 +273,7 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 		if(!in.IsEof())
 			throw Exc("Trailing data found after authentication tag");
 		
-		// Set GCM tag
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
 		OSSL_PARAM params[] = {
 			OSSL_PARAM_construct_octet_string("tag", (void*) ~tag, AES_GCM_TAG_SIZE),
 			OSSL_PARAM_construct_end()
@@ -259,6 +281,10 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 		
 		if(!EVP_CIPHER_CTX_set_params(ctx, params))
 			throw Exc("Failed to set tag");
+#else
+		if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, AES_GCM_TAG_SIZE, (void*) ~tag))
+			throw Exc("Failed to set tag");
+#endif
 
 		// Finalize decryption
 		if(!EVP_DecryptFinal_ex(ctx, buffer, &buflen))
@@ -334,5 +360,3 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 	
 	
 }
-
-#endif
