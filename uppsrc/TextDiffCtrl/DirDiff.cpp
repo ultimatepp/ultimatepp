@@ -157,14 +157,17 @@ DirDiffDlg::DirDiffDlg()
 	Title("Compare directories");
 };
 
-void DirDiffDlg::GatherFilesDeep(Index<String>& files, const String& base, const String& path)
+void DirDiffDlg::GatherFilesDeep(VectorMap<String, Time>& files, const String& base, const String& path)
 {
 	FindFile ff(AppendFileName(AppendFileName(base, path), "*.*"));
 	while(ff) {
 		String p = (path.GetCount() ? path + '/' : String()) + ff.GetName();
 		if(hidden || !ff.IsHidden()) {
-			if(ff.IsFile())
-				files.FindAdd(p);
+			if(ff.IsFile()) {
+				Time ftm = ff.GetLastWriteTime();
+				Time& tm = files.GetAdd(p, ftm);
+				tm = max(tm, ftm);
+			}
 			else
 			if(ff.IsFolder())
 				GatherFilesDeep(files, base, p);
@@ -173,32 +176,32 @@ void DirDiffDlg::GatherFilesDeep(Index<String>& files, const String& base, const
 	}
 }
 
-bool DirDiffDlg::FileEqual(const String& f1, const String& f2, int& n)
+bool DirDiffDlg::FileEqual(const String& f1, const String& f2, int& kind)
 {
 	FileIn in1(f1);
 	FileIn in2(f2);
 	if(in1 && in2) {
-		in1.SetBufferSize(256 * 1024);
-		in2.SetBufferSize(256 * 1024);
+		kind = NORMAL_FILE;
+		if(in1.GetSize() != in2.GetSize())
+			return false;
+		
 		while(!in1.IsEof() && !in2.IsEof()) {
-			String a = in1.GetLine();
-			String b = in2.GetLine();
+			String a = in1.Get(64*1024);
+			String b = in2.Get(64*1024);
 			if(a != b)
 				return false;
 		}
 		return true;
 	}
 	else
-	{
-		n = (in1 ? DELETED_FILE : NEW_FILE);
-	}
+		kind = in1 ? DELETED_FILE : NEW_FILE;
 	
 	return false;
 }
 
 void DirDiffDlg::Compare()
 {
-	Index<String> fs;
+	VectorMap<String, Time> fs;
 	GatherFilesDeep(fs, ~dir1, Null);
 	GatherFilesDeep(fs, ~dir2, Null);
 
@@ -209,18 +212,18 @@ void DirDiffDlg::Compare()
 	removeright.Disable();
 	
 	files.Clear();
-	Vector<String> f = fs.PickKeys();
-	Sort(f);
+	SortByKey(fs);
 	Progress pi(t_("Comparing.."));
-	pi.SetTotal(f.GetCount());
+	pi.SetTotal(fs.GetCount());
 	
 	list.Clear();
 	Index<String> exts;
-	for(int i = 0; i < f.GetCount(); i++) {
+	for(int i = 0; i < fs.GetCount(); i++) {
 		if(pi.StepCanceled())
 			break;
-		String p1 = AppendFileName(~dir1, f[i]);
-		String p2 = AppendFileName(~dir2, f[i]);
+		String p = fs.GetKey(i);
+		String p1 = AppendFileName(~dir1, p);
+		String p2 = AppendFileName(~dir2, p);
 		int kind = NORMAL_FILE;
 		auto IsGit = [&](const String& path) {
 			return path.Find("/.git/") >= 0 || path.Find("\\.git/") >= 0 || path.Find("\\.git\\") >= 0 || path.Find("/.git\\") >= 0;
@@ -228,11 +231,10 @@ void DirDiffDlg::Compare()
 		if(!FileEqual(p1, p2, kind) && !IsGit(p1) && !IsGit(p2)) {
 			exts.FindAdd(GetFileExt(p1));
 			FileInfo& m = list.Add();
-			m.file = f[i];
+			m.file = p;
 			m.path1 = p1;
 			m.path2 = p2;
-			m.time1 = FileGetTime(p1);
-			m.time2 = FileGetTime(p2);
+			m.time = fs[i];
 			m.kind = kind;
 		}
 	}
@@ -281,7 +283,7 @@ void DirDiffDlg::ShowResult()
 		const FileInfo& fi = list[i];
 		int n = fi.kind;
 		String fn = ToLower(list[i].file);
-		if((IsNull(dlim) || fi.time1 >= dlim || fi.time2 >= dlim) &&
+		if((IsNull(dlim) || fi.time >= dlim) &&
 		   (n == NORMAL_FILE && modified ||
 		    n == DELETED_FILE && removed ||
 		    n == NEW_FILE && added ||

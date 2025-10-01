@@ -160,7 +160,7 @@ bool PatchDiff::Open(const char *patch_path, const Vector<String>& target_dirs0)
 		fi.file = fn;
 		fi.path1 = fi.path2 = p;
 		fi.kind = failed ? FAILED_FILE : pe && x ? NORMAL_FILE : pe ? NEW_FILE : DELETED_FILE;
-		fi.time1 = fi.time2 = now;
+		fi.time = now;
 		if(failed)
 			failed_count++;
 	}

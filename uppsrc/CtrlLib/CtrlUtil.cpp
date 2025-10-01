@@ -431,22 +431,29 @@ void FileSelButton::OnAction()
 	Ctrl *owner = button.GetParent();
 	ASSERT(owner);
 	String old = ~*owner;
-	if(mode == MODE_DIR) {
-		for(int i = 0; i < 4; i++) {
-			if(DirectoryExists(old))
+	if(IsNull(old))
+		LoadFromGlobal(old, "FileSelButtonLastPath");
+	if(mode == MODE_DIR)
+		for(int i = 0; i < 8 && old.GetCount(); i++) {
+			if(DirectoryExists(old)) {
+				ActiveDir(old);
 				break;
+			}
 			old = GetFileFolder(old);
 		}
-		ActiveDir(old);
-	}
 	else
 		Set(old);
-	if(mode == MODE_OPEN ? ExecuteOpen(title) : mode == MODE_SAVE ? ExecuteSaveAs(title) : ExecuteSelectDir(title))
-	{
-		*owner <<= Get();
+	String path;
+	if(mode == MODE_OPEN ? ExecuteOpen(title) : mode == MODE_SAVE ? ExecuteSaveAs(title) : ExecuteSelectDir(title)) {
+		path = Get();
+		*owner <<= path;
 		owner->Action();
 		WhenSelected();
 	}
+	else
+		path = GetActiveDir();
+	if(path.GetCount())
+		StoreToGlobal(path, "FileSelButtonLastPath");
 }
 
 void FileSelButton::Detach()
