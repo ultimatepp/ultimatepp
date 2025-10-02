@@ -176,7 +176,6 @@ void Ide::InsertFilePath(bool c)
 	}
 }
 
-
 void Ide::InsertAs(const String& data)
 {
 	WithInsertAsLayout<TopWindow> dlg;
@@ -223,7 +222,7 @@ void Ide::InsertAs()
 		InsertAs(txt);
 }
 
-void Ide::InsertFileBase64()
+void Ide::InsertFileContent()
 {
 	if(editor.IsReadOnly())
 		return;
@@ -236,6 +235,47 @@ void Ide::InsertFileBase64()
 		}
 		InsertAs(LoadFile(path));
 	}
+}
+
+void Ide::InsertParameters()
+{
+	if(designer)
+		return;
+	if(!editor.WaitCurrentFile())
+		return;
+	AnnotationItem cm = editor.FindCurrentAnnotation();
+	CParser p(cm.pretty);
+	int lvl = 0;
+	String id;
+	String params;
+	try {
+		while(!p.IsEof()) {
+			if(p.Char('(')) {
+				lvl++;
+				id.Clear();
+			}
+			else
+			if(p.Char(')')) {
+				if(lvl == 1 && id.GetCount())
+					MergeWith(params, ", ", id);
+				lvl--;
+				id.Clear();
+			}
+			else
+			if(p.Char(',')) {
+				if(lvl == 1 && id.GetCount())
+					MergeWith(params, ", ", id);
+				id.Clear();
+			}
+			else
+			if(p.IsId())
+				id = p.ReadId();
+			else
+				p.SkipTerm();
+		}
+	}
+	catch(CParser::Error) {}
+	InsertText(params);
 }
 
 void Ide::InsertMenu(Bar& bar)
@@ -276,10 +316,11 @@ void Ide::InsertMenu(Bar& bar)
 	bar.Add("Insert color..", THISBACK(InsertColor));
 	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	bar.Add("Insert sequence..", THISBACK(InsertSequence));
+	bar.Add("Insert function parameters..", [=] { InsertParameters(); });
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
 	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
-	bar.Add("Insert file as..", THISBACK(InsertFileBase64));
+	bar.Add("Insert file as..", THISBACK(InsertFileContent));
 	bar.Add(IdeKeys::AK_INSERTDATE, [=] {
 		Date d = GetSysDate();
 		InsertText(Format("%d-%02d-%02d", d.year, d.month, d.day));
