@@ -469,7 +469,8 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 			SetAnnotations(f);
 
 			ClearErrors();
-			if(!IsCurrentFileDirty() && theide && theide->IsProjectFile(theide->editfile)) {
+			if(!IsCurrentFileDirty() && theide && theide->IsProjectFile(theide->editfile) && GetIdeWorkspace().GetCount()
+			   && !GetIdeWorkspace().GetPackage(0).nowarnings) {
 				errors = clone(ds);
 	
 				Vector<Point> err;
