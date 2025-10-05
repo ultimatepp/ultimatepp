@@ -253,3 +253,10 @@ void Diagnostics(CXTranslationUnit tu, Stream& out)
 		out << filename << " (" << pos.y + 1 << "): " << text << "\r\n";
 	});
 }
+
+#ifdef PLATFORM_WIN32
+String GetLibClangVersion()
+{
+	return FetchString(clang_getClangVersion());
+}
+#endif

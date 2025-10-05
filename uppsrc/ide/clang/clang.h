@@ -80,6 +80,10 @@ struct SourceLocation : Moveable<SourceLocation> {
 
 String GetClangInternalIncludes();
 
+#ifdef PLATFORM_WIN32
+String GetLibClangVersion();
+#endif
+
 enum AdditionalKinds {
 	KIND_INCLUDEFILE = -1000,
 	KIND_INCLUDEFILE_ANY,

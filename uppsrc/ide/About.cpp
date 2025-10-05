@@ -149,6 +149,40 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 		h << "X11";
 #endif
 
+#ifdef PLATFORM_WIN32
+	String cv = Sys(GetExeDirFile("bin/clang/bin/c++") + " --version");
+	String version;
+	String target;
+	String threads;
+	StringStream ss(cv);
+	while(!ss.IsEof()) {
+		String s = ss.GetLine();
+		if(s.TrimStart("clang version ")) {
+			int q = s.Find(" (");
+			if(q >= 0)
+				s.Trim(q);
+			version = s;
+		}
+		else
+		if(s.TrimStart("Target: "))
+			target = s;
+		else
+		if(s.TrimStart("Thread model: "))
+			threads = s;
+	}
+	if(version.GetCount() + target.GetCount())
+		h << "\nClang " + version + " " + target;
+	if(threads.GetCount())
+		h << "\n" << threads << " thread model";
+	cv = StringStream(GetLibClangVersion()).GetLine();
+	cv.TrimStart("clang version ");
+	int q = cv.Find(" (");
+	if(q >= 0)
+		cv.Trim(q);
+	if(cv.GetCount())
+		h << "\nlibclang " << cv;
+#endif
+
 #if 0
 	h << "\n1\n2\n3\n4\n5\n6"; // for size testing
 #endif
