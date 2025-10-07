@@ -124,8 +124,8 @@ public:
 	bool     IsEmpty() const                   { return !ssl_ctx; }
 
 	bool     Set(SSL_CTX *c)                   { Clear(); return !!(ssl_ctx = c); }
-	bool     Create(SSL_METHOD *meth)          { return Set(SSL_CTX_new(meth)); }
-	void     Clear()                           { if(ssl_ctx) { SSL_CTX_free(ssl_ctx); ssl_ctx = NULL; } }
+	bool     Create(SSL_METHOD *meth);
+	void     Clear();
 	SSL_CTX *Detach()                          { SSL_CTX *c = ssl_ctx; ssl_ctx = NULL; return c; }
 
 	operator SSL_CTX * () const                { return ssl_ctx; }

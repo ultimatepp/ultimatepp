@@ -131,11 +131,13 @@ static void sslExitThread()
 
 void SslInitThread()
 {
+	DLOG("+++ SslInitThread");
 	MemoryIgnoreLeaksBlock __;
 	if(sThreadInit || Thread::IsMain())
 		return;
 	sThreadInit = true;
 	sPrevExit = Thread::AtExit(sslExitThread);
+	DLOG("--- SslInitThread");
 }
 
 }

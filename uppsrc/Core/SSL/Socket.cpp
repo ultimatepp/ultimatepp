@@ -108,6 +108,20 @@ bool TcpSocket::SSLImp::IsAgain(int res) const
 	       res == SSL_ERROR_WANT_ACCEPT;
 }
 
+bool SslContext::Create(SSL_METHOD *meth)
+{
+	MemoryIgnoreLeaksBlock __; // as of OpenSSL 3.6.0, SSL_CTX_new has harmless leaks
+	return Set(SSL_CTX_new(meth));
+}
+
+void SslContext::Clear()
+{
+	if(ssl_ctx) {
+		SSL_CTX_free(ssl_ctx);
+		ssl_ctx = NULL;
+	}
+}
+
 bool TcpSocket::SSLImp::Start()
 {
 	LLOG("SSL Start");
@@ -126,6 +140,7 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL context.");
 		return false;
 	}
+
 	if(socket.cert.GetCount())
 		context.UseCertificate(socket.cert, socket.pkey, socket.asn1);
 	if(!(ssl = SSL_new(context))) {

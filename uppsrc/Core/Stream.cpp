@@ -324,7 +324,9 @@ void Stream::PutUtf8(int c)
 
 void Stream::Put(const char *s)
 {
-	while(*s) Put(*s++);
+	if(s)
+		while(*s)
+			Put(*s++);
 }
 
 void Stream::Put(int c, int count) {
