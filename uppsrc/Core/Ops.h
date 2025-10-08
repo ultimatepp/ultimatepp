@@ -284,7 +284,7 @@ int CountTrailingZeroBits64(uint64 x)
 {
 #if COMPILER_GCC && !defined(flagLEGACY_CPU)
 	return __builtin_ctzll(x);
-#elif COMPILER_MSC && !defined(flagLEGACY_CPU)
+#elif COMPILER_MSC && !defined(flagLEGACY_CPU) && CPU_64
 	unsigned long index;
 	_BitScanForward64(&index, x);
 	return index;

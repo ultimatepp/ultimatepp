@@ -107,11 +107,11 @@ nasm, strawberry perl
 
 make sure Scripts folder is on windows path (needs restart)
 
-from perl prompt run
+from perl prompt
 
 check echo %PATH%
 
-vc32.bat
+vc32.bat (use msvs*.bm file to update, do not forget %PATH%;)
 
 unpack openssl into new dir (it seems there is a problem reusing it in mingw64)
 

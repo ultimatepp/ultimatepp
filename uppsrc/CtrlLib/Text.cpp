@@ -36,7 +36,7 @@ TextCtrl::TextCtrl()
 	max_total = 200 * 1024 * 1024;
 #endif
 #endif
-	max_line_len = 100000;
+	max_line_len = 400000;
 	truncated = false;
 }
 
@@ -188,6 +188,7 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 	bool cr = false;
 	byte b8 = 0;
 	auto line_count = [&] { return view_line_count ? *view_line_count : ls.GetCount(); };
+	int max_line_len16 = max_line_len / 4;
 	if(charset == CHARSET_UTF16_LE || charset == CHARSET_UTF16_BE) {
 		WStringBuffer wln;
 		auto put_wln = [&]() {
@@ -219,7 +220,7 @@ int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte ch
 			}
 			else {
 				wln.Cat(c);
-				if(wln.GetCount() >= max_line_len)
+				if(wln.GetCount() >= max_line_len16)
 					goto truncate_line;
 			}
 		}
