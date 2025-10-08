@@ -99,7 +99,6 @@ int CPU_Cores()
 		mib[0] = CTL_HW;
 		mib[1] = HW_NCPU;
 		sysctl(mib, 2, &n, &len, NULL, 0);
-		n = minmax(n, 1, 256);
 #elif defined(PLATFORM_SOLARIS)
 		n = minmax((int)sysconf(_SC_NPROCESSORS_ONLN), 1, 256);
 #else
