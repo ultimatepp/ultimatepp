@@ -108,6 +108,7 @@ int CPU_Cores()
 #else
 		n = 1;
 #endif
+		n = max(n, 1); // sanity
 	}
 	return n;
 }
