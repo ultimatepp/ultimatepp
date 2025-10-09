@@ -31,7 +31,7 @@ void RightTabs::Add(const Image& img, const String& tip, bool highlight)
 	t.img = img;
 	t.tip = tip;
 	t.highlight = highlight;
-	cx = max(cx, DPI(1) + max(img.GetWidth(), DPI(16)) + DPI(80) + DPI(2));
+	cx = max(cx, DPI(1) + max(img.GetWidth(), DPI(16)) + Zx(80) + DPI(2));
 	Repos();
 }
 
