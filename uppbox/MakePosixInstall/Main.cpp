@@ -137,7 +137,7 @@ CONSOLE_APP_MAIN
 
 	SaveFile(release + "/license.chk", "1");
 	
-	system("cp " + GetHomeDirFile("upp.bin") + "/" + "*.udc " + release);
+	system("cp /samba/work/upp.bin/*.udc " + release);
 
 	chdir(release_dir);
 
