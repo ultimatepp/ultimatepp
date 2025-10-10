@@ -79,7 +79,7 @@ String upptmp = tmp + "/upp";
 String ass = upptmp + "/uppsrc";
 String upp = home + "/upp.src";
 String uppsrc = upp + "/uppsrc";
-String bin = home + "/upp.bin";
+String bin = "/samba/work/upp.bin";
 
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
