@@ -242,7 +242,7 @@ void Ide::MainConfig() {
 		const Package::Config& f = actual.config[i];
 		dlg.list.Add(f.param, f.name);
 	}
-	if(!dlg.Perform(mainconfigname)) return;
+	if(!dlg.Perform(mainconfigparam)) return;
 	actual.config.Clear();
 	for(int i = 0; i < dlg.list.GetCount(); i++) {
 		Package::Config& f = actual.config.Add();
