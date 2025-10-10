@@ -148,8 +148,8 @@ void SliderCtrl::LeftUp(Point pos, dword keyflags)
 {
 	if(HasCapture())
 		WhenSlideFinish();
-	Refresh();
 	ReleaseCapture();
+	Refresh();
 }
 
 void SliderCtrl::MouseMove(Point pos, dword keyflags)

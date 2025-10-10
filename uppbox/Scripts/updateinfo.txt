@@ -36,6 +36,10 @@ https://github.com/llvm/llvm-project/releases
 (check with theide about)
 
 
+2025-10-09: 21.1.1 (CLANG and LLVM)
+
+
+
 ------------------------------------------------------------------
 OpenSSL
 
@@ -152,6 +156,7 @@ libcrypto_static.lib, libssl_static.lib -> bin/openssl/lib64/crypto.lib, ssl.lib
 2022-03-05: 1.1.1n
 2023-09-28: 1.1.1w
 2024-05-12: 3.2.1
+2025-10-09: 3.6.0
 ------------------------------------------------------------------
 plugin/jpg
 
