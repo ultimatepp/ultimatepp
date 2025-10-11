@@ -1835,6 +1835,11 @@ onst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])_[@(0.0.255) const]&]
 pointer is inside specified view area rectangle.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:HasMouseIn`(`)const:%- [@(0.0.255) bool] [* HasMouseIn]() 
+[@(0.0.255) const]&]
+[s2; Returns true when mouse pointer is inside view area.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:GetMouseViewPos`(`)const:%- [_^Point^ Point]_[* GetMouseViewPos]()_[@(0.0.255) c
 onst]&]
 [s2; Returns the position of mouse relative to the view area. Note 

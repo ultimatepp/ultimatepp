@@ -51,8 +51,8 @@ void SliderCtrl::Paint(Draw& w)
 {
 	Size size = GetSize();
 	int ii = IsEnabled() ? HasCapture() || HasFocus() ? CTRL_PRESSED
-                                                      : HasMouse() ? CTRL_HOT
-                                                                   : CTRL_NORMAL
+                                                      : HasMouseIn() ? CTRL_HOT
+                                                                     : CTRL_NORMAL
                          : CTRL_DISABLED;
 	int l = SliderToClient(min);
 	int t = Nvl(SliderToClient(value), l);
