@@ -14,12 +14,15 @@ Size SDL2GUI::GetSize()
 	return Size(w, h);
 }
 
-bool SDL2GUI::Create(const Rect& rect, const char *title)
+bool SDL2GUI::Create(const Rect& rect, const char *title, bool fullscreen)
 {
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
 
-	win = SDL_CreateWindow(title, rect.left, rect.top, rect.GetWidth(), rect.GetHeight(),
-	                       SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_BORDERLESS);
+	Uint32 flags = SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL;
+
+	flags |= fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_BORDERLESS;
+	
+	win = SDL_CreateWindow(title, rect.left, rect.top, rect.GetWidth(), rect.GetHeight(), flags);
 	if(!win)
 		return false;
 	MemoryIgnoreLeaksBegin();
