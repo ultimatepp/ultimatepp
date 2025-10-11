@@ -38,10 +38,28 @@ String Ide::GetDefaultMethod()
 	return "GCC";
 }
 
+String ReplaceMethodDir(String paths, const String& method_dir)
+{
+	constexpr const char* METHOD_DIR = "${METHOD_DIR}";
+	
+	if (paths.Find(METHOD_DIR) == -1) {
+		return paths;
+	}
+	paths.Replace(METHOD_DIR, method_dir);
+	return paths;
+}
+
 VectorMap<String, String> Ide::GetMethodVars(const String& method)
 {
 	VectorMap<String, String> map;
 	LoadVarFile(GetMethodName(method), map);
+	
+	const String method_dir = GetFileFolder(method);
+	const Vector<String> categories_with_method_dir = {"PATH", "INCLUDE", "LIB" };
+	for (const auto& category : categories_with_method_dir) {
+		map.GetAdd(category) = ReplaceMethodDir(map.Get(category), method_dir);
+	}
+
 	return map;
 }
 
