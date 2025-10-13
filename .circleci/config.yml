@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  win: circleci/windows@5.1
+
 jobs:
   build-linux:
     docker:
@@ -24,6 +27,10 @@ jobs:
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
       - run: ./umk ./uppsrc ide CLANG -brs ./theide
+  build-windows:
+    executor: win/default
+    steps:
+      - run: Write-Host 'Hello, Windows'
 
 workflows:
   build-linux:
@@ -33,3 +40,7 @@ workflows:
   build-mac:
     jobs:
       - build-mac
+
+  build-windows:
+    jobs:
+      -build-windows
