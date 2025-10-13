@@ -19,7 +19,7 @@ jobs:
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
   build-mac:
     macos:
-      xcode: 26.1.0
+      xcode: 16.4.0
     environment:
       NUMBER_OF_CPUS: 4
     steps:
