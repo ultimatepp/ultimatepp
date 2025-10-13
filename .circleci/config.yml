@@ -30,6 +30,7 @@ jobs:
   build-windows:
     executor: win/default
     steps:
+      - checkout
       - run: Write-Host 'Hello, Windows'
 
 workflows:
@@ -43,4 +44,4 @@ workflows:
 
   build-windows:
     jobs:
-      -build-windows
+      - build-windows
