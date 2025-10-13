@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-linux:
     docker:
-      - image: cimg/base:2025.06
+      - image: cimg/base:2025.10
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
@@ -19,7 +19,7 @@ jobs:
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
   build-mac:
     macos:
-      xcode: 16.4.0
+      xcode: 26.1.0
     environment:
       NUMBER_OF_CPUS: 4
     steps:
@@ -34,17 +34,17 @@ jobs:
       - run: New-Item -Path "3p\downloads" -ItemType Directory -Force
       - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z -OutFile 3p\downloads\umk.7z
       - run: 7z x 3p\downloads\umk.7z -o3p
-      - run: 3p\umk\umk ./uppsrc ide 3p\umk\CLANG.bm -brs ./theide
+      - run: 3p\umk\umk ./uppsrc ide 3p\umk\CLANG.bm -brs +GUI ./theide
       - run: 3p\umk\umk ./uppsrc umk 3p\umk\CLANG.bm -brs ./umk
 
 workflows:
-  #build-linux:
-  #  jobs:
-  #    - build-linux
+  build-linux:
+    jobs:
+      - build-linux
   
-  #build-mac:
-  #  jobs:
-  #    - build-mac
+  build-mac:
+    jobs:
+      - build-mac
 
   build-windows:
     jobs:
