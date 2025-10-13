@@ -90,61 +90,65 @@ DisplayPopup::PopUp::~PopUp()
 		all().Remove(q);
 }
 
+Rect DisplayPopup::Check(Ctrl *ctrl, const Rect& item, const Value& value, const Display *display, int margin)
+{
+	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())) {
+		Ctrl *top = ctrl->GetTopCtrl();
+		if(top && top->HasFocusDeep()) {
+			Size sz = display->GetStdSize(value);
+			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
+				Rect vw = ctrl->GetScreenView();
+				Rect r = (item + vw.TopLeft()) & vw;
+				if(r.Contains(GetMousePos()))
+					return r;
+			}
+		}
+	}
+	return Null;
+}
+
 void DisplayPopup::PopUp::Sync()
 {
 	if(!IsMainThread()) {
 		PostCallback(PTEBACK(Sync));
 		return;
 	}
-	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !IsDragAndDropTarget()) {
-		Ctrl *top = ctrl->GetTopCtrl();
-		if(top && top->HasFocusDeep()) {
-			Size sz = display->GetStdSize(value);
-			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
-				Rect vw = ctrl->GetScreenView();
-				slim = (item + vw.TopLeft()) & vw;
-				if(slim.Contains(GetMousePos())) {
-					Rect r = item;
-					r.right = max(r.right, r.left + sz.cx + 2 * margin);
-					r.bottom = max(r.bottom, r.top + sz.cy);
-					r.Inflate(1, 1);
-					Rect v = ctrl->GetScreenView();
-					r.Offset(v.TopLeft());
 
-					Rect wa = GetWorkArea(r.BottomLeft());
-					Size sz = r.GetSize();
-					if(r.left < wa.left) {
-						r.left = wa.left;
-						r.right = min(wa.right, r.left + sz.cx);
-					}
-					else
-					if(r.right > wa.right) {
-						r.left = max(wa.left, wa.right - sz.cx);
-						r.right = wa.right;
-					}
-					if(r.top < wa.top) {
-						r.top = wa.top;
-						r.bottom = min(wa.bottom, wa.top + sz.cy);
-					}
-					else
-					if(r.bottom > wa.bottom) {
-						if(wa.bottom - r.top < r.top - wa.top) { // there is more space upside
-							r.bottom = item.bottom + v.top;
-							r.top = max(wa.top, r.bottom - sz.cy);
-						}
-						else
-							r.bottom = wa.bottom;
-					}
-					SetRect(r);
-					if(!IsOpen())
-						Ctrl::PopUp(ctrl, true, false, false);
-					return;
-				}
-			}
+	Rect r = Check(ctrl, item, value, display, margin);
+	if(IsNull(r)) {
+		DLOG("CLOSE");
+		DDUMP(r);
+		DDUMP(ctrl);
+		DDUMP(item);
+		DDUMP(value);
+		DDUMP(display);
+		DDUMP(margin);
+		Ctrl *top = ctrl->GetTopCtrl();
+		DDUMP(top);
+		if(top)
+			DDUMP(top->HasFocusDeep());
+		WhenClose();
+	}
+	else {
+		Ctrl *top = ctrl->GetTopCtrl();
+		Size sz = display->GetStdSize(value);
+		Rect wa = top->GetWorkArea();
+		r.right = min(wa.right, r.left + sz.cx + 2 * margin);
+		r.bottom = max(r.bottom, r.top + sz.cy);
+		slim = r;
+		r.Inflate(1, 1);
+		SetRect(r);
+		if(!IsOpen()) {
+			DLOG("POPUP " << r);
+			DDUMP(r);
+			DDUMP(ctrl);
+			DDUMP(item);
+			DDUMP(value);
+			DDUMP(display);
+			DDUMP(margin);
+			Ctrl::PopUp(ctrl, true, false, false);
 		}
 	}
-	if(IsOpen() && !GetDragAndDropSource())
-		WhenClose();
 }
 
 void DisplayPopup::PopUp::SyncAll()
@@ -173,9 +177,10 @@ bool DisplayPopup::PopUp::MouseHook(Ctrl *, bool, int, Point, int, dword)
 
 void DisplayPopup::PopUp::Cancel()
 {
+	DLOG("CANCEL");
 	if(GetDragAndDropSource())
 		return;
-	display = NULL;
+	display = nullptr;
 	Sync();
 }
 
@@ -215,6 +220,8 @@ void DisplayPopup::PopUp::Set(Ctrl *_ctrl, const Rect& _item,
 
 void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display, Color ink, Color paper, dword style, int margin)
 {
+	if(IsNull(Check(ctrl, item, v, display, margin)))
+		return; // precheck to avoid creating / deleting popup too often, avoid flooding timer with PostCallback
 	if(!popup) {
 		popup.Create();
 		popup->usedisplaystdsize = usedisplaystdsize;
