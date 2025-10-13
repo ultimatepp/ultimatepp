@@ -31,7 +31,7 @@ jobs:
     executor: win/default
     steps:
       - checkout
-      - run: mkdir -p 3p/Downloads
+      - run: New-Item -Path "3p\Downloads" -ItemType Directory -Force
       - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z -OutFile 3p/Downloads/umk-win-17810.7z
 
 workflows:
