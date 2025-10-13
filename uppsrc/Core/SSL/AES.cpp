@@ -239,7 +239,7 @@ bool Aes256Gcm::Decrypt(Stream& in, const String& password, Stream& out)
 			throw Exc("Initialization failed");
 #endif
 
-		Buffer<byte> buffer(min((int64) chunksize, ciphertextlen));
+		Buffer<byte> buffer(min((size_t) chunksize, (size_t)ciphertextlen));
 		int    buflen = 0;
 		int64 remaining = ciphertextlen, processed = AES_GCM_ENVELOPE_SIZE;
 		

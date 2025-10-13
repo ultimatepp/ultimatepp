@@ -1219,6 +1219,7 @@ public:
 	bool    HasMouseDeep() const;
 	bool    HasMouseInFrame(const Rect& r) const;
 	bool    HasMouseIn(const Rect& r) const;
+	bool    HasMouseIn() const                 { return HasMouseIn(GetSize()); }
 	Point   GetMouseViewPos() const;
 	static Ctrl *GetMouseCtrl();
 

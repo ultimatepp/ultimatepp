@@ -204,8 +204,7 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	LoadFromGlobal(*this, CONFIGNAME);
 
 	if(!SymInitialize(hProcess, 0, FALSE)) {
-		Error();
-		Exclamation("Failed to load symbols");
+		Error("Failed to load symbols");
 		return false;
 	}
 	SymSetOptions(SYMOPT_LOAD_LINES|SYMOPT_UNDNAME|SYMOPT_NO_UNQUALIFIED_LOADS);

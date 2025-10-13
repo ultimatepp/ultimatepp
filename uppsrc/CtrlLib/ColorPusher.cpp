@@ -129,13 +129,13 @@ void ColorButton::Paint(Draw& w)
 	Point center = (sz - isz) / 2;
 	if(GUI_GlobalStyle() >= GUISTYLE_XP)
 		ChPaint(w, sz, style->look[!IsEnabled() ? CTRL_DISABLED : push ? CTRL_PRESSED
-		                                        : HasMouse() ? CTRL_HOT : CTRL_NORMAL]);
+		                                        : HasMouseIn() ? CTRL_HOT : CTRL_NORMAL]);
 	else {
 		w.DrawRect(sz, SColorFace);
 		if(push)
 			DrawFrame(w, sz, SColorShadow, SColorLight);
 		else
-		if(HasMouse())
+		if(HasMouseIn())
 			DrawFrame(w, sz, SColorLight, SColorShadow);
 	}
 	if(IsEnabled()) {
