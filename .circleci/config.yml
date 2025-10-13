@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - run: New-Item -Path "3p\downloads" -ItemType Directory -Force
-      - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/downloads/v2025.1.1/umk-win-17810.7z -OutFile 3p\downloads\umk.7z
+      - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z -OutFile 3p\downloads\umk.7z
       - run: 7z x 3p\downloads\umk.7z -o3p
       - run: ls 3p
 
