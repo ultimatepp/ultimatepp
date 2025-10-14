@@ -239,13 +239,7 @@ public:
 	}
 #endif
 };
-/*
-template <class T, int N = 1>
-class LinkOwner : public Link<T, N> {
-public:
-	~LinkOwner()                         { Link<T, N>::DeleteList(); }
-};
-*/
+
 template <class T, class K = String>
 class LRUCache {
 public:
