@@ -1173,10 +1173,6 @@ void TreeCtrl::Paint(Draw& w)
 				if(!IsNull(m.value) || m.ctrl && highlight_ctrl) {
 					w.DrawRect(br, bg);
 					Rect r = RectC(x + ctx + m.margin, y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
-					if(st & Display::CURSOR) {
-						DDUMP(r);
-						DDUMP(GetValueRect(l));
-					}
 					w.Clip(r);
 					d->Paint(w, r, m.value, fg, bg, st);
 					w.End();
