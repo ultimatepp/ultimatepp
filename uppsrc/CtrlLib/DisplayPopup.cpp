@@ -116,17 +116,6 @@ void DisplayPopup::PopUp::Sync()
 
 	Rect r = Check(ctrl, item, value, display, margin);
 	if(IsNull(r)) {
-		DLOG("CLOSE");
-		DDUMP(r);
-		DDUMP(ctrl);
-		DDUMP(item);
-		DDUMP(value);
-		DDUMP(display);
-		DDUMP(margin);
-		Ctrl *top = ctrl->GetTopCtrl();
-		DDUMP(top);
-		if(top)
-			DDUMP(top->HasFocusDeep());
 		WhenClose();
 	}
 	else {
@@ -138,16 +127,8 @@ void DisplayPopup::PopUp::Sync()
 		slim = r;
 		r.Inflate(1, 1);
 		SetRect(r);
-		if(!IsOpen()) {
-			DLOG("POPUP " << r);
-			DDUMP(r);
-			DDUMP(ctrl);
-			DDUMP(item);
-			DDUMP(value);
-			DDUMP(display);
-			DDUMP(margin);
+		if(!IsOpen())
 			Ctrl::PopUp(ctrl, true, false, false);
-		}
 	}
 }
 
@@ -177,7 +158,6 @@ bool DisplayPopup::PopUp::MouseHook(Ctrl *, bool, int, Point, int, dword)
 
 void DisplayPopup::PopUp::Cancel()
 {
-	DLOG("CANCEL");
 	if(GetDragAndDropSource())
 		return;
 	display = nullptr;
