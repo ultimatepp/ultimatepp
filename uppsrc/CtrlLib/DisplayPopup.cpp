@@ -92,7 +92,7 @@ DisplayPopup::PopUp::~PopUp()
 
 Rect DisplayPopup::Check(Ctrl *ctrl, const Rect& item, const Value& value, const Display *display, int margin)
 {
-	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())) {
+	if(display && ctrl && !ctrl->IsDragAndDropTarget()) {
 		Ctrl *top = ctrl->GetTopCtrl();
 		if(top && top->HasFocusDeep()) {
 			Size sz = display->GetStdSize(value);
@@ -115,9 +115,8 @@ void DisplayPopup::PopUp::Sync()
 	}
 
 	Rect r = Check(ctrl, item, value, display, margin);
-	if(IsNull(r)) {
+	if(IsNull(r))
 		WhenClose();
-	}
 	else {
 		Ctrl *top = ctrl->GetTopCtrl();
 		Size sz = display->GetStdSize(value);

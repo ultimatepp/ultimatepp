@@ -986,14 +986,15 @@ void TreeCtrl::SyncInfo()
 		Point org = sb;
 		int i = FindLine(p.y + org.y);
 		if(i < line.GetCount()) {
-			Size sz = GetSize();
 			const Line& l = line[i];
 			const Item& m = item[l.itemi];
+			Size sz = GetSize();
 			int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
 			Size csz = m.GetCtrlSize();
 			if(m.ctrl && !highlight_ctrl)
 				x += csz.cx;
 			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetValueSize(display).cy + 2 * m.margin);
+		//	Rect r = GetValueRect(l);
 			if(r.Contains(p)) {
 				Color fg, bg;
 				dword st;
@@ -1172,6 +1173,10 @@ void TreeCtrl::Paint(Draw& w)
 				if(!IsNull(m.value) || m.ctrl && highlight_ctrl) {
 					w.DrawRect(br, bg);
 					Rect r = RectC(x + ctx + m.margin, y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
+					if(st & Display::CURSOR) {
+						DDUMP(r);
+						DDUMP(GetValueRect(l));
+					}
 					w.Clip(r);
 					d->Paint(w, r, m.value, fg, bg, st);
 					w.End();
