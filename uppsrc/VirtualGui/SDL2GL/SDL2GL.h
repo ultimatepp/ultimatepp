@@ -38,7 +38,7 @@ struct SDL2GUI : VirtualGui {
 	void Attach(SDL_Window *win, SDL_GLContext glcontext);
 	void Detach();
 
-	bool Create(const Rect& rect, const char *title);
+	bool Create(const Rect& rect, const char *title, bool fullscreen = false);
 	void Destroy();
 	
 	SDL2GUI();
