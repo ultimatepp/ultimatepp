@@ -24,6 +24,7 @@ struct FlagsDlg : WithConfLayout<TopWindow> {
 	void Set(ArrayCtrl& a) { a.Set(0, ~flags); a.Set(1, ~name); Flags(); }
 
 	FlagsDlg();
+	~FlagsDlg();
 };
 
 void FlagsDlg::Options()
@@ -60,11 +61,20 @@ void FlagsDlg::Flags()
 		accepts.Set(i, CC_SET, flg.Find(~~accepts.Get(i, CC_FLAG)) >= 0);
 }
 
+FlagsDlg::~FlagsDlg()
+{
+	StoreToGlobal([&](Stream& s) { SerializePlacement(s); }, "FlagsDlgPlacement");
+}
+
 FlagsDlg::FlagsDlg()
 {
 	VectorMap<String, Tuple<String, Index<String>>> code_flags;
 
 	CtrlLayoutOKCancel(*this, "Configuration flags");
+	
+	Sizeable().Zoomable();
+
+	LoadFromGlobal([&](Stream& s) { SerializePlacement(s); }, "FlagsDlgPlacement");
 
 	PPInfo pp;
 	pp.SetIncludes(TheIde()->GetCurrentIncludePath() + ";" + GetClangInternalIncludes());
@@ -209,7 +219,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 
 	remove.SetImage(IdeImg::remove()) << [=] {
 		int q = list.GetCursor();
-		if(q >= 0) {
+		if(q >= 0 && PromptYesNo("Remove configuration?")) {
 			list.Remove(q);
 			if(q >= list.GetCount())
 				q--;

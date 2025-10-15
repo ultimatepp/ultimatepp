@@ -25,7 +25,7 @@ LAYOUT(ConfigLayout, 724, 216)
 	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).LeftPosZ(300, 68).BottomPosZ(5, 23))
 END_LAYOUT
 
-LAYOUT(ConfLayout, 764, 784)
+LAYOUT(ConfLayout, 764, 576)
 	ITEM(Upp::Option, gui, SetLabel(t_("GUI application")).LeftPosZ(8, 112).TopPosZ(8, 16))
 	ITEM(Upp::Option, debugcode, SetLabel(t_("Allow debuging code in release mode")).LeftPosZ(124, 240).TopPosZ(8, 16))
 	ITEM(Upp::ArrayCtrl, accepts, AutoHideSb(true).HSizePosZ(8, 8).VSizePosZ(32, 88))
