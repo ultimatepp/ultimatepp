@@ -207,6 +207,16 @@ int64 Value::GetOtherInt64() const
 	       (int64)GetSmall<double>();
 }
 
+size_t Value::GetOtherSizeT() const
+{
+	if(IsNull()) return Null;
+	return data.IsSpecial(BOOL_V) ? (size_t)GetSmall<bool>() :
+	       data.IsSpecial(INT_V) ? (size_t)GetSmall<int>() :
+	       data.IsSpecial(FLOAT_V) ? (size_t)GetSmall<float>() :
+	       (size_t)GetSmall<double>();
+}
+
+
 double Value::GetOtherDouble() const
 {
 	if(IsNull()) return Null;

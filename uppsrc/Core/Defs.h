@@ -263,6 +263,7 @@ public:
 
 const int    INT_NULL           =    INT_MIN;
 const int64  INT64_NULL         =    INT64_MIN;
+const size_t SIZE_T_NULL        =    std::numeric_limits<size_t>::max();
 
 constexpr double DOUBLE_NULL    =    -std::numeric_limits<double>::infinity();
 constexpr float FLOAT_NULL      =    -std::numeric_limits<float>::infinity();
@@ -271,6 +272,7 @@ class Nuller {
 public:
 	operator int() const                { return INT_NULL; }
 	operator int64() const              { return INT64_NULL; }
+	operator size_t() const             { return SIZE_T_NULL; }
 	operator double() const             { return DOUBLE_NULL; }
 	operator float() const              { return FLOAT_NULL; }
 	operator bool() const               { return false; }
@@ -286,6 +288,7 @@ template <class T> bool IsNull(const T& x)       { return x.IsNullInstance(); }
 
 template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
 template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
+template<> inline bool  IsNull(const size_t& i)  { return i == SIZE_T_NULL; }
 template<> inline bool  IsNull(const double& r)  { return !(std::abs(r) < std::numeric_limits<double>::infinity()); }
 template<> inline bool  IsNull(const float& r)   { return !(std::abs(r) < std::numeric_limits<float>::infinity()); }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
