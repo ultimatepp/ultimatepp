@@ -21,7 +21,7 @@ struct UppHubDlg {
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
 	void  Load();
-	void  Install(const Index<String>& ii, bool update = false);
+	bool  Install(const Index<String>& ii, bool update = false);
 };
 
 Value UppHubDlg::LoadJson(const String& url)
@@ -120,7 +120,7 @@ void UppHubDlg::Load()
 	Load(0, url);
 }
 
-void UppHubDlg::Install(const Index<String>& ii_, bool update)
+bool UppHubDlg::Install(const Index<String>& ii_, bool update)
 {
 	Index<String> ii = clone(ii_);
 	if(ii.GetCount()) {
@@ -137,7 +137,9 @@ void UppHubDlg::Install(const Index<String>& ii_, bool update)
 					cmd << n->repo;
 					cmd << ' ' << dir;
 					PutConsole(cmd);
-					system(cmd);
+					if (system(cmd) != 0)
+						return false;
+					
 					for(String p : FindAllPaths(dir, "*.upp")) {
 						Package pkg;
 						pkg.Load(p);
@@ -153,20 +155,24 @@ void UppHubDlg::Install(const Index<String>& ii_, bool update)
 					String cmd = GetGitPath() + " -C ";
 					cmd << dir << " clean -fxd";
 					PutConsole(cmd);
-					system(cmd);
+					if (system(cmd) != 0)
+						return false;
+					
 					cmd = GetGitPath() + " -C ";
 					cmd << dir << " pull";
 					PutConsole(cmd);
-					system(cmd);
+					if (system(cmd) != 0)
+						return false;
 				}
 			}
 		}
 		InvalidatePackageCache();
 	}
 	ResetBlitz();
+	return true;
 }
 
-bool UppHubAuto(const String& main)
+bool UppHub::AutoInstall(const String& main)
 {
 	Index<String> pmissing;
 	for(;;) {
@@ -191,7 +197,8 @@ bool UppHubAuto(const String& main)
 					found.FindAdd(n.name);
 		
 		if(missing != pmissing) {
-			dlg.Install(found);
+			if (!dlg.Install(found))
+				return false;
 			pmissing = clone(missing);
 			continue;
 		}
@@ -201,7 +208,7 @@ bool UppHubAuto(const String& main)
 	return true;
 }
 
-void UppHubUpdate(const String& main)
+bool UppHub::Update(const String& main)
 {
 	UppHubDlg dlg;
 	dlg.Load();
@@ -216,5 +223,5 @@ void UppHubUpdate(const String& main)
 					packages.FindAdd(n.name);
 			}
 	}
-	dlg.Install(packages, true);
+	return dlg.Install(packages, true);
 }

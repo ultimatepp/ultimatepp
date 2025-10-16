@@ -257,12 +257,14 @@ CONSOLE_APP_MAIN
 			return;
 		}
 		if(auto_hub || update_hub) {
-			if(!UppHubAuto(ide.main)) {
+			if(!UppHub::AutoInstall(ide.main)) {
 				SetExitCode(6);
 				return;
 			}
-			if (update_hub)
-				UppHubUpdate(ide.main);
+			if (update_hub && !UppHub::Update(ide.main)) {
+				SetExitCode(6);
+				return;
+			}
 		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();
