@@ -216,7 +216,6 @@ size_t Value::GetOtherSizeT() const
 	       (size_t)GetSmall<double>();
 }
 
-
 double Value::GetOtherDouble() const
 {
 	if(IsNull()) return Null;
