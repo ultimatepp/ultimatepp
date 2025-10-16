@@ -288,7 +288,7 @@ template <class T> bool IsNull(const T& x)       { return x.IsNullInstance(); }
 
 template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
 template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
-template<> inline bool  IsNull(const size_t& i)  { return i == SIZE_T_NULL; }
+template<> inline bool  IsNull(const size_t& s)  { return s == SIZE_T_NULL; }
 template<> inline bool  IsNull(const double& r)  { return !(std::abs(r) < std::numeric_limits<double>::infinity()); }
 template<> inline bool  IsNull(const float& r)   { return !(std::abs(r) < std::numeric_limits<float>::infinity()); }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
