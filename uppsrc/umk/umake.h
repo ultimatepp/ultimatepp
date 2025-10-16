@@ -5,8 +5,10 @@
 
 extern bool SilentMode;
 
-bool UppHubAuto(const String& main);
-void UppHubUpdate(const String& main);
+namespace UppHub {
+bool AutoInstall(const String& main);
+bool Update(const String& main);
+}
 
 class Console {
 public:
