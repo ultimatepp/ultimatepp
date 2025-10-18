@@ -265,6 +265,17 @@ changes of any Ctrls.&]
 [s7;i1120;a17; [%-*C@3 hook]-|Pointer to hook routine.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:InstallPaintHook`(PaintHook`):%- [@(0.0.255) static] 
+[@(0.0.255) void] [* InstallPaintHook](PaintHook [*@3 hook])&]
+[s2; Installs [%-*@3 hook] `- gets called each time after any top`-level 
+window is repainted.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:DeinstallPaintHook`(PaintHook`):%- [@(0.0.255) static] 
+[@(0.0.255) void] [* DeinstallPaintHook](PaintHook [*@3 hook])&]
+[s2; Deinstalls previously installed paint [%-*@3 hook].&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:Paint`(Draw`&`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Paint]([_^`:`:Draw^ D
 raw][@(0.0.255) `&]_[*@3 draw])&]
 [s2;b17;a17; This method is called when Ctrl`'s view area is about 

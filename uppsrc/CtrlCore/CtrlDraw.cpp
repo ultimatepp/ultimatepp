@@ -421,6 +421,8 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
 		PaintWinBar(w, clip);
 	#endif
+		for(PaintHook h : painthook())
+			h(this, w, clip);
 	};
 	if(globalbackbuffer) {
 		DoCtrlPaint(draw, clip);
