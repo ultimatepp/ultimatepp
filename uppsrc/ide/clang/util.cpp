@@ -85,6 +85,11 @@ bool IsFunction(int kind)
 	                     CXCursor_Destructor, CXCursor_ConversionFunction, CXCursor_CXXMethod) >= 0;
 }
 
+bool IsMethod(int kind)
+{
+	return kind == CXCursor_CXXMethod;
+}
+
 bool IsVariable(int kind)
 {
 	return findarg(kind, CXCursor_VarDecl, CXCursor_FieldDecl) >= 0;

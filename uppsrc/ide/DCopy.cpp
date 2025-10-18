@@ -49,13 +49,125 @@ void AssistEditor::DCopy()
 		if(first_line <= m.pos.y && m.pos.y <= last_line) {
 			String cls = GetClass(m);
 			if(IsFunction(m.kind)) {
-				if(m.definition) {
-					if(cls.GetCount())
-						result << '\t';
-					result << m.pretty << ";\n";
+				String text;
+				for(int i = m.pos.y; i < GetLineCount(); i++) {
+					String l = GetUtf8Line(i);
+					int q = max(l.ReverseFind(';'), l.ReverseFind('{'));
+					if(q >= 0)
+						l.Trim(q);
+					text << l << ' ';
+					if(q >= 0)
+						break;
 				}
-				else
-					result << MakeDefinition(m);
+				const char *fn_name_pos = nullptr;
+				const char *fn_params_pos = nullptr;
+				bool  in_id = false;
+				const char *id_pos = nullptr;
+				
+				const char *s = text;
+				int lvl = 0;
+				while(*s) {
+					if(*s == '(') {
+						if(lvl == 0) {
+							fn_params_pos = s;
+							fn_name_pos = id_pos;
+						}
+						lvl++;
+					}
+					else
+					if(*s == ')') {
+						lvl--;
+					}
+					else
+					if(IsSpace(*s) || iscid(*s) || *s == ':') {
+						if(!in_id) {
+							id_pos = s;
+							in_id = true;
+						}
+					}
+					else {
+						in_id = false;
+						id_pos = nullptr;
+					}
+					
+					s++;
+				}
+				
+				String ret, name, params;
+				if(fn_params_pos) {
+					params = fn_params_pos;
+					if(fn_name_pos) {
+						name = String(fn_name_pos, fn_params_pos);
+						ret = String(text, fn_name_pos);
+					}
+				}
+				
+				auto Clean = [](String& s) { // this can be slow
+					s = Join(Split(TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; })), ' '), " ");
+				};
+				
+				Clean(ret);
+				Clean(name);
+				Clean(params);
+
+				if(ret.GetCount() && name.GetCount() && params.GetCount()) { // prefer original text
+					if(m.definition) {
+						if(IsMethod(m.kind))
+							result << '\t';
+						result << ret << ' ' << m.name << params << ";\n";
+					}
+					else {
+						String cret;
+						if(IsMethod(m.kind)) { // attempt to qualify local classes in return value type
+							bool qualified = false;
+							const char *begin = ret;
+							String st = m.nest + "::";
+							VectorMap<String, String> qname;
+							for(const AnnotationItem& m : annotations)
+								if(IsStruct(m.kind) && m.nest.StartsWith(st))
+									qname.Add(m.name, m.nest);
+							
+							try {
+								CParser p(ret);
+								while(!p.IsEof()) {
+									if(p.Char2(':', ':'))
+										qualified = true;
+									else
+									if(p.IsId() && !qualified) {
+										const char *q = p.GetPtr();
+										String id = p.ReadId();
+										if(p.Char2(':', ':'))
+											qualified = true;
+										else
+										if(!p.IsId() && qname.Find(id) >= 0) {
+											cret.Cat(begin, q);
+											begin = p.GetPtr();
+											cret << qname.Get(id, id);
+										}
+									}
+									else {
+										qualified = false;
+										p.Skip();
+									}
+								}
+							}
+							catch(CParser::Error) {}
+							cret.Cat(begin, ret.End());
+						}
+						else
+							cret = ret;
+						result << cret << ' ' << cls << m.name << params << "\n{\n}\n\n";
+					}
+				}
+				else { // just in case our heuristics split of original text failed
+					if(m.definition) {
+						if(cls.GetCount())
+							result << '\t';
+						result << m.pretty << ";\n";
+					}
+					else
+						result << MakeDefinition(m);
+				}
 			}
 			if(m.kind == CXCursor_VarDecl) {
 				if(cls.GetCount()) { // class variable

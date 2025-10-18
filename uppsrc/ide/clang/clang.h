@@ -100,6 +100,7 @@ String CppText(const String& name, const String& pretty);
 bool IsStruct(int kind);
 bool IsTemplate(int kind);
 bool IsFunction(int kind);
+bool IsMethod(int kind);
 bool IsVariable(int kind);
 int  FindId(const String& s, const String& id);
 

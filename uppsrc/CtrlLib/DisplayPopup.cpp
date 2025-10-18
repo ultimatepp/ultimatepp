@@ -199,7 +199,7 @@ void DisplayPopup::PopUp::Set(Ctrl *_ctrl, const Rect& _item,
 
 void DisplayPopup::Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display, Color ink, Color paper, dword style, int margin)
 {
-	if(IsNull(Check(ctrl, item, v, display, margin)))
+	if(IsNull(Check(ctrl, item, v, display, margin)) && !(popup && popup->IsOpen()))
 		return; // precheck to avoid creating / deleting popup too often, avoid flooding timer with PostCallback
 	if(!popup) {
 		popup.Create();
