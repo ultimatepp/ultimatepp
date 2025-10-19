@@ -300,7 +300,10 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 		}
 	};
 
-	help << [&] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html"); };
+	help << [] {
+		LaunchWebBrowser(
+			"https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html");
+	};
 
 	String exf = VarFilePath("[external]");
 	if(!FileExists(exf))
