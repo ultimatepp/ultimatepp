@@ -434,6 +434,9 @@ BuildMethods::BuildMethods()
 	builder <<= THISBACK(NewBuilder);
 	setdefault <<= THISBACK(SetDefault);
 
+	help <<
+		[] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$BuildMethods_en-us.html"); };
+
 	linkmode_lock.SetLabel("Lock link mode");
 }
 
