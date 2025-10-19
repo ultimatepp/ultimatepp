@@ -64,35 +64,36 @@ void AssistEditor::DCopy()
 				bool  in_id = false;
 				const char *id_pos = nullptr;
 				
-				const char *s = text;
 				int lvl = 0;
-				while(*s) {
-					if(*s == '(') {
-						if(lvl == 0) {
-							fn_params_pos = s;
-							fn_name_pos = id_pos;
+				CParser p(text);
+				try {
+					while(!p.IsEof()) {
+						const char *ptr = p.GetPtr();
+						if(p.Char('(')) {
+							if(lvl == 0) {
+								fn_params_pos = ptr;
+								fn_name_pos = id_pos;
+							}
+							lvl++;
 						}
-						lvl++;
-					}
-					else
-					if(*s == ')') {
-						lvl--;
-					}
-					else
-					if(IsSpace(*s) || iscid(*s) || *s == ':') {
-						if(!in_id) {
-							id_pos = s;
-							in_id = true;
+						else
+						if(p.Char(')'))
+							lvl--;
+						else
+						if(p.IsId()) {
+							id_pos = p.GetPtr();
+							do
+								p.ReadId();
+							while(p.Char2(':', ':') && p.IsId());
+						}
+						else {
+							id_pos = nullptr;
+							p.Skip();
 						}
 					}
-					else {
-						in_id = false;
-						id_pos = nullptr;
-					}
-					
-					s++;
 				}
-				
+				catch(CParser::Error) {}
+
 				String ret, name, params;
 				if(fn_params_pos) {
 					params = fn_params_pos;
@@ -102,7 +103,7 @@ void AssistEditor::DCopy()
 					}
 				}
 				
-				auto Clean = [](String& s) { // this can be slow
+				auto Clean = [](String& s) { // this is ok to be slow (hence Join/Split)
 					s = Join(Split(TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; })), ' '), " ");
 				};
 				
@@ -117,16 +118,19 @@ void AssistEditor::DCopy()
 						result << ret << ' ' << m.name << params << ";\n";
 					}
 					else {
+						ret.TrimStart("static ");
 						String cret;
 						if(IsMethod(m.kind)) { // attempt to qualify local classes in return value type
 							bool qualified = false;
 							const char *begin = ret;
 							String st = m.nest + "::";
 							VectorMap<String, String> qname;
-							for(const AnnotationItem& m : annotations)
-								if(IsStruct(m.kind) && m.nest.StartsWith(st))
-									qname.Add(m.name, m.nest);
-							
+							for(const AnnotationItem& am : annotations) {
+								if(IsStruct(am.kind) && am.nest.StartsWith(st))
+									qname.Add(am.name, am.nest);
+								if(IsTypedef(am.kind) && am.nest == m.nest)
+									qname.Add(am.name, am.nest + "::" + am.name);
+							}
 							try {
 								CParser p(ret);
 								while(!p.IsEof()) {

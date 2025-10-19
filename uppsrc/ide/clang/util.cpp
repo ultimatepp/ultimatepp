@@ -68,6 +68,11 @@ bool IsHeaderFile(const String& path)
 	return findarg(ext, ".h", ".hxx", ".hpp", ".hh") >= 0;
 }
 
+bool IsTypedef(int kind)
+{
+	return kind == CXCursor_TypedefDecl;
+}
+
 bool IsStruct(int kind)
 {
 	return findarg(kind, CXCursor_StructDecl, CXCursor_UnionDecl, CXCursor_ClassDecl,
