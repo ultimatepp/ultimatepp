@@ -234,103 +234,96 @@ void AppMain___()
 	if (cmd_handler.Handle())
 		return;
 	auto arg = clone(cmd_handler.GetArgs());
+	
+	bool debug_exe_mode = arg.GetCount() && arg[0] == "--debug";
 
 	SetVppLogSizeLimit(200000000);
 //	SetVppLogSizeLimit(2000000000); _DBG_
-	
-	if(!CheckLicense())
-		return;
-#ifdef PLATFORM_WIN32
-	AutoInstantSetup();
-#endif
-	bool hasvars = FindFile(ConfigFile("*.var"));
-#ifdef PLATFORM_POSIX
-	RemoveConsoleScripts(); // remove old console-script files
-
-	String home = Environment().Get("UPP_HOME", Null);
-	if(!IsNull(home))
-		SetHomeDirectory(home);
-	if(!hasvars) {
-		if(!Install(hasvars))
-			return;
-		SaveFile(ConfigFile("version"), IDE_VERSION);
-	}
-#endif
-
-//	if(!hasvars) // this does not work for some reason on initial install, disable for now
-//		SetupGITMaster();
-
-	if(!FileExists(BlitzBaseFile()))
-		ResetBlitz();
-	
-	if(!FileExists(SearchEnginesFile()))
-		SearchEnginesDefaultSetup();
 
 	bool dosplash = true;
-	for(int i = 0; i < arg.GetCount(); i++)
-		if(arg[i] == "--nosplash") {
-			dosplash = false;
-			arg.Remove(i);
-			break;
-		}
-	for(int i = 0; i < arg.GetCount(); i++) {
-	#ifdef PLATFORM_WIN32
-		if(arg[i] == "!") {
-			String cmdline;
-			for(++i; i < arg.GetCount(); i++) {
-				if(!IsNull(cmdline))
-					cmdline << ' ';
-				String h = arg[i];
-				if(h.Find(' ') >= 0)
-					cmdline << '\"' << arg[i] << '\"';
-				else
-					cmdline << arg[i];
-			}
-			int n = cmdline.GetLength() + 1;
-			Buffer<char> cmd(n);
-			memcpy(cmd, cmdline, n);
-			SECURITY_ATTRIBUTES sa;
-			sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-			sa.lpSecurityDescriptor = NULL;
-			sa.bInheritHandle = TRUE;
-			PROCESS_INFORMATION pi;
-			STARTUPINFO si;
-			ZeroMemory(&si, sizeof(STARTUPINFO));
-			si.cb = sizeof(STARTUPINFO);
-			AllocConsole();
-			SetConsoleTitle(cmdline);
-			int time = msecs();
-			if(CreateProcess(NULL, cmd, &sa, &sa, TRUE,
-				             NORMAL_PRIORITY_CLASS,
-			                 NULL, NULL, &si, &pi)) {
-				WaitForSingleObject(pi.hProcess, INFINITE);
-				dword exitcode = 255;
-				GetExitCodeProcess(pi.hProcess, &exitcode);
-				CloseHandle(pi.hProcess);
-				CloseHandle(pi.hThread);
-				Puts("<--- Finished in " + GetPrintTime(time) + ", exitcode: " + AsString(exitcode) + " --->");
-			}
-			else
-				Puts("Unable to launch " + cmdline);
-			char h[1];
-			dword dummy;
-			ReadFile(GetStdHandle(STD_INPUT_HANDLE), h, 1, &dummy, NULL);
+	if(debug_exe_mode)
+		dosplash = false;
+	else {
+		if(!CheckLicense())
 			return;
+	#ifdef PLATFORM_WIN32
+		AutoInstantSetup();
+	#endif
+		bool hasvars = FindFile(ConfigFile("*.var"));
+	#ifdef PLATFORM_POSIX
+		RemoveConsoleScripts(); // remove old console-script files
+	
+		String home = Environment().Get("UPP_HOME", Null);
+		if(!IsNull(home))
+			SetHomeDirectory(home);
+		if(!hasvars) {
+			if(!Install(hasvars))
+				return;
+			SaveFile(ConfigFile("version"), IDE_VERSION);
 		}
 	#endif
-	/*
-		if(arg[i] == "#git_ask_pass") {
-			String s;
-			for(;;) {
-				int c = getchar();
-				if(c == EOF)
-					break;
-				s.Cat(c);
+	
+	//	if(!hasvars) // this does not work for some reason on initial install, disable for now
+	//		SetupGITMaster();
+	
+		if(!FileExists(BlitzBaseFile()))
+			ResetBlitz();
+		
+		if(!FileExists(SearchEnginesFile()))
+			SearchEnginesDefaultSetup();
+	
+		for(int i = 0; i < arg.GetCount(); i++)
+			if(arg[i] == "--nosplash") {
+				dosplash = false;
+				arg.Remove(i);
+				break;
 			}
-			PromptOK("ASK_PASS:&\1" + s);
-			return;
+		for(int i = 0; i < arg.GetCount(); i++) {
+		#ifdef PLATFORM_WIN32
+			if(arg[i] == "!") {
+				String cmdline;
+				for(++i; i < arg.GetCount(); i++) {
+					if(!IsNull(cmdline))
+						cmdline << ' ';
+					String h = arg[i];
+					if(h.Find(' ') >= 0)
+						cmdline << '\"' << arg[i] << '\"';
+					else
+						cmdline << arg[i];
+				}
+				int n = cmdline.GetLength() + 1;
+				Buffer<char> cmd(n);
+				memcpy(cmd, cmdline, n);
+				SECURITY_ATTRIBUTES sa;
+				sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+				sa.lpSecurityDescriptor = NULL;
+				sa.bInheritHandle = TRUE;
+				PROCESS_INFORMATION pi;
+				STARTUPINFO si;
+				ZeroMemory(&si, sizeof(STARTUPINFO));
+				si.cb = sizeof(STARTUPINFO);
+				AllocConsole();
+				SetConsoleTitle(cmdline);
+				int time = msecs();
+				if(CreateProcess(NULL, cmd, &sa, &sa, TRUE,
+					             NORMAL_PRIORITY_CLASS,
+				                 NULL, NULL, &si, &pi)) {
+					WaitForSingleObject(pi.hProcess, INFINITE);
+					dword exitcode = 255;
+					GetExitCodeProcess(pi.hProcess, &exitcode);
+					CloseHandle(pi.hProcess);
+					CloseHandle(pi.hThread);
+					Puts("<--- Finished in " + GetPrintTime(time) + ", exitcode: " + AsString(exitcode) + " --->");
+				}
+				else
+					Puts("Unable to launch " + cmdline);
+				char h[1];
+				dword dummy;
+				ReadFile(GetStdHandle(STD_INPUT_HANDLE), h, 1, &dummy, NULL);
+				return;
+			}
+		#endif
 		}
-	*/
 	}
 
 #ifdef _DEBUG0
@@ -360,12 +353,17 @@ void AppMain___()
 		SetTheIde(&ide);
 		ide.Maximize();
 		bool clset = false;
+
+#ifdef PLATFORM_WIN32
+		if(ide.PdbMode(arg))
+			return;
+#endif
 		
 		ide.LoadConfig();
 
 		if(!ide.disable_custom_caption)
 			ide.CustomTitleBar();
-		
+
 		if(arg.GetCount() == 1) {
 			if(arg[0].EndsWith(".upp")) {
 				Vector<String> names = Split(arg[0], DIR_SEP);
