@@ -166,14 +166,11 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 	Buffer<char> env(local.environment.GetCount() + 1);
 	memcpy(env, ~local.environment, local.environment.GetCount() + 1);
-	DDUMP(local.environment);
-	DDUMP(exefile);
-	DDUMP(~cmd);
-	DDUMP(~env);
+
 	bool h = CreateProcess(exefile, cmd, NULL, NULL, TRUE,
 	                       /*NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|*/DEBUG_ONLY_THIS_PROCESS/*|DEBUG_PROCESS*/,
 	                       local.environment.GetCount() ? ~env : NULL, NULL, &si, &pi);
-	DDUMP(GetLastErrorMessage());
+
 	if(!h) {
 		Exclamation("Error creating process&[* " + DeQtf(exefile) + "]&" +
 		            "Windows error: " + DeQtf(GetLastErrorMessage()));
