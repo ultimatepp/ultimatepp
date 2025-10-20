@@ -398,6 +398,58 @@ void Ide::BuildAndDebug(bool runto)
 		debugger->Run();
 }
 
+#ifdef PLATFORM_WIN32
+
+static FileOut *pdb_mode_out;
+
+int PdbModePrompts(Event<const String&>,
+               const char *title, const Image& , const char *qtf, bool,
+               const char *, const char *, const char *,
+               int, Image, Image, Image)
+{
+	if(pdb_mode_out) {
+		*pdb_mode_out << "============== " << GetSysTime() << "\n";
+		*pdb_mode_out << "*** " << title << "\n";
+		*pdb_mode_out << ParseQTF(qtf).GetPlainText().ToString() << "\n";
+	}
+	return 1;
+}
+
+bool Ide::PdbMode(const Vector<String>& arg)
+{
+	if(arg.GetCount() >= 2 && arg[0] == "--debug") {
+		FileOut out(GetExeDirFile("debug.log"));
+		RedirectPrompts(PdbModePrompts);
+		pdb_mode_out = &out;
+
+		Vector<String> cmd = clone(arg);
+		out << "Session started at " << GetSysTime() << "\r\n";
+		cmd.Remove(0, 2);
+		Host host;
+		debugger = PdbCreate(host, arg[1], Join(cmd, " "), false);
+		if(!debugger) {
+			out << "Failed to start the debugging session";
+			return true;
+		}
+		debugger->Run();
+		auto *pdb = dynamic_cast<Pdb *>(~debugger);
+		if(pdb) {
+			*pdb_mode_out << "============== " << GetSysTime() << "\n";
+			out << "Crashed thread backtrace:\n";
+			out << pdb->CopyStack();
+			*pdb_mode_out << "==============\n";
+			out << "All threads backtrace:\n";
+			out << pdb->CopyStackAll();
+		}
+		else
+			out << "Failed to get backtraces";
+		return true;
+	}
+	return false;
+}
+
+#endif
+
 void Ide::DebugClearBreakpoints()
 {
 	const Workspace& wspc = IdeWorkspace();

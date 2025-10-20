@@ -22,6 +22,10 @@ TOPIC("Blitz_en-us")
 #include "Blitz_en-us.tppi"
 END_TOPIC
 
+TOPIC("BuildMethods_en-us")
+#include "BuildMethods_en-us.tppi"
+END_TOPIC
+
 TOPIC("CodeFormatting_en-us")
 #include "CodeFormatting_en-us.tppi"
 END_TOPIC

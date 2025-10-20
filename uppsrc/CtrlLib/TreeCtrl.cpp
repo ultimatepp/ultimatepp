@@ -496,7 +496,7 @@ void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
 				AddChildBefore(m.ctrl, GetLastChild());
 			if(m.ctrl == restorefocus || m.ctrl->HasChildDeep(restorefocus))
 				restorefocus->SetFocus();
-			
+
 			int yy = l.y - org.y;
 			if(yy + mcy < 0 || yy > sz.cy) // not in view, no need to evaluate precisely
 				m.ctrl->SetRect(levelcx + l.level * levelcx + m.margin - org.x,
@@ -705,6 +705,7 @@ void TreeCtrl::SetCursorLine(int i, bool sc, bool sel, bool cb)
 			if(!multiselect) WhenSel();
 		}
 	}
+	SyncInfo();
 }
 
 void TreeCtrl::SetCursorLine(int i)
@@ -986,20 +987,15 @@ void TreeCtrl::SyncInfo()
 		Point org = sb;
 		int i = FindLine(p.y + org.y);
 		if(i < line.GetCount()) {
-			Size sz = GetSize();
 			const Line& l = line[i];
 			const Item& m = item[l.itemi];
-			int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
-			Size csz = m.GetCtrlSize();
-			if(m.ctrl && !highlight_ctrl)
-				x += csz.cx;
-			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetValueSize(display).cy + 2 * m.margin);
+			Rect r = GetValueRect(l) & GetSize();
 			if(r.Contains(p)) {
 				Color fg, bg;
 				dword st;
 				const Display *d = GetStyle(i, fg, bg, st);
 				info.UseDisplayStdSize();
-				info.Set(this, r, m.value, d, fg, bg, st, m.margin);
+				info.Set(this, r, m.value, d, fg, bg, st, 0);
 				return;
 			}
 		}

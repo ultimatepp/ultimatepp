@@ -79,8 +79,13 @@ about TheIDE version and exits.&]
 line help and exits.&]
 [s22;:1`_4: 1.4 Advanced options&]
 [s5; There are some less frequently used options:&]
-[s5;l128;i150;O0; `-`-scale [@4 `$percent] `- scale interface by `"percent`" 
+[s5;l128;i150;O0; `-`-scale [@4 percent] `- scale interface by `"percent`" 
 parameter.&]
+[s5;l128;i150;O0; `-`-debug [@5 program.exe arguments...] in this special 
+mode which only works in Windows, application program.exe is 
+started in debugger and runs until it crashes or finishes. In 
+case of irregular exit, stack backtrace of all threads is stored 
+in debug.log file. .pdb for application must be present.&]
 [s3;:2: 2. Building application from command line&]
 [s5; In order to build application (package) from command line [^topic`:`/`/ide`/app`/umk`_en`-us^ U
 MK] console utility should be used.]]

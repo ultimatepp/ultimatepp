@@ -38,7 +38,7 @@ void CSyntax::InitKeywords()
         "operator", "or", "or_eq", "override", "private", "protected",
         "public", "register", "reinterpret_cast", "requires",
         "short", "signed", "sizeof", "static", "static_assert",
-        "static_cast", "struct", "switch", "template", "this", "thread",
+        "static_cast", "struct", "switch", "template", "this",
         "thread_local", "true", "try", "typedef", "typeid",
         "typename", "union", "unsigned", "using", "virtual",
         "void", "volatile", "wchar_t", "while", "xor", "xor_eq",

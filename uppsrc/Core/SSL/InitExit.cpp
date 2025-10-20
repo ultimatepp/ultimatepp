@@ -89,7 +89,9 @@ INITIALIZER(SSL)
 	LLOG("SslInit");
 	TcpSocketInit();
 #ifdef UPP_HEAP
+#ifndef _DEBUG // temporary solution unless we find the source of all those harmless leaks
 	CRYPTO_set_mem_functions(SslAlloc, SslRealloc, SslFree);
+#endif
 #endif
 	SSL_library_init();
 	SSL_load_error_strings();
