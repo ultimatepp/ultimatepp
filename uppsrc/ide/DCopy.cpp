@@ -59,9 +59,9 @@ void AssistEditor::DCopy()
 					if(q >= 0)
 						break;
 				}
+
 				const char *fn_name_pos = nullptr;
 				const char *fn_params_pos = nullptr;
-				bool  in_id = false;
 				const char *id_pos = nullptr;
 				
 				int lvl = 0;
