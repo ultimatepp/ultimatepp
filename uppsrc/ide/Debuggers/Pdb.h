@@ -267,6 +267,8 @@ struct Pdb : Debugger, ParentCtrl {
 	adr_t                       current_modbase; // so that we do not need to pass it as parameter to GetTypeInfo
 	VectorMap<String, TypeInfo> typeinfo_cache;
 	
+	Stream                     *log_mode = nullptr;
+	
 	enum { SINGLE_VALUE, TEXT, CONTAINER };
 	
 	struct LengthLimit {};
@@ -525,8 +527,8 @@ struct Pdb : Debugger, ParentCtrl {
 	int       FindChild(int parent, String id);
 	void      ExpandTreeType(int parent, CParser& p);
 
-	void      CopyStack();
-	void      CopyStackAll();
+	String    CopyStack();
+	String    CopyStackAll();
 	void      CopyDisas();
 	void      CopyModules();
 

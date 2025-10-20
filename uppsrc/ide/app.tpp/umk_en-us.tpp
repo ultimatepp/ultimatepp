@@ -19,6 +19,7 @@ topic "UMK - Command line builder";
 [s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#1^ 1. Definition]&]
 [s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#2^ 2. Command line interface]&]
 [s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#3^ 3. Examples]&]
+[s0; [^topic`:`/`/ide`/app`/umk`_en`-us`#4^ 4. Related topics]&]
 [s0; &]
 [s12;:1: 1. Definition&]
 [s11; [* UMK] (U`+`+ MaKe) is a command line utility to build the U`+`+ 
@@ -118,4 +119,10 @@ mpile`_commands.json]]
 [s0;l128; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs]&]
 [s0;l128; [*C@5+92 umk upp/examples,upp/uppsrc Bombs `~/GCC.bm `-rv 
 `+GUI,SHARED `~/bin]&]
-[s0; ]]
+[s0; &]
+[s12;:4: 4. Related topics&]
+[s11; Below is a list of related topics worth reading to further expand 
+your knowledge of UMK:&]
+[s11;l128;i150;O0; [*^topic`:`/`/ide`/app`/BuildMethods`_en`-us^ Build 
+Methods] `- The build methods used by UMK are discussed in detail 
+in the referenced article]]

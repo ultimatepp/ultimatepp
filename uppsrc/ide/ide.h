@@ -963,6 +963,9 @@ public:
 		void  BuildAndExtDebugFile();
 		bool  IsValgrind();
 		void  Valgrind();
+#ifdef PLATFORM_WIN32
+		bool  PdbMode(const Vector<String>& cmd);
+#endif
 
 		void  StartDebug();
 		void  StopDebug();

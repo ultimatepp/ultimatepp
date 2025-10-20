@@ -650,6 +650,8 @@ Ctrl::~Ctrl() {
 Vector<Ctrl::MouseHook>& Ctrl::mousehook() { static Vector<Ctrl::MouseHook> h; return h; }
 Vector<Ctrl::KeyHook>&   Ctrl::keyhook() { static Vector<Ctrl::KeyHook> h; return h; }
 Vector<Ctrl::StateHook>& Ctrl::statehook() { static Vector<Ctrl::StateHook> h; return h; }
+Vector<Ctrl::PaintHook>& Ctrl::painthook() { static Vector<Ctrl::PaintHook> h; return h; }
+
 
 void Ctrl::InstallMouseHook(MouseHook hook)
 {
@@ -688,6 +690,19 @@ void Ctrl::DeinstallStateHook(StateHook hook)
 	GuiLock __;
 	int q = FindIndex(statehook(), hook);
 	if(q >= 0) statehook().Remove(q);
+}
+
+void Ctrl::InstallPaintHook(PaintHook hook)
+{
+	GuiLock __;
+	painthook().Add(hook);
+}
+
+void Ctrl::DeinstallPaintHook(PaintHook hook)
+{
+	GuiLock __;
+	int q = FindIndex(painthook(), hook);
+	if(q >= 0) painthook().Remove(q);
 }
 
 static char sZoomText[] = "OK Cancel Exit Retry";

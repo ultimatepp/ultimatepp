@@ -88,8 +88,8 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 5));
 	bar.Add(b, AK_BTS, THISBACK1(SetTab, 6));
 	bar.MenuSeparator();
-	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
-	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
+	bar.Add(b, "Copy backtrace", [=] { WriteClipboardText(CopyStack()); });
+	bar.Add(b, "Copy backtrace of all threads", [=] { WriteClipboardText(CopyStackAll()); });
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
 	bar.Add(b, "Copy modules", THISBACK(CopyModules));
 }
@@ -166,10 +166,14 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 	Buffer<char> env(local.environment.GetCount() + 1);
 	memcpy(env, ~local.environment, local.environment.GetCount() + 1);
+	DDUMP(local.environment);
+	DDUMP(exefile);
+	DDUMP(~cmd);
+	DDUMP(~env);
 	bool h = CreateProcess(exefile, cmd, NULL, NULL, TRUE,
 	                       /*NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE|*/DEBUG_ONLY_THIS_PROCESS/*|DEBUG_PROCESS*/,
-	                       ~env, NULL, &si, &pi);
-
+	                       local.environment.GetCount() ? ~env : NULL, NULL, &si, &pi);
+	DDUMP(GetLastErrorMessage());
 	if(!h) {
 		Exclamation("Error creating process&[* " + DeQtf(exefile) + "]&" +
 		            "Windows error: " + DeQtf(GetLastErrorMessage()));
@@ -204,8 +208,7 @@ bool Pdb::Create(Host& local, const String& exefile, const String& cmdline, bool
 	LoadFromGlobal(*this, CONFIGNAME);
 
 	if(!SymInitialize(hProcess, 0, FALSE)) {
-		Error();
-		Exclamation("Failed to load symbols");
+		Error("Failed to load symbols");
 		return false;
 	}
 	SymSetOptions(SYMOPT_LOAD_LINES|SYMOPT_UNDNAME|SYMOPT_NO_UNQUALIFIED_LOADS);
@@ -374,7 +377,7 @@ Pdb::Pdb()
 	LoadPrettyScripts();
 }
 
-void Pdb::CopyStack()
+String Pdb::CopyStack()
 {
 	String s;
 	for(int i = 0; i < framelist.GetCount(); i++) {
@@ -384,10 +387,10 @@ void Pdb::CopyStack()
 			s << " at " << fp.path << " " << fp.line + 1;
 		s << "\n";
 	}
-	WriteClipboardText(s);
+	return s;
 }
 
-void Pdb::CopyStackAll()
+String Pdb::CopyStackAll()
 {
 	String s;
 	for(int i = 0; i < threads.GetCount(); i++) {
@@ -398,7 +401,7 @@ void Pdb::CopyStackAll()
 			s << f.text << "\r\n";
 		s << "\r\n";
 	}
-	WriteClipboardText(s);
+	return s;
 }
 
 void Pdb::CopyDisas()

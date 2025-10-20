@@ -1,9 +1,12 @@
 version: 2.1
 
+orbs:
+  win: circleci/windows@5.1
+
 jobs:
   build-linux:
     docker:
-      - image: cimg/base:2025.06
+      - image: cimg/base:2025.10
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
@@ -24,6 +27,15 @@ jobs:
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
       - run: ./umk ./uppsrc ide CLANG -brs ./theide
+  build-windows:
+    executor: win/default
+    steps:
+      - checkout
+      - run: New-Item -Path "3p\downloads" -ItemType Directory -Force
+      - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z -OutFile 3p\downloads\umk.7z
+      - run: 7z x 3p\downloads\umk.7z -o3p
+      - run: 3p\umk\umk ./uppsrc ide 3p\umk\CLANG.bm -brs +GUI ./theide
+      - run: 3p\umk\umk ./uppsrc umk 3p\umk\CLANG.bm -brs ./umk
 
 workflows:
   build-linux:
@@ -33,3 +45,7 @@ workflows:
   build-mac:
     jobs:
       - build-mac
+
+  build-windows:
+    jobs:
+      - build-windows
