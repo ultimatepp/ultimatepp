@@ -528,8 +528,8 @@ public:
 	int       editfile_repo;
 	bool      editfile_isfolder;
 	bool      replace_in_files = false; // Find in files replace or Replace found items mode - do not update things
-
 	String    editfile2;
+	int64     editfile_length = 0;
 
 	String    scratch_back; // to get back from Alt-M scratchfile
 
@@ -688,6 +688,7 @@ public:
 	ParentCtrl              barrect; // to do custom caption clipping
 	CursorInfoCtrl          display, display_main;
 	ImageCtrl               indeximage, indeximage2;
+	bool                    fileinfo_visible = false; // show file time when cursor points to display
 
 	byte      hilite_scope;
 	int       hilite_bracket;
@@ -1168,6 +1169,9 @@ public:
 	void      CheckFileUpdate();
 	void      Periodic();
 	void      SyncClang();
+
+	Rect      GetFileInfoRect();
+	void      PaintFileInfo(Draw& w);
 
 	void      PassEditor(AssistEditor& editor2);
 	void      PassEditor();
