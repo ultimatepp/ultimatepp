@@ -398,6 +398,8 @@ void Ide::BuildAndDebug(bool runto)
 		debugger->Run();
 }
 
+#ifdef PLATFORM_WIN32
+
 static FileOut *pdb_mode_out;
 
 int PdbModePrompts(Event<const String&>,
@@ -445,6 +447,8 @@ bool Ide::PdbMode(const Vector<String>& arg)
 	}
 	return false;
 }
+
+#endif
 
 void Ide::DebugClearBreakpoints()
 {
