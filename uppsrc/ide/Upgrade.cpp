@@ -10,7 +10,7 @@ void Ide::UpgradeTheIDE()
 	String target_dir = idepath + "/" + name + ".new";
 	DeleteFolderDeep(target_dir);
 	RealizeDirectory(target_dir);
-
+	
 	newpath = target_dir + "/" + name + ".app";
 	bakpath = idepath + "/" + name + ".bak.app";
 	idepath << "/" << name << ".app";

@@ -120,6 +120,7 @@ void AssistEditor::DCopy()
 					else {
 						ret.TrimStart("virtual ");
 						ret.TrimStart("static ");
+						ret.TrimStart("friend ");
 						params.TrimEnd("override");
 						params = TrimBoth(params);
 						String cret;
