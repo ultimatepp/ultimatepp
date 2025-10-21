@@ -37,6 +37,7 @@ GUI_APP_MAIN
 		clist.Add(FormatIntRoman(i));
 	
 	TopWindow win;
+	win.Sizeable().Zoomable();
 	win.Add(dl.TopPosZ(0).LeftPosZ(0, 100));
 	win.Add(list.VSizePosZ(Zx(20), 0).LeftPosZ(0, 100));
 	win.Add(tree.VSizePosZ(Zx(20), 0).LeftPosZ(100, 100));

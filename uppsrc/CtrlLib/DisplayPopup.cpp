@@ -24,19 +24,19 @@ DisplayPopup::DisplayPopup()
 
 void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 {
-	if(!ctrl || IsNull(screen_rect) || tw != ctrl->GetTopCtrl())
-		return;
-	Rect r = screen_rect - tw->GetScreenRect().TopLeft();
-	DrawFrame(w, r, SBlack());
-	r.Deflate(1, 1);
-	w.Clip(r);
-	w.DrawRect(r, SColorPaper);
-	if(display) {
-		display->PaintBackground(w, r, value, ink, paper, style);
-		r.left += margin;
-		if(usedisplaystdsize_s)
-			r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
-		display->Paint(w, r, value, ink, paper, style);
+	if(ctrl && !IsNull(screen_rect) && (tw == ctrl->GetTopCtrl() || tw && tw != ctrl->GetOwner())) {
+		Rect r = screen_rect - tw->GetScreenRect().TopLeft();
+		DrawFrame(w, r, SBlack());
+		r.Deflate(1, 1);
+		w.Clip(r);
+		w.DrawRect(r, SColorPaper);
+		if(display) {
+			display->PaintBackground(w, r, value, ink, paper, style);
+			r.left += margin;
+			if(usedisplaystdsize_s)
+				r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
+			display->Paint(w, r, value, ink, paper, style);
+		}
 	}
 }
 
@@ -60,8 +60,13 @@ Rect DisplayPopup::Check(Ctrl *ctrl, const Rect& item, const Value& value, const
 void DisplayPopup::RefreshRect()
 {
 	if(ctrl && !IsNull(screen_rect)) {
-		DDUMP(screen_rect - ctrl->GetTopCtrl()->GetScreenRect().TopLeft());
-		ctrl->GetTopCtrl()->RefreshFrame(screen_rect - ctrl->GetTopCtrl()->GetScreenRect().TopLeft());
+		Ctrl *top = ctrl->GetTopCtrl();
+		top->RefreshFrame(screen_rect - top->GetScreenRect().TopLeft());
+		Ctrl *owner = top->GetOwner();
+		if(owner) {
+			Rect owa = owner->GetScreenRect();
+			owner->RefreshFrame(screen_rect - owner->GetScreenRect().TopLeft());
+		}
 	}
 }
 
@@ -76,9 +81,16 @@ void DisplayPopup::Sync()
 		Size sz = display->GetStdSize(value);
 		Rect wa = top->GetScreenRect();
 		r.right = min(wa.right, r.left + sz.cx + 2 * margin);
+		if(wa.bottom < r.top + sz.cy)
+			return;
 		r.bottom = max(r.bottom, r.top + sz.cy);
-		r.Inflate(1, 1);
-		screen_rect = r;
+		Ctrl *owner = top->GetOwner();
+		if(owner) {
+			Rect owa = owner->GetScreenRect();
+			if(owa.bottom >= r.bottom)
+				r.right = min(max(wa.right, owa.right), r.left + sz.cx + 2 * margin);
+		}
+		screen_rect = r.Inflated(1, 1);
 		RefreshRect();
 	}
 }
