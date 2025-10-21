@@ -21,6 +21,8 @@ void Ide::UpgradeTheIDE()
 	bakpath << ".bak" << GetExeExt();
 #endif
 
+	mainconfiglist.GoBegin();
+
 	int tbak = targetmode;
 	String tmbak = StoreAsString(release);
 
