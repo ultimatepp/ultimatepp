@@ -103,8 +103,8 @@ void AssistEditor::DCopy()
 					}
 				}
 				
-				auto Clean = [](String& s) { // this is ok to be slow (hence Join/Split)
-					s = Join(Split(TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; })), ' '), " ");
+				auto Clean = [](String& s) {
+					s = NormalizeSpaces((TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; }))));
 				};
 				
 				Clean(ret);

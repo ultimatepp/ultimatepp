@@ -20,7 +20,7 @@ struct Foo {
 	std::vector<String> Bar2(const std::vector<Item>& price, String s);
 	std::vector<Change> Bar(const std::vector<Item>& price, String s);
 	std::vector<Foo::Change> Bar(const std::vector<std::vector<Item>>& price, String s);
-	std::vector<void (*)(int x, int y)> Bar(const std::vector<std::vector<Item>>& price, int x);
+	std::vector<void (*)(int x, int y)> Bar(const std::vector<std::vector<Item>>& price, int    x);
 
 	typedef void (*PaintHook)(String s);
 

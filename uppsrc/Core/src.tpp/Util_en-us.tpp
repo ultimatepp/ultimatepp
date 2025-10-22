@@ -1,5 +1,4 @@
 topic "Utilities";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,9 +8,22 @@ topic "Utilities";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Utilities]]}}&]
 [s3; &]
+[s5;:Upp`:`:NormalizeSpaces`(const char`*`): Upp[@(0.0.255) `::]String 
+[* NormalizeSpaces]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 s])&]
+[s5;:Upp`:`:NormalizeSpaces`(const char`*`,const char`*`): Upp[@(0.0.255) `::]String 
+[* NormalizeSpaces]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 s], 
+[@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 end])&]
+[s2;%% Normalizes spaces `- multiple spaces are replaced with just 
+one ASCII 32 character. Characters 0..32 are considered to be 
+spaces. Variant with [%-*@3 end] allows zero character in the string 
+which is considered a space. Single parameter variant expects 
+zero terminated string.&]
+[s3; &]
+[s4; &]
 [s5;:CsvString`(const String`&`): [_^String^ String]_[* CsvString]([@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 text])&]
 [s2;%% Formats [%-*@3 text] for inclusion in [^http`:`/`/en`.wikipedia`.org`/wiki`/Comma`-separated`_values^ C
