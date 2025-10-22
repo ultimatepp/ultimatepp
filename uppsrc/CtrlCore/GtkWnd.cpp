@@ -122,9 +122,7 @@ Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	Top *top = GetTop();
-	if(!top)
-		return nullptr;
-	return IsOpen() ? top->owner : nullptr;
+	return top && IsOpen() ? top->owner : nullptr;
 }
 
 Ctrl *Ctrl::GetActiveCtrl()
@@ -606,3 +604,4 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 
 
 #endif
+
