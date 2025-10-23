@@ -643,6 +643,7 @@ Rect Ide::GetFileInfoRect()
 	Rect r = display.GetScreenRect();
 	r.top = r.bottom - GetStdFontCy() / 2;
 	r.bottom = r.top + GetStdFontCy() + DPI(2);
+	r.left = r.right - HorzLayoutZoom(270);
 	return r - GetScreenRect().TopLeft();
 }
 
@@ -666,6 +667,7 @@ void Ide::PaintFileInfo(Draw& w)
 		};
 		DoUnit(60, "hour");
 		DoUnit(24, "day");
+		
 		DoUnit(30.5, "month");
 		DoUnit(12, "year");
 		int n = (int)round(d);
