@@ -118,7 +118,7 @@ void IconDes::SettingBar(Bar& bar)
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
 	        [=] { show_downscaled = !show_downscaled; show_synthetics = false; SyncShow(); SetBar(); })
 	   .Check(show_downscaled);
-	bar.Add("Show secondardy grid", IconDesImg::grid2(),
+	bar.Add("Show secondary grid", IconDesImg::grid2(),
 	        [=] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
 	   .Check(show_grid2);
 	bar.Add(c, AK_ZOOM_IN, IconDesImg::ZoomMinus(), THISBACK(ZoomOut))

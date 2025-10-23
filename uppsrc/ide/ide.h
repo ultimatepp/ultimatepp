@@ -1187,14 +1187,10 @@ public:
 	void      TabsLR( int jd );
 	void      TabsStackLR( int jd );
 
-	void      RefreshFrame(bool auto_disasm);
-	void      RefreshLine(int frame, bool auto_disasm);
-
 	void      SetBar();
 	void      SetMenuBar();
 	void      SetToolBar();
 	TimeCallback delayed_toolbar;
-
 
 	void      UpdateFormat(CodeEditor& editor);
 	void      UpdateFormat();

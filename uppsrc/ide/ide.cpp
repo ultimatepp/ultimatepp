@@ -641,7 +641,7 @@ void Ide::SetIcon()
 Rect Ide::GetFileInfoRect()
 {
 	Rect r = display.GetScreenRect();
-	r.top = r.bottom;
+	r.top = r.bottom - GetStdFontCy() / 2;
 	r.bottom = r.top + GetStdFontCy() + DPI(2);
 	return r - GetScreenRect().TopLeft();
 }
@@ -652,11 +652,26 @@ void Ide::PaintFileInfo(Draw& w)
 		Time tm(edittime);
 		String qtf = "[g ";
 		
-		qtf << AsString(Format("  %d-%02d-%02d %02d:%02d:%02d",
+		qtf << AsString(Format("  [@b* %d]-[@b* %02d]-[@b* %02d] [* %02d]:[* %02d]:%02d",
 		                (int)tm.year, (int)tm.month, (int)tm.day,
 		                (int)tm.hour, (int)tm.minute, (int)tm.second));
-
-		qtf << ", Size " << FormatFileSize(editfile_length);
+		                
+		double d = (GetSysTime() - tm) / 60;
+		String unit = "minute";
+		auto DoUnit = [&](double m, const char *s) {
+			if(d > m) {
+				d /= m;
+				unit = s;
+			}
+		};
+		DoUnit(60, "hour");
+		DoUnit(24, "day");
+		DoUnit(30.5, "month");
+		DoUnit(12, "year");
+		int n = (int)round(d);
+		if(n != 1)
+			unit << "s";
+		qtf << " ([* " << n << ' ' << unit << "] ago), size [* " << FormatFileSize(editfile_length);
 
 		RichText txt = ParseQTF(qtf);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
@@ -681,8 +696,7 @@ void Ide::Periodic()
 	SyncClang();
 	bool b = display.GetScreenRect().Contains(GetMousePos());
 	if(fileinfo_visible != b) {
-		Refresh(GetFileInfoRect());
-		Refresh();
+		RefreshFrame(GetFileInfoRect());
 		fileinfo_visible = b;
 	}
 }
