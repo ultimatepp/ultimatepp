@@ -175,24 +175,36 @@ like this:&]
 Below is a list with all options grouped in two categories. The 
 first group described options related to Android SDK. The second 
 one is related to Android NDK.&]
-[s2; Android SDK settings:&]
-[s6;l160;i150;O0; Platform version `- select android platform version&]
-[s6;l160;i150;O0; Build tools version `- select android build tools 
-version&]
-[s2; Android NDK settings:&]
-[s6;l160;i150;O0;~~~32; BLITZ `- turn on/off BLITZ technology.&]
-[s6;l160;i150;O0;~~~32; Target architectures `- specify which architecture 
-binaries will be built&]
-[s6;l160;i150;O0;~~~32; Toolchain `- specify compiler which will 
+[s2;l160;i150;O0; [* Android SDK settings]&]
+[s0;<l320;i150;b42;a42;phO0; [*2 Platform version][2  `- Specifies the 
+Android API Level (e.g., API 36 for Android 16) that your application 
+will be compiled against. This determines the set of APIs and 
+features available to your code.]&]
+[s6;l320;i150;O0; [* Build tools version] `- Specifies the version 
+of the command`-line utilities (like aapt, dx, zipalign) used 
+to build the Android package (APK or AAB).&]
+[s2;l160;i150;O0;~~~32; [* Android NDK settings]&]
+[s6;l320;i150;O0;~~~32; [* BLITZ] `- If enabled, packages are compiled 
+in Single Compilation Unit (SCU) mode for the release build. 
+This setting is used to significantly decrease compilation time.&]
+[s6;l320;i150;O0;~~~32; Target architectures `- `- Specifies the 
+target architectures for compiling native source files. If the 
+selected architectures do not match the Android device`'s CPU, 
+the application will not run.  Options are&]
+[s2;l480;i150;O0; armeabi`-v7a&]
+[s2;l480;i150;O0; arm64`-v8a&]
+[s2;l480;i150;O0; x86&]
+[s6;l480;i150;O0;~~~32; x86`-64&]
+[s6;l320;i150;O0;~~~32; Toolchain `- specify compiler which will 
 be used to compile source files `- entries without text refer 
 to GCC&]
-[s6;l160;i150;O0;~~~32; C`+`+ runtime `- specify runtime library 
+[s6;l320;i150;O0;~~~32; C`+`+ runtime `- specify runtime library 
 `- please notice that this flag can turn on/off language specific 
 features like availability of standard library or exception handling&]
-[s6;l160;i150;O0;~~~32; Common C`+`+ options `- compilation flags 
-used with C`+`+ source files&]
-[s6;l160;i150;O0;~~~32; Common C options `- compilation flags used 
-with C source files&]
+[s0;<l320;i150;b42;a42;phO0;~~~32; [2 Common C`+`+ options `- Compiler 
+options for C`+`+ language files.]&]
+[s6;l320;i150;O0;~~~32; Common C options `- Compiler options for 
+C language files.&]
 [s0; &]
 [s3;:7: 7. Tips and tricks&]
 [s2; Sometimes you can simplify many things or do things that are 
