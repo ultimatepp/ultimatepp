@@ -643,7 +643,7 @@ Rect Ide::GetFileInfoRect()
 	Rect r = display.GetScreenRect();
 	r.top = r.bottom - GetStdFontCy() / 2;
 	r.bottom = r.top + GetStdFontCy() + DPI(2);
-	r.left = r.right - HorzLayoutZoom(270);
+	r.left = r.right - Zx(400);
 	return r - GetScreenRect().TopLeft();
 }
 
