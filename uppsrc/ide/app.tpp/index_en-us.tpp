@@ -65,7 +65,7 @@ a Cross Development Tool]&]
 Android builder]&]
 [s0; &]
 [s0; &]
-[s0; [*4 Ultimate`+`+ donors]&]
+[s0; [*4 U`+`+ donors]&]
 [s0; [/1 Thank you!]&]
 [s0; &]
 [s0;%- [%%*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans], [*^http`:`/`/www`.vegachess`.com^ vega
