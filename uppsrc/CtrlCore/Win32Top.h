@@ -7,6 +7,7 @@ private:
 	HICON       ico, lico;
 
 	void        DeleteIco();
+	void        SetIco();
 	void        CenterRect(HWND owner, int center);
 
 public:
