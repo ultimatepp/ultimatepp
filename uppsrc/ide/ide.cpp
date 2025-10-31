@@ -696,7 +696,9 @@ void Ide::Periodic()
 	if(debugger && debugger->IsFinished() && !IdeIsDebugLock())
 		IdeEndDebug();
 	SyncClang();
-	bool b = display.GetScreenRect().Contains(GetMousePos());
+	Rect r = display.GetScreenRect();
+	r.left = max(r.left, r.right - Zx(150));
+	bool b = r.Contains(GetMousePos());
 	if(fileinfo_visible != b) {
 		RefreshFrame(GetFileInfoRect());
 		fileinfo_visible = b;
