@@ -499,7 +499,8 @@ void UppHubDlg::SyncList()
 		   (broken || n.status != "broken"))
 			list.Add(n.name, AT(n.name), AT(n.category), AT(n.description), n.name);
 	}
-		         
+	
+	list.HeaderTab(0).SetText("Name (" + AsString(list.GetCount()) + ")");
 	list.DoColumnSort();
 	list.ScrollTo(sc);
 	if(!list.FindSetCursor(k))
