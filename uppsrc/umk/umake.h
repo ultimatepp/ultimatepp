@@ -5,8 +5,18 @@
 
 extern bool SilentMode;
 
-bool UppHubAuto(const String& main);
-void UppHubUpdate(const String& main);
+namespace UppHub {
+	bool DownloadAndInstallIfMissing(const String& main);
+	void Update(const String& main);
+	void SetupDir(const String& hub_dir, const bool auto_hub);
+}
+
+enum class ExitCodes {
+	SUCESS = 0,
+	INVALID_BUILD_METHOD_ERROR = 3,
+	UPP_HUB_ERROR = 6,
+	CMD_LINE_ARGS_PARSING_ERROR = 7
+};
 
 class Console {
 public:
