@@ -166,7 +166,7 @@ void UppHubDlg::Install(const Index<String>& ii_, bool update)
 	ResetBlitz();
 }
 
-bool UppHub::DownloadAndInstallIfMissing(const String& main)
+bool UppHubAuto(const String& main)
 {
 	Index<String> pmissing;
 	for(;;) {
@@ -201,7 +201,7 @@ bool UppHub::DownloadAndInstallIfMissing(const String& main)
 	return true;
 }
 
-void UppHub::Update(const String& main)
+void UppHubUpdate(const String& main)
 {
 	UppHubDlg dlg;
 	dlg.Load();
@@ -219,7 +219,7 @@ void UppHub::Update(const String& main)
 	dlg.Install(packages, true);
 }
 
-void UppHub::SetupDir(const String& hub_dir, const bool auto_hub)
+void UppHubSetupDirForUmk(const String& hub_dir, const bool auto_hub)
 {
 	if(!hub_dir.IsEmpty()) {
 		OverrideHubDir(hub_dir);

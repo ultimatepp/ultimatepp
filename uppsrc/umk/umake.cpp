@@ -131,18 +131,18 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < args.GetCount(); i++) {
 		String a = args[i];
 		if(a.StartsWith("--")) {
-			String param = a.Right(a.GetCount() - 2);
-			if(param == "upp_hub_dir") {
+			String ar = a.Right(a.GetCount() - 2);
+			if(ar == "upp_hub_dir") {
 				if(i + 1 >= args.GetCount()) {
 					PutVerbose("UppHub directory not specified");
-					SetExitCode(static_cast<int>(ExitCodes::CMD_LINE_ARGS_PARSING_ERROR));
+					SetExitCode(7);
 					return;
 				}
 				
 				hub_dir = args[++i];
 			} else {
-				PutVerbose(String("Unknown parameter \"") + a + "\".");
-				SetExitCode(static_cast<int>(ExitCodes::CMD_LINE_ARGS_PARSING_ERROR));
+				Puts(String("Unrecognized parameter \"") + a + "\".");
+				SetExitCode(7);
 				return;
 			}
 		}
@@ -216,7 +216,7 @@ CONSOLE_APP_MAIN
 			param.Add(a);
 	}
 
-	UppHub::SetupDir(hub_dir, auto_hub);
+	UppHubSetupDirForUmk(hub_dir, auto_hub);
 
 	if(param.GetCount() >= 2) {
 		String v = GetUmkFile(param[0] + ".var");
@@ -257,12 +257,12 @@ CONSOLE_APP_MAIN
 			return;
 		}
 		if(auto_hub || update_hub) {
-			if(!UppHub::DownloadAndInstallIfMissing(ide.main)) {
-				SetExitCode(static_cast<int>(ExitCodes::UPP_HUB_ERROR));
+			if(!UppHubAuto(ide.main)) {
+				SetExitCode(6);
 				return;
 			}
 			if(update_hub)
-				UppHub::Update(ide.main);
+				UppHubUpdate(ide.main);
 		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();
