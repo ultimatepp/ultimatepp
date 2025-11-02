@@ -132,9 +132,9 @@ CONSOLE_APP_MAIN
 		String a = args[i];
 		if(a.StartsWith("--")) {
 			String ar = a.Right(a.GetCount() - 2);
-			if(ar == "upp_hub_dir") {
+			if(ar == "hub-dir") {
 				if(i + 1 >= args.GetCount()) {
-					PutVerbose("UppHub directory not specified");
+					Puts("UppHub directory not specified");
 					SetExitCode(7);
 					return;
 				}
