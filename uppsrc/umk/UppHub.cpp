@@ -218,3 +218,30 @@ void UppHubUpdate(const String& main)
 	}
 	dlg.Install(packages, true);
 }
+
+void UppHubSetupDirForUmk(const String& hub_dir, const bool auto_hub)
+{
+	if(!hub_dir.IsEmpty()) {
+		OverrideHubDir(hub_dir);
+		return;
+	}
+
+	if(auto_hub) {
+		// NOTE: In auto_hub mode we don't want to change default directory or reuse these
+		// belonging to umk or ide.
+		DeleteFolderDeep(GetHubDir());
+		return;
+	}
+
+	String cfgdir = GetFileFolder(GetFileFolder(ConfigFile("x")));
+	for(const char *q : { "umk", "theide", "ide" }) {
+		String dir = cfgdir + "/" + q + "/UppHub";
+		if(DirectoryExists(dir)) {
+			for(FindFile ff(dir + "/*"); ff; ff.Next())
+				if(ff.IsFolder() && *ff.GetName() != '.') {
+					OverrideHubDir(dir);
+					return;
+				}
+		}
+	}
+}
