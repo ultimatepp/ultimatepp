@@ -89,21 +89,6 @@ String GenerateVersionNumber()
 	return "";
 }
 
-void SetupUmkUppHub()
-{
-	String cfgdir = GetFileFolder(GetFileFolder(ConfigFile("x")));
-	for(const char *q : { "umk", "theide", "ide" }) {
-		String dir = cfgdir + "/" + q + "/UppHub";
-		if(DirectoryExists(dir)) {
-			for(FindFile ff(dir + "/*"); ff; ff.Next())
-				if(ff.IsFolder() && *ff.GetName() != '.') {
-					OverrideHubDir(dir);
-					return;
-				}
-		}
-	}
-}
-
 CONSOLE_APP_MAIN
 {
 	SetConfigName("theide");
@@ -136,6 +121,7 @@ CONSOLE_APP_MAIN
 	bool run = false;
 	bool auto_hub = false;
 	bool update_hub = false;
+	String hub_dir;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
 
@@ -144,6 +130,23 @@ CONSOLE_APP_MAIN
 	const Vector<String>& args = CommandLine();
 	for(int i = 0; i < args.GetCount(); i++) {
 		String a = args[i];
+		if(a.StartsWith("--")) {
+			String ar = a.Right(a.GetCount() - 2);
+			if(ar == "hub-dir") {
+				if(i + 1 >= args.GetCount()) {
+					Puts("UppHub directory not specified");
+					SetExitCode(7);
+					return;
+				}
+				
+				hub_dir = args[++i];
+			} else {
+				Puts(String("Unrecognized parameter \"") + a + "\".");
+				SetExitCode(7);
+				return;
+			}
+		}
+		else
 		if(*a == '-') {
 			for(const char *s = ~a + 1; *s; s++)
 				switch(*s) {
@@ -213,10 +216,7 @@ CONSOLE_APP_MAIN
 			param.Add(a);
 	}
 
-	if(auto_hub)
-		DeleteFolderDeep(GetHubDir());
-	else
-		SetupUmkUppHub();
+	UppHubSetupDirForUmk(hub_dir, auto_hub);
 
 	if(param.GetCount() >= 2) {
 		String v = GetUmkFile(param[0] + ".var");
@@ -261,7 +261,7 @@ CONSOLE_APP_MAIN
 				SetExitCode(6);
 				return;
 			}
-			if (update_hub)
+			if(update_hub)
 				UppHubUpdate(ide.main);
 		}
 		ide.wspc.Scan(ide.main);
