@@ -63,10 +63,8 @@ void DisplayPopup::RefreshRect()
 		Ctrl *top = ctrl->GetTopCtrl();
 		top->RefreshFrame(screen_rect - top->GetScreenRect().TopLeft());
 		Ctrl *owner = top->GetOwner();
-		if(owner) {
-			Rect owa = owner->GetScreenRect();
+		if(owner)
 			owner->RefreshFrame(screen_rect - owner->GetScreenRect().TopLeft());
-		}
 	}
 }
 

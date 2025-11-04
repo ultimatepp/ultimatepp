@@ -7,6 +7,7 @@ extern bool SilentMode;
 
 bool UppHubAuto(const String& main);
 void UppHubUpdate(const String& main);
+void UppHubSetupDirForUmk(const String& hub_dir, const bool auto_hub);
 
 class Console {
 public:

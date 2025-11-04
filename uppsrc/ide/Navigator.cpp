@@ -363,6 +363,7 @@ void Navigator::Search()
 	s = Join(Split(s, '.'), "::") + (s.EndsWith(".") ? "::" : "");
 	int lineno = StrInt(s);
 	nitem.Clear();
+	litem.Clear();
 	Index<String> nests;
 	auto Nest = [&](const AnnotationItem& m, const String& path) {
 		if(m.nspace == m.nest)

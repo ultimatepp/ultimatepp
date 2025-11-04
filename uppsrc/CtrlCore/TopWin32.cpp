@@ -79,17 +79,6 @@ void TopWindow::SyncTitle()
 		::SetWindowTextW(hwnd, ToSystemCharsetW(title));
 }
 
-void TopWindow::DeleteIco()
-{
-	GuiLock __;
-	LLOG("TopWindow::DeleteIco " << UPP::Name(this));
-	if(ico)
-		DestroyIcon(ico);
-	if(lico)
-		DestroyIcon(lico);
-	ico = lico = NULL;
-}
-
 String WindowStyleAsString(dword style, dword exstyle)
 {
 	String r1;
@@ -192,12 +181,39 @@ void TopWindow::SyncCaption()
 			FlashWindowEx(&fi);
 		}
 	}
-	DeleteIco();
 
+	SetIco();
+	Ptr<TopWindow> ptr = this;
+	PostCallback([=] { // windows 11 ignores icon if Window does not start processing messages within ~200ms
+		if(ptr) ptr->SetIco(); // set it again when we are processing events
+	});
+}
+
+void TopWindow::SetIco()
+{
+	HWND hwnd = GetHWND();
 	if(hwnd) {
-		::SendMessage(hwnd, WM_SETICON, false, (LPARAM)(ico = SystemDraw::IconWin32(icon)));
-		::SendMessage(hwnd, WM_SETICON, true, (LPARAM)(lico = SystemDraw::IconWin32(largeicon)));
+		HICON new_ico = SystemDraw::IconWin32(Nvl(icon, largeicon));
+		HICON new_lico = SystemDraw::IconWin32(Nvl(largeicon, icon));
+		::SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)(new_ico));
+		::SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)(new_lico));
+
+		DeleteIco();
+
+		ico = new_ico;
+		lico = new_lico;
 	}
+}
+
+void TopWindow::DeleteIco()
+{
+	GuiLock __;
+	LLOG("TopWindow::DeleteIco " << UPP::Name(this));
+	if(ico)
+		DestroyIcon(ico);
+	if(lico)
+		DestroyIcon(lico);
+	ico = lico = NULL;
 }
 
 void TopWindow::CenterRect(HWND hwnd, int center)

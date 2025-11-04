@@ -33,8 +33,6 @@ void SetupFont()
 	bool italic = false;
 
 	String font_name = GtkSettingsString("gtk-font-name");
-
-//	double xdpi = Nvl(GtkSettingsInt("gtk-xft-dpi"), 72 * 1024);
 	
 	double xdpi = gdk_screen_get_resolution(gdk_display_get_default_screen(gdk_display_get_default()));
 	

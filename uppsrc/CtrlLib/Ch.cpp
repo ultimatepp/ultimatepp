@@ -872,10 +872,78 @@ void ChFlatDarkSkin()
 
 #ifdef GUI_X11
 
+void SetupFont()
+{
+	String s = Sys("dump_xsettings");
+	StringStream ss(s);
+	String font_name;
+	int    scaling = 1;
+	int    xdpi = 98347;
+	while(!ss.IsEof()) {
+		String l = ss.GetLine();
+		int q = l.Find(' ');
+		if(q >= 0) {
+			String id = l.Mid(0, q);
+			String value = l.Mid(q + 1);
+			if(id == "Gdk/WindowScalingFactor")
+				scaling = max(Atoi(value), 1);
+			if(id == "Gtk/FontName")
+				font_name = value;
+			if(id == "Xft/DPI")
+				xdpi = Nvl(StrInt(value), 98347);
+		}
+	}
+
+	int fontface = Font::ARIAL;
+	int fontheight = 13;
+	bool bold = false;
+	bool italic = false;
+
+	const char *q = strrchr(font_name, ' ');
+	if(q) {
+		int h = atoi(q);
+		if(h)
+			fontheight = h;
+		String face(font_name, q);
+		fontface = Font::FindFaceNameIndex(face);
+
+		if(fontface == 0) {
+			for(;;) {
+				const char *q = strrchr(face, ' ');
+				if(!q) break;
+				const char *s = q + 1;
+				if(stricmp(s, "Bold") == 0 || stricmp(s, "Heavy") == 0)
+					bold = true;
+				else
+				if(stricmp(s, "Italic") == 0 || stricmp(s, "Oblique") == 0)
+					italic = true;
+				else
+				if(stricmp(s, "Regular") == 0 || stricmp(s, "Light") || stricmp(s, "Medium"))
+					;
+				else
+					continue;
+				face = String(~face, q);
+			}
+			fontface = Font::FindFaceNameIndex(face);
+			if(fontface == 0) {
+				if(ToUpper(face[0]) == 'M')
+					fontface = Font::COURIER;
+				else
+				if(ToUpper(face[0]) == 'S' && ToUpper(face[1]) == 'e')
+					fontface = Font::ROMAN;
+				else
+					fontface = Font::ARIAL;
+			}
+		}
+	}
+	Font gui_font = Font(fontface, fround(fontheight * xdpi / (72*1024.0))).Bold(bold).Italic(italic);
+	Font::SetDefaultFont(gui_font);
+}
+
 void ChHostSkin()
 {
-	int h = Ctrl::GetPrimaryScreenArea().Height();
-	Font::SetDefaultFont(Arial(h > 1300 ? 26 : h > 800 ? 14 : 12));
+	SetupFont();
+
 	SColorFace_Write(Color(242, 241, 240));
 	SColorMenu_Write(Color(242, 241, 240));
 	SColorHighlight_Write(Color(50, 50, 250));

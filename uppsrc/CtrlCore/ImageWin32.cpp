@@ -14,39 +14,29 @@ bool ImageFallBack
 ;
 
 class BitmapInfo32__ {
-	Buffer<byte> data;
+	BITMAPV5HEADER bi;
 
 public:
-	operator BITMAPINFO *()        { return (BITMAPINFO *)~data; }
-	operator BITMAPINFOHEADER *()  { return (BITMAPINFOHEADER *)~data; }
-	BITMAPINFOHEADER *operator->() { return (BITMAPINFOHEADER *)~data; }
+	operator BITMAPINFO *()        { return (BITMAPINFO *)&bi; }
+	operator BITMAPINFOHEADER *()  { return (BITMAPINFOHEADER *)&bi; }
+	BITMAPINFOHEADER *operator->() { return (BITMAPINFOHEADER *)&bi; }
 
 	BitmapInfo32__(int cx, int cy);
 };
 
 BitmapInfo32__::BitmapInfo32__(int cx, int cy)
 {
-	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
-	BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
-	memset8(hi, 0, sizeof(BITMAPINFOHEADER));
-	hi->biSize = sizeof(BITMAPINFOHEADER);
-	hi->biPlanes = 1;
-#ifdef PLATFORM_WINCE
-	hi->biBitCount = 32;
-	hi->biCompression = BI_BITFIELDS;
-	dword *x = (dword *)(~data + sizeof(BITMAPINFOHEADER));
-	x[2] = 0xff;
-	x[1] = 0xff00;
-	x[0] = 0xff0000;
-#else
-	hi->biBitCount = 32;
-	hi->biCompression = BI_RGB;
-#endif
-	hi->biSizeImage = 0;
-	hi->biClrUsed = 0;
-	hi->biClrImportant = 0;
-	hi->biWidth = cx;
-	hi->biHeight = -cy;
+    ZeroMemory(&bi, sizeof(BITMAPV5HEADER));
+    bi.bV5Size   = sizeof(BITMAPV5HEADER);
+    bi.bV5Width  = cx;
+    bi.bV5Height = -cy;
+    bi.bV5Planes = 1;
+    bi.bV5BitCount = 32;
+    bi.bV5Compression = BI_BITFIELDS;
+    bi.bV5RedMask   =  0x00FF0000;
+    bi.bV5GreenMask =  0x0000FF00;
+    bi.bV5BlueMask  =  0x000000FF;
+    bi.bV5AlphaMask =  0xFF000000;
 }
 
 HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
