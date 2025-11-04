@@ -92,6 +92,8 @@ void UppHubSettingsDlg::RefreshCtrls()
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
+	static constexpr auto LIST_KEY = "PACKAGE";
+	
 	SplitterFrame splitter;
 	ArrayCtrl list;
 	RichTextView info;
@@ -127,7 +129,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Menu(Bar& bar);
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
-	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get("NAME")) : NULL; }
+	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get(LIST_KEY)) : nullptr; }
 
 	UppHubDlg();
 
@@ -144,8 +146,8 @@ UppHubDlg::UppHubDlg()
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Right(info, 500));
 	
-	list.AddKey("NAME");
-	list.AddColumn("Name").Sorting();
+	list.AddKey(LIST_KEY);
+	list.AddColumn("Package").Sorting();
 	list.AddColumn("Category").Sorting();
 	list.AddColumn("Description");
 	
@@ -500,7 +502,7 @@ void UppHubDlg::SyncList()
 			list.Add(n.name, AT(n.name), AT(n.category), AT(n.description), n.name);
 	}
 	
-	list.HeaderTab(0).SetText("Name (" + AsString(list.GetCount()) + ")");
+	list.HeaderTab(0).SetText("Package (" + AsString(list.GetCount()) + ")");
 	list.DoColumnSort();
 	list.ScrollTo(sc);
 	if(!list.FindSetCursor(k))
