@@ -12,8 +12,6 @@ file
 	Module.cpp,
 	Util.cpp,
 	common.iml,
-	Defs readonly separator,
-	CommandLineOptions.h,
 	Info readonly separator,
 	Copying;
 

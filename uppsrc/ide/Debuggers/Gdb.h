@@ -158,6 +158,7 @@ protected:
 	String             exception;
 	
 	const int max_stack_trace_size = 400;
-	
-	One<IGdbUtils> gdb_utils;
+
+public:	
+	static String BreakRunning(int pid);
 };

@@ -3,8 +3,6 @@
 
 #define DR_LOG(x) // RLOG(x)
 
-#include "GdbUtils.h"
-
 #include <ide/Common/Common.h>
 
 #include <HexView/HexView.h>

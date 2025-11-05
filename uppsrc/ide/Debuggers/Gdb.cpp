@@ -448,7 +448,7 @@ void Gdb::BreakRunning()
 {
 	Logd() << METHOD_NAME << "PID: " << pid << "\n";
 	
-	auto error = gdb_utils->BreakRunning(pid);
+	auto error = BreakRunning(pid);
 	if(!error.IsEmpty()) {
 		Loge() << METHOD_NAME << error;
 		ErrorOK(error);
@@ -693,7 +693,6 @@ void Gdb::SerializeSession(Stream& s)
 }
 
 Gdb::Gdb()
-	: gdb_utils(GdbUtilsFactory().Create())
 {
 	auto Mem = [=](Bar& bar, ArrayCtrl& h) {
 		String s = h.GetKey();

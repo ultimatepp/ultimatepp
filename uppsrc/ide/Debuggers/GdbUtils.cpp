@@ -1,80 +1,39 @@
-#include "GdbUtils.h"
-
-#include <memory>
-#include <ide/Core/Logger.h>
-#include <ide/Common/CommandLineOptions.h>
+#include "Debuggers.h"
 
 using namespace Upp;
 
-One<IGdbUtils> GdbUtilsFactory::Create()
-{
-#if defined(PLATFORM_WIN32)
-	return MakeOne<GdbWindowsUtils>();
-#elif defined(PLATFORM_POSIX)
-	return MakeOne<GdbPosixUtils>();
-#endif
-}
-
 #if defined(PLATFORM_WIN32)
 
-#define METHOD_NAME UPP_METHOD_NAME("GdbWindowsUtils")
-
-using DeleteHandleFun = std::function<void(HANDLE)>;
-
-static void DeleteHandle(HANDLE handle)
+String Gdb::BreakRunning(int pid)
 {
-	if (handle)
-	{
-		CloseHandle(handle);
-	}
-}
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 
-String GdbWindowsUtils::BreakRunning(int pid)
-{
-	std::unique_ptr<void, DeleteHandleFun> handle(OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid), &DeleteHandle);
 	if(!handle)
-		return String().Cat() << "Failed to open process associated with " << pid << " PID.";
-	
-	if(Is64BitIde() && !Is64BitProcess(handle.get())) {
-		auto path = String().Cat() << GetExeFolder() << "\\" << GetExeTitle() << "32.exe";
-		auto cmd = String().Cat() << path << " " << COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION << " " << pid;
-		
-		String out;
-		if(Sys(cmd, out) == COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_FAILURE_STATUS) {
-			Logd() << METHOD_NAME << cmd;
-			
-			return String().Cat() << "Failed to interrupt process via 32-bit TheIDE. Output from command is \"" << out << "\".";
+		return String() << "Failed to open process associated with " << pid << " PID.";
+
+	String ret;
+	BOOL is_wow_64 = FALSE;
+	if(IsWow64Process(handle, &is_wow_64)) {
+		if(sizeof(void*) == 8 && is_wow_64) {
+			String out; // NOTE: this does not work anyway as we are not distributing theide32.exe anymore
+			if(Sys(GetExeFolder() << "\\" << "theide32.exe --gdb_debug_break_process=" << pid, out) < 0)
+				ret = "Failed to interrupt process via 32-bit TheIDE. Output from command is \"" << out << "\".";
 		}
-		
-		return "";
 	}
+	else
+		 ret = "Failed to check that process is under wow64 emulation layer.";
 	
-	if (!DebugBreakProcess(handle.get()))
+	if(DebugBreakProcess(handle))
 		return String().Cat() << "Failed to break process associated with " << pid << " PID.";
+	
+	CloseHandle(handle);
 	
 	return "";
 }
 
-bool GdbWindowsUtils::Is64BitIde() const
-{
-	return sizeof(void*) == 8;
-}
-
-bool GdbWindowsUtils::Is64BitProcess(HANDLE handle) const
-{
-	BOOL is_wow_64 = FALSE;
-	if(!IsWow64Process(handle, &is_wow_64)) {
-		Loge() << METHOD_NAME << "Failed to check that process is under wow64 emulation layer.";
-	}
-	
-	return !is_wow_64;
-}
-
-#undef METHOD_NAME
-
 #elif defined(PLATFORM_POSIX)
 
-String GdbPosixUtils::BreakRunning(int pid)
+String Gdb::BreakRunning(int pid)
 {
 	if(kill(pid, SIGINT) == -1)
 		return String().Cat() << "Failed to interrupt process associated with " << pid << " PID.";
