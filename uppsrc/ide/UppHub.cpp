@@ -52,9 +52,6 @@ void VerifyUppHubRequirements()
 
 class UppHubSettingsDlg final : public WithUppHubSettingsLayout<TopWindow> {
 public:
-	static constexpr auto GLOBAL_CONFIG_NAME = "UppHubDlgSettings";
-	
-public:
 	UppHubSettingsDlg();
 	
 	void LoadGlobalSettings();
@@ -73,15 +70,20 @@ UppHubSettingsDlg::UppHubSettingsDlg()
 	};
 }
 
+INITBLOCK
+{
+	RegisterGlobalConfig("UppHubDlgSettings");
+}
+
 void UppHubSettingsDlg::LoadGlobalSettings()
 {
-	LoadFromGlobal(*this, GLOBAL_CONFIG_NAME);
+	LoadFromGlobal(*this, "UppHubDlgSettings");
 	RefreshCtrls();
 }
 
 void UppHubSettingsDlg::SaveGlobalSettings()
 {
-	StoreToGlobal(*this, GLOBAL_CONFIG_NAME);
+	StoreToGlobal(*this, "UppHubDlgSettings");
 }
 
 void UppHubSettingsDlg::RefreshCtrls()
@@ -92,8 +94,6 @@ void UppHubSettingsDlg::RefreshCtrls()
 }
 
 struct UppHubDlg : WithUppHubLayout<TopWindow> {
-	static constexpr auto LIST_KEY = "PACKAGE";
-	
 	SplitterFrame splitter;
 	ArrayCtrl list;
 	RichTextView info;
@@ -129,7 +129,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	void  Menu(Bar& bar);
 	
 	UppHubNest *Get(const String& name) { return upv.FindPtr(name); }
-	UppHubNest *Current()               { return list.IsCursor() ? Get(list.Get(LIST_KEY)) : nullptr; }
+	UppHubNest *Current()               { return list.IsCursor() ? Get(list.GetKey()) : nullptr; }
 
 	UppHubDlg();
 
@@ -146,7 +146,7 @@ UppHubDlg::UppHubDlg()
 	parent.Add(list.SizePos());
 	parent.AddFrame(splitter.Right(info, 500));
 	
-	list.AddKey(LIST_KEY);
+	list.AddKey();
 	list.AddColumn("Package").Sorting();
 	list.AddColumn("Category").Sorting();
 	list.AddColumn("Description");
@@ -207,11 +207,6 @@ UppHubDlg::UppHubDlg()
 	category ^= experimental ^= broken ^= [=] { SyncList(); };
 	
 	settings.LoadGlobalSettings();
-}
-
-INITBLOCK
-{
-	RegisterGlobalConfig(UppHubSettingsDlg::GLOBAL_CONFIG_NAME);
 }
 
 bool UppHubDlg::Key(dword key, int count)

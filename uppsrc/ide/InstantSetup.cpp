@@ -109,11 +109,8 @@ String DirFinder::Get(const String& substring, const char *files)
 
 String DirFinder::GetVisualStudioFolder(int drive, String pf)
 {
-	constexpr auto VISUAL_STUDIO_FOLDER = "Microsoft Visual Studio";
-	
 	pf.Set(0, drive);
-	pf = AppendFileName(pf, VISUAL_STUDIO_FOLDER);
-	return pf;
+	return AppendFileName(pf, "Microsoft Visual Studio");
 }
 
 bool CheckDirs(const Vector<String>& d, int count)
