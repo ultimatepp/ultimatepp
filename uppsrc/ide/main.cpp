@@ -240,15 +240,16 @@ void AppMain___()
 		if(findarg(ca, "?", "--help", "-h", "-?", "/?") >= 0) {
 			Info(
 				"Usage:\n"
-				"    theide [file..]               opens given file in editor mode (Auto detection mode).\n"
-				"    theide [assembly] [package]   opens given package from given assembly.\n\n"
+				"    theide [file..]               opens given file in editor mode\n"
+				"    theide [assembly] [package]   opens given package from given assembly\n\n"
 				"Common options:\n"
 				"    -v or --version    displays information about version.\n"
 				"    -h or --help       displays this site.\n"
 				"    --nosplash         start without showing splash window\n"
-				"    --scale=number     scales interface by number percent.\n"
+				"    --scale=number     scales interface by number percent\n"
 			#ifdef PLATFORM_POSIX
 				"    --clangdir dir     specify location of libclang.so\n"
+				"    --noclang          do not use libclang.so (Assist will be disabled)\n"
 			#endif
 			);
 			return;
