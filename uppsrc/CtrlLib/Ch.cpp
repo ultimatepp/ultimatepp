@@ -872,11 +872,11 @@ void ChFlatDarkSkin()
 
 #ifdef GUI_X11
 
-void SetupFont()
+void ChHostSkin()
 {
 	String s = Sys("dump_xsettings");
 	StringStream ss(s);
-	String font_name;
+	String font_name, theme;
 	int    scaling = 1;
 	int    xdpi = 98347;
 	while(!ss.IsEof()) {
@@ -891,6 +891,8 @@ void SetupFont()
 				font_name = value;
 			if(id == "Xft/DPI")
 				xdpi = Nvl(StrInt(value), 98347);
+			if(id == "Net/ThemeName")
+				theme = value;
 		}
 	}
 
@@ -936,19 +938,35 @@ void SetupFont()
 			}
 		}
 	}
+	
 	Font gui_font = Font(fontface, fround(fontheight * xdpi / (72*1024.0))).Bold(bold).Italic(italic);
 	Font::SetDefaultFont(gui_font);
-}
-
-void ChHostSkin()
-{
-	SetupFont();
 
 	SColorFace_Write(Color(242, 241, 240));
 	SColorMenu_Write(Color(242, 241, 240));
 	SColorHighlight_Write(Color(50, 50, 250));
 
-	ChStdSkin();
+	auto ThemeHasWord = [&](const char *text) {
+		int q = ToLower(theme).Find(text);
+		if(q >= 0) {
+			if(q > 0) {
+				int c = theme[q];
+				if(IsLetter(c) && IsLower(c) == IsLower(*text))
+					return false;
+			}
+			int l = strlen(text);
+			int c = theme[q + l];
+			if(IsLetter(c) && IsLower(c) == IsLower(text[l - 1]))
+				return false;
+			return true;
+		}
+		return false;
+	};
+	
+	if(ThemeHasWord("dark") || ThemeHasWord("inverse") || ThemeHasWord("black"))
+		ChDarkSkin();
+	else
+		ChStdSkin();
 }
 
 #endif
