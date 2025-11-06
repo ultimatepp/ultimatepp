@@ -20,9 +20,10 @@ constexpr const int NONCE_MIN = 12;
 template<typename T>
 bool SSLRandom(T* buffer, int n)
 {
-	// Check RNG state
 	if(RAND_status() != 1) {
-		RAND_poll(); // Emergency reseed
+#if OPENSSL_VERSION_NUMBER < 0x10101000L
+		RAND_poll();
+#endif
 		if(RAND_status() != 1)
 			return false;
 	}
