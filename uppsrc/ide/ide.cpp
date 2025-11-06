@@ -663,13 +663,11 @@ void Ide::PaintFileInfo(Draw& w)
 			if(d > m) {
 				d /= m;
 				unit = s;
+				return true;
 			}
+			return false;
 		};
-		DoUnit(60, "hour");
-		DoUnit(24, "day");
-		
-		DoUnit(30.5, "month");
-		DoUnit(12, "year");
+		DoUnit(60, "hour") && DoUnit(24, "day") && DoUnit(30.5, "month") && DoUnit(12, "year");
 		int n = (int)round(d);
 		if(n != 1)
 			unit << "s";
