@@ -89,8 +89,10 @@ INITIALIZER(SSL)
 	LLOG("SslInit");
 	TcpSocketInit();
 #ifdef UPP_HEAP
+#ifndef flagSSL_USEMALLOC // do not change OpenSSL memory functions to U++ heap
 #ifndef _DEBUG // temporary solution unless we find the source of all those harmless leaks
 	CRYPTO_set_mem_functions(SslAlloc, SslRealloc, SslFree);
+#endif
 #endif
 #endif
 	SSL_library_init();
