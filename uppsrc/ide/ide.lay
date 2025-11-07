@@ -912,10 +912,10 @@ LAYOUT(SlideShowSettingsLayout, 184, 188)
 END_LAYOUT
 
 LAYOUT(InsertAsLayout, 276, 168)
-	ITEM(Upp::Switch, format, SetLabel(t_("C string\nBase64 encoded text\nByte values\nLZ4 compressed byte values\nZ compressed byte values\n7z compressed byte values")).LeftPosZ(8, 260).TopPosZ(8, 96))
+	ITEM(Upp::Switch, format, SetLabel(t_("C string\nBase64 encoded text\nByte values\nLZ4 compressed byte values\nZ compressed byte values\n7z compressed byte values")).LeftPosZ(8, 260).TopPosZ(8, 108))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
-	ITEM(Upp::Label, dv___3, SetLabel(t_("Data length will be put into the clipboard")).LeftPosZ(8, 260).TopPosZ(108, 19))
+	ITEM(Upp::Label, dv___3, SetLabel(t_("Data length will be put into the clipboard")).LeftPosZ(8, 260).TopPosZ(112, 19))
 END_LAYOUT
 
 LAYOUT(UppHubLayout, 1000, 656)

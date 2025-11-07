@@ -180,8 +180,8 @@ void Ide::InsertAs(const String& data)
 {
 	WithInsertAsLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Insert data");
-	if(data.GetCount() > 20*1024)
-		Exclamation("Data size is too big!&(Limit is 20KB.)");
+	if(data.GetCount() > 2*1024*1024)
+		Exclamation("Data size is too big!&(Limit is 2MB.)");
 	String f[6];
 	f[0] = data;
 	f[1] = Encode64(data);
@@ -200,7 +200,7 @@ void Ide::InsertAs(const String& data)
 	String d = f[i];
 	WriteClipboardText(AsString(d.GetCount()));
 	if(i == 0 || i == 1)
-		editor.Paste(AsCString(d).ToWString());
+		editor.Paste(AsCString(d, 256).ToWString());
 	else {
 		for(int i = 0; i < d.GetCount(); i += 256) {
 			int e = min(i + 256, d.GetCount());
@@ -229,8 +229,8 @@ void Ide::InsertFileContent()
 	String path = SelectInsertFile();
 	path.Replace("\\", "/");
 	if(path.GetCount()) {
-		if(GetFileLength(path) >= 20*1024) {
-			Exclamation("File is too big!&(Limit is 20KB.)");
+		if(GetFileLength(path) >= 2*1024*1024) {
+			Exclamation("File is too big!&(Limit is 2MB.)");
 			return;
 		}
 		InsertAs(LoadFile(path));
