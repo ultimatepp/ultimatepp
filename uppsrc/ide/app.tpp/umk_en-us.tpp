@@ -127,7 +127,7 @@ mpile`_commands.json]]
 `+GUI,SHARED `~/bin]&]
 [s0;l128;*C@5+92 &]
 [s0;l128; [*C@5+92 umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm `-`-hub`-dir 
-`~/UppTerm/3p/hub `-brU `+GUI,SHARED build/UppTerm]&]
+3p/hub `-brU `+GUI,SHARED build/UppTerm]&]
 [s0; &]
 [s12;:4: 4. Related topics&]
 [s11; Below is a list of related topics worth reading to further expand 

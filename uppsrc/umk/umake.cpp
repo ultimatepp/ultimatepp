@@ -353,9 +353,10 @@ CONSOLE_APP_MAIN
 	else {
 		String version = GenerateVersionNumber();
 		Puts("umk (U++MaKe) " + version + "\n\n"
-		     "Usage: umk assembly main_package [build_method] [-options] [+flags] [output]\n"
+		     "Usage: umk assembly main_package [build_method] [--hub-dir dir] [-options] [+flags] [output]\n\n"
 		     "Examples: umk examples Bombs CLANG -ab +GUI,SHARED ~/bombs\n"
-		     "          umk ~/upp.src/examples,~/upp.src/uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
+		     "          umk ~/upp.src/examples,~/upp.src/uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
+		     "          umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm --hub-dir 3p/hub -brU +GUI,SHARED build/UppTerm\n\n"
 		     "See https://www.ultimatepp.org/app$ide$umk$en-us.html for details.\n");
 	}
 }
