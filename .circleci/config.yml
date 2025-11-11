@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - run: New-Item -Path "3p\downloads" -ItemType Directory -Force
-      - run: Invoke-WebRequest https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z -OutFile 3p\downloads\umk.7z
+      - run: curl.exe -L -o "3p\downloads\umk.7z" "https://github.com/ultimatepp/ultimatepp/releases/download/v2025.1.1/umk-win-17810.7z"
       - run: 7z x 3p\downloads\umk.7z -o3p
       - run: 3p\umk\umk ./uppsrc ide 3p\umk\CLANG.bm -brs +GUI ./theide
       - run: 3p\umk\umk ./uppsrc umk 3p\umk\CLANG.bm -brs ./umk
