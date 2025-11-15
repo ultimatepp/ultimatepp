@@ -57,7 +57,9 @@ void Ide::EndBuilding(bool ok)
 	if(!errors.IsEmpty())
 		ok = false;
 	PutConsole("");
-	PutConsole((ok ? "OK. " : "There were errors. ") + GetPrintTime(build_time));
+	Time tm = GetSysTime();
+	PutConsole((ok ? "OK. " : "There were errors. ") + GetPrintTime(build_time)
+	           + Format(" (completed at %02d:%02d)", (int)tm.hour, (int)tm.minute));
 	SetIdeState(EDITING);
 	if(GetTopWindow()->IsOpen()) {
 		if(ok)

@@ -227,7 +227,7 @@ float Value::GetOtherFloat() const
 
 bool Value::GetOtherBool() const
 {
-	if(IsNull()) return Null;
+	if(IsNull()) return false;
 	return data.IsSpecial(DOUBLE_V) ? (bool)GetSmall<double>() :
 	       data.IsSpecial(INT_V) ? (bool)GetSmall<int>() :
 	       data.IsSpecial(FLOAT_V) ? (float)GetSmall<float>() :
