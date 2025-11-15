@@ -491,6 +491,7 @@ public:
 
 	struct FoundList : ArrayCtrl {
 		Button freplace;
+		Button fdelete;
 		Image  icon;
 		
 		FoundList();
@@ -1031,7 +1032,8 @@ public:
 		void  DoPatchDiff();
 		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
-		void  RemoveDs();
+		void  FindDs(Bar& menu);
+		void  FindDs(int where);
 		void  FindDesignerItemReferences(const String& id, const String& name);
 		void  NavigatorDlg();
 		void  InsertParameters();
@@ -1117,7 +1119,7 @@ public:
 	void      NewFFound();
 	ArrayCtrl& FFound();
 	void      FFoundSetIcon(const Image& m);
-	void      FFoundFinish(bool replace = true);
+	void      FFoundFinish();
 	void      ShowFound(ArrayCtrl& list);
 	void      CopyFound(ArrayCtrl& list, bool all);
 	void      FFoundMenu(ArrayCtrl& list, Bar& bar);
@@ -1126,6 +1128,7 @@ public:
 	WString   FormatErrorLine(const String& text, int& linecy);
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
 	void      ReplaceFound(ArrayCtrl& list);
+	void      DeleteFound(ArrayCtrl& list);
 
 	struct FoundDisplay : Display {
 		Size DrawHl(Draw& w, const char *s, const Rect& r, Color ink, Color paper, dword style) const;

@@ -318,7 +318,7 @@ void Ide::FindInFiles(bool replace) {
 					FFound().Sync();
 				}
 			}
-			FFoundFinish(!IsNull(pattern));
+			FFoundFinish();
 		}
 	}
 }
@@ -329,12 +329,13 @@ void Ide::FFoundSetIcon(const Image& m)
 	ffound[0]->icon = m;
 }
 
-void Ide::FFoundFinish(bool replace)
+void Ide::FFoundFinish()
 {
 	ArrayCtrl& ff = FFound();
 	FFound().HeaderTab(2).SetText(Format("Source line (%d)", ff.GetCount()));
 	int ii = btabs.GetCursor();
 	ffound[0]->freplace.Show(ff.GetCount());
+	ffound[0]->fdelete.Show(ff.GetCount());
 	BTabs(); // to update the found text
 	btabs.SetCursor(ii);
 }
@@ -503,11 +504,16 @@ Ide::FoundList::FoundList()
 	ColumnAt(2).SetDisplay(Single<FoundDisplay>());
 	WhenBar = [=](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
 	WhenLeftClick = WhenSel = [=] { TheIde()->ShowFound(*this); };
-	freplace.SetLabel("Replace");
 	HeaderObject() << freplace.RightPosZ(0, 80).VSizePos();
 	freplace.Hide();
+	freplace.SetLabel("Replace");
 	freplace << [=] { TheIde()->ReplaceFound(*this); };
 	freplace.SetImage(IdeImg::textfield_rename());
+	HeaderObject() << fdelete.RightPosZ(82, 100).VSizePos();
+	fdelete.Hide();
+	fdelete.SetLabel("Delete lines");
+	fdelete << [=] { TheIde()->DeleteFound(*this); };
+	fdelete.SetImage(IdeImg::delete_lines());
 }
 
 void Ide::NewFFound()
@@ -549,6 +555,69 @@ void Ide::FFoundMenu(ArrayCtrl& list, Bar& bar)
 
 INITBLOCK {
 	RegisterGlobalConfig("Ide::ReplaceFound");
+}
+
+void Ide::DeleteFound(ArrayCtrl& list)
+{
+	if(!PromptYesNo("Delete lines?"))
+		return;
+
+	replace_in_files = true; // allow .lay etc... to be edited as text, do not update things
+
+	String fn = editfile;
+	AssistEditor curtain; // to prevent editor visual changes while doing the work
+	PassEditor(curtain);
+	FlushFile();
+	editor_p.Add(curtain.SizePos());
+
+	VectorMap<String, Vector<Tuple<int, String>>> files;
+	for(int i = 0; i < list.GetCount(); i++) {
+		Value v = list.Get(i, "INFO");
+		bool err = true;
+		if(v.Is<ListLineInfo>()) {
+			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
+			if(*f.message == '\1') {
+				Vector<String> h = Split(~f.message + 1, '\1', false);
+				if(h.GetCount() > 3) {
+					auto& m = files.GetAdd(NormalizePath(f.file)).Add();
+					m.a = f.lineno - 1;
+					m.b = h[3];
+				}
+			}
+		}
+	}
+	
+	Progress pi;
+	Index<String> errors;
+	pi.SetTotal(files.GetCount());
+	for(const auto& file : ~files) {
+		pi.SetText(GetFileName(file.key));
+		if(pi.StepCanceled())
+			break;
+		LoadFileSilent(file.key);
+		editor.NextUndo();
+		Vector<Tuple<int, String>> lines = pick(file.value);
+		Sort(lines, [](const Tuple<int, String>& a, Tuple<int, String>& b) { return a.a > b.a; });
+		for(const auto& m : lines) {
+			if(m.a < editor.GetLineCount() && m.b == editor.GetUtf8Line(m.a) && !editor.IsReadOnly() && !editor.IsView()) {
+				editor.GotoLine(m.a);
+				editor.DeleteLine();
+			}
+			else
+				errors.FindAdd(String() << file.key << " " << m.a + 1);
+		}
+		editor.MoveEnd();
+	}
+
+	replace_in_files = false;
+
+	EditFile(fn);
+
+	list.Clear();
+	FFoundFinish();
+
+	if(errors.GetCount())
+		Exclamation("Some lines could not be removed:&&\1" + Join(errors.GetKeys(), "\n"));
 }
 
 void Ide::ReplaceFound(ArrayCtrl& list)
@@ -647,7 +716,6 @@ void Ide::ReplaceFound(ArrayCtrl& list)
 				int pos = editor.GetPos(linei);
 				editor.Remove(pos, editor.GetLineLength(linei));
 				editor.Insert(pos, replaced);
-				
 			}
 			else
 				err = true;

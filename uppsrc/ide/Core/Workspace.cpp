@@ -10,7 +10,7 @@ String PackageDirectory(const String& name)
 	return MainNest().PackageDirectory(name);
 }
 
-String GetPackagePathNest(const String& path)
+String GetPathNest(const String& path)
 {
 	if(IsExternalMode())
 		return Null;

@@ -530,36 +530,68 @@ void Ide::AsErrors()
 	SetErrorEditor();
 }
 
-void Ide::RemoveDs()
+void Ide::FindDs(int where)
 {
-	if(designer || editor.IsReadOnly())
-		return;
+	SaveFile();
+
 	static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
 	                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
-	editor.NextUndo();
-	int l = 0;
-	int h = editor.GetLineCount() - 1;
-	int ll, hh;
-	if(editor.GetSelection(ll, hh)) {
-		l = editor.GetLine(ll);
-		h = editor.GetLine(hh);
-	}
-	for(int i = h; i >= l; i--) {
-		String ln = editor.GetUtf8Line(i);
-		try {
-			CParser p(ln);
-			if(p.IsId()) {
-				String id = p.ReadId();
-				if(ds.Find(id) >= 0 && p.Char('(')) {
-					int pos = editor.GetPos(i);
-					int end = min(editor.GetLength(), editor.GetPos(i) + editor.GetLineLength(i) + 1);
-					editor.Remove(editor.GetPos(i), end - pos);
-				}
+
+	NewFFound();
+	
+	String nest_dir = GetPathNest(editfile);
+	
+	Vector<String> files;
+	if(where == 0)
+		files.Add(editfile);
+	else {
+		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) { // find lowest file time
+			const Package& pk = wspc.GetPackage(i);
+			String n = wspc[i];
+			String pp = PackageDirectory(n);
+			for(int i = 0; i < pk.GetCount(); i++) {
+				String path = SourcePath(n, pk.file[i]);
+				String ext = ToLower(GetFileExt(path));
+				if(FileExists(path) &&
+				   (where != 1 || editfile.StartsWith(pp)) &&
+				   (where != 2 || GetPathNest(path) == nest_dir) &&
+				   findarg(ext, ".cpp", ".h", ".hpp", ".c", ".m", ".cxx", ".cc", ".mm", ".icpp", ".i") >= 0)
+					files.Add(path);
 			}
 		}
-		catch(CParser::Error) {}
 	}
-	editor.GotoLine(l);
+
+	int n = 0;
+	Progress pi;
+	for(String fn : files) {
+		if(pi.SetCanceled(n++, files.GetCount()))
+			break;
+		FileIn in(fn);
+		int line = 0;
+		while(!in.IsEof()) {
+			line++;
+			String ln = in.GetLine();
+			try {
+				CParser p(ln);
+				while(!p.IsEof()) {
+					if(p.Char('#') || p.Char2('/', '/'))
+						break;
+					if(p.IsId()) {
+						int pos = p.GetPtr() - ln;
+						String id = p.ReadId();
+						if(ds.Find(id) >= 0 && p.Char('('))
+							AddFoundFile(fn, line, ln, pos, id.GetCount());
+					}
+					else
+						p.Skip();
+				}
+			}
+			catch(CParser::Error) {}
+		}
+	}
+
+	FFoundFinish();
 }
 
 void Ide::CopyRich()

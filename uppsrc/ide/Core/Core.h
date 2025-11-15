@@ -356,7 +356,7 @@ String SourcePath(const String& package, const String& name);
 String PackageDirectory(const String& name);
 bool   IsNestReadOnly(const String& path);
 
-String GetPackagePathNest(const String& path);
+String GetPathNest(const String& path);
 
 void   SplitPathMap(const char *path_map, Vector<String>& local, Vector<String>& remote);
 String JoinPathMap(const Vector<String>& local, const Vector<String>& remote);
