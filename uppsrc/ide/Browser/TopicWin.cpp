@@ -236,7 +236,8 @@ void TopicEditor::TopicMenu(Bar& bar)
 		p = UnixPath(p);
 		p.TrimStart("/");
 		p.Replace(".tpp/", "/");
-		WriteClipboardText(p);
+		p.TrimEnd(".tpp");
+		WriteClipboardText(AsCString(p));
 	});
 	bar.Separator();
 	bar.Add(topics_list.IsCursor() && GetFileTitle(topicpath) != "$.tpp",

@@ -86,6 +86,10 @@ TOPIC("Keys_en-us")
 #include "Keys_en-us.tppi"
 END_TOPIC
 
+TOPIC("LayBeginnerInfo_en-us")
+#include "LayBeginnerInfo_en-us.tppi"
+END_TOPIC
+
 TOPIC("LayoutDes_en-us")
 #include "LayoutDes_en-us.tppi"
 END_TOPIC

@@ -317,28 +317,31 @@ void LayDes::Paint(Draw& w)
 		w.DrawRect(sz, SColorPaper());
 		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
 	}
-	if(IsNull(currentlayout))
-		return;
 
-	if(layout_zoom) {
-		DrawPainter sw(w, sz);
-		sw.Co();
-		sw.Clear(SColorPaper());
-		sw.Offset(-sb.Get());
-		sw.Offset(MARGIN, MARGIN);
-		sw.Scale(GetScale());
-		Paint2(sw);
-		sw.End();
-		sw.End();
+	if(!IsNull(currentlayout)) {
+		if(layout_zoom) {
+			DrawPainter sw(w, sz);
+			sw.Co();
+			sw.Clear(SColorPaper());
+			sw.Offset(-sb.Get());
+			sw.Offset(MARGIN, MARGIN);
+			sw.Scale(GetScale());
+			Paint2(sw);
+			sw.End();
+			sw.End();
+		}
+		else {
+			w.DrawRect(sz, SColorPaper());
+			w.Offset(-sb.Get());
+			w.Offset(MARGIN, MARGIN);
+			Paint2(w);
+			w.End();
+			w.End();
+		}
 	}
-	else {
-		w.DrawRect(sz, SColorPaper());
-		w.Offset(-sb.Get());
-		w.Offset(MARGIN, MARGIN);
-		Paint2(w);
-		w.End();
-		w.End();
-	}
+	
+	if(list.GetCount() == 0)
+		PaintBeginnerInfoTopic(w, GetSize(), "ide/app/LayBeginnerInfo_en-us");
 }
 
 void  LayDes::SaveState()
