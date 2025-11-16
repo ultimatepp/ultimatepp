@@ -110,6 +110,7 @@ void IconDes::Paint(Draw& w)
 	Size sz = GetSize();
 	if(!IsCurrent()) {
 		w.DrawRect(sz, SColorPaper());
+		PaintBeginnerInfoTopic(w, GetSize(), "ide/app/ImlBeginnerInfo_en-us");
 		return;
 	}
 	const Image& image = Current().image;

@@ -124,11 +124,6 @@ void DiagramEditor::Paint(Draw& w)
 		else
 		   iw.Stroke(0.2, SColorHighlight());
 
-		if(data.item.GetCount() == 0) {
-			iw.DrawText(DPI(30), DPI(30), "Right-click to insert item(s)", ArialZ(10).Italic(), SLtGray());
-			iw.DrawText(DPI(30), DPI(50), "Double-click to edit text", ArialZ(10).Italic(), SLtGray());
-		}
-
 		if(display_grid)
 			for(int x = 0; x < dsz.cx; x += 8)
 				for(int y = 0; y < dsz.cy; y += 8)
@@ -142,10 +137,14 @@ void DiagramEditor::Paint(Draw& w)
 			r.Normalize();
 			iw.Rectangle(r).Fill(30 * SColorHighlight()).Stroke(1, LtRed()).Dash("4").Stroke(1, White());
 		}
-
 	}
 	if(!fast)
 		paint_ms = msecs() - t0;
+
+	if(data.item.GetCount() == 0)
+		PaintBeginnerInfo(w, GetSize(),
+			"Right-click to insert item(s)&"
+			"Double-click to edit text");
 }
 
 void DiagramEditor::Sync()

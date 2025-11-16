@@ -78,6 +78,10 @@ TOPIC("IconDes_en-us")
 #include "IconDes_en-us.tppi"
 END_TOPIC
 
+TOPIC("ImlBeginnerInfo_en-us")
+#include "ImlBeginnerInfo_en-us.tppi"
+END_TOPIC
+
 TOPIC("IntroductionToUPP_en-us")
 #include "IntroductionToUPP_en-us.tppi"
 END_TOPIC

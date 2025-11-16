@@ -1,7 +1,7 @@
 topic "Right-click the list of widgets (on the left) to add new layouts.";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [2 Right`-click the list of widgets (on the left) to add new layouts.]&]
+[s0; [2 Right`-click the list of layouts (on the left) to add new one.]&]
 [s0; [2 Right`-click edit area to add new widgets to the layout.]&]
 [s0; [2 Hold ][%-*@(0.0.255)2 Ctrl][2  to resize widgets beyond its minimal 
 size.]&]
