@@ -649,6 +649,10 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		}
 		editor.SetCharset(tfile ? CHARSET_UTF8 : charset);
 	}
+	static bool ShowBeginnerInfo = true;
+	editor.show_beginner_info = ShowBeginnerInfo;
+	ShowBeginnerInfo = false; // just a single chance!
+	editor.Refresh();
 	if(!replace_in_files) {
 		editor.SetFocus();
 		MakeTitle();

@@ -73,6 +73,21 @@ AssistEditor::AssistEditor()
 	};
 }
 
+void AssistEditor::EndBeginnerInfo()
+{
+	if(show_beginner_info) {
+		show_beginner_info = false;
+		Refresh();
+	}
+}
+
+void AssistEditor::Paint(Draw& w)
+{
+	CodeEditor::Paint(w);
+	if(show_beginner_info)
+		PaintBeginnerInfoTopic(w, GetSize(), "ide/app/EditorBeginnerInfo_en-us");
+}
+
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
 	virtual void FramePaint(Draw& w, const Rect& r) {
@@ -133,6 +148,7 @@ void AssistEditor::PostInsert(int pos, const WString& s)
 		assist_cursor = -1;
 	}
 	CodeEditor::PostInsert(pos, s);
+	EndBeginnerInfo();
 }
 
 void AssistEditor::PostRemove(int pos, int size)
@@ -142,6 +158,7 @@ void AssistEditor::PostRemove(int pos, int size)
 		assist_cursor = -1;
 	}
 	CodeEditor::PostRemove(pos, size);
+	EndBeginnerInfo();
 }
 
 bool isincludefnchar(int c)
@@ -1029,6 +1046,7 @@ bool isaid(int c)
 bool AssistEditor::Key(dword key, int count)
 {
 	CloseTip();
+	EndBeginnerInfo();
 	dword *k = IdeKeys::AK_DELLINE().key;
 	if(key == k[0] || key == k[1]) {
 		DeleteLine();

@@ -71,8 +71,6 @@ topic "Keys";
 :: [s0; [2 Previous matching bracket.]]
 :: [s0;%- [*@(0.0.255)2 Tab]]
 :: [s0; [2 When selection is defined, indent selection right.]]
-:: [s0;%- [*@(0.0.255)2 Shift`+Tab]]
-:: [s0; [2 When selection is defined, indent selection left.]]
 :: [s0;%- [*@(0.0.255)2 Shift`+Ctrl`+Up]]
 :: [s0; [2 Move line/selection up.]]
 :: [s0;%- [*@(0.0.255)2 Shift`+Ctrl`+Down]]

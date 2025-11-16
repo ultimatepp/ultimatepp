@@ -495,4 +495,24 @@ Image MakeZoomIcon(double scale)
 	return MakeImage(m);
 }
 
+void PaintBeginnerInfo(Draw& w, Size sz, const char *qtf)
+{
+	RichText text = ParseQTF(qtf);
+	text.ApplyZoom(GetRichTextStdScreenZoom());
+	
+	int u = 4 * GetStdFontCy();
+	int cx = min(text.GetWidth() + u, sz.cx - 2 * u);
+	int cy = text.GetHeight(cx);
+	
+	Rect r = RectC(u - DPI(4), u - DPI(4), cx + DPI(8), cy + DPI(8));
+	w.DrawRect(r, Blend(SYellow(), SWhite(), 225));
+	DrawFrame(w, r, Gray());
+	text.Paint(w, u, u, cx);
+}
+
+void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic)
+{
+	PaintBeginnerInfo(w, sz, GetTopic(topic));
+}
+
 }

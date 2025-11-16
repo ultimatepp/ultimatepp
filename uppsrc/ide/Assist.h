@@ -76,6 +76,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	virtual void State(int reason);
 	virtual void PostInsert(int pos, const WString& s);
 	virtual void PostRemove(int pos, int size);
+	virtual void Paint(Draw& draw);
 
 	virtual int  GetCurrentLine();
 
@@ -157,6 +158,10 @@ struct AssistEditor : CodeEditor, Navigator {
 	Vector<Diagnostic> errors;
 
 	VectorMap<String, MasterSourceCacheRecord> ms_cache;
+
+	void               EndBeginnerInfo();
+	
+	bool               show_beginner_info = false;
 
 	int                ToUtf8x(int line, int pos);
 	int                FromUtf8x(int line, int pos);

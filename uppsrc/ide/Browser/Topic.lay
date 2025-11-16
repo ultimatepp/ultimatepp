@@ -1,11 +1,11 @@
-LAYOUT(NewTopicLayout, 268, 92)
+LAYOUT(NewTopicLayout, 308, 92)
 	ITEM(Upp::Label, dv___0, SetLabel(t_("Topic")).LeftPosZ(8, 56).TopPosZ(8, 19))
-	ITEM(Upp::EditString, topic, LeftPosZ(68, 92).TopPosZ(8, 19))
-	ITEM(LNGCtrl, lang, LeftPosZ(164, 96).TopPosZ(8, 19))
+	ITEM(Upp::EditString, topic, LeftPosZ(68, 136).TopPosZ(8, 19))
+	ITEM(LNGCtrl, lang, LeftPosZ(208, 96).TopPosZ(8, 19))
 	ITEM(Upp::Label, dv___3, SetLabel(t_("Template")).LeftPosZ(8, 56).TopPosZ(32, 19))
-	ITEM(Upp::DropList, tmpl, LeftPosZ(68, 192).TopPosZ(32, 19))
-	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(128, 64).TopPosZ(60, 24))
-	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(60, 24))
+	ITEM(Upp::DropList, tmpl, LeftPosZ(68, 236).TopPosZ(32, 19))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).LeftPosZ(172, 64).TopPosZ(60, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(240, 64).TopPosZ(60, 24))
 END_LAYOUT
 
 LAYOUT(MoveTopicLayout, 220, 136)

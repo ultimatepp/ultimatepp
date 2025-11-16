@@ -229,6 +229,16 @@ void TopicEditor::TopicMenu(Bar& bar)
 	bar.Add(topics_list.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
 	bar.Separator();
+	bar.Add(topics_list.IsCursor(), "Copy topic ID", [=] {
+		String p = topicpath;
+		String nest = GetPathNest(p);
+		p.Remove(0, nest.GetCount());
+		p = UnixPath(p);
+		p.TrimStart("/");
+		p.Replace(".tpp/", "/");
+		WriteClipboardText(p);
+	});
+	bar.Separator();
 	bar.Add(topics_list.IsCursor() && GetFileTitle(topicpath) != "$.tpp",
 	        "Save as template..", THISBACK(SaveAsTemplate));
 	bar.Add(topics_list.IsCursor(), "Apply template stylesheet..", THISBACK(ApplyStylesheet));

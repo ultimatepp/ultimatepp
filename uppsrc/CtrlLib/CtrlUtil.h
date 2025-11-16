@@ -532,8 +532,11 @@ struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NUL
 
 Image MakeZoomIcon(double scale);
 
-void Set(ArrayCtrl& array, int ii, IdCtrls& m);
-void Get(ArrayCtrl& array, int ii, IdCtrls& m);
+void   PaintBeginnerInfo(Draw& w, Size sz, const char *qtf);
+void   PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic);
+
+void   Set(ArrayCtrl& array, int ii, IdCtrls& m);
+void   Get(ArrayCtrl& array, int ii, IdCtrls& m);
 
 void   UpdateSetDir(const char *path);
 void   UpdateSetUpdater(const char *exename);

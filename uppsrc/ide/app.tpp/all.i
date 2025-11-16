@@ -46,6 +46,10 @@ TOPIC("CrossComp_en-gb")
 #include "CrossComp_en-gb.tppi"
 END_TOPIC
 
+TOPIC("EditorBeginnerInfo_en-us")
+#include "EditorBeginnerInfo_en-us.tppi"
+END_TOPIC
+
 TOPIC("Files_en-us")
 #include "Files_en-us.tppi"
 END_TOPIC

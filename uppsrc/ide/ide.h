@@ -728,7 +728,7 @@ public:
 	int           animate_phase = 0;
 	
 	Vector<Ptr<TopWindow>> window;
-
+	
 	void          NewWindow(TopWindow *win);
 	template<class T, class... Args>
 	T&            CreateNewWindow(Args&&... args)     { T *q = new T(std::forward<Args>(args)...); NewWindow(q); return *q; }
