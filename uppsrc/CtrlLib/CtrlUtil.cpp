@@ -495,19 +495,67 @@ Image MakeZoomIcon(double scale)
 	return MakeImage(m);
 }
 
+void DrawRoundRect(Draw& w, const Rect& r, int radius, Color fill, int stroke_width,
+                   Color stroke)
+{
+	Size sz = r.GetSize();
+	radius = min(min(sz.cx, sz.cy) / 2, radius);
+	if(radius < 1) {
+		w.DrawRect(r.Deflated(stroke_width), fill);
+		DrawFrame(w, r, stroke);
+	}
+	else {
+		StringStream ss;
+		ss % radius % fill % stroke_width % stroke;
+		String key = ss;
+		auto MakeCorner = [&](int x, int y, int c) {
+			return MakeImage(
+				[&] { return key + String(c, 1); },
+				[&] {
+					ImagePainter iw(radius, radius);
+					iw.Clear();
+					iw.Circle(x, y, radius - (double) stroke_width / 2);
+					iw.Fill(fill);
+					iw.Stroke(stroke_width, stroke);
+					return iw.GetResult();
+				}
+			);
+		};
+		w.DrawImage(r.left, r.top, MakeCorner(radius, radius, '1'));
+		w.DrawImage(r.right - radius, r.top, MakeCorner(0, radius, '2'));
+		w.DrawImage(r.left, r.bottom - radius, MakeCorner(radius, 0, '3'));
+		w.DrawImage(r.right - radius, r.bottom - radius, MakeCorner(0, 0, '4'));
+		int tbf = max(radius - stroke_width, 0);
+		w.DrawRect(r.left + radius, r.top, sz.cx - 2 * radius, stroke_width, stroke);
+		w.DrawRect(r.left + radius, r.top + stroke_width, sz.cx - 2 * radius, tbf, fill);
+		w.DrawRect(r.left + radius, r.bottom - stroke_width, sz.cx - 2 * radius, stroke_width, stroke);
+		w.DrawRect(r.left + radius, r.bottom - stroke_width - tbf, sz.cx - 2 * radius, tbf, fill);
+		int h = sz.cy - 2 * radius;
+		w.DrawRect(r.left, r.top + radius, stroke_width, h, stroke);
+		w.DrawRect(r.left + stroke_width, r.top + radius, max(sz.cx - 2 * stroke_width, 0), h, fill);
+		w.DrawRect(r.right - stroke_width, r.top + radius, stroke_width, h, stroke);
+	}
+}
+
+void DrawRoundRect(Draw& w, int x, int y, int cx, int cy, int radius, Color fill,
+                   int stroke_width, Color stroke)
+{
+	DrawRoundRect(w, RectC(x, y, cx, cy), radius, fill, stroke_width, stroke);
+}
+
 void PaintBeginnerInfo(Draw& w, Size sz, const char *qtf)
 {
 	RichText text = ParseQTF(qtf);
 	text.ApplyZoom(GetRichTextStdScreenZoom());
 	
-	int u = 4 * GetStdFontCy();
-	int cx = min(text.GetWidth() + u, sz.cx - 2 * u);
+	int u = 2 * GetStdFontCy() + DPI(4);
+
+	int cx = min(text.GetWidth(), sz.cx - 2 * u);
 	int cy = text.GetHeight(cx);
 	
-	Rect r = RectC(u - DPI(4), u - DPI(4), cx + DPI(8), cy + DPI(8));
-	w.DrawRect(r, Blend(SYellow(), SWhite(), 225));
-	DrawFrame(w, r, Gray());
-	text.Paint(w, u, u, cx);
+	Rect r = RectC(sz.cx - cx - u, sz.cy - cy - u, cx + DPI(8), cy + DPI(8));
+	DrawRoundRect(w, r, DPI(4), Blend(SYellow(), SWhite(), 225), 1, Gray());
+	text.Paint(w, r.left + DPI(4), r.top + DPI(4), cx);
 }
 
 void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic)

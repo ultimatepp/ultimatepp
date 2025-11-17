@@ -532,6 +532,11 @@ struct SelectDirButton : FileSelButton { SelectDirButton(const char *title = NUL
 
 Image MakeZoomIcon(double scale);
 
+void DrawRoundRect(Draw& w, const Rect& r, int radius, Color fill,
+                   int stroke_width, Color stroke);
+void DrawRoundRect(Draw& w, int x, int y, int cx, int cy, int radius, Color fill,
+                   int stroke_width, Color stroke);
+
 void   PaintBeginnerInfo(Draw& w, Size sz, const char *qtf);
 void   PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic);
 
