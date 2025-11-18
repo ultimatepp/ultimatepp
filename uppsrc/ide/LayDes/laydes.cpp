@@ -340,8 +340,7 @@ void LayDes::Paint(Draw& w)
 		}
 	}
 	
-	if(list.GetCount() == 0)
-		PaintBeginnerInfoTopic(w, GetSize(), "ide/app/LayBeginnerInfo_en-us");
+	PaintBeginnerInfoTopic(this, w, "ide/app/LayBeginnerInfo_en-us");
 }
 
 void  LayDes::SaveState()

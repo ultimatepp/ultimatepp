@@ -543,24 +543,4 @@ void DrawRoundRect(Draw& w, int x, int y, int cx, int cy, int radius, Color fill
 	DrawRoundRect(w, RectC(x, y, cx, cy), radius, fill, stroke_width, stroke);
 }
 
-void PaintBeginnerInfo(Draw& w, Size sz, const char *qtf)
-{
-	RichText text = ParseQTF(qtf);
-	text.ApplyZoom(GetRichTextStdScreenZoom());
-	
-	int u = 2 * GetStdFontCy() + DPI(4);
-
-	int cx = min(text.GetWidth(), sz.cx - 2 * u);
-	int cy = text.GetHeight(cx);
-	
-	Rect r = RectC(sz.cx - cx - u, sz.cy - cy - u, cx + DPI(8), cy + DPI(8));
-	DrawRoundRect(w, r, DPI(4), Blend(SYellow(), SWhite(), 225), 1, Gray());
-	text.Paint(w, r.left + DPI(4), r.top + DPI(4), cx);
-}
-
-void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic)
-{
-	PaintBeginnerInfo(w, sz, GetTopic(topic));
-}
-
 }

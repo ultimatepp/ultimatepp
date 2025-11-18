@@ -70,8 +70,6 @@ topic "Ctrl+Tab - cycle through files";
 :: [s0; [2 Previous file tab.]]
 :: [s0;%- [*@(0.0.255)2 Ctrl`+Alt`+Right]]
 :: [s0; [2 Next file tab.]]
-:: [s0;%- [*@(0.0.255)2 Ctrl`+Tab]]
-:: [s0; [2 Cycle files.]]
 :: [s0;%- [*@(0.0.255)2 Shift`+Ctrl`+0][*2  ... ][*@(0.0.255)2 Shift`+Ctrl`+9]]
 :: [s0; [2 Bookmark position.]]
 :: [s0;%- [*@(0.0.255)2 Ctrl`+0][*2  ... ][*@(0.0.255)2 Ctrl`+9]]
