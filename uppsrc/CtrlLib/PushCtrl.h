@@ -231,7 +231,7 @@ public:
 	ButtonOption& SetLabel(const String& text);
 	String GetLabel() const                                   { return label; }
 	
-	void Set(bool b)                                          { option = b; UpdateRefresh(); }
+	ButtonOption& Set(bool b)                                 { option = b; UpdateRefresh(); return *this; }
 	bool Get() const                                          { return option; }
 
 	void operator=(bool b)                                    { Set(b); }

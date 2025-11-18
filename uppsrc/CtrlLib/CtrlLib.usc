@@ -548,6 +548,11 @@ ctrl Button {
 	}
 }
 
+ctrl ButtonOption {
+	>Button;
+	bool Set = false;
+}
+
 fn DrawCircle(w, xx, yy, c, color)
 {
 	if(c > 15) {
