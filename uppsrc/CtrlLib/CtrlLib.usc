@@ -1693,7 +1693,12 @@ ctrl ProgressIndicator {
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 24); }
 
+	Font  SetFont = StdFont();
 	Frame  SetFrame @1;
+	int SetTotal = 0;
+	bool Percent = false;
+	Color SetColor = Null;
+	
 
 	Paint(w) {
 		r = GetRect();
@@ -1708,11 +1713,17 @@ ctrl ProgressIndicator {
 		sz = Size(r.right - r.left, r.bottom - r.top);
 		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);
 
+		color = .SetColor ? .SetColor : :LtGreen;
 		if(sz.cx > sz.cy) {
-			w.DrawRect(r.left, r.top, sz.cx >> 2, sz.cy, :SLtGreen);
+			w.DrawRect(r.left, r.top, sz.cx >> 2, sz.cy, color);
 		}
 		else {
-			w.DrawRect(r.left, r.bottom - (sz.cy >> 2), sz.cx, sz.cy >> 2, :SLtGreen);
+			w.DrawRect(r.left, r.bottom - (sz.cy >> 2), sz.cx, sz.cy >> 2, color);
+		}
+		if(.Percent) {
+			txt = "0 %";
+			textsize = GetTextSize(txt, .SetFont);
+			w.DrawText(r.left + (sz.cx - textsize.cx) / 2, r.top + (sz.cy - textsize.cy) / 2, txt, .SetFont, :SBlack);
 		}
 	}
 }
