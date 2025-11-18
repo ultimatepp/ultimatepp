@@ -1663,6 +1663,8 @@ ctrl SliderCtrl {
 	
 	Frame  SetFrame @1;
 	bool Jump = false;
+	int Range = 100;
+	int Step = 1;
 	
 	Paint(w) {
 		r = GetRect();
