@@ -573,7 +573,6 @@ void Ide::DeleteFound(ArrayCtrl& list)
 	VectorMap<String, Vector<Tuple<int, String>>> files;
 	for(int i = 0; i < list.GetCount(); i++) {
 		Value v = list.Get(i, "INFO");
-		bool err = true;
 		if(v.Is<ListLineInfo>()) {
 			const ListLineInfo& f = ValueTo<ListLineInfo>(v);
 			if(*f.message == '\1') {
