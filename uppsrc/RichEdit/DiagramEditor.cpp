@@ -141,10 +141,7 @@ void DiagramEditor::Paint(Draw& w)
 	if(!fast)
 		paint_ms = msecs() - t0;
 
-	if(data.item.GetCount() == 0)
-		PaintBeginnerInfo(w, GetSize(),
-			"Right-click to insert item(s)&"
-			"Double-click to edit text");
+	PaintBeginnerInfo(this, w, "Right-click to insert item(s)&Double-click to edit text", "#DiagramEditor");
 }
 
 void DiagramEditor::Sync()

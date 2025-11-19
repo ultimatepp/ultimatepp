@@ -106,6 +106,7 @@ file
 	TrayIconGtk.cpp,
 	Update.cpp,
 	CtrlUtil.cpp,
+	BeginnerInfo.cpp,
 	Ctrl.iml,
 	Ctrl.lay,
 	CtrlLib.t,
