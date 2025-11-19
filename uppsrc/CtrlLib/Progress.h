@@ -44,7 +44,7 @@ public:
 	ProgressIndicator& SetColor(Color c)        { color = c; Refresh(); return *this; }
 	ProgressIndicator& SetStyle(const Style& s) { style = &s; Refresh(); return *this; }
 	ProgressIndicator& SetFont(const Font& f)   { font = f; Refresh(); return *this; }
-	Font& GetFont()                             { return font; }
+	Font GetFont()                              { return font; }
 
 	ProgressIndicator();
 	virtual ~ProgressIndicator();
