@@ -17,6 +17,7 @@ protected:
 	bool  percent:1;
 	const Style *style;
 	Color color;
+	Font font;
 
 	Rect GetMargins();
 	Size GetMsz();
@@ -42,6 +43,8 @@ public:
 	ProgressIndicator& NoPercent()              { return Percent(false); }
 	ProgressIndicator& SetColor(Color c)        { color = c; Refresh(); return *this; }
 	ProgressIndicator& SetStyle(const Style& s) { style = &s; Refresh(); return *this; }
+	ProgressIndicator& SetFont(const Font& f)   { font = f; Refresh(); return *this; }
+	Font GetFont()                              { return font; }
 
 	ProgressIndicator();
 	virtual ~ProgressIndicator();
