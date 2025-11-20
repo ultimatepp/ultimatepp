@@ -21,9 +21,6 @@ void   ColoredOverride(Iml& target, Iml& source);
 void   ChReset();
 void   ChFinish();
 
-void   ChPaintImage(Draw& w, const Rect& r, const Image& img, Point p1, Point p2);
-void   ChPaintImage(Draw& w, const Rect& r, const Image& img, int margin);
-
 void   ChPaint(Draw& w, const Rect& r, const Value& look, Color ink = Null);
 void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
 void   ChPaintNoCache(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);

@@ -300,17 +300,6 @@ Value ChLookFnImage(Draw& w, const Rect& r, const Image& img, int op, Color ink)
 	return ChLookFnImage(w, r, img, op, ink, img.GetHotSpot(), img.Get2ndSpot());
 }
 
-void ChPaintImage(Draw& w, const Rect& r, const Image& img, Point p1, Point p2)
-{
-	ChLookFnImage(w, r, img, LOOK_PAINT, Null, p1, p2);
-}
-
-void ChPaintImage(Draw& w, const Rect& r, const Image& img, int margin)
-{
-	Size sz = img.GetSize();
-	ChPaintImage(w, r, img, Point(margin, margin), Point(sz.cx - margin - 1, sz.cy - margin - 1));
-}
-
 Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op, Color ink)
 {
 	if(IsType<sChLookWith>(v)) {

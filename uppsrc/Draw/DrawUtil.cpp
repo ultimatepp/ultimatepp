@@ -580,6 +580,18 @@ void DrawXPButton(Draw& w, Rect r, int type)
 	}
 }
 
+void Draw9Slice(Draw& w, const Rect& r, const Image& img, Point p1, Point p2)
+{
+	Value ChLookFnImage(Draw& w, const Rect& r, const Image& img, int op, Color ink, Point p, Point p2);
+	ChLookFnImage(w, r, img, LOOK_PAINT, Null, p1, p2);
+}
+
+void Draw9Slice(Draw& w, const Rect& r, const Image& img, int margin)
+{
+	Size sz = img.GetSize();
+	Draw9Slice(w, r, img, Point(margin, margin), Point(sz.cx - margin - 1, sz.cy - margin - 1));
+}
+
 static DrawingToPdfFnType sPdf;
 static PdfDrawJPEGFnType sJpeg;
 

@@ -947,6 +947,9 @@ void DrawRectMinusRect(Draw& w, const Rect& rect, const Rect& inner, Color color
 void DrawHighlightImage(Draw& w, int x, int y, const Image& img, bool highlight = true,
                         bool enabled = true, Color maskcolor = SColorPaper);
 
+void Draw9Slice(Draw& w, const Rect& r, const Image& img, Point p1, Point p2);
+void Draw9Slice(Draw& w, const Rect& r, const Image& img, int margin);
+
 Color GradientColor(Color fc, Color tc, int i, int n);
 
 void DrawTextEllipsis(Draw& w, int x, int y, int cx, const char *text, const char *ellipsis,
