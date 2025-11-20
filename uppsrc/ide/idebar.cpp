@@ -898,14 +898,14 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.MenuSeparator();
 		}
 
-		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK1(History, -1))
+		menu.Add("Go back", CtrlImg::go_back(), THISBACK1(History, -1))
 		#ifdef PLATFORM_COCOA
 			.Key(K_OPTION|K_LEFT)
 		#else
 			.Key(K_ALT_LEFT)
 		#endif
 			.Enable(GetHistory(-1) >= 0);
-		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK1(History, 1))
+		menu.Add("Go forward", CtrlImg::go_forward(), THISBACK1(History, 1))
 		#ifdef PLATFORM_COCOA
 			.Key(K_OPTION|K_RIGHT)
 		#else
