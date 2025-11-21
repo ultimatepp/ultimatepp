@@ -580,9 +580,10 @@ void DrawXPButton(Draw& w, Rect r, int type)
 	}
 }
 
+Value ChLookFnImage(Draw& w, const Rect& r, const Image& img, int op, Color ink, Point p, Point p2);
+
 void Draw9Slice(Draw& w, const Rect& r, const Image& img, Point p1, Point p2)
 {
-	Value ChLookFnImage(Draw& w, const Rect& r, const Image& img, int op, Color ink, Point p, Point p2);
 	ChLookFnImage(w, r, img, LOOK_PAINT, Null, p1, p2);
 }
 
