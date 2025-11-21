@@ -657,7 +657,7 @@ void Ide::PaintFileInfo(Draw& w)
 		                (int)tm.year, (int)tm.month, (int)tm.day,
 		                (int)tm.hour, (int)tm.minute, (int)tm.second));
 		                
-		double d = (GetSysTime() - tm) / 60;
+		double d = double(GetSysTime() - tm) / 60;
 		String unit = "minute";
 		auto DoUnit = [&](double m, const char *s) {
 			if(d > m) {
