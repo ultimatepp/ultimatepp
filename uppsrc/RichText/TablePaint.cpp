@@ -35,7 +35,7 @@ bool RichTable::RowPaint(PageDraw& pw, RichContext rc, const Layout& tab, bool h
 		pw.tracer->TableRow(GetPageRect(pr.py), rc.py, i, *this);
 	int gridln = LineZoom(pi.zoom, format.grid);
 	int ff2ln = gridln - gridln / 2;
-	Color gc = format.gridcolor;
+	Color gc = pi.ResolveInk(format.gridcolor);
 	if(gridln == 0 && !IsNull(pi.showcodes)) {
 		gridln = 1;
 		gc = pi.showcodes;
@@ -179,7 +179,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool b
 		if(pgi > tab.py.page && tab.hasheader) // need to paint header here...
 			for(int i = 0; i < hy; i++) {
 				RowPaint(pw, rc, tab.header, true, i, hy, hpg, hpg, frr, pi, pgi, false);
-				pw.Page(pgi).DrawRect(r.left, hpg.bottom, r.Width(), gridln, format.gridcolor);
+				pw.Page(pgi).DrawRect(r.left, hpg.bottom, r.Width(), gridln, gc);
 			}
 		r = frr[i].Inflated(fl);
 		Draw& w = pw.Page(pgi);
