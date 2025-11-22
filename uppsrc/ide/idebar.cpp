@@ -245,7 +245,8 @@ void Ide::SearchMenu(Bar& menu)
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");
-	FindDs(menu);
+	if(menu.IsMenuBar())
+		FindDs(menu);
 }
 
 void Ide::Edit(Bar& menu)
