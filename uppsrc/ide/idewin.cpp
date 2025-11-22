@@ -397,7 +397,10 @@ void Ide::DoDisplay()
 		p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	if(IsCustomTitleBar()) {
-		s << "[g \1" << editfile << "\1";
+		s << "[g [";
+		if(editfile_isreadonly)
+			s << "@B";
+		s << " \1" << editfile << "\1]";
 		if(!designer) {
 			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
 			int64 l, h;

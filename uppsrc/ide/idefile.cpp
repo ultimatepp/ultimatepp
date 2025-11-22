@@ -392,6 +392,7 @@ void Ide::SaveFile0(bool always)
 	FindFile ff(editfile);
 	fd.filetime = edittime = ff.GetLastWriteTime();
 	editfile_length = ff.GetLength();
+	editfile_isreadonly = ff.IsReadOnly();
 
 	if(!file_exists)
 		TriggerIdeBackgroundThread(2000);
@@ -507,7 +508,19 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 
 	editfile_isfolder = IsFolder(editfile) || IsHelpName(editfile);
 	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
-	
+
+	FindFile ff(editfile);
+	if(ff) {
+		edittime = ff.GetLastWriteTime();
+		editfile_length = ff.GetLength();
+		editfile_isreadonly = ff.IsReadOnly();
+	}
+	else {
+		edittime = GetSysTime().AsFileTime();
+		editfile_isreadonly = false;
+		editfile_length = 0;
+	}
+
 	bool candesigner = !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
 	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile) && !replace_in_files;
 	
@@ -546,11 +559,8 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	if(!replace_in_files)
 		ActiveFocus(editor);
 	FileData& fd = Filedata(editfile);
-	FindFile ff(editfile);
 	bool tfile = GetFileExt(editfile) == ".t";
 	if(ff) {
-		edittime = ff.GetLastWriteTime();
-		editfile_length = ff.GetLength();
 		view_file.SetBufferSize(256*1024);
 		view_file.Open(editfile);
 		if(view_file) {

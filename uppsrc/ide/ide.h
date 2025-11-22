@@ -524,13 +524,14 @@ public:
 	StaticRect right;
 
 	String    editfile;
+	String    editfile2;
 	FileTime  edittime;
+	int64     editfile_length = 0;
 	int       editfile_line_endings;
 	int       editfile_repo;
 	bool      editfile_isfolder;
 	bool      replace_in_files = false; // Find in files replace or Replace found items mode - do not update things
-	String    editfile2;
-	int64     editfile_length = 0;
+	bool      editfile_isreadonly = false;
 
 	String    scratch_back; // to get back from Alt-M scratchfile
 

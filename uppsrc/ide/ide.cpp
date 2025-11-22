@@ -672,6 +672,9 @@ void Ide::PaintFileInfo(Draw& w)
 		if(n != 1)
 			unit << "s";
 		qtf << " ([* " << n << ' ' << unit << "] ago), size [* " << FormatFileSize(editfile_length);
+		
+		if(editfile_isreadonly)
+			qtf << "][@B read only  ";
 
 		RichText txt = ParseQTF(qtf);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
