@@ -385,6 +385,8 @@ void Ide::SetupFormat() {
 	}
 #endif
 
+	bool show_basic_hints = IsBeginnerInfoEnabled();
+
 	rtvr
 		(hlt.hilite_scope, hs)
 		(hlt.hilite_bracket, hilite_bracket)
@@ -458,6 +460,7 @@ void Ide::SetupFormat() {
 		(ide.setmain_newide, setmain_newide)
 		(ide.gui_font, gui_font_override)
 		(ide.search_downloads, search_downloads)
+		(ide.show_basic_hints, show_basic_hints)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);
@@ -537,6 +540,8 @@ void Ide::SetupFormat() {
 		UpdateFormat();
 		
 		web_search.Save();
+		
+		EnableBeginnerInfo(show_basic_hints);
 		
 		if(c == IDEXIT)
 			break;

@@ -2,8 +2,22 @@
 
 namespace Upp {
 
+static bool s_beginner_info_enabled = true;
+
+void EnableBeginnerInfo(bool b)
+{
+	s_beginner_info_enabled = b;
+}
+
+bool IsBeginnerInfoEnabled()
+{
+	return s_beginner_info_enabled;
+}
+
 void PaintBeginnerInfo(Draw& w, const Rect& cr, const char *qtf)
 {
+	if(!s_beginner_info_enabled)
+		return;
 	RichText text = ParseQTF(qtf);
 	text.ApplyZoom(GetRichTextStdScreenZoom());
 	
@@ -28,7 +42,7 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 {
 	static Index<String> done_keys;
 	
-	if(done_keys.Find(key) >= 0)
+	if(!s_beginner_info_enabled || done_keys.Find(key) >= 0)
 		return;
 
 	struct Record : Moveable<Record> {

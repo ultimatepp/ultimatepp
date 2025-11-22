@@ -537,6 +537,9 @@ void DrawRoundRect(Draw& w, const Rect& r, int radius, Color fill,
 void DrawRoundRect(Draw& w, int x, int y, int cx, int cy, int radius, Color fill,
                    int stroke_width, Color stroke);
 
+void EnableBeginnerInfo(bool b);
+bool IsBeginnerInfoEnabled();
+
 void PaintBeginnerInfo(Draw& w, const Rect& cr, const char *qtf);
 void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic);
 

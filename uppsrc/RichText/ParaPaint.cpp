@@ -682,8 +682,10 @@ void  RichPara::ApplyZoom(Zoom z)
 		if(part[i].IsText())
 			FontHeightRound(part[i].format, z);
 		else
-		if(part[i].object)
+		if(part[i].object) {
 			part[i].object.SetSize(z * part[i].object.GetSize());
+			part[i].object.SetYDelta(z * part[i].object.GetYDelta());
+		}
 }
 
 }
