@@ -21,10 +21,9 @@ bool PPMRaster::Create()
 		for(;;) {
 			while(IsSpace(stream.Peek()))
 				(void) stream.Get();
-			if(stream.Peek() == '#')
-				(void) stream.GetLine();
-			else
+			if(stream.Peek() != '#')
 				break;
+			[[maybe_unused]] String s = stream.GetLine();
 		}
 	};
 	
@@ -48,19 +47,19 @@ bool PPMRaster::Create()
 	}
 	
 	SkipWhitespaces();
-	if(size.cx = ReadInt(); size.cx <= 0 || size.cx > 99999) {
+	if(size.cx = ReadInt(); size.cx <= 0 || size.cx >= std::numeric_limits<word>::max()) {
 		SetError();
 		return false;
 	}
 	
 	SkipWhitespaces();
-	if(size.cy = ReadInt(); size.cy <= 0 || size.cy > 99999) {
+	if(size.cy = ReadInt(); size.cy <= 0 || size.cy >= std::numeric_limits<word>::max()) {
 		SetError();
 		return false;
 	}
 	
 	SkipWhitespaces();
-	if(int maxval = ReadInt(); maxval > 0 && maxval < 65536) {
+	if(int maxval = ReadInt(); maxval > 0 && maxval < std::numeric_limits<word>::max()) {
 		SkipWhitespaces();
 		is16 = maxval > 255;
 		pixel_pos = stream.GetPos();
