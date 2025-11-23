@@ -17,27 +17,39 @@ bool PPMRaster::Create()
 		return false;
 	}
 
-	try {
-		if(stream.GetLine() != "P6")
+	auto ReadInt = [&] {
+		int n = 0, c;
+		while((c = stream.Get()) >= '0' && c <= '9')
+			n = n * 10 + (c - '0');
+		return n;
+	};
+
+	auto SkipWhitespaces = [&] {
+		while(IsSpace(stream.Peek()))
+			(void) stream.Get();
+		while(stream.Peek() == '#') // PPM can contain comment lines
+			(void) stream.GetLine();
+	};
+
+	// PPM P6 format
+	if(stream.Get() == 'P' && stream.Get() == '6') {
+		SkipWhitespaces();
+		if(size.cx = ReadInt(); size.cx <= 0 || size.cx > 99999) {
 			return false;
-		String h = stream.GetLine();
-		CParser p(h);
-		size.cx = p.ReadInt();
-		size.cy = p.ReadInt();
-		if(size.cx <= 0 || size.cx > 99999 || size.cy <= 0 || size.cy >= 99999)
+		}
+		SkipWhitespaces();
+		if(size.cy = ReadInt(); size.cy <= 0 || size.cy > 99999) {
 			return false;
-		h = stream.GetLine();
-		CParser p1(h);
-		int maxval = p1.ReadInt();
-		if(maxval <= 0 || maxval > 65535)
-			return false;
-		is16 = maxval > 255;
-		pixel_pos = stream.GetPos();
-		return true;
+		}
+		SkipWhitespaces();
+		if(int maxval = ReadInt(); maxval > 0 && maxval < 65536) {
+			SkipWhitespaces();
+			is16 = maxval > 255;
+			pixel_pos = stream.GetPos();
+			return true;
+		}
 	}
-	catch(CParser::Error) {
-		return false;
-	}
+	return false;
 }
 
 Raster::Info PPMRaster::GetInfo()
