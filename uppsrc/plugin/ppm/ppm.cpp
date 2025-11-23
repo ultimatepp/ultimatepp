@@ -16,39 +16,58 @@ bool PPMRaster::Create()
 		SetError();
 		return false;
 	}
-
+	
+	auto SkipWhitespaces = [&] {
+		for(;;) {
+			while(IsSpace(stream.Peek()))
+				(void) stream.Get();
+			if(stream.Peek() == '#')
+				(void) stream.GetLine();
+			else
+				break;
+		}
+	};
+	
 	auto ReadInt = [&] {
 		int n = 0, c;
-		while((c = stream.Get()) >= '0' && c <= '9')
+		while((c = stream.Get()) >= '0' && c <= '9') {
+			// Overflow check: ensure n * 10 + digit doesn't overflow
+			if(n > (INT_MAX - 9) / 10) {
+				SetError();
+				return -1;
+			}
 			n = n * 10 + (c - '0');
+		}
 		return n;
 	};
-
-	auto SkipWhitespaces = [&] {
-		while(IsSpace(stream.Peek()))
-			(void) stream.Get();
-		while(stream.Peek() == '#') // PPM can contain comment lines
-			(void) stream.GetLine();
-	};
-
+	
 	// PPM P6 format
-	if(stream.Get() == 'P' && stream.Get() == '6') {
-		SkipWhitespaces();
-		if(size.cx = ReadInt(); size.cx <= 0 || size.cx > 99999) {
-			return false;
-		}
-		SkipWhitespaces();
-		if(size.cy = ReadInt(); size.cy <= 0 || size.cy > 99999) {
-			return false;
-		}
-		SkipWhitespaces();
-		if(int maxval = ReadInt(); maxval > 0 && maxval < 65536) {
-			SkipWhitespaces();
-			is16 = maxval > 255;
-			pixel_pos = stream.GetPos();
-			return !stream.IsEof();
-		}
+	if(stream.Get() != 'P' || stream.Get() != '6') {
+		SetError();
+		return false;
 	}
+	
+	SkipWhitespaces();
+	if(size.cx = ReadInt(); size.cx <= 0 || size.cx > 99999) {
+		SetError();
+		return false;
+	}
+	
+	SkipWhitespaces();
+	if(size.cy = ReadInt(); size.cy <= 0 || size.cy > 99999) {
+		SetError();
+		return false;
+	}
+	
+	SkipWhitespaces();
+	if(int maxval = ReadInt(); maxval > 0 && maxval < 65536) {
+		SkipWhitespaces();
+		is16 = maxval > 255;
+		pixel_pos = stream.GetPos();
+		return !stream.IsEof();
+	}
+	
+	SetError();
 	return false;
 }
 
