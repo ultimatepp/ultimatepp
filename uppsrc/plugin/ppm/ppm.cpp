@@ -46,7 +46,7 @@ bool PPMRaster::Create()
 			SkipWhitespaces();
 			is16 = maxval > 255;
 			pixel_pos = stream.GetPos();
-			return true;
+			return !stream.IsEof();
 		}
 	}
 	return false;
