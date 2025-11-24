@@ -25,6 +25,10 @@ static_library(ANDROID) cpufeatures;
 
 link(GCC POSIX STACKTRACE) -rdynamic;
 
+link(LINUX !SHARED) "-nodefaultlibs -Wl,-shared -l c -Wl,-static";
+
+link(LINUX SHARED) "-Wl,-static -Wl,--start-group -lfreetype -lfontconfig -lfreetype -lX11 -lxcb -lexpat -lpng16 -lfreetype -lX11 -lXinerama -lXrender -lXdmcp -lXau -lxcb -lXext -lbrotlidec -lbrotlicommon -lpng16 -lbz2 -lXft -lpthread -ldl -lrt -lz -Wl,--end-group -Wl,-shared";
+
 file
 	Core.h options(BUILDER_OPTION) PCH,
 	config.h,

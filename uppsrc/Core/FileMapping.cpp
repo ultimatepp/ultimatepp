@@ -65,7 +65,8 @@ bool FileMapping::Open(const char *filename, dword mode, int64 wsize, mode_t acm
 	if(!FileStream::OpenHandle(filename, mode, hfile, filesize, acm))
 		return false;
 	if((mode & FileStream::MODEMASK) == FileStream::CREATE) {
-		(void)ftruncate(hfile, wsize);
+		if(ftruncate(hfile, wsize))
+			return false;
 		filesize = wsize;
 	}
 #endif
