@@ -36,6 +36,8 @@ const dword BOOL_V   = 11;
 const dword VALUEMAP_V   = 12;
 const dword FLOAT_V   = 13;
 
+const dword SIZE_T_V = 14;
+
 const dword UNKNOWN_V = (dword)0xffffffff;
 
 template <class T>
@@ -159,6 +161,7 @@ protected:
 
 	int      GetOtherInt() const;
 	int64    GetOtherInt64() const;
+	size_t   GetOtherSizeT() const;
 	double   GetOtherDouble() const;
 	float	 GetOtherFloat() const;
 	bool     GetOtherBool() const;
@@ -226,6 +229,7 @@ public:
 	operator float() const           { return Is(FLOAT_V) ? GetSmallRaw<float>() : GetOtherFloat(); }
 	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
+	operator size_t() const          { return Is(SIZE_T_V) ? GetSmallRaw<size_t>() : GetOtherSizeT(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
 	std::string  ToStd() const       { return operator String().ToStd(); }
 	std::wstring ToWStd() const      { return operator WString().ToStd(); }
@@ -235,6 +239,7 @@ public:
 	Value(const char *s) : data(s)   { Magic(); }
 	Value(int i)                     : data(i, INT_V, String::SPECIAL) { Magic(); }
 	Value(int64 i)                   : data(i, INT64_V, String::SPECIAL) { Magic(); }
+	Value(size_t s)                  : data(s, SIZE_T_V, String::SPECIAL) { Magic(); }
 	Value(double d)                  : data(d, DOUBLE_V, String::SPECIAL) { Magic(); }
 	Value(float d)                   : data(d, FLOAT_V, String::SPECIAL) { Magic(); }
 	Value(bool b)                    : data(b, BOOL_V, String::SPECIAL) { Magic(); }
@@ -349,6 +354,7 @@ inline bool operator!=(T x, const Value& v)   { return v.Is<VT>() ? (VT)v != x :
 
 VALUE_COMPARE(int)
 VALUE_COMPARE(int64)
+VALUE_COMPARE(size_t)
 VALUE_COMPARE(double)
 VALUE_COMPARE(float)
 VALUE_COMPARE(bool)
