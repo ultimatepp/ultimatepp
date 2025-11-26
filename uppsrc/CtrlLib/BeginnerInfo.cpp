@@ -82,7 +82,7 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 		if(testmousepos)
 			mousepos = GetMousePos();
 		for(Record& r : records) {
-			if(testmousepos && Distance(r.mousepos, mousepos) < DPI(50))
+			if(testmousepos && Distance(r.mousepos, mousepos) < DPI(200))
 				continue;
 			if(tm - r.tm > 250) {
 				if(r.ctrl) {
