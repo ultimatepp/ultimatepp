@@ -4,17 +4,17 @@ namespace Upp {
 
 static bool s_beginner_info_enabled = true;
 
-void EnableBeginnerInfo(bool b)
+void EnableBasicHints(bool b)
 {
 	s_beginner_info_enabled = b;
 }
 
-bool IsBeginnerInfoEnabled()
+bool IsBasicHintsEnabled()
 {
 	return s_beginner_info_enabled;
 }
 
-void PaintBeginnerInfo(Draw& w, const Rect& cr, const char *qtf)
+void PaintBasicHints(Draw& w, const Rect& cr, const char *qtf)
 {
 	if(!s_beginner_info_enabled)
 		return;
@@ -33,12 +33,12 @@ void PaintBeginnerInfo(Draw& w, const Rect& cr, const char *qtf)
 	text.Paint(w, r.left + DPI(4), r.top + DPI(4), cx);
 }
 
-void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic)
+void PaintBasicHintsTopic(Draw& w, Size sz, const char *topic)
 {
-	PaintBeginnerInfo(w, sz, GetTopic(topic));
+	PaintBasicHints(w, sz, GetTopic(topic));
 }
 
-void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, const char *key)
+void PaintBasicHints(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, const char *key)
 {
 	static Index<String> done_keys;
 	
@@ -48,7 +48,7 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 	struct Record : Moveable<Record> {
 		Ptr<Ctrl> ctrl;
 		String    key;
-		Point     mousepos;
+		int       movecount;
 		int       tm;
 	};
 	
@@ -66,7 +66,7 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 		Record& r = records.Add();
 		r.ctrl = ctrl;
 		r.key = key;
-		r.mousepos = GetMousePos();
+		r.movecount = 0;
 		r.tm = msecs();
 	}
 
@@ -82,7 +82,7 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 		if(testmousepos)
 			mousepos = GetMousePos();
 		for(Record& r : records) {
-			if(testmousepos && Distance(r.mousepos, mousepos) < DPI(200))
+			if(testmousepos && r.movecount++ < 40)
 				continue;
 			if(tm - r.tm > 250) {
 				if(r.ctrl) {
@@ -110,22 +110,22 @@ void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, con
 		});
 	}
 	
-	PaintBeginnerInfo(w, cr, qtf);
+	PaintBasicHints(w, cr, qtf);
 }
 
-void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const char *qtf, const char *key)
+void PaintBasicHints(Ctrl *ctrl, Draw& w, const char *qtf, const char *key)
 {
-	PaintBeginnerInfo(ctrl, w, ctrl->GetSize(), qtf, key);
+	PaintBasicHints(ctrl, w, ctrl->GetSize(), qtf, key);
 }
 
-void PaintBeginnerInfoTopic(Ctrl *ctrl, Draw& w, const Rect& cr, const char *topic)
+void PaintBasicHintsTopic(Ctrl *ctrl, Draw& w, const Rect& cr, const char *topic)
 {
-	PaintBeginnerInfo(ctrl, w, cr, GetTopic(topic), topic);
+	PaintBasicHints(ctrl, w, cr, GetTopic(topic), topic);
 }
 
-void PaintBeginnerInfoTopic(Ctrl *ctrl, Draw& w, const char *topic)
+void PaintBasicHintsTopic(Ctrl *ctrl, Draw& w, const char *topic)
 {
-	PaintBeginnerInfo(ctrl, w, ctrl->GetSize(), GetTopic(topic), topic);
+	PaintBasicHints(ctrl, w, ctrl->GetSize(), GetTopic(topic), topic);
 }
 
 }

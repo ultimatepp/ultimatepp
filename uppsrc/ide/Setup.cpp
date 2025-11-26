@@ -385,7 +385,7 @@ void Ide::SetupFormat() {
 	}
 #endif
 
-	bool show_basic_hints = IsBeginnerInfoEnabled();
+	bool show_basic_hints = IsBasicHintsEnabled();
 
 	rtvr
 		(hlt.hilite_scope, hs)
@@ -541,7 +541,7 @@ void Ide::SetupFormat() {
 		
 		web_search.Save();
 		
-		EnableBeginnerInfo(show_basic_hints);
+		EnableBasicHints(show_basic_hints);
 		
 		if(c == IDEXIT)
 			break;

@@ -390,9 +390,9 @@ void Ide::Serialize(Stream& s)
 		s % blk0_header;
 	
 	if(version >= 34) {
-		bool b = IsBeginnerInfoEnabled();
+		bool b = IsBasicHintsEnabled();
 		s % b;
-		EnableBeginnerInfo(b);
+		EnableBasicHints(b);
 	}
 
 #ifdef PLATFORM_WIN32

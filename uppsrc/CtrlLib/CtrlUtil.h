@@ -537,16 +537,16 @@ void DrawRoundRect(Draw& w, const Rect& r, int radius, Color fill,
 void DrawRoundRect(Draw& w, int x, int y, int cx, int cy, int radius, Color fill,
                    int stroke_width, Color stroke);
 
-void EnableBeginnerInfo(bool b);
-bool IsBeginnerInfoEnabled();
+void EnableBasicHints(bool b);
+bool IsBasicHintsEnabled();
 
-void PaintBeginnerInfo(Draw& w, const Rect& cr, const char *qtf);
-void PaintBeginnerInfoTopic(Draw& w, Size sz, const char *topic);
+void PaintBasicHints(Draw& w, const Rect& cr, const char *qtf);
+void PaintBasicHintsTopic(Draw& w, Size sz, const char *topic);
 
-void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, const char *key);
-void PaintBeginnerInfo(Ctrl *ctrl, Draw& w, const char *qtf, const char *key);
-void PaintBeginnerInfoTopic(Ctrl *ctrl, Draw& w, const Rect& cr, const char *topic);
-void PaintBeginnerInfoTopic(Ctrl *ctrl, Draw& w, const char *topic);
+void PaintBasicHints(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, const char *key);
+void PaintBasicHints(Ctrl *ctrl, Draw& w, const char *qtf, const char *key);
+void PaintBasicHintsTopic(Ctrl *ctrl, Draw& w, const Rect& cr, const char *topic);
+void PaintBasicHintsTopic(Ctrl *ctrl, Draw& w, const char *topic);
 
 void   Set(ArrayCtrl& array, int ii, IdCtrls& m);
 void   Get(ArrayCtrl& array, int ii, IdCtrls& m);

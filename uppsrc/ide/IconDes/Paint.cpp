@@ -110,7 +110,7 @@ void IconDes::Paint(Draw& w)
 	Size sz = GetSize();
 	if(!IsCurrent()) {
 		w.DrawRect(sz, SColorPaper());
-		PaintBeginnerInfoTopic(this, w, "ide/app/ImlBeginnerInfo_en-us");
+		PaintBasicHintsTopic(this, w, "ide/app/ImlBeginnerInfo_en-us");
 		return;
 	}
 	const Image& image = Current().image;
@@ -269,5 +269,5 @@ void IconDes::Paint(Draw& w)
 		PaintHotSpot(image.Get2ndSpot(), LtBlue());
 	}
 
-	PaintBeginnerInfoTopic(this, w, "ide/app/ImlBeginnerInfo_en-us");
+	PaintBasicHintsTopic(this, w, "ide/app/ImlBeginnerInfo_en-us");
 }

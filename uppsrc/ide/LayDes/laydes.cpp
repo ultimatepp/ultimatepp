@@ -338,7 +338,7 @@ void LayDes::Paint(Draw& w)
 		}
 	}
 	
-	PaintBeginnerInfoTopic(this, w, "ide/app/LayBeginnerInfo_en-us");
+	PaintBasicHintsTopic(this, w, "ide/app/LayBeginnerInfo_en-us");
 }
 
 void  LayDes::SaveState()
