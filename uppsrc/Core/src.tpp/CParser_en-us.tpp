@@ -373,6 +373,11 @@ is advanced by 1 character.&]
 [s2;%% Same as Skip, legacy name.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:CParser`:`:SkipLine`(`): [@(0.0.255) void] [* SkipLine]()&]
+[s2;%% Skips everything from current position to the end of line. 
+.&]
+[s3; &]
+[s4; &]
 [s5;:CParser`:`:GetPtr`(`)const: [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetPtr]()_[@(0.0.255) c
 onst]&]
 [s2;%% Returns a pointer to the current position.&]

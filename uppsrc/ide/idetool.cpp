@@ -534,9 +534,6 @@ void Ide::FindDs(int where)
 {
 	SaveFile();
 
-	static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
-	                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
-
 	NewFFound();
 	
 	String nest_dir = GetPathNest(editfile);
@@ -567,6 +564,42 @@ void Ide::FindDs(int where)
 	for(String fn : files) {
 		if(pi.SetCanceled(n++, files.GetCount()))
 			break;
+
+		if(GetFileLength(fn) < 10*1024*1024) {
+			String text = LoadFile(fn);
+			try {
+				CParser p(text);
+				bool ignore = false;
+				while(!p.IsEof()) {
+					CParser::Pos pos = p.GetPos();
+					if(p.Char('#')) {
+						if(p.Id("if") || p.Id("ifdef"))
+							ignore = true;
+						else
+						if(p.Id("endif"))
+							ignore = false;
+						p.SkipLine();
+					}
+					else
+					if(p.IsId()) {
+						static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+						                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
+						String id = p.ReadId();
+						if(ds.Find(id) >= 0 && p.Char('(') && !ignore) {
+							String line;
+							for(const char *s = pos.lineptr; findarg(*s, '\0', '\r', '\n') < 0; s++)
+								line.Cat(*s);
+							AddFoundFile(fn, pos.line, line, pos.ptr - pos.lineptr, id.GetCount());
+						}
+					}
+					else
+						p.Skip();
+				}
+			}
+			catch(CParser::Error) {}
+		}
+	}
+	/*
 		FileIn in(fn);
 		int line = 0;
 		while(!in.IsEof()) {
@@ -590,6 +623,7 @@ void Ide::FindDs(int where)
 			catch(CParser::Error) {}
 		}
 	}
+	*/
 
 	FFoundFinish();
 }

@@ -549,7 +549,7 @@ void CParser::Skip()
 			term++;
 	else
 	if(IsString())
-		ReadString();
+		ReadString(false);
 	else
 	if(IsChar('\''))
 		ReadString('\'', false);
@@ -562,6 +562,19 @@ void CParser::Skip()
 		term++;
 	}
 	DoSpaces();
+}
+
+void CParser::SkipLine()
+{
+	while(*term) {
+		if(*term == '\n') {
+			line++;
+			lineptr = term + 1;
+			term++;
+			break;
+		}
+		term++;
+	}
 }
 
 CParser::Pos CParser::GetPos() const
