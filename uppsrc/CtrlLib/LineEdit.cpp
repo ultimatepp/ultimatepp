@@ -1216,7 +1216,7 @@ void LineEdit::DeleteLine()
 	}
 	int i = GetLine(cursor);
 	int p = GetPos32(i);
-	Remove((int)p, GetLineLength(i) + 1);
+	Remove(p, GetLineLength(i) + 1);
 	PlaceCaret(p);
 	Action();
 }

@@ -1294,7 +1294,7 @@ void CodeEditor::ForwardWhenBreakpoint(int i) {
 	WhenBreakpoint(i);
 }
 
-void CodeEditor::GotoLine(int line)
+void CodeEditor::GotoBarLine(int line)
 {
 	SetCursor(GetPos64(GetLineNo(line)));
 }

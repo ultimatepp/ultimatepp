@@ -502,7 +502,7 @@ public:
 	void     SetBreakpoint(int line, const String& b) { bar.SetBreakpoint(line, b); }
 	void     ClearEdited()                            { bar.ClearEdited(); }
 	int		 GetUndoCount()                           { return undo.GetCount(); }
-	void     GotoLine(int line);
+	void     GotoBarLine(int line);
 	void     EnableBreakpointing()                    { bar.EnableBreakpointing(true); }
 	void     DisableBreakpointing()                   { bar.EnableBreakpointing(false); }
 	void     Renumber2();
