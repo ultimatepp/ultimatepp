@@ -205,15 +205,6 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(AK_GOTO_POSITION, [=] { GotoPosition(); });
 }
 
-void Ide::FindDs(Bar& menu) {
-	menu.Sub("Find debugging logs (DDUMP...)", [=](Bar& bar) {
-		bar.Add("In current file", [=] { FindDs(0); });
-		bar.Add("In current file package", [=] { FindDs(1); });
-		bar.Add("In workspace files in current file nest", [=] { FindDs(2); });
-		bar.Add("In workspace", [=] { FindDs(3); });
-	});
-}
-
 void Ide::SearchMenu(Bar& menu)
 {
 	LTIMESTOP("SearchMeanu");
@@ -244,8 +235,13 @@ void Ide::SearchMenu(Bar& menu)
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");
-	if(menu.IsMenuBar())
-		FindDs(menu);
+	menu.Sub("Find debugging logs (DDUMP...)", [=](Bar& bar) {
+		bar.Add("In workspace", [=] { FindDs(3); });
+		bar.Add("In current file", [=] { FindDs(0); });
+		bar.Add("In current file package", [=] { FindDs(1); });
+		bar.Add("In workspace files in current file nest", [=] { FindDs(2); });
+	});
+	menu.Add("Find GIT conflicts", [=] { FindGitConflicts(); });
 }
 
 void Ide::Edit(Bar& menu)

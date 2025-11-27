@@ -1033,8 +1033,9 @@ public:
 		void  DoPatchDiff();
 		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
-		void  FindDs(Bar& menu);
+		Vector<String> FindXFiles(int where);
 		void  FindDs(int where);
+		void  FindGitConflicts();
 		void  FindDesignerItemReferences(const String& id, const String& name);
 		void  NavigatorDlg();
 		void  InsertParameters();
