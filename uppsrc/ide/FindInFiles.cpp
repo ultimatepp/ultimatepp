@@ -597,14 +597,13 @@ void Ide::DeleteFound(ArrayCtrl& list)
 		editor.NextUndo();
 		Vector<Tuple<int, String>> lines = pick(file.value);
 		Sort(lines, [](const Tuple<int, String>& a, Tuple<int, String>& b) { return a.a > b.a; });
-		for(const auto& m : lines) {
+		for(const auto& m : lines)
 			if(m.a < editor.GetLineCount() && m.b == editor.GetUtf8Line(m.a) && !editor.IsReadOnly() && !editor.IsView()) {
 				editor.SetCursor(editor.GetPos(m.a));
 				editor.DeleteLine();
 			}
 			else
 				errors.FindAdd(String() << file.key << " " << m.a + 1);
-		}
 		editor.MoveEnd();
 	}
 
