@@ -110,7 +110,7 @@
 #define FTRUNCATE64_ ftruncate
 #endif
 
-#ifdef PLATFORM_LINUX
+#if defined(PLATFORM_LINUX) && !defined(_LARGEFILE64_SOURCE)
 #undef  LOFF_T_
 #define LOFF_T_      loff_t
 #undef  LSEEK64_
