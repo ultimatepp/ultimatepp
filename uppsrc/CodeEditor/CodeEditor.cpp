@@ -115,12 +115,11 @@ void CodeEditor::Paint(Draw& w)
 	Point start, end; // paint zero level block header
 	if(!GetSyntax(GetScrollPos().y + 1)->GetBlockHeader(start, end))
 		return;
-
-	if(IsNull(start) || IsNull(end) || end.y > start.y)
+	if(IsNull(start) || (!IsNull(end) && end.y > start.y))
 		return;
 
 	int line0 = -1;
-	for(int i = end.y + 1; i <= start.y; i++) {
+	for(int i = IsNull(end) ? 0 : end.y + 1; i <= start.y; i++) {
 		String l = GetUtf8Line(i);
 		bool hdr = false;
 		bool empty = true;
@@ -142,8 +141,8 @@ void CodeEditor::Paint(Draw& w)
 		if(!empty && line0 < 0)
 			line0 = i;
 	}
-
-	if(line0 < 0)
+	
+	if(line0 < 0 || GetScrollPos().y <= line0)
 		return;
 
 	int l = GetPos(line0, 0);
