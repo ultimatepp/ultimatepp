@@ -9,6 +9,8 @@ uint64 cmask16__(uint16x8_t mask) {
 	return matches;
 }
 
+// force_inline uint64 cmask16__(uint16x8_t mask) { return vreinterpretq_s16_u16(mask); }
+
 const uint64 cmask_all__ = 0xffffffffffffffffull;
 
 struct f32x4 {

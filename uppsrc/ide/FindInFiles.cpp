@@ -599,7 +599,7 @@ void Ide::DeleteFound(ArrayCtrl& list)
 		Sort(lines, [](const Tuple<int, String>& a, Tuple<int, String>& b) { return a.a > b.a; });
 		for(const auto& m : lines) {
 			if(m.a < editor.GetLineCount() && m.b == editor.GetUtf8Line(m.a) && !editor.IsReadOnly() && !editor.IsView()) {
-				editor.GotoLine(m.a);
+				editor.SetCursor(editor.GetPos(m.a));
 				editor.DeleteLine();
 			}
 			else

@@ -73,6 +73,7 @@ public:
 
 	void   Skip();
 	void   SkipTerm()                         { Skip(); }
+	void   SkipLine();
 
 	struct Pos {
 		const char *ptr;

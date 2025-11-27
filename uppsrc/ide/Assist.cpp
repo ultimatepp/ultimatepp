@@ -84,7 +84,7 @@ void AssistEditor::EndBeginnerInfo()
 void AssistEditor::Paint(Draw& w)
 {
 	CodeEditor::Paint(w);
-	PaintBeginnerInfoTopic(this, w, "ide/app/EditorBeginnerInfo_en-us");
+	PaintBasicHintsTopic(this, w, "ide/app/EditorBeginnerInfo_en-us");
 }
 
 class IndexSeparatorFrameCls : public CtrlFrame {

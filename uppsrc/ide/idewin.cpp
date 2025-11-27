@@ -223,7 +223,7 @@ void Ide::IdeSetDebugPos(const String& file, int line, const Image& img, int i)
 	posline[i] = line;
 	posimg[i] = img;
 	EditFile(file);
-	editor.GotoLine(line);
+	editor.GotoBarLine(line);
 	PosSync();
 	Size sz = editor.GetPageSize();
 	Point p = editor.GetScrollPos();

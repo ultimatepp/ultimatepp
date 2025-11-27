@@ -921,7 +921,7 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 		Size fsz = GetFontSize();
 		p = (p + fsz * (Size)sb.Get()) / fsz;
 		int64 h = GetGPos(p.y, p.x);
-		tippos = h < INT_MAX ? (int)h : -1;
+		tippos = h < INT_MAX && GetColumnLine(h) == p ? (int)h : -1;
 	}
 	
 	SyncTip();
@@ -1294,7 +1294,7 @@ void CodeEditor::ForwardWhenBreakpoint(int i) {
 	WhenBreakpoint(i);
 }
 
-void CodeEditor::GotoLine(int line)
+void CodeEditor::GotoBarLine(int line)
 {
 	SetCursor(GetPos64(GetLineNo(line)));
 }

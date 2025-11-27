@@ -200,7 +200,6 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Comment code lines");
 	menu.Add(b && editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
-	FindDs(menu);
 	menu.MenuSeparator();
 	menu.Add(AK_COPY_POSITION, [=] { CopyPosition(); });
 	menu.Add(AK_GOTO_POSITION, [=] { GotoPosition(); });

@@ -757,11 +757,11 @@ void Ide::EditAsText()
 		layout = "LAYOUT(" + layout + ",";
 		for(int i = 0; i < editor.GetLineCount(); i++)
 			if(TrimBoth(editor.GetUtf8Line(i)).StartsWith(layout)) {
-				editor.GotoLine(i);
+				editor.GotoBarLine(i);
 				if(item.GetCount())
 					for(int j = i + 1; j < editor.GetLineCount(); j++)
 						if(GetLayItemId(editor.GetUtf8Line(j)) == item) {
-							editor.GotoLine(j);
+							editor.GotoBarLine(j);
 							break;
 						}
 				break;
