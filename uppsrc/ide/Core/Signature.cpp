@@ -447,10 +447,11 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 
 Image CxxIcon(int kind);
 
-String SignatureQtf(const String& name, const String& pretty, int pari)
+String SignatureQtf(const String& name, const String& pretty, const String& nest, int pari)
 {
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParsePretty(name, pretty);
+	String ns = nest;
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
@@ -477,6 +478,10 @@ String SignatureQtf(const String& name, const String& pretty, int pari)
 			break;
 		}
 		qtf << ' ';
+		if(ns.GetCount() && p.type == ITEM_NAME) {
+			qtf << "[@b \1" << ns << "::\1]";
+			ns.Clear();
+		}
 		qtf << '\1' << pretty.Mid(p.pos, p.len) << '\1';
 		qtf << ']';
 	}
