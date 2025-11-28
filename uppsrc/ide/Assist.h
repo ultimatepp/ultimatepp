@@ -223,7 +223,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	String         BestTopic(const Vector<String>& tl);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
-	RichText       GetCodeTopic(const String& tl, const String& coderef);
+	RichText       GetCodeTopic(const String& tl, const String& coderef, bool skip_header);
 	void           SyncAnnotationPopup();
 	void           EditAnnotation(bool fastedit);
 	void           OpenTopic(String topic, String create, bool before);

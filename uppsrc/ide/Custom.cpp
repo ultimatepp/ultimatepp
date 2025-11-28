@@ -34,8 +34,6 @@ void Custom::InsertOut(String s) {
 void Custom::DoMenu(Button& b, Callback1<String> cb, bool cmd) {
 	if(!list.IsCursor()) return;
 	MenuBar menu;
-//	Event<> Arg<String> set;
-//	set <<= cb;
 	String pk = list.Get(0);
 	String ext = (String)list.Get(2);
 	if(ext[0] != '.')

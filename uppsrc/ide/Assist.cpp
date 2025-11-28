@@ -604,15 +604,15 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 	
 	String qtf = "[g ";
 	
-	String p = m.pretty0;
+	String p = IsFunction(m.kind) ? m.pretty : m.pretty0;
 	p.TrimEnd("{}");
 
-	qtf << SignatureQtf(m.name, p, m.nest) << '&';
+	qtf << SignatureQtf(m.name, p, m.nest);
 	
 	String tl = BestTopic(GetRefLinks(ref_id));
 	if(tl.GetCount()) {
-		RichText txt = GetCodeTopic(tl, ref_id);
-		qtf << AsQTF(txt);
+		RichText txt = GetCodeTopic(tl, ref_id, true);
+		qtf << '&' << AsQTF(txt);
 	}
 
 	SetQTF(mt, qtf);
