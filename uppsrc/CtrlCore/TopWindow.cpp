@@ -421,25 +421,25 @@ TopWindow& TopWindow::Icon(const Image& smallicon, const Image& _largeicon)
 	return *this;
 }
 
-bool is_custom_titlebar_available__;
+// avoid the need to implement custom titlebar in all platforms:
 
-bool TopWindow::IsCustomTitleBar() const
-{
-	return custom_titlebar && is_custom_titlebar_available__;
-}
-
-TopWindow& TopWindow::CustomTitleBar(int cy)
-{
-	custom_titlebar = is_custom_titlebar_available__;
-	custom_titlebar_cy = cy;
-	return *this;
-}
-
+Function<bool (const TopWindow *)> is_custom_titlebar__;
+Function<Ctrl *(TopWindow *, int)> custom_titlebar_make__;
 Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__ =
 [](const TopWindow *, TopWindow::CustomTitleBarMetrics& m) {
 	m.lm = m.rm = m.height = 0;
 	m.background = SColorPaper();
 };
+
+bool TopWindow::IsCustomTitleBar() const
+{
+	return is_custom_titlebar__(this);
+}
+
+Ctrl *TopWindow::CustomTitleBar(int cy)
+{
+	return custom_titlebar_make__(this, cy);
+}
 
 TopWindow::CustomTitleBarMetrics TopWindow::GetCustomTitleBarMetrics() const
 {
@@ -545,8 +545,6 @@ TopWindow::TopWindow()
 	dokeys = true;
 	fullscreen = frameless = urgent = false;
 	close_rejects = false;
-	custom_titlebar = false;
-	custom_titlebar_cy = 0;
 }
 
 TopWindow::~TopWindow()

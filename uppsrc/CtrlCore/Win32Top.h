@@ -10,6 +10,16 @@ private:
 	void        SetIco();
 	void        CenterRect(HWND owner, int center);
 
+	One<FrameTop<Ctrl>>   custom_bar_frame;
+	One<Ctrl>             custom_bar;
+	int                   custom_titlebar_cy = 0;
+	int                   active_titlebar_button = -1;
+	bool                  active_titlebar_active = false;
+	
+	bool        IsCustomTitleBar__() const;
+	Ctrl       *MakeCustomTitleBar__(int mincy);
+	void        SyncCustomBar();
+
 public:
 	void       Open(HWND ownerhwnd);
 	TopWindow& Style(dword _style);

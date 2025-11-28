@@ -220,8 +220,9 @@ void Ctrl::InstallPanicBox()
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 }
 
-extern bool is_custom_titlebar_available__;
 extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
+extern Function<bool (const TopWindow *)> is_custom_titlebar__;
+extern Function<Ctrl *(TopWindow *, int)> custom_titlebar_make__;
 
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
@@ -284,10 +285,8 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 
 	GlobalBackPaint();
 
-	is_custom_titlebar_available__ = IsWin11();
-
-	custom_titlebar_metrics__ = [=](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
-		if(!tw->custom_titlebar)
+	custom_titlebar_metrics__ = [](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
+		if(!tw->custom_bar)
 			return;
 		m.height = GetWin32TitleBarHeight(tw);
 		m.lm = 0;
@@ -296,7 +295,15 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 			m.lm = DPI(4) + min(icon.GetWidth(), 32);
 		m.rm = (tw->IsZoomable() ? 3 : 1) * GetWin32TitleBarButtonWidth();
 	};
+
+	is_custom_titlebar__ = [](const TopWindow *win) {
+		return win->IsCustomTitleBar__();
+	};
 	
+	custom_titlebar_make__ = [=](TopWindow *win, int mincy) -> Ctrl * {
+		return win->MakeCustomTitleBar__(mincy);
+	};
+
 	EnterGuiMutex();
 }
 

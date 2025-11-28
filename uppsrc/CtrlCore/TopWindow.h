@@ -80,13 +80,8 @@ private:
 	bool        frameless:1;
 	bool        urgent:1;
 	bool        close_rejects:1;
-	bool        custom_titlebar:1;
 	byte        state;
 	Image       icon, largeicon;
-
-	int         custom_titlebar_cy = 0;
-	int         active_titlebar_button = -1;
-	bool        active_titlebar_active = false;
 
 	const TopStyle *st;
 	
@@ -181,7 +176,9 @@ public:
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
 	
-	TopWindow&  CustomTitleBar(int min_cy = 0);
+	Ctrl       *CustomTitleBar(int min_cy = 0);
+	
+//	TopWindow&  CustomTitleBar(int min_cy = 0);
 	bool        IsCustomTitleBar() const;
 
 	struct CustomTitleBarMetrics {
