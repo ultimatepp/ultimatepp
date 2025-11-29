@@ -7,16 +7,11 @@ struct MyApp : TopWindow {
 	LineEdit             editor;
 	Label                title;
 	
-	void MainMenu(Bar& bar)
-	{
-		bar.Sub("File", [=](Bar& bar) {
-			bar.Add("Exit", [=] { Break(); });
-		});
-	}
-
 	void SetMenuBar() {
 		menubar.Set([=](Bar& bar) {
-			MainMenu(bar);
+			bar.Sub("File", [=](Bar& bar) {
+				bar.Add("Exit", [=] { Break(); });
+			});
 		});
 	}
 
@@ -41,7 +36,7 @@ struct MyApp : TopWindow {
 			SetMenuBar(); // run it here to get GetWidth
 			menubar.LeftPos(0, menubar.GetWidth()).TopPos((cm.height - h) / 2, h);
 			*custom_bar << title.HSizePos(menubar.GetWidth(), cm.rm).VSizePos();
-			title.SetLabel("This is CustomTitleBar example");
+			title.SetLabel("\1[g This is [* CustomTitleBar] [/ example]");
 			title.AlignCenter();
 			title.AlignVCenter();
 		}
