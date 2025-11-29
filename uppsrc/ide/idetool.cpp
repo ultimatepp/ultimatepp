@@ -558,7 +558,7 @@ Vector<String> Ide::FindXFiles(int where)
 	return files;
 }
 
-void Ide::FindDs(int where)
+void Ide::FindDs(int where, bool all)
 {
 	SaveFile();
 
@@ -580,19 +580,31 @@ void Ide::FindDs(int where)
 				while(!p.IsEof()) {
 					CParser::Pos pos = p.GetPos();
 					if(p.Char('#')) {
-						if(p.Id("if") || p.Id("ifdef"))
-							ignore = true;
-						else
-						if(p.Id("endif"))
-							ignore = false;
+						if(!all) {
+							if(p.Id("if") || p.Id("ifdef"))
+								ignore = true;
+							else
+							if(p.Id("endif"))
+								ignore = false;
+						}
 						p.SkipLine();
 					}
 					else
 					if(p.IsId()) {
-						static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
-						                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
+						static Index<String> ds = {
+							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT"
+						};
+						static Index<String> ds_all = {
+							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT",
+							"RLOG", "RDUMP", "RDUMPC", "RDUMPM", "RTIMING",
+						    "RLOGHEX", "RDUMPHEX", "RTIMESTOP", "RHITCOUNT",
+							"LOG", "DUMP", "DUMPC", "DUMPM", "TIMING",
+						    "LOGHEX", "DUMPHEX", "TIMESTOP", "HITCOUNT",
+						};
 						String id = p.ReadId();
-						if(ds.Find(id) >= 0 && p.Char('(') && !ignore) {
+						if((all ? ds_all : ds).Find(id) >= 0 && p.Char('(') && !ignore) {
 							String line;
 							for(const char *s = pos.lineptr; findarg(*s, '\0', '\r', '\n') < 0; s++)
 								line.Cat(*s);

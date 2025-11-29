@@ -1034,7 +1034,7 @@ public:
 		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
 		Vector<String> FindXFiles(int where);
-		void  FindDs(int where);
+		void  FindDs(int where, bool all = false);
 		void  FindGitConflicts();
 		void  FindDesignerItemReferences(const String& id, const String& name);
 		void  NavigatorDlg();
