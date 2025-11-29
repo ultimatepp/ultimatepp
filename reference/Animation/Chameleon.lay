@@ -1,0 +1,9 @@
+LAYOUT(ChameleonLayout, 228, 68)
+	ITEM(Upp::Button, host, SetLabel(t_("Button")).LeftPosZ(8, 68).TopPosZ(8, 24))
+	ITEM(Upp::Button, std, SetLabel(t_("Button")).LeftPosZ(80, 68).TopPosZ(8, 24))
+	ITEM(Upp::Button, classic, SetLabel(t_("Button")).LeftPosZ(152, 68).TopPosZ(8, 24))
+	ITEM(Upp::Button, color, SetLabel(t_("Button")).LeftPosZ(8, 68).TopPosZ(36, 24))
+	ITEM(Upp::Button, img, SetLabel(t_("Button")).LeftPosZ(80, 68).TopPosZ(36, 24))
+	ITEM(Upp::Button, fn, SetLabel(t_("Button")).LeftPosZ(152, 68).TopPosZ(36, 24))
+END_LAYOUT
+
