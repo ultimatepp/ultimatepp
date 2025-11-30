@@ -141,6 +141,9 @@ class TcpSocket : NoCopy {
 
 	friend void  InitCreateSSL();
 	friend class IpAddrInfo;
+#ifdef PLATFORM_POSIX
+	friend class UnixSocket;
+#endif
 
 	int                     GetEndTime() const;
 	bool                    RawWait(dword flags, int end_time);

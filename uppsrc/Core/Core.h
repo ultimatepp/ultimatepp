@@ -410,6 +410,8 @@ class JsonIO;
 
 #include "ValueCache.h"
 
+#include "UnixSocket.h"
+
 #ifdef CPU_SIMD
 String AsString(const f32x4& x);
 String AsString(const i32x4& x);
