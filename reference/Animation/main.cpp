@@ -102,6 +102,7 @@ Button::Style AnimationStyle()
 
 void AnimationSkin()
 {
+	ChStdSkin();
 	Button::StyleNormal().Write() = AnimationStyle();
 }
 

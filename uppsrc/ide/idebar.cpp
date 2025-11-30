@@ -320,9 +320,8 @@ void Ide::Edit(Bar& menu)
 			.Key(K_CTRL_A);
 	}
 
-	menu.MenuSeparator();
-
 	if(!designer && menu.IsMenuBar()) {
+		menu.MenuSeparator();
 		InsertAdvanced(menu);
 		Reformat(menu);
 	}
@@ -1036,6 +1035,7 @@ void Ide::MainTool(Bar& bar)
 	if(!designer)
 		bar.Separator();
 	Edit(bar);
+	bar.Separator();
 	if(debugger) {
 		DebugMenu(bar);
 		bar.Separator();
