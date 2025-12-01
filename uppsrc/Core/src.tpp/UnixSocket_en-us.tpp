@@ -41,7 +41,8 @@ in interactive applications.&]
 [s5;:Upp`:`:UnixSocket`:`:GetPeerPid`(`)const: [@(0.0.255) int] [* GetPeerPid]() 
 [@(0.0.255) const]&]
 [s2;%% Returns the process ID (pid) of the peer on success, `-1 on 
-failure.&]
+failure. On non`-blocking mode, make sure that socket is actually 
+connected or accepted.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:UnixSocket`:`:GetDone`(`)const: [@(0.0.255) int] [* GetDone]() 

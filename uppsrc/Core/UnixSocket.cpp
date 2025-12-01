@@ -40,28 +40,9 @@ void SetSockType(const String& path, sockaddr_un& addr, UnixSocket::Type t)
     }
 }
 
-int sGetPeerPid(SOCKET socket)
-{
-#if defined(PLATFORM_LINUX)
-    struct ucred ucred;
-    socklen_t len = sizeof(ucred);
-    if(getsockopt(socket, SOL_SOCKET, SO_PEERCRED, &ucred, &len) == 0)
-        return ucred.pid;
-        
-#elif (defined(PLATFORM_MACOS) || defined(PLATFORM_FREEBSD)) && defined(LOCAL_PEERPID)
-    pid_t pid;
-    socklen_t len = sizeof(pid);
-    if(getsockopt(socket, SOL_LOCAL, LOCAL_PEERPID, &pid, &len) == 0)
-        return pid;
-
-#endif
-    return -1; // Not supported or failed
-}
-
 }
 
 UnixSocket::UnixSocket()
-: peerpid(-1)
 {
 	socket.WhenWait << WhenWait;
 }
@@ -70,9 +51,22 @@ int UnixSocket::GetPeerPid() const
 {
 	if(!IsOpen())
 		return -1;
-	if(peerpid < 0) // Lazy evalauation (for NB connect)
-		peerpid = sGetPeerPid(socket.GetSOCKET());
-	return peerpid;
+	
+#if defined(PLATFORM_LINUX)
+    struct ucred ucred;
+    socklen_t len = sizeof(ucred);
+    if(getsockopt(socket.GetSOCKET(), SOL_SOCKET, SO_PEERCRED, &ucred, &len) == 0)
+        return ucred.pid;
+        
+#elif (defined(PLATFORM_MACOS) || defined(PLATFORM_FREEBSD)) && defined(LOCAL_PEERPID)
+    pid_t pid;
+    socklen_t len = sizeof(pid);
+    if(getsockopt(socket.GetSOCKET(), SOL_LOCAL, LOCAL_PEERPID, &pid, &len) == 0)
+        return pid;
+
+#endif
+ 
+   return -1; // Not supported or failed
 }
 
 bool UnixSocket::Listen(const String& path, int listen_count, bool reuse, Type socktype)
@@ -131,7 +125,6 @@ bool UnixSocket::Accept(UnixSocket& ls)
 	}
 
 	socket.mode = TcpSocket::ACCEPT;
-    peerpid = sGetPeerPid(socket.GetSOCKET());
 	return socket.SetupSocket();
 }
 
@@ -156,12 +149,6 @@ bool UnixSocket::Connect(const String& path, Type socktype)
 	SetSockError("connect", -1, strerror(GetErrorCode()));
 	Close();
 	return false;
-}
-
-void UnixSocket::Close()
-{
-	socket.Close();
-	peerpid = -1;
 }
 
 #endif

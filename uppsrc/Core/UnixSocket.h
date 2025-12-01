@@ -38,7 +38,7 @@ public:
 
 	void            Attach(SOCKET sock)                      { socket.Attach(sock); }
 	
-	void            Close();
+	void            Close()                                  { socket.Close(); }
 	void            Shutdown()                               { socket.Shutdown(); }
 
 	void            Linger(int ms)                           { socket.Linger(ms); }
@@ -86,7 +86,6 @@ public:
 	
 private:
 	TcpSocket       socket;
-	mutable int     peerpid;
 };
 
 #endif

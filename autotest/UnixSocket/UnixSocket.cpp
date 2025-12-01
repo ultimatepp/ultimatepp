@@ -30,7 +30,7 @@ CONSOLE_APP_MAIN
 	
 	UnixSocket accepted;
 	if(!accepted.Accept(server)) {
-		LOG("Accept failed: " << server.GetErrorDesc());
+		LOG("Accept failed: " << accepted.GetErrorDesc());
 		Exit(1);
 	}
 	
