@@ -24,10 +24,13 @@ void Ide::Valgrind()
 	String ValgSupp = ConfigFile("valgrind.supp");
 	if(!IsNull(LoadFile(ValgSupp)))
 		cmdline << "--suppressions=" << ValgSupp << ' ';
+	if(!IsNull(valgrind_options))
+		cmdline << valgrind_options << ' ';
 	cmdline << '\"' << target << "\" ";
 	cmdline << runarg;
 	ConsoleClear();
-	PutConsole("Valgrind..");
+	ShowConsole();
+	PutConsole(cmdline);
 	if(IsNull(h.Execute(cmdline))) {
 		PutConsole("Error executing valgrind");
 		return;

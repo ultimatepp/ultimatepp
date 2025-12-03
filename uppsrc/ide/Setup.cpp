@@ -461,6 +461,7 @@ void Ide::SetupFormat() {
 		(ide.gui_font, gui_font_override)
 		(ide.search_downloads, search_downloads)
 		(ide.show_basic_hints, show_basic_hints)
+		(ide.valgrind, valgrind_options)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);

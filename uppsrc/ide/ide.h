@@ -664,6 +664,7 @@ public:
 	Font      gui_font = StdFont();
 	String    libclang_options;
 	String    libclang_coptions;
+	String    valgrind_options;
 	bool      prefer_clang_format = false;
 	bool      blk0_header = true;
 	bool      win_deactivated = false;
