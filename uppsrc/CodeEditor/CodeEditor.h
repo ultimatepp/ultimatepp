@@ -72,6 +72,7 @@ private:
 	bool             bingenabled;
 	bool             hilite_if_endif;
 	bool             line_numbers;
+	bool             no_annotations;
 	int              annotations;
 	bool             ignored_next_edit;
 	int              next_age;
@@ -131,6 +132,7 @@ public:
 	void     HiliteIfEndif(bool b)           { hilite_if_endif = b; Refresh(); }
 	void     LineNumbers(bool b);
 	void     Annotations(int width);
+	void     NoAnnotations(bool b);
 	
 	bool     IsHiliteIfEndif() const         { return hilite_if_endif; }
 	
@@ -551,6 +553,8 @@ public:
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 	void     BarColor(Color c)                        { bar.Background(c); }
 	void     BarText(const String& text, Color c)     { bar.Text(text, c); }
+	
+	void     NoAnnotations(bool b = true)             { bar.NoAnnotations(b); }
 
 	void     Errors(Vector<Point>&& errs);
 	

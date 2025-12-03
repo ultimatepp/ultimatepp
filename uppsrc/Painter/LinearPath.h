@@ -33,6 +33,7 @@ private:
 	double fid;
 	double tw;
 
+	Pointf first;
 	Pointf p0, v0, o0, a0, b0;
 	Pointf p1, v1, o1, a1, b1;
 	Pointf p2;

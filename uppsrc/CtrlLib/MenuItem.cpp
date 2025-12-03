@@ -213,7 +213,7 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 				hltxt = IsDark(bg) ? White() : Black();
 			}
 			else
-				ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
+				ChPaint(this, w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
 		}
 		else
 		if(opaque)
@@ -326,7 +326,7 @@ void MenuItem::Paint(Draw& w)
 
 	if(hl) {
 		if(GUI_GlobalStyle() >= GUISTYLE_XP)
-			ChPaint(w, 0, 0, sz.cx, sz.cy, style->item);
+			ChPaint(this, w, 0, 0, sz.cx, sz.cy, style->item);
 		else
 			w.DrawRect(sz, SColorHighlight);
 	}
@@ -352,7 +352,7 @@ void MenuItem::Paint(Draw& w)
 				if(IsNull(style->icheck))
 					DrawXPButton(w, rr, BUTTON_EDGE|BUTTON_CHECKED);
 				else
-					ChPaint(w, rr, style->icheck);
+					ChPaint(this, w, rr, style->icheck);
 			}
 		}
 		else {

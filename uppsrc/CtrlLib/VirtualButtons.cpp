@@ -40,7 +40,7 @@ void VirtualButtons::PaintButtons(Draw& w, Ctrl *ctrl)
 	for(int i = 0; i < ButtonCount(); i++) {
 		Rect r = ButtonRect(i);
 		if(r.GetWidth() > 0 && r.GetHeight() > 0)
-			Button::PaintButton(w, ButtonRect(i), ButtonStyle(i), ButtonVisualState(ctrl, i), false,
+			Button::PaintButton(nullptr, w, ButtonRect(i), ButtonStyle(i), ButtonVisualState(ctrl, i), false,
 			                    String(), StdFont(), ButtonImage(i),
 			                    ButtonMono(i), 0, false, !ButtonEnabled(i));
 	}

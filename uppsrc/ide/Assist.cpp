@@ -603,16 +603,17 @@ bool AssistEditor::DelayedTip(CodeEditor::MouseTip& mt)
 		return false;
 	
 	String qtf = "[g ";
-	if(m.nest.GetCount())
-		qtf << "[@b* \1" << m.nest << "::\1]&";
+	
+	String p = IsFunction(m.kind) ? m.pretty : m.pretty0;
+	p.TrimEnd("{}");
 
+	qtf << SignatureQtf(m.name, p, m.nest);
+	
 	String tl = BestTopic(GetRefLinks(ref_id));
 	if(tl.GetCount()) {
-		RichText txt = GetCodeTopic(tl, ref_id);
-		qtf << AsQTF(txt);
+		RichText txt = GetCodeTopic(tl, ref_id, true);
+		qtf << '&' << AsQTF(txt);
 	}
-	else
-		qtf << SignatureQtf(m.name, m.pretty);
 
 	SetQTF(mt, qtf);
 	mt.background = AdjustIfDark(Color(245, 255, 221));

@@ -326,6 +326,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 	}
 	bool param = false;
 	bool was_type = false;
+	bool was_colon = false;
 	int pari = -1;
 	int par = 0;
 	int lastidi = -1;
@@ -340,12 +341,15 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 
 		auto Pname = [&] {
 			if(lastidi >= 0) {
-				if(was_type)
+				if(was_type && !was_colon)
 					part[lastidi].type = ITEM_PNAME;
 				lastidi = -1;
 			}
 			was_type = false;
 		};
+		
+		if(*s == ':')
+			was_colon = true;
 
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
@@ -390,6 +394,9 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				}
 				else
 				if(param) {
+					if(lastidi >= 0 && par == 0 && was_colon)
+						was_colon = false;
+					else
 					if(lastidi >= 0 && par == 0)
 						was_type = true;
 					lastidi = part.GetCount() - 1; // can be a parameter name
@@ -447,10 +454,11 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 
 Image CxxIcon(int kind);
 
-String SignatureQtf(const String& name, const String& pretty, int pari)
+String SignatureQtf(const String& name, const String& pretty, const String& nest, int pari)
 {
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParsePretty(name, pretty);
+	String ns = nest;
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
@@ -477,6 +485,10 @@ String SignatureQtf(const String& name, const String& pretty, int pari)
 			break;
 		}
 		qtf << ' ';
+		if(ns.GetCount() && p.type == ITEM_NAME) {
+			qtf << "[@b \1" << ns << "::\1]";
+			ns.Clear();
+		}
 		qtf << '\1' << pretty.Mid(p.pos, p.len) << '\1';
 		qtf << ']';
 	}

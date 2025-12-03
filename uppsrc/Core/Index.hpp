@@ -313,6 +313,8 @@ void Index<T>::Shrink()
 template <typename T>
 void Index<T>::Remove(const int *sorted_list, int count)
 {
+	if(count == 0)
+		return;
 	if(HasUnlinked()) {
 		Vector<bool> u;
 		u.SetCount(GetCount());

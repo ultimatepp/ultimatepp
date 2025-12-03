@@ -71,7 +71,7 @@ bool AssistEditor::GetAnnotationRef(String& t, String& coderef, int q)
 	return true;
 }
 
-RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef)
+RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef, bool skip_header)
 {
 	static String   last_path;
 	static RichText topic_text;
@@ -104,7 +104,8 @@ RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef)
 				if(!IsCodeItem(topic_text, i)) i++;
 				while(IsCodeItem(topic_text, i)) {
 					if(CleanupTppId(topic_text.Get(i).format.label) == cr)
-						result.Cat(topic_text.Get(i));
+						if(!skip_header)
+							result.Cat(topic_text.Get(i));
 					i++;
 				}
 				while(i < topic_text.GetPartCount() && !IsCodeItem(topic_text, i)
@@ -121,7 +122,8 @@ RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef)
 			else
 			if(CleanupTppId(topic_text.Get(i).format.label) == cr) {
 				while(i < topic_text.GetPartCount() && CleanupTppId(topic_text.Get(i).format.label) == cr)
-					result.Cat(topic_text.Get(i++));
+					if(!skip_header)
+						result.Cat(topic_text.Get(i++));
 				while(i < topic_text.GetPartCount() && topic_text.Get(i).format.label.GetCount() == 0
 				      && !IsBeginEnd(topic_text, i)) {
 					if(topic_text.IsPara(i))
@@ -146,7 +148,7 @@ void AssistEditor::SyncAnnotationPopup()
 	if(!GetAnnotationRef(tl, coderef))
 		return;
 	if(tl.GetCount()) {
-		annotation_popup.Pick(pick(GetCodeTopic(tl, coderef)), GetRichTextStdScreenZoom());
+		annotation_popup.Pick(pick(GetCodeTopic(tl, coderef, false)), GetRichTextStdScreenZoom());
 	}
 	else
 		if(SyncRefsFinished)

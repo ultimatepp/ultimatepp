@@ -228,19 +228,19 @@ void ScrollBar::Paint(Draw& w)
 				pr = style->through ? GetSize() : Slider();
 			}
 			if(i != 2 || thumbsize >= style->thumbmin)
-				ChPaint(w, pr, l[i][p == i ? CTRL_PRESSED : light == i && !buttons_capture ? CTRL_HOT : CTRL_NORMAL]);
+				ChPaint(this, w, pr, l[i][p == i ? CTRL_PRESSED : light == i && !buttons_capture ? CTRL_HOT : CTRL_NORMAL]);
 			if(i != 2)
 				w.End();
 		}
 	}
 	else {
 		if(style->through)
-			ChPaint(w, sz, l[0][CTRL_DISABLED]);
+			ChPaint(this, w, sz, l[0][CTRL_DISABLED]);
 		else
 		if(IsHorz())
-			ChPaint(w, cc, 0, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
+			ChPaint(this, w, cc, 0, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
 		else
-			ChPaint(w, 0, cc, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
+			ChPaint(this, w, 0, cc, sz.cx, sz.cy, l[0][CTRL_DISABLED]);
 	}
 	PaintButtons(w, this);
 }

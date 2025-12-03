@@ -530,12 +530,8 @@ void Ide::AsErrors()
 	SetErrorEditor();
 }
 
-void Ide::FindDs(int where)
+Vector<String> Ide::FindXFiles(int where)
 {
-	SaveFile();
-
-	NewFFound();
-	
 	String nest_dir = GetPathNest(editfile);
 	
 	Vector<String> files;
@@ -553,11 +549,22 @@ void Ide::FindDs(int where)
 				if(FileExists(path) &&
 				   (where != 1 || editfile.StartsWith(pp)) &&
 				   (where != 2 || GetPathNest(path) == nest_dir) &&
-				   findarg(ext, ".cpp", ".h", ".hpp", ".c", ".m", ".cxx", ".cc", ".mm", ".icpp", ".i") >= 0)
+				   (where < 0 || findarg(ext, ".cpp", ".h", ".hpp", ".c", ".m", ".cxx", ".cc", ".mm", ".icpp", ".i") >= 0))
 					files.Add(path);
 			}
 		}
 	}
+	
+	return files;
+}
+
+void Ide::FindDs(int where, bool all)
+{
+	SaveFile();
+
+	Vector<String> files = FindXFiles(where);
+
+	NewFFound();
 
 	int n = 0;
 	Progress pi;
@@ -573,19 +580,31 @@ void Ide::FindDs(int where)
 				while(!p.IsEof()) {
 					CParser::Pos pos = p.GetPos();
 					if(p.Char('#')) {
-						if(p.Id("if") || p.Id("ifdef"))
-							ignore = true;
-						else
-						if(p.Id("endif"))
-							ignore = false;
+						if(!all) {
+							if(p.Id("if") || p.Id("ifdef"))
+								ignore = true;
+							else
+							if(p.Id("endif"))
+								ignore = false;
+						}
 						p.SkipLine();
 					}
 					else
 					if(p.IsId()) {
-						static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
-						                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
+						static Index<String> ds = {
+							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT"
+						};
+						static Index<String> ds_all = {
+							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT",
+							"RLOG", "RDUMP", "RDUMPC", "RDUMPM", "RTIMING",
+						    "RLOGHEX", "RDUMPHEX", "RTIMESTOP", "RHITCOUNT",
+							"LOG", "DUMP", "DUMPC", "DUMPM", "TIMING",
+						    "LOGHEX", "DUMPHEX", "TIMESTOP", "HITCOUNT",
+						};
 						String id = p.ReadId();
-						if(ds.Find(id) >= 0 && p.Char('(') && !ignore) {
+						if((all ? ds_all : ds).Find(id) >= 0 && p.Char('(') && !ignore) {
 							String line;
 							for(const char *s = pos.lineptr; findarg(*s, '\0', '\r', '\n') < 0; s++)
 								line.Cat(*s);
@@ -599,34 +618,38 @@ void Ide::FindDs(int where)
 			catch(CParser::Error) {}
 		}
 	}
-	/*
-		FileIn in(fn);
-		int line = 0;
-		while(!in.IsEof()) {
-			line++;
-			String ln = in.GetLine();
-			try {
-				CParser p(ln);
-				while(!p.IsEof()) {
-					if(p.Char('#') || p.Char2('/', '/'))
-						break;
-					if(p.IsId()) {
-						int pos = p.GetPtr() - ln;
-						String id = p.ReadId();
-						if(ds.Find(id) >= 0 && p.Char('('))
-							AddFoundFile(fn, line, ln, pos, id.GetCount());
-					}
-					else
-						p.Skip();
-				}
-			}
-			catch(CParser::Error) {}
-		}
-	}
-	*/
-
 	FFoundFinish();
 }
+
+void Ide::FindGitConflicts()
+{
+	SaveFile();
+
+	Vector<String> files = FindXFiles(-1);
+
+	NewFFound();
+
+	int n = 0;
+	Progress pi;
+	for(String fn : files) {
+		if(pi.SetCanceled(n++, files.GetCount()))
+			break;
+
+		if(GetFileLength(fn) < 10*1024*1024) {
+			FileIn in(fn);
+			int line = 0;
+			while(!in.IsEof()) {
+				line++;
+				String ln = in.GetLine();
+				if(ln.StartsWith("<<<<<<<"))
+					AddFoundFile(fn, line, ln, 0, 7);
+			}
+		}
+	}
+	FFoundFinish();
+}
+
+
 
 void Ide::CopyRich()
 {

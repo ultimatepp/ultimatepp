@@ -2,7 +2,7 @@ enum LookOp {
 	LOOK_PAINT,
 	LOOK_MARGINS,
 	LOOK_PAINTEDGE,
-	
+
 	LOOK_NOCACHE = 0x8000,
 };
 
@@ -11,6 +11,9 @@ enum {
 	CH_EDITFIELD_IMAGE = -1001, // special Image hotspot x2 value, y2 is then x and y for the purposes of painting
 };
 
+class Ctrl;
+
+void  ChLookFn(Value (*fn)(Ctrl *ctrl, Draw& w, const Rect& r, const Value& look, int lookop, Color ink));
 void  ChLookFn(Value (*fn)(Draw& w, const Rect& r, const Value& look, int lookop, Color ink));
 
 Image AdjustColors(const Image& img);
@@ -20,6 +23,15 @@ void   ColoredOverride(Iml& target, Iml& source);
 
 void   ChReset();
 void   ChFinish();
+
+void ChPaint(Ctrl *ctrl, Draw& w,const Rect& r, const Value& look, Color ink = Null);
+void ChPaint(Ctrl *ctrl, Draw& w,int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void ChPaintNoCache(Ctrl *ctrl, Draw& w,int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void ChPaintEdge(Ctrl *ctrl, Draw& w,const Rect& r, const Value& look, Color ink = Null);
+void ChPaintEdge(Ctrl *ctrl, Draw& w,int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+void ChPaintBody(Ctrl *ctrl, Draw& w, const Rect& r, const Value& look, Color ink = Null);
+void ChPaintBody(Ctrl *ctrl, Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
+Rect ChMargins(Ctrl *ctrl, const Value& look);
 
 void   ChPaint(Draw& w, const Rect& r, const Value& look, Color ink = Null);
 void   ChPaint(Draw& w, int x, int y, int cx, int cy, const Value& look, Color ink = Null);
