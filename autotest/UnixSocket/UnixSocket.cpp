@@ -10,16 +10,16 @@ CONSOLE_APP_MAIN
 
 	String path = Format("/tmp/upp-unixsocket-test-%d", getpid());
 	
-	UnixSocket server, client;
+	Socket server, client;
 	
 	// Test server listen
-	if(!server.Listen(path)) {
+	if(!server.ListenFileSystem(path)) {
 		LOG("Server listen failed: " << server.GetErrorDesc());
 		Exit(1);
 	}
 	
 	// Test client connect
-	if(!client.Connect(path)) {
+	if(!client.ConnectFileSystem(path)) {
 		LOG("Client connect failed: " << client.GetErrorDesc());
 		Exit(1);
 	}
@@ -28,7 +28,7 @@ CONSOLE_APP_MAIN
 	String test_data = "Hello, world!";
 	client.Put(test_data + "\n");
 	
-	UnixSocket accepted;
+	Socket accepted;
 	if(!accepted.Accept(server)) {
 		LOG("Accept failed: " << accepted.GetErrorDesc());
 		Exit(1);

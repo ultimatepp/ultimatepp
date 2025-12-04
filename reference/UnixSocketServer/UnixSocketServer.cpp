@@ -7,15 +7,15 @@ CONSOLE_APP_MAIN
 #ifdef PLATFORM_POSIX
 	const String& path = "/tmp/upp-unixsocket.sock";
 	
-	UnixSocket server;
-	if(!server.Listen(path, 5)) {
+	Socket server;
+	if(!server.ListenFileSystem(path, 5)) {
 		Cout() << "Unable to initialize server socket!\n";
 		SetExitCode(1);
 		return;
 	}
 	Cout() << "Waiting for requests..\n";
 	for(;;) {
-		UnixSocket s;
+		Socket s;
 		if(s.Accept(server)) {
 			String w = s.GetLine();
 			Cout() << "Request: " << w << " from: " << s.GetPeerPid() << '\n';

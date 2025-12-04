@@ -9,8 +9,8 @@ CONSOLE_APP_MAIN
 #ifdef PLATFORM_POSIX
 	auto Request = [](const String& r)
 	{
-		UnixSocket s;
-		if(!s.Connect("/tmp/upp-unixsocket.sock")) {
+		Socket s;
+		if(!s.ConnectFileSystem("/tmp/upp-unixsocket.sock")) {
 			Cout() << "Unable to connect to server!\n";
 			SetExitCode(1);
 			return String();

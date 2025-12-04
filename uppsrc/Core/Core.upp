@@ -185,8 +185,6 @@ file
 	SHA256.cpp,
 	lib\xxhash.c,
 	xxHsh.cpp,
-	UnixSocket.h,
-	UnixSocket.cpp,
 	Web readonly separator,
 	Inet.h,
 	HttpStatusCode.i,

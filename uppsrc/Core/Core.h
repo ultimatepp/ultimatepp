@@ -221,6 +221,7 @@
 #define W_P(w, p) p
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <netdb.h>
 #include <netinet/in.h>
 //#include <libiberty.h>
@@ -409,8 +410,6 @@ class JsonIO;
 #include "Huge.h"
 
 #include "ValueCache.h"
-
-#include "UnixSocket.h"
 
 #ifdef CPU_SIMD
 String AsString(const f32x4& x);
