@@ -20,7 +20,7 @@ jobs:
   build-mac:
     macos:
       xcode: 26.2.0
-    resource_class: medium
+    resource_class: m4pro.medium
     environment:
       NUMBER_OF_CPUS: 4
     steps:
