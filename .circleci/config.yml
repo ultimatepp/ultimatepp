@@ -20,7 +20,7 @@ jobs:
   build-mac:
     macos:
       xcode: 16.4.0
-    resource_class: large
+    resource_class: medium
     environment:
       NUMBER_OF_CPUS: 4
     steps:
