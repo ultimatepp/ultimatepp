@@ -202,6 +202,21 @@ void TopWindow::SetIco()
 
 		ico = new_ico;
 		lico = new_lico;
+
+		if(custom_titlebar) {
+			Rect r = GetTitleBarRect(this);
+
+			bool maximized = IsMaximized();
+			Image icon = GetIcon();
+			if(IsNull(icon))
+				r.right = r.left + GetWin32TitleBarButtonWidth();
+			else {
+				if(max(icon.GetHeight(), icon.GetWidth()) > 32)
+					icon = CachedRescale(icon, Size(32, 32));
+				r.right = r.left + DPI(IsMaximized() ? 2 : 4) + icon.GetWidth();
+			}
+			InvalidateRect(hwnd, r, FALSE);
+		}
 	}
 }
 
