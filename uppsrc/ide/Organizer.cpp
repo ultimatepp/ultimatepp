@@ -603,8 +603,8 @@ void PackageEditor::Init(ArrayCtrl& option)
 {
 	option.AddIndex();
 	option.AddIndex();
-	option.AddColumn("").SetDisplay(Single<OptionDisplay>()).Margin(0);
-	option.AddColumn("", 2).SetDisplay(Single<OptionDisplay>()).Margin(0);
+	option.AddColumn("", 7).SetDisplay(Single<OptionDisplay>()).Margin(0);
+	option.AddColumn("", 20).SetDisplay(Single<OptionDisplay>()).Margin(0);
 	option.NoHeader();
 	option.SetLineCy(max(IdeImg::Package().GetSize().cy, Draw::GetStdFontCy()));
 }

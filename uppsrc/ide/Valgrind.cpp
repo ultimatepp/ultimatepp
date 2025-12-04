@@ -19,15 +19,15 @@ void Ide::Valgrind()
 	CreateHostRunDir(h);
 	h.ChDir(Nvl(rundir, GetFileFolder(target)));
 	String cmdline;
-	String fn = GetTempFileName();
+	String fn = ConfigFile("valgrind.xml");
 	cmdline << "valgrind --xml=yes --num-callers=40 --xml-file=" << fn << ' ';
-	String ValgSupp = ConfigFile("valgrind.supp");
-	if(!IsNull(LoadFile(ValgSupp)))
-		cmdline << "--suppressions=" << ValgSupp << ' ';
+	if(!IsNull(valgrind_options))
+		cmdline << valgrind_options << ' ';
 	cmdline << '\"' << target << "\" ";
 	cmdline << runarg;
 	ConsoleClear();
-	PutConsole("Valgrind..");
+	ShowConsole();
+	PutConsole(cmdline);
 	if(IsNull(h.Execute(cmdline))) {
 		PutConsole("Error executing valgrind");
 		return;
