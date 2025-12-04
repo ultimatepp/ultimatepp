@@ -114,17 +114,17 @@ public:
 	bool      GetAll(Huge& h, size_t size);
 
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
-	int       Get16()                { if(ptr + 1 >= rdlim) return _Get16(); int q = Peek16(ptr); ptr += 2; return q; }
-	int       Get32()                { if(ptr + 3 >= rdlim) return _Get32(); int q = Peek32(ptr); ptr += 4; return q; }
-	int64     Get64()                { if(ptr + 7 >= rdlim) return _Get64(); int64 q = Peek64(ptr); ptr += 8; return q; }
+	int       Get16()                { if(rdlim - ptr <= 1) return _Get16(); int q = Peek16(ptr); ptr += 2; return q; }
+	int       Get32()                { if(rdlim - ptr <= 3) return _Get32(); int q = Peek32(ptr); ptr += 4; return q; }
+	int64     Get64()                { if(rdlim - ptr <= 7) return _Get64(); int64 q = Peek64(ptr); ptr += 8; return q; }
 
 	int       GetUtf8();
 
 	String    GetLine();
 
-	void      Put16(word q)          { if(ptr + 1 < wrlim) { Poke16(ptr, q); ptr += 2; } else Put(&q, 2); }
-	void      Put32(dword q)         { if(ptr + 3 < wrlim) { Poke32(ptr, q); ptr += 4; } else Put(&q, 4); }
-	void      Put64(int64 q)         { if(ptr + 7 < wrlim) { Poke64(ptr, q); ptr += 8; } else Put(&q, 8); }
+	void      Put16(word q)          { if(wrlim - ptr > 1) { Poke16(ptr, q); ptr += 2; } else Put(&q, 2); }
+	void      Put32(dword q)         { if(wrlim - ptr > 3) { Poke32(ptr, q); ptr += 4; } else Put(&q, 4); }
+	void      Put64(int64 q)         { if(wrlim - ptr > 7) { Poke64(ptr, q); ptr += 8; } else Put(&q, 8); }
 
 #ifdef CPU_LE
 	int       Get16le()              { return Get16(); }
@@ -199,7 +199,7 @@ public:
 	Stream&   SerializeRaw(dword *data)    { if(IsLoading()) *data = Get32le(); else Put32le(*data); return *this; }
 	Stream&   SerializeRaw(uint64 *data)   { if(IsLoading()) *data = Get64le(); else Put64le(*data); return *this; }
 
-	Stream&   operator%(bool& d)           { byte b; if(IsStoring()) b = d; SerializeRaw(&b); d = b; return *this; }
+	Stream&   operator%(bool& d)           { byte b; if(IsStoring()) b = d; SerializeRaw(&b); d = !!b; return *this; }
 	Stream&   operator%(char& d)           { return SerializeRaw((byte *)&d); }
 	Stream&   operator%(signed char& d)    { return SerializeRaw((byte *)&d); }
 	Stream&   operator%(unsigned char& d)  { return SerializeRaw((byte *)&d); }
