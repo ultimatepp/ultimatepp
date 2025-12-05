@@ -748,10 +748,9 @@ void  ButtonOption::Paint(Draw& w) {
 	if(VisibleAccessKeys() && IsEnabled())
 		dl.accesskey = accesskey;
 	int i = !IsShowEnabled() ? CTRL_DISABLED :
-	         push ? CTRL_PRESSED :
+	         push || option ? CTRL_PRESSED :
 	         HasMouseIn() || HasFocus() ? CTRL_HOT :
 	         CTRL_NORMAL;
-	if(option) i = CTRL_PRESSED;
 	ChPaint(this, w, sz, style->look[i]);
 	dl.ink = style->textcolor[i];
 	dl.Paint(w, 3, 3, sz.cx - 6, sz.cy - 6, true);
