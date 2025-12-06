@@ -28,8 +28,8 @@ sockets for specified events.&]
 Note that SocketWaitEvent always waits for exceptions.&]
 [s3;%% &]
 [s4; &]
-[s5;:SocketWaitEvent`:`:Add`(Socket`&`,dword`): [@(0.0.255) void]_[* Add]([_^TcpSocket^ Soc
-ket][@(0.0.255) `&]_[*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
+[s5;:SocketWaitEvent`:`:Add`(Socket`&`,dword`): [@(0.0.255) void]_[* Add]([_^topic`:`/`/Core`/src`/Socket`_en`-us`#Socket`:`:class^ S
+ocket][@(0.0.255) `&]_[*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
 [s2;%% Adds Socket [%-*@3 s] to the list to be waited on specified 
 [%-*@3 events]. If [%-*@3 s] is not open, it is not used but its 
 index is reserved anyway (see Get).&]

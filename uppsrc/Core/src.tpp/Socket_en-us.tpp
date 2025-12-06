@@ -177,7 +177,7 @@ for ipv6`=`=true.&]
 system [%-*@3 path]. [%-*@3 listen`_count] specifies the maximum 
 number of pending connections in the queue. [%-*@3 reuse] indicates 
 whether the socket should allow reuse of the address if it already 
-exists.&]
+exists. returns true if the listen is successful.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Socket`:`:ListenAbstract`(const String`&`,int`,bool`): [@(0.0.255) bool] 
@@ -192,7 +192,7 @@ the maximum number of pending connections. [%-*@3 reuse] indicates
 whether the abstract socket name can be reused. Abstract sockets 
 exist only in kernel memory and disappear when processes exit. 
 On non`-Linux POSIX systems, this method will fail and set the 
-socket into error state..&]
+socket into error state.&]
 [s3; &]
 [s4;%% &]
 [s5;:Socket`:`:Accept`(Socket`&`): [@(0.0.255) bool]_[* Accept]([_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ S
@@ -209,7 +209,8 @@ ocket][@(0.0.255) `&]_[*@3 listen`_socket])&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Socket`:`:NoDelay`(`): [@(0.0.255) void]_[* NoDelay]()&]
-[s2;%% Sets TCP`_NODELAY option.&]
+[s2;%% Sets TCP`_NODELAY option. Note that this option is not available 
+for unix domain sockets.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Socket`:`:Linger`(int`): [@(0.0.255) void]_[* Linger]([@(0.0.255) int]_[*@3 msecs])&]
