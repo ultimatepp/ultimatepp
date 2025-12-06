@@ -986,15 +986,15 @@ void Socket::Clear()
 
 #ifdef PLATFORM_POSIX
 
-static bool sSetSockType(Socket& s, const String& path, sockaddr_un& addr, bool abstract)
+static bool sSetUnixSockType(Socket& s, const String& path, sockaddr_un& addr, bool abstract)
 {
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 
 #ifndef PLATFORM_LINUX
 	if(abstract) {
-		s.SetSockError("unix socket config",
-						-1, "abstract socket is not supported on this platform");
+		s.SetSockError("SetUnixSockType",
+						-1, "Abstract socket is not supported on this platform");
 		return false;
 	}
 #endif
@@ -1015,8 +1015,8 @@ static bool sSetSockType(Socket& s, const String& path, sockaddr_un& addr, bool 
 			return true;
 		}
 	}
-	s.SetSockError("unix socket config",
-						-1, "failed to set unix socket type");
+	s.SetSockError("SetUnixSockType",
+						-1, "Failed to set unix domain socket type");
 	return false;
 }
 
@@ -1052,7 +1052,7 @@ bool Socket::NixConnect(const String& path, bool abstract)
 		return false;
 
 	struct sockaddr_un addr;
-	if(!sSetSockType(*this, path, addr, abstract))
+	if(!sSetUnixSockType(*this, path, addr, abstract))
 		return false;
 
 	if(connect(socket, (sockaddr *) &addr, sizeof(addr)) == 0 ||
@@ -1086,7 +1086,7 @@ bool Socket::NixListen(const String& path, int n, bool reuse, bool abstract)
 		return false;
 
 	struct sockaddr_un addr;
-	if(!sSetSockType(*this, path, addr, abstract))
+	if(!sSetUnixSockType(*this, path, addr, abstract))
 		return false;
 	
 	if(reuse) {
