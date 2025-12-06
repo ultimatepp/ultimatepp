@@ -157,17 +157,17 @@ INITBLOCK
 void AssistEditor::Events()
 {
 	SortByKey(CodeIndex());
-	String nest = FindCurrentNest();
-	if(IsNull(nest))
+	AnnotationItem cm = FindCurrentNest();
+	if(IsNull(cm.nest))
 		return;
-	EventsDlg dlg(nest);
+	EventsDlg dlg(cm.nest);
 	LoadFromGlobal(dlg, "EventsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "EventsDlg");
 	if(c != IDOK)
 		return;
 	String a, b;
-	dlg.Generate(a, b, nest, c == IDYES);
+	dlg.Generate(a, b, cm.nest, c == IDYES);
 	Paste(a.ToWString());
 	if(c != IDYES)
 		WriteClipboardText(b);

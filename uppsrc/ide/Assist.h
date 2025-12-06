@@ -205,7 +205,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	AnnotationItem FindCurrentAnnotation(bool allow_define = false);
 
 	void           DCopy();
-	String         FindCurrentNest(String *local_bases = nullptr);
+	AnnotationItem FindCurrentNest(String *local_bases = nullptr);
 	void           Virtuals();
 	void           Events();
 
