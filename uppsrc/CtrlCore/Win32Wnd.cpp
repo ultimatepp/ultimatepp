@@ -222,7 +222,7 @@ void Ctrl::InstallPanicBox()
 
 extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titlebar_metrics__;
 extern Function<bool (const TopWindow *)> is_custom_titlebar__;
-extern Function<Ctrl *(TopWindow *, int)> custom_titlebar_make__;
+extern Function<Ctrl *(TopWindow *, Color, int)> custom_titlebar_make__;
 
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
@@ -300,8 +300,8 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 		return win->IsCustomTitleBar__();
 	};
 	
-	custom_titlebar_make__ = [=](TopWindow *win, int mincy) -> Ctrl * {
-		return win->MakeCustomTitleBar__(mincy);
+	custom_titlebar_make__ = [=](TopWindow *win, Color bk, int mincy) -> Ctrl * {
+		return win->MakeCustomTitleBar__(bk, mincy);
 	};
 
 	EnterGuiMutex();

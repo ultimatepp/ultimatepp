@@ -512,7 +512,8 @@ public:
 	virtual ~ToolButton();
 };
 
-void PaintBarArea(Draw& w, Ctrl *x, const Value& look, int bottom = Null);
+void  PaintBarArea(Draw& w, Ctrl *x, const Value& look, int bottom = Null);
+Color GetBarAreaAvgColor();
 
 class ToolBar : public BarCtrl {
 public:

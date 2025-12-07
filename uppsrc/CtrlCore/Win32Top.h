@@ -12,12 +12,13 @@ private:
 
 	One<FrameTop<Ctrl>>   custom_bar_frame;
 	One<Ctrl>             custom_bar;
+	Color                 custom_titlebar_bk = Null;
 	int                   custom_titlebar_cy = 0;
 	int                   active_titlebar_button = -1;
 	bool                  active_titlebar_active = false;
 	
 	bool        IsCustomTitleBar__() const;
-	Ctrl       *MakeCustomTitleBar__(int mincy);
+	Ctrl       *MakeCustomTitleBar__(Color bk, int mincy);
 	void        SyncCustomBar();
 
 public:

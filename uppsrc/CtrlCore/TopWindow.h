@@ -176,16 +176,14 @@ public:
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
 	
-	Ctrl       *CustomTitleBar(int min_cy = 0);
+	Ctrl       *CustomTitleBar(Color bk = Null, int min_cy = 0);
 	
-//	TopWindow&  CustomTitleBar(int min_cy = 0);
 	bool        IsCustomTitleBar() const;
 
 	struct CustomTitleBarMetrics {
 		int   lm;
 		int   rm;
 		int   height;
-		Color background;
 	};
 	
 	CustomTitleBarMetrics GetCustomTitleBarMetrics() const;

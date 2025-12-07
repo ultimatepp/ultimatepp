@@ -403,9 +403,6 @@ void AppMain___()
 		
 		ide.LoadConfig();
 
-		if(!ide.disable_custom_caption)
-			ide.CustomTitleBar();
-
 		if(arg.GetCount() == 1) {
 			if(arg[0].EndsWith(".upp")) {
 				Vector<String> names = Split(arg[0], DIR_SEP);

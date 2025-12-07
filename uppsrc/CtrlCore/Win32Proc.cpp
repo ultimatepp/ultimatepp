@@ -141,7 +141,7 @@ void Ctrl::PaintWinBarBackground(SystemDraw& w, const Rect& clip)
 	HWND hwnd = GetHWND();
 	if(topwin && topwin->IsCustomTitleBar() && hwnd) {
 		Rect r = GetTitleBarRect(topwin);
-		w.DrawRect(r, IsDarkTheme() ? Color(26, 34, 39) : Color(238, 244, 249));
+		w.DrawRect(r, Nvl(topwin->custom_titlebar_bk, IsDarkTheme() ? Color(26, 34, 39) : Color(238, 244, 249)));
 	}
 }
 

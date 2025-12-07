@@ -198,6 +198,7 @@ void TopWindow::SyncCustomBar()
 	if(custom_bar) {
 		auto cm = GetCustomTitleBarMetrics();
 		custom_bar->VSizePos().HSizePos(cm.lm, cm.rm);
+		RefreshFrame(0, 0, GetRect().Width(), cm.height);
 	}
 }
 
@@ -206,16 +207,25 @@ bool TopWindow::IsCustomTitleBar__() const
 	return custom_bar;
 }
 
-Ctrl *TopWindow::MakeCustomTitleBar__(int mincy)
+Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 {
 	if(!custom_bar && IsWin11()) {
-		custom_titlebar_cy = mincy;
-		AddFrame(custom_bar_frame.Create());
+		custom_bar_frame.Create();
 		custom_bar_frame->Transparent();
 		custom_bar.Create();
-		custom_bar_frame->Add(*custom_bar);
-		SyncCustomBar();
 	}
+	if(custom_bar) {
+		if(&GetFrame(0) != ~custom_bar_frame)
+			RemoveFrame(*custom_bar_frame);
+			if(&GetFrame(0) == &NullFrame())
+				SetFrame(0, *custom_bar_frame);
+			else
+				InsertFrame(0, *custom_bar_frame);
+		custom_bar_frame->Add(*custom_bar);
+	}
+	custom_titlebar_bk = bk;
+	custom_titlebar_cy = mincy;
+	SyncCustomBar();
 	return ~custom_bar;
 }
 

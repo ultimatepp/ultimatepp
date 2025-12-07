@@ -3,49 +3,44 @@
 using namespace Upp;
 
 struct MyApp : TopWindow {
-	void Paint(Draw& w) override {
-		Size sz = GetSize();
-//		w.DrawRect(sz, WhiteGray()); return;
-
-		auto h = GetCustomTitleBarMetrics().height;
-		Color c2 = SLtCyan();
-		for(int i = 0; i < h; i++)
-			w.DrawRect(0, i, sz.cx, 1, Blend(WhiteGray(), c2, i * 255 / h));
-	}
-	
-	void Layout() override {
-		auto m = GetCustomTitleBarMetrics();
-		int h = bar.GetHeight();
-		bar.LeftPos(m.lm, bar.GetWidth()).TopPos((m.height - h) / 2, h);
-	}
-	
-	void MainMenu(Bar& bar)
-	{
-		bar.Sub("File", [=](Bar& bar) {
-			bar.Add("Exit", [=] { Break(); });
-		});
-	}
-	
-	MenuBar bar;
+	MenuBar  bar;
 	LineEdit editor;
-	
+	Label    title;
+	FrameTop<Ctrl> test;
+
+	void Layout() override {
+		int ch = GetCustomTitleBarMetrics().height;
+		int h = bar.GetHeight();
+		int w = bar.GetWidth();
+		bar.LeftPos(0, w).TopPos((ch - h) / 2, h);
+		
+		title.HSizePos(w, 0).VSizePos();
+	}
+
 	MyApp() {
 		Icon(CtrlImg::select_all());
 
-		CustomTitleBar(200);
+		Ctrl *tb = CustomTitleBar(Blend(SWhiteGray(), SLtMagenta(), 20));
 		
-		Add(bar);
+		if(tb) {
+			tb->Add(bar);
+			tb->Add(title);
+		}
+		else
+			AddFrame(bar);
 		bar.Transparent();
 		bar.Set([=](Bar& bar) {
-			MainMenu(bar);
+			bar.Sub("File", [=](Bar& bar) {
+				bar.Add("Yellow", [=] { CustomTitleBar(Yellow()); });
+				bar.Add("Red", [=] { CustomTitleBar(LtRed()); });
+				bar.Add("Exit", [=] { Break(); });
+			});
 		});
 
-		DDUMP(bar.GetWidth());
-		DDUMP(bar.GetHeight());
-		
-		DDUMP(GetCustomTitleBarMetrics().height);
+		title = "\1[g This is [* title";
+		title.AlignCenter();
 
-		Add(editor.VSizePos(GetCustomTitleBarMetrics().height).HSizePos());
+		Add(editor.SizePos());
 	};
 };
 
