@@ -292,7 +292,33 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		return GetTextSize(m.pretty, StdFont().Bold()).cx;
 	}
 
-	return PaintCpp(w, r, m.kind, m.name, m.pretty, ink, focuscursor, true);
+	String pretty;
+	const char *s = m.pretty;
+	const char *b = s;
+	while(*s) { // remove qualifications Foo(Upp::Point p) -> Foo(Point p)
+		if(iscib(*s)) {
+			pretty.Cat(b, s);
+			b = s;
+			try {
+				CParser p(s);
+				while(!p.IsEof()) {
+					p.ReadId();
+					if(!p.Char2(':', ':') || !p.IsId())
+						break;
+					b = p.GetPtr(); // skip any qualification
+				}
+				s = p.GetPtr();
+			}
+			catch(CParser::Error) {
+				if(*s) s++; // should not happen, but if it does, move on
+			}
+		}
+		else
+			s++;
+	}
+	pretty.Cat(b, s);
+
+	return PaintCpp(w, r, m.kind, m.name, pretty, ink, focuscursor, true);
 }
 
 void Navigator::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const

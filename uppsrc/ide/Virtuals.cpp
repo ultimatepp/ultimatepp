@@ -99,11 +99,11 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		for(String cls : classes) {
 			Vector<String> split = Split(cls, ':');
 			if(split.GetCount()) {
-				split.Drop(); // remove type name ([Upp, TopWindow] -> [Upp])
+				split.Drop(); // remove type name (e.g. [Upp, TopWindow] -> [Upp])
 				String qual;
 				for(String s : split) {
 					MergeWith(qual, "::", s);
-					if(namespaces.Find(qual) < 0) // if base is Upp::TopWindow, we will not ignore Upp::
+					if(namespaces.Find(qual) < 0) // e.g. if base is Upp::TopWindow, we will not ignore Upp::
 						unneeded_qualifications.FindAdd(qual);
 				}
 			}
@@ -130,7 +130,9 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 						}
 						s = p.GetPtr();
 					}
-					catch(CParser::Error) {}
+					catch(CParser::Error) {
+						if(*s) s++; // should not happen, but if it does, move on
+					}
 				}
 				else
 					s++;
