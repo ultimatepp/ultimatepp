@@ -47,17 +47,26 @@ void IconDes::PasteText()
 	Font font = textdlg.GetFont();
 	Size tsz = GetTextSize(text, font);
 	tsz.cx += tsz.cy / 3;
-	ImageDraw iw(tsz);
-	iw.Alpha().DrawText(0, 0, text, font, GrayColor(CurrentColor().a));
-	iw.DrawRect(tsz, CurrentColor());
+	Image img;
+	if(textdlg.outline) {
+		ImagePainter iw(tsz + 2 * pen, textdlg.nonaa ? MODE_NOAA : MODE_ANTIALIASED);
+		iw.Clear();
+		iw.Text(pen, pen, text, font).Stroke(pen, CurrentColor());
+		img = iw;
+	}
+	else {
+		ImageDraw iw(tsz);
+		iw.Alpha().DrawText(0, 0, text, font, GrayColor(CurrentColor().a));
+		iw.DrawRect(tsz, CurrentColor());
+		img = iw;
+	}
 #ifdef PLATFORM_WIN32 // non-antialiased works
-	Current().paste_image = iw;
+	Current().paste_image = img;
 #else
 	if(!font.IsNonAntiAliased())
 		Current().paste_image = iw;
 	else {
-		Image h = iw;
-		ImageBuffer ib(h);
+		ImageBuffer ib(img);
 		RGBA cc = CurrentColor();
 		for(RGBA& c : ib)
 			c = c.a < 128 ? RGBAZero() : cc;

@@ -9,6 +9,7 @@ void IconDes::SetPen(int _pen)
 {
 	pen = _pen;
 	SetBar();
+	PasteText();
 }
 
 bool IconDes::Key(dword key, int count)
