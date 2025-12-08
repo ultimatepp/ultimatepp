@@ -161,7 +161,7 @@ void IpAddrInfo::Clear()
 
 IpAddrInfo::IpAddrInfo()
 {
-	TcpSocket::Init();
+	Socket::Init();
 	entry = NULL;
 }
 
@@ -169,12 +169,12 @@ IpAddrInfo::IpAddrInfo()
 
 #define SOCKERR(x) x
 
-const char *TcpSocketErrorDesc(int code)
+const char *SocketErrorDesc(int code)
 {
 	return strerror(code);
 }
 
-int TcpSocket::GetErrorCode()
+int Socket::GetErrorCode()
 {
 	return errno;
 }
@@ -183,7 +183,7 @@ int TcpSocket::GetErrorCode()
 
 #define SOCKERR(x) WSA##x
 
-const char *TcpSocketErrorDesc(int code)
+const char *SocketErrorDesc(int code)
 {
 	static Tuple<int, const char *> err[] = {
 		{ WSAEINTR,                 "Interrupted function call." },
@@ -194,13 +194,13 @@ const char *TcpSocketErrorDesc(int code)
 		{ WSAEWOULDBLOCK,           "Resource temporarily unavailable." },
 		{ WSAEINPROGRESS,           "Operation now in progress." },
 		{ WSAEALREADY,              "Operation already in progress." },
-		{ WSAENOTSOCK,              "TcpSocket operation on nonsocket." },
+		{ WSAENOTSOCK,              "Socket operation on nonsocket." },
 		{ WSAEDESTADDRREQ,          "Destination address required." },
 		{ WSAEMSGSIZE,              "Message too long." },
 		{ WSAEPROTOTYPE,            "Protocol wrong type for socket." },
 		{ WSAENOPROTOOPT,           "Bad protocol option." },
 		{ WSAEPROTONOSUPPORT,       "Protocol not supported." },
-		{ WSAESOCKTNOSUPPORT,       "TcpSocket type not supported." },
+		{ WSAESOCKTNOSUPPORT,       "Socket type not supported." },
 		{ WSAEOPNOTSUPP,            "Operation not supported." },
 		{ WSAEPFNOSUPPORT,          "Protocol family not supported." },
 		{ WSAEAFNOSUPPORT,          "Address family not supported by protocol family." },
@@ -212,8 +212,8 @@ const char *TcpSocketErrorDesc(int code)
 		{ WSAECONNABORTED,          "Software caused connection abort." },
 		{ WSAECONNRESET,            "Connection reset by peer." },
 		{ WSAENOBUFS,               "No buffer space available." },
-		{ WSAEISCONN,               "TcpSocket is already connected." },
-		{ WSAENOTCONN,              "TcpSocket is not connected." },
+		{ WSAEISCONN,               "Socket is already connected." },
+		{ WSAENOTCONN,              "Socket is not connected." },
 		{ WSAESHUTDOWN,             "Cannot send after socket shutdown." },
 		{ WSAETIMEDOUT,             "Connection timed out." },
 		{ WSAECONNREFUSED,          "Connection refused." },
@@ -235,14 +235,14 @@ const char *TcpSocketErrorDesc(int code)
 	return x ? x->b : "Unknown error code.";
 }
 
-int TcpSocket::GetErrorCode()
+int Socket::GetErrorCode()
 {
 	return WSAGetLastError();
 }
 
 #endif
 
-void TcpSocketInit()
+void SocketInit()
 {
 #ifdef PLATFORM_WIN32
 	ONCELOCK {
@@ -255,12 +255,12 @@ void TcpSocketInit()
 #endif
 }
 
-void TcpSocket::Init()
+void Socket::Init()
 {
-	TcpSocketInit();
+	SocketInit();
 }
 
-void TcpSocket::Reset()
+void Socket::Reset()
 {
 	LLOG("Reset");
 	is_eof = false;
@@ -280,7 +280,7 @@ void TcpSocket::Reset()
 	ssl_start = Null;
 }
 
-TcpSocket::TcpSocket()
+Socket::Socket()
 {
 	ClearError();
 	Reset();
@@ -289,7 +289,7 @@ TcpSocket::TcpSocket()
 	asn1 = false;
 }
 
-bool TcpSocket::SetupSocket()
+bool Socket::SetupSocket()
 {
 #ifdef PLATFORM_WIN32
 	connection_start = msecs();
@@ -310,7 +310,7 @@ bool TcpSocket::SetupSocket()
 	return true;
 }
 
-bool TcpSocket::Open(int family, int type, int protocol)
+bool Socket::Open(int family, int type, int protocol)
 {
 	Init();
 	Close();
@@ -319,11 +319,11 @@ bool TcpSocket::Open(int family, int type, int protocol)
 		SetSockError("open");
 		return false;
 	}
-	LLOG("TcpSocket::Data::Open() -> " << (int)socket);
+	LLOG("Socket::Data::Open() -> " << (int)socket);
 	return SetupSocket();
 }
 
-bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse, void *addr)
+bool Socket::Listen(int port, int listen_count, bool ipv6_, bool reuse, void *addr)
 {
 	Close();
 	Init();
@@ -368,13 +368,13 @@ bool TcpSocket::Listen(int port, int listen_count, bool ipv6_, bool reuse, void 
 	return true;
 }
 
-bool TcpSocket::Listen(const IpAddrInfo& addr, int port, int listen_count, bool ipv6, bool reuse)
+bool Socket::Listen(const IpAddrInfo& addr, int port, int listen_count, bool ipv6, bool reuse)
 {
 	addrinfo *a = addr.GetResult();
 	return Listen(port, listen_count, ipv6, reuse, &(((sockaddr_in*)a->ai_addr)->sin_addr.s_addr));
 }
 
-bool TcpSocket::Accept(TcpSocket& ls)
+bool Socket::Accept(Socket& ls)
 {
 	Close();
 	Init();
@@ -399,7 +399,7 @@ bool TcpSocket::Accept(TcpSocket& ls)
 	return SetupSocket();
 }
 
-String TcpSocket::GetPeerAddr() const
+String Socket::GetPeerAddr() const
 {
 	if(!IsOpen())
 		return Null;
@@ -417,7 +417,7 @@ String TcpSocket::GetPeerAddr() const
 #endif
 }
 
-void TcpSocket::NoDelay()
+void Socket::NoDelay()
 {
 	ASSERT(IsOpen());
 	int __true = 1;
@@ -426,7 +426,7 @@ void TcpSocket::NoDelay()
 		SetSockError("setsockopt(TCP_NODELAY)");
 }
 
-void TcpSocket::Linger(int msecs)
+void Socket::Linger(int msecs)
 {
 	ASSERT(IsOpen());
 	linger ls;
@@ -436,13 +436,13 @@ void TcpSocket::Linger(int msecs)
 		SetSockError("setsockopt(SO_LINGER)");
 }
 
-void TcpSocket::Attach(SOCKET s)
+void Socket::Attach(SOCKET s)
 {
 	Close();
 	socket = s;
 }
 
-bool TcpSocket::RawConnect(addrinfo *arp)
+bool Socket::RawConnect(addrinfo *arp)
 {
 	if(!arp) {
 		SetSockError("connect", -1, "not found");
@@ -462,7 +462,7 @@ bool TcpSocket::RawConnect(addrinfo *arp)
 				}
 				if(err.GetCount())
 					err << '\n';
-				err << TcpSocketErrorDesc(GetErrorCode());
+				err << SocketErrorDesc(GetErrorCode());
 				Close();
 			}
 			rp = rp->ai_next;
@@ -473,7 +473,7 @@ bool TcpSocket::RawConnect(addrinfo *arp)
 }
 
 
-bool TcpSocket::Connect(IpAddrInfo& info)
+bool Socket::Connect(IpAddrInfo& info)
 {
 	LLOG("Connect addrinfo");
 	Init();
@@ -482,7 +482,7 @@ bool TcpSocket::Connect(IpAddrInfo& info)
 	return RawConnect(result);
 }
 
-bool TcpSocket::Connect(const char *host, int port)
+bool Socket::Connect(const char *host, int port)
 {
 	LLOG("Connect(" << host << ':' << port << ')');
 	Close();
@@ -496,7 +496,7 @@ bool TcpSocket::Connect(const char *host, int port)
 	return Connect(info);
 }
 
-bool TcpSocket::WaitConnect()
+bool Socket::WaitConnect()
 {
 	if(WaitWrite()) {
 		int optval = 0;
@@ -505,7 +505,7 @@ bool TcpSocket::WaitConnect()
 			if (optval == 0)
 				return true;
 			else {
-				SetSockError("wait connect", -1, Nvl(String(TcpSocketErrorDesc(optval)), "failed"));
+				SetSockError("wait connect", -1, Nvl(String(SocketErrorDesc(optval)), "failed"));
 				return false;
 			}
 		}
@@ -513,7 +513,7 @@ bool TcpSocket::WaitConnect()
 	return false;
 }
 
-void TcpSocket::RawClose()
+void Socket::RawClose()
 {
 	LLOG("close " << (int)socket);
 	if(socket != INVALID_SOCKET) {
@@ -531,7 +531,7 @@ void TcpSocket::RawClose()
 	}
 }
 
-void TcpSocket::Close()
+void Socket::Close()
 {
 	if(ssl)
 		ssl->Close();
@@ -540,7 +540,7 @@ void TcpSocket::Close()
 	ssl.Clear();
 }
 
-bool TcpSocket::WouldBlock()
+bool Socket::WouldBlock()
 {
 	int c = GetErrorCode();
 #ifdef PLATFORM_POSIX
@@ -559,7 +559,7 @@ bool TcpSocket::WouldBlock()
 #endif
 }
 
-int TcpSocket::RawSend(const void *buf, int amount)
+int Socket::RawSend(const void *buf, int amount)
 {
 #ifdef PLATFORM_LINUX
 	int res = send(socket, (const char *)buf, amount, MSG_NOSIGNAL);
@@ -574,21 +574,21 @@ int TcpSocket::RawSend(const void *buf, int amount)
 	return res;
 }
 
-int TcpSocket::Send(const void *buf, int amount)
+int Socket::Send(const void *buf, int amount)
 {
 	if(SSLHandshake())
 		return 0;
 	return ssl ? ssl->Send(buf, amount) : RawSend(buf, amount);
 }
 
-void TcpSocket::Shutdown()
+void Socket::Shutdown()
 {
 	ASSERT(IsOpen());
 	if(shutdown(socket, SD_SEND))
 		SetSockError("shutdown(SD_SEND)");
 }
 
-String TcpSocket::GetHostName()
+String Socket::GetHostName()
 {
 	Init();
 	char buffer[256];
@@ -596,7 +596,7 @@ String TcpSocket::GetHostName()
 	return buffer;
 }
 
-bool TcpSocket::IsGlobalTimeout()
+bool Socket::IsGlobalTimeout()
 {
 	if(!IsNull(global_timeout) && msecs() - start_time > global_timeout) {
 		SetSockError("wait", ERROR_GLOBAL_TIMEOUT, "Timeout");
@@ -605,7 +605,7 @@ bool TcpSocket::IsGlobalTimeout()
 	return false;
 }
 
-bool TcpSocket::RawWait(dword flags, int end_time)
+bool Socket::RawWait(dword flags, int end_time)
 { // wait till end_time
 	LLOG("RawWait end_time: " << end_time << ", current time " << msecs() << ", to wait: " << end_time - msecs());
 	is_timeout = false;
@@ -661,19 +661,19 @@ bool TcpSocket::RawWait(dword flags, int end_time)
 	}
 }
 
-TcpSocket& TcpSocket::GlobalTimeout(int ms)
+Socket& Socket::GlobalTimeout(int ms)
 {
 	start_time = msecs();
 	global_timeout = ms;
 	return *this;
 }
 
-bool TcpSocket::Wait(dword flags, int end_time)
+bool Socket::Wait(dword flags, int end_time)
 {
 	return ssl ? ssl->Wait(flags, end_time) : RawWait(flags, end_time);
 }
 
-int  TcpSocket::GetEndTime() const
+int  Socket::GetEndTime() const
 { // Compute time limit for operation, based on global timeout and per-operation timeout settings
 	int o = min(IsNull(global_timeout) ? INT_MAX : start_time + global_timeout,
 	            IsNull(timeout) ? INT_MAX : msecs() + timeout);
@@ -685,12 +685,12 @@ int  TcpSocket::GetEndTime() const
 	return o;
 }
 
-bool TcpSocket::Wait(dword flags)
+bool Socket::Wait(dword flags)
 {
 	return Wait(flags, GetEndTime());
 }
 
-int TcpSocket::Put(const void *s_, int length)
+int Socket::Put(const void *s_, int length)
 {
 	LLOG("Put " << socket << ": " << length);
 	ASSERT(IsOpen());
@@ -718,7 +718,7 @@ int TcpSocket::Put(const void *s_, int length)
 	return done;
 }
 
-bool TcpSocket::PutAll(const void *s, int len)
+bool Socket::PutAll(const void *s, int len)
 {
 	if(Put(s, len) != len) {
 		if(!IsError())
@@ -728,7 +728,7 @@ bool TcpSocket::PutAll(const void *s, int len)
 	return true;
 }
 
-bool TcpSocket::PutAll(const String& s)
+bool Socket::PutAll(const String& s)
 {
 	if(Put(s) != s.GetCount()) {
 		if(!IsError())
@@ -738,7 +738,7 @@ bool TcpSocket::PutAll(const String& s)
 	return true;
 }
 
-int TcpSocket::RawRecv(void *buf, int amount)
+int Socket::RawRecv(void *buf, int amount)
 {
 	int res = recv(socket, (char *)buf, amount, 0);
 	if(res == 0)
@@ -755,26 +755,26 @@ int TcpSocket::RawRecv(void *buf, int amount)
 	return res;
 }
 
-int TcpSocket::Recv(void *buffer, int maxlen)
+int Socket::Recv(void *buffer, int maxlen)
 {
 	if(SSLHandshake())
 		return 0;
 	return ssl ? ssl->Recv(buffer, maxlen) : RawRecv(buffer, maxlen);
 }
 
-void TcpSocket::ReadBuffer(int end_time)
+void Socket::ReadBuffer(int end_time)
 {
 	ptr = end = buffer;
 	if(Wait(WAIT_READ, end_time))
 		end = buffer + Recv(buffer, BUFFERSIZE);
 }
 
-bool TcpSocket::IsEof() const
+bool Socket::IsEof() const
 {
 	return is_eof && ptr == end || IsAbort() || !IsOpen() || IsError();
 }
 
-int TcpSocket::Get_()
+int Socket::Get_()
 {
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return -1;
@@ -782,7 +782,7 @@ int TcpSocket::Get_()
 	return ptr < end ? (byte)*ptr++ : -1;
 }
 
-int TcpSocket::Peek_(int end_time)
+int Socket::Peek_(int end_time)
 {
 	if(!IsOpen() || IsError() || IsEof() || IsAbort())
 		return -1;
@@ -790,12 +790,12 @@ int TcpSocket::Peek_(int end_time)
 	return ptr < end ? (byte)*ptr : -1;
 }
 
-int TcpSocket::Peek_()
+int Socket::Peek_()
 {
 	return Peek_(GetEndTime());
 }
 
-int TcpSocket::Get(void *buffer, int count)
+int Socket::Get(void *buffer, int count)
 {
 	LLOG("Get " << count);
 
@@ -829,7 +829,7 @@ int TcpSocket::Get(void *buffer, int count)
 	return done;
 }
 
-String TcpSocket::Get(int count)
+String Socket::Get(int count)
 {
 	if(count == 0)
 		return Null;
@@ -841,7 +841,7 @@ String TcpSocket::Get(int count)
 	return String(out);
 }
 
-bool  TcpSocket::GetAll(void *buffer, int len)
+bool  Socket::GetAll(void *buffer, int len)
 {
 	if(Get(buffer, len) == len)
 		return true;
@@ -850,7 +850,7 @@ bool  TcpSocket::GetAll(void *buffer, int len)
 	return false;
 }
 
-String TcpSocket::GetAll(int len)
+String Socket::GetAll(int len)
 {
 	String s = Get(len);
 	if(s.GetCount() != len) {
@@ -861,7 +861,7 @@ String TcpSocket::GetAll(int len)
 	return s;
 }
 
-String TcpSocket::GetLine(int maxlen)
+String Socket::GetLine(int maxlen)
 {
 	LLOG("GetLine " << maxlen << ", iseof " << IsEof());
 	String ln;
@@ -892,7 +892,7 @@ String TcpSocket::GetLine(int maxlen)
 	}
 }
 
-void TcpSocket::SetSockError(const char *context, int code, const char *errdesc)
+void Socket::SetSockError(const char *context, int code, const char *errdesc)
 {
 	errorcode = code;
 	errordesc.Clear();
@@ -903,19 +903,19 @@ void TcpSocket::SetSockError(const char *context, int code, const char *errdesc)
 	LLOG("ERROR " << errordesc);
 }
 
-void TcpSocket::SetSockError(const char *context, const char *errdesc)
+void Socket::SetSockError(const char *context, const char *errdesc)
 {
 	SetSockError(context, GetErrorCode(), errdesc);
 }
 
-void TcpSocket::SetSockError(const char *context)
+void Socket::SetSockError(const char *context)
 {
-	SetSockError(context, TcpSocketErrorDesc(GetErrorCode()));
+	SetSockError(context, SocketErrorDesc(GetErrorCode()));
 }
 
-TcpSocket::SSL *(*TcpSocket::CreateSSL)(TcpSocket& socket);
+Socket::SSL *(*Socket::CreateSSL)(Socket& socket);
 
-bool TcpSocket::StartSSL()
+bool Socket::StartSSL()
 {
 	ASSERT(IsOpen());
 	if(!CreateSSL) {
@@ -940,7 +940,7 @@ bool TcpSocket::StartSSL()
 	return true;
 }
 
-dword TcpSocket::SSLHandshake()
+dword Socket::SSLHandshake()
 {
 	if(ssl && (mode == CONNECT || mode == ACCEPT)) {
 		dword w = ssl->Handshake();
@@ -958,31 +958,167 @@ dword TcpSocket::SSLHandshake()
 	return 0;
 }
 
-void TcpSocket::SSLCertificate(const String& cert_, const String& pkey_, bool asn1_)
+void Socket::SSLCertificate(const String& cert_, const String& pkey_, bool asn1_)
 {
 	cert = cert_;
 	pkey = pkey_;
 	asn1 = asn1_;
 }
 
-void TcpSocket::SSLServerNameIndication(const String& name)
+void Socket::SSLServerNameIndication(const String& name)
 {
 	sni = name;
 }
 
-void TcpSocket::SSLCAcert(const String& cert, bool asn1_)
+void Socket::SSLCAcert(const String& cert, bool asn1_)
 {
 	ca_cert = cert;
     asn1 = asn1_;
 }
 
-void TcpSocket::Clear()
+void Socket::Clear()
 {
 	ClearError();
 	if(IsOpen())
 		Close();
 	Reset();
 }
+
+#ifdef PLATFORM_POSIX
+
+static bool sSetUnixSockType(Socket& s, const String& path, sockaddr_un& addr, bool abstract)
+{
+	memset(&addr, 0, sizeof(addr));
+	addr.sun_family = AF_UNIX;
+
+#ifndef PLATFORM_LINUX
+	if(abstract) {
+		s.SetSockError("SetUnixSockType",
+						-1, "Abstract socket is not supported on this platform");
+		return false;
+	}
+#endif
+
+	if(abstract) {
+		addr.sun_path[0] = '\0';
+		if(path.GetLength() > 0) {
+			ASSERT(path.GetLength() < sizeof(addr.sun_path) - 1);
+			strncpy(addr.sun_path + 1, ~path, sizeof(addr.sun_path) - 2);
+			return true;
+		}
+	}
+	else {
+		if(path.GetLength() > 0) {
+			ASSERT(path.GetLength() < sizeof(addr.sun_path));
+			strncpy(addr.sun_path, ~path, sizeof(addr.sun_path) - 1);
+			addr.sun_path[sizeof(addr.sun_path) - 1] = '\0';
+			return true;
+		}
+	}
+	s.SetSockError("SetUnixSockType",
+						-1, "Failed to set unix domain socket type");
+	return false;
+}
+
+int Socket::GetPeerPid() const
+{
+	if(!IsOpen())
+		return -1;
+	
+#if defined(PLATFORM_LINUX)
+    struct ucred ucred;
+    socklen_t len = sizeof(ucred);
+    if(getsockopt(socket, SOL_SOCKET, SO_PEERCRED, &ucred, &len) == 0)
+        return ucred.pid;
+        
+#elif (defined(PLATFORM_MACOS) || defined(PLATFORM_FREEBSD)) && defined(LOCAL_PEERPID)
+    pid_t pid;
+    socklen_t len = sizeof(pid);
+    if(getsockopt(socket, SOL_LOCAL, LOCAL_PEERPID, &pid, &len) == 0)
+        return pid;
+
+#endif
+ 
+   return -1; // Not supported.
+}
+
+bool Socket::NixConnect(const String& path, bool abstract)
+{
+	Close();
+	Init();
+	Reset();
+
+	if(!Open(AF_UNIX, SOCK_STREAM, 0))
+		return false;
+
+	struct sockaddr_un addr;
+	if(!sSetUnixSockType(*this, path, addr, abstract))
+		return false;
+
+	if(connect(socket, (sockaddr *) &addr, sizeof(addr)) == 0 ||
+		GetErrorCode() == EINPROGRESS || GetErrorCode() == EWOULDBLOCK) {
+			mode = Socket::CONNECT;
+			return true;
+	}
+
+	SetSockError("connect", -1, strerror(GetErrorCode()));
+	Close();
+	return false;
+}
+
+bool Socket::ConnectFileSystem(const String& path)
+{
+	return NixConnect(path, false);
+}
+
+bool Socket::ConnectAbstract(const String& path)
+{
+	return NixConnect(path, true);
+}
+
+bool Socket::NixListen(const String& path, int n, bool reuse, bool abstract)
+{
+	Close();
+	Init();
+	Reset();
+
+	if(!Open(AF_UNIX, SOCK_STREAM, 0))
+		return false;
+
+	struct sockaddr_un addr;
+	if(!sSetUnixSockType(*this, path, addr, abstract))
+		return false;
+	
+	if(reuse) {
+		int optval = 1;
+		setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (const char *) &optval, sizeof(optval));
+	}
+
+	if(bind(socket, (const sockaddr *) &addr, sizeof(addr))) {
+		SetSockError(Format("bind(path=%s)", path));
+		return false;
+	}
+
+	if(listen(socket, n)) {
+		SetSockError(Format("listen(path=%s, count=%d)", path, n));
+		return false;
+	}
+
+	return true;
+}
+
+bool Socket::ListenFileSystem(const String& path, int listen_count, bool reuse)
+{
+	return NixListen(path, listen_count, reuse, false);
+}
+
+bool Socket::ListenAbstract(const String& path, int listen_count, bool reuse)
+{
+	return NixListen(path, listen_count, reuse, true);
+}
+
+#endif
+
 
 int SocketWaitEvent::Wait(int timeout)
 {

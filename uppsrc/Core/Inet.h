@@ -87,7 +87,7 @@ struct SSLInfo {
 
 enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_IS_EXCEPTION = 4 };
 
-class TcpSocket : NoCopy {
+class Socket : NoCopy {
 	enum { BUFFERSIZE = 512 };
 	enum { NONE, CONNECT, ACCEPT, SSL_CONNECTED };
 	SOCKET                  socket;
@@ -136,8 +136,8 @@ class TcpSocket : NoCopy {
 	struct SSLImp;
 	friend struct SSLImp;
 
-	static SSL *(*CreateSSL)(TcpSocket& socket);
-	static SSL *CreateSSLImp(TcpSocket& socket);
+	static SSL *(*CreateSSL)(Socket& socket);
+	static SSL *CreateSSLImp(Socket& socket);
 
 	friend void  InitCreateSSL();
 	friend class IpAddrInfo;
@@ -172,7 +172,12 @@ class TcpSocket : NoCopy {
 	static int              GetErrorCode();
 	static void             Init();
 	
-	TcpSocket(const TcpSocket&);
+#ifdef PLATFORM_POSIX // Unix domain socket support
+    bool                    NixConnect(const String& path, bool abstract);
+    bool                    NixListen(const String& path, int n, bool reuse, bool abstract);
+#endif
+
+	Socket(const Socket&);
 
 public:
 	Event<>         WhenWait;
@@ -208,9 +213,17 @@ public:
 	bool            WaitConnect();
 	bool            Listen(int port, int listen_count = 5, bool ipv6 = false, bool reuse = true, void* addr = NULL);
 	bool            Listen(const IpAddrInfo& addr, int port, int listen_count = 5, bool ipv6 = false, bool reuse = true);
-	bool            Accept(TcpSocket& listen_socket);
+	bool            Accept(Socket& listen_socket);
 	void            Close();
 	void            Shutdown();
+
+#ifdef PLATFORM_POSIX
+	int             GetPeerPid() const;
+	bool            ConnectFileSystem(const String& path);
+	bool            ConnectAbstract(const String& path);
+	bool            ListenFileSystem(const String& path, int listen_count = 5, bool reuse = true);
+	bool            ListenAbstract(const String& path, int listen_count = 5, bool reuse = true);
+#endif
 
 	void            NoDelay();
 	void            Linger(int msecs);
@@ -247,18 +260,20 @@ public:
 	
 	void            Clear();
 
-	TcpSocket&      Timeout(int ms)                          { timeout = ms; return *this; }
+	Socket&         Timeout(int ms)                          { timeout = ms; return *this; }
 	int             GetTimeout() const                       { return timeout; }
-	TcpSocket&      GlobalTimeout(int ms);
-	TcpSocket&      NoGlobalTimeout()                        { return GlobalTimeout(Null); }
-	TcpSocket&      Blocking()                               { return Timeout(Null); }
+	Socket&         GlobalTimeout(int ms);
+	Socket&         NoGlobalTimeout()                        { return GlobalTimeout(Null); }
+	Socket&         Blocking()                               { return Timeout(Null); }
 	bool            IsBlocking()                             { return IsNull(GetTimeout()); }
-	TcpSocket&      WaitStep(int ms)                         { waitstep = ms; return *this; }
+	Socket&         WaitStep(int ms)                         { waitstep = ms; return *this; }
 	int             GetWaitStep() const                      { return waitstep; }
 
-	TcpSocket();
-	~TcpSocket()                                             { Close(); }
+	Socket();
+	virtual ~Socket()                                        { Close(); }
 };
+
+using TcpSocket = Socket; // Backward compatibility
 
 class SocketWaitEvent {
 	Vector<Tuple<int, dword>> socket;
@@ -268,7 +283,7 @@ class SocketWaitEvent {
 public:
 	void  Clear()                                            { socket.Clear(); }
 	void  Add(SOCKET s, dword events)                        { socket.Add(MakeTuple((int)s, events)); }
-	void  Add(TcpSocket& s, dword events)                    { Add(s.GetSOCKET(), events); }
+	void  Add(Socket& s, dword events)                       { Add(s.GetSOCKET(), events); }
 	int   Wait(int timeout);
 	dword Get(int i) const;
 	dword operator[](int i) const                            { return Get(i); }

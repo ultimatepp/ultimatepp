@@ -81,13 +81,13 @@ static void *SslRealloc(void *ptr, size_t size)
 
 #endif
 
-void TcpSocketInit();
+void SocketInit();
 
 INITIALIZER(SSL)
 {
 	MemoryIgnoreLeaksBlock __;
 	LLOG("SslInit");
-	TcpSocketInit();
+	SocketInit();
 #ifdef UPP_HEAP
 #ifndef flagSSL_USEMALLOC // do not change OpenSSL memory functions to U++ heap
 #ifndef _DEBUG // temporary solution unless we find the source of all those harmless leaks
