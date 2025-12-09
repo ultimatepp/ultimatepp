@@ -247,9 +247,6 @@ void IconDes::MainToolBar(Bar& bar)
 	bar.Separator();
 	SettingBar(bar);
 	bar.GapRight();
-	bar.Separator();
-	bar.Add("Learn more about Icon Designer..", IdeCommonImg::Help(),
-	        [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$IconDes$en-us.html"); });
 }
 
 void IconDes::SetBar()

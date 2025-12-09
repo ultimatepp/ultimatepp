@@ -6,6 +6,11 @@ static VectorMap<String, IdeIconEditPos>& sEP()
 	return x;
 }
 
+String IconDes::HelpLink() const
+{
+	return "IconDes";
+}
+
 void IconDes::SaveEditPos()
 {
 	IdeIconEditPos& ep = sEP().GetAdd(filename);

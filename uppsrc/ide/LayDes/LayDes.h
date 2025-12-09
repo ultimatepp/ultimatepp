@@ -506,13 +506,14 @@ class LayDesigner : public IdeDesigner {
 	ParentCtrl     parent;
 
 public:
-	virtual String GetFileName() const override { return designer.filename; }
-	virtual void   Save() override              { designer.Save(); }
-	virtual void   SyncUsc() override           { designer.SyncUsc(); }
-	virtual void   SaveEditPos() override       { designer.SaveEditPos(); }
-	virtual void   EditMenu(Bar& menu) override { designer.EditMenu(menu); }
-	virtual int    GetCharset() const override  { return designer.charset; }
-	virtual Ctrl&  DesignerCtrl() override      { return parent; }
+	String GetFileName() const override { return designer.filename; }
+	void   Save() override              { designer.Save(); }
+	void   SyncUsc() override           { designer.SyncUsc(); }
+	void   SaveEditPos() override       { designer.SaveEditPos(); }
+	void   EditMenu(Bar& menu) override { designer.EditMenu(menu); }
+	int    GetCharset() const override  { return designer.charset; }
+	Ctrl&  DesignerCtrl() override      { return parent; }
+	String HelpLink() const override;
 
 	void Serialize(Stream& s)                   { designer.Serialize(s); }
 	bool Load(const char *filename, byte cs)    { return designer.Load(filename, cs); }

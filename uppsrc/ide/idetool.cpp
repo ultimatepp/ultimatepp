@@ -101,12 +101,11 @@ void Ide::OpenTopic(const String& topic)
 	OpenTopic(topic, String(), false);
 }
 
-void Ide::OpenATopic()
+void Ide::OpenATopic(const String& topic)
 {
-	String t = doc.GetCurrentLink();
-	if(!t.StartsWith("topic:"))
+	if(!topic.StartsWith("topic:"))
 		return;
-	OpenTopic(t);
+	OpenTopic(topic);
 }
 
 void Ide::IdeFlushFile()

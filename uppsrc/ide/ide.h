@@ -203,7 +203,7 @@ private:
 	void Next();
 
 public:
-	Event<>  WhenTopic;
+	Event<String> WhenTopic;
 
 	void SyncDocTree();
 	void SearchWord(const String& s);
@@ -710,7 +710,6 @@ public:
 
 	int           doc_serial;
 	TopicCtrl     doc;
-	TopicCtrl     windoc;
 
 	int           state_icon;
 
@@ -1003,7 +1002,7 @@ public:
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
 		void  OpenTopic(const String& topic);
-		void  OpenATopic();
+		void  OpenATopic(const String& topic);
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
@@ -1209,6 +1208,7 @@ public:
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();
+	void      OpenHelp(const char *ref, bool editable = false);
 
 	const Workspace& AssistWorkspace() const;
 

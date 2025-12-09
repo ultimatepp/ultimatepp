@@ -411,7 +411,7 @@ LangDlg::LangDlg(Vector<TFile>& tfile)
 	text.AddColumn("Text");
 	text.WhenEnterRow = [=] { EnterText(); };
 	
-	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/srcdoc$Core$i18n_en-us.html"); };
+	IdeHelpButton(help, "topic://Core/srcdoc/i18n_en-us");
 	
 	source.AddIndex();
 	source.AddIndex();

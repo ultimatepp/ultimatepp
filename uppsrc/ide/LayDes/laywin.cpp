@@ -193,12 +193,6 @@ void LayDes::OptionBar(Bar& bar)
 	bar.Add("Settings..", THISBACK(Settings));
 }
 
-void LayDes::HelpBar(Bar& bar)
-{
-	bar.Add("Learn more about Layout Designer..", IdeCommonImg::Help(),
-		[=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$LayoutDes_en-us.html"); });
-}
-
 void LayDes::MainToolBar(Bar& bar)
 {
 	EditBar(bar);
@@ -215,8 +209,6 @@ void LayDes::MainToolBar(Bar& bar)
 	bar.Separator();
 	SpringBar(bar);
 	bar.GapRight();
-	bar.Separator();
-	HelpBar(bar);
 }
 
 void LayDes::ItemBar(Bar& bar)
@@ -380,6 +372,11 @@ LayDes::LayDes()
 	setting.gridy <<= 4;
 }
 
+String LayDesigner::HelpLink() const
+{
+	return "topic://ide/app/LayoutDes_en-us";
+}
+
 LayDesigner *CreateLayDesigner(const char *filename, byte charset, const char *cfgname)
 {
 	LayDesigner *q = new LayDesigner();
@@ -389,6 +386,7 @@ LayDesigner *CreateLayDesigner(const char *filename, byte charset, const char *c
 	delete q;
 	return NULL;
 }
+
 
 void LayUscClean();
 bool LayUscParse(CParser& p, String& current_namespace);

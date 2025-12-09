@@ -968,21 +968,28 @@ void Ide::HelpMenu(Bar& menu)
 {
 	LTIMESTOP("HelpMenu");
 	if(!IsEditorMode()) {
-		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
+//		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 		menu.Add(editor.GetWord().GetCount(), AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	}
-	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
+	menu.AddMenu(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
 	menu.MenuSeparator();
 	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
 	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
 	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
-	menu.Separator();
+	menu.MenuSeparator();
 	OnlineSearchMenu(menu);
 	if(menu.IsMenuBar()) {
 		menu.Separator();
 		menu.Add(FileExists(GetIdeLogPath()), "View application log file", THISBACK(ViewIdeLogFile));
 		menu.Separator();
 		menu.Add("About..", IdeImg::info(), THISBACK(About));
+	}
+	else {
+		if(!toolbar_in_row) {
+			menu.GapRight();
+			menu.Separator();
+		}
+		menu.Add(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
 	}
 }
 

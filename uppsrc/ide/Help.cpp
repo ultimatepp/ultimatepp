@@ -309,8 +309,6 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 	return Topic();
 }
 
-                 
-
 struct HighlightWords : RichText::Iterator {
 	Vector<String> words;
 	struct Pos : Moveable<Pos> { int pos, len; };
@@ -371,7 +369,7 @@ void TopicCtrl::FinishText(RichText& text)
 
 void TopicCtrl::OpenTopic()
 {
-	WhenTopic();
+	WhenTopic(GetCurrentLink());
 }
 
 void TopicCtrl::Search()
@@ -454,9 +452,11 @@ void  TopicCtrl::BarEx(Bar& bar)
 	bar.Add(!internal && GetCurrent().StartsWith("topic:"), "Display on full screen",
 	        IdeImg::show(), THISBACK(SShow));
 	bar.GapRight();
-	bar.Separator();
-	bar.Add(!internal && GetCurrent().StartsWith("topic:"), "Edit topic",
-	        TopicImg::Topic(), THISBACK(OpenTopic));
+	if(WhenTopic) {
+		bar.Separator();
+		bar.Add(!internal && GetCurrent().StartsWith("topic:"), "Edit topic",
+		        TopicImg::Topic(), THISBACK(OpenTopic));
+	}
 }
 
 void TopicCtrl::Serialize(Stream& s)
@@ -493,7 +493,7 @@ bool IsHelpName(const char *path)
 struct HelpModule : public IdeModule {
 	virtual String       GetID() { return "HelpModule"; }
 	virtual Image FileIcon(const char *path) {
-		return IsHelpName(path) ? IdeImg::help() : Null;
+		return IsHelpName(path) ? CtrlImg::help() : Null;
 	}
 	virtual IdeDesigner *CreateDesigner(Ide *ide, const char *path, byte cs) {
 		if(IsHelpName(path)) {
@@ -552,18 +552,28 @@ void Ide::ShowTopics()
 	EditFile(HELPNAME);
 }
 
+void Ide::OpenHelp(const char *link, bool editable)
+{
+	TopicCtrl& help = CreateNewWindow<TopicCtrl>();
+	if(editable)
+		help.WhenTopic = [=](const String& topic) { OpenATopic(topic); };
+	help.Icon(CtrlImg::help());
+	topic_serial++;
+	GetRefLinks("");
+	help.SyncDocTree();
+	String l = link;
+	if(!l.StartsWith("topic://"))
+		l = "topic://ide/app/" + l + "_en-us";
+	help.GoTo(l);
+	help.OpenMain();
+}
+
 void Ide::ShowTopicsWin()
 {
-	windoc.Icon(IdeImg::help_win(), IdeImg::help_win_large());
-	if(windoc.IsOpen())
-		windoc.SetForeground();
-	else {
-		topic_serial++;
-		GetRefLinks("");
-		windoc.SyncDocTree();
-		windoc.GoTo(sTopicHome);
-		windoc.OpenMain();
-	}
+	String link = sTopicHome;
+	if(designer)
+		link = Nvl(designer->HelpLink(), link);
+	OpenHelp(link);
 }
 
 void Ide::SearchTopics()
@@ -586,4 +596,15 @@ void Ide::RefreshBrowser()
 void Ide::ViewIdeLogFile()
 {
 	OpenLog(GetIdeLogPath());
+}
+
+void IdeHelpButton(Button& help, const String& link)
+{
+	help.SetImage(CtrlImg::help());
+	help.SetLabel("");
+	help << [=] {
+		Ide *ide = TheIde();
+		if(ide)
+			ide->OpenHelp(link);
+	};
 }
