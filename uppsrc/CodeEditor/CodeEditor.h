@@ -375,7 +375,6 @@ protected:
 	void   ToggleLineComments(bool usestars = false);
 	void   ToggleStarComments();
 	void   Enclose(const char *c1, const char *c2, int l = -1, int h = -1);
-	void   Make(Event<String&> op);
 	void   TabsOrSpaces(String& out, bool maketabs);
 	void   LineEnds(String& out);
 
@@ -443,7 +442,6 @@ public:
 
 	void   MakeTabsOrSpaces(bool tabs);
 	void   MakeLineEnds();
-	void   ConvertToOverrides();
 
 	void   CopyWord();
 	void   SwapChars();
@@ -482,6 +480,8 @@ public:
 	void   TabRight();
 	void   TabLeft();
 	void   SwapUpDown(bool up);
+
+	void   Make(Event<String&> op);
 
 	void    CheckEdited(bool e = true)                { check_edited = e; }
 	bool    GetCheckEdited()                          { return check_edited; }

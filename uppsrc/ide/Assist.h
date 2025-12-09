@@ -239,6 +239,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SerializeNavigatorWorkspace(Stream& s);
 	void           SyncNavigatorPlacement();
 
+	void           ConvertToOverrides();
+
 	Event<int>     WhenFontScroll;
 	Event<>        WhenSelectionChanged;
 

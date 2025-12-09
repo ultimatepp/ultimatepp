@@ -265,3 +265,50 @@ void AssistEditor::Virtuals()
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);
 }
+
+void AssistEditor::ConvertToOverrides()
+{
+	Make([](String& out) {
+		String r;
+		const char *s = out;
+		bool virt = false;
+		int lvl = 0;
+		while(*s) {
+			const char *b = s;
+			while(iscid(*s))
+				s++;
+			int len = int(s - b);
+			if(len == 7 && memcmp(b, "virtual", 7) == 0) {
+				virt = true;
+				lvl = 0;
+				while(*s == ' ' || *s == '\t')
+					s++;
+			}
+			else {
+				r.Cat(b, s);
+				if(*s == '(')
+					lvl++;
+				r.Cat(*s);
+				if(*s == ')') {
+					lvl = max(lvl - 1, 0);
+					if(lvl == 0 && virt) {
+						r << " override";
+						virt = false;
+					}
+				}
+				s++;
+			}
+		}
+		
+		out = r;
+	/*
+		out.Insert(0, " ");
+		out.Replace("\tvirtual\t", "\t");
+		out.Replace("\tvirtual ", "\t");
+		out.Replace(" virtual\t", " ");
+		out.Replace(" virtual ", " ");
+		out.Replace(";", " override;");
+		out.Remove(0, 1);*/
+	});
+}
+
