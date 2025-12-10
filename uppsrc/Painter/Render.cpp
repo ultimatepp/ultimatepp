@@ -14,6 +14,8 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const Path
 {
 	evenodd = attr.evenodd;
 	regular = isregular && width < 0 && !path_info->ischar;
+	
+	stroke_width = width;
 
 	g = &rasterizer;
 
@@ -56,11 +58,17 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const Path
 }
 
 void BufferPainter::RenderPathSegments(LinearPathConsumer *g, const Vector<byte>& path,
-                                       const SimpleAttr *attr, double tolerance)
+                                       const SimpleAttr *attr, double tolerance, double stroke_width)
 {
 	Pointf pos = Pointf(0, 0);
 	const byte *data = path.begin();
 	const byte *end = path.end();
+
+	auto AdjustTolerance = [&](Pointf p) { // resolve RoundRect(0, 0, 9, 9, 0.001).Stroke(10) issue
+		return stroke_width > 0 ? tolerance / (max(0.5 * stroke_width, 1.0)) * min(1.0, 2 * Distance(pos, p))
+		                        : tolerance;
+	};
+
 	while(data < end) {
 		const LinearData *d = (LinearData *)data;
 		switch(d->type) {
@@ -80,11 +88,11 @@ void BufferPainter::RenderPathSegments(LinearPathConsumer *g, const Vector<byte>
 			const QuadraticData *d = (QuadraticData *)data;
 			if(attr) {
 				Pointf p = attr->mtx.Transform(d->p);
-				ApproximateQuadratic(*g, pos, attr->mtx.Transform(d->p1), p, tolerance);
+				ApproximateQuadratic(*g, pos, attr->mtx.Transform(d->p1), p, AdjustTolerance(p));
 				pos = p;
 			}
 			else {
-				ApproximateQuadratic(*g, pos, d->p1, d->p, tolerance);
+				ApproximateQuadratic(*g, pos, d->p1, d->p, AdjustTolerance(d->p));
 				pos = d->p;
 			}
 			data += sizeof(QuadraticData);
@@ -96,11 +104,11 @@ void BufferPainter::RenderPathSegments(LinearPathConsumer *g, const Vector<byte>
 			if(attr) {
 				Pointf p = attr->mtx.Transform(d->p);
 				ApproximateCubic(*g, pos, attr->mtx.Transform(d->p1),
-				                 attr->mtx.Transform(d->p2), p, tolerance);
+				                 attr->mtx.Transform(d->p2), p, AdjustTolerance(p));
 				pos = p;
 			}
 			else {
-				ApproximateCubic(*g, pos, d->p1, d->p2, d->p, tolerance);
+				ApproximateCubic(*g, pos, d->p1, d->p2, d->p, AdjustTolerance(d->p));
 				pos = d->p;
 			}
 			data += sizeof(CubicData);
@@ -313,7 +321,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, One<SpanSource>& ss
 	PAINTER_TIMING("RenderPath2");
 	bool doco = co && !doclip && !alt && !(subpixel && clip.GetCount());
 	for(const auto& p : path_info->path) {
-		RenderPathSegments(j.g, p, j.regular ? &pathattr : NULL, j.tolerance);
+		RenderPathSegments(j.g, p, j.regular ? &pathattr : NULL, j.tolerance, j.stroke_width);
 		if(width != ONPATH) {
 			if(rasterizer.IsValid()) {
 				PAINTER_TIMING("RenderPath2 Fill");
@@ -349,7 +357,8 @@ void BufferPainter::FinishPathJob()
 				PathJob j(b.rasterizer, b.width, b.path_info, b.attr, b.preclip, b.regular);
 				if(!j.preclipped) {
 					b.evenodd = j.evenodd;
-					BufferPainter::RenderPathSegments(j.g, b.path_info->path[b.subpath], j.regular ? &b.attr : NULL, j.tolerance);
+					BufferPainter::RenderPathSegments(j.g, b.path_info->path[b.subpath],
+					                                  j.regular ? &b.attr : NULL, j.tolerance, j.stroke_width);
 				}
 			}
 		});
