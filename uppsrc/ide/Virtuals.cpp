@@ -301,14 +301,6 @@ void AssistEditor::ConvertToOverrides()
 		}
 		
 		out = r;
-	/*
-		out.Insert(0, " ");
-		out.Replace("\tvirtual\t", "\t");
-		out.Replace("\tvirtual ", "\t");
-		out.Replace(" virtual\t", " ");
-		out.Replace(" virtual ", " ");
-		out.Replace(";", " override;");
-		out.Remove(0, 1);*/
 	});
 }
 
