@@ -64,7 +64,7 @@ void IconDes::PasteText()
 	Current().paste_image = img;
 #else
 	if(!font.IsNonAntiAliased())
-		Current().paste_image = iw;
+		Current().paste_image = img;
 	else {
 		ImageBuffer ib(img);
 		RGBA cc = CurrentColor();
