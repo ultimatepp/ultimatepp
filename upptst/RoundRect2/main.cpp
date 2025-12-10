@@ -9,7 +9,6 @@ struct MyApp : public TopWindow {
 	void Paint(Draw& w) override {
 		DrawPainter p(w, GetSize());
 		p.Clear(White());
-		p.Scale(22);
 		auto Strokes = [&] {
 			DLOG("== 18");
 			p.Stroke(18, Green());
@@ -19,19 +18,25 @@ struct MyApp : public TopWindow {
 			p.Stroke(5, Blue());
 			DLOG("== 1");
 			p.Stroke(1, Yellow());
+			DLOG("== 0.1");
+			p.Stroke(0.1, Cyan());
 		};
-		DLOG("----------------------------- 1");
-		p.RoundedRectangle(10, 10, 20, 30, 1);
-		Strokes();
-		DLOG("----------------------------- 0.1");
-		p.RoundedRectangle(50, 10, 20, 30, 0.1);
-		Strokes();
-		DLOG("----------------------------- 0.01");
-		p.RoundedRectangle(90, 10, 20, 30, 0.01);
-		Strokes();
-		DLOG("----------------------------- 0.001");
-		p.RoundedRectangle(130, 10, 20, 30, 0.001);
-		Strokes();
+		for(int pass = 0; pass < 4; pass++) {
+			DLOG("----------------------------- 1");
+			p.RoundedRectangle(10, 10, 20, 30, 1);
+			Strokes();
+			DLOG("----------------------------- 0.1");
+			p.RoundedRectangle(50, 10, 20, 30, 0.1);
+			Strokes();
+			DLOG("----------------------------- 0.01");
+			p.RoundedRectangle(90, 10, 20, 30, 0.01);
+			Strokes();
+			DLOG("----------------------------- 0.001");
+			p.RoundedRectangle(130, 10, 20, 30, 0.001);
+			Strokes();
+			p.Offset(0, 50);
+			p.Scale(2.8);
+		}
 	}
 };
 
