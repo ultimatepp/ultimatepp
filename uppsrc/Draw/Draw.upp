@@ -13,9 +13,9 @@ library(WIN32) "usp10 user32 gdi32";
 
 link(OSX !X11 !NOMM) "-framework Foundation -framework Cocoa -framework Carbon";
 
-pkg_config(POSIX !OSX !SO) "freetype2 fontconfig";
+pkg_config(POSIX !OSX !SO) fontconfig;
 
-pkg_config(POSIX !OSX !VIRTUALGUI !SO) "x11 xcb expat";
+pkg_config(POSIX !OSX !VIRTUALGUI !SO) "xcb expat";
 
 file
 	Draw.h options(BUILDER_OPTION) PCH,

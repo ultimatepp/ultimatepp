@@ -8,9 +8,9 @@ uses
 
 library(WIN32) "advapi32 comdlg32 comctl32 imm32";
 
-library(POSIX !OSX !VIRTUALGUI !SO X11) "freetype X11 Xinerama Xrender Xdmcp Xau xcb Xext brotlidec brotlicommon png16 bz2 Xft";
+library(POSIX !OSX !VIRTUALGUI X11) "/lib/x86_64-linux-gnu/libX11.a /lib/x86_64-linux-gnu/libfreetype.a X11 Xinerama Xrender Xdmcp Xau xcb Xext brotlidec brotlicommon png16 bz2 Xft";
 
-pkg_config(POSIX !OSX !VIRTUALGUI SO) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
+pkg_config(POSIX !OSX !VIRTUALGUI SO) "xinerama xrender xft xdmcp fontconfig xcb xext";
 
 pkg_config(POSIX !X11 !OSX !VIRTUALGUI) "gtk+-3.0 libnotify";
 
