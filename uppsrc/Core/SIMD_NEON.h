@@ -1,7 +1,5 @@
 #include <arm_neon.h>
 
-using namespace Upp;
-
 force_inline
 uint64 cmask16__(uint16x8_t mask) {
 	uint8x8_t res = vshrn_n_u16(mask, 4);
@@ -286,3 +284,4 @@ force_inline i16x8 BroadcastLH3(i16x8 a)          {
 }
 
 force_inline i16x8 i64all(qword data)             { return vreinterpretq_s16_u64(vdupq_n_u64(data)); }
+
