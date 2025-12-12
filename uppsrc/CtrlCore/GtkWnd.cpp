@@ -170,9 +170,33 @@ Rect Ctrl::GetWndScreenRect() const
 			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
 	}
 	else {
+		DLOG("=====================");
 		gdk_window_get_position(gdk(), &x, &y);
 		width = gdk_window_get_width(gdk());
 		height = gdk_window_get_height(gdk());
+
+		DDUMP(x);
+		DDUMP(y);
+		DDUMP(width);
+		DDUMP(height);
+		Point p;
+		gtk_widget_translate_coordinates(utop->drawing_area, GTK_WIDGET(gtk()), 0, 0, &p.x, &p.y);
+		DDUMP(p);
+
+		gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
+		DDUMP(x);
+		DDUMP(y);
+		DDUMP(width);
+		DDUMP(height);
+
+		Point p2;
+		gdk_window_get_root_origin(gdk(), &p2.x, &p2.y);
+		DLOG("gdk_window_get_root_origin " << p);
+		
+		width = gtk_widget_get_allocated_width(utop->drawing_area);
+		height = gtk_widget_get_allocated_height(utop->drawing_area);
+		x = p.x + p2.x;
+		y = p.y + p2.y;
 	}
 
 	return SCL(x, y, width, height);

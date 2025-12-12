@@ -24,15 +24,18 @@ bool GtkCSD::IsSSDSupported()
 	return false;
 }
 
-void GtkCSD::Create(GdkWindowTypeHint hint)
+void GtkCSD::Create(GdkWindowTypeHint hint, bool force)
 {
 	enabled = false;
 	left = right = top = bottom = 0;
-	if(!Ctrl::IsWayland())
-		return;
-	if(IsSSDSupported() && hint != GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
-	   hint == GDK_WINDOW_TYPE_HINT_COMBO)
-		return;
+
+	if(!force) {
+		if(!Ctrl::IsWayland())
+			return;
+		if(IsSSDSupported() && hint != GDK_WINDOW_TYPE_HINT_POPUP_MENU ||
+		   hint == GDK_WINDOW_TYPE_HINT_COMBO)
+			return;
+	}
 	
 	enabled = true;
 	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -51,6 +54,9 @@ void GtkCSD::Create(GdkWindowTypeHint hint)
 	gtk_widget_show_all(win);
 	
 	gdk_window_get_origin(gtk_widget_get_window(drawing_area), &left, &top);
+	
+	DDUMP(left);
+	DDUMP(top);
 	
 	gint drawing_area_width = gtk_widget_get_allocated_width(drawing_area);
 	gint drawing_area_height = gtk_widget_get_allocated_height(drawing_area);

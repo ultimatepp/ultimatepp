@@ -163,13 +163,13 @@ public:
 	~ImageGdk();
 };
 
-class GtkCSD final : Rect { // wayland client side decoration handling
+class GtkCSD final : public Rect { // wayland client side decoration handling
 	bool enabled = false;
 
 public:
 	static bool IsSSDSupported();
 	
-	void Create(GdkWindowTypeHint hint);
+	void Create(GdkWindowTypeHint hint, bool force);
 	
 	bool IsEnabled() const   { return enabled; }
 	
@@ -201,6 +201,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	GtkWidget            *window; \
 	GtkWidget            *header = nullptr; \
 	GtkWidget            *drawing_area = nullptr; \
+	GtkWidget            *header_area = nullptr; \
 	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \

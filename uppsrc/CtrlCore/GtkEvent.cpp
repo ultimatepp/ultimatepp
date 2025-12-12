@@ -321,6 +321,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.value = value;
 	GdkModifierType mod;
 	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
+	DDUMP(e.mousepos);
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
 		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
