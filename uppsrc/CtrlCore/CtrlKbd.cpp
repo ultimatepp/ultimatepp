@@ -410,6 +410,7 @@ Tuple<dword, const char *> KeyNames__[ ] = {
 #ifdef GUI_COCOA
 	{ K_OPTION_KEY, tt_("key\vOption") },
 #endif
+	{ IK_CLICK, tt_("key\v[click]") },
 	{ IK_DBL_CLICK, tt_("key\v[double-click]") },
 	{ (dword)K_MOUSE_FORWARD, tt_("key\v[Forward]") },
 	{ (dword)K_MOUSE_BACKWARD, tt_("key\v[Backward]") },

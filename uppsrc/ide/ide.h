@@ -893,6 +893,7 @@ public:
 	    void  ReformatComment();
 		String FindClangFormatPath(bool local = false);
 
+	void OnlineSearchMenu(Bar& menu, const String& what, bool accel);
 	void OnlineSearchMenu(Bar& menu);
 
 	String GetFoundText(const ArrayCtrl& list);

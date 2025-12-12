@@ -56,6 +56,7 @@ struct Navigator {
 	void NaviSort();
 
 	void           Navigate();
+	void           Navigate(bool usage);
 	void           NavigatorClick();
 	void           NavigatorEnter();
 	void           SyncCursor();
