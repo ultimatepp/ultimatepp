@@ -4,16 +4,14 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-#ifdef PLATFORM_POSIX
-
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String path = Format("/tmp/upp-unixsocket-test-%d", getpid());
+	String path = GetTempFileName();
 	
 	Socket server, client;
 	
 	// Test server listen
-	if(!server.ListenFileSystem(path)) {
+	if(!server.ListenFileSystem(path, 5, false)) {
 		LOG("Server listen failed: " << server.GetErrorDesc());
 		Exit(1);
 	}
@@ -46,6 +44,4 @@ CONSOLE_APP_MAIN
 		ASSERT(pid == getpid()); // Should be our own process in this test
 
 	LOG("=========== OK");
-
-#endif
 }
