@@ -825,7 +825,6 @@ public:
 	WString& operator=(const WString& s)                    { if(this != &s) { WString0::FFree(); WString0::Set0(s); } return *this; }
 	WString& operator=(WString&& s)                         { if(this != &s) { WString0::FFree(); WString0::Pick0(pick(s)); } return *this; }
 	WString& operator=(WStringBuffer& b)                    { *this = WString(b); return *this; }
-//	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                         { *this = WString(Begin(), GetLength()); }
 

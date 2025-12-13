@@ -240,13 +240,6 @@ fast and does not depend on the length of string.&]
 r`=]([_^StringBuffer^ StringBuffer][@(0.0.255) `&]_[*@3 b])&]
 [s2; Assigns the content of [* StringBuffer]. After the operation,b 
 is emptied.&]
-[s3; &]
-[s4;%- &]
-[s5;:String`:`:operator`<`<`=`(const String`&`):%- [_^String^ String][@(0.0.255) `&]_[* ope
-rator<<`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
-[s2; `"Deep`" assignment. It is equivalent of standard assignment 
-followed by [* Shrink ]operation (in other words, internal buffer 
-gets reallocated to the exact size of source).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String`:`:ToStd`(`)const:%- [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
