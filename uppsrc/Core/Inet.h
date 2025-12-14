@@ -171,11 +171,10 @@ class Socket : NoCopy {
 
 	static int              GetErrorCode();
 	static void             Init();
-	
-#ifdef PLATFORM_POSIX // Unix domain socket support
+
+    // Unix domain socket support
     bool                    NixConnect(const String& path, bool abstract);
     bool                    NixListen(const String& path, int n, bool reuse, bool abstract);
-#endif
 
 	Socket(const Socket&);
 
@@ -217,13 +216,11 @@ public:
 	void            Close();
 	void            Shutdown();
 
-#ifdef PLATFORM_POSIX
 	int             GetPeerPid() const;
 	bool            ConnectFileSystem(const String& path);
 	bool            ConnectAbstract(const String& path);
 	bool            ListenFileSystem(const String& path, int listen_count = 5, bool reuse = true);
 	bool            ListenAbstract(const String& path, int listen_count = 5, bool reuse = true);
-#endif
 
 	void            NoDelay();
 	void            Linger(int msecs);
