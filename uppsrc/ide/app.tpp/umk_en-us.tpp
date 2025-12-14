@@ -28,14 +28,14 @@ program, with U`+`+ assembly/package/build method system.&]
 [s11; Below is a command line interface of UMK:&]
 [s0; &]
 [s0;l128;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package ][*C3 `[][*C@(0.0.255)3 build`_me
-thod][*C3 `] `[][*C@(0.0.255)3 `-`-hub`-dir dir][*C3 `]][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]
-`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[
-][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]`[][*C@4;3 M`=][*/C@3;3 m
-akefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 k][*C3 `]`[][*C@4;3 j][*C3 `]`[][*C@4;3 h][*C3 `]`[][*C@4;3 U
-][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  
-][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]..`]][*C@4;3  
-][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@(0.0.255)3 !][*C3  `[][*C@(0.0.255)3 runarg][*C3 `].
-.`]]&]
+thod][*C3 `] `[][*C@(0.0.255)3 `-`-hub`-dir dir][*C3 `] `[][*C@(0.0.255)3 `-`-hub`-only][*C3 `]
+][*C@4;3  ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[
+][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M
+][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]`[][*C@4;3 l][*C3 `]`[][*C@4;3 k][*C3 `]`[][*C@4;3 j
+][*C3 `]`[][*C@4;3 h][*C3 `]`[][*C@4;3 U][*C3 `]`[][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H
+][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]
+..`]][*C@4;3  ][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@(0.0.255)3 !][*C3  
+`[][*C@(0.0.255)3 runarg][*C3 `]..`]]&]
 [s0;3 &]
 [s11; Let`'s take a closer look at all available options:&]
 [s11;l128;i150;O0; [*@(0.0.255) assembly] is a direct set of package 
@@ -58,6 +58,11 @@ where UppHub packages should be downloaded, using the second
 parameter, ][*@(0.0.255) dir][@N , to set the path. This ensures 
 packages are kept in a consistent location that is independent 
 of the current project and TheIDE configuration.]&]
+[s11;l128;i150;O0; [*@(0.0.255) `-`-hub`-only] [@N instructs UMK to handle 
+only the logic related to UppHub. However, please note that even 
+when this option is active, you must still specify either the 
+][*@N `-][*C@4;3 U][@N  or ][*@N `-][*C@4;3 h][@N  option to indicate how 
+UMK should handle UppHub.]&]
 [s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
 tion flags]. If flags are not specified, the first main configuration 
 entry in .upp file is used.&]
@@ -128,6 +133,13 @@ mpile`_commands.json]]
 [s0;l128;*C@5+92 &]
 [s0;l128; [*C@5+92 umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm `-`-hub`-dir 
 3p/hub `-brU `+GUI,SHARED build/UppTerm]&]
+[s0; &]
+[s11; The below example demonstrates how to download only UppHub dependencies 
+and skip the build process. This is useful when embedding UMK 
+with various command handlers, such as makefiles.&]
+[s0; &]
+[s11;l128; [*C@5+92 umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm `-`-hub`-dir 
+3p/hub `-`-hub`-only `-U]&]
 [s0; &]
 [s12;:4: 4. Related topics&]
 [s11; Below is a list of related topics worth reading to further expand 
