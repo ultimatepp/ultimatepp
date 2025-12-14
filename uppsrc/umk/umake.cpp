@@ -271,7 +271,14 @@ CONSOLE_APP_MAIN
 				UppHubUpdate(ide.main);
 		}
 		if(only_hub) {
-			SetExitCode(0);
+			int exit_code = 0;
+			if(!auto_hub && !update_hub) {
+				exit_code = 6;
+				Puts("The --hub-only option was specified, but UppHub mode instruction are "
+				     "missing. Please ensure you include the -U or -h flag for the required "
+				     "UppHub mode configuration.\n");
+			}
+			SetExitCode(exit_code);
 			return;
 		}
 		ide.wspc.Scan(ide.main);
