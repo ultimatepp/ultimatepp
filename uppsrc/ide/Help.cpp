@@ -555,6 +555,8 @@ void Ide::ShowTopics()
 void Ide::OpenHelp(const char *link, bool editable)
 {
 	TopicCtrl& help = CreateNewWindow<TopicCtrl>();
+	help.SetRect(0, 0, clamp(DPI(1300), 400, GetWorkArea().GetWidth() - DPI(20)),
+	             clamp(DPI(768), 400, GetWorkArea().GetHeight() - DPI(20)));
 	if(editable)
 		help.WhenTopic = [=](const String& topic) { OpenATopic(topic); };
 	help.Icon(CtrlImg::help());
@@ -573,7 +575,7 @@ void Ide::ShowTopicsWin()
 	String link = sTopicHome;
 	if(designer)
 		link = Nvl(designer->HelpLink(), link);
-	OpenHelp(link);
+	OpenHelp(link, true);
 }
 
 void Ide::SearchTopics()
