@@ -19,25 +19,29 @@ void TopWindow::SyncSizeHints()
 	GuiLock __;
 	if(!top)
 		return;
-	GdkGeometry m;
 	Size sz0 = GetRect().GetSize();
 	LLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
-	Size sz = sz0;
-	if(sizeable)
-		sz = GetMinSize();
-	m.min_width = LSC(sz.cx + utop->csd.ExtraWidth());
-	m.min_height = LSC(sz.cy + utop->csd.ExtraHeight());
-	sz = sz0;
-	if(sizeable)
-		sz = GetMaxSize();
-	m.max_width = LSC(sz.cx + utop->csd.ExtraWidth());
-	m.max_height = LSC(sz.cy + utop->csd.ExtraHeight());
 	gtk_window_set_resizable(gtk(), sizeable);
 	Top *top = GetTop();
 	if(top) {
-		gtk_window_set_geometry_hints(gtk(), top->window, &m,
-		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
-		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
+		Rect g = CSDMargins();
+		
+		GdkGeometry m;
+
+		Size minsz = sz0;
+		if(sizeable)
+			minsz = GetMinSize();
+		m.min_width = LSCH(minsz.cx) + g.left + g.right;
+		m.min_height = LSCH(minsz.cy) + g.top + g.bottom;
+		Size maxsz = sz0;
+		if(sizeable)
+			maxsz = GetMaxSize();
+		m.max_width = LSCH(maxsz.cx) + g.left + g.right;
+		m.max_height = LSCH(maxsz.cy) + g.top + g.bottom;
+
+		if(gtk_widget_get_realized(GTK_WIDGET(gtk())))
+			gtk_window_set_geometry_hints(gtk(), top->window, &m,
+			                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 	}
 }
 
@@ -148,10 +152,12 @@ void TopWindow::Open(Ctrl *owner)
 	GdkRectangle fr;
 	gdk_window_get_frame_extents(gdk(), &fr);
 	Rect r = GetRect();
-	frameMargins.left = max(frameMargins.left, minmax(r.left - SCL(fr.x), 0, 32));
-	frameMargins.right = max(frameMargins.right, minmax(SCL(fr.x + fr.width) - r.right, 0, 32));
-	frameMargins.top = max(frameMargins.top, minmax(r.top - SCL(fr.y), 0, 64));
-	frameMargins.bottom = max(frameMargins.bottom, minmax(SCL(fr.y + fr.height) - r.bottom, 0, 48));
+	DDUMP(r.top - SCL(fr.y));
+	frameMargins.left = max(frameMargins.left, minmax(r.left - SCL(fr.x), 0, DPI(32)));
+	frameMargins.right = max(frameMargins.right, minmax(SCL(fr.x + fr.width) - r.right, 0, DPI(32)));
+	frameMargins.top = max(frameMargins.top, minmax(r.top - SCL(fr.y), 0, DPI(80)));
+	frameMargins.bottom = max(frameMargins.bottom, minmax(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48)));
+	DDUMP(frameMargins);
 }
 
 void TopWindow::Open()

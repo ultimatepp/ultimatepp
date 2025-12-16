@@ -12,5 +12,6 @@ file
 
 mainconfig
 	"" = "GUI",
+	"" = "GUI FORCE_CSD",
 	"" = "GUI X11";
 

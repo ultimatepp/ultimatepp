@@ -1039,6 +1039,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 
 void ArrayCtrl::Paint(Draw& w)
 {
+	DLOG("ArrayCtrl GetScreenRect " << GetScreenRect() << ", top " << GetTopCtrl()->GetScreenRect());
 	DoPaint(w, false);
 }
 

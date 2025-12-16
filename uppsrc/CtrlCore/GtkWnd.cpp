@@ -150,56 +150,68 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 #endif
 
+Rect Ctrl::CSDMargins() const
+{
+	if(top && utop->csd && gtk_widget_get_realized(GTK_WIDGET(gtk()))) {
+		int client_cx = gtk_widget_get_allocated_width(utop->client);
+		int client_cy = gtk_widget_get_allocated_height(utop->client);
+		
+		int client_x, client_y;
+		gtk_widget_translate_coordinates(utop->client, GTK_WIDGET(gtk()), 0, 0, &client_x, &client_y);
+
+		gint window_x, window_y, window_cx, window_cy;
+		gdk_window_get_geometry(gdk(), &window_x, &window_y, &window_cx, &window_cy);
+		
+		return Rect(client_x, client_y, window_cx - client_cx - client_x, window_cy - client_cy - client_y);
+	}
+	return Rect(0, 0, 0, 0);
+}
+
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
 
-	if(!IsOpen())
+	if(!IsOpen() || !top)
 		return Null;
+	
+	
+	DTIMESTOP("GetWndScreenRect");
+	DTIMING("GetWndScreenRect");
+	
+	if(utop->sync_rect) {
 
-	gint x, y;
-	gint width, height;
-
-	if(IsWayland()) {
-		if(top && utop->csd.IsEnabled()) {
-			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
-			width = gtk_widget_get_allocated_width(utop->drawing_area);
-			height = gtk_widget_get_allocated_height(utop->drawing_area);
+		gint x, y;
+		gint width, height;
+	
+		width = gtk_widget_get_allocated_width(utop->client);
+		height = gtk_widget_get_allocated_height(utop->client);
+	
+	/* TODO: Remove?
+		if(IsWayland()) {
+			if(top && utop->csd) {
+				gdk_window_get_origin(gtk_widget_get_window(utop->client), &x, &y);
+				width = gtk_widget_get_allocated_width(utop->client);
+				height = gtk_widget_get_allocated_height(utop->client);
+			}
+			else
+				gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
 		}
 		else
-			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
-	}
-	else {
-		DLOG("=====================");
-		gdk_window_get_position(gdk(), &x, &y);
-		width = gdk_window_get_width(gdk());
-		height = gdk_window_get_height(gdk());
-
-		DDUMP(x);
-		DDUMP(y);
-		DDUMP(width);
-		DDUMP(height);
-		Point p;
-		gtk_widget_translate_coordinates(utop->drawing_area, GTK_WIDGET(gtk()), 0, 0, &p.x, &p.y);
-		DDUMP(p);
-
-		gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
-		DDUMP(x);
-		DDUMP(y);
-		DDUMP(width);
-		DDUMP(height);
-
-		Point p2;
-		gdk_window_get_root_origin(gdk(), &p2.x, &p2.y);
-		DLOG("gdk_window_get_root_origin " << p);
+	*/
+		if(top && utop->csd) {
+			gdk_window_get_root_origin(gdk(), &x, &y);
+			int x1, y1;
+			gtk_widget_translate_coordinates(utop->client, GTK_WIDGET(gtk()), 0, 0, &x1, &y1);
+			x += x1;
+			y += y1;
+		}
+		else
+			gdk_window_get_position(gdk(), &x, &y);
 		
-		width = gtk_widget_get_allocated_width(utop->drawing_area);
-		height = gtk_widget_get_allocated_height(utop->drawing_area);
-		x = p.x + p2.x;
-		y = p.y + p2.y;
+		utop->screen_rect = SCL(x, y, width, height);
+		utop->sync_rect = false;
 	}
-
-	return SCL(x, y, width, height);
+	return utop->screen_rect;
 }
 
 void Ctrl::WndShow(bool b)
@@ -499,7 +511,7 @@ bool Ctrl::SweepConfigure(bool wait)
 		Top *top = GetTop();
 		if(e.type == GDK_CONFIGURE && this_ && top && top->id == e.windowid) {
 			Rect rect = e.value;
-			LLOG("SweepConfigure " << rect);
+			DLOG("SweepConfigure " << rect);
 			if(GetRect() != rect)
 				SetWndRect(rect);
 			r = true;
@@ -511,22 +523,33 @@ bool Ctrl::SweepConfigure(bool wait)
 
 void Ctrl::WndSetPos(const Rect& rect)
 {
-	LLOG("WndSetPos " << UPP::Name(this) << " " << rect);
+	DLOG("========================== WNDSETPOS");
+	DLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	GuiLock __;
+	DDUMP(IsOpen());
 	if(!IsOpen())
 		return;
 	Ptr<Ctrl> this_ = this;
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
+	DDUMP(this_);
+	DDUMP(IsOpen());
 	if(!this_ || !IsOpen())
 		return;
 
-	Rect m(0, 0, 0, 0);
-	if(dynamic_cast<TopWindow *>(this))
-		m = GetFrameMargins();
 	SetWndRect(rect);
 	if(TopWindow *tw = dynamic_cast<TopWindow *>(this))
 		tw->SyncSizeHints();
-	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
+	if(top && utop->csd) {
+		Rect m = CSDMargins();
+		gdk_window_move_resize(gdk(), LSC(rect.left) - m.left, LSC(rect.top) - m.top,
+		                               LSCH(rect.GetWidth()) + m.left + m.right,
+		                               LSCH(rect.GetHeight()) + m.top + m.bottom);
+	}
+	else {
+		Rect m = GetFrameMargins();
+		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
+		                               LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
+	}
 	LLOG("-- WndSetPos0 " << rect);
 }
 
@@ -579,8 +602,8 @@ TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 	cairo_rectangle_int_t rr;
 	rr.x = Ctrl::LSC(r.left);
 	rr.y = Ctrl::LSC(r.top);
-	rr.width = Ctrl::LSC(r.GetWidth());
-	rr.height = Ctrl::LSC(r.GetHeight());
+	rr.width = Ctrl::LSCH(r.GetWidth());
+	rr.height = Ctrl::LSCH(r.GetHeight());
 	cairo_region_t *rg = cairo_region_create_rectangle(&rr);
 	ctx = gdk_window_begin_draw_frame(top->gdk(), rg);
 	cairo_region_destroy(rg);

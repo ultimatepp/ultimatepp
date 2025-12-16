@@ -47,9 +47,13 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	Rect r = GetRect();
 	DDUMP(r);
 	bool custom_bar = false;
-	top->csd.Create(type_hint, true/*custom_bar*/);
-	if(top->csd.IsEnabled()) {
-		top->drawing_area = gtk_drawing_area_new();
+	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE";
+	top->csd = !popup && need_csd;
+#ifdef flagFORCE_CSD // Force using client side decorations even when server side is available
+	top->csd = !popup;
+#endif
+	if(top->csd) {
+		top->client = gtk_drawing_area_new();
 		if(custom_bar) {
 			top->header_area = gtk_drawing_area_new();
 			gtk_widget_set_size_request(top->header_area, -1, 23);
@@ -69,7 +73,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 		gtk_window_set_titlebar(gtk(), top->header);
 
-		gtk_widget_set_can_focus(top->drawing_area, TRUE);
+		gtk_widget_set_can_focus(top->client, TRUE);
 /*
 		r.left -= top->csd.LeftMargin();
 		r.right += top->csd.RightMargin();
@@ -79,15 +83,18 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		g_signal_connect(top->window, "delete-event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	}
 	else
-		top->drawing_area = top->window;
+		top->client = top->window;
+	
+	DLOG("*** 1 " << CSDMargins());
 
-	w.drawing_area = top->drawing_area;
+	w.drawing_area = top->client;
 
 	top->cursor_id = -1;
 
-	gtk_widget_set_events(top->drawing_area, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
-	g_signal_connect(top->drawing_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
-	g_signal_connect(top->drawing_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
+	gtk_widget_set_events(top->client, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
+	g_signal_connect(top->client, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
+	g_signal_connect(gtk(), "event", G_CALLBACK(TopGtkEvent), (gpointer)(uintptr_t)top->id);
+	g_signal_connect(top->client, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 	
 	if(top->header_area) {
 		g_signal_connect(top->header_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
@@ -99,31 +106,34 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		tw->SyncSizeHints();
 
 	DDUMP(r);
+	DDUMP(top->csd);
 
-	gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
-//	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
-//	gtk_window_resize(gtk(), LSC(r.GetWidth()) - top->csd.ExtraWidth(),
-//	                  LSC(r.GetHeight()) - top->csd.ExtraHeight());
+	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
+	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 
-	if(top->header) { // CSD is active
-		GdkRect gr(Rect(0, 0, LSC(r.GetWidth()), LSC(r.GetHeight())));
-		gtk_widget_size_allocate(top->drawing_area, &gr);
-		gtk_container_add(GTK_CONTAINER(top->window), top->drawing_area);
+	DLOG("*** 2 " << CSDMargins());
+
+	if(top->csd) { // CSD is active
+		GdkRect gr(Rect(0, 0, LSCH(r.GetWidth()), LSCH(r.GetHeight())));
+		gtk_container_add(GTK_CONTAINER(top->window), top->client);
 		gtk_widget_show_all(top->window);
 
 		GtkWidget *win = GTK_WIDGET(gtk());
 
 		gtk_widget_show_all(win);
+		gtk_widget_size_allocate(top->client, &gr);
+
+	#if 0
 		Point origin;
-		gdk_window_get_origin(gtk_widget_get_window(top->drawing_area), &origin.x, &origin.y);
+		gdk_window_get_origin(gtk_widget_get_window(top->client), &origin.x, &origin.y);
 		DDUMP(origin);
 
 		gdk_window_get_origin(gdk(), &origin.x, &origin.y);
 		DDUMP(origin);
 		
 		
-		DDUMP(gtk_widget_get_allocated_width(top->drawing_area));
-		DDUMP(gtk_widget_get_allocated_height(top->drawing_area));
+		DDUMP(gtk_widget_get_allocated_width(top->client));
+		DDUMP(gtk_widget_get_allocated_height(top->client));
 
 		DDUMP(gtk_widget_get_allocated_width(top->header_area));
 		DDUMP(gtk_widget_get_allocated_height(top->header_area));
@@ -131,17 +141,19 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		DDUMP(gtk_widget_get_allocated_width(win));
 		DDUMP(gtk_widget_get_allocated_height(win));
 		
-		DDUMP((Rect)top->csd);
-
-		DDUMP(top->csd.LeftMargin());
-		DDUMP(top->csd.RightMargin());
-		DDUMP(top->csd.TopMargin());
-		DDUMP(top->csd.BottomMargin());
+		DDUMP(top->csd);
+	#endif
 	}
-	else
+	else {
+	#if 0
+		DDUMP(r.GetWidth());
+		DDUMP(LSC(r.GetWidth()));
+	#endif
 		gtk_widget_realize(top->window);
+		gtk_window_resize(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
+	}
 
-	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
+	DLOG("*** 3 " << CSDMargins());
 
 	w.gdk = gtk_widget_get_window(top->window);
 
@@ -161,6 +173,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	WndShow(IsShown());
 
+	DDUMP(IsShown());
+	DLOG("ABOUT TO SWEEPCFG");
 	SweepConfigure(true);
 	FocusSync();
 	if(!popup)
@@ -211,10 +225,10 @@ void Ctrl::WndDestroy()
 	if(q >= 0)
 		wins.Remove(q);
 	if(owner) {
-		if(owner->top && owner->utop && owner->utop->csd.IsEnabled()) {
+		if(owner->top && owner->utop && owner->utop->csd) {
 			// TODO: This fix the problem with keyboard when going back to original window, but
 			// the previous control is not being focused like it should be.
-			gtk_window_set_focus(owner->gtk(), owner->utop->drawing_area);
+			gtk_window_set_focus(owner->gtk(), owner->utop->client);
 		}
 		owner->WndUpdate();
 	}
@@ -247,7 +261,7 @@ void Ctrl::GuiPlatformRemove()
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
-	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
+	DLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
 	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
 	popup = true;
 	Ptr<Ctrl> _this = this;

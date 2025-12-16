@@ -200,14 +200,16 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget            *window; \
 	GtkWidget            *header = nullptr; \
-	GtkWidget            *drawing_area = nullptr; \
+	GtkWidget            *client = nullptr; \
 	GtkWidget            *header_area = nullptr; \
 	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
-	GtkCSD                csd; \
 	int64                 cursor_id; \
 	int                   id; \
+	bool                  csd = false; \
+	bool                  sync_rect = true; \
+	Rect                  screen_rect;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/GtkCtrl.h>
 

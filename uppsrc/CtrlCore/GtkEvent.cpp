@@ -133,6 +133,24 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	return true;
 }
 
+gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+#ifdef LOG_EVENTS
+	String ev = "? " + AsString((int)event->type);
+	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
+	if(f)
+		ev = f->b;
+	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
+#endif
+	if(event->type == GDK_CONFIGURE) {
+		Ctrl *p = GetTopCtrlFromId(user_data);
+		Top *top = p->GetTop();
+		if(top)
+			top->sync_rect = true;
+	}
+	return false;
+}
+
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GuiLock __;
@@ -321,7 +339,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.value = value;
 	GdkModifierType mod;
 	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
-	DDUMP(e.mousepos);
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
 		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
@@ -492,7 +509,7 @@ void Ctrl::GtkButtonEvent(int action)
 void Ctrl::Proc()
 {
 #ifdef LOG_EVENTS
-	String ev = "?";
+	String ev = "?" + AsString(CurrentEvent.type);
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
 	if(f)
 		ev = f->b;
@@ -544,6 +561,10 @@ void Ctrl::Proc()
 	}
 #endif
 
+	{
+		DTIMESTOP("EVENT SyncWndRect");
+		SyncWndRect(GetWndScreenRect());
+	}
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
@@ -720,9 +741,9 @@ void Ctrl::Proc()
 		}
 		return;
 	}
-	case GDK_CONFIGURE:
-		SyncWndRect(CurrentEvent.value);
-		break;
+//	case GDK_CONFIGURE:
+//		SyncWndRect(GetWndScreenRect());
+//		break;
 	default:
 		return;
 	}
