@@ -117,7 +117,10 @@ void AssistEditor::DCopy()
 				Clean(ret);
 				Clean(name);
 				Clean(params);
-
+				
+				if(ret.Find('~') >= 0)
+					ret.Clear();
+				ret.TrimStart("~");
 				ret.TrimStart("virtual ");
 				ret.TrimStart("static ");
 				ret.TrimStart("friend ");
@@ -147,7 +150,9 @@ void AssistEditor::DCopy()
 					if(m.definition) {
 						if(IsMethod(m.kind))
 							result << '\t';
-						result << ret << ' ' << m.name << params << ";\n";
+						if(ret.GetCount())
+							result << ret << ' ';
+						result << m.name << params << ";\n";
 					}
 					else {
 						String cret;
