@@ -101,10 +101,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		g_signal_connect(top->header_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 	}
 
-	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
-	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
-		tw->SyncSizeHints();
-
 	DDUMP(r);
 	DDUMP(top->csd);
 
@@ -145,13 +141,17 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	#endif
 	}
 	else {
-	#if 0
+	#if 1
 		DDUMP(r.GetWidth());
 		DDUMP(LSC(r.GetWidth()));
 	#endif
 		gtk_widget_realize(top->window);
 		gtk_window_resize(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	}
+
+	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
+	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
+		tw->SyncSizeHints();
 
 	DLOG("*** 3 " << CSDMargins());
 
@@ -175,6 +175,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	DDUMP(IsShown());
 	DLOG("ABOUT TO SWEEPCFG");
+	DDUMP(GetScreenRect());
 	SweepConfigure(true);
 	FocusSync();
 	if(!popup)

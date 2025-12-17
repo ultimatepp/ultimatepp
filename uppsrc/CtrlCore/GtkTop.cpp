@@ -20,8 +20,7 @@ void TopWindow::SyncSizeHints()
 	if(!top)
 		return;
 	Size sz0 = GetRect().GetSize();
-	LLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
-	gtk_window_set_resizable(gtk(), sizeable);
+	DLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
 	Top *top = GetTop();
 	if(top) {
 		Rect g = CSDMargins();
@@ -38,11 +37,18 @@ void TopWindow::SyncSizeHints()
 			maxsz = GetMaxSize();
 		m.max_width = LSCH(maxsz.cx) + g.left + g.right;
 		m.max_height = LSCH(maxsz.cy) + g.top + g.bottom;
-
-		if(gtk_widget_get_realized(GTK_WIDGET(gtk())))
-			gtk_window_set_geometry_hints(gtk(), top->window, &m,
-			                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+DDUMP(g);
+DDUMP(minsz);
+DDUMP(maxsz);
+DDUMP(sz0);
+DDUMP(GetRect());
+DDUMP(gtk_widget_get_realized(GTK_WIDGET(gtk())));
+		gtk_window_set_resizable(gtk(), sizeable);
+		gtk_window_set_geometry_hints(gtk(), top->window, &m,
+		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
 	}
+DDUMP(GetScreenRect());
 }
 
 void TopWindow::SyncTitle()

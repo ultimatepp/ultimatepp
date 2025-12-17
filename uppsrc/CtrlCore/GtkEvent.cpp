@@ -561,10 +561,7 @@ void Ctrl::Proc()
 	}
 #endif
 
-	{
-		DTIMESTOP("EVENT SyncWndRect");
-		SyncWndRect(GetWndScreenRect());
-	}
+	SyncWndRect(GetWndScreenRect());
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);

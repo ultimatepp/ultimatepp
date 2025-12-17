@@ -175,7 +175,6 @@ Rect Ctrl::GetWndScreenRect() const
 		return Null;
 	
 	
-	DTIMESTOP("GetWndScreenRect");
 	DTIMING("GetWndScreenRect");
 	
 	if(utop->sync_rect) {
@@ -512,6 +511,7 @@ bool Ctrl::SweepConfigure(bool wait)
 		if(e.type == GDK_CONFIGURE && this_ && top && top->id == e.windowid) {
 			Rect rect = e.value;
 			DLOG("SweepConfigure " << rect);
+			DDUMP(GetWndScreenRect());
 			if(GetRect() != rect)
 				SetWndRect(rect);
 			r = true;
