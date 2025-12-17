@@ -342,6 +342,8 @@ void ChHostSkin()
 	for(int i = 0; i < 6; i++)
 		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 	
+	Image cancel_image;
+	
 	{
 		Gtk_New("button");
 		Color ink;
@@ -364,7 +366,7 @@ void ChHostSkin()
 				FixButton(button[i]);
 			}
 			s.ok = Gtk_IconAdjusted("gtk-ok", DPI(16));
-			s.cancel = Gtk_IconAdjusted("gtk-cancel", DPI(16));
+			s.cancel = cancel_image = Gtk_IconAdjusted("gtk-cancel", DPI(16));
 			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
@@ -397,7 +399,9 @@ void ChHostSkin()
 	}
 	
 	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
-	NoButtonImage_Write(Gtk_IconAdjusted("gtk-no", DPI(16)));
+	Image no_image = Gtk_IconAdjusted("gtk-no", DPI(16));
+	if(Difference(no_image, cancel_image) > 20) // it is ugly when No and Cancel buttons have the same icon
+		NoButtonImage_Write(no_image);
 	AbortButtonImage_Write(Gtk_IconAdjusted("gtk-stop", DPI(16)));
 	RetryButtonImage_Write(Gtk_IconAdjusted("gtk-refresh", DPI(16)));
 

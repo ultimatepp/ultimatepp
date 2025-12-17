@@ -136,6 +136,7 @@ Image Unglyph(const Image& m);
 Image VertBlend(Image img1, Image img2, int y0, int y1);
 Image HorzBlend(Image img1, Image img2, int x0, int x1);
 Image HorzSymm(Image src);
+double Difference(const Image& a, const Image& b);
 
 bool   IsSingleColor(const Image& m, const Rect& rect);
 
