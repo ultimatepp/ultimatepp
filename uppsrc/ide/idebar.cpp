@@ -999,7 +999,7 @@ void Ide::MainMenu(Bar& menu)
 		.Help("Package & file functions, exports, bookmarks");
 	menu.Add("Edit", THISBACK(Edit))
 		.Help("Clipboard, find & replace, spaces / tabs conversion, scope highlighting");
-	menu.Sub("Find", [=](Bar& bar) { SearchMenu(bar); });
+	menu.Sub("Search", [=](Bar& bar) { SearchMenu(bar); });
 	if(HasMacros())
 		menu.Add("Macro", THISBACK(MacroMenu))
 			.Help("Editor & IDE macros");
