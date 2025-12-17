@@ -367,6 +367,13 @@ void IconDes::SyncStatus()
 	status.SetLabel(s);
 }
 
+Upp::RGBA IconDes::initial_rgba = Black();
+
+IconDes::~IconDes()
+{
+	initial_rgba = rgbactrl.Get();
+}
+
 IconDes::IconDes()
 {
 	sb.WhenScroll = THISBACK(Scroll);
@@ -386,6 +393,8 @@ IconDes::IconDes()
 	rgbactrl.SubCtrl(&imgs);
 
 	rgbactrl <<= THISBACK(ColorChanged);
+	
+	rgbactrl.Set(initial_rgba);
 
 	search.NullText("Search (Ctrl+F)");
 	search <<= THISBACK(Search);

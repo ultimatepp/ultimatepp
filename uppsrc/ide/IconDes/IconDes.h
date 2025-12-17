@@ -198,6 +198,8 @@ private:
 	bool         show_grid2 = true;
 	bool         antialiased = false;
 	int          fill_type = 0;
+	
+	static RGBA  initial_rgba;
 
 	ScrollBars   sb;
 	ToolBar      toolbar;
@@ -435,6 +437,7 @@ public:
 	typedef IconDes CLASSNAME;
 
 	IconDes();
+	~IconDes();
 };
 
 struct ImlImage : ImageIml {
