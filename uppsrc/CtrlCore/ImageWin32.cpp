@@ -284,8 +284,6 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	}
 	else {
 		LTIMING("Image Alpha sw");
-		DDUMP(c);
-		DDUMP((GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)));
 		DrawSurface sf(w, x, y, ssz.cx, ssz.cy);
 		RGBA *t = sf;
 		if(w.IsPrinter()) // We have got here because printer does not support alpha blending
