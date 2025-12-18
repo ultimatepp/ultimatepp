@@ -14,29 +14,47 @@ bool ImageFallBack
 ;
 
 class BitmapInfo32__ {
-	BITMAPV5HEADER bi;
+	union {
+		BITMAPV5HEADER   bi;
+		BITMAPINFOHEADER hi;
+	};
 
 public:
 	operator BITMAPINFO *()        { return (BITMAPINFO *)&bi; }
 	operator BITMAPINFOHEADER *()  { return (BITMAPINFOHEADER *)&bi; }
 	BITMAPINFOHEADER *operator->() { return (BITMAPINFOHEADER *)&bi; }
 
-	BitmapInfo32__(int cx, int cy);
+	BitmapInfo32__(int cx, int cy, bool surface = false);
 };
 
-BitmapInfo32__::BitmapInfo32__(int cx, int cy)
+BitmapInfo32__::BitmapInfo32__(int cx, int cy, bool surface)
 {
-    ZeroMemory(&bi, sizeof(BITMAPV5HEADER));
-    bi.bV5Size   = sizeof(BITMAPV5HEADER);
-    bi.bV5Width  = cx;
-    bi.bV5Height = -cy;
-    bi.bV5Planes = 1;
-    bi.bV5BitCount = 32;
-    bi.bV5Compression = BI_BITFIELDS;
-    bi.bV5RedMask   =  0x00FF0000;
-    bi.bV5GreenMask =  0x0000FF00;
-    bi.bV5BlueMask  =  0x000000FF;
-    bi.bV5AlphaMask =  0xFF000000;
+	if(surface) {
+		ZeroMemory(&hi, sizeof(BITMAPINFOHEADER));
+		hi.biSize = sizeof(BITMAPINFOHEADER);
+		hi.biPlanes = 1;
+		hi.biBitCount = 32;
+		hi.biCompression = BI_RGB;
+		hi.biSizeImage = 0;
+		hi.biClrUsed = 0;
+		hi.biClrImportant = 0;
+		hi.biWidth = cx;
+		hi.biHeight = -cy;
+	}
+	else {
+	    ZeroMemory(&bi, sizeof(BITMAPV5HEADER));
+	    bi.bV5Size   = sizeof(BITMAPV5HEADER);
+	    bi.bV5Width  = cx;
+	    bi.bV5Height = -cy;
+	    bi.bV5Planes = 1;
+	    bi.bV5BitCount = 32;
+	    bi.bV5Compression = BI_BITFIELDS;
+	    bi.bV5RedMask   =  0x00FF0000;
+	    bi.bV5GreenMask =  0x0000FF00;
+	    bi.bV5BlueMask  =  0x000000FF;
+	    bi.bV5AlphaMask =  0xFF000000;
+		bi.bV5CSType    =  LCS_sRGB;
+	}
 }
 
 HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
@@ -74,7 +92,7 @@ void SetSurface(HDC dc, const Rect& dest, const RGBA *pixels, Size srcsz, Point 
 {
 	LTIMING("SetSurface");
 	GuiLock __;
-	BitmapInfo32__ bi(srcsz.cx, srcsz.cy);
+	BitmapInfo32__ bi(srcsz.cx, srcsz.cy, true);
 	::SetDIBitsToDevice(dc, dest.left, dest.top, dest.GetWidth(), dest.GetHeight(),
 	                    srcoff.x, -srcoff.y - dest.Height() + srcsz.cy, 0, srcsz.cy, pixels, bi,
 	                    DIB_RGB_COLORS);
@@ -126,7 +144,7 @@ void DrawSurface::Init(SystemDraw& w, int _x, int _y, int cx, int cy)
 	x = _x;
 	y = _y;
 	dcMem = ::CreateCompatibleDC(dc);
-	BitmapInfo32__ bi(cx, cy);
+	BitmapInfo32__ bi(cx, cy, true);
 	hbmp = CreateDIBSection(dc, bi, DIB_RGB_COLORS, (void **)&pixels, NULL, 0);
 	hbmpOld = (HBITMAP) ::SelectObject(dcMem, hbmp);
 	::BitBlt(dcMem, 0, 0, cx, cy, dc, x, y, SRCCOPY);
@@ -266,6 +284,8 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	}
 	else {
 		LTIMING("Image Alpha sw");
+		DDUMP(c);
+		DDUMP((GetDeviceCaps(dc, SHADEBLENDCAPS) & (SB_PIXEL_ALPHA|SB_PREMULT_ALPHA)));
 		DrawSurface sf(w, x, y, ssz.cx, ssz.cy);
 		RGBA *t = sf;
 		if(w.IsPrinter()) // We have got here because printer does not support alpha blending
