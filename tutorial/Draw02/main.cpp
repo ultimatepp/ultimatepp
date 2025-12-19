@@ -8,7 +8,7 @@ struct MyApp : TopWindow {
 		w.DrawText(0, 0, "Hello world", Roman(30).Bold());
 	}
 	
-	virtual void Paint(Draw& w) override {
+	void Paint(Draw& w) override {
 		w.DrawRect(GetSize(), White());
 		DoPainting(w);
 		w.Offset(30, 50);
@@ -27,5 +27,8 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyApp().Sizeable().Run();
+	MyApp app;
+	app.Title("Offsets and Cliping").Zoomable().Sizeable();
+	app.SetRect(0, 0, 420, 240);
+	app.Run();
 }
