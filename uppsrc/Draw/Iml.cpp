@@ -147,6 +147,7 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 	};
 	
 	ImageIml im;
+	Image    original;
 	const int *candidates = mode_candidates[mode];
 	
 	for(int i = 0; i < 4 && candidates[i] >= 0; i++) {
@@ -156,6 +157,7 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 		if(IsNull(im.image))
 			im = GetRaw(cmode, id); // try alternative iml
 		if(!IsNull(im.image)) {
+			original = im.image;
 			if(im.flags & IML_IMAGE_FLAG_S3)
 				im.image = DownSample3x(im.image);
 			break;
@@ -165,8 +167,12 @@ Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> G
 	if(IsNull(im.image))
 		return Null;
 
-	if(!(mode & GUI_MODE_UHD) && (im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
-		im.image = Downscale2x(im.image);
+	if(!(mode & GUI_MODE_UHD) && (im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))) {
+		if(im.flags & IML_IMAGE_FLAG_S3)
+			im.image = Downscale6x(original);
+		else
+			im.image = Downscale2x(im.image);
+	}
 	if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
 		im.image = Upscale2x(im.image);
 	if((mode & GUI_MODE_DARK) && !(im.flags & IML_IMAGE_FLAG_DARK) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
