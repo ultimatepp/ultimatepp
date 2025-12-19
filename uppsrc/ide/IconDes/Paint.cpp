@@ -18,6 +18,8 @@ void IconShow::Paint(Draw& w)
 	Size isz = msz;
 	int  gap = DPI(8);
 	double fits = msz.cx * msz.cy < 20000;
+
+
 	if(fits) {
 		if(show_downscaled) {
 			isz.cx += (isz.cx + 1) / 2 + gap;
@@ -26,7 +28,9 @@ void IconShow::Paint(Draw& w)
 		if(show_synthetics) {
 			if(flags & IML_IMAGE_FLAG_UHD) {
 				isz.cx += isz.cx + gap;
-				isz.cy += isz.cy + (isz.cy + 1 / 2) + 2 * gap;
+				isz.cy += (isz.cy + 1) / 2 + gap;
+				if(IsUHDMode())
+					isz.cy += msz.cy + gap;
 			}
 			else {
 				isz.cx += 3 * isz.cx + gap;
@@ -34,6 +38,7 @@ void IconShow::Paint(Draw& w)
 			}
 		}
 	}
+
 	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
 	int ncx = sz.cx / n;
 	Image m2, m3;
