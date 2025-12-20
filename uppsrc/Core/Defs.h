@@ -275,7 +275,7 @@ public:
 	operator float() const              { return FLOAT_NULL; }
 	operator bool() const               { return false; }
 
-	Nuller() {}
+	Nuller() = default;
 };
 
 extern const Nuller Null;
