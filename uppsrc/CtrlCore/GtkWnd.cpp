@@ -175,9 +175,7 @@ Rect Ctrl::GetWndScreenRect() const
 		return Null;
 	
 	
-	DTIMING("GetWndScreenRect");
-	
-	if(utop->sync_rect) {
+	if(utop->sync_rect || 1) { _DBG_
 
 		gint x, y;
 		gint width, height;
@@ -512,6 +510,7 @@ bool Ctrl::SweepConfigure(bool wait)
 			Rect rect = e.value;
 			DLOG("SweepConfigure " << rect);
 			DDUMP(GetWndScreenRect());
+			DDUMP(rect);
 			if(GetRect() != rect)
 				SetWndRect(rect);
 			r = true;
@@ -537,7 +536,8 @@ void Ctrl::WndSetPos(const Rect& rect)
 		return;
 
 	SetWndRect(rect);
-	if(TopWindow *tw = dynamic_cast<TopWindow *>(this))
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	if(tw)
 		tw->SyncSizeHints();
 	if(top && utop->csd) {
 		Rect m = CSDMargins();
@@ -546,10 +546,13 @@ void Ctrl::WndSetPos(const Rect& rect)
 		                               LSCH(rect.GetHeight()) + m.top + m.bottom);
 	}
 	else {
-		Rect m = GetFrameMargins();
+		Rect m(0, 0, 0, 0);
+		if(tw)
+			m = GetFrameMargins();
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
 		                               LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}
+	utop->sync_rect = true;
 	LLOG("-- WndSetPos0 " << rect);
 }
 

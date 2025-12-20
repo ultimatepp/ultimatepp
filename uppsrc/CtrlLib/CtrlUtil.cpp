@@ -48,6 +48,7 @@ void Animate(Ctrl& c, const Rect& target, int type)
 		}
 	c.SetRect(target);
 	c.SetAlpha(255);
+	DDUMP(target);
 }
 
 void Animate(Ctrl& c, int x, int y, int cx, int cy, int type)
