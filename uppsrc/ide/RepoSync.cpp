@@ -71,6 +71,7 @@ RepoSync::RepoSync()
 	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
 	Sizeable().Zoomable();
 	BackPaint();
+	credentials.Show(TheIde() && TheIde()->IsVerbose());
 	credentials << [=] {
 		Index<String> hint;
 		for(const auto& w : ~work) {
