@@ -13,7 +13,7 @@ topic "Nuller";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Nuller]]}}&]
 [s3; &]
 [s1;:Upp`:`:Nuller: [@(0.0.255)3 class][3  ][*3 Nuller]&]
-[s9;%% Represents a logical null value with implicit conversions 
+[s9;%% [* Nuller] represents a logical null value with implicit conversions 
 to multiple scalar types.&]
 [s3; &]
 [s0; &]
