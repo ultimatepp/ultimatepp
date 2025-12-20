@@ -15,6 +15,7 @@ topic "Nuller";
 [s1;:Upp`:`:Nuller: [@(0.0.255)3 class][3  ][*3 Nuller]&]
 [s9;%% Represents a logical null value with implicit conversions 
 to multiple scalar types.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s0; &]
@@ -37,9 +38,11 @@ to multiple scalar types.&]
 [s2;%% Converts to a single`-precision null sentinel.&]
 [s3; &]
 [s4; &]
-[s0; operator [@(0.0.255) bool]() [@(0.0.255) const]&]
+[s0;:Upp`:`:Nuller`:`:operator bool`(`)const: operator [@(0.0.255) bool]() 
+[@(0.0.255) const]&]
 [s2; Converts to boolean false value. Allows ``Nuller`` to behave 
 as a falsy value in conditional contexts.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]
