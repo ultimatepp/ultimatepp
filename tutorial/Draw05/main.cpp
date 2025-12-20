@@ -11,16 +11,19 @@ struct MyApp : TopWindow {
 	}
 
 	MyApp() {
-		ImageDraw iw(100, 40);
-		iw.Alpha().DrawRect(0, 0, 100, 40, GrayColor(0));
-		iw.Alpha().DrawEllipse(0, 0, 100, 40, GrayColor(255));
-		iw.DrawEllipse(0, 0, 100, 40, Yellow());
-		iw.DrawText(26, 10, "Image", Arial(16).Bold());
+		ImageDraw iw(200, 80);
+		iw.Alpha().DrawRect(0, 0, 200, 80, GrayColor(0));
+		iw.Alpha().DrawEllipse(0, 0, 200, 80, GrayColor(255));
+		iw.DrawEllipse(0, 0, 200, 80, Yellow());
+		iw.DrawText(50, 15, "Image", Arial(32).Bold());
 		image = iw;
 	}
 };
 
 GUI_APP_MAIN
 {
-	MyApp().Sizeable().Run();
+	MyApp app;
+	app.Title("ImageDraw").Zoomable().Sizeable();
+	app.SetRect(0, 0, 220, 100);
+	app.Run();
 }
