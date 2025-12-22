@@ -307,10 +307,7 @@ void PopUpList::PopUp(Ctrl *owner, int width)
 	Rect r = owner->GetScreenRect();
 	if(width)
 		r.right = r.left + width;
-	DLOG("====== POPUP");
-	DDUMP(r);
 	PopUp(owner, r.left, r.top, r.bottom, r.Width());
-	DDUMP(r);
 }
 
 void PopUpList::PopUp(Ctrl *owner)

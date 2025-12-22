@@ -175,7 +175,7 @@ Rect Ctrl::GetWndScreenRect() const
 		return Null;
 	
 	
-	if(utop->sync_rect || 1) { _DBG_
+	if(utop->sync_rect) {
 
 		gint x, y;
 		gint width, height;
@@ -507,12 +507,12 @@ bool Ctrl::SweepConfigure(bool wait)
 		GEvent& e = Events[i];
 		Top *top = GetTop();
 		if(e.type == GDK_CONFIGURE && this_ && top && top->id == e.windowid) {
-			Rect rect = e.value;
-			DLOG("SweepConfigure " << rect);
-			DDUMP(GetWndScreenRect());
-			DDUMP(rect);
-			if(GetRect() != rect)
-				SetWndRect(rect);
+			LLOG("SweepConfigure " << e.value);
+			if(top) {
+				utop->sync_rect = true;
+				if(GetRect() != rect)
+					SetWndRect(GetWndScreenRect());
+			}
 			r = true;
 			e.type = EVENT_NONE;
 		}
@@ -522,7 +522,7 @@ bool Ctrl::SweepConfigure(bool wait)
 
 void Ctrl::WndSetPos(const Rect& rect)
 {
-	DLOG("========================== WNDSETPOS");
+	LLOG("========================== WNDSETPOS");
 	DLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	GuiLock __;
 	DDUMP(IsOpen());

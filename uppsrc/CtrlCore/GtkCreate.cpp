@@ -6,6 +6,46 @@ namespace Upp {
 
 #define LLOG(x)    //  DLOG(x)
 
+void Ctrl::SetCustomBarColor(Color c)
+{
+	GuiLock __;
+	
+	Top *top = GetTop();
+	if(!top || !top->header)
+		return;
+	
+	String new_css_class;
+	
+	static VectorMap<Color, GtkCssProvider *> providers;
+	
+	int q = providers.Find(c);
+	auto ClassName = [&] { return "upp_custom_titlebar_" + AsString(q); };
+	if(q < 0) {
+		if(providers.GetCount() > 64)
+			Panic("Too many custom bar colors (>64) !");
+		q = providers.GetCount();
+		String css;
+		css << "." << ClassName() << " { background-image: none; background-color: "
+		    << Format("#%02x%02x%02x;", c.GetR(), c.GetG(), c.GetB()) << "; }";
+		GtkCssProvider *provider = gtk_css_provider_new();
+		gtk_css_provider_load_from_data (provider, css, -1, NULL);
+		gtk_style_context_add_provider_for_screen(gtk_widget_get_screen(top->window),
+		                                          GTK_STYLE_PROVIDER (provider),
+		                                          GTK_STYLE_PROVIDER_PRIORITY_USER);
+		providers.Add(c, provider);
+	}
+	new_css_class = ClassName();
+	
+	if(top->bar_css_class == new_css_class)
+		return;
+
+	if(top->bar_css_class.GetCount())
+		gtk_style_context_remove_class (gtk_widget_get_style_context (top->header), ~top->bar_css_class);
+
+	top->bar_css_class = new_css_class;
+	gtk_style_context_add_class (gtk_widget_get_style_context (top->header), new_css_class);
+}
+
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
 	MemoryIgnoreLeaksBlock ___;
@@ -28,7 +68,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.ctrl = this;
 	w.gtk = top->window;
 	w.gdk = nullptr;
-	w.drawing_area = nullptr;
+	w.drawing_area = nullptr; _DBG_ // move to Top
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	GdkWindowTypeHint type_hint;
@@ -47,7 +87,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	Rect r = GetRect();
 	DDUMP(r);
 	bool custom_bar = false;
-	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE";
+	custom_bar = true;
+	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE" || custom_bar;
 	top->csd = !popup && need_csd;
 #ifdef flagFORCE_CSD // Force using client side decorations even when server side is available
 	top->csd = !popup;
@@ -55,11 +96,49 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(top->csd) {
 		top->client = gtk_drawing_area_new();
 		if(custom_bar) {
-			top->header_area = gtk_drawing_area_new();
-			gtk_widget_set_size_request(top->header_area, -1, 23);
+		#if 0
+			header = gtk_event_box_new ();
+			//gtk_style_context_add_class (gtk_widget_get_style_context (header), "titlebar");
+			//gtk_style_context_add_class (gtk_widget_get_style_context (header), "header-bar");
+			GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
+			g_object_set (box, "margin", 0, NULL);
+			label = gtk_label_new ("Label");
+			gtk_container_add (GTK_CONTAINER (header), label);
+			gtk_box_pack_start (GTK_BOX (box), label, FALSE, TRUE, 0);
+			gtk_widget_show_all (header);
+		#endif	
+		
+		#if 0
 			top->header = gtk_event_box_new();
+			
+			top->header_area = gtk_drawing_area_new();
+			gtk_widget_set_size_request(top->header_area, -1, 22);
 		    gtk_container_add(GTK_CONTAINER(top->header), top->header_area);
+		#endif
+		
+		    top->header = gtk_event_box_new ();
+
+#if 1
+			GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+			g_object_set (box, "margin", 0, NULL);
+
+			gtk_widget_set_size_request(box, -1, LSCH(tw->GetCustomTitleBarMetrics().height));
+			
+//			GtkWidget *left = gtk_label_new("");
+//			gtk_box_pack_start (GTK_BOX (box), left, FALSE, TRUE, 10);
+			
+			top->header_area = gtk_drawing_area_new();
+			gtk_box_pack_start (GTK_BOX (box), top->header_area, TRUE, TRUE, DPI(6)); // 6 seems to be a good compromise for rounded corners
+			
+//			GtkWidget *right = gtk_label_new("");
+//			gtk_box_pack_end (GTK_BOX (box), right, FALSE, TRUE, 10);
+			
+			gtk_container_add (GTK_CONTAINER (top->header), box);
+		//	gtk_container_add (GTK_CONTAINER (top->header), top->header_area);
+#endif
 		    gtk_widget_show_all(top->header);
+		    
+		    SetCustomBarColor(Magenta());
 		}
 		else {
 			top->header = gtk_header_bar_new();

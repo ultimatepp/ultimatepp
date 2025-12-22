@@ -87,10 +87,19 @@ bool Ctrl::ProcessInvalids()
 	GuiLock __;
 	if(invalids) {
 		for(Win& win : wins) {
+			Top *top = win.ctrl->GetTop();
+			TopWindow *tw = dynamic_cast<TopWindow *>(~win.ctrl);
 			for(const Rect& r : win.invalid)
-				if(win.drawing_area && win.ctrl)
+				if(win.drawing_area && win.ctrl) {
+					Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
+					if(top && tw && top->header_area) {
+						gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
+						                           GdkRect(rr), TRUE);
+						rr.Offset(0, -tw->custom_titlebar_cy);
+					}
 					gdk_window_invalidate_rect(gtk_widget_get_window(win.drawing_area),
-					                           GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
+					                           GdkRect(rr), TRUE);
+				}
 			win.invalid.Clear();
 		}
 		invalids = false;
@@ -109,7 +118,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		SystemDraw w(cr);
 		painting = true;
-
+		
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
@@ -126,6 +135,10 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		}
 		cairo_rectangle_list_destroy(list);
 
+		Top *top = p->GetTop();
+		TopWindow *tw = dynamic_cast<TopWindow *>(p);
+		if(top && tw && top->header_area && widget != top->header_area)
+			r.Offset(0, tw->custom_titlebar_cy);
 		p->UpdateArea(w, r);
 		w.End();
 		painting = false;

@@ -6,15 +6,16 @@ struct MyApp : TopWindow {
 	MenuBar  bar;
 	LineEdit editor;
 	Label    title;
-	FrameTop<Ctrl> test;
 
 	void Layout() override {
-		int ch = GetCustomTitleBarMetrics().height;
-		int h = bar.GetHeight();
-		int w = bar.GetWidth();
-		bar.LeftPos(0, w).TopPos((ch - h) / 2, h);
-		
-		title.HSizePos(w, 0).VSizePos();
+		if(IsCustomTitleBar()) {
+			int ch = GetCustomTitleBarMetrics().height;
+			int h = bar.GetHeight();
+			int w = bar.GetWidth();
+			bar.LeftPos(0, w).TopPos((ch - h) / 2, h);
+			
+			title.HSizePos(w, 0).VSizePos();
+		}
 	}
 
 	MyApp() {
@@ -25,14 +26,14 @@ struct MyApp : TopWindow {
 		if(tb) {
 			tb->Add(bar);
 			tb->Add(title);
+			bar.Transparent();
 		}
 		else
 			AddFrame(bar);
-		bar.Transparent();
 		bar.Set([=](Bar& bar) {
 			bar.Sub("File", [=](Bar& bar) {
-				bar.Add("Yellow", [=] { CustomTitleBar(Yellow()); });
-				bar.Add("Red", [=] { CustomTitleBar(LtRed()); });
+				bar.Add("Yellow", [=] { CustomTitleBar(Yellow(), 20); });
+				bar.Add("Red", [=] { CustomTitleBar(LtRed(), 20); });
 				bar.Add("Exit", [=] { Break(); });
 			});
 		});

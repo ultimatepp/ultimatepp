@@ -595,12 +595,10 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	CloseHandle(CreateThread(NULL, 0, PlaySoundThread, NULL, 0, &dummy));
 #endif
 	doeffect = true;
-	DLOG("===================== MENU POPUP");
 	Ctrl::PopUp(owner, true, true, GUI_DropShadows(), !owner);
 	GuiPlatformAfterMenuPopUp();
 	if(eff)
 		Animate(*this, p.x, p.y, sz.cx, sz.cy);
-	DDUMP(GetScreenRect());
 	sz = GetSize(); // final size can be a bit bigger, e.g. in macos
 	pane.RightPos(0, sz.cx).BottomPos(0, sz.cy);
 }

@@ -209,7 +209,10 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	int                   id; \
 	bool                  csd = false; \
 	bool                  sync_rect = true; \
-	Rect                  screen_rect;
+	Rect                  screen_rect; \
+	String                bar_css_class; \
+	Color                 bar_color; \
+	int                   bar_cy; \
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/GtkCtrl.h>
 

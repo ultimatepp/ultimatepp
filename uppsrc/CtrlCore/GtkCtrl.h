@@ -94,6 +94,8 @@ _DBG_
 	bool   SweepFocus(bool wait);
 	void   SyncWndRect(const Rect& rect);
 
+	void   SetCustomBarColor(Color c);
+
 	static BiVector<GEvent>  Events;
 	static Vector<Ptr<Ctrl>> activePopup; // created with 'activate' flag - usually menu
 	static Vector<Ptr<Ctrl>> visiblePopup; // any popup visible on screen
@@ -172,6 +174,9 @@ _DBG_
 	static PasteClip GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 	                        guint time, gpointer user_data, bool paste);
 	static bool   ProcessInvalids();
+
+	static int GetGtkTitleBarHeight(const TopWindow *tw);
+	static int GetGtkTitleBarButtonWidth();
 
 	friend bool InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void GuiPlatformGripResize(TopWindow *q);

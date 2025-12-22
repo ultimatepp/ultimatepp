@@ -103,6 +103,7 @@ file
 	GtkEvent.cpp,
 	GtkTop.h,
 	GtkTop.cpp,
+	CustomBar.cpp,
 	GtkClip.cpp,
 	GtkDnD.cpp,
 	GtkApp.cpp,

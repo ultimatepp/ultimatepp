@@ -217,10 +217,10 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 	if(custom_bar) {
 		if(&GetFrame(0) != ~custom_bar_frame)
 			RemoveFrame(*custom_bar_frame);
-			if(&GetFrame(0) == &NullFrame())
-				SetFrame(0, *custom_bar_frame);
-			else
-				InsertFrame(0, *custom_bar_frame);
+		if(&GetFrame(0) == &NullFrame())
+			SetFrame(0, *custom_bar_frame);
+		else
+			InsertFrame(0, *custom_bar_frame);
 		custom_bar_frame->Add(*custom_bar);
 	}
 	custom_titlebar_bk = bk;

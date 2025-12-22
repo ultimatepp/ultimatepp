@@ -30,8 +30,6 @@ static void sAdd(Ctrl& dlg, int fcy, int bcy, int& bx, int bcx, int gap, Button&
 
 void sExecutePrompt(PromptDlgWnd__ *dlg, int *result)
 {
-	DDUMP(dlg->GetMinSize());
-	DDUMP(dlg->GetRect());
 	dlg->Open();
 	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
 	for(int i = 0; i < wins.GetCount(); i++) {
@@ -42,7 +40,6 @@ void sExecutePrompt(PromptDlgWnd__ *dlg, int *result)
 		}
 	}
 	*result = dlg->RunAppModal();
-	DDUMP(dlg->GetScreenRect());
 	dlg->Close();
 }
                         
@@ -165,8 +162,6 @@ int Prompt(int dontshowagain, const char *dsa_id_, int beep,
 	int cy = mcy + 48 * fcy / 10;
 	if(dontshowagain)
 		cy += fcy;
-	DDUMP(cx);
-	DDUMP(cy);
 	dlg.SetRect(Size(cx, cy));
 	dlg << icon.TopPos(fcy, bsz.cy).LeftPos(fcy, bsz.cx);
 	dlg << qtfctrl.TopPos(fcy + (mcy - qcy) / 2, qcy).RightPos(fcy, qcx);
