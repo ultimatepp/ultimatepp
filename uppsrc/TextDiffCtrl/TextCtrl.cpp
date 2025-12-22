@@ -127,19 +127,16 @@ void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
 {
+	int bl = -1;
 	if(HasCapture()) {
 		DoSelection(pt.y, true);
-		Tip("");
 	}
-	else {
-		const Blame *b = GetBlame(pt);
-		if(b)
-			Tip("\1[g@b " + Format("%04d-%02d-%02d %02d:%02d:%02d ",
-			                       b->time.year, b->time.month, b->time.day,
-			                       b->time.hour, b->time.minute, b->time.second) +
-	               "[@r \1" + b->author + "\1&" +
-	               "[@k* \1" + b->summary + "\1]&"
-	               "[@g " + b->hash);
+	else
+	if(GetBlame(pt))
+		bl = scroll.Get().y + pt.y / letter.cy;
+	if(bl != blame_line) {
+		blame_line = bl;
+		Refresh();
 	}
 }
 
@@ -363,6 +360,12 @@ void TextCompareCtrl::Paint(Draw& draw)
 		}
 	}
 	
+	int blame_y = -1;
+	Color  blame_paper;
+	String blame_qtf;
+	
+	int blame_y0 = -1;
+
 	if(blame.GetCount()) {
 		int  ty = (letter.cy - blame_font.GetCy()) / 2;
 		Date now = GetSysDate();
@@ -372,11 +375,11 @@ void TextCompareCtrl::Paint(Draw& draw)
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
 			Color paper =  missingpaper;
-			Date dt;
+			Time tm;
 			String date, author, hash, summary;
 			if(!IsNull(l.number) && l.number >= 0 && l.number <= blame.GetCount()) {
 				Blame& m = blame[l.number - 1];
-				dt = m.time;
+				tm = m.time;
 				date = Format("%04d-%02d-%02d ", m.time.year, m.time.month, m.time.day);
 				author = m.author;
 				hash = m.hash;
@@ -394,15 +397,26 @@ void TextCompareCtrl::Paint(Draw& draw)
 			if(bli == 0) {
 				if(i != first_line)
 					draw.DrawRect(n_width, y, blame_width, 1, SLtGray());
-				int age = now - dt;
+				int age = now - (Date)tm;
 				draw.DrawText(n_width, y + ty, date, blame_font, age < 14 ? SLtBlue() : age < 365 ? SBlue() : SGray());
 				draw.DrawText(n_width + GetTextSize(date, blame_font).cx, y + ty, author, blame_font, SRed());
 				last_hash = hash;
+				blame_y0 = y;
 			}
 			if(bli == 1)
 				draw.DrawText(n_width, y + ty, summary, blame_font);
 			if(bli == 2 && hash.GetCount() > 6)
 				draw.DrawText(n_width, y + ty, hash.Mid(0, 6), blame_font, SGreen());
+			if(i == blame_line) {
+				blame_qtf = "[g@b " + Format("%04d-%02d-%02d %02d:%02d:%02d ",
+							                 tm.year, tm.month, tm.day,
+							                 tm.hour, tm.minute, tm.second) +
+				             "[@r \1" + author + "\1&" +
+				             "[@k* \1" + summary + "\1]&"
+				             "[@g " + hash;
+				blame_y = blame_y0;
+				blame_paper = paper;
+			}
 			draw.End();
 			draw.DrawRect(n_width + blame_width - 1, y, 1, letter.cy, Gray());
 			bli++;
@@ -518,6 +532,18 @@ void TextCompareCtrl::Paint(Draw& draw)
 	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
 	draw.End();
 	draw.DrawRect(0, lcy, n_width, sz.cy - lcy, number_bg);
+	
+	if(blame_y >= 0) {
+		RichText txt = ParseQTF(blame_qtf);
+		txt.ApplyZoom(GetRichTextStdScreenZoom());
+		int cx = clamp(txt.GetWidth(), 10, sz.cx - n_width);
+		int cy = txt.GetHeight(cx);
+		if(blame_y + cy > sz.cy)
+			blame_y = max(sz.cy - cy, 0);
+		draw.DrawRect(n_width, blame_y, cx + 2 + DPI(8), cy + 2, blame_paper);
+		DrawFrame(draw, n_width - 1, blame_y, cx + 2 + DPI(8), cy + 2, SLtGray());
+		txt.Paint(draw, n_width + DPI(4), blame_y + 1, cx);
+	}
 }
 
 void TextCompareCtrl::TabSize(int t)

@@ -80,6 +80,7 @@ private:
 	};
 	Array<Line>    lines;
 	Vector<Blame>  blame;
+	int            blame_line;
 	int            maxwidth;
 	ScrollBars     scroll;
 	Font           font;

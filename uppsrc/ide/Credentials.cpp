@@ -196,6 +196,7 @@ CredentialsDlg::CredentialsDlg(const Vector<String>& url_hints)
 		if(PromptYesNo("Remove all?"))
 			list.Clear();
 	};
+	
 	passkey << [=] { Passkey(); };
 }
 
