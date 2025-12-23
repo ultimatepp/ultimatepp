@@ -128,13 +128,14 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 //			gtk_box_pack_start (GTK_BOX (box), left, FALSE, TRUE, 10);
 			
 			top->header_area = gtk_drawing_area_new();
-			gtk_box_pack_start (GTK_BOX (box), top->header_area, TRUE, TRUE, DPI(6)); // 6 seems to be a good compromise for rounded corners
+//			gtk_box_pack_start (GTK_BOX (box), top->header_area, TRUE, TRUE, 0); // 6 seems to be a good compromise for rounded corners
 			
 //			GtkWidget *right = gtk_label_new("");
 //			gtk_box_pack_end (GTK_BOX (box), right, FALSE, TRUE, 10);
 			
-			gtk_container_add (GTK_CONTAINER (top->header), box);
-		//	gtk_container_add (GTK_CONTAINER (top->header), top->header_area);
+		//	gtk_container_add (GTK_CONTAINER (top->header), box);
+			gtk_widget_set_size_request(top->header_area, -1, LSCH(tw->GetCustomTitleBarMetrics().height));
+			gtk_container_add (GTK_CONTAINER (top->header), top->header_area);
 #endif
 		    gtk_widget_show_all(top->header);
 		    

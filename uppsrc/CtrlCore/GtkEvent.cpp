@@ -122,7 +122,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
-		w.Clip(r); // Because of IsPainting
+//		w.Clip(r); // Because of IsPainting
 
 		cairo_rectangle_list_t *list = cairo_copy_clip_rectangle_list(cr);
 		if(list->status == CAIRO_STATUS_SUCCESS && list->num_rectangles < 10) {
@@ -137,8 +137,16 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		Top *top = p->GetTop();
 		TopWindow *tw = dynamic_cast<TopWindow *>(p);
-		if(top && tw && top->header_area && widget != top->header_area)
-			r.Offset(0, tw->custom_titlebar_cy);
+		if(top && tw && top->header_area && widget != top->header_area) {
+			w.Offset(0, -tw->GetCustomTitleBarMetrics().height);
+			r.OffsetVert(tw->GetCustomTitleBarMetrics().height);
+			DDUMP(tw->GetCustomTitleBarMetrics().height);
+		}
+		else {
+			DLOG("NOT HEADER");
+			DDUMP(r);
+			w.Begin();
+		}
 		p->UpdateArea(w, r);
 		w.End();
 		painting = false;
