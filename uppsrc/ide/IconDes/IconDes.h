@@ -364,6 +364,7 @@ private:
 	void  Colors();
 	void  Smoothen();
 	void  RemoveAlpha();
+	void  RestoreAlpha();
 
 	void  Search();
 	void  GoTo(int q);
