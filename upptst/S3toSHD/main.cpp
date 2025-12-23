@@ -21,6 +21,11 @@ struct MyApp : TopWindow {
 			w.DrawImage(10 + i * 128, 200, Downscale2x(DownSample3x(m)));
 			w.DrawImage(40 + i * 128, 200, DownSample2x(DownSample3x(m)));
 			w.DrawImage(70 + i * 128, 200, RescaleFilter(m, m.GetSize() / 6, FILTER_LANCZOS3));
+
+			w.DrawImage(10 + i * 128, 300, Downscale2x(m));
+			w.DrawImage(10 + i * 128, 400, Downscale2x(Downscale2x(m)));
+
+			w.DrawImage(10 + i * 128, 500, Rescale(m, 64, 64));
 		}
 	}
 };
