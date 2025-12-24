@@ -84,7 +84,6 @@ _DBG_
 		int          id;
 		GtkWidget   *gtk;
 		GdkWindow   *gdk;
-		GtkWidget   *drawing_area;
 		Ptr<Ctrl>    ctrl;
 		Vector<Rect> invalid; // areas invalidated to be processed at next opportunity
 	};
@@ -95,6 +94,7 @@ _DBG_
 	void   SyncWndRect(const Rect& rect);
 
 	void   SetCustomBarColor(Color c);
+	void   WndRectsSync();
 
 	static BiVector<GEvent>  Events;
 	static Vector<Ptr<Ctrl>> activePopup; // created with 'activate' flag - usually menu
@@ -207,6 +207,8 @@ public: // really private:
 	static Rect   SCL(int x, int y, int cx, int cy) { return RectC(SCL(x), SCL(y), SCL(cx), SCL(cy)); }
 	static double LSC(int x)                        { return (double)x / scale; }
 	static int    LSCH(int x)                       { return (x + 1) / scale; }
+	static Rect   LSCH(int x, int y, int cx, int cy){ return RectC(LSC(x), LSC(y), LSCH(cx), LSCH(cy)); }
+	static Rect   LSCH(const Rect& r)               { return LSCH(r.left, r.top, r.GetWidth(), r.GetHeight()); }
 	
 	static int    GetCaretBlinkTime()               { return 500; }
             

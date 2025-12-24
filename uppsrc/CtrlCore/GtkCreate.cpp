@@ -9,15 +9,15 @@ namespace Upp {
 void Ctrl::SetCustomBarColor(Color c)
 {
 	GuiLock __;
-	
+
 	Top *top = GetTop();
 	if(!top || !top->header)
 		return;
-	
+
 	String new_css_class;
-	
+
 	static VectorMap<Color, GtkCssProvider *> providers;
-	
+
 	int q = providers.Find(c);
 	auto ClassName = [&] { return "upp_custom_titlebar_" + AsString(q); };
 	if(q < 0) {
@@ -35,7 +35,7 @@ void Ctrl::SetCustomBarColor(Color c)
 		providers.Add(c, provider);
 	}
 	new_css_class = ClassName();
-	
+
 	if(top->bar_css_class == new_css_class)
 		return;
 
@@ -68,7 +68,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.ctrl = this;
 	w.gtk = top->window;
 	w.gdk = nullptr;
-	w.drawing_area = nullptr; _DBG_ // move to Top
 
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	GdkWindowTypeHint type_hint;
@@ -86,54 +85,19 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	Rect r = GetRect();
 	DDUMP(r);
-	bool custom_bar = false;
-	custom_bar = true;
-	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE" || custom_bar;
-	top->csd = !popup && need_csd;
+	bool custom_bar = tw && tw->custom_bar;
+	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE";
+	top->csd = !popup && (need_csd || custom_bar);
 #ifdef flagFORCE_CSD // Force using client side decorations even when server side is available
 	top->csd = !popup;
 #endif
 	if(top->csd) {
 		top->client = gtk_drawing_area_new();
 		if(custom_bar) {
-		#if 0
-			header = gtk_event_box_new ();
-			//gtk_style_context_add_class (gtk_widget_get_style_context (header), "titlebar");
-			//gtk_style_context_add_class (gtk_widget_get_style_context (header), "header-bar");
-			GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 10);
-			g_object_set (box, "margin", 0, NULL);
-			label = gtk_label_new ("Label");
-			gtk_container_add (GTK_CONTAINER (header), label);
-			gtk_box_pack_start (GTK_BOX (box), label, FALSE, TRUE, 0);
-			gtk_widget_show_all (header);
-		#endif	
-		
-		#if 0
-			top->header = gtk_event_box_new();
-			
-			top->header_area = gtk_drawing_area_new();
-			gtk_widget_set_size_request(top->header_area, -1, 22);
-		    gtk_container_add(GTK_CONTAINER(top->header), top->header_area);
-		#endif
-		
 		    top->header = gtk_event_box_new ();
 
 #if 1
-			GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-			g_object_set (box, "margin", 0, NULL);
-
-			gtk_widget_set_size_request(box, -1, LSCH(tw->GetCustomTitleBarMetrics().height));
-			
-//			GtkWidget *left = gtk_label_new("");
-//			gtk_box_pack_start (GTK_BOX (box), left, FALSE, TRUE, 10);
-			
 			top->header_area = gtk_drawing_area_new();
-//			gtk_box_pack_start (GTK_BOX (box), top->header_area, TRUE, TRUE, 0); // 6 seems to be a good compromise for rounded corners
-			
-//			GtkWidget *right = gtk_label_new("");
-//			gtk_box_pack_end (GTK_BOX (box), right, FALSE, TRUE, 10);
-			
-		//	gtk_container_add (GTK_CONTAINER (top->header), box);
 			gtk_widget_set_size_request(top->header_area, -1, LSCH(tw->GetCustomTitleBarMetrics().height));
 			gtk_container_add (GTK_CONTAINER (top->header), top->header_area);
 #endif
@@ -164,10 +128,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	}
 	else
 		top->client = top->window;
-	
-	DLOG("*** 1 " << CSDMargins());
 
-	w.drawing_area = top->client;
+	DLOG("*** 1 " << CSDMargins());
 
 	top->cursor_id = -1;
 
@@ -175,14 +137,11 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	g_signal_connect(top->client, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(gtk(), "event", G_CALLBACK(TopGtkEvent), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(top->client, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
-	
+
 	if(top->header_area) {
 		g_signal_connect(top->header_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 		g_signal_connect(top->header_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
 	}
-
-	DDUMP(r);
-	DDUMP(top->csd);
 
 	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
@@ -206,17 +165,17 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 		gdk_window_get_origin(gdk(), &origin.x, &origin.y);
 		DDUMP(origin);
-		
-		
+
+
 		DDUMP(gtk_widget_get_allocated_width(top->client));
 		DDUMP(gtk_widget_get_allocated_height(top->client));
 
 		DDUMP(gtk_widget_get_allocated_width(top->header_area));
 		DDUMP(gtk_widget_get_allocated_height(top->header_area));
-		
+
 		DDUMP(gtk_widget_get_allocated_width(win));
 		DDUMP(gtk_widget_get_allocated_height(win));
-		
+
 		DDUMP(top->csd);
 	#endif
 	}
@@ -253,9 +212,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	WndShow(IsShown());
 
-	DDUMP(IsShown());
-	DLOG("ABOUT TO SWEEPCFG");
-	DDUMP(GetScreenRect());
 	SweepConfigure(true);
 	FocusSync();
 	if(!popup)
@@ -273,6 +229,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(r.Contains(m))
 		DispatchMouse(MOUSEMOVE, m);
 
+	top->sync_rect = true;
+	WndRectsSync();
 	RefreshLayoutDeep();
 }
 
@@ -342,7 +300,7 @@ void Ctrl::GuiPlatformRemove()
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
-	DLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
+	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
 	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
 	popup = true;
 	Ptr<Ctrl> _this = this;

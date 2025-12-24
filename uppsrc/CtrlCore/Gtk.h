@@ -209,6 +209,8 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	int                   id; \
 	bool                  csd = false; \
 	bool                  sync_rect = true; \
+	Rect                  client_rect; \
+	Rect                  header_rect; \
 	Rect                  screen_rect; \
 	String                bar_css_class; \
 	Color                 bar_color; \

@@ -90,15 +90,27 @@ bool Ctrl::ProcessInvalids()
 			Top *top = win.ctrl->GetTop();
 			TopWindow *tw = dynamic_cast<TopWindow *>(~win.ctrl);
 			for(const Rect& r : win.invalid)
-				if(win.drawing_area && win.ctrl) {
+				if(top->client && win.ctrl) {
 					Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
+					DLOG("+++");
+					DDUMP(rr);
 					if(top && tw && top->header_area) {
-						gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
-						                           GdkRect(rr), TRUE);
-						rr.Offset(0, -tw->custom_titlebar_cy);
+						int h = tw->custom_bar_frame->GetHeight();
+						DDUMP(h);
+						Rect t = rr & Rect(0, 0, INT_MAX, h);
+						if(!t.IsEmpty())
+							gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
+							                           GdkRect(LSCH(t)), TRUE);
+						rr.Offset(0, -h);
+						
+_DBG_//							gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area), GdkRect(RectC(0, 0, 1000, 1000)), TRUE);
+
 					}
-					gdk_window_invalidate_rect(gtk_widget_get_window(win.drawing_area),
-					                           GdkRect(rr), TRUE);
+					DDUMP(rr);
+					DDUMP(LSCH(rr));
+					gdk_window_invalidate_rect(gtk_widget_get_window(top->client),
+					                           GdkRect(LSCH(rr)), TRUE);
+_DBG_//							gdk_window_invalidate_rect(gtk_widget_get_window(top->client), GdkRect(RectC(0, 0, 1000, 1000)), TRUE);
 				}
 			win.invalid.Clear();
 		}
@@ -122,7 +134,6 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
-//		w.Clip(r); // Because of IsPainting
 
 		cairo_rectangle_list_t *list = cairo_copy_clip_rectangle_list(cr);
 		if(list->status == CAIRO_STATUS_SUCCESS && list->num_rectangles < 10) {
@@ -131,7 +142,8 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 				const cairo_rectangle_t& r = list->rectangles[i];
 				clip.Add(Rect((int)r.x, (int)r.y, (int)(r.x + r.width), (int)(r.y + r.height)));
 			}
-			w.PickInvalid(pick(clip));
+			DDUMP(clip);
+			// w.PickInvalid(pick(clip));
 		}
 		cairo_rectangle_list_destroy(list);
 
@@ -140,14 +152,13 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		if(top && tw && top->header_area && widget != top->header_area) {
 			w.Offset(0, -tw->GetCustomTitleBarMetrics().height);
 			r.OffsetVert(tw->GetCustomTitleBarMetrics().height);
-			DDUMP(tw->GetCustomTitleBarMetrics().height);
 		}
 		else {
-			DLOG("NOT HEADER");
-			DDUMP(r);
 			w.Begin();
 		}
+//		w.Clip(r); _DBG_ // Because of IsPainting
 		p->UpdateArea(w, r);
+//		w.End();
 		w.End();
 		painting = false;
 	}
@@ -165,9 +176,11 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 #endif
 	if(event->type == GDK_CONFIGURE) {
 		Ctrl *p = GetTopCtrlFromId(user_data);
-		Top *top = p->GetTop();
-		if(top)
-			top->sync_rect = true;
+		if(p) {
+			Top *top = p->GetTop();
+			if(top)
+				top->sync_rect = true;
+		}
 	}
 	return false;
 }
@@ -188,6 +201,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	LOG(rmsecs() << " FETCH EVENT " << ev << " ctrl: " << Name(p));
 #endif
 
+	if(!p)
+		return false;
 	switch(event->type) {
 	case GDK_DELETE:
 		p->CancelPreedit();
@@ -264,6 +279,9 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		retval = false;
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
 		value = SCL(e->x, e->y, e->width, e->height);
+		Top *top = p->GetTop();
+		if(top)
+			top->sync_rect = true;
 		break;
 	}
 	default:

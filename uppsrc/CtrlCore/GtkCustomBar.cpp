@@ -45,18 +45,14 @@ int Ctrl::GetGtkTitleBarButtonWidth()
 
 void TopWindow::SyncCustomBar()
 {
-	DLOG("======== SYNCBAR");
 	if(custom_bar_frame)
 		custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
 	if(custom_bar) {
 		SetCustomBarColor(Nvl(custom_titlebar_bk, SColorFace()));
 		auto cm = GetCustomTitleBarMetrics();
-		DDUMP(cm.height);
 		custom_bar->VSizePos().HSizePos(DPI(6), DPI(6));
 		RefreshFrame(0, 0, GetRect().Width(), cm.height);
 	}
-	DDUMP(GetSize());
-	Dump();
 }
 
 bool TopWindow::IsCustomTitleBar__() const
@@ -66,17 +62,11 @@ bool TopWindow::IsCustomTitleBar__() const
 
 Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 {
-	DLOG("===== MakeCustomTitleBar");
-	DDUMP(~custom_bar);
-	DDUMP(~custom_bar_frame);
 	if(!custom_bar) {
 		custom_bar_frame.Create();
 		custom_bar_frame->Transparent();
 		custom_bar.Create();
 	}
-	DLOG("====");
-	DDUMP(~custom_bar);
-	DDUMP(~custom_bar_frame);
 	if(custom_bar) {
 		if(&GetFrame(0) != ~custom_bar_frame) {
 			RemoveFrame(*custom_bar_frame);
