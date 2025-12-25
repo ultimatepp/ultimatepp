@@ -568,15 +568,15 @@ were no invalid values in slave widgets.&]
 edited, [* false] when not&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:SetLineCy`(int`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* SetLineCy]([@(0.0.255) i
-nt]_[*@3 cy])&]
+[s5;:ArrayCtrl`:`:SetLineCy`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* SetLineCy]([@(0.0.255) int]_[*@3 cy])&]
 [s2; Sets the (default) array row height. For certain rows, this 
 can be overriden by the two`-parameter version of this method.&]
 [s7; [*C@3 cy]-|row height in pixels&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:SetEditLineCy`(`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
-]_[* SetEditLineCy]()&]
+[s5;:Upp`:`:ArrayCtrl`:`:SetEditLineCy`(`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* SetEditLineCy]()&]
 [s2; Sets the default array row height such that EditField based 
 editors comfortably fit into the ArrayCtrl.&]
 [s3;%- &]
@@ -612,16 +612,16 @@ row height, or, when Null, the default row height).&]
 [s7; [*/ Return value]-|row height in pixels&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AppendLine`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AppendLine
-]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AppendLine`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AppendLine]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; The AppendLine property controls whether the array displays 
 an additional `'append`' row after its last (real) row. &]
 [s7; [*C@3 b]-|[* true] `= display appending row, [* false] `= hide it&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoAppendLine`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoAppendLine
-]()&]
+[s5;:ArrayCtrl`:`:NoAppendLine`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoAppendLine]()&]
 [s2; Hide the appending line (identical to [* AppendLine(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -633,16 +633,16 @@ onst]&]
 end of the array&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Inserting`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Inserting](
-[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Inserting`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Inserting]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable inserting new rows in the array (no matter 
 which insertion mechanism is selected).&]
 [s7; [*C@3 b]-|[* true] `= enable insertion, [* false] `= disable it&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoInserting`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoInserting](
-)&]
+[s5;:ArrayCtrl`:`:NoInserting`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoInserting]()&]
 [s2; Disables row insertion (identical to [* Inserting(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -654,8 +654,8 @@ st]&]
 when not&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Appending`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Appending](
-[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Appending`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Appending]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable adding new rows at the table end.&]
 [s7; [*C@3 b]-|[* true] `= enable row appending, [* false] `= disable it&]
 [s7; [*/ Return value]-|[* `*this]&]
@@ -668,8 +668,8 @@ st]&]
 when not.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AutoAppending`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AutoApp
-ending]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AutoAppending`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AutoAppending]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Same as [* Appending] but Enter pressed when editing a new row 
 accepts it and adds another one at the table end.&]
 [s7; [*C@3 b]-|[* true ]to enable the mode&]
@@ -682,22 +682,22 @@ onst]&]
 [s7; [*/ Return value]-|[* true] `= [* AutoAppending ]is active&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:BeforeAfterInserting`(int`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* B
-eforeAfterInserting]([@(0.0.255) int]_[*@3 q]_`=_[@3 1])&]
+[s5;:ArrayCtrl`:`:BeforeAfterInserting`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* BeforeAfterInserting]([@(0.0.255) int]_[*@3 q]_`=_[@3 1])&]
 [s2; Activate before / after row insertion mechanism ([* Insert] hotkey 
 `= before).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AfterBeforeInserting`(int`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* A
-fterBeforeInserting]([@(0.0.255) int]_[*@3 q]_`=_[@3 2])&]
+[s5;:ArrayCtrl`:`:AfterBeforeInserting`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AfterBeforeInserting]([@(0.0.255) int]_[*@3 q]_`=_[@3 2])&]
 [s2; Activate before / after row insertion mechanism ([* Insert] hotkey 
 `= after)&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Duplicating`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Duplicati
-ng]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Duplicating`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Duplicating]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable row duplication. Note that this property only 
 controls whether the `'Duplicate`' item should be present in 
 the array local menu. Of course, nothing can prevent you from 
@@ -707,8 +707,8 @@ supporting duplication in some other way, or from calling the
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoDuplicating`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoDuplicati
-ng]()&]
+[s5;:ArrayCtrl`:`:NoDuplicating`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoDuplicating]()&]
 [s2; Disable row duplication (identical to [* Duplicating(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -720,8 +720,9 @@ onst]&]
 [* false] when not&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoInsertAppend`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoInse
-rtAppend]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:NoInsertAppend`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoInsertAppend]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])
+&]
 [s2; Enables / disables the auto`-append mechanism (see above section 
 on inserting rows).&]
 [s7; [*C@3 b]-|[* true] `= disable InsertAppend mechanism, [* false] `= 
@@ -736,14 +737,15 @@ it is possible to [/ open] a row for editing).&]
 not&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Removing`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Removing]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Removing`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Removing]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable deleting rows from the table.&]
 [s7; [*C@3 b]-|[* true] `= enable deletion, [* false] `= disable it&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoRemoving`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoRemoving]()&]
+[s5;:ArrayCtrl`:`:NoRemoving`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoRemoving]()&]
 [s2; Disable deleting table rows (identical to [* Removing(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -755,8 +757,8 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 not&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AskRemove`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AskRemove](
-[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AskRemove`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AskRemove]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Sets whether the user must manually confirm array row deletion. 
 When set to [* true], every time a row is to be deleted, a confirmation 
 dialog pops up. When set to [* false], rows are deleted automatically 
@@ -766,8 +768,8 @@ without any further confirmation.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoAskRemove`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoAskRemove](
-)&]
+[s5;:ArrayCtrl`:`:NoAskRemove`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoAskRemove]()&]
 [s2; Disables user confirmation of row deletion (equivalent to [* AskRemove(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -779,8 +781,8 @@ st]&]
 rows, [* false] `= rows are deleted immediately&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Moving`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Moving]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Moving`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Moving]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable row swapping. When set to [* true], it is possible 
 to move an array row up and down by swapping it with the previous 
 / next row. This can be used to reorder array rows in a visually 
@@ -796,21 +798,22 @@ straightforward manner.&]
 [* false] `= it doesn`'t&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Header`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Header]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Header`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Header]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Show / hide the [*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us^ HeaderCtrl] 
 object for this table.&]
 [s7; [*C@3 b]-|[* true] `= show table header, [* false] `= hide it&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoHeader`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoHeader]()&]
+[s5;:ArrayCtrl`:`:NoHeader`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoHeader]()&]
 [s2; Hide table header (equivalent to [* Header(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Track`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Track]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Track`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Track]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Animate array column resizing. This is equivalent to setting 
 the [*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Track`(bool`)^ T
 rack] property in the array HeaderCtrl.&]
@@ -820,38 +823,41 @@ column widths, [* false] `= regenerate everything only after drag
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoTrack`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoTrack]()&]
+[s5;:ArrayCtrl`:`:NoTrack`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoTrack]()&]
 [s2; Do not animate array column resizing (equivalent to [* Track(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:VertGrid`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* VertGrid]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:VertGrid`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* VertGrid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Show / hide vertical array grid lines (separating array columns).&]
 [s7; [*C@3 b]-|[* true] `= show vertical grid lines, [* false] `= hide them&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoVertGrid`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoVertGrid]()&]
+[s5;:ArrayCtrl`:`:NoVertGrid`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoVertGrid]()&]
 [s2; Hide vertical grid lines (equivalent to [* VertGrid(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:HorzGrid`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* HorzGrid]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:HorzGrid`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* HorzGrid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Show / hide horizontal grid lines (separating array rows).&]
 [s7; [*C@3 b]-|[* true] `= show horizontal grid lines, [* false] `= hide 
 them&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoHorzGrid`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoHorzGrid]()&]
+[s5;:ArrayCtrl`:`:NoHorzGrid`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoHorzGrid]()&]
 [s2; Hide horizontal grid lines (equivalent to [* HorzGrid(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Grid`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Grid]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:Grid`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* Grid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Show / hide both horizontal and vertical grid lines (equivalent 
 to [* HorzGrid(b).VertGrid(b)]).&]
 [s7; [*C@3 b]-|[* true] `= show grid line matrix, [* false] `= hide all 
@@ -859,21 +865,22 @@ grid lines&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoGrid`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoGrid]()&]
+[s5;:ArrayCtrl`:`:NoGrid`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoGrid]()&]
 [s2; Hide horizontal and vertical grid lines (equivalent to [* Grid(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:GridColor`(Color`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* GridColor](
-[_^Color^ Color]_[*@3 c])&]
+[s5;:ArrayCtrl`:`:GridColor`(Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* GridColor]([_^Color^ Color]_[*@3 c])&]
 [s2; Sets the color for grid lines.&]
 [s7; [*C@3 c]-|new grid line color&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:EvenRowColor`(Color`,Color`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* E
-venRowColor]([_^Color^ Color]_[*@3 paper]_`=_Blend(SColorMark, SColorPaper, 
-[@3 220]), [_^Color^ Color]_[*@3 ink]_`=_SColorText)&]
+[s5;:ArrayCtrl`:`:EvenRowColor`(Color`,Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* EvenRowColor]([_^Color^ Color]_[*@3 paper]_`=_Blend(SColorMar
+k, SColorPaper, [@3 220]), [_^Color^ Color]_[*@3 ink]_`=_SColorText)&]
 [s2; Sets the paper and ink (background and foreground) color for 
 even array rows. In certain cases setting a different background 
 color for odd and even rows helps to simplify visual orientation 
@@ -888,9 +895,9 @@ etc. array row&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:OddRowColor`(Color`,Color`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* O
-ddRowColor]([_^Color^ Color]_[*@3 paper]_`=_SColorInfo, [_^Color^ Color]_[*@3 ink]_`=_SCo
-lorText)&]
+[s5;:ArrayCtrl`:`:OddRowColor`(Color`,Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* OddRowColor]([_^Color^ Color]_[*@3 paper]_`=_SColorInfo, 
+[_^Color^ Color]_[*@3 ink]_`=_SColorText)&]
 [s2; Sets the paper and ink (background and foreground) color for 
 odd array rows.&]
 [s7; [*C@3 paper]-|background color to use for first, third, fifth etc. 
@@ -899,16 +906,17 @@ array row&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoCursor`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoCursor]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:NoCursor`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoCursor]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Turns on / off highlighting cursor row.&]
 [s7; [*C@3 b]-|[* true] `= do not highlight cursor row, [* false] `= default 
 behaviour (cursor row is shown in inverse colors)&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:MouseMoveCursor`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Mouse
-MoveCursor]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:MouseMoveCursor`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* MouseMoveCursor]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])
+&]
 [s2; Enables / disables automatical cursor row switching as the mouse 
 cursor moves over the array rows.&]
 [s7; [*C@3 b]-|[* true] `= automatically switch cursor row, [* false] `= 
@@ -916,15 +924,15 @@ only upon clicks and keyboard navigation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoMouseMoveCursor`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoMouse
-MoveCursor]()&]
+[s5;:ArrayCtrl`:`:NoMouseMoveCursor`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoMouseMoveCursor]()&]
 [s2; Disable automatical cursor row switching (equivalent to [* MouseMoveCursor(false)])
 .&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AutoHideSb`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AutoHideSb
-]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AutoHideSb`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AutoHideSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; When set to [* true], the vertical scrollbar at the right array 
 edge is displayed only when the total row height exceeds the 
 array view height. When set to [* false], the scrollbar is shown 
@@ -934,36 +942,37 @@ all the time.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoAutoHideSb`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoAutoHideSb
-]()&]
+[s5;:ArrayCtrl`:`:NoAutoHideSb`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoAutoHideSb]()&]
 [s2; Display vertical scrollbar all the time (equivalent to [* AutoHideSb(false)]).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:HideSb`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* HideSb]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:HideSb`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* HideSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Hides vertical scrollbar (even if it would be needed).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AutoHideHorzSb`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AutoHi
-deHorzSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AutoHideHorzSb`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AutoHideHorzSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])
+&]
 [s2; Makes horizontal scroll bar (active if HeaderCtrl is in absolute 
 mode only) to autohide. Default is on.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoAutoHideHorzSb`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoAutoHi
-deHorzSb]()&]
+[s5;:ArrayCtrl`:`:NoAutoHideHorzSb`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoAutoHideHorzSb]()&]
 [s2; Same as AutoHideHorzSb(false).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:HideHorzSb`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* HideHorzSb
-]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:HideHorzSb`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* HideHorzSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Unconditionally hides horizontal scrollbar (active if HeaderCtrl 
 is in absolute mode only).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:MultiSelect`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* MultiSele
-ct]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:MultiSelect`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* MultiSelect]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable multiple row selection. &]
 [s7; [*C@3 b]-|[* true] `= allow selecting multiple rows at the same time, 
 [* false] `= only one row at a time&]
@@ -975,76 +984,79 @@ onst]&]
 [s2; Returns true if ArrayCtrl is in multiselect mode.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoBackground`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoBackgr
-ound]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:NoBackground`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoBackground]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Sets the widget into transparent mode `- background is not painted 
 and Transparent is activated `- a result, anything painted behind 
 the widget is visible, allowing client code to provide any background 
 it needs.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:PopUpEx`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* PopUpEx]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:PopUpEx`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* PopUpEx]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Activates showing small popup windows with cell content when 
 mouse is over and cell is to big to fit current dimensions. Default 
 is activated.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoPopUpEx`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoPopUpEx]()&]
+[s5;:ArrayCtrl`:`:NoPopUpEx`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoPopUpEx]()&]
 [s2; Same as PopUpEx(false).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoFocusSetCursor`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoFocusS
-etCursor]()&]
+[s5;:ArrayCtrl`:`:NoFocusSetCursor`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoFocusSetCursor]()&]
 [s2; Normally, when ArrayCtrl gets a focus and no cursor is set (and 
 cursor is allowed and there is at least one line), ArrayCtrl 
 a sets the cursor to the first line. This modifier deactivates 
 this feature.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:MovingHeader`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* MovingHe
-ader]([@(0.0.255) bool]_[*@3 b])&]
+[s5;:ArrayCtrl`:`:MovingHeader`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* MovingHeader]([@(0.0.255) bool]_[*@3 b])&]
 [s2; Activates dragging columns in header. Default is active.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoMovingHeader`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoMovingHe
-ader]()&]
+[s5;:ArrayCtrl`:`:NoMovingHeader`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoMovingHeader]()&]
 [s2; Same as MovingHeader(false).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnSortFindKey`(bool`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Col
-umnSortFindKey]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:ColumnSortFindKey`(bool`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* ColumnSortFindKey]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) tru
+e])&]
 [s2; Before ColumnSort orders the ArrayCtrl, the key of current row 
 (with cursor) is stored and after sorting, it is restored.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AllSorting`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* AllSorting]()&]
+[s5;:ArrayCtrl`:`:AllSorting`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* AllSorting]()&]
 [s2; If set, Sorting() is invoked for all columns (added either before 
 or after this modifier is called).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnSortSecondary`(const ArrayCtrl`:`:Order`&`): [_^ArrayCtrl^ Arra
-yCtrl][@(0.0.255) `&]_[* ColumnSortSecondary]([@(0.0.255) const]_[_^ArrayCtrl`:`:Order^ O
+[s5;:ArrayCtrl`:`:ColumnSortSecondary`(const ArrayCtrl`:`:Order`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* ColumnSortSecondary]([@(0.0.255) const]_[_^ArrayCtrl`:`:Order^ O
 rder][@(0.0.255) `&]_[*@3 order])&]
 [s2; Sets secondary sorting predicate for column sorts (see ColumnSort, 
 Sorting) `- if two cells are equal when performing sort by column, 
 they are ordered by this predicate.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoColumnSortSecondary`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoC
-olumnSortSecondary]()&]
+[s5;:ArrayCtrl`:`:NoColumnSortSecondary`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoColumnSortSecondary]()&]
 [s2; Removes secondary sorting predicate..&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:SortingFrom`(int`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
-]_[* SortingFrom]([@(0.0.255) int]_[*@3 from])&]
+[s5;:Upp`:`:ArrayCtrl`:`:SortingFrom`(int`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* SortingFrom]([@(0.0.255) int]_[*@3 from])&]
 [s2; When ArrayCtrl is sorted (without specifying the range of lines), 
 specifies the first column sorted. This allows for easy header 
 or summation line.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnWidths`(const char`*`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* C
-olumnWidths]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:ArrayCtrl`:`:ColumnWidths`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* ColumnWidths]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Initializes column widths based on a text string containing 
 blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 [s7; [*C@3 s]-|control string defining column widths&]
@@ -1055,18 +1067,19 @@ blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 [s2; Returns current column widths in format compatible with ColumnWidths.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:CursorOverride`(const Image`&`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
-]_[* CursorOverride]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 arrow])&]
+[s5;:ArrayCtrl`:`:CursorOverride`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* CursorOverride]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
+]_[*@3 arrow])&]
 [s2; Overrides mouse cursor to [*@3 arrow]. Setting Null ends override.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:NoCursorOverride`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoCursor
-Override]()&]
+[s5;:ArrayCtrl`:`:NoCursorOverride`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* NoCursorOverride]()&]
 [s2; Same as CursorOverride(Null).&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:SpanWideCells`(bool`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
-]_[* SpanWideCells]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ArrayCtrl`:`:SpanWideCells`(bool`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* SpanWideCells]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; In this mode, if cell content (as defined by Display`::GetStdSize) 
 is wider than cell width and next cell is Null (empty), the cell 
 width is extended to span over the next cell (just like in common 
@@ -1087,8 +1100,8 @@ term for `'row`' (as set by the [* RowName] property). This is
 used for array local menu items. Returns `*this.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:RowName`(const char`*`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* RowNa
-me]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:ArrayCtrl`:`:RowName`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
+rrayCtrl][@(0.0.255) `&]_[* RowName]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Sets the array`-specific term for `'row`'. This can be used 
 to customize the local menu terminology according to the logical 
 content of the array. For instance, when you have an array with 
