@@ -17,7 +17,8 @@ NewPackageFileWindow::NewPackageFileWindow()
 	type.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
 	type.SetDropLines(20);
 	Type("cpp", "C++ source file");
-	Type("h", "C++ header file");
+	Type("h", "C/C++ header file (h)");
+	Type("hpp", "C++ header file (hpp)");
 	Type("c", "C source file");
 	Type("lay", "Layout file (dialog templates)");
 	Type("iml", "Image file (icons)");
