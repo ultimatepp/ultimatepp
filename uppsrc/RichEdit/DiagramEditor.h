@@ -42,6 +42,8 @@ public:
 const VectorMap<String, Vector<Tuple<int, String>>>& UnicodeSymbols();
 
 String SelectFontSymbolSvg(Sizef& sz);
+int    SelectFontSymbol(Font& fnt);
+int    SelectSpecialSymbol();
 
 class DiagramEditor : public Ctrl, Diagram::PaintInfo {
 public:
