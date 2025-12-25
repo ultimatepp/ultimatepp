@@ -88,7 +88,11 @@ String NewPackageFileWindow::GetError()
 	if(FileExists(p))
 		return String().Cat() << "File&[* \1" << p << "\1]&already exists!";
 	if(*n == '.') {
-		Index<String> exceptions = {".clang-format"};
+		Index<String> exceptions = {
+			".clang-format",
+			".gitignore",
+			".gitmodules"
+		};
 		if(exceptions.Find(n) == -1) {
 			return "Invalid filename!";
 		}
