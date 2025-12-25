@@ -181,7 +181,17 @@ void IconDes::SmoothRescale()
 //	dlg.method.Add(FILTER_LANCZOS5, "Lanczos 5");
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
-		Image m = RescaleFilter(bk, sz, ~dlg.method);
+		Image m;
+		if(~dlg.method == FILTER_NEAREST) {
+			Size isz = bk.GetSize();
+			ImageBuffer t(sz);
+			for(int x = 0; x < sz.cx; x++)
+				for(int y = 0; y < sz.cy; y++)
+					t[y][x] = bk[y * isz.cy / sz.cy][x * isz.cx / sz.cx];
+			m = t;
+		}
+		else
+			m = RescaleFilter(bk, sz, ~dlg.method);
 		if(IsPasting()) {
 			c.paste_image = m;
 			MakePaste();
