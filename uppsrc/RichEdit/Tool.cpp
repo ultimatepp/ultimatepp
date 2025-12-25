@@ -354,7 +354,7 @@ void RichEdit::LoadImageTool(Bar& bar, dword key)
 
 void RichEdit::InsertCharacterTool(Bar& bar, dword key)
 {
-	bar.Add(!IsReadOnly(), t_("Insert special character.."), DiagramImg::FontSvg(), [=] { InsertCharacter(); });
+	bar.Add(!IsReadOnly(), t_("Insert special character.."), RichEditImg::InsertSymbol(), [=] { InsertCharacter(); });
 }
 
 void RichEdit::InsertDiagramTool(Bar& bar, dword key)
