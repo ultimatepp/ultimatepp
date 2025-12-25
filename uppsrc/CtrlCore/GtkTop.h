@@ -4,10 +4,8 @@
 
 	One<FrameTop<Ctrl>>   custom_bar_frame;
 	One<Ctrl>             custom_bar;
-	Color                 custom_titlebar_bk = Null;
-	int                   custom_titlebar_cy = 0;
-	int                   active_titlebar_button = -1;
-	bool                  active_titlebar_active = false;
+	Color                 custom_titlebar_bk = SColorFace();
+	int                   custom_titlebar_cy = -1;
 	
 	enum { FULLSCREEN = 99 };
 

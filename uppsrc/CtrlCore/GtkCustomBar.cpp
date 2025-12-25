@@ -78,7 +78,8 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 		custom_bar_frame->Add(*custom_bar);
 	}
 	custom_titlebar_bk = bk;
-	custom_titlebar_cy = mincy;
+	if(custom_titlebar_cy < 0)
+		custom_titlebar_cy = mincy;
 	SyncCustomBar();
 	return ~custom_bar;
 }

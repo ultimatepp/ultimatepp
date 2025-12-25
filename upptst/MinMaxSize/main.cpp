@@ -16,6 +16,7 @@ struct App : public TopWindow
 	Button   move;
 
 	void Paint(Draw& w) override {
+		DLOG("PAINT ---------------------");
 		w.DrawRect(GetSize(), LtCyan());
 		DrawFrame(w, 0, 0, 500, 500, Black());
 		DrawFrame(w, 0, 0, 400, 400, Black());
@@ -26,6 +27,10 @@ struct App : public TopWindow
 	}
 	
 	void MouseMove(Point p, dword keyflags) override {
+		Refresh();
+	}
+
+	void Layout() override {
 		Refresh();
 	}
 

@@ -95,15 +95,12 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		top->client = gtk_drawing_area_new();
 		if(custom_bar) {
 		    top->header = gtk_event_box_new ();
-
-#if 1
 			top->header_area = gtk_drawing_area_new();
 			gtk_widget_set_size_request(top->header_area, -1, LSCH(tw->GetCustomTitleBarMetrics().height));
 			gtk_container_add (GTK_CONTAINER (top->header), top->header_area);
-#endif
 		    gtk_widget_show_all(top->header);
 		    
-		    SetCustomBarColor(Magenta());
+		    SetCustomBarColor(tw->custom_titlebar_bk);
 		}
 		else {
 			top->header = gtk_header_bar_new();
@@ -133,15 +130,22 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top->cursor_id = -1;
 
-	gtk_widget_set_events(top->client, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
-	g_signal_connect(top->client, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
+	auto SetupEvents = [&](GtkWidget *w) {
+		gtk_widget_set_events(w, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
+	};
+	SetupEvents(GTK_WIDGET(gtk()));
 	g_signal_connect(gtk(), "event", G_CALLBACK(TopGtkEvent), (gpointer)(uintptr_t)top->id);
-	g_signal_connect(top->client, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
+	
+	auto SetupEvents2 = [&](GtkWidget *w) {
+		SetupEvents(w);
+		g_signal_connect(w, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
+		g_signal_connect(w, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
+	};
 
-	if(top->header_area) {
-		g_signal_connect(top->header_area, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
-		g_signal_connect(top->header_area, "draw", G_CALLBACK(GtkDraw), (gpointer)(uintptr_t)top->id);
-	}
+	SetupEvents2(top->client);
+
+	if(top->header_area)
+		SetupEvents2(top->header_area);
 
 	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));

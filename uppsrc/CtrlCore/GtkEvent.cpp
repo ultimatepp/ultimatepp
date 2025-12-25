@@ -89,29 +89,22 @@ bool Ctrl::ProcessInvalids()
 		for(Win& win : wins) {
 			Top *top = win.ctrl->GetTop();
 			TopWindow *tw = dynamic_cast<TopWindow *>(~win.ctrl);
-			for(const Rect& r : win.invalid)
-				if(top->client && win.ctrl) {
-					Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
-					DLOG("+++");
-					DDUMP(rr);
-					if(top && tw && top->header_area) {
-						int h = tw->custom_bar_frame->GetHeight();
-						DDUMP(h);
-						Rect t = rr & Rect(0, 0, INT_MAX, h);
-						if(!t.IsEmpty())
-							gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
-							                           GdkRect(LSCH(t)), TRUE);
-						rr.Offset(0, -h);
-						
-_DBG_//							gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area), GdkRect(RectC(0, 0, 1000, 1000)), TRUE);
-
+			if(top)
+				for(const Rect& r : win.invalid)
+					if(top->client && win.ctrl) {
+						win.ctrl->WndRectsSync();
+						Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
+						if(top && tw && top->header_area) {
+							int h = tw->custom_bar_frame->GetHeight();
+							Rect t = rr & Rect(0, 0, INT_MAX, h);
+							if(!t.IsEmpty())
+								gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
+								                           GdkRect(LSCH(t)), TRUE);
+							rr.Offset(0, -h);
+						}
+						gdk_window_invalidate_rect(gtk_widget_get_window(top->client),
+						                           GdkRect(LSCH(rr)), TRUE);
 					}
-					DDUMP(rr);
-					DDUMP(LSCH(rr));
-					gdk_window_invalidate_rect(gtk_widget_get_window(top->client),
-					                           GdkRect(LSCH(rr)), TRUE);
-_DBG_//							gdk_window_invalidate_rect(gtk_widget_get_window(top->client), GdkRect(RectC(0, 0, 1000, 1000)), TRUE);
-				}
 			win.invalid.Clear();
 		}
 		invalids = false;
@@ -124,6 +117,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
+		p->WndRectsSync();
 		p->fullrefresh = false;
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
@@ -142,7 +136,8 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 				const cairo_rectangle_t& r = list->rectangles[i];
 				clip.Add(Rect((int)r.x, (int)r.y, (int)(r.x + r.width), (int)(r.y + r.height)));
 			}
-			DDUMP(clip);
+			_DBG_
+			// DDUMP(clip);
 			// w.PickInvalid(pick(clip));
 		}
 		cairo_rectangle_list_destroy(list);
@@ -175,6 +170,7 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
 	if(event->type == GDK_CONFIGURE) {
+		DLOG("%%% CONFIGURE");
 		Ctrl *p = GetTopCtrlFromId(user_data);
 		if(p) {
 			Top *top = p->GetTop();
@@ -276,6 +272,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		}
 		break;
 	case GDK_CONFIGURE: {
+		DLOG("%%% CONFIGURE 2");
 		retval = false;
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
 		value = SCL(e->x, e->y, e->width, e->height);
@@ -600,6 +597,7 @@ void Ctrl::Proc()
 	}
 #endif
 
+	WndRectsSync();
 	SyncWndRect(GetWndScreenRect());
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
@@ -789,8 +787,10 @@ void Ctrl::Proc()
 
 void Ctrl::SyncWndRect(const Rect& rect)
 {
-	if(GetRect() != rect)
+	if(GetRect() != rect) {
+		DLOG("### SetRect " << rect);
 		SetWndRect(rect);
+	}
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
 	if(w && w->state == TopWindow::OVERLAPPED)
 		w->overlapped = rect;

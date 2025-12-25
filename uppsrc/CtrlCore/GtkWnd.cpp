@@ -227,7 +227,6 @@ Rect Ctrl::GetWndScreenRect() const
 	if(!IsOpen() || !top)
 		return Null;
 	
-	
 	return utop->screen_rect;
 }
 
@@ -523,8 +522,7 @@ bool Ctrl::SweepConfigure(bool wait)
 			LLOG("SweepConfigure " << e.value);
 			if(top) {
 				utop->sync_rect = true;
-				if(GetRect() != rect)
-					SetWndRect(GetWndScreenRect());
+				SetWndRect(GetWndScreenRect());
 			}
 			r = true;
 			e.type = EVENT_NONE;
