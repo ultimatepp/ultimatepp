@@ -421,7 +421,7 @@ itializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; Appends C`+`+11 style initializer list.&]
 [s3; &]
 [s4;%- &]
-[s5;:Array`:`:Append`(const Array`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;:Array`:`:Append`(const Array`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[*@3 x])&]
 [s2; Appends all elements of source Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
@@ -430,7 +430,7 @@ rray][@(0.0.255) `&]_[*@3 x])&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Append`(const Array`&`,int`,int`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) c
-onst]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_[*@3 x
+onst]_[_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_[*@3 x
 ], [@(0.0.255) int]_[*@3 o], [@(0.0.255) int]_[*@3 c])&]
 [s2; Appends a range of elements from source Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
@@ -441,7 +441,7 @@ onst]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) 
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Array`:`:InsertPick`(int`,Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* InsertPi
-ck]([@(0.0.255) int]_[*@3 i], [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+ck]([@(0.0.255) int]_[*@3 i], [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Inserts the source Array at the specified position using pick 
 transfer semantics. It is faster than deep copy insert, does 
@@ -449,7 +449,7 @@ not use deep copy constructor for T, but destroys the source
 Array by picking.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Array`:`:AppendPick`(Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* AppendPick]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;:Upp`:`:Array`:`:AppendPick`(Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* AppendPick]([_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Appends source Array using pick transfer semantics. It is faster 
 than deep copy insert, does not use deep copy constructor for 
@@ -531,16 +531,16 @@ of element.&]
 [s7; [*/ Return value]-|Pointer to element allocated on the heap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Swap`(Array`&`):%- [@(0.0.255) void]_[* Swap]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;:Array`:`:Swap`(Array`&`):%- [@(0.0.255) void]_[* Swap]([_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[*@3 b])&]
 [s2; Swaps content of Array with another array in constant time operation.&]
 [s7; [*C@3 b]-|Target array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:operator`<`<`(const T`&`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;:Array`:`:operator`<`<`(const T`&`):%- [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s5;:Upp`:`:Array`:`:operator`<`<`(T`&`&`):%- [_^Upp`:`:Array^ Array][@(0.0.255) `&]_[* ope
-rator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:operator`<`<`(T`&`&`):%- [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[* operator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Operator replacement of [* Add]. By returning a reference to the 
 Array it allows adding more elements in a single expression, 
 thus e.g. allowing to construct a temporary Array as part of 
@@ -551,7 +551,7 @@ an expression like Foo((Array<int>() << 1 << 2 << 4)).&]
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
 [s3; &]
 [s4;%- &]
-[s5;:Array`:`:operator`<`<`(T`*`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;:Array`:`:operator`<`<`(T`*`):%- [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[* operator<<]([*@4 T]_`*[*@3 newt])&]
 [s2; Operator replacement of [* void Add(T `*x)]. By returning a reference 
 to the Array it allows adding more elements in a single expression, 
@@ -562,7 +562,7 @@ an expression like Foo((Array<Bar>() << new Bar << new DerivedFromBar)).&]
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`$en`-us`#Stream`:`:class^ S
+[s5;:Array`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
 tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the content of the Array to/from the Stream. Works 
 only if NTL is used as part of UPP. Does not work with polymorphic 
@@ -572,7 +572,7 @@ Arrays (those storing objects derived from T).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:operator`=`(pick`_ Array`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
-ick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_
+ick`_]_[_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_
 [*@3 v])&]
 [s2; Pick operator. Transfers the source Array in low constant time, 
 but destroys it by picking.&]
@@ -637,8 +637,8 @@ is that [* pos] is range checked in debug mode..&]
 [s7; [*/ Return value]-|Iterator.&]
 [s3; &]
 [s4;%- &]
-[s5;%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
-rray][@(64) `&_][@3 a][@(64) , ][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+[s5;%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
+rray][@(64) `&_][@3 a][@(64) , ][_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ A
 rray][@(64) `&_][@3 b][@(64) )]&]
 [s2; Specialization of the generic [* Swap] for Array. Swaps the arrays 
 in simple constant time operation.&]

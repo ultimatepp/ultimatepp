@@ -60,32 +60,32 @@ restore ordering using [* Sweep] method.&]
 [s2; Constructs empty Index.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Index`&`&`):%- [* Index]([* Index][@(0.0.255) `&`&]_[*@3 s
-])&]
+[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Index`&`&`):%- [* Index]([*_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&`&]_[*@3 s])&]
 [s2; Pick constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:Index`:`:Index`(pick`_ Vector`<T`>`&`):%- [* Index]([@(0.128.128) pick`_]_[_^Vector^ V
+[s5;:Index`:`:Index`(pick`_ Vector`<T`>`&`):%- [* Index]([@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
 ector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s])&]
 [s2; Pick operator. Transfers source Vector to Index in low constant 
 time, but destroys it by picking.&]
 [s7; [*C@3 x]-|Source Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:Index`:`:Index`(const Index`&`,int`):%- [* Index]([@(0.0.255) const]_[* Index][@(0.0.255) `&
-]_[*@3 s], [@(0.0.255) int])&]
+[s5;:Index`:`:Index`(const Index`&`,int`):%- [* Index]([@(0.0.255) const]_[*_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*C@3 s]-|Source Index.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Vector`<T`>`&`&`):%- [@(0.0.255) explicit]_[* Index]([_^Upp`:`:Vector^ V
+[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Vector`<T`>`&`&`):%- [@(0.0.255) explicit]_[* Index]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
 ector]<[*@4 T]>`&`&_[*@3 s])&]
 [s2; Pick constructs Index from Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:Index`:`:Index`(const Vector`<T`>`&`,int`):%- [* Index]([@(0.0.255) const]_[_^Vector^ V
+[s5;:Index`:`:Index`(const Vector`<T`>`&`,int`):%- [* Index]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
 ector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep`-copy constructs Index from Vector.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
@@ -93,13 +93,15 @@ constructor.&]
 [s7; [*@3 s]-|Source Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Vector`<T`>`&`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&
-]_[* operator`=]([_^Upp`:`:Vector^ Vector]<[*@4 T]>`&`&_[*@3 x])&]
+[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Vector`<T`>`&`&`):%- [_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[*@4 T]>`&`&_[*@3 x])&]
 [s2; Pick assignment from Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Index`<T`>`&`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&
-]_[* operator`=]([_^Upp`:`:Index^ Index]<[*@4 T]>`&`&_[*@3 x])&]
+[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Index`<T`>`&`&`):%- [_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex]<[*@4 T]>`&`&_[*@3 x])&]
 [s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
@@ -132,10 +134,10 @@ element.&]
 [s6; Invalidates references to Index.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:operator`<`<`(const T`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&]_
-[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s5;:Upp`:`:Index`:`:operator`<`<`(T`&`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&]_[* ope
-rator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s5;:Upp`:`:Index`:`:operator`<`<`(const T`&`):%- [_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Index`:`:operator`<`<`(T`&`&`):%- [_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) `&]_[* operator<<]([*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Same as Add([%-*@3 x]).&]
 [s3; &]
 [s4;%- &]
@@ -364,8 +366,8 @@ in the AIndex but are ignored by any Find operations.&]
 [s2; Tests whether the element at [%-*@3 i] is unlinked.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Index`:`:GetUnlinked`(`)const:%- [_^Vector^ Vector]<[@(0.0.255) int]>_[* GetUnlinked](
-)_[@(0.0.255) const]&]
+[s5;:Index`:`:GetUnlinked`(`)const:%- [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[@(0.0.255) int]>_[* GetUnlinked]()_[@(0.0.255) const]&]
 [s2; Returns indices of all unlinked elements.&]
 [s3;%- &]
 [s4;%- &]
@@ -487,8 +489,8 @@ capacity to the number of elements.&]
 [s2; Returns the current capacity of AIndex.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Index`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize](Stream[@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:Index`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes content of AIndex to/from Stream.&]
 [s6; Requires T to have serialization operator defined.&]
 [s3;%- &]

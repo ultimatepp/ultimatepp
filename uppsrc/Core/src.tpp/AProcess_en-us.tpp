@@ -123,9 +123,10 @@ to specify the new current directory for the process.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:LocalProcess`:`:Start`(const char`*`,const Upp`:`:Vector`<Upp`:`:String`>`&`,const char`*`,const char`*`): [@(0.0.255) b
-ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Upp`:`:Vector^ V
-ector]<[_^Upp`:`:String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e
-nvptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cd]_`=_NULL)&]
+ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 
@@ -136,9 +137,10 @@ to specify the new current directory for the process.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:LocalProcess`:`:Start2`(const char`*`,const Upp`:`:Vector`<Upp`:`:String`>`&`,const char`*`,const char`*`): [@(0.0.255) b
-ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Upp`:`:Vector^ V
-ector]<[_^Upp`:`:String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e
-nvptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cd]_`=_NULL)&]
+ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 

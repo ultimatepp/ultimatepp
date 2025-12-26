@@ -34,6 +34,20 @@ void RichEdit::InsertImage()
 	ClipPaste(clip, "image/raw");
 }
 
+void RichEdit::InsertCharacter()
+{
+	int c = SelectSpecialSymbol();
+	
+	if(IsNull(c))
+		return;
+	
+	RichText clip;
+	RichPara p;
+	p.Cat(WString(c, 1), formatinfo);
+	clip.Cat(p);
+	ClipPaste(clip, "text/QTF");
+}
+
 void RichEdit::InsertDiagram()
 {
 	if(!allow_objects)

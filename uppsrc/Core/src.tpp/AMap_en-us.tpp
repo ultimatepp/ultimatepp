@@ -28,6 +28,7 @@ K`& x) method returning hash value for elements.&]
 random access container of values, forming map flavors. It is 
 used as base class for concrete map flavors, [* VectorMap], [* ArrayMap] 
 and [* SegtorMap].&]
+[s0;~~~.416; &]
 [s0;~~~.416; Like any other NTL container, AMap is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
 and optional deep copy] transfer semantics, although these features 
@@ -598,16 +599,16 @@ position.&]
 [s7; [*/ Return value]-|Constant reference to the key.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize](Stream[@(0.0.255) `&]_
-[*@3 s])&]
+[s5;:AMap`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the content of AMap to/from Stream. Works only if 
 NTL is used as part of UPP.&]
 [s6; Requires T to have serialization operator defined.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:Swap`(AMap`&`):%- [@(0.0.255) void]_[* Swap]([_^AMap^ AMap][@(0.0.255) `&]_[*@3 x])
-&]
+[s5;:AMap`:`:Swap`(AMap`&`):%- [@(0.0.255) void]_[* Swap]([_^topic`:`/`/Core`/src`/AMap`_en`-us`#AMap`:`:class^ A
+Map][@(0.0.255) `&]_[*@3 x])&]
 [s2; Swap AMap content with another AMap (of the same type).&]
 [s3; &]
 [s4;%- &]
@@ -617,19 +618,20 @@ NTL is used as part of UPP.&]
 [s7; [*/ Return value]-|Constant reference to the Index of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:AMap`:`:PickIndex`(`):%- [_^Upp`:`:Index^ Index]<[*@4 K], 
-[*@4 HashFn]>_[* PickIndex]()&]
+[s5;:Upp`:`:AMap`:`:PickIndex`(`):%- [_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ I
+ndex]<[*@4 K], [*@4 HashFn]>_[* PickIndex]()&]
 [s2; Returns Index of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Index of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:GetKeys`(`)const:%- [@(0.0.255) const]_Vector[@(0.0.255) <][*@4 K][@(0.0.255) >`&
-]_[* GetKeys]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetKeys`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[* GetKeys]()_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the Vector of keys.&]
 [s7; [*/ Return value]-|Constant reference to the Vector of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:AMap`:`:PickKeys`(`):%- [_^Upp`:`:Vector^ Vector]<[*@4 K]>_[* PickKeys]()&]
+[s5;:Upp`:`:AMap`:`:PickKeys`(`):%- [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[*@4 K]>_[* PickKeys]()&]
 [s2; Returns Vector of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Vector of keys.&]
 [s3;%- &]
@@ -651,19 +653,21 @@ by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:AMap`:`:operator`~`(`):%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
-Map]<[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [*@4 T]>_[* operator`~]()&]
-[s5;:Upp`:`:AMap`:`:operator`~`(`)const:%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
-Map]<[@(0.0.255) const]_[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [@(0.0.255) const]_[*@4 T]>_[* opera
-tor`~]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:AMap`:`:operator`~`(`):%- [_^topic`:`/`/Core`/src`/MapKVRange`_en`-us`#Upp`:`:MapKVRange^ M
+apKVRange]<[_^topic`:`/`/Core`/src`/AMap`_en`-us`#AMap`:`:class^ AMap]<[*@4 K], 
+[*@4 T], [*@4 V]>, [*@4 K], [*@4 T]>_[* operator`~]()&]
+[s5;:Upp`:`:AMap`:`:operator`~`(`)const:%- [_^topic`:`/`/Core`/src`/MapKVRange`_en`-us`#Upp`:`:MapKVRange^ M
+apKVRange]<[_^topic`:`/`/Core`/src`/AMap`_en`-us`#AMap`:`:class^ AMap]<[@(0.0.255) co
+nst]_[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [@(0.0.255) const]_[*@4 T]>_[* operator`~]()_[@(0.0.255) c
+onst]&]
 [s2; Returns a special range object that can be used in C`+`+11 range 
 for to iterate over key/value pairs. Unlinked objects are automatically 
 skipped.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^AMap^ AMap][@(0.0.255) `&]_[* opera
-tor()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 v])&]
+[s5;:AMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^topic`:`/`/Core`/src`/AMap`_en`-us`#AMap`:`:class^ A
+Map][@(0.0.255) `&]_[* operator()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 v])&]
 [s2; Same as Add([%-*@3 k], [%-*@3 v]), returns `*this. Syntax sugar 
 for creating map.&]
 [s3; &]

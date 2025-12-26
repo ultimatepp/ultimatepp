@@ -352,6 +352,11 @@ void RichEdit::LoadImageTool(Bar& bar, dword key)
 	bar.Add(!IsReadOnly(), t_("Insert image from file.."), CtrlImg::open(), THISBACK(InsertImage));
 }
 
+void RichEdit::InsertCharacterTool(Bar& bar, dword key)
+{
+	bar.Add(!IsReadOnly(), t_("Insert special character.."), RichEditImg::InsertSymbol(), [=] { InsertCharacter(); });
+}
+
 void RichEdit::InsertDiagramTool(Bar& bar, dword key)
 {
 	bar.Add(!IsReadOnly(), t_("Insert diagram.."), DiagramImg::Diagram(), [=] { InsertDiagram(); });

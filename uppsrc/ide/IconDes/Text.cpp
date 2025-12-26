@@ -19,6 +19,17 @@ IconDes::TextDlg::TextDlg()
 	height <<= 12;
 	for(int i = 4; i < 300; i += i < 16 ? 1 : i < 32 ? 4 : i < 48 ? 8 : 16)
 		height.AddList(i);
+	
+	symbol.SetImage(RichEditImg::InsertSymbol());
+	symbol << [=] {
+		Font fnt;
+		int c = SelectFontSymbol(fnt);
+		if(IsNull(c))
+			return;
+		text.Insert(c);
+		face <<= fnt.GetFace();
+		WhenAction();
+	};
 }
 
 Font IconDes::TextDlg::GetFont()

@@ -651,6 +651,7 @@ private:
 	void     ZoomClip(RichText& text) const;
 	
 	void     InsertImage();
+	void     InsertCharacter();
 	void     InsertDiagram();
 
 	RichObject Adjust(RichObject o);
@@ -799,6 +800,7 @@ public:
 	void   PastePlainTextTool(Bar& bar, dword key = K_CTRL_V|K_SHIFT);
 	void   ObjectTool(Bar& bar, dword key = 0);
 	void   LoadImageTool(Bar& bar, dword key = 0);
+	void   InsertCharacterTool(Bar& bar, dword key = 0);
 	void   InsertDiagramTool(Bar& bar, dword key = 0);
 	void   FindReplaceTool(Bar& bar, dword key = K_CTRL_F);
 
