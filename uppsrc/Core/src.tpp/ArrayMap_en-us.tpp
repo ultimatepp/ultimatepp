@@ -62,15 +62,16 @@ d`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:operator`(`)`(KK`&`&`,TT`&`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 KK], [@(0.0.255) class]_[*@4 TT]>_[*_^Upp`:`:ArrayMap^ ArrayMap][@(0.0.255) `&]_
-[* operator()]([*@4 KK][@(0.0.255) `&`&]_[*@3 k], [*@4 TT][@(0.0.255) `&`&]_[*@3 v])&]
+lass]_[*@4 KK], [@(0.0.255) class]_[*@4 TT]>_[*_^topic`:`/`/Core`/src`/ArrayMap`_en`-us`#ArrayMap`:`:class^ A
+rrayMap][@(0.0.255) `&]_[* operator()]([*@4 KK][@(0.0.255) `&`&]_[*@3 k], 
+[*@4 TT][@(0.0.255) `&`&]_[*@3 v])&]
 [s2; Same as Add([%-*@3 k], [%-*@3 v]), returns `*this. Syntax sugar 
 for creating map. Note the use of universal reference that gets 
 resolved to correct Add variant.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayMap`:`:ArrayMap`(const ArrayMap`&`,int`):%- [* ArrayMap]([@(0.0.255) const]_[* Ar
-rayMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
+[s5;:ArrayMap`:`:ArrayMap`(const ArrayMap`&`,int`):%- [* ArrayMap]([@(0.0.255) const]_[*_^topic`:`/`/Core`/src`/ArrayMap`_en`-us`#ArrayMap`:`:class^ A
+rrayMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor if Array stores only objects of type T.&]
@@ -80,15 +81,17 @@ of type derived from T.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:ArrayMap`(Upp`:`:Index`<K`>`&`&`,Upp`:`:Array`<T`>`&`&`):%- [* A
-rrayMap]([_^Upp`:`:Index^ Index]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Array^ Array]<[*@4 T]>`&
-`&_[*@3 val])&]
+rrayMap]([_^topic`:`/`/Core`/src`/Index`_en`-us`#Index`:`:class^ Index]<[*@4 K]>`&`&_
+[*@3 ndx], [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ Array]<[*@4 T]>`&`&_
+[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Index of keys and Array of values. 
 The source containers should have equal number of elements.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:ArrayMap`(Upp`:`:Vector`<K`>`&`&`,Upp`:`:Array`<T`>`&`&`):%- [* A
-rrayMap]([_^Upp`:`:Vector^ Vector]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Array^ Array]<[*@4 T]>
-`&`&_[*@3 val])&]
+rrayMap]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ Vector]<[*@4 K]>`&
+`&_[*@3 ndx], [_^topic`:`/`/Core`/src`/Array`_en`-us`#Array`:`:class^ Array]<[*@4 T]>`&
+`&_[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Vector of keys and Array of values. 
 The source containers should have equal number of elements.&]
 [s0; &]

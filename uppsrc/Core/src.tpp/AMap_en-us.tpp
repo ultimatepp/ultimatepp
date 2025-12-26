@@ -599,8 +599,8 @@ position.&]
 [s7; [*/ Return value]-|Constant reference to the key.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize](Stream[@(0.0.255) `&]_
-[*@3 s])&]
+[s5;:AMap`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the content of AMap to/from Stream. Works only if 
 NTL is used as part of UPP.&]
 [s6; Requires T to have serialization operator defined.&]
