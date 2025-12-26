@@ -8,6 +8,36 @@ extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titleb
 extern Function<bool (const TopWindow *)> is_custom_titlebar__;
 extern Function<Ctrl *(TopWindow *, Color, int)> custom_titlebar_make__;
 
+void TopWindow::CustomBarIcon::Paint(Draw& w)
+{
+	DDUMP(GetSize());
+	DDUMP(CtrlCoreImg::GtkBarButton().GetSize());
+	w.DrawImage(0, 0, HasMouse() ? CtrlCoreImg::GtkBarButtonH() : CtrlCoreImg::GtkBarButton());
+	w.DrawImage(0, 0, img);
+}
+
+void TopWindow::CustomBarIcon::MouseMove(Point p, dword keyflags)
+{
+	Refresh();
+}
+
+void TopWindow::CustomBarIcon::LeftDown(Point p, dword keyflags)
+{
+	SetCapture();
+}
+
+void TopWindow::CustomBarIcon::LeftUp(Point, dword keyflags)
+{
+	if(HasMouse())
+		Action();
+	Refresh();
+}
+
+void TopWindow::CustomBarIcon::MouseLeave()
+{
+	Refresh();
+}
+
 void TopWindow::Init()
 {
 	custom_titlebar_metrics__ = [](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
@@ -43,15 +73,35 @@ int Ctrl::GetGtkTitleBarButtonWidth()
 	return IsUHDMode() ? 94 : 47;
 }
 
+void TopWindow::SyncIcons()
+{
+	minicon.Set(CtrlCoreImg::GtkBarMinimize());
+	maxicon.Set(IsMaximized() ? CtrlCoreImg::GtkBarOverlap() : CtrlCoreImg::GtkBarMaximize());
+	closeicon.Set(CtrlCoreImg::GtkBarClose());
+}
+
 void TopWindow::SyncCustomBar()
 {
-	if(custom_bar_frame)
+	if(custom_bar_frame) {
 		custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
-	if(custom_bar) {
 		SetCustomBarColor(Nvl(custom_titlebar_bk, SColorFace()));
 		auto cm = GetCustomTitleBarMetrics();
 		custom_bar->VSizePos().HSizePos(DPI(6), DPI(6));
 		RefreshFrame(0, 0, GetRect().Width(), cm.height);
+		Size isz = CtrlCoreImg::GtkBarButton().GetSize();
+		DDUMP(isz);
+		int y = (cm.height - isz.cy) / 2;
+		custom_bar_icons->Width((isz.cx + DPI(8)) * (IsZoomable() ? 3 : 1));
+		*custom_bar_icons << closeicon.RightPos(DPI(8), isz.cx).TopPos(y, isz.cy);
+		if(IsZoomable()) {
+			*custom_bar_icons << minicon.LeftPos(0, isz.cx).TopPos(y, isz.cy);
+			*custom_bar_icons << maxicon.LeftPos(isz.cx + DPI(8), isz.cx).TopPos(y, isz.cy);
+		}
+		else {
+			minicon.Remove();
+			maxicon.Remove();
+		}
+		SyncIcons();
 	}
 }
 
@@ -65,7 +115,24 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 	if(!custom_bar) {
 		custom_bar_frame.Create();
 		custom_bar_frame->Transparent();
+		custom_bar_icons.Create();
+		custom_bar_icons->Transparent();
+		custom_bar_frame->AddFrame(*custom_bar_icons);
 		custom_bar.Create();
+		
+		minicon << [=] { Minimize(); };
+		maxicon << [=] {
+			if(IsMaximized())
+				Overlap();
+			else
+				Maximize();
+		};
+		closeicon << [=] {
+			if(IsEnabled()) {
+				IgnoreMouseUp();
+				WhenClose();
+			}
+		};
 	}
 	if(custom_bar) {
 		if(&GetFrame(0) != ~custom_bar_frame) {

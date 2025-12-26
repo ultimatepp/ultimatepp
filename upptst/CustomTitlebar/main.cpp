@@ -19,6 +19,8 @@ struct MyApp : TopWindow {
 	}
 
 	MyApp() {
+		Sizeable().Zoomable();
+
 		Icon(CtrlImg::select_all());
 
 		Ctrl *tb = CustomTitleBar(Blend(SWhiteGray(), SLtMagenta(), 20));

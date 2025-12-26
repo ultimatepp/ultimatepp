@@ -471,7 +471,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			int padding = GetSystemMetricsForDpi(92 /*SM_CXPADDEDBORDER*/, dpi);
 			Point p((LONG)lParam);
 			ScreenToClient(hwnd, p);
-			// We should not return HTTOP when hit-testing a maximized window 
+			// We should not return HTTOP when hit-testing a maximized window
 			if(!IsMaximized(hwnd) && p.y > 0 && p.y < frame_y + padding && topwin->IsSizeable())
 				return HTTOP;
 			

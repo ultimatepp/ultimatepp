@@ -42,6 +42,8 @@ void TopWindow::SyncSizeHints()
 		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
 		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
 	}
+	
+	SyncCustomBar();
 }
 
 void TopWindow::SyncTitle()
