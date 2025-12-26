@@ -597,6 +597,7 @@ void Ctrl::Proc()
 	}
 #endif
 
+	DLOG("@@@ PROC");
 	WndRectsSync();
 	SyncWndRect(GetWndScreenRect());
 	switch(CurrentEvent.type) {
@@ -787,6 +788,9 @@ void Ctrl::Proc()
 
 void Ctrl::SyncWndRect(const Rect& rect)
 {
+	DLOG("... SYNC");
+	DDUMP(GetRect());
+	DDUMP(rect);
 	if(GetRect() != rect) {
 		DLOG("### SetRect " << rect);
 		SetWndRect(rect);

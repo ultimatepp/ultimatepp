@@ -248,6 +248,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	}
 	pos = p;
 	inframe = _inframe;
+	DLOG("HERE");
 	UpdateRect();
 	StateH(POSITION);
 }
@@ -264,16 +265,17 @@ void Ctrl::UpdateRect0(bool sync)
 		rect = OffsetMegaRect(CalcRect(pwa, pwa));
 	}
 
-	LLOG("UpdateRect0 " << Name() << " to " << rect);
+	LLOG("UpdateRect0 " << Name() << " to " << rect << ", sync: " << sync);
 	LTIMING("UpdateRect0 SyncLayout");
 	if(sync)
-		SyncLayout();
+		SyncLayout(sync);
 }
 
 
 void Ctrl::UpdateRect(bool sync)
 {
 	GuiLock __;
+	DLOG("::: UPDATE RECT" << sync);
 	UpdateRect0(sync);
 	if(GetParent()) RefreshFrame();
 }
