@@ -76,7 +76,10 @@ int Ctrl::GetGtkTitleBarButtonWidth()
 void TopWindow::SyncIcons()
 {
 	minicon.Set(CtrlCoreImg::GtkBarMinimize());
-	maxicon.Set(IsMaximized() ? CtrlCoreImg::GtkBarOverlap() : CtrlCoreImg::GtkBarMaximize());
+	GtkWindow *w = gtk();
+	DDUMP(w && gtk_window_is_maximized(w));
+	maxicon.Set(w && gtk_window_is_maximized(w) ? CtrlCoreImg::GtkBarOverlap()
+	                                            : CtrlCoreImg::GtkBarMaximize());
 	closeicon.Set(CtrlCoreImg::GtkBarClose());
 }
 
@@ -120,12 +123,19 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 		custom_bar_frame->AddFrame(*custom_bar_icons);
 		custom_bar.Create();
 		
-		minicon << [=] { Minimize(); };
+		minicon << [=] {
+			GtkWindow *w = gtk();
+			if(w)
+				gtk_window_iconify(w);
+		};
 		maxicon << [=] {
-			if(IsMaximized())
-				Overlap();
-			else
-				Maximize();
+			GtkWindow *w = gtk();
+			if(w) {
+				if(gtk_window_is_maximized(w))
+					gtk_window_unmaximize(w);
+				else
+					gtk_window_maximize(w);
+			}
 		};
 		closeicon << [=] {
 			if(IsEnabled()) {

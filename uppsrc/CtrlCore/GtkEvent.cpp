@@ -136,9 +136,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 				const cairo_rectangle_t& r = list->rectangles[i];
 				clip.Add(Rect((int)r.x, (int)r.y, (int)(r.x + r.width), (int)(r.y + r.height)));
 			}
-			_DBG_
-			// DDUMP(clip);
-			// w.PickInvalid(pick(clip));
+			w.PickInvalid(pick(clip));
 		}
 		cairo_rectangle_list_destroy(list);
 
@@ -151,9 +149,9 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		else {
 			w.Begin();
 		}
-//		w.Clip(r); _DBG_ // Because of IsPainting
+		w.Clip(r);
 		p->UpdateArea(w, r);
-//		w.End();
+		w.End();
 		w.End();
 		painting = false;
 	}
@@ -796,8 +794,11 @@ void Ctrl::SyncWndRect(const Rect& rect)
 		SetWndRect(rect);
 	}
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
-	if(w && w->state == TopWindow::OVERLAPPED)
-		w->overlapped = rect;
+	if(w) {
+		w->SyncIcons();
+		if(w->state == TopWindow::OVERLAPPED)
+			w->overlapped = rect;
+	}
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
