@@ -872,15 +872,17 @@ rrayCtrl][@(0.0.255) `&]_[* NoGrid]()&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GridColor`(Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
-rrayCtrl][@(0.0.255) `&]_[* GridColor]([_^Color^ Color]_[*@3 c])&]
+rrayCtrl][@(0.0.255) `&]_[* GridColor]([_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor]_[*@3 c])&]
 [s2; Sets the color for grid lines.&]
 [s7; [*C@3 c]-|new grid line color&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:EvenRowColor`(Color`,Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
-rrayCtrl][@(0.0.255) `&]_[* EvenRowColor]([_^Color^ Color]_[*@3 paper]_`=_Blend(SColorMar
-k, SColorPaper, [@3 220]), [_^Color^ Color]_[*@3 ink]_`=_SColorText)&]
+rrayCtrl][@(0.0.255) `&]_[* EvenRowColor]([_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor]_[*@3 paper]_`=_Blend(SColorMark, SColorPaper, [@3 220]), [_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor]_[*@3 ink]_`=_SColorText)&]
 [s2; Sets the paper and ink (background and foreground) color for 
 even array rows. In certain cases setting a different background 
 color for odd and even rows helps to simplify visual orientation 
@@ -897,7 +899,8 @@ etc. array row&]
 [s4; &]
 [s5;:ArrayCtrl`:`:OddRowColor`(Color`,Color`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
 rrayCtrl][@(0.0.255) `&]_[* OddRowColor]([_^Color^ Color]_[*@3 paper]_`=_SColorInfo, 
-[_^Color^ Color]_[*@3 ink]_`=_SColorText)&]
+[_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ Color]_[*@3 ink]_`=_SColorTex
+t)&]
 [s2; Sets the paper and ink (background and foreground) color for 
 odd array rows.&]
 [s7; [*C@3 paper]-|background color to use for first, third, fifth etc. 
@@ -1036,7 +1039,7 @@ or after this modifier is called).&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:ColumnSortSecondary`(const ArrayCtrl`:`:Order`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
-rrayCtrl][@(0.0.255) `&]_[* ColumnSortSecondary]([@(0.0.255) const]_[_^ArrayCtrl`:`:Order^ O
+rrayCtrl][@(0.0.255) `&]_[* ColumnSortSecondary]([@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Order`:`:struct^ O
 rder][@(0.0.255) `&]_[*@3 order])&]
 [s2; Sets secondary sorting predicate for column sorts (see ColumnSort, 
 Sorting) `- if two cells are equal when performing sort by column, 
@@ -1063,13 +1066,14 @@ blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:GetColumnWidths`(`): [_^String^ String]_[* GetColumnWidths]()&]
+[s5;:ArrayCtrl`:`:GetColumnWidths`(`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* GetColumnWidths]()&]
 [s2; Returns current column widths in format compatible with ColumnWidths.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:CursorOverride`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
-rrayCtrl][@(0.0.255) `&]_[* CursorOverride]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&
-]_[*@3 arrow])&]
+rrayCtrl][@(0.0.255) `&]_[* CursorOverride]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 arrow])&]
 [s2; Overrides mouse cursor to [*@3 arrow]. Setting Null ends override.&]
 [s3; &]
 [s4; &]
@@ -1093,8 +1097,8 @@ mode for correct operation. Returns `*this.&]
 (e.g. editors). This mode activates such behaviour.&]
 [s3;%- &]
 [s4; &]
-[s5;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^String^ String]_[* RowFormat]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* RowFormat]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Formats a text by substituting [* %s] with the array`-specific 
 term for `'row`' (as set by the [* RowName] property). This is 
 used for array local menu items. Returns `*this.&]
@@ -1115,24 +1119,24 @@ employee`'] etc.&]
 [s0; [* Column structure programming]&]
 [s3; &]
 [s0; &]
-[s5;:ArrayCtrl`:`:IndexInfo`(int`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* Index
-Info]([@(0.0.255) int]_[*@3 ii])&]
+[s5;:ArrayCtrl`:`:IndexInfo`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* IndexInfo]([@(0.0.255) int]_[*@3 ii])&]
 [s2; Returns a reference to the [* IdInfo] structure describing a given 
 array index (column in the source data matrix).&]
 [s7; [*C@3 ii]-|zero`-based ordinal number of the array index&]
 [s7; [*/ Return value]-|IdInfo reference for the given index&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:IndexInfo`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_
-[* IndexInfo]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:IndexInfo`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* IndexInfo]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
 [s2; Returns a reference to the [* IdInfo] structure describing a given 
 array index.&]
 [s7; [*C@3 id]-|the [* Id] index identifier&]
 [s7; [*/ Return value]-|IdInfo reference for the given index&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddIndex`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_
-[* AddIndex]([@(0.0.255) const] [_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:AddIndex`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddIndex]([@(0.0.255) const] [_^Id^ Id]`&_[*@3 id])&]
 [s2; Adds a new index to the array and assign it a given [* Id] identifier.&]
 [s7; [*C@3 id]-|new index identifier&]
 [s7; [*/ Return value]-|A reference to the [* IdInfo ]structure describing 
@@ -1140,8 +1144,8 @@ the newly added index. The reference can be used to set additional
 index properties.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddIndex`(`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* AddIndex](
-)&]
+[s5;:ArrayCtrl`:`:AddIndex`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddIndex]()&]
 [s2; Adds a new index (without an identifier) to the array.&]
 [s7; [*/ Return value]-|A reference to the [* IdInfo] structure describing 
 the newly added index.&]
@@ -1170,8 +1174,10 @@ with a given identifier.&]
 [s7; [*/ Return value]-|zero`-based index number, `-1 when not found&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:SetId`(int`,const Id`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&
-]_[* SetId]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:SetId`(int`,const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* SetId]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const 
+][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:SetId`(int`,const Id`&`)^ I
+d]`&_[*@3 id])&]
 [s2; Sets the identifier for a given array index. This can be used 
 to set or modify the identifier for a previously added index.&]
 [s7; [*C@3 ii]-|zero`-based ordinal number of the index to set the identifier 
@@ -1182,8 +1188,9 @@ for the [/ ii]`-th index. The reference can be used to set additional
 properties of the altered index.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddKey`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* A
-ddKey]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:AddKey`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddKey]([@(0.0.255) const ][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:AddKey`(const Id`&`)^ I
+d]`&_[*@3 id])&]
 [s2; Adds a [/ primary key] index to the table. The [/ primary key] is 
 just another name for the first index (index with ordinal number 
 0). This is just a handy convention often used for SQL`-based 
@@ -1197,7 +1204,8 @@ an [* ASSERT].&]
 for the primary key index.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddKey`(`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* AddKey]()&]
+[s5;:ArrayCtrl`:`:AddKey`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddKey]()&]
 [s2; Adds a primary key index without an identifier to the table. 
 This is equivalent to [* AddKey(Null)].&]
 [s7; [*/ Return value]-|A reference to the [* IdInfo] structure describing 
@@ -1225,8 +1233,9 @@ for the newly added column and the corresponding header tab.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:AddColumn`(const Id`&`,const char`*`,int`): [_^ArrayCtrl`:`:Column^ C
-olumn][@(0.0.255) `&]_[* AddColumn]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) int]_[*@3 w]_`=_[@3 0])&]
+olumn][@(0.0.255) `&]_[* AddColumn]([@(0.0.255) const ][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:AddColumn`(const Id`&`,const char`*`,int`)^ I
+d]`&_[*@3 id], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) int]_[*@3 w]_`=
+_[@3 0])&]
 [s2; Adds a new column`-index pair to the table. This is equivalent 
 to the above two`-parameter version but, in addition, the method 
 sets the [* Id] identifier for the newly created index.&]
@@ -1251,8 +1260,9 @@ the newly added array column.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:AddColumnAt`(const Id`&`,const char`*`,int`): [_^ArrayCtrl`:`:Column^ C
-olumn][@(0.0.255) `&]_[* AddColumnAt]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) int]_[*@3 w]_`=_[@3 0])&]
+olumn][@(0.0.255) `&]_[* AddColumnAt]([@(0.0.255) const ][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:AddColumn`(const Id`&`,const char`*`,int`)^ I
+d]`&_[*@3 id], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) int]_[*@3 w]_`=
+_[@3 0])&]
 [s2; Adds a new column to the table and binds it to a given source 
 data index.&]
 [s7; [*C@3 id]-|identifier of the index to use as source for the newly 
@@ -1280,8 +1290,8 @@ editing mechanism).&]
 the newly added array column.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddCtrl`(Ctrl`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* AddC
-trl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s5;:ArrayCtrl`:`:AddCtrl`(Ctrl`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
 [s2; Adds a new index`-control pair to the table; the index keeps 
 the source data and the external control is used to edit it. 
 The ArrayCtrl handles data transfer between the source data matrix 
@@ -1304,9 +1314,9 @@ the controls.&]
 the newly added index&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddCtrl`(const Id`&`,Ctrl`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&
-]_[* AddCtrl]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl
-])&]
+[s5;:ArrayCtrl`:`:AddCtrl`(const Id`&`,Ctrl`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddCtrl]([@(0.0.255) const ][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:AddCtrl`(Ctrl`&`)^ I
+d]`&_[*@3 id], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
 [s2; Adds a new index`-control pair to the table. This is identical 
 to the above version with the only difference that the newly 
 added index is assigned an [* Id] identifier at the same time.&]
@@ -1316,8 +1326,8 @@ added index is assigned an [* Id] identifier at the same time.&]
 the newly added index&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AddIdCtrl`(Ctrl`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* Ad
-dIdCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s5;:ArrayCtrl`:`:AddIdCtrl`(Ctrl`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* AddIdCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
 [s2; Same as AddCtrl(ctrl.GetLayoutId(), ctrl). Helpful when adding 
 dialog widgets whose id is the same as widget`'s variable id.&]
 [s3; &]
@@ -1379,37 +1389,38 @@ function returns the index of first one found. Use FindColumnsWithId
 if you need them all.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithPos`(int`)const:%- [_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
-nt]>_[* FindColumnsWithPos]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithPos`(int`)const:%- [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[@(0.0.255) int]>_[* FindColumnsWithPos]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) con
+st]&]
 [s2; Returns the zero`-based indices of all columns based on its 
 source data index or `-1 if not found.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithId`(const Upp`:`:Id`&`)const:%- [_^Upp`:`:Vector^ V
+[s5;:Upp`:`:ArrayCtrl`:`:FindColumnsWithId`(const Upp`:`:Id`&`)const:%- [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
 ector]<[@(0.0.255) int]>_[* FindColumnsWithId]([@(0.0.255) const]_[_^Upp`:`:Id^ Id][@(0.0.255) `&
 ]_[*@3 id])_[@(0.0.255) const]&]
 [s2; Returns the zero`-based indices of all columns based on its 
 source data [%-*@3 id] or `-1 if not found.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnAt`(int`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* Column
-At]([@(0.0.255) int]_[*@3 i])&]
+[s5;:ArrayCtrl`:`:ColumnAt`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* ColumnAt]([@(0.0.255) int]_[*@3 i])&]
 [s2; Returns the [* Column] structure describing a given column.&]
 [s7; [*C@3 i]-|zero`-based column index&]
 [s7; [*/ Return value]-|a reference to the [* Column] structure describing 
 the given column&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnAt`(const Id`&`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_
-[* ColumnAt]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:ColumnAt`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* ColumnAt]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])&]
 [s2; Returns the [* Column] structure describing a given column.&]
 [s7; [*C@3 i]-|zero`-based column index&]
 [s7; [*/ Return value]-|a constant reference to the [* Column] structure 
 describing the given column&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnAt`(int`)const: [@(0.0.255) const]_[_^ArrayCtrl`:`:Column^ Column
-][@(0.0.255) `&]_[* ColumnAt]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:ArrayCtrl`:`:ColumnAt`(int`)const: [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* ColumnAt]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns the [* Column] structure describing a column with given 
 source index. This is merely the const version of the above method; 
 it can be used to query properties for the column.&]
@@ -1418,7 +1429,7 @@ it can be used to query properties for the column.&]
 the given column&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ColumnAt`(const Id`&`)const: [@(0.0.255) const]_[_^ArrayCtrl`:`:Column^ C
+[s5;:ArrayCtrl`:`:ColumnAt`(const Id`&`)const: [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
 olumn][@(0.0.255) `&]_[* ColumnAt]([@(0.0.255) const ][_^Id^ Id]`&_[*@3 id])_[@(0.0.255) cons
 t]&]
 [s2; Returns a constant reference to the [* Column] structure describing 
@@ -1618,7 +1629,8 @@ GetLineCy(r) > y]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayCtrl`:`:SetLineColor`(int`,Upp`:`:Color`):%- [@(0.0.255) void]_[* SetLin
-eColor]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Color^ Color]_[*@3 c])&]
+eColor]([@(0.0.255) int]_[*@3 i], [_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor]_[*@3 c])&]
 [s2; Sets the background color of line [%-*@3 i] to [%-*@3 c].&]
 [s3; &]
 [s4;%- &]
@@ -1857,8 +1869,8 @@ nvalidateCache].&]
 [s7; [*/ Return value]-|the converted cell value&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:ReadRow`(int`)const: [_^Vector^ Vector]<[_^Value^ Value]>_[* ReadRow]([@(0.0.255) i
-nt]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:ArrayCtrl`:`:ReadRow`(int`)const: [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Value^ Value]>_[* ReadRow]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns a [* Vector] containing the values of all source indices 
 in the given row. Invariantly, the [* GetCount()] of the returned 
 array is equal to the [* GetIndexCount()] of the source ArrayCtrl.&]
@@ -1867,10 +1879,11 @@ array is equal to the [* GetIndexCount()] of the source ArrayCtrl.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Set`(int`,const Vector`<Value`>`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+nt]_[*@3 i], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Value^ Value]>`&_[*@3 v])&]
 [s5;:Upp`:`:ArrayCtrl`:`:Set`(int`,Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&
-`&_[*@3 v])&]
+oid]_[* Set]([@(0.0.255) int]_[*@3 i], [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 v])&]
 [s2; Modifies a given row by setting all source index values to values 
 passed in the parameter [/ v].&]
 [s3; &]
@@ -1891,10 +1904,12 @@ non`-null defaults, you have to modify the relevant cells manually.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Add`(const Vector`<Value`>`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) con
-st]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+st]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ Vector]<[_^Value^ Value
+]>`&_[*@3 v])&]
 [s5;:Upp`:`:ArrayCtrl`:`:Add`(Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [@(0.0.255) void]_
-[* Add]([_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 v])&]
-[s2; Adds a new row at the end of the source data matrix. The [*^topic`:`/`/Core`/src`/Vector`$en`-us^ V
+[* Add]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ Vector]<[_^Upp`:`:Value^ V
+alue]>`&`&_[*@3 v])&]
+[s2; Adds a new row at the end of the source data matrix. The [*^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
 ector] parameter contains the values to be used to initialize 
 the new row of the matrix.&]
 [s3; &]
@@ -1921,15 +1936,17 @@ titles.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`): [@(0.0.255) void]_[* Se
-t]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^VectorMap^ VectorMap]<[_^String^ String],
- [_^Value^ Value]>`&_[*@3 m])&]
+t]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector][_^VectorMap^ Map]<[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ St
+ring], [_^Value^ Value]>`&_[*@3 m])&]
 [s2; Sets the row based on map. Keys are matched to row Ids, keys 
 that are not found are ignored, those found are assigned correspoding 
 map values.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Add`(const VectorMap`<String`,Value`>`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) c
-onst]_[_^VectorMap^ VectorMap]<[_^String^ String], [_^Value^ Value]>`&_[*@3 m])&]
+onst]_[_^VectorMap^ VectorMap]<[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring], [_^Value^ Value]>`&_[*@3 m])&]
 [s2; Adds the row based on map. Keys are matched to row Ids, keys 
 that are not found are ignored, those found are assigned correspoding 
 map values.&]
@@ -1980,7 +1997,8 @@ values, you have to do so manually.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Insert`(int`,const Vector`<Value`>`&`): [@(0.0.255) void]_[* Insert]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 v])&]
+nt]_[*@3 i], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Value^ Value]>`&_[*@3 v])&]
 [s2; Inserts a new row into the array at a given position. The second 
 parameter, [/ v], is used to initialize the source indices of the 
 newly created row.&]
@@ -2032,7 +2050,8 @@ are in required ordering.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Sort`(const ArrayCtrl`:`:Order`&`): [@(0.0.255) void]_[* Sort]([@(0.0.255) c
-onst]_[_^ArrayCtrl`:`:Order^ ArrayCtrl`::Order][@(0.0.255) `&]_[*@3 order])&]
+onst]_[_^ArrayCtrl`:`:Order^ ArrayCtrl`::][_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Order`:`:struct^ O
+rder][@(0.0.255) `&]_[*@3 order])&]
 [s2; Sorts the array rows according to a given ordering predicate. 
 The [* ArrayCtrl`::Order] object defines the ordering predicate; 
 its [* operator ()] should return [* true] whenever its first parameter 
@@ -2042,7 +2061,7 @@ is less than its second parameter.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Sort`(int`,int`,const ArrayCtrl`:`:Order`&`): [@(0.0.255) void]_[* Sort
-]([@(0.0.255) int]_[*@3 from], [@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[_^ArrayCtrl`:`:Order^ A
+]([@(0.0.255) int]_[*@3 from], [@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Order`:`:struct^ A
 rrayCtrl`::Order][@(0.0.255) `&]_[*@3 order])&]
 [s2; Sorts a portion of the array using a given ordering predicate.&]
 [s7; [*C@3 from]-|zero`-based index of the first row to sort&]
@@ -2234,8 +2253,8 @@ onst]&]
 selected, otherwise returns true if cursor is at [*@3 i].&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:GetSelKeys`(`)const:%- [_^Upp`:`:Vector^ Vector]<[@(0.0.255) int
-]>_[* GetSelKeys]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:ArrayCtrl`:`:GetSelKeys`(`)const:%- [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[@(0.0.255) int]>_[* GetSelKeys]()_[@(0.0.255) const]&]
 [s2; Returns keys (elements with index 0) of all selected lines (ordered 
 by line order).&]
 [s3;%- &]
@@ -2537,12 +2556,13 @@ committed, [* false] when not&]
 [s0; [* Content export]&]
 [s0;* &]
 [s3; &]
-[s5;:ArrayCtrl`:`:AsText`(String`(`*`)`(const Value`&`)`,bool`,const char`*`,const char`*`,const char`*`,const char`*`)const: [_^String^ S
-tring]_[* AsText]([_^String^ String]_(`*[*@3 format])([@(0.0.255) const]_Value[@(0.0.255) `&
-]), [@(0.0.255) bool]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) const]_[@(0.0.255) char]_
-`*[*@3 tab]_`=_`"`\t`", [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 row]_`=_`"`\r`\n`", 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 hdrtab]_`=_`"`\t`", [@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 hdrrow]_`=_`"`\r`\n`")_[@(0.0.255) const]&]
+[s5;:ArrayCtrl`:`:AsText`(String`(`*`)`(const Value`&`)`,bool`,const char`*`,const char`*`,const char`*`,const char`*`)const: [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* AsText]([_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ String]_(
+`*[*@3 format])([@(0.0.255) const]_Value[@(0.0.255) `&]), [@(0.0.255) bool]_[*@3 sel]_`=_[@(0.0.255) f
+alse], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tab]_`=_`"`\t`", 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 row]_`=_`"`\r`\n`", [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 hdrtab]_`=_`"`\t`", [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 hdrrow]_`=_`"
+`\r`\n`")_[@(0.0.255) const]&]
 [s2; Generic function for conversion of ArrayCtrl content to text. 
 The content visible on screen is exported (means, it exports 
 columns defined using AddColumn, not indicies). Cells are converted 
@@ -2562,16 +2582,17 @@ and `"`\r`\n`" as separators. If [*@3 sel] is true, only rows with
 IsSel true are exported, [*@3 hdr] controls whether header is exported.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AsQtf`(bool`,bool`): [_^String^ String]_[* AsQtf]([@(0.0.255) bool]_[*@3 se
-l]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AsQtf`(bool`,bool`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* AsQtf]([@(0.0.255) bool]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 hd
+r]_`=_[@(0.0.255) true])&]
 [s2; Returns ArrayCtrl content in QTF format. If [*@3 sel] is true, 
 only rows with IsSel true are exported, [*@3 hdr] controls whether 
 header is exported.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:AsCsv`(bool`,int`,bool`): [_^String^ String]_[* AsCsv]([@(0.0.255) bool]_
-[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) int]_[*@3 sep]_`=_`';`', 
-[@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])&]
+[s5;:ArrayCtrl`:`:AsCsv`(bool`,int`,bool`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* AsCsv]([@(0.0.255) bool]_[*@3 sel]_`=_[@(0.0.255) false], [@(0.0.255) int]_[*@3 sep
+]_`=_`';`', [@(0.0.255) bool]_[*@3 hdr]_`=_[@(0.0.255) true])&]
 [s2; Returns ArrayCtrl content in csv format, using [*@3 sep] as separator. 
 If [*@3 sel] is true, only rows with IsSel true are exported, [*@3 hdr] 
 controls whether header is exported.&]
@@ -2731,9 +2752,9 @@ to source array data.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3; &]
-[s5;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(const Value`&`): [_^ArrayCtrl`:`:IdInfo^ IdInf
-o][@(0.0.255) `&]_[* InsertValue]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])
-&]
+[s5;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(const Value`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* InsertValue]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v
+])&]
 [s2; The method sets up the default source index value for newly 
 created rows. This is used only when the row insertion is GUI`-based 
 (like using the [* DoInsert] method for instance). When a row is 
@@ -2743,8 +2764,8 @@ these default values are not used.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(ValueGen`&`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&
-]_[* InsertValue]([_^ValueGen^ ValueGen][@(0.0.255) `&]_[*@3 g])&]
+[s5;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(ValueGen`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* InsertValue]([_^ValueGen^ ValueGen][@(0.0.255) `&]_[*@3 g])&]
 [s2; The method sets up a factory for generating default index values 
 for newly created rows. This is used only when the row insertion 
 is GUI`-based (like using the [* DoInsert] method for instance). 
@@ -2773,8 +2794,8 @@ key presses.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:IdInfo`:`:Accel`(`): [_^ArrayCtrl`:`:IdInfo^ IdInfo][@(0.0.255) `&]_[* Ac
-cel]()&]
+[s5;:ArrayCtrl`:`:IdInfo`:`:Accel`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:IdInfo`:`:struct^ I
+dInfo][@(0.0.255) `&]_[* Accel]()&]
 [s2; This method sets up keyboard acceleration for the given source 
 index. The `'trivial`' [/ CharConvert] is used for character translation.&]
 [s7; [*/ Return value]-|[* `*this]&]
@@ -2804,16 +2825,16 @@ some of which are also settable via ArrayCtrl methods.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3; &]
-[s5;:ArrayCtrl`:`:Column`:`:Add`(int`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* A
-dd]([@(0.0.255) int]_[*@3 `_pos])&]
+[s5;:ArrayCtrl`:`:Column`:`:Add`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Add]([@(0.0.255) int]_[*@3 `_pos])&]
 [s2; Adds another source data index to the list of source indices 
 used as the data for the given output column.&]
 [s7; [*C@3 `_pos]-|zero`-based ordinal number of the source index&]
 [s7; [*/ Return value]-|[* `*this].&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Add`(const Id`&`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* Add](const [_^Id^ Id]`&_[*@3 id])&]
+[s5;:ArrayCtrl`:`:Column`:`:Add`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Add](const [_^Id^ Id]`&_[*@3 id])&]
 [s2; Adds another source data index to the list of source indices 
 used as the data for the given output column.&]
 [s7; [*C@3 id]-|the [* Id] identifier of the source index&]
@@ -2821,8 +2842,8 @@ used as the data for the given output column.&]
 [s3; &]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:AddIndex`(const Id`&`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* AddIndex]([@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 id])&]
+[s5;:ArrayCtrl`:`:Column`:`:AddIndex`(const Id`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* AddIndex]([@(0.0.255) const]_[_^Id^ Id][@(0.0.255) `&]_[*@3 id])&]
 [s2; Adds another source index to the array and adds it to the list 
 of source indices bound to this output column. The newly created 
 index is assigned the given identifier.&]
@@ -2830,16 +2851,16 @@ index is assigned the given identifier.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:AddIndex`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_
-[* AddIndex]()&]
+[s5;:ArrayCtrl`:`:Column`:`:AddIndex`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* AddIndex]()&]
 [s2; Adds another source index to the array and adds it to the list 
 of source indices bound to this output column.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:SetConvert`(const Convert`&`): [_^ArrayCtrl`:`:Column^ Colu
-mn][@(0.0.255) `&]_[* SetConvert]([@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_[*@3 c
-])&]
+[s5;:ArrayCtrl`:`:Column`:`:SetConvert`(const Convert`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* SetConvert]([@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_
+[*@3 c])&]
 [s2; Sets the [* Convert] object for the given column. This object 
 is used to convert the source values (obtained from the source 
 data matrix) to the values displayable and/or editable by the 
@@ -2858,7 +2879,7 @@ the given column&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:ConvertBy`(Upp`:`:Function`<Upp`:`:Value`(const Upp`:`:Value`&`)`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:ConvertBy`(Upp`:`:Function`<Upp`:`:Value`(const Upp`:`:Value`&`)`>`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* ConvertBy]([_^Upp`:`:Function^ Function]<Value([@(0.0.255) c
 onst]_Value[@(0.0.255) `&])>_[*@3 cv])&]
 [s2; Similar to SetConvert, but using [%-*@3 cv] instead of class for 
@@ -2876,9 +2897,9 @@ argument defines the desired formatting pattern.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:SetDisplay`(const Display`&`): [_^ArrayCtrl`:`:Column^ Colu
-mn][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 d
-])&]
+[s5;:ArrayCtrl`:`:Column`:`:SetDisplay`(const Display`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_
+[*@3 d])&]
 [s2; Sets the default Display to use for this column. The column 
 Display can be overridden for certain array cells by calls to 
 the [*^topic`:`/`/CtrlLib`/src`/ArrayCtrl`$en`-us`#`:`:ArrayCtrl`:`:SetDisplay`(int`,int`,const Display`&`)^ A
@@ -2891,15 +2912,15 @@ as long as necessary.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Edit`(Ctrl`&`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* Edit]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 e])&]
+[s5;:ArrayCtrl`:`:Column`:`:Edit`(Ctrl`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Edit]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 e])&]
 [s2; Sets up the Ctrl`-based object to use for inline array column 
 editing.&]
 [s7; [*C@3 e]-|a reference to the editor control object&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Ctrls`(void`(`*`)`(One`<Ctrl`>`&`)`): [_^ArrayCtrl`:`:Column^ C
+[s5;:ArrayCtrl`:`:Column`:`:Ctrls`(void`(`*`)`(One`<Ctrl`>`&`)`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
 olumn][@(0.0.255) `&]_[* Ctrls]([@(0.0.255) void]_(`*[*@3 factory])(One<Ctrl>`&))&]
 [s2; The methods sets up a factory which the ArrayCtrl uses as necessary 
 to create new Ctrl`'s for editing a given column. The argument 
@@ -2914,7 +2935,7 @@ the position represents the position within the cell.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Ctrls`(`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^ArrayCtrl`:`:Column^ C
+[s5;:ArrayCtrl`:`:Column`:`:Ctrls`(`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
 olumn][@(0.0.255) `&]_[* Ctrls]()&]
 [s2; This member template sets up a default factory for creating 
 editor controls of a given type. Every time the ArrayCtrl needs 
@@ -2928,7 +2949,7 @@ the position represents the position within the cell.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:WithLined`(Upp`:`:Event`<int`,Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:WithLined`(Upp`:`:Event`<int`,Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* WithLined]([_^Upp`:`:Event^ Event]<[@(0.0.255) int], 
 [_^Upp`:`:One^ One]<[_^Upp`:`:Ctrl^ Ctrl]>`&>_[*@3 factory])&]
 [s2; This method sets up a factory which the ArrayCtrl uses to create 
@@ -2942,7 +2963,7 @@ whole width and using STDSIZE for height, otherwise the position
 represents the position within the cell.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:With`(Upp`:`:Event`<Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:With`(Upp`:`:Event`<Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* With]([_^Upp`:`:Event^ Event]<[_^Upp`:`:One^ One]<[_^Upp`:`:Ctrl^ C
 trl]>`&>_[*@3 factory])&]
 [s2; This method sets up a factory which the ArrayCtrl uses to create 
@@ -2955,9 +2976,9 @@ spanning the whole width and using STDSIZE for height, otherwise
 the position represents the position within the cell.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:InsertValue`(const Value`&`): [_^ArrayCtrl`:`:Column^ Colum
-n][@(0.0.255) `&]_[* InsertValue]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])
-&]
+[s5;:ArrayCtrl`:`:Column`:`:InsertValue`(const Value`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* InsertValue]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v
+])&]
 [s2; Instructs the ArrayCtrl object to initialize this column in 
 newly created rows to the given value [/ v]. (This applies only 
 to GUI`-based row insertion using methods like [* DoInsert] etc., 
@@ -2968,8 +2989,8 @@ with [* Null]`'s).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:InsertValue`(ValueGen`&`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* InsertValue]([_^ValueGen^ ValueGen][@(0.0.255) `&]_[*@3 g])&]
+[s5;:ArrayCtrl`:`:Column`:`:InsertValue`(ValueGen`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* InsertValue]([_^ValueGen^ ValueGen][@(0.0.255) `&]_[*@3 g])&]
 [s2; Programs the ArrayCtrl object to use the given [* ValueGen] factory 
 for default value generation for newly created rows. This can 
 be used e.g. to generate unique UUID`'s or primary keys using 
@@ -2987,15 +3008,15 @@ user action `- when a row is added to the array programmatically
 (e.g. using [* Add] or [* Insert]), [%-*@3 gen] is not used.&]
 [s3;%- &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:NoClickEdit`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* NoClickEdit]()&]
+[s5;:ArrayCtrl`:`:Column`:`:NoClickEdit`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* NoClickEdit]()&]
 [s2; Disables entering the editing mode when clicking the respective 
 column.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Cache`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* Ca
-che]()&]
+[s5;:ArrayCtrl`:`:Column`:`:Cache`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Cache]()&]
 [s2; Enables using the cache to store the converted values of this 
 column. By default, converted value caching is turned off to 
 make cell value conversion entirely dynamic; however, very often 
@@ -3005,8 +3026,8 @@ queries a database connection to convert the value).&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Accel`(int`(`*`)`(int`)`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* Accel]([@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]))&]
+[s5;:ArrayCtrl`:`:Column`:`:Accel`(int`(`*`)`(int`)`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Accel]([@(0.0.255) int]_(`*[*@3 filter])([@(0.0.255) int]))&]
 [s2; Sets up the accelerator for the given column. A given filtering 
 function is used to convert keystrokes before acceleration.&]
 [s7; [*C@3 filter]-|a [* CharConvert]`-style function to use for keystroke 
@@ -3014,15 +3035,15 @@ conversion&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Accel`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* Ac
-cel]()&]
+[s5;:ArrayCtrl`:`:Column`:`:Accel`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Accel]()&]
 [s2; Sets up the accelerator for the given column. No keystroke conversion 
 is performed.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Margin`(int`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_
-[* Margin]([@(0.0.255) int]_[*@3 m])&]
+[s5;:ArrayCtrl`:`:Column`:`:Margin`(int`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Margin]([@(0.0.255) int]_[*@3 m])&]
 [s2; Sets up the margin width for the given column. This is equivalent 
 to calling the [*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Column`:`:SetMargin`(int`)^ S
 etMargin] method of the underlying [* HeaderTab].&]
@@ -3030,17 +3051,17 @@ etMargin] method of the underlying [* HeaderTab].&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Sorting`(const ValueOrder`&`): [_^ArrayCtrl`:`:Column^ Colu
-mn][@(0.0.255) `&]_[* Sorting]([@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&]_
-[*@3 o])&]
-[s5;:ArrayCtrl`:`:Column`:`:Sorting`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* S
-orting]()&]
+[s5;:ArrayCtrl`:`:Column`:`:Sorting`(const ValueOrder`&`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Sorting]([@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&
+]_[*@3 o])&]
+[s5;:ArrayCtrl`:`:Column`:`:Sorting`(`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Sorting]()&]
 [s2; Activates sorting of ArrayCtrl column by clicking on its header 
 tab. Parameterless version uses default Value ordering using 
 StdValueCompare.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingLined`(Upp`:`:Gate`<int`,int`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingLined`(Upp`:`:Gate`<int`,int`>`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* SortingLined]([_^Upp`:`:Gate^ Gate]<[@(0.0.255) int],
  [@(0.0.255) int]>_[*@3 aorder])&]
 [s2; Activates sorting of ArrayCtrl column by clicking on its header 
@@ -3051,7 +3072,7 @@ implemented in predicate, using ArrayCtrl`::IsSortDescending to
 determine the order.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingBy`(Upp`:`:Function`<int`(const Upp`:`:Value`&a`,const Upp`:`:Value`&b`)`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingBy`(Upp`:`:Function`<int`(const Upp`:`:Value`&a`,const Upp`:`:Value`&b`)`>`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* SortingBy]([_^Upp`:`:Function^ Function]<[@(0.0.255) i
 nt]_([@(0.0.255) const]_Value[@(0.0.255) `&]_a, [@(0.0.255) const]_Value[@(0.0.255) `&]_b
 )>_[*@3 c])&]
@@ -3060,7 +3081,7 @@ tab, using [%-*@3 c] to compare values of column. [%-*@3 c] should
 return `-1, 0, 1 for <, `=, >.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortDefault`(bool`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortDefault`(bool`):%- [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ A
 rrayCtrl`::Column][@(0.0.255) `&]_[* SortDefault]([@(0.0.255) bool]_[*@3 desc] 
 `= [@(0.0.255) false])&]
 [s2;%- [%% Sets this column to be initial sorting column (calls SetSortColumn 
@@ -3079,14 +3100,16 @@ column. This object can be used to set up additional column properties
 henAction] callback).&]
 [s3; &]
 [s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Tip`(const char`*`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* Tip]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tip])&]
+[s5;:ArrayCtrl`:`:Column`:`:Tip`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Column`:`:class^ C
+olumn][@(0.0.255) `&]_[* Tip]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tip])&]
 [s2; Assigns a [*@3 tip] to header tab column.&]
 [s3; &]
 [s0; &]
 [ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl`::Order]]}}&]
 [s3; &]
-[s1;:ArrayCtrl`:`:Order`:`:struct: [@(0.0.255)3 struct][3 _][*3 Order]&]
+[s1;:ArrayCtrl`:`:Order`:`:struct: [^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Order`:`:struct^@(0.0.255)3 s
+truct][^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:Order`:`:struct^3 _
+][*^ArrayCtrl`:`:Order^3 Order]&]
 [s9; The [* Order] object is used for array row sorting. The overloaded 
 [* operator ()] acts as the sorting predicate, which is consulted 
 within the sorting method to determine which of a given pair 
@@ -3096,9 +3119,9 @@ of row is `'less`' according to the desired sorting.&]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3; &]
 [s5;:ArrayCtrl`:`:Order`:`:operator`(`)`(const Vector`<Value`>`&`,const Vector`<Value`>`&`)const: [@(0.0.255) v
-irtual] [@(0.0.255) bool]_[* operator()]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Va
-lue]>`&_[*@3 row1], [@(0.0.255) const]_[_^Vector^ Vector]<[_^Value^ Value]>`&_[*@3 row2])_[@(0.0.255) c
-onst]_`=_[@3 0]&]
+irtual] [@(0.0.255) bool]_[* operator()]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Value^ Value]>`&_[*@3 row1], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^Value^ Value]>`&_[*@3 row2])_[@(0.0.255) const]_`=_[@3 0]&]
 [s2; The sorting predicate. This method should return [* true] when 
 its first argument ([/ row1]) is less than the second argument 
 ([/ row2]) according to the desired ordering.&]
