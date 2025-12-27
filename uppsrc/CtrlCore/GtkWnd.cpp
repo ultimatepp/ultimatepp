@@ -205,11 +205,13 @@ void Ctrl::WndRectsSync()
 		utop->client_rect = GetScreenRect(utop->client);
 		utop->screen_rect = utop->client_rect;
 		TopWindow *tw = dynamic_cast<TopWindow *>(this);
-		if(tw && tw->custom_bar_frame) {
-			utop->header_rect = GetScreenRect(utop->header_area);
-			utop->screen_rect.Union(utop->header_rect);
-			if(tw->custom_bar_frame) _DBG_ // TODO: Maybe consider wrongly placed ones?
-				tw->custom_bar_frame->Height(utop->header_rect.GetHeight());
+		if(tw) {
+			if(tw->custom_bar_frame) {
+				utop->header_rect = GetScreenRect(utop->header_area);
+				utop->screen_rect.Union(utop->header_rect);
+				if(tw->custom_bar_frame) _DBG_ // TODO: Maybe consider wrongly placed ones?
+					tw->custom_bar_frame->Height(utop->header_rect.GetHeight());
+			}
 		}
 		utop->sync_rect = false;
 		DDUMP(utop->header_rect);

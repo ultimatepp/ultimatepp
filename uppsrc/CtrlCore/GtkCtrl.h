@@ -12,12 +12,6 @@
 
 	static void     ThemeChanged(void *);
 
-/*
-_DBG_
-	static void     AddEvent(gpointer user_data, int type, const Value& value);
-	static void     DoMouseEvent(int state, Point pos);
-*/
-
 	bool   DispatchMouseIn(int act, int zd);
 	Image  GtkMouseEvent(int action, int act, int zd);
 	void   GtkButtonEvent(int action);
@@ -41,7 +35,7 @@ _DBG_
 	static bool MouseIsGrabbed();
 	bool GrabMouse();
 	static void UngrabMouse();
-	
+
 	static int scale; // in case GUI is scaling (e.g. in UHD mode)
 
 	enum {
@@ -49,7 +43,7 @@ _DBG_
 		EVENT_TEXT,
 		EVENT_FOCUS_CHANGE,
 	};
-	
+
 	struct GEvent0 {
 		int        time;
 		int        windowid;
@@ -67,7 +61,7 @@ _DBG_
 		double     pen_rotation;
 		Pointf     pen_tilt;
 	};
-	
+
 	struct GEvent : Moveable<GEvent>, GEvent0 {
 		GdkEvent  *event;
 
@@ -79,7 +73,7 @@ _DBG_
 		GEvent();
 		~GEvent();
 	};
-	
+
 	struct Win : Moveable<Win> {
 		int          id;
 		GtkWidget   *gtk;
@@ -110,13 +104,13 @@ _DBG_
 	static int FindCtrl(Ctrl *ctrl);
 	static int FindGtkWindow(GtkWidget *gtk);
 	static int FindGdkWindow(GdkWindow *gdk);
-	
+
 	static Ctrl *GetTopCtrlFromId(int id);
 	static Ctrl *GetTopCtrlFromId(gpointer user_data) { return GetTopCtrlFromId((uint32)(uintptr_t)user_data); }
 
 	static void SyncPopupCapture();
 	void ReleasePopupCapture();
-	
+
 	static void FocusSync();
 	static gboolean TimeHandler(GtkWidget *);
 	static void InvalidateMousePos();
@@ -124,10 +118,10 @@ _DBG_
 	static void StartGrabPopup();
 	static bool ReleaseWndCapture0();
 	static void DoCancelPreedit();
-	
+
 	static Rect frameMargins;
 	static Rect GetFrameMargins();
-	
+
 	       Rect CSDMargins() const;
 
 	static Index<String>   dnd_targets;
@@ -147,7 +141,7 @@ _DBG_
 	static Vector<String>                     dnd_fmts;
 	static int                                dnd_result;
 	static Image                              dnd_icon;
-	
+
 	static void            GtkSelectionDataSet(GtkSelectionData *selection_data, const String& fmt, const String& data);
 	static void            GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer user_data);
 	static void            AddFmt(GtkTargetList *list, const String& fmt, int info);
@@ -197,11 +191,12 @@ public: // really private:
 	static Gclipboard& gclipboard();
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);
-	
+
 	static Vector<Event<>> hotkey;
 	static Vector<dword>   keyhot;
 	static Vector<dword>   modhot;
 	static guint           MouseState;
+	static Point           prev_mouse_pos;
 
 	static int    SCL(int x)                        { return scale * x; }
 	static Rect   SCL(int x, int y, int cx, int cy) { return RectC(SCL(x), SCL(y), SCL(cx), SCL(cy)); }
@@ -209,21 +204,21 @@ public: // really private:
 	static int    LSCH(int x)                       { return (x + 1) / scale; }
 	static Rect   LSCH(int x, int y, int cx, int cy){ return Rect(LSC(x), LSC(y), LSCH(x + cx), LSCH(y + cy)); }
 	static Rect   LSCH(const Rect& r)               { return LSCH(r.left, r.top, r.GetWidth(), r.GetHeight()); }
-	
+
 	static int    GetCaretBlinkTime()               { return 500; }
             
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
 	static void      PanicMsgBox(const char *title, const char *text);
-	
+
 	static bool      IsX11();
 	static bool      IsWayland();
 	static bool      IsRunningOnWayland();
 	static bool      IsXWayland()              { return IsX11() && IsRunningOnWayland(); }
-	
+
 	static void      UseWayland();
-	
+
 	static Point     CurrentMousePos;
 	static guint     CurrentState;
 	static guint32   CurrentTime;

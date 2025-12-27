@@ -228,7 +228,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	StateH(OPEN);
 
 	GdkModifierType mod;
-	Point m = GetMouseInfo(gdk(), mod);
+	Point m = prev_mouse_pos;
 	r = GetWndScreenRect().GetSize();
 	if(r.Contains(m))
 		DispatchMouse(MOUSEMOVE, m);

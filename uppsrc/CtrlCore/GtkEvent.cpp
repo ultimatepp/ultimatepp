@@ -9,7 +9,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-// #define LOG_EVENTS  _DBG_
+#define LOG_EVENTS  _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -346,7 +346,7 @@ void Ctrl::GEvent::operator=(const GEvent& e)
 	Set(e);
 }
 
-static Point s_mousepos;
+Point Ctrl::prev_mouse_pos = Null;
 
 Point Ctrl::GetMouseInfo(GdkWindow *win, GdkModifierType& mod)
 {
@@ -355,7 +355,7 @@ Point Ctrl::GetMouseInfo(GdkWindow *win, GdkModifierType& mod)
 	GdkDevice *pointer = gdk_seat_get_pointer (gdk_display_get_default_seat (display));
 	double x, y;
 	gdk_window_get_device_position_double (win, pointer, &x, &y, &mod);
-	return s_mousepos; //return Point((int)SCL(x), (int)SCL(y));
+	return prev_mouse_pos; //return Point((int)SCL(x), (int)SCL(y));
 #else
 	gint x, y;
 	gdk_window_get_pointer(win, &x, &y, &mod);
@@ -372,14 +372,14 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.type = type;
 	e.value = value;
 	GdkModifierType mod;
-	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
+	e.mousepos = prev_mouse_pos;
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
-		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+		prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 	}
 	if(event && event->type == GDK_LEAVE_NOTIFY){
 		GdkEventCrossing *mevent = (GdkEventCrossing *)event;
-		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+		prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 	}
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
@@ -403,7 +403,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 				break;
 			case GDK_MOTION_NOTIFY:{
 				GdkEventMotion *mevent = (GdkEventMotion *)event;
-				e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 				axes = ((GdkEventMotion *)event)->axes;
 				break;
 			}
@@ -595,9 +594,10 @@ void Ctrl::Proc()
 	}
 #endif
 
-	DLOG("@@@ PROC");
-	WndRectsSync();
-	SyncWndRect(GetWndScreenRect());
+	for(Ctrl *q : GetTopCtrls()) {
+		q->WndRectsSync();
+		q->SyncWndRect(GetWndScreenRect());
+	}
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
@@ -774,9 +774,6 @@ void Ctrl::Proc()
 		}
 		return;
 	}
-//	case GDK_CONFIGURE:
-//		SyncWndRect(GetWndScreenRect());
-//		break;
 	default:
 		return;
 	}
@@ -786,19 +783,18 @@ void Ctrl::Proc()
 
 void Ctrl::SyncWndRect(const Rect& rect)
 {
-	DLOG("... SYNC");
-	DDUMP(GetRect());
-	DDUMP(rect);
-	if(GetRect() != rect) {
-		DLOG("### SetRect " << rect);
-		SetWndRect(rect);
-	}
 	TopWindow *w = dynamic_cast<TopWindow *>(this);
+	bool force = false;
 	if(w) {
 		w->SyncIcons();
 		if(w->state == TopWindow::OVERLAPPED)
 			w->overlapped = rect;
 	}
+	if(GetRect() != rect)
+		SetWndRect(rect);
+	else
+	if(force)
+		Layout();
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
@@ -827,6 +823,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		GEvent& e = Events.Head();
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
+		DDUMP(CurrentMousePos);
 		CurrentState = e.state;
 		CurrentEvent = e;
 		Value val = e.value;

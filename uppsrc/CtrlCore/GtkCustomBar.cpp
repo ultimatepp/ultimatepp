@@ -10,8 +10,7 @@ extern Function<Ctrl *(TopWindow *, Color, int)> custom_titlebar_make__;
 
 void TopWindow::CustomBarIcon::Paint(Draw& w)
 {
-	DDUMP(GetSize());
-	DDUMP(CtrlCoreImg::GtkBarButton().GetSize());
+	DLOG("CustomBarIcon::Paint " << GetMousePos() << " " << HasMouseIn());
 	w.DrawImage(0, 0, HasMouse() ? CtrlCoreImg::GtkBarButtonH() : CtrlCoreImg::GtkBarButton());
 	w.DrawImage(0, 0, img);
 }
@@ -77,7 +76,6 @@ void TopWindow::SyncIcons()
 {
 	minicon.Set(CtrlCoreImg::GtkBarMinimize());
 	GtkWindow *w = gtk();
-	DDUMP(w && gtk_window_is_maximized(w));
 	maxicon.Set(w && gtk_window_is_maximized(w) ? CtrlCoreImg::GtkBarOverlap()
 	                                            : CtrlCoreImg::GtkBarMaximize());
 	closeicon.Set(CtrlCoreImg::GtkBarClose());
@@ -92,7 +90,6 @@ void TopWindow::SyncCustomBar()
 		custom_bar->VSizePos().HSizePos(DPI(6), DPI(6));
 		RefreshFrame(0, 0, GetRect().Width(), cm.height);
 		Size isz = CtrlCoreImg::GtkBarButton().GetSize();
-		DDUMP(isz);
 		int y = (cm.height - isz.cy) / 2;
 		custom_bar_icons->Width((isz.cx + DPI(8)) * (IsZoomable() ? 3 : 1));
 		*custom_bar_icons << closeicon.RightPos(DPI(8), isz.cx).TopPos(y, isz.cy);

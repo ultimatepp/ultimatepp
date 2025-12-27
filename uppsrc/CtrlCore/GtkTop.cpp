@@ -112,6 +112,7 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 {
 	TopWindow *w = (TopWindow *)user_data;
 	dword h = event->new_window_state;
+	int prev = w->state;
 	if(h & GDK_WINDOW_STATE_FULLSCREEN)
 		w->state = FULLSCREEN;
 	else
@@ -124,7 +125,15 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 		w->state = OVERLAPPED;
 		w->overlapped = w->GetRect();
 	}
+	DLOG("StateEvent " << prev << " -> " << (int)w->state);
 	w->topmost = h & GDK_WINDOW_STATE_ABOVE;
+	w->Layout();
+	if(prev == MINIMIZED && w->state != MINIMIZED) {
+		prev_mouse_pos = CurrentMousePos = Null; // we lost the track of mouse, otherwise "minimize" button would render highlighted
+		DDUMP(CurrentMousePos);
+		if(w->custom_bar_icons)
+			w->custom_bar_icons->RefreshFrame();
+	}
 	return FALSE;
 }
 
@@ -185,29 +194,24 @@ void TopWindow::SetMode(int mode)
 	if(w)
 		switch(state) {
 		case MINIMIZED:
-			gtk_window_deiconify(w);
-			break;
-		case MAXIMIZED:
-			gtk_window_unmaximize(w);
-			break;
-		case FULLSCREEN:
-			gtk_window_unfullscreen(w);
-			break;
-		}
-	state = mode;
-	if(w)
-		switch(state) {
-		case MINIMIZED:
+			fullscreen = false;
 			gtk_window_iconify(w);
 			break;
 		case MAXIMIZED:
+			fullscreen = false;
+			gtk_window_deiconify(w);
 			gtk_window_maximize(w);
+			break;
+		case OVERLAPPED:
+			fullscreen = false;
+			gtk_window_deiconify(w);
+			gtk_window_unmaximize(w);
 			break;
 		case FULLSCREEN:
 			gtk_window_fullscreen(w);
+			fullscreen = true;
 			break;
 		}
-	fullscreen = state == FULLSCREEN;
 }
 
 void TopWindow::Minimize(bool effect)
