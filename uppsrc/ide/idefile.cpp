@@ -642,8 +642,14 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	}
 	else {
 		RealizePath(editfile);
-		if(GetFileExt(editfile) == ".h") {
-			String n = '_' + Filter(String().Cat() << GetActivePackage() << '_' << GetFileTitle(editfile) << "_h_",
+		Index<String> extensions = {
+			".h",
+			".hpp"
+		};
+		String ext = GetFileExt(editfile);
+		if(extensions.Find(ext) >= 0) {
+			ext.Set(0, '_');
+			String n = '_' + Filter(String().Cat() << GetActivePackage() << '_' << GetFileTitle(editfile) << ext <<"_",
 			                        CharFilterMacro);
 			String s;
 			s << "#ifndef " << n << "\r\n";
