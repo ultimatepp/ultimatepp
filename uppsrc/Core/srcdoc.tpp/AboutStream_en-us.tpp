@@ -1,5 +1,4 @@
 topic "About Stream";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "About Stream";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [s0; [*R6 About Stream]&]
 [s0; [/ (some loosely organized comments about Stream by Konstantin 
@@ -27,7 +27,7 @@ not contain (own in U`+`+ terms) the data itself. Thats why it
 may have MemStream, StringStream, FileStream etc.. `'they`' access 
 or even contain (StringBuffer) the buffer and are using the pointers 
 from Stream base to handle it. The buffer referenced by Stream 
-is a current chunk of data, `*entirely`* accessable in your stream.&]
+is a current chunk of data, `*entirely`* accessible in your stream.&]
 [s0; &]
 [s0;i150;O0; Stream is unidirectional per definition and should be 
 used as such. In contrast to other Stream implementations, Upp 

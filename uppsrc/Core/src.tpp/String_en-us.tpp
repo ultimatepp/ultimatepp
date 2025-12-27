@@ -12,22 +12,28 @@ topic "String and WString";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 String]]}}&]
 [s3; &]
-[s1;:String`:`:class:%- [@(0.0.255)3 class][3 _][*3 String][3 _:_][@(0.0.255)3 public][3 _][*@3;3 Mo
-veable][@(0.0.255)3 <][*3 String][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^String0^3 Strin
-g0][@(0.0.255)3 >][3 _>_]&]
-[s9; String is a value class that contains an array of characters 
+[s1;:String`:`:class:%- [@(0.0.255)3 class][3 _][*3 String][3 _:_][*@3;3 Moveable][@(0.0.255)3 <][*3 S
+tring>][3 , ][@(0.0.255)3 public ][_^topic`:`/`/Core`/src`/String`_en`-us`#AString`:`:class^3 A
+String][@(0.0.255)3 <][3 String0][@(0.0.255)3 >][3 _]&]
+[s9; [* String ]is a value class that contains an array of characters 
 (or bytes). It is designed to have fast copy operations. The 
-array of characters is zero terminated. String provides non`-mutable 
-access to the array of characters. String can store 8 bit encoded 
+array of characters is zero terminated. [* String ]provides non`-mutable 
+access to the array of characters. [* String ]can store 8 bit encoded 
 string or an UTF`-8 encoded string. For UTF`-8 strings, however, 
-String works with raw 8 bit values `- there are not automatic 
+[* String ]works with raw 8 bit values `- there are not automatic 
 conversions performed e.g. in operator`[`]. If you need to access 
 individual UTF`-8 characters, the best practice in most cases 
-is to convert it to WString (and eventually back after processing).&]
-[s9; String is also often used to store raw binary data.&]
-[s9; WString is similar to String, but it uses 32 bit encoding. String 
-and WString share a number of common functions through the AString 
-interface.&]
+is to convert it to [* WString ](and eventually back after processing).&]
+[s9; [* String ]is also often used to store raw binary data.&]
+[s9; WString is similar to [* String], but it uses 32 bit encoding. 
+[* String ]and [* WString ]share a number of common functions through 
+the [* AString ]interface.&]
+[s9; In the context of class declarations, [* String0 ]acts as a methods 
+provider for the [* String ]class. This class is not documented 
+separately; instead, all methods provided by [* String0 ]are included 
+directly within the [* String ]documentation. To learn more about 
+the internal implementation of this class, we recommend studying 
+the library`'s source code.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -63,8 +69,8 @@ r]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [%-*@3 s].  Zero characters are included.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^byte^ byte]_
-`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
+[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2; Constructs a string equal to first [%-*@3 n] bytes of [%-*@3 s]. 
 Zero characters are included.&]
 [s3; &]
@@ -81,14 +87,14 @@ of [%-*@3 s]. Zero characters are included.&]
 to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:String`(StringBuffer`&`):%- [* String]([_^StringBuffer^ StringBuffer][@(0.0.255) `&
-]_[*@3 b])&]
+[s5;:String`:`:String`(StringBuffer`&`):%- [* String]([_^topic`:`/`/Core`/src`/StringBuffer`_en`-us`#StringBuffer`:`:class^ S
+tringBuffer][@(0.0.255) `&]_[*@3 b])&]
 [s2; Constructs a string from [%-*@3 b]. [%-*@3 b] is emptied by this 
 operation.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:String`(const Nuller`&`):%- [* String]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
-])&]
+[s5;:String`:`:String`(const Nuller`&`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2; Constructs empty [* String]. This variant is important to allow 
 assigning [* Null ]to [* String ](which is same as assigning the 
 empty [* String]).&]
@@ -113,19 +119,20 @@ for UTF`-8 where it returns a number of unicode codepoints. It
 is faster equivalent of ToWString().GetCount().&]
 [s3;%- &]
 [s4;%- &]
-[s5;:String`:`:ToWString`(`)const:%- [_^WString^ WString]_[* ToWString]()_[@(0.0.255) const
-]&]
+[s5;:String`:`:ToWString`(`)const:%- [_^topic`:`/`/Core`/src`/String`_en`-us`#WString`:`:class^ W
+String]_[* ToWString]()_[@(0.0.255) const]&]
 [s2; Convert String to WString using current default character set.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:String`:`:ToString`(`)const:%- [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[* T
-oString]()_[@(0.0.255) const]&]
+[s5;:String`:`:ToString`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Returns `*this. Useful because ToString is standard method to 
 convert concrete type to text, used by AsString template (and 
 therefore by operator << as well).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:String`:`:GetVoid`(`):%- [@(0.0.255) static] [_^String^ String]_[* GetVoid]()&]
+[s5;:String`:`:GetVoid`(`):%- [@(0.0.255) static] [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* GetVoid]()&]
 [s2; Returns special Void value. This value is same as empty string, 
 but IsVoid method returns true for it. It can be used in special 
 scenarios where client code needs to distinguish between two 
@@ -139,7 +146,8 @@ empty string if it is empty.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String0`:`:IsEqual`(const String0`&`)const:%- [@(0.0.255) bool]_[* IsEqual]([@(0.0.255) c
-onst]_[_^String0^ String][@(0.0.255) `&]_[*@3 s])_[@(0.0.255) const]&]
+onst]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ String][@(0.0.255) `&
+]_[*@3 s])_[@(0.0.255) const]&]
 [s2; Return true if string is equal to [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
@@ -152,12 +160,12 @@ are compared as unsigned integer values.&]
 [s4;%- &]
 [s5;:String0`:`:GetHashValue`(`)const:%- [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
 onst]&]
-[s2; Returns the hash value of the string.&]
+[s2; Returns the hash valueIsEqual of the string.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String0`:`:Cat`(int`):%- [@(0.0.255) void]_[* Cat]([@(0.0.255) int]_[*@3 c])&]
-[s5;:String`:`:operator`+`=`(char`):%- [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
-[* operator`+`=]([@(0.0.255) char]_[*@3 c])&]
+[s5;:String`:`:operator`+`=`(char`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`+`=]([@(0.0.255) char]_[*@3 c])&]
 [s2; Appends single character [%-*@3 c]. This operations has constant 
 amortized time (in other words, internal space used by implementation 
 grows exponentially, like with Vector or std`::vector). [%-*@3 c] 
@@ -213,40 +221,36 @@ before it has to grow) &]
 operations.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:operator`+`=`(const char`*`):%- [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
-]_[* operator`+`=]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
-[s5;:String`:`:operator`+`=`(const String`&`):%- [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
-]_[* operator`+`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:String`:`:operator`+`=`(const char`*`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`+`=]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:String`:`:operator`+`=`(const String`&`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`+`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[*@3 s])&]
 [s2; Appends a zero terminated string [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:operator`=`(const String`&`):%- [_^String^ String][@(0.0.255) `&]_[* operato
-r`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:String`:`:operator`=`(const String`&`):%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s
+])&]
 [s2; Assigns another string [%-*@3 s]. This operations is relatively 
 fast and does not depend on the length of string.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:String`:`:operator`=`(Upp`:`:String`&`&`):%- [_^Upp`:`:String^ String][@(0.0.255) `&
-]_[* operator`=]([_^Upp`:`:String^ String][@(0.0.255) `&`&]_[*@3 s])&]
+[s5;:Upp`:`:String`:`:operator`=`(Upp`:`:String`&`&`):%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`=]([_^Upp`:`:String^ String][@(0.0.255) `&`&]_[*@3 s])&]
 [s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:operator`=`(const char`*`):%- [_^String^ String][@(0.0.255) `&]_[* operator`=
-]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:String`:`:operator`=`(const char`*`):%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`=]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Assign a zero terminated string [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:operator`=`(StringBuffer`&`):%- [_^String^ String][@(0.0.255) `&]_[* operato
-r`=]([_^StringBuffer^ StringBuffer][@(0.0.255) `&]_[*@3 b])&]
+[s5;:String`:`:operator`=`(StringBuffer`&`):%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Core`/src`/StringBuffer`_en`-us`#StringBuffer`:`:class^ S
+tringBuffer][@(0.0.255) `&]_[*@3 b])&]
 [s2; Assigns the content of [* StringBuffer]. After the operation,b 
 is emptied.&]
-[s3; &]
-[s4;%- &]
-[s5;:String`:`:operator`<`<`=`(const String`&`):%- [_^String^ String][@(0.0.255) `&]_[* ope
-rator<<`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
-[s2; `"Deep`" assignment. It is equivalent of standard assignment 
-followed by [* Shrink ]operation (in other words, internal buffer 
-gets reallocated to the exact size of source).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String`:`:ToStd`(`)const:%- [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
@@ -267,8 +271,8 @@ nt]_[*@3 i])_[@(0.0.255) const]&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:String`:`:Make`(int`,Maker`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 M
-aker]>_[@(0.0.255) static]_[_^Upp`:`:String^ String]_[* Make]([@(0.0.255) int]_[*@3 alloc],
- [*@4 Maker]_[*@3 m])&]
+aker]>_[@(0.0.255) static]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* Make]([@(0.0.255) int]_[*@3 alloc], [*@4 Maker]_[*@3 m])&]
 [s2; Optimized static method for creating Strings. This method creates 
 internal buffer of at least [%-*@3 alloc] and then invokes lambda 
 [%-*@3 m] passing the char `* pointer to the internal buffer as 
@@ -280,12 +284,18 @@ be constant.&]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 WString]]}}&]
 [s3; &]
-[s1;:WString`:`:class:%- [@(0.0.255)3 class][3 _][*3 WString][3 _:_][@(0.0.255)3 public][3 _][*@3;3 M
-oveable][@(0.0.255)3 <][*3 WString][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^WString0^3 WS
-tring0][@(0.0.255)3 >][3 _>_]&]
-[s9; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
-String and WString share a number of common functions through 
-the AString interface.&]
+[s1;:WString`:`:class:%- [@(0.0.255)3 class][3 _][*3 WString][3 _:_][*@3;3 Moveable][@(0.0.255)3 <
+][*3 WString>][3 , ][@(0.0.255)3 public ][_^topic`:`/`/Core`/src`/String`_en`-us`#AString`:`:class^3 A
+String][@(0.0.255)3 <][3 WString0][@(0.0.255)3 >]&]
+[s9; [* WString ]is similar to [* String], but it uses 16 bit Ucs2 encoding. 
+[* String ]and [* WString ]share a number of common functions through 
+the [* AString ]interface.&]
+[s9; Similar to the String class declaration, [* WString0 ]acts as 
+a methods provider for the [* WString ]class. This class is not 
+documented separately; instead, all methods provided by [* WString0 
+]are included directly within the [* WString ]documentation. To 
+learn more about the internal implementation of this class, we 
+recommend studying the library`'s source code.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -351,8 +361,8 @@ to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 operation.&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(const Nuller`&`):%- [* WString]([@(0.0.255) const]_[_^Nuller^ Null
-er][@(0.0.255) `&])&]
+[s5;:WString`:`:WString`(const Nuller`&`):%- [* WString]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2; Constructs empty [* WString]. This variant is important to allow 
 assigning [* Null] to [* WString] (which is same as assigning the 
 empty [* WString]).&]

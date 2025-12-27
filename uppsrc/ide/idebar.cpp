@@ -235,11 +235,17 @@ void Ide::SearchMenu(Bar& menu)
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");
-	menu.Sub("Find debugging logs (DDUMP...)", [=](Bar& bar) {
+	menu.Sub("Find U++ debugging logs (DDUMP, DLOG...)", [=](Bar& bar) {
 		bar.Add("In workspace", [=] { FindDs(3); });
 		bar.Add("In current file", [=] { FindDs(0); });
 		bar.Add("In current file package", [=] { FindDs(1); });
 		bar.Add("In workspace files in current file nest", [=] { FindDs(2); });
+	});
+	menu.Sub("Find all U++ logs (RLOG, DLOG, LOG...)", [=](Bar& bar) {
+		bar.Add("In workspace", [=] { FindDs(3, true); });
+		bar.Add("In current file", [=] { FindDs(0, true); });
+		bar.Add("In current file package", [=] { FindDs(1, true); });
+		bar.Add("In workspace files in current file nest", [=] { FindDs(2, true); });
 	});
 	menu.Add("Find GIT conflicts", [=] { FindGitConflicts(); });
 }
@@ -314,11 +320,8 @@ void Ide::Edit(Bar& menu)
 			.Key(K_CTRL_A);
 	}
 
-	menu.MenuSeparator();
-
-	menu.Add("Find and Replace", THISBACK(SearchMenu));
-
 	if(!designer && menu.IsMenuBar()) {
+		menu.MenuSeparator();
 		InsertAdvanced(menu);
 		Reformat(menu);
 	}
@@ -517,14 +520,13 @@ void Ide::Project(Bar& menu)
 	if(!IsEditorMode()) {
 		WorkspaceWork::PackageMenu(menu);
 		menu.MenuSeparator();
-		menu.Add(AK_ORGANIZER, IdeImg::package_organizer(), THISBACK(EditWorkspace))
+		menu.AddMenu(AK_ORGANIZER, IdeImg::package_organizer(), THISBACK(EditWorkspace))
 			.Help("Package dependencies, compiler & linker options, output path override");
 		menu.Add(AK_CUSTOM, THISBACK(CustomSteps))
 			.Help("Building intermediate files using custom commands / applications");
-		if(menu.IsMenuBar())
-			menu.Add(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
-				.Help("Configuring compiler, operating system, output application parameters, custom flags");
-		menu.Separator();
+		menu.AddMenu(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
+			.Help("Configuring compiler, operating system, output application parameters, custom flags");
+		menu.MenuSeparator();
 		menu.AddMenu(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");
 		menu.AddMenu(AK_TRIMPORT, IdeImg::Language(), THISBACK1(SyncT, 1))
@@ -966,21 +968,28 @@ void Ide::HelpMenu(Bar& menu)
 {
 	LTIMESTOP("HelpMenu");
 	if(!IsEditorMode()) {
-		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
+//		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 		menu.Add(editor.GetWord().GetCount(), AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	}
-	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
+	menu.AddMenu(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
 	menu.MenuSeparator();
 	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
 	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
 	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
-	menu.Separator();
+	menu.MenuSeparator();
 	OnlineSearchMenu(menu);
 	if(menu.IsMenuBar()) {
 		menu.Separator();
 		menu.Add(FileExists(GetIdeLogPath()), "View application log file", THISBACK(ViewIdeLogFile));
 		menu.Separator();
 		menu.Add("About..", IdeImg::info(), THISBACK(About));
+	}
+	else {
+		if(!toolbar_in_row) {
+			menu.GapRight();
+			menu.Separator();
+		}
+		menu.Add(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
 	}
 }
 
@@ -990,6 +999,7 @@ void Ide::MainMenu(Bar& menu)
 		.Help("Package & file functions, exports, bookmarks");
 	menu.Add("Edit", THISBACK(Edit))
 		.Help("Clipboard, find & replace, spaces / tabs conversion, scope highlighting");
+	menu.Sub("Search", [=](Bar& bar) { SearchMenu(bar); });
 	if(HasMacros())
 		menu.Add("Macro", THISBACK(MacroMenu))
 			.Help("Editor & IDE macros");
@@ -1032,6 +1042,7 @@ void Ide::MainTool(Bar& bar)
 	if(!designer)
 		bar.Separator();
 	Edit(bar);
+	bar.Separator();
 	if(debugger) {
 		DebugMenu(bar);
 		bar.Separator();
@@ -1039,10 +1050,8 @@ void Ide::MainTool(Bar& bar)
 	Project(bar);
 	if(!IsEditorMode()) {
 		BuildMenu(bar);
-		if(!debugger) {
-			bar.Separator();
+		if(!debugger)
 			DebugMenu(bar);
-		}
 		bar.Separator();
 	}
 	HelpMenu(bar);
@@ -1091,4 +1100,25 @@ void Ide::SetMenuBar()
 void Ide::SetToolBar()
 {
 	toolbar.Set(THISBACK(MainTool));
+}
+
+void Ide::EditorMenu(Bar& bar)
+{
+	bar.Sub("Assist", [=](Bar& bar) { AssistMenu(bar); });
+	Reformat(bar);
+	InsertAdvanced(bar);
+//	bar.Add("Find and Replace", THISBACK(SearchMenu));
+	bar.MenuSeparator();
+	OnlineSearchMenu(bar);
+    bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
+            "Compare with clipboard..", [=]() {
+        DiffDlg& dlg = CreateNewWindow<DiffDlg>();
+        dlg.diff.left.RemoveFrame(dlg.p);
+        dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
+                                                               : editor.Get());
+		dlg.Title("Compare with clipboard");
+        dlg.OpenMain();
+    });
+	bar.MenuSeparator();
+	editor.StdBar(bar);
 }

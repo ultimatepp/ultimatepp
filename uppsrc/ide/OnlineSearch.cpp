@@ -208,6 +208,11 @@ void WebSearchTab::Save()
 
 void Ide::OnlineSearchMenu(Bar& menu)
 {
+	OnlineSearchMenu(menu, Nvl(editor.GetSelection(), editor.GetWord()), true);
+}
+
+void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
+{
 	static Time search_engines_tm = Null;
 	static Value search_engines;
 	static Vector<Image> search_icon;
@@ -225,11 +230,11 @@ void Ide::OnlineSearchMenu(Bar& menu)
 		}
 	}
 	
-	bool b = editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
+	bool b = what.GetCount(); // editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
 
 	auto OnlineSearch = [=](const String& url) {
 		String h = url;
-		h.Replace("%s", UrlEncode(Nvl(editor.GetSelection(), editor.GetWord())));
+		h.Replace("%s", UrlEncode(what));
 		LaunchWebBrowser(h);
 	};
 	
@@ -258,10 +263,18 @@ void Ide::OnlineSearchMenu(Bar& menu)
 
 	using namespace IdeKeys;
 
-	menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()), [=] { OnlineSearch(uri); }).Key(AK_GOOGLE);
-	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [=] {
-		OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
-	});
+	{
+		auto& x = menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()), [=] { OnlineSearch(uri); });
+		if(accel)
+			x.Key(AK_GOOGLE);
+	}
+	{
+		auto& x = menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [=] {
+			OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
+		});
+		if(accel)
+			x.Key(AK_GOOGLEUPP);
+	}
 
 	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)
 		return;

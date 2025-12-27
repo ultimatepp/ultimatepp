@@ -339,7 +339,7 @@ const Button::Style *Button::St() const
 	return st;
 }
 
-void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
+void Button::PaintButton(Ctrl *ctrl, Draw& w, const Rect& r, const Button::Style& st, int visualstate, bool focus,
                          const String& label, Font font, const Image& img,
                          bool monoimg, int accesskey, bool visibleaccesskeys, bool disabled)
 {
@@ -355,7 +355,7 @@ void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int vi
 		dl.accesskey = accesskey;
 	if(monoimg)
 		dl.lcolor = SColorText;
-	ChPaint(w, r, st.look[visualstate]);
+	ChPaint(ctrl, w, r, st.look[visualstate]);
 	dl.ink = st.textcolor[visualstate];
 	if(monoimg)
 		dl.lcolor = st.monocolor[visualstate];
@@ -368,7 +368,7 @@ void Button::PaintButton(Draw& w, const Rect& r, const Button::Style& st, int vi
 
 void Button::Paint(Draw& w)
 {
-	PaintButton(w, GetSize(), *St(), GetVisualState(), HasFocus(),
+	PaintButton(this, w, GetSize(), *St(), GetVisualState(), HasFocus(),
 	            label, font, img,
 	            monoimg, accesskey, VisibleAccessKeys(), !IsShowEnabled());
 }
@@ -748,11 +748,10 @@ void  ButtonOption::Paint(Draw& w) {
 	if(VisibleAccessKeys() && IsEnabled())
 		dl.accesskey = accesskey;
 	int i = !IsShowEnabled() ? CTRL_DISABLED :
-	         push ? CTRL_PRESSED :
+	         push || option ? CTRL_PRESSED :
 	         HasMouseIn() || HasFocus() ? CTRL_HOT :
 	         CTRL_NORMAL;
-	if(option) i = CTRL_PRESSED;
-	ChPaint(w, sz, style->look[i]);
+	ChPaint(this, w, sz, style->look[i]);
 	dl.ink = style->textcolor[i];
 	dl.Paint(w, 3, 3, sz.cx - 6, sz.cy - 6, true);
 	if(HasFocus() && style->drawfocus)

@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)  //  DLOG(x)
 
 namespace Upp {
 
@@ -17,6 +17,7 @@ void Stroker::Init(double width, double miterlimit, double tolerance, int _linec
 	qmiter *= qmiter;
 	fid = acos(1 - tolerance / w2);
 	p0 = p1 = p2 = Null;
+	first = Null;
 	lines = 0;
 }
 
@@ -24,7 +25,7 @@ void Stroker::Move(const Pointf& p)
 {
 	LLOG("Stroker::Move " << p);
 	Finish();
-	p1 = p;
+	first = p1 = p;
 	p0 = p2 = Null;
 }
 
@@ -56,7 +57,11 @@ void Stroker::Line(const Pointf& p3)
 		Move(p3);
 		return;
 	}
-	if(IsNull(p2)) {
+
+	Pointf v2 = p3 - p2;
+	double l = Length(v2);
+
+	if(IsNull(p2) || l < 1e-15) {
 		Pointf v = p3 - p1;
 		double l = Length(v);
 		if(l < 1e-8) // lower precision to accomodate Arc precision issue
@@ -76,10 +81,6 @@ void Stroker::Line(const Pointf& p3)
 		return;
 	}
 
-	Pointf v2 = p3 - p2;
-	double l = Length(v2);
-	if(l < 1e-15)
-		return;
 	Pointf o2 = Orthogonal(v2) * w2 / l;
 	Pointf a2 = p2 + o2;
 	Pointf b2 = p2 - o2;
@@ -155,7 +156,7 @@ void Stroker::Finish()
 {
 	if(IsNull(p1) || IsNull(p2) || IsNull(p0))
 		return;
-	LLOG("-- Finish " << p1 << " " << p2 << ", lines " << lines);
+	LLOG("-- Finish " << p1 << " to " << p2 << ", lines " << lines);
 	if(lines == 1 && !IsNull(preclip) && PreClipped(p1, p2)) { // this is mostly intended to preclip dasher segments
 		LLOG("FINISH PRECLIPPED " << p1 << " - " << p2);
 		lines = 0;
@@ -168,10 +169,12 @@ void Stroker::Finish()
 		PutLine(a1 + v1);
 		PutMove(b1 + v1);
 		PutLine(b1);
-		Cap(p0, v0, o0, b0, a0);
-		Cap(p2, -v1, -o1, a1 + v1, b1 + v1);
+		if(p2 != first) {
+			Cap(p0, v0, o0, b0, a0);
+			Cap(p2, -v1, -o1, a1 + v1, b1 + v1);
+		}
 	}
-	p0 = p1 = p2 = Null;
+	first = p0 = p1 = p2 = Null;
 	lines = 0;
 	LLOG("* done");
 }

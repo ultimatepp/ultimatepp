@@ -64,12 +64,13 @@ void MacroManagerWindow::InitButtons()
 	close.Close();
 	
 	close              << [=] { Break(); };
-	help               << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$MacroManager_en-us.html"); };
 	editLabel          << [=] { OnEditFile(); };
 	exportLabel        << [=] { OnExport(globalTree.GetCursor()); };
 	newGlobalLabel     << [=] { OnNewMacroFile(); };
 	importGlobalsLabel << [=] { OnImport(); };
 	exportGlobalsLabel << [=] { OnExport(0); };
+	
+	IdeHelpButton(help, "MacroManager");
 	
 	editLabel.Tip(t_("Edit currently selected macro inside TheIde.."));
 	exportLabel.Tip(t_("Export selected macro file.."));

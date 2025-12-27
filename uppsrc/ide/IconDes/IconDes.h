@@ -124,14 +124,15 @@ struct IconDraw : DDARasterizer {
 
 struct IconDes : public IdeDesigner, public Ctrl {
 public: // IdeDesigner
-	virtual String GetFileName() const;
-	virtual void   Save();
-	virtual void   SaveEditPos();
-	virtual void   RestoreEditPos();
-	virtual void   EditMenu(Bar& menu);
-	virtual Ctrl&  DesignerCtrl()             { return *this; }
+	String GetFileName() const override;
+	void   Save() override;
+	void   SaveEditPos() override;
+	void   RestoreEditPos() override;
+	void   EditMenu(Bar& menu) override;
+	Ctrl&  DesignerCtrl() override                { return *this; }
+	String HelpLink() const override;
 
-	virtual void   Serialize(Stream& s);
+	void   Serialize(Stream& s) override;
 
 	int     format = 0;
 	String  filename;
@@ -147,18 +148,18 @@ public: // IdeDesigner
 	void   FindId(const String& id);
 
 public:
-	virtual void  Layout();
-	virtual void  Paint(Draw& w);
-	virtual void  LeftDown(Point p, dword keyflags);
-	virtual void  MouseMove(Point p, dword keyflags);
-	virtual void  MouseEnter(Point, dword)                 { SyncStatus(); }
-	virtual void  MouseLeave()                             { SyncStatus(); }
-	virtual void  LeftUp(Point p, dword keyflags);
-	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
-	virtual void  HorzMouseWheel(Point pt, int zdelta, dword keyflags);
-	virtual void  RightDown(Point p, dword keyflags);
-	virtual bool  Key(dword key, int count);
-	virtual Image CursorImage(Point p, dword keyflags);
+	void  Layout() override;
+	void  Paint(Draw& w) override;
+	void  LeftDown(Point p, dword keyflags) override;
+	void  MouseMove(Point p, dword keyflags) override;
+	void  MouseEnter(Point, dword) override                { SyncStatus(); }
+	void  MouseLeave() override                            { SyncStatus(); }
+	void  LeftUp(Point p, dword keyflags) override;
+	void  MouseWheel(Point p, int zdelta, dword keyflags) override;
+	void  HorzMouseWheel(Point pt, int zdelta, dword keyflags) override;
+	void  RightDown(Point p, dword keyflags) override;
+	bool  Key(dword key, int count) override;
+	Image CursorImage(Point p, dword keyflags) override;
 
 private:
 	struct Slot {
@@ -197,6 +198,8 @@ private:
 	bool         show_grid2 = true;
 	bool         antialiased = false;
 	int          fill_type = 0;
+	
+	static RGBA  initial_rgba;
 
 	ScrollBars   sb;
 	ToolBar      toolbar;
@@ -361,6 +364,7 @@ private:
 	void  Colors();
 	void  Smoothen();
 	void  RemoveAlpha();
+	void  RestoreAlpha();
 
 	void  Search();
 	void  GoTo(int q);
@@ -434,6 +438,7 @@ public:
 	typedef IconDes CLASSNAME;
 
 	IconDes();
+	~IconDes();
 };
 
 struct ImlImage : ImageIml {

@@ -372,7 +372,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.type = type;
 	e.value = value;
 	GdkModifierType mod;
-	e.mousepos = prev_mouse_pos;
+	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
 		prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
@@ -402,7 +402,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 				axes = ((GdkEventButton *)event)->axes;
 				break;
 			case GDK_MOTION_NOTIFY:{
-				GdkEventMotion *mevent = (GdkEventMotion *)event;
 				axes = ((GdkEventMotion *)event)->axes;
 				break;
 			}
@@ -596,7 +595,7 @@ void Ctrl::Proc()
 
 	for(Ctrl *q : GetTopCtrls()) {
 		q->WndRectsSync();
-		q->SyncWndRect(GetWndScreenRect());
+		q->SyncWndRect(q->GetWndScreenRect());
 	}
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:

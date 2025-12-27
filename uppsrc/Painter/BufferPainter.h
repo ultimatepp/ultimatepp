@@ -240,10 +240,10 @@ private:
 		OnPathTarget        onpathtarget;
 		LinearPathConsumer *g;
 		double              tolerance;
+		double              stroke_width;
 		bool                evenodd;
 		bool                regular;
 		bool                preclipped;
-
 
 		PathJob(Rasterizer& rasterizer, double width, const PathInfo *path_info,
 		        const SimpleAttr& attr, const Rectf& preclip, bool regular);
@@ -299,7 +299,8 @@ private:
 	void             ColorStop0(Attr& a, double pos, const RGBA& color);
 	void             FinishMask();
 
-	static void RenderPathSegments(LinearPathConsumer *g, const Vector<byte>& path, const SimpleAttr *attr, double tolerance);
+	static void RenderPathSegments(LinearPathConsumer *g, const Vector<byte>& path, const SimpleAttr *attr,
+	                               double tolerance, double stroke_width);
 
 	void FinishPathJob();
 	void FinishFillJob()                                       { fill_job.Finish(); }

@@ -326,6 +326,7 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 	}
 	bool param = false;
 	bool was_type = false;
+	bool was_colon = false;
 	int pari = -1;
 	int par = 0;
 	int lastidi = -1;
@@ -340,12 +341,15 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 
 		auto Pname = [&] {
 			if(lastidi >= 0) {
-				if(was_type)
+				if(was_type && !was_colon)
 					part[lastidi].type = ITEM_PNAME;
 				lastidi = -1;
 			}
 			was_type = false;
 		};
+		
+		if(*s == ':')
+			was_colon = true;
 
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
@@ -390,6 +394,9 @@ Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, in
 				}
 				else
 				if(param) {
+					if(lastidi >= 0 && par == 0 && was_colon)
+						was_colon = false;
+					else
 					if(lastidi >= 0 && par == 0)
 						was_type = true;
 					lastidi = part.GetCount() - 1; // can be a parameter name

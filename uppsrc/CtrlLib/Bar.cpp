@@ -225,6 +225,8 @@ Bar::Item& Bar::Item::RightLabel(const char *text)
 }
 
 Bar::Item& Bar::Item::Key(KeyInfo& (*key)()) {
+	if(!key)
+		return *this;
 	KeyInfo& k = (*key)();
 	return Key(k.key[0]).Key(k.key[1]).Key(k.key[2]).Key(k.key[3]);
 }

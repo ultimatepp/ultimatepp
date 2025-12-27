@@ -195,7 +195,7 @@ UppHubDlg::UppHubDlg()
 	
 	update << [=] { Update(); };
 	
-	help << [=] { LaunchWebBrowser("https://www.ultimatepp.org/app$ide$UppHub_en-us.html"); };
+	IdeHelpButton(help, "UppHub");
 	
 	search.NullText("Search (Ctrl+K)");
 	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });

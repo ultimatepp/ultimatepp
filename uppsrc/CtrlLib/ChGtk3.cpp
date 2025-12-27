@@ -342,6 +342,8 @@ void ChHostSkin()
 	for(int i = 0; i < 6; i++)
 		CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 	
+	Image cancel_image;
+	
 	{
 		Gtk_New("button");
 		Color ink;
@@ -364,7 +366,7 @@ void ChHostSkin()
 				FixButton(button[i]);
 			}
 			s.ok = Gtk_IconAdjusted("gtk-ok", DPI(16));
-			s.cancel = Gtk_IconAdjusted("gtk-cancel", DPI(16));
+			s.cancel = cancel_image = Gtk_IconAdjusted("gtk-cancel", DPI(16));
 			s.exit = Gtk_IconAdjusted("gtk-quit", DPI(16));
 		}
 		
@@ -397,10 +399,24 @@ void ChHostSkin()
 	}
 	
 	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
-	NoButtonImage_Write(Gtk_IconAdjusted("gtk-no", DPI(16)));
+	Image no_image = Gtk_IconAdjusted("gtk-no", DPI(16));
+	if(Difference(no_image, cancel_image) > 20) // it is ugly when No and Cancel buttons have the same icon
+		NoButtonImage_Write(no_image);
 	AbortButtonImage_Write(Gtk_IconAdjusted("gtk-stop", DPI(16)));
 	RetryButtonImage_Write(Gtk_IconAdjusted("gtk-refresh", DPI(16)));
 
+	for(int i = 0; i < 4; i++) {
+		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+		s.arrowsize = 0;
+		s.thumbmin = DPI(24);
+		int g = IsDarkTheme() ? get_i(i, 80, 100, 70, 70)
+		                      : get_i(i, 192, 200, 128, 128);
+		s.vthumb[i] = MakeRoundScrollbarThumb(DPI(16), DPI(4), GrayColor(g));
+		s.hthumb[i] = RotateClockwise(s.vthumb[i]);
+		s.hupper[i] = s.hlower[i] = s.vupper[i] = s.vlower[i] = IsDarkTheme() ? Color(20, 20, 20) : Color(240, 240, 240);
+	}
+
+#if 0 // let us play it safe....
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		gboolean stepper;
@@ -439,7 +455,7 @@ void ChHostSkin()
 			s.vthumb[status] = WithHotSpot(RotateClockwise(thumb), CH_SCROLLBAR_IMAGE, 0);
 		}
 	}
-	
+#endif
 	{
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;

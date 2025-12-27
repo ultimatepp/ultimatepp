@@ -477,12 +477,12 @@ void AppMain___()
 					ide.Run();
 				ide.SaveConfigOnTime();
 				ide.SaveLastMain();
-				ide.DeleteWindows();
 				ide.Close();
 			}
 		}
 		while(IdeAgain);
 
+		ide.DeleteWindows();
 		DelTemps();
 		DeletePCHFiles();
 		ReduceCfgCache();

@@ -48,6 +48,7 @@ struct VirtualsDisplay : Display {
 
 struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 	ArrayMap<String, VirtualMethod> virtuals;
+	Index<String> unneeded_qualifications;
 
 	virtual bool Key(dword key, int count)
 	{
@@ -87,13 +88,59 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	typedef VirtualsDlg CLASSNAME;
 
-	VirtualsDlg(const String& nest, const String& local_bases) {
-		Index<String> done;
+	VirtualsDlg(const String& nest, const String& local_bases, const Index<String>& namespaces) {
+		Index<String> classes;
 		if(local_bases.GetCount())
 			for(String b : Split(local_bases, ';'))
-				GatherVirtuals(virtuals, b, done, false);
+				GatherVirtuals(virtuals, b, classes, false);
 		else
-			GatherVirtuals(virtuals, nest, done, true);
+			GatherVirtuals(virtuals, nest, classes, true);
+
+		for(String cls : classes) {
+			Vector<String> split = Split(cls, ':');
+			if(split.GetCount()) {
+				split.Drop(); // remove type name (e.g. [Upp, TopWindow] -> [Upp])
+				String qual;
+				for(String s : split) {
+					MergeWith(qual, "::", s);
+					if(namespaces.Find(qual) < 0) // e.g. if base is Upp::TopWindow, we will not ignore Upp::
+						unneeded_qualifications.FindAdd(qual);
+				}
+			}
+		}
+		
+		for(VirtualMethod& m : virtuals) { // remove unneeded qualifications
+			String r;
+			const char *s = m.pretty;
+			const char *b = s;
+			while(*s) {
+				if(iscib(*s)) {
+					r.Cat(b, s);
+					b = s;
+					try {
+						CParser p(s);
+						String qual;
+						while(!p.IsEof()) {
+							qual = p.ReadId();
+							if(!p.Char2(':', ':') || !p.IsId())
+								break;
+							if(unneeded_qualifications.Find(qual) >= 0)
+								b = p.GetPtr(); // skip uneeded qualification
+							qual << "::";
+						}
+						s = p.GetPtr();
+					}
+					catch(CParser::Error) {
+						if(*s) s++; // should not happen, but if it does, move on
+					}
+				}
+				else
+					s++;
+			}
+			r.Cat(b, s);
+			m.pretty = r;
+		}
+	
 		CtrlLayoutOKCancel(*this, "Virtual methods");
 		list.AddColumn("Virtual function").SetDisplay(Single<VirtualsDisplay>());
 		list.AddColumn("Defined in");
@@ -119,11 +166,12 @@ INITBLOCK
 	RegisterGlobalConfig("VirtualsDlg");
 }
 
-String AssistEditor::FindCurrentNest(String *local_bases)
+AnnotationItem AssistEditor::FindCurrentNest(String *local_bases)
 {
+	AnnotationItem cm;
 	if(!WaitCurrentFile())
-		return Null;
-	AnnotationItem cm = FindCurrentAnnotation();
+		return cm;
+	cm = FindCurrentAnnotation();
 	int li = GetCursorLine();
 	if(IsFunction(cm.kind) && local_bases) { // do local classes
 		for(const AnnotationItem& lm : locals) {
@@ -133,24 +181,65 @@ String AssistEditor::FindCurrentNest(String *local_bases)
 				break;
 		}
 		*local_bases = cm.bases;
-		return cm.nest;
+		return cm;
 	}
 
-	if(IsNull(cm.nest)) {
+	if(IsNull(cm.nest))
 		Exclamation("No class can be associated with current position.");
-		return Null;
-	}
-	return cm.nest;
+	return cm;
 }
 
 void AssistEditor::Virtuals()
 {
 	SortByKey(CodeIndex());
 	String local_bases;
-	String nest = FindCurrentNest(&local_bases);
-	if(IsNull(nest))
+	AnnotationItem cm = FindCurrentNest(&local_bases);
+	if(IsNull(cm.nest))
 		return;
-	VirtualsDlg dlg(nest, local_bases);
+
+	Point pos = GetCurrentPos();
+	AnnotationItem q; // class declaration to gather explicit namespaces in bases
+	for(const AnnotationItem& m : annotations) {
+		if(m.pos.y > pos.y)
+			break;
+		if(IsStruct(m.kind))
+			q = m;
+	}
+	
+
+	Index<String> namespaces; // These namespaces cannot be ignored
+
+	try {
+		int line = q.pos.y;
+		while(line < GetLineCount()) {
+			String s = GetUtf8Line(line++);
+			CParser p(s);
+			String prospective_namespace;
+			bool done = false;
+			while(!p.IsEof()) {
+				if(p.IsId())
+					prospective_namespace << p.ReadId();
+				else
+				if(p.Char2(':', ':')) {
+					if(prospective_namespace.GetCount() > 2)
+						namespaces.Add(prospective_namespace);
+					prospective_namespace << "::";
+				}
+				else {
+					prospective_namespace.Clear();
+					if(p.Char('{') || p.Char(';')) {
+						done = true;
+						break;
+					}
+					p.Skip();
+				}
+			}
+			if(done)
+				break;
+		}
+	}
+	catch(CParser::Error()) {}
+	VirtualsDlg dlg(cm.nest, local_bases, namespaces);
 	LoadFromGlobal(dlg, "VirtualsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "VirtualsDlg");
@@ -171,8 +260,47 @@ void AssistEditor::Virtuals()
 			if(dlg.add_override)
 				text << " override";
 			text << ";\r\n";
-			ctext << MakeDefinition(m, nest + "::");
+			ctext << MakeDefinition(m, cm.nest + "::");
 		}
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);
 }
+
+void AssistEditor::ConvertToOverrides()
+{
+	Make([](String& out) {
+		String r;
+		const char *s = out;
+		bool virt = false;
+		int lvl = 0;
+		while(*s) {
+			const char *b = s;
+			while(iscid(*s))
+				s++;
+			int len = int(s - b);
+			if(len == 7 && memcmp(b, "virtual", 7) == 0) {
+				virt = true;
+				lvl = 0;
+				while(*s == ' ' || *s == '\t')
+					s++;
+			}
+			else {
+				r.Cat(b, s);
+				if(*s == '(')
+					lvl++;
+				r.Cat(*s);
+				if(*s == ')') {
+					lvl = max(lvl - 1, 0);
+					if(lvl == 0 && virt) {
+						r << " override";
+						virt = false;
+					}
+				}
+				s++;
+			}
+		}
+		
+		out = r;
+	});
+}
+

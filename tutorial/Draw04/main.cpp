@@ -23,5 +23,8 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyApp().Sizeable().Run();
+	MyApp app;
+	app.Title("DrawingDraw").Zoomable().Sizeable();
+	app.SetRect(0, 0, 380, 360);
+	app.Run();
 }

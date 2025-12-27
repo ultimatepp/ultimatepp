@@ -168,7 +168,7 @@ public:
 };
 
 class String0 {
-	enum { // 
+	enum { //
 		KIND = 14,    // chr[KIND] is String tier flag, 0 - small, 31 - medium, 32..254 ref alloc, 255 - read alloc from Ref
 		SLEN = 15,    // chr[SLEN] stores the length of small tier strings (up to 14 bytes)
 		LLEN = 2,     // chr[LLEN] stores the length of medium (< 32) and large tier strings
@@ -825,7 +825,6 @@ public:
 	WString& operator=(const WString& s)                    { if(this != &s) { WString0::FFree(); WString0::Set0(s); } return *this; }
 	WString& operator=(WString&& s)                         { if(this != &s) { WString0::FFree(); WString0::Pick0(pick(s)); } return *this; }
 	WString& operator=(WStringBuffer& b)                    { *this = WString(b); return *this; }
-//	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                         { *this = WString(Begin(), GetLength()); }
 

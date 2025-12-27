@@ -39,16 +39,16 @@ String AsSvgPath(Font font, int c, Sizef& sz) {
 }
 
 struct SelectSymbolDlg : WithSelectSymbolLayout<TopWindow> {
-	Vector<Tuple<Sizef, String>> svg;
+	Vector<Tuple<Sizef, String, Font, int>> svg;
 	int result;
 	
-	SelectSymbolDlg();
+	SelectSymbolDlg(bool show_variants = true);
 	
 	void Sync();
 	void Variants(int codepoint);
 };
 
-SelectSymbolDlg::SelectSymbolDlg()
+SelectSymbolDlg::SelectSymbolDlg(bool show_variants)
 {
 	CtrlLayout(*this, "Insert symbol");
 	search.NullText(t_("Search"));
@@ -57,12 +57,22 @@ SelectSymbolDlg::SelectSymbolDlg()
 	search ^= group ^= [=] { Sync(); };
 
 	symbols.NoHyperlinkDecoration();
-	symbols.WhenLink << [=](const String& s) { Variants(Atoi(s)); };
 	symbols.MonoGlyphs();
 
-	result = -1;
-	variants.NoHyperlinkDecoration();
-	variants.WhenLink << [=](const String& s) { result = Atoi(s); Break(IDOK); };
+	if(show_variants) {
+		symbols.WhenLink << [=](const String& s) { Variants(Atoi(s)); };
+		result = -1;
+		variants.NoHyperlinkDecoration();
+		variants.WhenLink << [=](const String& s) { result = Atoi(s); Break(IDOK); };
+	}
+	else {
+		variants.Hide();
+		Logc vy = variants.GetPos().y;
+		Logc y = symbols.GetPos().y;
+		y.SetB(vy.GetA() + vy.GetB() - y.GetA());
+		symbols.SetPosY(y);
+		symbols.WhenLink << [=](const String& s) { result = Atoi(s); Break(IDOK); };
+	}
 }
 
 void SelectSymbolDlg::Sync()
@@ -101,7 +111,7 @@ void SelectSymbolDlg::Variants(int codepoint)
 				if(h.Find(img) < 0) {
 					qtf << "[^" << h.GetCount() << "^ " << " " << AsQTF(CreatePNGObject(img, sz.cx, sz.cy)) << "], ";
 					h.Add(img);
-					svg.Add(MakeTuple(szf0, svgpath));
+					svg.Add(MakeTuple(szf0, svgpath, fnt, codepoint));
 				}
 			}
 		}
@@ -109,14 +119,35 @@ void SelectSymbolDlg::Variants(int codepoint)
 	variants.SetQTF(qtf);
 }
 
-String SelectFontSymbolSvg(Sizef& sz)
+int SelectSpecialSymbol()
+{
+	SelectSymbolDlg dlg(false);
+	dlg.Sync();
+	if(dlg.Execute() != IDOK)
+		return Null;
+	return dlg.result;
+}
+
+static Tuple<Sizef, String, Font, int> sSelectSymbol()
 {
 	SelectSymbolDlg dlg;
 	dlg.Sync();
 	if(dlg.Execute() != IDOK || dlg.result < 0 || dlg.result >= dlg.svg.GetCount())
-		return Null;
+		return MakeTuple(Null, Null, Null, Null);
 	
-	Tuple<Sizef, String> h = dlg.svg[dlg.result];
+	return dlg.svg[dlg.result];
+}
+
+int SelectFontSymbol(Font& fnt)
+{
+	Tuple<Sizef, String, Font, int> h = sSelectSymbol();
+	fnt = h.c;
+	return h.d;
+}
+
+String SelectFontSymbolSvg(Sizef& sz)
+{
+	Tuple<Sizef, String, Font, int> h = sSelectSymbol();
 	sz = h.a;
 	return h.b;
 }

@@ -1,5 +1,4 @@
 topic "SocketWaitEvent";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "SocketWaitEvent";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 SocketWaitEvent]]}}&]
 [s3; &]
@@ -28,9 +28,9 @@ sockets for specified events.&]
 Note that SocketWaitEvent always waits for exceptions.&]
 [s3;%% &]
 [s4; &]
-[s5;:SocketWaitEvent`:`:Add`(TcpSocket`&`,dword`): [@(0.0.255) void]_[* Add]([_^TcpSocket^ T
-cpSocket][@(0.0.255) `&]_[*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
-[s2;%% Adds TcpSocket [%-*@3 s] to the list to be waited on specified 
+[s5;:SocketWaitEvent`:`:Add`(Socket`&`,dword`): [@(0.0.255) void]_[* Add]([_^topic`:`/`/Core`/src`/Socket`_en`-us`#Socket`:`:class^ S
+ocket][@(0.0.255) `&]_[*@3 s], [_^dword^ dword]_[*@3 events]_`=_WAIT`_ALL)&]
+[s2;%% Adds Socket [%-*@3 s] to the list to be waited on specified 
 [%-*@3 events]. If [%-*@3 s] is not open, it is not used but its 
 index is reserved anyway (see Get).&]
 [s3;%% &]

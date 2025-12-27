@@ -114,6 +114,18 @@ Image Downscale2x(const Image& src)
 	return Image(h);
 }
 
+Image Downscale6x(const Image& src)
+{
+	if(IsNull(src))
+		return src;
+	Size s2 = src.Get2ndSpot(); // see above...
+	Image m = DownSample2x(DownSample3x(src));
+	ImageBuffer h(m);
+	h.SetHotSpot(s2 / 6);
+	h.Set2ndSpot(src.Get2ndSpot() / 6);
+	return Image(h);
+}
+
 static bool sUHDMode;
 
 void SetUHDMode(bool b)

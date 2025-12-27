@@ -94,7 +94,7 @@ void EditorBar::Paint(Draw& w)
 					String n = AsString((i + 1) % 1000000);
 					Font fnt = editor->GetFont();
 					Size tsz = GetTextSize(n, fnt);
-					w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, SBrown());
+					w.DrawText(sz.cx - (no_annotations ? Zx(2) : Zx(4 + 12)) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, SBrown());
 				}
 				if(hi_if) {
 					Vector<IfState> nextif;
@@ -470,7 +470,8 @@ void EditorBar::SyncSize()
 		i++;
 		n /= 10;
 	}
-	int w = max(DPI(32), (line_numbers && editor ? editor->GetFont()['0'] * i : 0) + Zx(12 + 4) + annotations);
+	int w = line_numbers && editor ? editor->GetFont()['0'] * i : 0;
+	w = no_annotations ? w + Zx(2) : max(DPI(32), w + Zx(12 + 4) + annotations);
 	if(w != GetWidth())
 		Width(w);
 	Refresh();
@@ -488,13 +489,19 @@ void EditorBar::Annotations(int width)
 	SyncSize();
 }
 
+void EditorBar::NoAnnotations(bool b)
+{
+	no_annotations = b;
+	SyncSize();
+}
+
 EditorBar::EditorBar()
 {
 	editor = NULL;
 	line_numbers = false;
+	no_annotations = false;
 	bingenabled = true;
 	hilite_if_endif = true;
-	line_numbers = false;
 	annotations = 0;
 	ignored_next_edit = false;
 	next_age = 0;

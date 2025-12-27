@@ -136,6 +136,7 @@ Image Unglyph(const Image& m);
 Image VertBlend(Image img1, Image img2, int y0, int y1);
 Image HorzBlend(Image img1, Image img2, int x0, int x1);
 Image HorzSymm(Image src);
+double Difference(const Image& a, const Image& b);
 
 bool   IsSingleColor(const Image& m, const Rect& rect);
 
@@ -263,6 +264,7 @@ Image  DownSample2x(const Image& src, bool co = false);
 
 Image Upscale2x(const Image& src);
 Image Downscale2x(const Image& src);
+Image Downscale6x(const Image& src);
 
 void SetUHDMode(bool b = true);
 bool IsUHDMode();

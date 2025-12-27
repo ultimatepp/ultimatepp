@@ -216,7 +216,6 @@ void RepoDiff::Load()
 			extfile = GitCmd(repo_dir, "show " + h);
 		else
 			extfile = GitCmd(GetFileFolder(editfile), "show " + commit + ":./" + GetFileName(editfile));
-	#if 1
 		extfile.Clear();
 		StringStream ss(GitCmd(GetFileFolder(editfile), "blame -p " + GetFileName(editfile) + " " + commit));
 		VectorMap<String, TextCompareCtrl::Blame> blame;
@@ -245,7 +244,6 @@ void RepoDiff::Load()
 					b.time = Time(1970, 1, 1) + Atoi(ln);
 			}
 		}
-	#endif
 	}
 	
 	diff.Set(backup = LoadFile(editfile), extfile);

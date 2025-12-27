@@ -279,4 +279,20 @@ Image ChPartMaker::Make() const
 	return Image(ib);
 }
 
+double Difference(const Image& a, const Image& b)
+{
+	if(a.GetSize() != b.GetSize())
+		return DBL_MAX;
+	double diff = 0;
+	const RGBA *p = ~a;
+	const RGBA *e = a.end();
+	const RGBA *q = ~b;
+	while(p < e) {
+		diff += sqr(p->a - q->a) + sqr(p->r - q->r) + sqr(p->g - q->g) + sqr(p->b - q->b);
+		p++;
+		q++;
+	}
+	return sqrt(diff / a.GetLength());
+}
+
 }

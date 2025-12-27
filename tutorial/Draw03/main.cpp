@@ -42,5 +42,8 @@ struct MyApp : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyApp().Sizeable().Run();
+	MyApp app;
+	app.Title("Fonts and Font Metrics").Zoomable().Sizeable();
+	app.SetRect(0, 0, 700, 300);
+	app.Run();
 }

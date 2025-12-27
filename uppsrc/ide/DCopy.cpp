@@ -117,19 +117,44 @@ void AssistEditor::DCopy()
 				Clean(ret);
 				Clean(name);
 				Clean(params);
+				
+				if(ret.Find('~') >= 0)
+					ret.Clear();
+				ret.TrimStart("~");
+				ret.TrimStart("virtual ");
+				ret.TrimStart("static ");
+				ret.TrimStart("friend ");
+				params.TrimEnd("override");
+				params = TrimBoth(params);
+				
+				if(!m.definition) {
+					String params2;
+					const char *s = params;
+					while(*s) {
+						if(*s == '=' || s[0] == ' ' && s[1] == '=') { // skip default parameters
+							while(*s) {
+								if(*s == ',' || *s == ')') {
+									params2.Cat(*s++);
+									break;
+								}
+								s++;
+							}
+						}
+						else
+							params2.Cat(*s++);
+					}
+					params = params2;
+				}
 
 				if(ret.GetCount() && name.GetCount() && params.GetCount()) { // prefer original text
 					if(m.definition) {
 						if(IsMethod(m.kind))
 							result << '\t';
-						result << ret << ' ' << m.name << params << ";\n";
+						if(ret.GetCount())
+							result << ret << ' ';
+						result << m.name << params << ";\n";
 					}
 					else {
-						ret.TrimStart("virtual ");
-						ret.TrimStart("static ");
-						ret.TrimStart("friend ");
-						params.TrimEnd("override");
-						params = TrimBoth(params);
 						String cret;
 						if(IsMethod(m.kind)) { // attempt to qualify local classes in return value type
 							bool qualified = false;

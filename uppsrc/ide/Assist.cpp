@@ -495,7 +495,9 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 				String path = NormalizePath(theide->editfile);
 				if(path.TrimEnd(".icpp"))
 					path << ".cpp";
-				while(di < ds.GetCount() && err.GetCount() < 30) {
+				bool errors = false;
+				bool warnings = false;
+				while(di < ds.GetCount() && err.GetCount() < 500) {
 					int k = ds[di].kind;
 					bool group_valid = false;
 					auto Do = [&](const Diagnostic& d) {
@@ -520,6 +522,10 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 							return;
 
 						err.Add(pos);
+						if(IsError(d.kind))
+							errors = true;
+						if(IsWarning(d.kind))
+							warnings = true;
 
 						if(d.path == path)
 							group_valid = true;
@@ -534,7 +540,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 						err.Trim(q);
 				}
 				if(show_errors_status)
-					StatusImage(err.GetCount() ? IdeImg::CurrentErrors() : IdeImg::CurrentOK());
+					StatusImage(errors ? IdeImg::CurrentErrors() : warnings ? IdeImg::CurrentWarnings() : IdeImg::CurrentOK());
 				if(show_errors)
 					Errors(pick(err));
 			}

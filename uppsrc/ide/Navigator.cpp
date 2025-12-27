@@ -73,9 +73,26 @@ Navigator::Navigator()
 {
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);
-	list.SetLineCy(max(16, GetStdFontCy()));
+	list.SetLineCy(max(DPI(16), GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
+	list.WhenBar = [=](Bar& bar) {
+		if(!theide)
+			return;
+		int kind = KIND_NEST;
+		String name;
+		int ii = list.GetCursor();
+		if(ii >= 0 && ii < litem.GetCount()) {
+			const NavItem& m = *litem[ii];
+			kind = m.kind;
+			name = m.name;
+		}
+		bar.Add(kind != KIND_NEST, "Go to", [=] { Navigate(false); })
+		   .Key(IK_CLICK);
+		bar.Add(kind >= 0, "Usage", [=] { Navigate(true); })
+		   .Key(K_ALT|IK_CLICK);
+		theide->OnlineSearchMenu(bar, name, false);
+	};
 	
 	scope.NoHeader();
 	scope.AddColumn().AddIndex().SetDisplay(Single<ScopeDisplay>());
@@ -94,9 +111,8 @@ Navigator::Navigator()
 	dlgmode = false;
 }
 
-AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
+AnnotationItem AssistEditor::FindAnnotation(Point pos, bool allow_define)
 {
-	Point pos = GetCurrentPos();
 	AnnotationItem q;
 	bool line1st = true;
 	for(const AnnotationItem& m : annotations)
@@ -117,6 +133,11 @@ AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
 				break;
 		}
 	return q;
+}
+
+AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
+{
+	return FindAnnotation(GetCurrentPos(), allow_define);
 }
 
 void Navigator::SyncCursor()
@@ -142,7 +163,7 @@ void Navigator::SyncCursor()
 	}
 }
 
-void Navigator::Navigate()
+void Navigator::Navigate(bool usage)
 {
 	if(navigating)
 		return;
@@ -186,14 +207,12 @@ void Navigator::Navigate()
 		else
 		if(m.kind == KIND_LINE) {
 			theide->GotoPos(Null, m.pos);
-			if(m.kind == KIND_LINE) { // Go to line - restore file view
-				search.Clear();
-				Search();
-				navigating = false;
-			}
+			search.Clear(); // Go to line - restore file view
+			Search();
+			navigating = false;
 		}
 		else
-		if(GetAlt())
+		if(usage)
 			theide->Usage(m.id, m.name, m.pos);
 		else
 		if(IsNull(search)) // current file - do not cycle
@@ -203,6 +222,11 @@ void Navigator::Navigate()
 	}
 	navigating = false;
 	SyncCursor();
+}
+
+void Navigator::Navigate()
+{
+	Navigate(GetAlt());
 }
 
 void Navigator::NavigatorClick()
@@ -292,7 +316,33 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		return GetTextSize(m.pretty, StdFont().Bold()).cx;
 	}
 
-	return PaintCpp(w, r, m.kind, m.name, m.pretty, ink, focuscursor, true);
+	String pretty;
+	const char *s = m.pretty;
+	const char *b = s;
+	while(*s) { // remove qualifications Foo(Upp::Point p) -> Foo(Point p)
+		if(iscib(*s)) {
+			pretty.Cat(b, s);
+			b = s;
+			try {
+				CParser p(s);
+				while(!p.IsEof()) {
+					p.ReadId();
+					if(!p.Char2(':', ':') || !p.IsId())
+						break;
+					b = p.GetPtr(); // skip any qualification
+				}
+				s = p.GetPtr();
+			}
+			catch(CParser::Error) {
+				if(*s) s++; // should not happen, but if it does, move on
+			}
+		}
+		else
+			s++;
+	}
+	pretty.Cat(b, s);
+
+	return PaintCpp(w, r, m.kind, m.name, pretty, ink, focuscursor, true);
 }
 
 void Navigator::NavigatorDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
@@ -382,11 +432,11 @@ void Navigator::Search()
 	int all_count = 0;
 	String usearch_nest = ToUpper(search_nest);
 	String usearch_name = ToUpper(search_name);
-	if(!IsNull(lineno)) {
+	if(!IsNull(lineno) && lineno > 0) {
 		NavItem& m = nitem.Add();
 		m.pretty = "Go to line " + AsString(lineno);
 		m.kind = KIND_LINE;
-		m.pos.y = lineno;
+		m.pos.y = lineno - 1;
 		m.pos.x = 0;
 	}
 	else

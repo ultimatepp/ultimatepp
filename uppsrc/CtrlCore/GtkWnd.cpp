@@ -204,6 +204,8 @@ void Ctrl::WndRectsSync()
 
 		utop->client_rect = GetScreenRect(utop->client);
 		utop->screen_rect = utop->client_rect;
+		DDUMP(Upp::Name(this));
+		DDUMP(utop->screen_rect);
 		TopWindow *tw = dynamic_cast<TopWindow *>(this);
 		if(tw) {
 			if(tw->custom_bar_frame) {

@@ -156,7 +156,7 @@ TemplateDlg::TemplateDlg()
 	ok.Disable();
 	package <<= THISBACK(EnableCreate);
 	package.SetFilter(FilterPackageName);
-	Icon(IdeImg::CreatePackage());
+	Icon(IdeImg::CreatePackage(), IdeImg::CreatePackageLarge());
 }
 
 TemplateDlg::~TemplateDlg() {}

@@ -299,11 +299,8 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 			clist.FindSetCursor(p);
 		}
 	};
-
-	help << [] {
-		LaunchWebBrowser(
-			"https://www.ultimatepp.org/app$ide$PackagesAssembliesAndNests$en-us.html");
-	};
+	
+	IdeHelpButton(help, "PackagesAssembliesAndNests");
 
 	String exf = VarFilePath("[external]");
 	if(!FileExists(exf))

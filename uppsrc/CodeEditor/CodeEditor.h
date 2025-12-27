@@ -72,6 +72,7 @@ private:
 	bool             bingenabled;
 	bool             hilite_if_endif;
 	bool             line_numbers;
+	bool             no_annotations;
 	int              annotations;
 	bool             ignored_next_edit;
 	int              next_age;
@@ -131,6 +132,7 @@ public:
 	void     HiliteIfEndif(bool b)           { hilite_if_endif = b; Refresh(); }
 	void     LineNumbers(bool b);
 	void     Annotations(int width);
+	void     NoAnnotations(bool b);
 	
 	bool     IsHiliteIfEndif() const         { return hilite_if_endif; }
 	
@@ -373,7 +375,6 @@ protected:
 	void   ToggleLineComments(bool usestars = false);
 	void   ToggleStarComments();
 	void   Enclose(const char *c1, const char *c2, int l = -1, int h = -1);
-	void   Make(Event<String&> op);
 	void   TabsOrSpaces(String& out, bool maketabs);
 	void   LineEnds(String& out);
 
@@ -441,7 +442,6 @@ public:
 
 	void   MakeTabsOrSpaces(bool tabs);
 	void   MakeLineEnds();
-	void   ConvertToOverrides();
 
 	void   CopyWord();
 	void   SwapChars();
@@ -480,6 +480,8 @@ public:
 	void   TabRight();
 	void   TabLeft();
 	void   SwapUpDown(bool up);
+
+	void   Make(Event<String&> op);
 
 	void    CheckEdited(bool e = true)                { check_edited = e; }
 	bool    GetCheckEdited()                          { return check_edited; }
@@ -551,6 +553,8 @@ public:
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 	void     BarColor(Color c)                        { bar.Background(c); }
 	void     BarText(const String& text, Color c)     { bar.Text(text, c); }
+	
+	void     NoAnnotations(bool b = true)             { bar.NoAnnotations(b); }
 
 	void     Errors(Vector<Point>&& errs);
 	
@@ -578,7 +582,7 @@ public:
 	void            SetFindReplaceData(const FindReplaceData& d);
 
 	void     SyncTip();
-	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
+	void     CloseTip();
 
 	typedef CodeEditor CLASSNAME;
 

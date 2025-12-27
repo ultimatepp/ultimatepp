@@ -437,7 +437,7 @@ void Ide::DoDisplay()
 		display_main.Set("[g$Y  [* " + m + " ");
 	}
 	else
-		display_main.Set("[g$Y  [@b \1" + GetVarsName() + "\1]: [* " + main + " ");
+		display_main.Set("[g$Y  [@b \1" + GetVarsName() + "\1]: [* \1" + main + "\1 ");
 }
 
 void SetupError(ArrayCtrl& error, const char *s)

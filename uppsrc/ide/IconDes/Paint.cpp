@@ -18,6 +18,8 @@ void IconShow::Paint(Draw& w)
 	Size isz = msz;
 	int  gap = DPI(8);
 	double fits = msz.cx * msz.cy < 20000;
+
+
 	if(fits) {
 		if(show_downscaled) {
 			isz.cx += (isz.cx + 1) / 2 + gap;
@@ -26,7 +28,9 @@ void IconShow::Paint(Draw& w)
 		if(show_synthetics) {
 			if(flags & IML_IMAGE_FLAG_UHD) {
 				isz.cx += isz.cx + gap;
-				isz.cy += isz.cy + (isz.cy + 1 / 2) + 2 * gap;
+				isz.cy += (isz.cy + 1) / 2 + gap;
+				if(IsUHDMode())
+					isz.cy += msz.cy + gap;
 			}
 			else {
 				isz.cx += 3 * isz.cx + gap;
@@ -34,6 +38,7 @@ void IconShow::Paint(Draw& w)
 			}
 		}
 	}
+
 	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
 	int ncx = sz.cx / n;
 	Image m2, m3;
@@ -259,14 +264,24 @@ void IconDes::Paint(Draw& w)
 		             Color(200, 200, 255), 3);
 
 	if(magnify > 8 || IsHotSpot()) {
-		auto PaintHotSpot = [&](Point hotspot, Color c) {
-			if(hotspot.x > 0 || hotspot.y > 0 || tool == &IconDes::HotSpotTool) {
-				hotspot = (hotspot - spos) * magnify;
-				DrawFatFrame(w, hotspot.x, hotspot.y, magnify + 1, magnify + 1, c, max(DPI(1), 1 + magnify / 8));
+		auto PaintHotSpot = [&](Point h, Color c, bool tl, bool br) {
+			if(h.x > 0 || h.y > 0 || tool == &IconDes::HotSpotTool) {
+				h = (h - spos) * magnify;
+				int d = magnify + 1;
+				int n = 1 + magnify / 8;
+				if(br) {
+					w.DrawRect(h.x + d - n, h.y + n, n, d - n, c);
+					w.DrawRect(h.x + n, h.y + d - n, d - 2 * n, n, c);
+				}
+				if(tl) {
+					w.DrawRect(h.x, h.y, d, n, c);
+					w.DrawRect(h.x, h.y + n, n, d - n, c);
+				}
 			}
 		};
-		PaintHotSpot(image.GetHotSpot(), LtRed());
-		PaintHotSpot(image.Get2ndSpot(), LtBlue());
+		bool ns = image.GetHotSpot() != image.Get2ndSpot();
+		PaintHotSpot(image.GetHotSpot(), LtRed(), true, ns);
+		PaintHotSpot(image.Get2ndSpot(), LtBlue(), ns, true);
 	}
 
 	PaintBasicHintsTopic(this, w, "ide/app/ImlBeginnerInfo_en-us");

@@ -203,7 +203,7 @@ private:
 	void Next();
 
 public:
-	Event<>  WhenTopic;
+	Event<String> WhenTopic;
 
 	void SyncDocTree();
 	void SearchWord(const String& s);
@@ -664,6 +664,7 @@ public:
 	Font      gui_font = StdFont();
 	String    libclang_options;
 	String    libclang_coptions;
+	String    valgrind_options;
 	bool      prefer_clang_format = false;
 	bool      blk0_header = true;
 	bool      win_deactivated = false;
@@ -709,7 +710,6 @@ public:
 
 	int           doc_serial;
 	TopicCtrl     doc;
-	TopicCtrl     windoc;
 
 	int           state_icon;
 
@@ -893,6 +893,7 @@ public:
 	    void  ReformatComment();
 		String FindClangFormatPath(bool local = false);
 
+	void OnlineSearchMenu(Bar& menu, const String& what, bool accel);
 	void OnlineSearchMenu(Bar& menu);
 
 	String GetFoundText(const ArrayCtrl& list);
@@ -1002,7 +1003,7 @@ public:
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
 		void  OpenTopic(const String& topic);
-		void  OpenATopic();
+		void  OpenATopic(const String& topic);
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
@@ -1034,7 +1035,7 @@ public:
 		RepoDiff *RunRepoDiff(const String& filepath, int line = -1);
 		void  AsErrors();
 		Vector<String> FindXFiles(int where);
-		void  FindDs(int where);
+		void  FindDs(int where, bool all = false);
 		void  FindGitConflicts();
 		void  FindDesignerItemReferences(const String& id, const String& name);
 		void  NavigatorDlg();
@@ -1208,6 +1209,7 @@ public:
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();
+	void      OpenHelp(const char *ref, bool editable = false);
 
 	const Workspace& AssistWorkspace() const;
 

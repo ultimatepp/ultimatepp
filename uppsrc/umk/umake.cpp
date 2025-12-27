@@ -121,6 +121,7 @@ CONSOLE_APP_MAIN
 	bool run = false;
 	bool auto_hub = false;
 	bool update_hub = false;
+	bool only_hub = false;
 	String hub_dir;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
@@ -140,7 +141,12 @@ CONSOLE_APP_MAIN
 				}
 				
 				hub_dir = args[++i];
-			} else {
+			}
+			else
+			if(ar == "hub-only") {
+				only_hub = true;
+			}
+			else {
 				Puts(String("Unrecognized parameter \"") + a + "\".");
 				SetExitCode(7);
 				return;
@@ -264,6 +270,17 @@ CONSOLE_APP_MAIN
 			if(update_hub)
 				UppHubUpdate(ide.main);
 		}
+		if(only_hub) {
+			int exit_code = 0;
+			if(!auto_hub && !update_hub) {
+				exit_code = 6;
+				Puts("The --hub-only option was specified, but UppHub mode instruction are "
+				     "missing. Please ensure you include the -U or -h flag for the required "
+				     "UppHub mode configuration.\n");
+			}
+			SetExitCode(exit_code);
+			return;
+		}
 		ide.wspc.Scan(ide.main);
 		const Workspace& wspc = ide.IdeWorkspace();
 		if(!wspc.GetCount()) {
@@ -353,7 +370,7 @@ CONSOLE_APP_MAIN
 	else {
 		String version = GenerateVersionNumber();
 		Puts("umk (U++MaKe) " + version + "\n\n"
-		     "Usage: umk assembly main_package [build_method] [--hub-dir dir] [-options] [+flags] [output]\n\n"
+		     "Usage: umk assembly main_package [build_method] [--hub-dir dir] [--hub-only] [-options] [+flags] [output]\n\n"
 		     "Examples: umk examples Bombs CLANG -ab +GUI,SHARED ~/bombs\n"
 		     "          umk ~/upp.src/examples,~/upp.src/uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
 		     "          umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm --hub-dir 3p/hub -brU +GUI,SHARED build/UppTerm\n\n"

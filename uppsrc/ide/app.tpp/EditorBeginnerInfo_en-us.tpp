@@ -12,7 +12,7 @@ matching bracket.]&]
 / next word.]&]
 [s0; [*@(0.0.255)2 Ctrl`+C][2  Copy selection if any, ][/2 current line][2  
 otherwise.]&]
-[s0; [*@(0.0.255)2 Ctrl`+Y ][2 (or ][*@(0.0.255)2 Ctrl`+L][2 ) Cut current 
+[s0; [*@(0.0.255)2 Ctrl`+Y ][2 or ][*@(0.0.255)2 Ctrl`+L][2  Cut current 
 line.]&]
 [s0; [*@(0.0.255)2 Tab][2  / ][*@(0.0.255)2 Shift`+Tab][2  When selection 
 is defined, indent selection right / left.]&]
@@ -27,7 +27,9 @@ to end of the file.]&]
 end.]&]
 [s0; [*@(0.0.255)2 Ctrl`+Backspace][2  Delete identifier from cursor 
 to beginning.]&]
+[s0; [*@(0.0.255)2 Alt`+Shift`+Up/Down/Left/Right][2  Multiline cursor 
+/ rectangular selection.]&]
 [s0; [2 
 @@image:120&120/25
-(BGAAYAAAAAAAAAAAAHic7dpZbgIxEARQjpWL5P5HIV9IaAL2uLeqXlqaT3D5lQ1SwuPBPz+/z6fkQefOOFLr6UQ+3ubTxf9BmXfvAu3ctQe0a9cerDxOp3sPkdYRnaA9T4bJ3LILtOtu2M2/TYUeMrpfJ2sH2d2vk6mDKPvoz7YMHXg6SL4fUTmq2FubR+Zismd1986ZzR7l7pk5gz3a2zs/qz3a17KHyA462TN20M3eam9jn7sDbTa0XVQHu9cjzj7qLKLWtvZnstdM1g6kOVjcvXJJ18hk7zVZOqhoH5lT41/17Ftnlb5/hbPv/R6oO4A8+9ZmrP6rDljPvlenbHeA9eyz9erhL1mD+ewzvP/qNSxnv2u/Wv8sNuh93PFnzF3d/70DpE2EPes5Qn/2rNbL5i9Zg83f8xn/8f/kj85cxd56ner2XnuxWquCf7T9+N+zH/+a9uOPte/uj7bv7M9g39Wfxb6jP5N9N382+/HH5+ziz2hv7ca4P+ZskkxZ//7MmO00U9a//6+GMVcX/2y5GP7/XsVfYsXw+5Pq/qvXMPz+qqs/0+8Ps/tLjJh+f5v9kfhc/bPdAZbH4uyPP7f/dGBr8s1/7oC//8o+yx1gzrDLsfPPcAeYM6xy3LHPcAdY199luOvP3gHj2pb2Gv8IB7Z1PfyZO2Ba08t+54/uIPLR7lPqr70DFTrQ7lFj370DBvudf9UOLPZk5d+tAzZ7yw6Ye7DK72Fv3QFTD5aZPe09OkD2YJ0zwv5uB8w9eOSKtPfswKsLzxwI+5MONPuX9hG1HtL+NVEmUZPJ/jWRZ9NrTvaA9v400Z8RVnOaG+28m8jvxyjzDO7vI9mfdxeaTGhP6Wj2rOnEal20n9VYeUQ9aC+vQbt2db8O2rmr+6cZc54Zc76pbP0HrMjArg==)
+(BGAAYAAAAAAAAAAAAHic7dXRasMwEERR//9Pt5BicMCksSzrzu7MBT1bOhPabUsppfShn8GTrjdqnU3Ge9o8W5xHuTvvQFu7bkG7Ou9AW7puQPs570CbuW5AOznvQNs4b0CbOG/w+HuvtuJO0xXHkjGH9iCTNl+4BVE594d3WFl5+8IbtHA/NvNNj8r/1cp+b9a7Yj+e+Abt/u6cJbyBjP3T3xD0l7Bf+T2hDfC/O8R3J75bwp+yF9gAt4ffP3yHid+Ov7G/gj28AWYf/+ENOrxZ6S6I/YhFU/8rGyzxJ0784x97zP+bDXCn+Pc7IvaW/qPFv539f/64l4L9w/6fNsDNDOzb+98t/oz7IvuW/oXs2/kXs2/lX9C+jX9R+xb+he3L+xe3t/en71/Zv7h7af8m9nb+9L0v+EtvYGAv62/y22/lT985/vy9Xf3p+97wl9ygif+30feMv9gx85fboIH/1ej7uvvLbVD4jEbfu8sZjb53l3Mn+u7Vz93o+79O4f+/M6LfUNV/ZvHn7Df6PfF/FX/Ofi/+nP1GvSv+b8Wfs9+LP2e/F3/Ofs/dXyFXf6VW/uYUjmK0ibP9Hm3jbH+MdnJ1P0abOdsfo/1c3Y/Rls72x2hXV/ezaGtH87PirlPM9Yp1SilN7hdqysBI)
 ][2  for more tips]]]

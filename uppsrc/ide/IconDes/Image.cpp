@@ -181,7 +181,17 @@ void IconDes::SmoothRescale()
 //	dlg.method.Add(FILTER_LANCZOS5, "Lanczos 5");
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
-		Image m = RescaleFilter(bk, sz, ~dlg.method);
+		Image m;
+		if(~dlg.method == FILTER_NEAREST) {
+			Size isz = bk.GetSize();
+			ImageBuffer t(sz);
+			for(int x = 0; x < sz.cx; x++)
+				for(int y = 0; y < sz.cy; y++)
+					t[y][x] = bk[y * isz.cy / sz.cy][x * isz.cx / sz.cx];
+			m = t;
+		}
+		else
+			m = RescaleFilter(bk, sz, ~dlg.method);
 		if(IsPasting()) {
 			c.paste_image = m;
 			MakePaste();
@@ -276,26 +286,18 @@ void IconDes::BlurSharpen()
 void IconDes::Colorize()
 {
 	WithImageDblLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Chroma");
+	CtrlLayoutOKCancel(dlg, "Colorize");
 	PlaceDlg(dlg);
 	Couple(dlg, dlg.level, dlg.slider, 1, 1);
 	Image bk = ImageStart();
 	for(;;) {
 		RGBA c = rgbactrl.GetColor();
-		double mg = 0;
-		ForEachPixelStraight(bk, [&](RGBA& t) {
-			mg = max(mg, (double)Grayscale(t));
-		},
-		false);
-		if(mg)
-			mg = 1 / mg;
-		double a = Nvl(dlg.level, 1.0);
-		double ca = 1 - a;
+		int l = int(255 * Nvl(dlg.level, 1.0));
 		ImageSet(ForEachPixelStraight(bk, [&](RGBA& t) {
-			double x = Grayscale(t) * mg;
-			t.r = Saturate255(int(a * (x * c.r + 0.5) + ca * t.r));
-			t.g = Saturate255(int(a * (x * c.g + 0.5) + ca * t.g));
-			t.b = Saturate255(int(a * (x * c.b + 0.5) + ca * t.b));
+			int a = t.a;
+			t.a = 255;
+			t = Blend(t, c, l);
+			t.a = a;
 		}));
 		switch(dlg.Run()) {
 		case IDCANCEL:
@@ -493,4 +495,35 @@ void IconDes::Colors()
 			return;
 		}
 	}
+}
+
+void IconDes::RestoreAlpha()
+{
+	if(!IsCurrent())
+		return;
+	Slot& c = Current();
+	
+	auto Restore = [&](Image& m) {
+		ImageBuffer ib(m);
+		int maxg = 0;
+		
+		for(RGBA& rgba : ib)
+			maxg = max(Grayscale(rgba), maxg);
+
+		if(maxg)
+			for(RGBA& rgba : ib) {
+				rgba.a = 255 - 255 * Grayscale(rgba) / maxg;
+				rgba.r = rgba.g = rgba.b = 0;
+			}
+		
+		m = ib;
+	};
+	
+	if(BeginTransform()) {
+		Restore(c.paste_image);
+		MakePaste();
+	}
+	else
+		Restore(c.image);
+	SyncShow();
 }

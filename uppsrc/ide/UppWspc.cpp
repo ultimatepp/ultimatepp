@@ -302,6 +302,7 @@ void WorkspaceWork::Fetch(Package& p, const String& pkg)
 		p.file.Clear();
 		p.file.AddPick(Package::File(String(HELPNAME)));
 		p.file.AddPick(Package::File(ConfigFile("global.defs")));
+		p.file.AddPick(Package::File(ConfigFile("valgrind.xml")));
 		for(String d : GetUppDirs()) {
 			Package::File sep(GetFileName(d));
 			sep.separator = true;
@@ -1184,7 +1185,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 	if(!menu.IsScanKeys()) {
 		bool cando = !IsAux() && package.IsCursor();
 		String act = UnixPath(GetActivePackage());
-		menu.Add(cando, ~Format("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
+		menu.AddMenu(cando, ~Format("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
 		if(IsExternalMode())
 			menu.Add(cando, ~Format("Add subfolder packages to '%s'", act), THISBACK(AddFolderUses));
 		RemovePackageMenu(menu);
