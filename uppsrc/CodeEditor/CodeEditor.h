@@ -582,7 +582,7 @@ public:
 	void            SetFindReplaceData(const FindReplaceData& d);
 
 	void     SyncTip();
-	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
+	void     CloseTip();
 
 	typedef CodeEditor CLASSNAME;
 

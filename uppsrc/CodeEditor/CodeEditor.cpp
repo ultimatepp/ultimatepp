@@ -856,7 +856,7 @@ void CodeEditor::SyncTip()
 		Size sz = tip.AddFrameSize(mt.sz);
 		int y = p.y + DPI(24);
 		if(y + sz.cy > wa.bottom)
-			y = max(0, p.y - sz.cy);
+			y = max(0, p.y - sz.cy - DPI(4));
 		int x = p.x;
 		if(x + sz.cx > wa.right)
 			x = max(0, wa.right - sz.cx);
@@ -867,6 +867,13 @@ void CodeEditor::SyncTip()
 	}
 	else
 		CloseTip();
+}
+
+void CodeEditor::CloseTip()
+{
+	if(tip.IsOpen())
+		tip.Close();
+	tip.d = NULL;
 }
 
 bool CodeEditor::MouseSelSpecial(Point p, dword flags) {
