@@ -35,7 +35,7 @@ to the stream.&]
 [s5;:CopyStream`(Stream`&`,Stream`&`,int64`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[* CopyStream]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream
 ][@(0.0.255) `&]_[*@3 dest], [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
-tream][@(0.0.255) `&]_[*@3 src], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64`:`:typedef^ i
+tream][@(0.0.255) `&]_[*@3 src], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
 nt64]_[*@3 count] `= INT64`_MAX)&]
 [s2;%% Copies at most [%-*@3 count] bytes from source to destination 
 stream. Returns the actual number of bytes copied. With default 

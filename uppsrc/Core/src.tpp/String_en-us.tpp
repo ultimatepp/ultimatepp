@@ -69,7 +69,7 @@ r]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [%-*@3 s].  Zero characters are included.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:byte`:`:typedef^ b
+[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:byte^ b
 yte]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2; Constructs a string equal to first [%-*@3 n] bytes of [%-*@3 s]. 
 Zero characters are included.&]
@@ -309,8 +309,8 @@ recommend studying the library`'s source code.&]
 [s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(const wchar`*`):%- [* WString]([@(0.0.255) const]_[_^wchar^ wchar]_
-`*[*@3 s])&]
+[s5;:WString`:`:WString`(const wchar`*`):%- [* WString]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 s])&]
 [s2; Creates a copy of zero terminated string [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
@@ -325,14 +325,16 @@ g][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 ][%%* WString][%%  ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(const wchar`*`,int`):%- [* WString]([@(0.0.255) const]_[_^wchar^ w
+[s5;:WString`:`:WString`(const wchar`*`,int`):%- [* WString]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
 char]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
 ][*@3 s ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const wchar`*`,const wchar`*`):%- [* WString]([@(0.0.255) const]_
-[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 lim])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ wchar]_`*[*@3 s], 
+[@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 lim])&]
 [s2;%- [%% Constructs a string equal to first ][*@3 lim][%%  `- ][*@3 s][%%  
 characters of ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
@@ -355,8 +357,8 @@ zero terminated string ][*@3 s ]([*@3 s ]can contain zero characters).&]
 to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(WStringBuffer`&`):%- [* WString]([_^WStringBuffer^ WStringBuffer
-][@(0.0.255) `&]_[*@3 b])&]
+[s5;:WString`:`:WString`(WStringBuffer`&`):%- [* WString]([_^topic`:`/`/Core`/src`/StringBuffer`_en`-us`#WStringBuffer`:`:class^ W
+StringBuffer][@(0.0.255) `&]_[*@3 b])&]
 [s2; Constructs a string from [%-*@3 b]. [%-*@3 b] is emptied by this 
 operation.&]
 [s3; &]
@@ -379,13 +381,15 @@ empty [* WString]).&]
 [s2; Reduces memory used by string to minimum (size optimization).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:WString`:`:ToString`(`)const:%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Converts [* WString ]to [* String ]using current default character 
 set. Also serves as standard text conversion (for [* AsString] 
 and [* operator<<] templates).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString`:`:GetVoid`(`):%- [@(0.0.255) static] [_^WString^ WString]_[* GetVoid]()&]
+[s5;:WString`:`:GetVoid`(`):%- [@(0.0.255) static] [_^topic`:`/`/Core`/src`/String`_en`-us`#WString`:`:class^ W
+String]_[* GetVoid]()&]
 [s2; Returns special Void value. This value is same as empty string, 
 but IsVoid method returns true for it. It can be used in special 
 scenarios where client code needs to distinguish between two 
@@ -398,13 +402,13 @@ empty string if it is empty.&]
 [s2; Returns true if String is special value returned by [* GetVoid].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString0`:`:Begin`(`)const:%- [@(0.0.255) const]_[_^wchar^ wchar]_`*[* Begin]()_[@(0.0.255) c
-onst]&]
+[s5;:WString0`:`:Begin`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[* Begin]()_[@(0.0.255) const]&]
 [s2; Returns a pointer to the first character.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString0`:`:End`(`)const:%- [@(0.0.255) const]_[_^wchar^ wchar]_`*[* End]()_[@(0.0.255) c
-onst]&]
+[s5;:WString0`:`:End`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[* End]()_[@(0.0.255) const]&]
 [s2; Returns a pointer to ending zero.&]
 [s3;%- &]
 [s4;%- &]
@@ -425,7 +429,8 @@ grows exponentially, like with Vector or std`::vector).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString0`:`:Cat`(const wchar`*`,int`):%- [@(0.0.255) void]_[* Cat]([@(0.0.255) const]_
-[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 length])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ wchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 length])&]
 [s2;%- [%% Appends ][*@3 len][%%  characters from string ][*@3 s] ([*@3 s ]can 
 contain zero characters).&]
 [s3; &]
@@ -453,7 +458,8 @@ are compared as unsigned integer values.&]
 [s3; &]
 [s4;%- &]
 [s5;:WString0`:`:Insert`(int`,const wchar`*`,int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
-nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
+nt]_[*@3 pos], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
 [s2; Inserts first [%-*@3 count] characters of [%-*@3 s] at position 
 [%-*@3 pos].&]
 [s3; &]

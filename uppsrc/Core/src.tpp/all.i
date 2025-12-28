@@ -2,27 +2,35 @@ TOPIC("AMap_en-us")
 #include "AMap_en-us.tppi"
 END_TOPIC
 
-TOPIC("AProcess_en-us")
-#include "AProcess_en-us.tppi"
-END_TOPIC
-
-TOPIC("AppEnv_en-us")
-#include "AppEnv_en-us.tppi"
-END_TOPIC
-
-TOPIC("ArrayMap_en-us")
-#include "ArrayMap_en-us.tppi"
-END_TOPIC
-
-TOPIC("Array_en-us")
-#include "Array_en-us.tppi"
-END_TOPIC
-
-TOPIC("Index_en-us")
-#include "Index_en-us.tppi"
+TOPIC("Function_en-us")
+#include "Function_en-us.tppi"
 END_TOPIC
 
 TOPIC("MapKVRange_en-us")
 #include "MapKVRange_en-us.tppi"
+END_TOPIC
+
+TOPIC("Point_en-us")
+#include "Point_en-us.tppi"
+END_TOPIC
+
+TOPIC("PrimitiveDataTypes_en-us")
+#include "PrimitiveDataTypes_en-us.tppi"
+END_TOPIC
+
+TOPIC("Rect_en-us")
+#include "Rect_en-us.tppi"
+END_TOPIC
+
+TOPIC("Size_en-us")
+#include "Size_en-us.tppi"
+END_TOPIC
+
+TOPIC("StreamFn_en-us")
+#include "StreamFn_en-us.tppi"
+END_TOPIC
+
+TOPIC("String_en-us")
+#include "String_en-us.tppi"
 END_TOPIC
 
