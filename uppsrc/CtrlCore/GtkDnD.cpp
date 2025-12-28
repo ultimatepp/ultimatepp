@@ -39,13 +39,13 @@ void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer use
 
 void Ctrl::GtkDragDelete(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
-	DLOG("GtkDragDelete");
+	LLOG("GtkDragDelete");
 }
 
 void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *data,
                           guint info, guint time, gpointer user_data)
 {
-	DLOG("GtkDragGetData");
+	LLOG("GtkDragGetData");
 	if(!dnd_source)
 		return;
 	if(info < (guint)dnd_source_data->GetCount())
@@ -61,7 +61,7 @@ void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelecti
 
 void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
-	DLOG("GtkDragEnd");
+	LLOG("GtkDragEnd");
 	dnd_result = DND_NONE;
 	GdkDragAction a = gdk_drag_context_get_selected_action(context);
 	dnd_result = a == GDK_ACTION_MOVE ? DND_MOVE : a == GDK_ACTION_COPY ? DND_COPY : DND_NONE;
@@ -71,7 +71,7 @@ void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_
 gboolean Ctrl::GtkDragFailed(GtkWidget *widget, GdkDragContext *context, GtkDragResult   result,
                              gpointer user_data)
 {
-	DLOG("GtkDragFailed");
+	LLOG("GtkDragFailed");
 	dnd_source = NULL;
 	return FALSE;
 }
@@ -87,7 +87,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
 	LLOG("------------------------------");
-	DLOG("DoDragAndDrop " << fmts);
+	LLOG("DoDragAndDrop " << fmts);
 	TopWindow *w = GetTopWindow();
 	if(!w || !w->top)
 		return DND_NONE;

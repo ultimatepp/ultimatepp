@@ -125,12 +125,11 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 		w->state = OVERLAPPED;
 		w->overlapped = w->GetRect();
 	}
-	DLOG("StateEvent " << prev << " -> " << (int)w->state);
+	LLOG("StateEvent " << prev << " -> " << (int)w->state);
 	w->topmost = h & GDK_WINDOW_STATE_ABOVE;
 	w->Layout();
 	if(prev == MINIMIZED && w->state != MINIMIZED) {
 		prev_mouse_pos = CurrentMousePos = Null; // we lost the track of mouse, otherwise "minimize" button would render highlighted
-		DDUMP(CurrentMousePos);
 		if(w->custom_bar_icons)
 			w->custom_bar_icons->RefreshFrame();
 	}
@@ -162,12 +161,10 @@ void TopWindow::Open(Ctrl *owner)
 	GdkRectangle fr;
 	gdk_window_get_frame_extents(gdk(), &fr);
 	Rect r = GetRect();
-	DDUMP(r.top - SCL(fr.y));
 	frameMargins.left = max(frameMargins.left, minmax(r.left - SCL(fr.x), 0, DPI(32)));
 	frameMargins.right = max(frameMargins.right, minmax(SCL(fr.x + fr.width) - r.right, 0, DPI(32)));
 	frameMargins.top = max(frameMargins.top, minmax(r.top - SCL(fr.y), 0, DPI(80)));
 	frameMargins.bottom = max(frameMargins.bottom, minmax(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48)));
-	DDUMP(frameMargins);
 }
 
 void TopWindow::Open()

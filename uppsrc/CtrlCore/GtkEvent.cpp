@@ -168,7 +168,6 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
 	if(event->type == GDK_CONFIGURE) {
-		DLOG("%%% CONFIGURE");
 		Ctrl *p = GetTopCtrlFromId(user_data);
 		if(p) {
 			Top *top = p->GetTop();
@@ -270,7 +269,6 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		}
 		break;
 	case GDK_CONFIGURE: {
-		DLOG("%%% CONFIGURE 2");
 		retval = false;
 		GdkEventConfigure *e = (GdkEventConfigure *)event;
 		value = SCL(e->x, e->y, e->width, e->height);

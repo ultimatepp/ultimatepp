@@ -10,7 +10,6 @@ extern Function<Ctrl *(TopWindow *, Color, int)> custom_titlebar_make__;
 
 void TopWindow::CustomBarIcon::Paint(Draw& w)
 {
-	DLOG("CustomBarIcon::Paint " << GetMousePos() << " " << HasMouseIn());
 	w.DrawImage(0, 0, HasMouse() ? CtrlCoreImg::GtkBarButtonH() : CtrlCoreImg::GtkBarButton());
 	w.DrawImage(0, 0, img);
 }

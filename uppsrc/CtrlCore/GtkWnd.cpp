@@ -209,7 +209,7 @@ void Ctrl::WndRectsSync()
 			if(tw->custom_bar_frame) {
 				utop->header_rect = GetScreenRect(utop->header_area);
 				utop->screen_rect.Union(utop->header_rect);
-				if(tw->custom_bar_frame) _DBG_ // TODO: Maybe consider wrongly placed ones?
+				if(tw->custom_bar_frame) // TODO: Maybe consider wrongly placed ones?
 					tw->custom_bar_frame->Height(utop->header_rect.GetHeight());
 			}
 		}

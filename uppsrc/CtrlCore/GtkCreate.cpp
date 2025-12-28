@@ -84,7 +84,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_type_hint(gtk(), type_hint);
 
 	Rect r = GetRect();
-	DDUMP(r);
 	bool custom_bar = tw && tw->custom_bar;
 	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE";
 	top->csd = !popup && (need_csd || custom_bar);
@@ -126,8 +125,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	else
 		top->client = top->window;
 
-	DLOG("*** 1 " << CSDMargins());
-
 	top->cursor_id = -1;
 
 	auto SetupEvents = [&](GtkWidget *w) {
@@ -150,8 +147,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 
-	DLOG("*** 2 " << CSDMargins());
-
 	if(top->csd) { // CSD is active
 		GdkRect gr(Rect(0, 0, LSCH(r.GetWidth()), LSCH(r.GetHeight())));
 		gtk_container_add(GTK_CONTAINER(top->window), top->client);
@@ -161,33 +156,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 		gtk_widget_show_all(win);
 		gtk_widget_size_allocate(top->client, &gr);
-
-	#if 0
-		Point origin;
-		gdk_window_get_origin(gtk_widget_get_window(top->client), &origin.x, &origin.y);
-		DDUMP(origin);
-
-		gdk_window_get_origin(gdk(), &origin.x, &origin.y);
-		DDUMP(origin);
-
-
-		DDUMP(gtk_widget_get_allocated_width(top->client));
-		DDUMP(gtk_widget_get_allocated_height(top->client));
-
-		DDUMP(gtk_widget_get_allocated_width(top->header_area));
-		DDUMP(gtk_widget_get_allocated_height(top->header_area));
-
-		DDUMP(gtk_widget_get_allocated_width(win));
-		DDUMP(gtk_widget_get_allocated_height(win));
-
-		DDUMP(top->csd);
-	#endif
 	}
 	else {
-	#if 1
-		DDUMP(r.GetWidth());
-		DDUMP(LSC(r.GetWidth()));
-	#endif
 		gtk_widget_realize(top->window);
 		gtk_window_resize(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	}
@@ -195,8 +165,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
 	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
 		tw->SyncSizeHints();
-
-	DLOG("*** 3 " << CSDMargins());
 
 	w.gdk = gtk_widget_get_window(top->window);
 
