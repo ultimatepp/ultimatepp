@@ -163,25 +163,6 @@ public:
 	~ImageGdk();
 };
 
-class GtkCSD final : public Rect { // wayland client side decoration handling
-	bool enabled = false;
-
-public:
-	static bool IsSSDSupported();
-	
-	void Create(GdkWindowTypeHint hint, bool force);
-	
-	bool IsEnabled() const   { return enabled; }
-	
-	int ExtraWidth() const   { return left + right; }
-	int ExtraHeight() const  { return top + bottom; }
-	
-	int LeftMargin() const   { return left; }
-	int RightMargin() const  { return right; }
-	int TopMargin() const    { return top; }
-	int BottomMargin() const { return bottom; }
-};
-
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
 
