@@ -437,7 +437,11 @@ bool TopWindow::IsCustomTitleBar() const
 
 Ctrl * TopWindow::CustomTitleBar(Color bk, int min_cy)
 {
+#ifdef flagNOCUSTOMBAR // suppress custom title bar for testing
+	return nullptr;
+#else
 	return custom_titlebar_make__(this, bk, min_cy);
+#endif
 }
 
 TopWindow::CustomTitleBarMetrics TopWindow::GetCustomTitleBarMetrics() const
