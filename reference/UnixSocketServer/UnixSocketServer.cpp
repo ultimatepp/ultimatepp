@@ -2,13 +2,23 @@
 
 using namespace Upp;
 
+String GetSocketPath()
+{
+	String temp;
+#ifdef PLATFORM_WIN32
+	temp = GetEnv("TEMP");
+#else
+	temp = GetTempPath();
+#endif
+	return AppendFileName(temp, "upp-unixsocket.socket");
+}
+
 CONSOLE_APP_MAIN
 {
-#ifdef PLATFORM_POSIX
-	const String& path = "/tmp/upp-unixsocket.sock";
-	
 	Socket server;
-	if(!server.ListenFileSystem(path, 5)) {
+	String path = GetSocketPath();
+	DeleteFile(path); // "unlink" existing file system socket
+	if(!server.ListenFileSystem(path, 5, false)) { // Reuse option is not available on Windows
 		Cout() << "Unable to initialize server socket!\n";
 		SetExitCode(1);
 		return;
@@ -26,8 +36,4 @@ CONSOLE_APP_MAIN
 			s.Put("\n");
 		}
 	}
-#else
-	Cout() << "This example requires a POSIX compliant operating system...\r\n"
-	SetExitCode(1);
-#endif
 }

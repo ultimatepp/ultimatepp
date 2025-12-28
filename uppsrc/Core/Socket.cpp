@@ -3,7 +3,11 @@
 #ifdef PLATFORM_WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#ifdef AF_UNIX // Unix domain (AF_UNIX) socket support, Windows 10+
+#include <afunix.h>
 #endif
+#endif
+
 
 #ifdef PLATFORM_POSIX
 #include <arpa/inet.h>
@@ -984,40 +988,43 @@ void Socket::Clear()
 	Reset();
 }
 
-#ifdef PLATFORM_POSIX
-
-static bool sSetUnixSockType(Socket& s, const String& path, sockaddr_un& addr, bool abstract)
+static socklen_t sSetUnixSockType(Socket& s, const String& path, sockaddr_un& addr,  bool abstract)
 {
-	memset(&addr, 0, sizeof(addr));
-	addr.sun_family = AF_UNIX;
-
+#ifdef AF_UNIX
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
 #ifndef PLATFORM_LINUX
-	if(abstract) {
-		s.SetSockError("SetUnixSockType",
-						-1, "Abstract socket is not supported on this platform");
-		return false;
-	}
+    if(abstract) {
+        s.SetSockError("SetUnixSockType",
+                       -1, "Abstract socket is not supported on this platform");
+        return 0;
+    }
 #endif
+    const int len = path.GetLength();
 
-	if(abstract) {
-		addr.sun_path[0] = '\0';
-		if(path.GetLength() > 0) {
-			ASSERT(path.GetLength() < sizeof(addr.sun_path) - 1);
-			strncpy(addr.sun_path + 1, ~path, sizeof(addr.sun_path) - 2);
-			return true;
-		}
-	}
-	else {
-		if(path.GetLength() > 0) {
-			ASSERT(path.GetLength() < sizeof(addr.sun_path));
-			strncpy(addr.sun_path, ~path, sizeof(addr.sun_path) - 1);
-			addr.sun_path[sizeof(addr.sun_path) - 1] = '\0';
-			return true;
-		}
-	}
-	s.SetSockError("SetUnixSockType",
-						-1, "Failed to set unix domain socket type");
-	return false;
+    if(abstract) {
+        if(len <= 0 || len > int(sizeof(addr.sun_path) - 1)) {
+            s.SetSockError("SetUnixSockType", -1, "Abstract socket name too long");
+            return 0;
+        }
+        addr.sun_path[0] = '\0';
+        memcpy(addr.sun_path + 1, ~path, len);
+        return offsetof(sockaddr_un, sun_path) + 1 + len;
+    }
+    else {
+        if(len <= 0 || len >= int(sizeof(addr.sun_path))) {
+            s.SetSockError("SetUnixSockType", -1, "Unix socket path too long");
+            return 0;
+        }
+        memcpy(addr.sun_path, ~path, len);
+        addr.sun_path[len] = '\0';
+        return offsetof(sockaddr_un, sun_path) + len + 1;
+    }
+#else
+       s.SetSockError("SetUnixSockType",
+                      -1, "Unix domain socket is not supported on this platform");
+#endif
+    return 0;
 }
 
 int Socket::GetPeerPid() const
@@ -1048,21 +1055,27 @@ bool Socket::NixConnect(const String& path, bool abstract)
 	Init();
 	Reset();
 
+#ifdef AF_UNIX
 	if(!Open(AF_UNIX, SOCK_STREAM, 0))
 		return false;
 
 	struct sockaddr_un addr;
-	if(!sSetUnixSockType(*this, path, addr, abstract))
+	socklen_t addrlen = 0;
+	if((addrlen = sSetUnixSockType(*this, path, addr, abstract)) == 0)
 		return false;
 
-	if(connect(socket, (sockaddr *) &addr, sizeof(addr)) == 0 ||
-		GetErrorCode() == EINPROGRESS || GetErrorCode() == EWOULDBLOCK) {
+	if(connect(socket, (sockaddr *) &addr, addrlen) == 0 ||
+		findarg(GetErrorCode(), SOCKERR(EINPROGRESS), SOCKERR(EWOULDBLOCK)) >= 0) {
 			mode = Socket::CONNECT;
 			return true;
 	}
 
 	SetSockError("connect", -1, strerror(GetErrorCode()));
 	Close();
+#else
+    SetSockError("NixConnect",
+                 -1, "Unix domain socket is not supported on this platform");
+#endif
 	return false;
 }
 
@@ -1082,11 +1095,13 @@ bool Socket::NixListen(const String& path, int n, bool reuse, bool abstract)
 	Init();
 	Reset();
 
+#ifdef AF_UNIX
 	if(!Open(AF_UNIX, SOCK_STREAM, 0))
 		return false;
 
 	struct sockaddr_un addr;
-	if(!sSetUnixSockType(*this, path, addr, abstract))
+	socklen_t addrlen = 0;
+	if((addrlen = sSetUnixSockType(*this, path, addr, abstract)) == 0)
 		return false;
 	
 	if(reuse) {
@@ -1094,7 +1109,7 @@ bool Socket::NixListen(const String& path, int n, bool reuse, bool abstract)
 		setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (const char *) &optval, sizeof(optval));
 	}
 
-	if(bind(socket, (const sockaddr *) &addr, sizeof(addr))) {
+	if(bind(socket, (const sockaddr *) &addr, addrlen)) {
 		SetSockError(Format("bind(path=%s)", path));
 		return false;
 	}
@@ -1105,6 +1120,12 @@ bool Socket::NixListen(const String& path, int n, bool reuse, bool abstract)
 	}
 
 	return true;
+	
+#else
+   SetSockError("NixListen",
+                -1, "Unix domain socket is not supported on this platform");
+    return false;
+#endif
 }
 
 bool Socket::ListenFileSystem(const String& path, int listen_count, bool reuse)
@@ -1116,9 +1137,6 @@ bool Socket::ListenAbstract(const String& path, int listen_count, bool reuse)
 {
 	return NixListen(path, listen_count, reuse, true);
 }
-
-#endif
-
 
 int SocketWaitEvent::Wait(int timeout)
 {
