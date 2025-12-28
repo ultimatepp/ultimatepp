@@ -28,7 +28,8 @@ and bottom. All coordinates are of type ][*@4 T.]&]
 [s5;:Upp`:`:Rect: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
 ect`_][@(0.0.255) <int>]_[* Rect]&]
 [s2;%% [* Rect`_] with [%-* int] coordinates. This is the most common 
-variant, suitable for general`-purpose UI and coordinate systems.&]
+variant, suitable for general`-purpose UI coordinate systems 
+with typical precision requirements.&]
 [s3; &]
 [s4; &]
 [s0; [* Rect16]&]

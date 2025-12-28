@@ -28,7 +28,8 @@ type [*@4 T]. &]
 [s5;:Upp`:`:Size:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
 ize`_][@(0.0.255) <int>]_[* Size]&]
 [s2; Size`_ with [* int] dimensions. This is the most common variant, 
-suitable for general`-purpose UI and coordinate systems.&]
+suitable for general`-purpose UI coordinate systems with typical 
+precision requirements.&]
 [s3; &]
 [s4; &]
 [s1;%- [* Size16]&]

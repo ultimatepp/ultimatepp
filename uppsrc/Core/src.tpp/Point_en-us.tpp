@@ -27,28 +27,29 @@ of type [*@4 T].&]
 [s0; [* Point]&]
 [s5;:Upp`:`:Point:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint`_][@(0.0.255) <int>]_[* Point]&]
-[s2; Point with with [* int] coordinates. This is the most common variant, 
-suitable for general`-purpose UI and coordinate systems.&]
+[s2; Point with [* int] coordinates. This is the most common variant, 
+suitable for general`-purpose UI coordinate systems with typical 
+precision requirements.&]
 [s3; &]
 [s4; &]
 [s0;%- [* Point16]&]
 [s5;:Upp`:`:Point16:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ i
 nt16][@(0.0.255) >]_[* Point16]&]
-[s2; Point with with [* int16][@(0.0.255)  ]coordinates .&]
+[s2; Point with [* int16][@(0.0.255)  ]coordinates .&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s0; [* Point64]&]
 [s5;:Upp`:`:Point64:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
 nt64][@(0.0.255) >]_[* Point64]&]
-[s2; Point with with [* int64][@(0.0.255)  ]coordinates .&]
+[s2; Point with [* int64][@(0.0.255)  ]coordinates .&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s0;%- [* Pointf]&]
 [s5;:Upp`:`:Pointf:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint`_][@(0.0.255) <double>]_[* Pointf]&]
-[s2; Point with with [* double][@(0.0.255)  ]coordinates .&]
+[s2; Point with [* double][@(0.0.255)  ]coordinates .&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public typedef Detail]]}}&]
