@@ -39,13 +39,13 @@ void Ctrl::GtkDragBegin(GtkWidget *widget, GdkDragContext *context, gpointer use
 
 void Ctrl::GtkDragDelete(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
-	LLOG("GtkDragDelete");
+	DLOG("GtkDragDelete");
 }
 
 void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *data,
                           guint info, guint time, gpointer user_data)
 {
-	LLOG("GtkDragGetData");
+	DLOG("GtkDragGetData");
 	if(!dnd_source)
 		return;
 	if(info < (guint)dnd_source_data->GetCount())
@@ -61,7 +61,7 @@ void Ctrl::GtkDragGetData(GtkWidget *widget, GdkDragContext *context, GtkSelecti
 
 void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_data)
 {
-	LLOG("GtkDragEnd");
+	DLOG("GtkDragEnd");
 	dnd_result = DND_NONE;
 	GdkDragAction a = gdk_drag_context_get_selected_action(context);
 	dnd_result = a == GDK_ACTION_MOVE ? DND_MOVE : a == GDK_ACTION_COPY ? DND_COPY : DND_NONE;
@@ -71,7 +71,7 @@ void Ctrl::GtkDragEnd(GtkWidget *widget, GdkDragContext *context, gpointer user_
 gboolean Ctrl::GtkDragFailed(GtkWidget *widget, GdkDragContext *context, GtkDragResult   result,
                              gpointer user_data)
 {
-	LLOG("GtkDragFailed");
+	DLOG("GtkDragFailed");
 	dnd_source = NULL;
 	return FALSE;
 }
@@ -87,7 +87,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
 	LLOG("------------------------------");
-	LLOG("DoDragAndDrop " << fmts);
+	DLOG("DoDragAndDrop " << fmts);
 	TopWindow *w = GetTopWindow();
 	if(!w || !w->top)
 		return DND_NONE;
@@ -288,7 +288,15 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 	if(w) {
 		GetMouseInfo(gdk_get_default_root_window(), mod);
 		CurrentState = mod;
-		CurrentMousePos = Point(SCL(x), SCL(y)) + w->GetScreenRect().TopLeft();
+		CurrentMousePos = Point(SCL(x), SCL(y));
+		Top *top = w->GetTop();
+		if(top->csd) {
+			int x, y;
+			gdk_window_get_root_origin(w->gdk(), &x, &y);
+			CurrentMousePos -= Point(SCL(x), SCL(y));
+		}
+		else
+			CurrentMousePos += w->GetScreenRect().TopLeft();
 		w->DnD(CurrentMousePos, clip);
 	}
 	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE

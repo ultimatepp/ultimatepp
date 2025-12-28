@@ -248,7 +248,6 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	}
 	pos = p;
 	inframe = _inframe;
-	DLOG("HERE");
 	UpdateRect();
 	StateH(POSITION);
 }
@@ -275,7 +274,6 @@ void Ctrl::UpdateRect0(bool sync)
 void Ctrl::UpdateRect(bool sync)
 {
 	GuiLock __;
-	DLOG("::: UPDATE RECT" << sync);
 	UpdateRect0(sync);
 	if(GetParent()) RefreshFrame();
 }

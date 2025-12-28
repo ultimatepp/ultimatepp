@@ -9,7 +9,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-#define LOG_EVENTS  _DBG_
+// #define LOG_EVENTS _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -822,7 +822,6 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		GEvent& e = Events.Head();
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
-		DDUMP(CurrentMousePos);
 		CurrentState = e.state;
 		CurrentEvent = e;
 		Value val = e.value;

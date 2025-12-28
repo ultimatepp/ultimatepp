@@ -204,8 +204,6 @@ void Ctrl::WndRectsSync()
 
 		utop->client_rect = GetScreenRect(utop->client);
 		utop->screen_rect = utop->client_rect;
-		DDUMP(Upp::Name(this));
-		DDUMP(utop->screen_rect);
 		TopWindow *tw = dynamic_cast<TopWindow *>(this);
 		if(tw) {
 			if(tw->custom_bar_frame) {
@@ -216,11 +214,6 @@ void Ctrl::WndRectsSync()
 			}
 		}
 		utop->sync_rect = false;
-		DDUMP(utop->header_rect);
-		DDUMP(utop->client_rect);
-		DDUMP(utop->screen_rect);
-		if(tw && tw->custom_bar_frame) _DBG_ // TODO: Maybe consider wrongly placed ones?
-			DDUMP(tw->custom_bar_frame->GetHeight());
 	}
 }
 
