@@ -114,12 +114,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		gtk_window_set_titlebar(gtk(), top->header);
 
 		gtk_widget_set_can_focus(top->client, TRUE);
-/*
-		r.left -= top->csd.LeftMargin();
-		r.right += top->csd.RightMargin();
-		r.top -= top->csd.TopMargin();
-		r.bottom += top->csd.BottomMargin();
-*/
+
 		g_signal_connect(top->window, "delete-event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	}
 	else

@@ -23,7 +23,7 @@ struct MyApp : TopWindow {
 
 		Icon(CtrlImg::select_all());
 
-		Ctrl *tb = CustomTitleBar(Blend(SWhiteGray(), SLtMagenta(), 20));
+		Ctrl *tb = CustomTitleBar(Blend(SWhiteGray(), SLtMagenta(), 50), 50);
 		
 		if(tb) {
 			tb->Add(bar);

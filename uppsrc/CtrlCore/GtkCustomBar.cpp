@@ -83,7 +83,7 @@ void TopWindow::SyncIcons()
 void TopWindow::SyncCustomBar()
 {
 	if(custom_bar_frame) {
-		custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
+	//	custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
 		SetCustomBarColor(Nvl(custom_titlebar_bk, SColorFace()));
 		auto cm = GetCustomTitleBarMetrics();
 		custom_bar->VSizePos().HSizePos(DPI(6), DPI(6));

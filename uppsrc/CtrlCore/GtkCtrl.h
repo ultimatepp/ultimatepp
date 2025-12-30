@@ -201,7 +201,7 @@ public: // really private:
 	static int    SCL(int x)                        { return scale * x; }
 	static Rect   SCL(int x, int y, int cx, int cy) { return RectC(SCL(x), SCL(y), SCL(cx), SCL(cy)); }
 	static double LSC(int x)                        { return (double)x / scale; }
-	static int    LSCH(int x)                       { return (x + 1) / scale; }
+	static int    LSCH(int x)                       { return (x + scale - 1) / scale; }
 	static Rect   LSCH(int x, int y, int cx, int cy){ return Rect(LSC(x), LSC(y), LSCH(x + cx), LSCH(y + cy)); }
 	static Rect   LSCH(const Rect& r)               { return LSCH(r.left, r.top, r.GetWidth(), r.GetHeight()); }
 
