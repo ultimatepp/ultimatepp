@@ -80,7 +80,6 @@ void PPInfo::PPFile::Parse(Stream& in)
 	guarded = false;
 	blitz = AUTO;
 
-	int  linei = 0;
 	bool incomment = false;
 	
 	String guard_id;
@@ -120,7 +119,6 @@ void PPInfo::PPFile::Parse(Stream& in)
 	
 		while(*l.Last() == '\\' && !in.IsEof()) {
 			l.TrimLast();
-			linei++;
 			l.Cat(in.GetLine());
 		}
 	
@@ -197,14 +195,13 @@ void PPInfo::PPFile::Parse(Stream& in)
 			}
 		}
 		catch(...) {}
-		if(first)
+		if(first) {
 			for(char s : l)
 				if(s != ' ' && s != '\t') {
 					first = false;
 					break;
 				}
-		
-		linei++;
+		}
 	}
 }
 

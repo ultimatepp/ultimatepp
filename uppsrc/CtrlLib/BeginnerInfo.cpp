@@ -70,12 +70,6 @@ void PaintBasicHints(Ctrl *ctrl, Draw& w, const Rect& cr, const char *qtf, const
 		r.tm = msecs();
 	}
 
-	typedef bool (*MouseHook)(Ctrl *ctrl, bool inframe, int event, Point p,
-	                          int zdelta, dword keyflags);
-	typedef bool (*KeyHook)(Ctrl *ctrl, dword key, int count);
-	typedef bool (*StateHook)(Ctrl *ctrl, int reason);
-	typedef void (*PaintHook)(Ctrl *ctrl, Draw& draw, const Rect& clip);
-	
 	static auto Stop = [](bool testmousepos = false) {
 		int tm = msecs();
 		Point mousepos;

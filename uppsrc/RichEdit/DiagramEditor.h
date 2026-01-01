@@ -64,6 +64,8 @@ public:
 private:
 	struct DropColumns : public MultiButton, public Display {
 		ColumnPopUp popup;
+		
+		using MultiButton::Paint;
 		void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const override;
 		
 		DropColumns();
