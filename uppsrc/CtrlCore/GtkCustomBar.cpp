@@ -36,6 +36,12 @@ void TopWindow::CustomBarIcon::MouseLeave()
 	Refresh();
 }
 
+void TopWindow::BarCtrl::LeftDouble(Point p, dword keyflags)
+{
+	DLOG("HERE!");
+	WhenAction();
+}
+
 void TopWindow::Init()
 {
 	custom_titlebar_metrics__ = [](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
@@ -124,7 +130,7 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 			if(w)
 				gtk_window_iconify(w);
 		};
-		maxicon << [=] {
+		*custom_bar ^= maxicon ^= [=] {
 			GtkWindow *w = gtk();
 			if(w) {
 				if(gtk_window_is_maximized(w))

@@ -14,10 +14,13 @@
 		void Set(const Image& m)    { if(!m.IsSame(img)) { img = m; Refresh(); }}
 	};
 	
+	struct BarCtrl : public Ctrl {
+		void LeftDouble(Point p, dword keyflags) override;
+	};
 
 	One<FrameTop<Ctrl>>   custom_bar_frame;
 	One<FrameRight<Ctrl>> custom_bar_icons;
-	One<Ctrl>             custom_bar;
+	One<BarCtrl>          custom_bar;
 	CustomBarIcon         minicon, maxicon, closeicon;
 	Color                 custom_titlebar_bk = SColorFace();
 	int                   custom_titlebar_cy = -1;
