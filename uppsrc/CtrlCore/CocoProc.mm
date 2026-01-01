@@ -237,7 +237,6 @@ struct MMImp {
 		if(!ctrl->IsEnabled())
 			return false;
 		Upp::dword k = e.keyCode;
-		Cout() << "Key: " << k << "\n";
 		WString x = ToWString((CFStringRef)(e.charactersIgnoringModifiers));
 		if(x.GetCount() == 1)
 			switch(ToUpper(x[0])) {
