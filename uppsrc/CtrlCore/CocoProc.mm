@@ -196,7 +196,32 @@ struct MMImp {
 		dbl_pos = np;
 		return b;
 	}
-	
+
+	static bool OtherMouseDownEvent(CocoView* view, NSEvent* e)
+	{
+		// NOTE: Apple does not provide constants for extended mouse buttons.
+		// Button 3 (Back) and Button 4 (Forward) are the de facto industry standard
+		// across most hardware vendors.
+		static constexpr NSInteger s_mouse_back = 3;
+		static constexpr NSInteger s_mouse_forward = 4;
+
+		NSInteger button_number = [e buttonNumber];
+		Upp::CtrlCoreFlags flag;
+		switch(button_number) {
+		case s_mouse_back:
+			flag = Upp::K_MOUSE_BACKWARD;
+			break;
+		case s_mouse_forward:
+			flag = Upp::K_MOUSE_FORWARD;
+			break;
+		default:
+			return false;
+		}
+
+		view->ctrl->DispatchKey(flag, 1);
+		return true;
+	}
+
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
 	{
 		if(!ctrl)
@@ -212,6 +237,7 @@ struct MMImp {
 		if(!ctrl->IsEnabled())
 			return false;
 		Upp::dword k = e.keyCode;
+		Cout() << "Key: " << k << "\n";
 		WString x = ToWString((CFStringRef)(e.charactersIgnoringModifiers));
 		if(x.GetCount() == 1)
 			switch(ToUpper(x[0])) {
@@ -360,6 +386,13 @@ struct MMImp {
 	coco_mouse_left = true;
 	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::LEFT))
 		[super mouseDown:e];
+}
+
+- (void)otherMouseDown:(NSEvent*)e {
+	Upp::GuiLock __;
+	if(!Upp::MMImp::OtherMouseDownEvent(self, e)) {
+		[super otherMouseDown:e];
+	}
 }
 
 - (void)mouseUp:(NSEvent *)e {
