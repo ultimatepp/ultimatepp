@@ -157,9 +157,16 @@ void Ctrl::WndDestroy()
 		return;
 	bool focus = HasFocusDeep();
 	Ptr<Ctrl> owner = GetOwner();
-	[GetTop()->coco->window close];
-	delete GetTop()->coco;
+
+	auto* coco = GetTop()->coco;
+	auto* window = coco->window;
+
+	[window setCollectionBehavior:NSWindowCollectionBehaviorTransient];
+	[window close];
+
+	delete coco;
 	DeleteTop();
+
 	popup = isopen = false;
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
