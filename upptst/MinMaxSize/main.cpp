@@ -1,13 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
 
-#define IMAGECLASS TestImg
-#define IMAGEFILE <GUI/test.iml>
-#include <Draw/iml_header.h>
-
-#define IMAGECLASS TestImg
-#define IMAGEFILE <GUI/test.iml>
-#include <Draw/iml_source.h>
-
 using namespace Upp;
 
 struct App : public TopWindow

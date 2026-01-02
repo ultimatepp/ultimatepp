@@ -476,7 +476,7 @@ void WakeUpGuiThread();
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-
+	
 	Rect rr = r;
 	if(IsWayland())
 		rr.Inflate(DPI(2), DPI(2)); // TODO: This is temporary fix
@@ -486,12 +486,16 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		if(win.ctrl == this) {
 			if(win.invalid.GetCount() && IsNull(win.invalid[0]))
 				return;
+			for(const Rect& ir : win.invalid)
+				if(ir.Contains(r)) // ignore repeated invalidates
+					return;
 			if(win.invalid.GetCount() > 40) { // keep things sane
 				win.invalid.Clear();
 				win.invalid.Add(Null);
 			}
-			else
+			else {
 				win.invalid.Add(rr);
+			}
 			if(!invalids) {
 				invalids = true;
 				WakeUpGuiThread();

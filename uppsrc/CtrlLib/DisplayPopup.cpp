@@ -2,16 +2,17 @@
 
 namespace Upp {
 
-Rect           DisplayPopup::screen_rect;
-Ptr<Ctrl>      DisplayPopup::ctrl;
-Rect           DisplayPopup::item;
-Value          DisplayPopup::value;
-Color          DisplayPopup::paper;
-Color          DisplayPopup::ink;
-dword          DisplayPopup::style;
-const Display *DisplayPopup::display;
-int            DisplayPopup::margin;
-bool           DisplayPopup::usedisplaystdsize_s;
+Rect              DisplayPopup::screen_rect;
+Ptr<Ctrl>         DisplayPopup::ctrl;
+Ptr<DisplayPopup> DisplayPopup::owner;
+Rect              DisplayPopup::item;
+Value             DisplayPopup::value;
+Color             DisplayPopup::paper;
+Color             DisplayPopup::ink;
+dword             DisplayPopup::style;
+const Display    *DisplayPopup::display;
+int               DisplayPopup::margin;
+bool              DisplayPopup::usedisplaystdsize_s;
 	
 DisplayPopup::DisplayPopup()
 {
@@ -37,6 +38,7 @@ void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 				r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
 			display->Paint(w, r, value, ink, paper, style);
 		}
+		w.End();
 	}
 }
 
@@ -101,7 +103,7 @@ bool DisplayPopup::StateHook(Ctrl *, int reason)
 }
 
 
-bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
+bool DisplayPopup::MouseHook(Ctrl *, bool, int event, Point, int, dword)
 {
 	Sync();
 	return false;
@@ -119,6 +121,7 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		RefreshRect();
 		item = _item;
 		ctrl = _ctrl;
+		owner = this;
 		value = _value;
 		display = _display;
 		ink = _ink;
@@ -132,8 +135,10 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 
 void DisplayPopup::Cancel()
 {
-	screen_rect = Null;
-	Sync();
+	if(owner == this) {
+		screen_rect = Null;
+		Sync();
+	}
 }
 
 bool DisplayPopup::IsOpen()

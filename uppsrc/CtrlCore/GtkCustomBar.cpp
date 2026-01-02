@@ -38,7 +38,6 @@ void TopWindow::CustomBarIcon::MouseLeave()
 
 void TopWindow::BarCtrl::LeftDouble(Point p, dword keyflags)
 {
-	DLOG("HERE!");
 	WhenAction();
 }
 
@@ -92,7 +91,7 @@ void TopWindow::SyncCustomBar()
 	//	custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
 		SetCustomBarColor(Nvl(custom_titlebar_bk, SColorFace()));
 		auto cm = GetCustomTitleBarMetrics();
-		custom_bar->VSizePos().HSizePos(DPI(6), DPI(6));
+		custom_bar->VSizePos().HSizePos(DPI(10), DPI(6));
 		RefreshFrame(0, 0, GetRect().Width(), cm.height);
 		Size isz = CtrlCoreImg::GtkBarButton().GetSize();
 		int y = (cm.height - isz.cy) / 2;

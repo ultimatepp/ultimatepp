@@ -94,16 +94,18 @@ bool Ctrl::ProcessInvalids()
 					if(top->client && win.ctrl) {
 						win.ctrl->WndRectsSync();
 						Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
+						auto Invalidate = [](GtkWidget *w, Rect r) {
+							if(r.IsEmpty())
+								return;
+							r = LSCH(r);
+							gtk_widget_queue_draw_area(w, r.left, r.top, r.GetWidth(), r.GetHeight());
+						};
 						if(top && tw && top->header_area) {
 							int h = tw->custom_bar_frame->GetHeight();
-							Rect t = rr & Rect(0, 0, INT_MAX, h);
-							if(!t.IsEmpty())
-								gdk_window_invalidate_rect(gtk_widget_get_window(top->header_area),
-								                           GdkRect(LSCH(t)), TRUE);
+							Invalidate(top->header_area, rr & Rect(0, 0, INT_MAX, h));
 							rr.Offset(0, -h);
 						}
-						gdk_window_invalidate_rect(gtk_widget_get_window(top->client),
-						                           GdkRect(LSCH(rr)), TRUE);
+						Invalidate(top->client, rr);
 					}
 			win.invalid.Clear();
 		}
@@ -117,9 +119,11 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	GuiLock __;
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
-		p->WndRectsSync();
 		p->fullrefresh = false;
+
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
+
+		p->WndRectsSync();
 		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
 
 		SystemDraw w(cr);
@@ -143,12 +147,13 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		Top *top = p->GetTop();
 		TopWindow *tw = dynamic_cast<TopWindow *>(p);
 		if(top && tw && top->header_area && widget != top->header_area) {
-			w.Offset(0, -tw->GetCustomTitleBarMetrics().height);
-			r.OffsetVert(tw->GetCustomTitleBarMetrics().height);
+			int h = tw->GetCustomTitleBarMetrics().height;
+			w.Offset(0, -h);
+			r.OffsetVert(h);
 		}
-		else {
+		else
 			w.Begin();
-		}
+
 		w.Clip(r);
 		p->UpdateArea(w, r);
 		w.End();

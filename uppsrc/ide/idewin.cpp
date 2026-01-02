@@ -15,13 +15,15 @@ void Ide::Skin()
 	SyncUsc();
 }
 
-void Ide::ToggleVerboseBuild() {
+void Ide::ToggleVerboseBuild()
+{
 	console.verbosebuild = !console.verbosebuild;
 
 	SetToolBar();
 }
 
-void Ide::ToggleStopOnErrors() {
+void Ide::ToggleStopOnErrors()
+{
 	stoponerrors = !stoponerrors;
 }
 
