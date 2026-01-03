@@ -124,7 +124,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	auto SetupEvents = [&](GtkWidget *w) {
 		gtk_widget_set_events(w, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
-	_DBG_ //	g_signal_connect(w, "button-press-event", G_CALLBACK(GtkPreventWindowDrag), (gpointer)(uintptr_t)top->id);
 	};
 	SetupEvents(GTK_WIDGET(gtk()));
 	g_signal_connect(gtk(), "event", G_CALLBACK(TopGtkEvent), (gpointer)(uintptr_t)top->id);
@@ -143,8 +142,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 
-	gtk_grab_add(GTK_WIDGET(top->client)); _DBG_
-	
 	if(top->csd) { // CSD is active
 		GdkRect gr(Rect(0, 0, LSCH(r.GetWidth()), LSCH(r.GetHeight())));
 		gtk_container_add(GTK_CONTAINER(top->window), top->client);
@@ -160,9 +157,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		gtk_window_resize(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	}
 
-	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
-	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
-		tw->SyncSizeHints();
+	if(tw) {
+		if(findarg(gtk_window_get_type_hint(gtk()), GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
+			tw->SyncSizeHints();
+	}
 
 	w.gdk = gtk_widget_get_window(top->window);
 

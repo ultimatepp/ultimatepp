@@ -451,17 +451,18 @@ TopWindow::CustomTitleBarMetrics TopWindow::GetCustomTitleBarMetrics() const
 	return m;
 }
 
-static bool sIsDragArea(Ctrl& w, Point p)
+bool Ctrl::MouseActiveCtrl(Ctrl *w, Point p)
 {
-	for(Ctrl& q : w)
-		if(q.GetScreenRect().Contains(p))
-			return q.IsIgnoreMouse() || sIsDragArea(q, p);
-	return false;
+	for(Ctrl *q = w->GetLastChild(); q; q = q->GetPrev())
+		if(q->GetScreenRect().Contains(p))
+			return MouseActiveCtrl(q, p);
+			
+	return w->IsMouseActive();
 }
 
 bool TopWindow::IsCustomTitleBarDragArea(Point p)
 {
-	return sIsDragArea(*this, p + GetScreenRect().TopLeft());
+	return !MouseActiveCtrl(this, p + GetScreenRect().TopLeft());
 }
 
 TopWindow& TopWindow::ToolWindow(bool b)

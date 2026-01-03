@@ -24,7 +24,6 @@
 
 	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
 	static gboolean GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer data);
-_DBG_ //	static gboolean GtkPreventWindowDrag(GtkWidget *widget, GdkEventButton *event, gpointer user_data);
 
 	static gboolean TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 
@@ -199,7 +198,7 @@ public: // really private:
 	static Vector<Event<>> hotkey;
 	static Vector<dword>   keyhot;
 	static Vector<dword>   modhot;
-	static guint           MouseState;
+	static guint           prev_state;
 	static Point           prev_mouse_pos;
 
 	static int    SCL(int x)                        { return scale * x; }
