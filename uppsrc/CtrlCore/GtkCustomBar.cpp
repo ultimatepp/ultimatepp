@@ -114,6 +114,30 @@ bool TopWindow::IsCustomTitleBar__() const
 	return custom_bar;
 }
 
+void  TopWindow::DoZoom()
+{
+	GtkWindow *w = gtk();
+	if(w) {
+		if(gtk_window_is_maximized(w))
+			gtk_window_unmaximize(w);
+		else
+			gtk_window_maximize(w);
+	}
+}
+
+void  TopWindow::DoMoveWindow()
+{
+	DLOG("DoMoveWindow");
+	DDUMP(GetMouseLeft());
+#if GTK_CHECK_VERSION(3, 22, 0)
+	if(CurrentEvent.device)
+		gdk_window_begin_move_drag_for_device(gdk(), CurrentEvent.device,
+		                                      1, CurrentEvent.x_root, CurrentEvent.y_root, CurrentEvent.time);
+	else
+#endif
+		gdk_window_begin_move_drag(gdk(), 1, CurrentEvent.x_root, CurrentEvent.y_root, CurrentEvent.time);
+}
+
 Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 {
 	if(!custom_bar) {
@@ -129,14 +153,8 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 			if(w)
 				gtk_window_iconify(w);
 		};
-		*custom_bar ^= maxicon ^= [=] {
-			GtkWindow *w = gtk();
-			if(w) {
-				if(gtk_window_is_maximized(w))
-					gtk_window_unmaximize(w);
-				else
-					gtk_window_maximize(w);
-			}
+		maxicon << [=] {
+			DoZoom();
 		};
 		closeicon << [=] {
 			if(IsEnabled()) {

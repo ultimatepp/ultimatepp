@@ -22,7 +22,7 @@ void Ctrl::SetCustomBarColor(Color c)
 	auto ClassName = [&] { return "upp_custom_titlebar_" + AsString(q); };
 	if(q < 0) {
 		if(providers.GetCount() > 64)
-			Panic("Too many custom bar colors (>64) !");
+			Panic("Too many custom bar colors !");
 		q = providers.GetCount();
 		String css;
 		css << "." << ClassName() << " { background-image: none; background-color: "
@@ -124,6 +124,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	auto SetupEvents = [&](GtkWidget *w) {
 		gtk_widget_set_events(w, GDK_ALL_EVENTS_MASK & ~GDK_POINTER_MOTION_HINT_MASK & ~GDK_SMOOTH_SCROLL_MASK);
+	_DBG_ //	g_signal_connect(w, "button-press-event", G_CALLBACK(GtkPreventWindowDrag), (gpointer)(uintptr_t)top->id);
 	};
 	SetupEvents(GTK_WIDGET(gtk()));
 	g_signal_connect(gtk(), "event", G_CALLBACK(TopGtkEvent), (gpointer)(uintptr_t)top->id);
@@ -142,6 +143,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
 	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 
+	gtk_grab_add(GTK_WIDGET(top->client)); _DBG_
+	
 	if(top->csd) { // CSD is active
 		GdkRect gr(Rect(0, 0, LSCH(r.GetWidth()), LSCH(r.GetHeight())));
 		gtk_container_add(GTK_CONTAINER(top->window), top->client);
@@ -198,6 +201,25 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->sync_rect = true;
 	WndRectsSync();
 	RefreshLayoutDeep();
+
+
+	if(custom_bar) { // prevent drag gesture on the titlebar
+		static bool was_set; // TODO: do this better...
+		if(!was_set) {
+			was_set = true;
+			g_object_set (gtk_settings_get_default (), "gtk-double-click-distance", 100000, NULL);
+			g_object_set (gtk_settings_get_default (), "gtk-dnd-drag-threshold", 100000, NULL);
+		}
+	}
+
+	#if 0
+	gint double_click_distance;
+	GtkSettings *settings;
+	settings = gtk_widget_get_settings (GTK_WIDGET (gtk()));
+	g_object_get(settings,
+	             "gtk-double-click-distance", &double_click_distance,
+	             NULL);
+	#endif
 }
 
 void Ctrl::WndDestroy()

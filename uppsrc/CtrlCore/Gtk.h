@@ -183,6 +183,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	GtkWidget            *header = nullptr; \
 	GtkWidget            *client = nullptr; \
 	GtkWidget            *header_area = nullptr; \
+	Ptr<Ctrl>             hdr_screen[2]; \
 	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \

@@ -21,6 +21,8 @@ Point     Ctrl::middlemousepos = Null;
 PenInfo   Ctrl::pen;
 bool      Ctrl::is_pen_event;
 
+int       Ctrl::last_mouse_action;
+
 dword GetMouseFlags() {
 	dword style = 0;
 	if(GetAlt()) style |= K_ALT;
@@ -67,6 +69,7 @@ void Ctrl::LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, in
 Image Ctrl::FrameMouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	last_mouse_action = event;
 	Ptr<Ctrl> this_ = this;
 	for(int i = 0; i < mousehook().GetCount(); i++)
 		if(this_ && (*mousehook()[i])(this, true, event, p, zdelta, keyflags))
@@ -104,6 +107,7 @@ Image Ctrl::MouseEvent0(int event, Point p, int zdelta, dword keyflags)
 Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
 	GuiLock __;
+	last_mouse_action = event;
 	Ptr<Ctrl> this_ = this;
 	for(int i = 0; i < mousehook().GetCount(); i++)
 		if(this_ && (*mousehook()[i])(this, false, event, p, zdelta, keyflags))

@@ -183,6 +183,20 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 	return false;
 }
 
+_DBG_ /*
+gboolean Ctrl::GtkPreventWindowDrag(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
+{
+	Ctrl *p = GetTopCtrlFromId(user_data);
+	if(p) {
+		DLOG("==========");
+		DDUMP(p->GetScreenRect());
+		DDUMP(Point(event->x_root, event->y_root));
+		DDUMP(p->GetScreenRect().Contains(event->x_root, event->y_root));
+	}
+
+	return p && p->GetScreenRect().Contains(event->x_root, event->y_root);
+}
+*/
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 	GuiLock __;
@@ -379,17 +393,22 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	if(event && event->type == GDK_MOTION_NOTIFY){
 		GdkEventMotion *mevent = (GdkEventMotion *)event;
 		prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+		e.x_root = mevent->x_root;
+		e.y_root = mevent->y_root;
 	}
 	if(event && event->type == GDK_LEAVE_NOTIFY){
 		GdkEventCrossing *mevent = (GdkEventCrossing *)event;
 		prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+		e.x_root = mevent->x_root;
+		e.y_root = mevent->y_root;
 	}
 	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
-	e.event = NULL;
+	e.event = nullptr;
+	e.device = nullptr;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	GdkDevice *d = event ? gdk_event_get_source_device(event) : NULL;
-	if(d && findarg(gdk_device_get_source(d), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
+	e.device = event ? gdk_event_get_source_device(event) : NULL;
+	if(e.device && findarg(gdk_device_get_source(e.device), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
 		e.pen = true;
 		e.pen_barrel = MouseState & GDK_BUTTON3_MASK;
 		double *axes = NULL;
@@ -411,10 +430,10 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 			default:;
 		}
 		if(axes) {
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_PRESSURE, &e.pen_pressure)) e.pen_pressure=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_ROTATION, &e.pen_rotation)) e.pen_rotation=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_XTILT, &e.pen_tilt.x)) e.pen_tilt.x=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_YTILT, &e.pen_tilt.y)) e.pen_tilt.y=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_PRESSURE, &e.pen_pressure)) e.pen_pressure=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_ROTATION, &e.pen_rotation)) e.pen_rotation=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_XTILT, &e.pen_tilt.x)) e.pen_tilt.x=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_YTILT, &e.pen_tilt.y)) e.pen_tilt.y=Null;
 		}
 	}
 #endif
@@ -600,9 +619,20 @@ void Ctrl::Proc()
 		q->WndRectsSync();
 		q->SyncWndRect(q->GetWndScreenRect());
 	}
+	
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	
+	Top *top = GetTop();
+	
+	auto IsCustomBarAction = [&] {
+		return tw && top && top->header && tw->IsCustomTitleBarDragArea(GetMousePos() - GetScreenRect().TopLeft());
+	};
+	
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
+		if(GetMouseLeft() && IsCustomBarAction())
+			tw->DoMoveWindow();
 		break;
 	case GDK_BUTTON_PRESS:
 		if(CurrentEvent.value == 8) {
@@ -625,7 +655,10 @@ void Ctrl::Proc()
 		if(!ignoreclick) {
 			bool dbl = msecs(clicktime) < 250;
 			clicktime = dbl ? clicktime - 1000 : msecs();
-			GtkButtonEvent(dbl ? DOUBLE : DOWN);
+			if(dbl && IsCustomBarAction())
+				tw->DoZoom();
+			else
+				GtkButtonEvent(dbl ? DOUBLE : DOWN);
 		}
 		break;
 /*	case GDK_2BUTTON_PRESS:

@@ -24,6 +24,7 @@
 
 	static gboolean GtkEvent(GtkWidget *widget, GdkEvent *key, gpointer user_data);
 	static gboolean GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer data);
+_DBG_ //	static gboolean GtkPreventWindowDrag(GtkWidget *widget, GdkEventButton *event, gpointer user_data);
 
 	static gboolean TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 
@@ -52,6 +53,9 @@
 		Point      mousepos;
 		guint      state;
 		int        count;
+		GdkDevice *device;
+		int        x_root;
+		int        y_root;
 
 		bool       pen;
 		bool       pen_barrel;

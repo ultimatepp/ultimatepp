@@ -408,7 +408,11 @@ void Ide::DoDisplay()
 		s << "[g [";
 		if(editfile_isreadonly)
 			s << "@B";
-		s << " \1" << editfile << "\1]";
+		int q = max(editfile.ReverseFind('/'), editfile.ReverseFind('\\'));
+		if(q >= 0)
+			s << " [1 \1" << editfile.Mid(0, q + 1) << "\1]\1" << editfile.Mid(q + 1) << "\1]";
+		else
+			s << " \1" << editfile << "\1]";
 		if(!designer) {
 			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
 			int64 l, h;

@@ -675,6 +675,8 @@ private:
 	static Point     dndpos;
 	static bool      dndframe;
 	static PasteClip dndclip;
+	
+	static int       last_mouse_action;
 
 	void    DnD(Point p, PasteClip& clip);
 	static void DnDRepeat();

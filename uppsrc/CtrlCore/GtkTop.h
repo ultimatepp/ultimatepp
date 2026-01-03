@@ -35,6 +35,8 @@
 	void     SyncIcons();
 	bool     IsCustomTitleBar__() const;
 	Ctrl    *MakeCustomTitleBar__(Color bk, int mincy);
+	void     DoZoom();
+	void     DoMoveWindow();
 	static   void Init();
 
 	static gboolean StateEvent(GtkWidget *widget, GdkEventWindowState *event, gpointer user_data);
