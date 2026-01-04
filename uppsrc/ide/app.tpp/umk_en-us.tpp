@@ -64,15 +64,10 @@ only the logic related to UppHub. However, please note that even
 when this option is active, you must still specify either the 
 ][*@N `-][*C@4;3 U][@N  or ][*@N `-][*C@4;3 h][@N  option to indicate how 
 UMK should handle UppHub.]&]
-[s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
-tion flags]. If flags are not specified, the first main configuration 
-entry in .upp file is used.&]
-[s11;l128;i150;O0; [*@(0.0.255) out] overrides output name, file or 
-directory.&]
-[s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
-should be also executed after successful build, using optional 
-arguments after [*C@(0.0.255)3 !] as its arguments.&]
-[s11;l128;i160;O0; All other options are located below:&]
+[s11;l128;i160;O0; Additional UMK build options are listed below. 
+If using multiple options, they must be combined into a single 
+argument, such as `-[*@4 brU]). If no parameters are provided, 
+UMK will build the project in debug mode with symbols by default.&]
 [ {{1914:8086<283;h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
 ::^@2 [s0; [*C@4;3 a]]
@@ -121,7 +116,18 @@ mpile`_commands.json]]
 ::= [s0; [3 Export entire project]]
 ::^ [s0;%- [*C@4;3 k]]
 ::= [s0; [3 Delete target directory before project export]]}}&]
-[s0; &]
+[s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
+tion flags]. If flags are not specified, the first main configuration 
+entry in .upp file is used by default. Use commas to chain multiple 
+flags, such as [*@4 `+GUI,SHARED].&]
+[s11;l128;i150;O0; [*@(0.0.255) out] overrides output name, file or 
+directory.&]
+[s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
+should be also executed after successful build, using optional 
+arguments after [*C@(0.0.255)3 !] as its arguments.&]
+[s11;l256;i150;O0; All arguments provided after [*C@(0.0.255)3 !] are 
+treated as [*C@(0.0.255) runargs], sent directly to the compiled 
+executable.&]
 [s12;:3: 3. Examples&]
 [s11; Sample usage of UMK is located below:&]
 [s0;*C@5+92 &]
