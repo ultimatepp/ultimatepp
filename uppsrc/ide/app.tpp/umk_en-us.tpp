@@ -125,9 +125,7 @@ directory.&]
 [s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
 should be also executed after successful build, using optional 
 arguments after [*C@(0.0.255)3 !] as its arguments.&]
-[s11;l256;i150;O0; All arguments provided after [*C@(0.0.255)3 !] are 
-treated as [*C@(0.0.255) runargs], sent directly to the compiled 
-executable.&]
+[s0; &]
 [s12;:3: 3. Examples&]
 [s11; Sample usage of UMK is located below:&]
 [s0;*C@5+92 &]
