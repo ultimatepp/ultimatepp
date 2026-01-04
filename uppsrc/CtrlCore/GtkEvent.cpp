@@ -584,6 +584,8 @@ void Ctrl::GtkButtonEvent(int action)
 	GtkMouseEvent(action, act, 0);
 }
 
+bool Ctrl::custom_titlebar_drag_click;
+
 void Ctrl::Proc()
 {
 #ifdef LOG_EVENTS
@@ -654,7 +656,8 @@ void Ctrl::Proc()
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
-		if(GetMouseLeft() && IsCustomBarAction())
+		SyncPreventCustomBarDragPrevention();
+		if(GetMouseLeft() && custom_titlebar_drag_click && IsCustomBarAction())
 			tw->DoMoveWindow();
 		break;
 	case GDK_BUTTON_PRESS:
@@ -674,7 +677,9 @@ void Ctrl::Proc()
 			ignoreclick = false;
 			ignoremouseup = false;
 		}
-
+		
+		custom_titlebar_drag_click = CurrentEvent.value == 1 && IsCustomBarAction();
+		
 		if(!ignoreclick) {
 			bool dbl = msecs(clicktime) < 250;
 			clicktime = dbl ? clicktime - 1000 : msecs();
@@ -883,6 +888,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Value val = e.value;
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		SetCustomBarDragPrevention();
 		FocusSync();
 		CaptureSync();
 		if(w) {

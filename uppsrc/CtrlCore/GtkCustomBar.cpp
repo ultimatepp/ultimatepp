@@ -109,6 +109,29 @@ void TopWindow::SyncCustomBar()
 	}
 }
 
+bool Ctrl::prevent_custombar_drag;
+
+void Ctrl::SetCustomBarDragPrevention()
+{
+	static gint p1, p2;
+	GtkSettings *gs = gtk_settings_get_default();
+	ONCELOCK {
+		g_object_get(gs, "gtk-double-click-distance", &p1, "gtk-dnd-drag-threshold", &p2, NULL);
+	};
+	gint s1 = p1;
+	gint s2 = p2;
+	if(prevent_custombar_drag)
+		s1 = s2 = 1000000;
+	g_object_set (gs, "gtk-double-click-distance", s1, "gtk-dnd-drag-threshold", s2, NULL);
+}
+
+void Ctrl::SyncPreventCustomBarDragPrevention()
+{
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	prevent_custombar_drag = tw && tw->custom_bar_frame && tw->GetScreenRect().Contains(GetMousePos());
+	SetCustomBarDragPrevention();
+}
+
 bool TopWindow::IsCustomTitleBar__() const
 {
 	return custom_bar;

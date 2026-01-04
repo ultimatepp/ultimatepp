@@ -172,8 +172,13 @@
 	                        guint time, gpointer user_data, bool paste);
 	static bool   ProcessInvalids();
 
-	static int GetGtkTitleBarHeight(const TopWindow *tw);
-	static int GetGtkTitleBarButtonWidth();
+	static bool prevent_custombar_drag;
+	static bool custom_titlebar_drag_click;
+
+	static int  GetGtkTitleBarHeight(const TopWindow *tw);
+	static int  GetGtkTitleBarButtonWidth();
+	static void SetCustomBarDragPrevention();
+	       void SyncPreventCustomBarDragPrevention();
 
 	friend bool InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void GuiPlatformGripResize(TopWindow *q);

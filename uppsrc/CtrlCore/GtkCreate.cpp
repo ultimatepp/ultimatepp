@@ -199,17 +199,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->sync_rect = true;
 	WndRectsSync();
 	RefreshLayoutDeep();
-
-
-	if(custom_bar) { // prevent drag gesture on the titlebar
-		static bool was_set; // TODO: do this better...
-		if(!was_set) {
-			was_set = true;
-			g_object_set (gtk_settings_get_default (), "gtk-double-click-distance", 100000, NULL);
-			g_object_set (gtk_settings_get_default (), "gtk-dnd-drag-threshold", 100000, NULL);
-		}
-	}
-
+	
 	#if 0
 	gint double_click_distance;
 	GtkSettings *settings;
