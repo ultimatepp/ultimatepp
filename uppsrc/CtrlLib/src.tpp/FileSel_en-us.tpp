@@ -40,8 +40,8 @@ closed/destroyed, does not wait for this function to finish,
 so it should not rely on any data outside of function.&]
 [s3; &]
 [s4; &]
-[s5;:FileSel`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:FileSel`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Serializes current settings of FileSel. That includes current 
 directory, currently selected file type, size of FileSel window, 
 LRU list of visited directories and `"Sort by`" switch state.&]

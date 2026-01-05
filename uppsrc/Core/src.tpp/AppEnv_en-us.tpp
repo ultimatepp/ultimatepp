@@ -59,20 +59,23 @@ name of the file&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:GetAppFolder`(`): [_^Upp`:`:String^ String]_[* GetAppFolder]()&]
+[s5;:Upp`:`:GetAppFolder`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetAppFolder]()&]
 [s6; `[MacOS only`]&]
 [s2;%% This funtion returns the path to the application folder, if 
 the the executable is in one.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:GetAppName`(`): [_^Upp`:`:String^ String]_[* GetAppName]()&]
+[s5;:Upp`:`:GetAppName`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetAppName]()&]
 [s2;%% Returns the name of the application. Default value is GetExeTitle, 
 but it can be changed with SetAppName. This values is used e.g. 
 as the name of configuration folder.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SetAppName`(const Upp`:`:String`&`): [@(0.0.255) void]_[* SetAppName]([@(0.0.255) c
-onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 name])&]
+onst]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&
+]_[*@3 name])&]
 [s2;%% Overrides the name of the application.&]
 [s3;%% &]
 [s4; &]
@@ -86,16 +89,18 @@ configuration. Setting group empty just removes whole level.
 Default value is `"u`+`+`".&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:GetConfigGroup`(`): [_^Upp`:`:String^ String]_[* GetConfigGroup]()&]
+[s5;:Upp`:`:GetConfigGroup`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetConfigGroup]()&]
 [s2;%% Returns current config group.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:GetTempDirectory`(`): [_^Upp`:`:String^ String]_[* GetTempDirectory]()&]
+[s5;:Upp`:`:GetTempDirectory`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetTempDirectory]()&]
 [s2;%% Return the temporary directory.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:TempFile`(const char`*`): [_^Upp`:`:String^ String]_[* TempFile]([@(0.0.255) co
-nst]_[@(0.0.255) char]_`*[*@3 filename])&]
+[s5;:Upp`:`:TempFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* TempFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 filename])&]
 [s2;%% Returns the absolute path of a file in temporary directory.&]
 [s3;%% &]
 [s4; &]
@@ -114,12 +119,14 @@ home folder (true) or application folder (false)&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SetConfigDirectory`(const Upp`:`:String`&`): [@(0.0.255) void]_[* SetConfigDi
-rectory]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
+rectory]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Overrides the directory where configuration files are stored.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SetConfigName`(const String`&`): [@(0.0.255) void] [* SetConfigName]([@(0.0.255) c
-onst] String[@(0.0.255) `&] [*@3 s])&]
+onst] [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&
+] [*@3 s])&]
 [s2;%% Sets the name of configuration directory if applicable. If 
 not specified, GetAppName() is used.&]
 [s3; &]
@@ -158,7 +165,8 @@ nt] [*@3 i], [@(0.0.255) int] [*@3 count] [@(0.0.255) `=] [@3 1])&]
 [s2;%% Removes commandline argument(s).&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:GetArgv0`(`): [_^Upp`:`:String^ String]_[* GetArgv0]()&]
+[s5;:Upp`:`:GetArgv0`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Str
+ing]_[* GetArgv0]()&]
 [s2;%% Returns the argv`[0`] argument to main (contains the name 
 of executable).&]
 [s3; &]

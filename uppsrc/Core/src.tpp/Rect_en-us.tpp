@@ -12,9 +12,9 @@ topic "Rect";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Rect`_]]}}&]
 [s3;%% &]
-[s0; [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
-[s1;:Rect`_`:`:struct: [@(0.0.255) struct]_[* Rect`_]_:_[@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
-]_[* Rect`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
+[s0; [@(0.0.255)3 template ][3 <][@(0.0.255)3 class ][*@4;3 T][@(0.0.255)3 >]&]
+[s1;:Rect`_`:`:struct: [@(0.0.255) struct]_[* Rect`_ ]: [@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
+][* Rect`_][@(0.0.255) <][*@4 T][@(0.0.255) >]>&]
 [s0;%% &]
 [s0; [%%* Rect`_][%%  is a generic structure describing a rectangular 
 area defined by the coordinates of the upper left corner, left 
@@ -25,37 +25,43 @@ and bottom. All coordinates are of type ][*@4 T.]&]
 [s0;%% To get a specialized version of [* Size`_], use one of the following:&]
 [s0; &]
 [s0; [* Rect]&]
-[s5;:Rect`:`:typedef: [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <int>]_[* Rect]&]
-[s2;%% [* Rect`_] with [%-* int] coordinates.&]
+[s5;:Upp`:`:Rect: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) <int>]_[* Rect]&]
+[s2;%% [* Rect`_] with [%-* int] coordinates. This is the most common 
+variant, suitable for general`-purpose UI coordinate systems 
+with typical precision requirements.&]
 [s3; &]
 [s4; &]
 [s0; [* Rect16]&]
-[s5;:Rect16`:`:typedef:~~~128; [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <][_^int16^ i
+[s5;:Upp`:`:Rect16:~~~128; [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ i
 nt16][@(0.0.255) >]_[* Rect16]&]
 [s2;%% [* Rect`_] with [%-* int16] coordinates.&]
 [s3; &]
 [s4; &]
 [s0; [* Rect64]&]
-[s5;:Rect64`:`:typedef: [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <][_^int64^ int64][@(0.0.255) >
-]_[* Rect64]&]
+[s5;:Upp`:`:Rect64: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
+nt64][@(0.0.255) >]_[* Rect64]&]
 [s2;%% [* Rect`_] with [%-* int64] coordinates.&]
 [s3; &]
 [s4; &]
 [s0; [* Rectf]&]
-[s5;:Rectf`:`:typedef: [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <double>]_[* Rectf]&]
+[s5;:Upp`:`:Rectf: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) <double>]_[* Rectf]&]
 [s2;%% [* Rect`_] with [%-* double] coordinates.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public typedef Detail]]}}&]
 [s3;%% &]
-[s5;:Rect`_`:`:Pt`:`:typedef: [@(0.0.255) typedef]_[_^Point`_^ Point`_][@(0.0.255) <]T[@(0.0.255) >
-]_[* Pt]&]
+[s5;:Upp`:`:Rect`_`:`:Pt: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) <]T[@(0.0.255) >]_[* Pt]&]
 [s2;%% A [* Point`_] with it`'s coordinates of the same type [*@4 T] 
 as [* Rect`_].&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:Sz`:`:typedef: [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <]T[@(0.0.255) >
-]_[* Sz]&]
+[s5;:Upp`:`:Rect`_`:`:Sz: [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <]T[@(0.0.255) >]_[* Sz]&]
 [s2;%% A [* Size`_] with it`'s coordinates of the same type [*@4 T] as 
 [* Rect`_].&]
 [s3; &]
@@ -71,8 +77,8 @@ or height, sitting right at the (0,0) origin.&]
 sEmpty()] method on such a [* Rect`_] object will return true.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(const Value`&`): [* Rect`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[*@3 src])&]
+[s5;:Rect`_`:`:Rect`_`(const Value`&`): [* Rect`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 src])&]
 [s2;%% Default copy constructor.&]
 [s3;%% &]
 [s4; &]
@@ -82,20 +88,21 @@ sEmpty()] method on such a [* Rect`_] object will return true.&]
 [%-*@3 l][%-* ,] [%-*@3 t][%-* ,] [%-*@3 r][%-  and] [%-*@3 b].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(Rect`_`:`:Pt`,Rect`_`:`:Pt`): [* Rect`_]([_^Rect`_`:`:Pt^ Pt]_[*@3 a
-], [_^Rect`_`:`:Pt^ Pt]_[*@3 b])&]
+[s5; [* Rect`_]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ Pt]_[*@3 a], 
+[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ Pt]_[*@3 b])&]
 [s2;%% Creates a [* Rect`_] and initializes it`'s upper left corner 
 with [%-*@3 a ]and it`'s bottom right corner with [%-*@3 b].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(Rect`_`:`:Pt`,Rect`_`:`:Sz`): [* Rect`_]([_^Rect`_`:`:Pt^ Pt]_[*@3 a
-], [_^Rect`_`:`:Sz^ Sz]_[*@3 sz])&]
+[s5;:Rect`_`:`:Rect`_`(Rect`_`:`:Pt`,Rect`_`:`:Sz`): [* Rect`_]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[*@3 a], [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_[*@3 sz])&]
 [s2;%% Creates a [* Rect`_] and initializes it`'s upper left corner 
 with [%-*@3 a ]and it`'s bottom right corner with [*@3 a ][* `+][*@3  
 sz].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(Rect`_`:`:Sz`): [* Rect`_]([_^Rect`_`:`:Sz^ Sz]_[*@3 sz])&]
+[s5;:Rect`_`:`:Rect`_`(Rect`_`:`:Sz`): [* Rect`_]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[*@3 sz])&]
 [s2;%% Creates a [* Rect`_] and initializes it`'s upper left corner 
 with [%-* (0, 0)][%-*@3  ]and it`'s bottom right corner with [*@3 sz].&]
 [s3;%% &]
@@ -106,14 +113,16 @@ int>`&]_[*@3 r])&]
 ][%-*@3 r].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(const Rect`_`<short`>`&`): [* Rect`_]([@(0.0.255) const]_[* Rect`_][@(0.0.255) <
-short>`&]_[*@3 r])&]
+[s5;:Rect`_`:`:Rect`_`(const Rect`_`<int16`>`&`): [* Rect`_]([@(0.0.255) const]_[* Rect`_][@(0.0.255) <
+][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ int16][@(0.0.255) >
+`&]_[*@3 r])&]
 [s2;%% Creates a [* Rect`_] and initializes it with [%-* Rect16][%-@(0.0.255)  
 ][%-*@3 r].&]
 [s3;%% &]
 [s4; &]
 [s5;:Rect`_`:`:Rect`_`(const Rect`_`<int64`>`&`): [* Rect`_]([@(0.0.255) const]_[* Rect`_][@(0.0.255) <
-][_^int64^ int64][@(0.0.255) >`&]_[*@3 r])&]
+][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ int64][@(0.0.255) >
+`&]_[*@3 r])&]
 [s2;%% Creates a [* Rect`_] and initializes it with [%-* Rect64][%-@(0.0.255)  
 ][%-*@3 r].&]
 [s3;%% &]
@@ -124,8 +133,8 @@ double>`&]_[*@3 r])&]
 ][%-*@3 r].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Rect`_`(const Nuller`&`): [* Rect`_]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
-])&]
+[s5;:Rect`_`:`:Rect`_`(const Nuller`&`): [* Rect`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2;%% Creates a [* Rect`_] and initializes it with [%-* Null].&]
 [s3; &]
 [s0; &]
@@ -178,75 +187,82 @@ onst]&]
 [* top].&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:Size`(`)const: [_^Rect`_`:`:Sz^ Sz]_[* Size]()_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:GetSize`(`)const: [_^Rect`_`:`:Sz^ Sz]_[* GetSize]()_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Size`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[* Size]()_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:GetSize`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[* GetSize]()_[@(0.0.255) const]&]
 [s2;%% Returns a size containing the width and the height of the 
 rectangle.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:TopLeft`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* TopLeft]()_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:TopLeft`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* TopLeft]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the top`-left coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:TopCenter`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* TopCenter]()_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:TopCenter`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* TopCenter]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the top`-center coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:TopRight`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* TopRight]()_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:TopRight`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* TopRight]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the top`-right coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:CenterLeft`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* CenterLeft]()_[@(0.0.255) const
-]&]
+[s5;:Rect`_`:`:CenterLeft`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* CenterLeft]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the center`-left coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:CenterPoint`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* CenterPoint]()_[@(0.0.255) con
-st]&]
+[s5;:Rect`_`:`:CenterPoint`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* CenterPoint]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the coordinates of the center of 
 the rectangle.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:CenterRight`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* CenterRight]()_[@(0.0.255) con
-st]&]
+[s5;:Rect`_`:`:CenterRight`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* CenterRight]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the center`-right coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:BottomLeft`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* BottomLeft]()_[@(0.0.255) const
-]&]
+[s5;:Rect`_`:`:BottomLeft`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* BottomLeft]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the bottom`-left coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:BottomCenter`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* BottomCenter]()_[@(0.0.255) c
-onst]&]
+[s5;:Rect`_`:`:BottomCenter`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* BottomCenter]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the bottom`-center coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:BottomRight`(`)const: [_^Rect`_`:`:Pt^ Pt]_[* BottomRight]()_[@(0.0.255) con
-st]&]
+[s5;:Rect`_`:`:BottomRight`(`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* BottomRight]()_[@(0.0.255) const]&]
 [s2;%% Returns a point containing the bottom`-right coordinates.&]
 [s3; &]
 [s4; &]
-[s5;:Rect`_`:`:CenterPos`(T`,T`)const: [_^Rect`_`:`:Pt^ Pt]_[* CenterPos]([*@4 T]_[*@3 cx], 
-[*@4 T]_[*@3 cy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:CenterPos`(T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* CenterPos]([*@4 T]_[*@3 cx], [*@4 T]_[*@3 cy])_[@(0.0.255) const]&]
 [s2; [%% Returns the left and top coordinates of an object of sizes 
 ][*@3 cx][%%  and ][*@3 cy] that is centered inside the rectangle.&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:CenterPos`(Rect`_`:`:Sz`)const: [_^Rect`_`:`:Pt^ Pt]_[* CenterPos]([_^Rect`_`:`:Sz^ S
-z]_[*@3 sz])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:CenterPos`(Rect`_`:`:Sz`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[* CenterPos]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_[*@3 s
+z])_[@(0.0.255) const]&]
 [s2; [%% Returns the left and top coordinates of an object of size 
 ][*@3 sz] that is centered inside the rectangle.&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:CenterRect`(T`,T`)const: [_^Rect`_^ Rect`_]_[* CenterRect]([*@4 T]_[*@3 cx], 
-[*@4 T]_[*@3 cy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:CenterRect`(T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* CenterRect]([*@4 T]_[*@3 cx], [*@4 T]_[*@3 cy])_[@(0.0.255) const]&]
 [s2;%% Return the coordinates of a new rectangle with sizes [%-*@3 cx][%-  
 and ][%-*@3 cy ]centered inside the rectangle.&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:CenterRect`(Rect`_`:`:Sz`)const: [_^Rect`_^ Rect`_]_[* CenterRect]([_^Rect`_`:`:Sz^ S
-z]_[*@3 sz])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:CenterRect`(Rect`_`:`:Sz`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* CenterRect]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_
+[*@3 sz])_[@(0.0.255) const]&]
 [s2;%% Return the coordinates of a new rectangle with size [%-*@3 sz 
 ]centered inside the rectangle.&]
 [s3;%% &]
@@ -257,19 +273,19 @@ z]_[*@3 sz])_[@(0.0.255) const]&]
 [%-*@3 r][%-  and] [%-*@3 b].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Set`(Rect`_`:`:Pt`,Rect`_`:`:Pt`): [@(0.0.255) void]_[* Set]([_^Rect`_`:`:Pt^ P
-t]_[*@3 a], [_^Rect`_`:`:Pt^ Pt]_[*@3 b])&]
+[s5;:Rect`_`:`:Set`(Rect`_`:`:Pt`,Rect`_`:`:Pt`): [@(0.0.255) void]_[* Set]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[*@3 a], [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ Pt]_[*@3 b])&]
 [s2;%% Initializes rectangles upper left corner with [%-*@3 a ]and 
 it`'s bottom right corner with [%-*@3 b].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Set`(Rect`_`:`:Pt`,Rect`_`:`:Sz`): [@(0.0.255) void]_[* Set]([_^Rect`_`:`:Pt^ P
-t]_[*@3 a], [_^Rect`_`:`:Sz^ Sz]_[*@3 sz])&]
+[s5;:Rect`_`:`:Set`(Rect`_`:`:Pt`,Rect`_`:`:Sz`): [@(0.0.255) void]_[* Set]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Pt^ P
+t]_[*@3 a], [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_[*@3 sz])&]
 [s2;%% Initializes rectangle`'s upper left corner with [%-*@3 a ]and 
 it`'s bottom right corner with [*@3 a ][* `+][*@3  sz].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Set`(const Rect`_`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[_^Rect`_^ R
+[s5;:Rect`_`:`:Set`(const Rect`_`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
 ect`_][@(0.0.255) `&]_[*@3 r])&]
 [s2; [%% Initializes rectangles coordinates with the ones of ][*@3 r.]&]
 [s3;%% &]
@@ -280,8 +296,8 @@ ect`_][@(0.0.255) `&]_[*@3 r])&]
 to [%-*@3 cy].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:SetSize`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* SetSize]([_^Rect`_`:`:Sz^ Sz]_
-[*@3 sz])&]
+[s5;:Rect`_`:`:SetSize`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* SetSize]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[*@3 sz])&]
 [s2;%% Sets the width and height of the rectangle to [%-*@3 sz].&]
 [s3;%% &]
 [s4; &]
@@ -303,8 +319,8 @@ and it`'s bottom coordinate increased.&]
 by [%-*@3 dy].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Inflate`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* Inflate]([_^Rect`_`:`:Sz^ Sz]_
-[*@3 sz])&]
+[s5;:Rect`_`:`:Inflate`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* Inflate]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[*@3 sz])&]
 [s2;%% Inflates the rectangle horizontally by the horizontal dimension 
 of [*@3 sz] and vertically by the vertical one.&]
 [s3;%% &]
@@ -320,7 +336,8 @@ and [%-*@3 b].&]
 [s3;%% &]
 [s4; &]
 [s5;:Rect`_`:`:Inflate`(const Rect`_`&`): [@(0.0.255) void]_[* Inflate]([@(0.0.255) const]_
-[_^Rect`_^ Rect`_][@(0.0.255) `&]_[*@3 r])&]
+[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ Rect`_][@(0.0.255) `&]_[*@3 r])
+&]
 [s2;%% Inflates the rectangle by [*@3 r.left][%- ,] [%-*@3 r.top][%- ,] [%-*@3 r.right] 
 and [%-*@3 r.bottom].&]
 [s3;%% &]
@@ -343,8 +360,8 @@ and it`'s bottom coordinate decreased.&]
 by [%-*@3 dy].&]
 [s3;%% &]
 [s4;%% &]
-[s5;:Rect`_`:`:Deflate`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* Deflate]([_^Rect`_`:`:Sz^ Sz]_
-[*@3 sz])&]
+[s5;:Rect`_`:`:Deflate`(Rect`_`:`:Sz`): [@(0.0.255) void]_[* Deflate]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ S
+z]_[*@3 sz])&]
 [s2;%% Deflates the rectangle horizontally by the horizontal dimension 
 of [*@3 sz] and vertically by the vertical one.&]
 [s3;%% &]
@@ -360,59 +377,66 @@ and [%-*@3 b].&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Rect`_`:`:Deflate`(const Rect`_`&`): [@(0.0.255) void]_[* Deflate]([@(0.0.255) const]_
-[_^Rect`_^ Rect`_][@(0.0.255) `&]_[*@3 r])&]
+[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ Rect`_][@(0.0.255) `&]_[*@3 r])
+&]
 [s2;%% Deflates the rectangle by [*@3 r.left][%- ,] [%-*@3 r.top][%- ,] [%-*@3 r.right] 
 and [%-*@3 r.bottom].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:InflatedHorz`(T`)const: [_^Rect`_^ Rect`_]_[* InflatedHorz]([*@4 T]_[*@3 dx])_
-[@(0.0.255) const]&]
+[s5;:Rect`_`:`:InflatedHorz`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* InflatedHorz]([*@4 T]_[*@3 dx])_[@(0.0.255) const]&]
 [s2;%% Returns the result of inflating the rectangle horizontally 
 by [%-*@3 dx].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:InflatedVert`(T`)const: [_^Rect`_^ Rect`_]_[* InflatedVert]([*@4 T]_[*@3 dy])_
-[@(0.0.255) const]&]
+[s5;:Rect`_`:`:InflatedVert`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* InflatedVert]([*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
 [s2;%% Returns the result of inflating the rectangle horizontally 
 by [%-*@3 dx].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Inflated`(T`,T`)const: [_^Rect`_^ Rect`_]_[* Inflated]([*@4 T]_[*@3 dx], 
-[*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Inflated`(Rect`_`:`:Sz`)const: [_^Rect`_^ Rect`_]_[* Inflated]([_^Rect`_`:`:Sz^ S
-z]_[*@3 sz])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Inflated`(T`)const: [_^Rect`_^ Rect`_]_[* Inflated]([*@4 T]_[*@3 dxy])_[@(0.0.255) c
+[s5;:Rect`_`:`:Inflated`(T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Inflated]([*@4 T]_[*@3 dx], [*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Inflated`(Rect`_`:`:Sz`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Inflated]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_[*@3 s
+z])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Inflated`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Inflated]([*@4 T]_[*@3 dxy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Inflated`(T`,T`,T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Inflated]([*@4 T]_[*@3 l], [*@4 T]_[*@3 t], [*@4 T]_[*@3 r], [*@4 T]_[*@3 b])_[@(0.0.255) c
 onst]&]
-[s5;:Rect`_`:`:Inflated`(T`,T`,T`,T`)const: [_^Rect`_^ Rect`_]_[* Inflated]([*@4 T]_[*@3 l], 
-[*@4 T]_[*@3 t], [*@4 T]_[*@3 r], [*@4 T]_[*@3 b])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Inflated`(const Rect`_`&`)const: [_^Rect`_^ Rect`_]_[* Inflated]([@(0.0.255) c
-onst]_[_^Rect`_^ Rect`_][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Inflated`(const Rect`_`&`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Inflated]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) const]&]
 [s2;%% Returns the result of inflating the rectangle with the amount 
 specified by the respective parameters.&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:DeflatedHorz`(T`)const: [_^Rect`_^ Rect`_]_[* DeflatedHorz]([*@4 T]_[*@3 dx])_
-[@(0.0.255) const]&]
+[s5;:Rect`_`:`:DeflatedHorz`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* DeflatedHorz]([*@4 T]_[*@3 dx])_[@(0.0.255) const]&]
 [s2;%% Returns the result of deflating the rectangle horizontally 
 by [%-*@3 dx].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:DeflatedVert`(T`)const: [_^Rect`_^ Rect`_]_[* DeflatedVert]([*@4 T]_[*@3 dy])_
-[@(0.0.255) const]&]
+[s5;:Rect`_`:`:DeflatedVert`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* DeflatedVert]([*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
 [s2;%% Returns the result of deflating the rectangle horizontally 
 by [%-*@3 dx].&]
 [s3;%% &]
 [s4; &]
-[s5;:Rect`_`:`:Deflated`(T`,T`)const: [_^Rect`_^ Rect`_]_[* Deflated]([*@4 T]_[*@3 dx], 
-[*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Deflated`(Rect`_`:`:Sz`)const: [_^Rect`_^ Rect`_]_[* Deflated]([_^Rect`_`:`:Sz^ S
-z]_[*@3 sz])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Deflated`(T`)const: [_^Rect`_^ Rect`_]_[* Deflated]([*@4 T]_[*@3 dxy])_[@(0.0.255) c
+[s5;:Rect`_`:`:Deflated`(T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Deflated]([*@4 T]_[*@3 dx], [*@4 T]_[*@3 dy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Deflated`(Rect`_`:`:Sz`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Deflated]([_^topic`:`/`/Core`/src`/Rect`_en`-us`#Upp`:`:Rect`_`:`:Sz^ Sz]_[*@3 s
+z])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Deflated`(T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Deflated]([*@4 T]_[*@3 dxy])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Deflated`(T`,T`,T`,T`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Deflated]([*@4 T]_[*@3 l], [*@4 T]_[*@3 t], [*@4 T]_[*@3 r], [*@4 T]_[*@3 b])_[@(0.0.255) c
 onst]&]
-[s5;:Rect`_`:`:Deflated`(T`,T`,T`,T`)const: [_^Rect`_^ Rect`_]_[* Deflated]([*@4 T]_[*@3 l], 
-[*@4 T]_[*@3 t], [*@4 T]_[*@3 r], [*@4 T]_[*@3 b])_[@(0.0.255) const]&]
-[s5;:Rect`_`:`:Deflated`(const Rect`_`&`)const: [_^Rect`_^ Rect`_]_[* Deflated]([@(0.0.255) c
-onst]_[_^Rect`_^ Rect`_][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) const]&]
+[s5;:Rect`_`:`:Deflated`(const Rect`_`&`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_]_[* Deflated]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect`_][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) const]&]
 [s2;%% Returns the result of deflating the rectangle with the amount 
 specified by the respective parameters.&]
 [s3;%% &]

@@ -63,7 +63,7 @@ struct Size_ : Moveable< Size_<T> > {
 	Size_() : cx(0), cy(0) {}
 	Size_(T cx, T cy) : cx(cx), cy(cy) {}
 
-	Size_(const Size_<int>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}	
+	Size_(const Size_<int>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
 	Size_(const Size_<int16>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
 	Size_(const Size_<double>& sz)  : cx((T)sz.cx), cy((T)sz.cy) {}
 	Size_(const Size_<int64>& sz) : cx((T)sz.cx), cy((T)sz.cy) {}

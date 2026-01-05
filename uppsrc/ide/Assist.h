@@ -203,6 +203,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Abbr();
 
 	Point          GetCurrentPos() const;
+	AnnotationItem FindAnnotation(Point pos, bool allow_define = false);
 	AnnotationItem FindCurrentAnnotation(bool allow_define = false);
 
 	void           DCopy();

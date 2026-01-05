@@ -12,22 +12,28 @@ topic "String and WString";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 String]]}}&]
 [s3; &]
-[s1;:String`:`:class:%- [@(0.0.255)3 class][3 _][*3 String][3 _:_][@(0.0.255)3 public][3 _][*@3;3 Mo
-veable][@(0.0.255)3 <][*3 String][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^String0^3 Strin
-g0][@(0.0.255)3 >][3 _>_]&]
-[s9; String is a value class that contains an array of characters 
+[s1;:String`:`:class:%- [@(0.0.255)3 class][3 _][*3 String][3 _:_][*@3;3 Moveable][@(0.0.255)3 <][*3 S
+tring>][3 , ][@(0.0.255)3 public ][_^topic`:`/`/Core`/src`/String`_en`-us`#AString`:`:class^3 A
+String][@(0.0.255)3 <][3 String0][@(0.0.255)3 >][3 _]&]
+[s9; [* String ]is a value class that contains an array of characters 
 (or bytes). It is designed to have fast copy operations. The 
-array of characters is zero terminated. String provides non`-mutable 
-access to the array of characters. String can store 8 bit encoded 
+array of characters is zero terminated. [* String ]provides non`-mutable 
+access to the array of characters. [* String ]can store 8 bit encoded 
 string or an UTF`-8 encoded string. For UTF`-8 strings, however, 
-String works with raw 8 bit values `- there are not automatic 
+[* String ]works with raw 8 bit values `- there are not automatic 
 conversions performed e.g. in operator`[`]. If you need to access 
 individual UTF`-8 characters, the best practice in most cases 
-is to convert it to WString (and eventually back after processing).&]
-[s9; String is also often used to store raw binary data.&]
-[s9; WString is similar to String, but it uses 32 bit encoding. String 
-and WString share a number of common functions through the AString 
-interface.&]
+is to convert it to [* WString ](and eventually back after processing).&]
+[s9; [* String ]is also often used to store raw binary data.&]
+[s9; WString is similar to [* String], but it uses 32 bit encoding. 
+[* String ]and [* WString ]share a number of common functions through 
+the [* AString ]interface.&]
+[s9; In the context of class declarations, [* String0 ]acts as a methods 
+provider for the [* String ]class. This class is not documented 
+separately; instead, all methods provided by [* String0 ]are included 
+directly within the [* String ]documentation. To learn more about 
+the internal implementation of this class, we recommend studying 
+the library`'s source code.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -63,7 +69,7 @@ r]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [%-*@3 s].  Zero characters are included.&]
 [s3; &]
 [s4;%- &]
-[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:byte`:`:typedef^ b
+[s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:byte^ b
 yte]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2; Constructs a string equal to first [%-*@3 n] bytes of [%-*@3 s]. 
 Zero characters are included.&]
@@ -154,7 +160,7 @@ are compared as unsigned integer values.&]
 [s4;%- &]
 [s5;:String0`:`:GetHashValue`(`)const:%- [@(0.0.255) unsigned]_[* GetHashValue]()_[@(0.0.255) c
 onst]&]
-[s2; Returns the hash value of the string.&]
+[s2; Returns the hash valueIsEqual of the string.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String0`:`:Cat`(int`):%- [@(0.0.255) void]_[* Cat]([@(0.0.255) int]_[*@3 c])&]
@@ -278,12 +284,18 @@ be constant.&]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 WString]]}}&]
 [s3; &]
-[s1;:WString`:`:class:%- [@(0.0.255)3 class][3 _][*3 WString][3 _:_][@(0.0.255)3 public][3 _][*@3;3 M
-oveable][@(0.0.255)3 <][*3 WString][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^WString0^3 WS
-tring0][@(0.0.255)3 >][3 _>_]&]
-[s9; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
-String and WString share a number of common functions through 
-the AString interface.&]
+[s1;:WString`:`:class:%- [@(0.0.255)3 class][3 _][*3 WString][3 _:_][*@3;3 Moveable][@(0.0.255)3 <
+][*3 WString>][3 , ][@(0.0.255)3 public ][_^topic`:`/`/Core`/src`/String`_en`-us`#AString`:`:class^3 A
+String][@(0.0.255)3 <][3 WString0][@(0.0.255)3 >]&]
+[s9; [* WString ]is similar to [* String], but it uses 16 bit Ucs2 encoding. 
+[* String ]and [* WString ]share a number of common functions through 
+the [* AString ]interface.&]
+[s9; Similar to the String class declaration, [* WString0 ]acts as 
+a methods provider for the [* WString ]class. This class is not 
+documented separately; instead, all methods provided by [* WString0 
+]are included directly within the [* WString ]documentation. To 
+learn more about the internal implementation of this class, we 
+recommend studying the library`'s source code.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -297,8 +309,8 @@ the AString interface.&]
 [s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(const wchar`*`):%- [* WString]([@(0.0.255) const]_[_^wchar^ wchar]_
-`*[*@3 s])&]
+[s5;:WString`:`:WString`(const wchar`*`):%- [* WString]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 s])&]
 [s2; Creates a copy of zero terminated string [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
@@ -313,14 +325,16 @@ g][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 ][%%* WString][%%  ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(const wchar`*`,int`):%- [* WString]([@(0.0.255) const]_[_^wchar^ w
+[s5;:WString`:`:WString`(const wchar`*`,int`):%- [* WString]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
 char]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
 ][*@3 s ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const wchar`*`,const wchar`*`):%- [* WString]([@(0.0.255) const]_
-[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 lim])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ wchar]_`*[*@3 s], 
+[@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 lim])&]
 [s2;%- [%% Constructs a string equal to first ][*@3 lim][%%  `- ][*@3 s][%%  
 characters of ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
@@ -343,8 +357,8 @@ zero terminated string ][*@3 s ]([*@3 s ]can contain zero characters).&]
 to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 [s3; &]
 [s4;%- &]
-[s5;:WString`:`:WString`(WStringBuffer`&`):%- [* WString]([_^WStringBuffer^ WStringBuffer
-][@(0.0.255) `&]_[*@3 b])&]
+[s5;:WString`:`:WString`(WStringBuffer`&`):%- [* WString]([_^topic`:`/`/Core`/src`/StringBuffer`_en`-us`#WStringBuffer`:`:class^ W
+StringBuffer][@(0.0.255) `&]_[*@3 b])&]
 [s2; Constructs a string from [%-*@3 b]. [%-*@3 b] is emptied by this 
 operation.&]
 [s3; &]
@@ -367,13 +381,15 @@ empty [* WString]).&]
 [s2; Reduces memory used by string to minimum (size optimization).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:WString`:`:ToString`(`)const:%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Converts [* WString ]to [* String ]using current default character 
 set. Also serves as standard text conversion (for [* AsString] 
 and [* operator<<] templates).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString`:`:GetVoid`(`):%- [@(0.0.255) static] [_^WString^ WString]_[* GetVoid]()&]
+[s5;:WString`:`:GetVoid`(`):%- [@(0.0.255) static] [_^topic`:`/`/Core`/src`/String`_en`-us`#WString`:`:class^ W
+String]_[* GetVoid]()&]
 [s2; Returns special Void value. This value is same as empty string, 
 but IsVoid method returns true for it. It can be used in special 
 scenarios where client code needs to distinguish between two 
@@ -386,13 +402,13 @@ empty string if it is empty.&]
 [s2; Returns true if String is special value returned by [* GetVoid].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString0`:`:Begin`(`)const:%- [@(0.0.255) const]_[_^wchar^ wchar]_`*[* Begin]()_[@(0.0.255) c
-onst]&]
+[s5;:WString0`:`:Begin`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[* Begin]()_[@(0.0.255) const]&]
 [s2; Returns a pointer to the first character.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString0`:`:End`(`)const:%- [@(0.0.255) const]_[_^wchar^ wchar]_`*[* End]()_[@(0.0.255) c
-onst]&]
+[s5;:WString0`:`:End`(`)const:%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[* End]()_[@(0.0.255) const]&]
 [s2; Returns a pointer to ending zero.&]
 [s3;%- &]
 [s4;%- &]
@@ -413,7 +429,8 @@ grows exponentially, like with Vector or std`::vector).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString0`:`:Cat`(const wchar`*`,int`):%- [@(0.0.255) void]_[* Cat]([@(0.0.255) const]_
-[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 length])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ wchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 length])&]
 [s2;%- [%% Appends ][*@3 len][%%  characters from string ][*@3 s] ([*@3 s ]can 
 contain zero characters).&]
 [s3; &]
@@ -441,7 +458,8 @@ are compared as unsigned integer values.&]
 [s3; &]
 [s4;%- &]
 [s5;:WString0`:`:Insert`(int`,const wchar`*`,int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
-nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
+nt]_[*@3 pos], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:wchar^ w
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
 [s2; Inserts first [%-*@3 count] characters of [%-*@3 s] at position 
 [%-*@3 pos].&]
 [s3; &]

@@ -12,9 +12,9 @@ topic "Point";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Point`_]]}}&]
 [s3; &]
-[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
-[s1;:Point`_`:`:struct:%- [@(0.0.255) struct]_[* Point`_]_:_[@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
-]_[* Point`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
+[s1;%- [@(0.0.255)3 template ][3 <][@(0.0.255)3 class ][*@4;3 T][@(0.0.255)3 >]&]
+[s1;:Point`_`:`:struct:%- [@(0.0.255) struct]_[* Point`_ ]: [@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
+][* Point`_][@(0.0.255) <][*@4 T][@(0.0.255) >]>&]
 [s0; &]
 [s0; [* Point`_] is a generic structure that describes a two dimensional 
 point object. The horizontal coordinate is represented by [*@(154.0.0) x][@(154.0.0)  
@@ -25,27 +25,38 @@ of type [*@4 T].&]
 [s0; To get a specialized version of [* Point`_], use one of the following:&]
 [s0; &]
 [s0; [* Point]&]
-[s5;:Point`:`:typedef:%- [@(0.0.255) typedef]_[_^Point`_^ Point`_][@(0.0.255) <int>]_[* Point
-]&]
-[s2; Point with with [* int] coordinates .&]
+[s5;:Upp`:`:Point:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) <int>]_[* Point]&]
+[s2; Point with [* int] coordinates. This is the most common variant, 
+suitable for general`-purpose UI coordinate systems with typical 
+precision requirements.&]
 [s3; &]
 [s4; &]
 [s0;%- [* Point16]&]
-[s5;:Point16`:`:typedef:%- [@(0.0.255) typedef]_[_^Point`_^ Point`_][@(0.0.255) <][_^int16^ i
+[s5;:Upp`:`:Point16:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ i
 nt16][@(0.0.255) >]_[* Point16]&]
-[s2; Point with with [* int16][@(0.0.255)  ]coordinates .&]
+[s2; Point with [* int16][@(0.0.255)  ]coordinates .&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s0; [* Point64]&]
-[s5;:Point64`:`:typedef:%- [@(0.0.255) typedef]_[_^Point`_^ Point`_][@(0.0.255) <][_^int64^ i
+[s5;:Upp`:`:Point64:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
 nt64][@(0.0.255) >]_[* Point64]&]
-[s2; Point with with [* int64][@(0.0.255)  ]coordinates .&]
+[s2; Point with [* int64][@(0.0.255)  ]coordinates .&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s0;%- [* Pointf]&]
-[s5;:Pointf`:`:typedef:%- [@(0.0.255) typedef]_[_^Point`_^ Point`_][@(0.0.255) <double>]_[* P
-ointf]&]
-[s2; Point with with [* double][@(0.0.255)  ]coordinates .&]
+[s5;:Upp`:`:Pointf:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) <double>]_[* Pointf]&]
+[s2; Point with [* double][@(0.0.255)  ]coordinates .&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public typedef Detail]]}}&]
+[s3; &]
+[s5;:Upp`:`:Point`_`:`:Sz:%- [@(0.0.255) typedef] Size`_<T> [* Sz]&]
+[s0;l288; A Size[* `_] with it`'s coordinates of the same type [*@4 T] 
+as [* Point`_].&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor List]]}}&]
@@ -58,8 +69,8 @@ x and y, set to 0. This places the point at the origin (0,0).&]
 sZero()] method on such a [* Point`_] object will return true.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:Point`_`(const Value`&`):%- [* Point`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[*@3 src])&]
+[s5;:Point`_`:`:Point`_`(const Value`&`):%- [* Point`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 src])&]
 [s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
@@ -75,8 +86,9 @@ t`_][@(0.0.255) <int>`&]_[*@3 pt])&]
 ][*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:Point`_`(const Point`_`<short`>`&`):%- [* Point`_]([@(0.0.255) const]_[* Po
-int`_][@(0.0.255) <short>`&]_[*@3 pt])&]
+[s5;:Point`_`:`:Point`_`(const Point`_`<int16`>`&`):%- [* Point`_]([@(0.0.255) const]_[* Po
+int`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ i
+nt16][@(0.0.255) >`&]_[*@3 pt])&]
 [s2; Creates a [%-* Point`_ ]object and initializes it with a [%-* Point16 
 ][*@3 sz].&]
 [s3; &]
@@ -88,19 +100,20 @@ oint`_][@(0.0.255) <double>`&]_[*@3 pt])&]
 [s3; &]
 [s4;%- &]
 [s5;:Point`_`:`:Point`_`(const Point`_`<int64`>`&`):%- [* Point`_]([@(0.0.255) const]_[* Po
-int`_][@(0.0.255) <][_^int64^ int64][@(0.0.255) >`&]_[*@3 pt])&]
+int`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
+nt64][@(0.0.255) >`&]_[*@3 pt])&]
 [s2; Creates a [%-* Point`_ ]object and initializes it with a [%-* Point64 
 ][%-*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:Point`_`(const Size`_`<T`>`&`):%- [* Point`_]([@(0.0.255) const]_[_^Size`_^ S
+[s5;:Point`_`:`:Point`_`(const Size`_`<T`>`&`):%- [* Point`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
 ize`_][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 sz])&]
 [s2; Creates a [%-* Point`_ ]object and initializes it with a [* Size] 
 [%-*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:Point`_`(const Nuller`&`):%- [* Point`_]([@(0.0.255) const]_[_^Nuller^ Null
-er][@(0.0.255) `&])&]
+[s5;:Point`_`:`:Point`_`(const Nuller`&`):%- [* Point`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2; Creates a [%-* Point`_ ]object and initializes with [* Null].&]
 [s3; &]
 [s0; &]
@@ -143,93 +156,104 @@ onst]&]
 [s2; Returns the hash value of the point.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:Point`_`:`:ToString`(`)const:%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Returns the [* String] representation of the point.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`+`=`(Point`_`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`+
-`=]([_^Point`_^ Point`_]_[*@3 p])&]
+[s5;:Point`_`:`:operator`+`=`(Point`_`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`+`=]([_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_[*@3 p])&]
 [s2; Increases [* x] with [*@3 p]`'s horizontal [%- coordinate ]and [* y] 
 with [*@3 p]`'s vertical [%- coordinate].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`+`=`(Point`_`:`:Sz`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* ope
-rator`+`=]([_^Size`_^ Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
+[s5;:Point`_`:`:operator`+`=`(Point`_`:`:Sz`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`+`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
 [s2; Increases [* x ]with [*@3 p]`'s horizontal dimension and [* y] with 
 [*@3 p]`'s vertical dimension.&]
 [s0; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`+`=`(T`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`+`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Point`_`:`:operator`+`=`(T`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`+`=]([*@4 T]_[*@3 t])&]
 [s2; Increases both [%- coordinates ]with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`-`=`(Point`_`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`-
-`=]([_^Point`_^ Point`_]_[*@3 p])&]
+[s5;:Point`_`:`:operator`-`=`(Point`_`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`-`=]([_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_[*@3 p])&]
 [s2; Decreases [* x] with [*@3 p]`'s horizontal [%- coordinate ]and [* y] 
 with [*@3 p]`'s vertical [%- coordinate].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`-`=`(Point`_`:`:Sz`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* ope
-rator`-`=]([_^Size`_^ Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
+[s5;:Point`_`:`:operator`-`=`(Point`_`:`:Sz`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`-`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
 [s2; [%- Decreases ][* x ]with [*@3 p]`'s horizontal dimension and [* y] 
 with [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`-`=`(T`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`-`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Point`_`:`:operator`-`=`(T`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`-`=]([*@4 T]_[*@3 t])&]
 [s2; Decreases both [%- coordinates ]with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`*`=`(Point`_`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`*
-`=]([_^Point`_^ Point`_]_[*@3 p])&]
+[s5;:Point`_`:`:operator`*`=`(Point`_`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`*`=]([_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_[*@3 p])&]
 [s2; Multiplies [* x] with [*@3 p]`'s horizontal [%- coordinate ]and [* y] 
 with [*@3 p]`'s vertical [%- coordinate].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`*`=`(Point`_`:`:Sz`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* ope
-rator`*`=]([_^Size`_^ Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
+[s5;:Point`_`:`:operator`*`=`(Point`_`:`:Sz`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`*`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
 [s2; Multiplies [* x ]with [*@3 p]`'s horizontal dimension and [* y] with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`*`=`(T`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`*`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Point`_`:`:operator`*`=`(T`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`*`=]([*@4 T]_[*@3 t])&]
 [s2; Multiplies both dimension with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`/`=`(Point`_`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator/
-`=]([_^Point`_^ Point`_]_[*@3 p])&]
+[s5;:Point`_`:`:operator`/`=`(Point`_`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator/`=]([_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_[*@3 p])&]
 [s2; Divides [* x] with [*@3 p]`'s horizontal [%- coordinate ]and [* y] with 
 [*@3 p]`'s vertical [%- coordinate].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`/`=`(Point`_`:`:Sz`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* ope
-rator/`=]([_^Size`_^ Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
+[s5;:Point`_`:`:operator`/`=`(Point`_`:`:Sz`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator/`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
 [s2; Divides [* x ]with [*@3 p]`'s horizontal dimension and [* y] with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`/`=`(T`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator/`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Point`_`:`:operator`/`=`(T`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator/`=]([*@4 T]_[*@3 t])&]
 [s2; Divides both coordinates with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`<`<`=`(int`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator<<`=
-]([@(0.0.255) int]_[*@3 sh])&]
+[s5;:Point`_`:`:operator`<`<`=`(int`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator<<`=]([@(0.0.255) int]_[*@3 sh])&]
 [s2; Shift both coordinates left by [*@3 sh].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`>`>`=`(int`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator>>`=
-]([@(0.0.255) int]_[*@3 sh])&]
+[s5;:Point`_`:`:operator`>`>`=`(int`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator>>`=]([@(0.0.255) int]_[*@3 sh])&]
 [s2; Shift both coordinates right by [*@3 sh].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`+`+`(`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`+`+]()&]
+[s5;:Point`_`:`:operator`+`+`(`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`+`+]()&]
 [s2; Increments both coordinates.&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:operator`-`-`(`):%- [_^Point`_^ Point`_][@(0.0.255) `&]_[* operator`-`-]()&]
+[s5;:Point`_`:`:operator`-`-`(`):%- [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(0.0.255) `&]_[* operator`-`-]()&]
 [s2; Decrements both [%- coordinates].&]
 [s3; &]
 [s4;%- &]
@@ -237,120 +261,145 @@ rator/`=]([_^Size`_^ Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_[*@3 p])&]
 [s2; Returns a conversion of the point to [* Value].&]
 [s3; &]
 [s4;%- &]
-[s5;:Point`_`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:Point`_`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the point to a stream [*@(141.42.0) s].&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Friend List]]}}&]
 [s3; &]
-[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_operato
-r`+[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 p][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`+[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_][@(64) _][@3 p][@(64) )]&]
 [s2; Returns an unmodified point [%-*@3 s].&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_operato
-r`-[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 p][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`-[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 p][@(64) )]&]
 [s2; Returns a negated point [%-*@3 s].&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Poi
-nt`_]_operator`+[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- friend_[^`:`:Point`_^ P
-oint`_]_operator`+[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^topic`:`/`/Core`/src`/Size`$en`-us^@(64) Size`_][@(64) <][@4 T][@(64) >_][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,T`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator`+[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , T_][@3 t][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`+`(T`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator`+[@(64) (T_][@3 t][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`:`:Sz`,`:`:Point`_`):%- friend_[^topic`:`/`/Core`/src`/Size`$en`-us^ S
-ize`_]<[@4 T][@(64) >_]operator`+[@(64) (][^topic`:`/`/Core`/src`/Size`$en`-us^@(64) Size
-`_][@(64) <][@4 T][@(64) >_][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`+[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- [@(0.0.255) friend]_
+[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ Point`_]_operator`+[@(64) (
+][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) Point`_][@(64) _][@3 a][@(64) ,
+ ][^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^@(64) Size`_][@(64) <][@4 T][@(64) >
+_][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`,T`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`+[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , T_][@3 t][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(T`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`+[@(64) (T_][@3 t][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`+`(`:`:Point`_`:`:Sz`,`:`:Point`_`):%- [@(0.0.255) friend]_
+[^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ Size`_]<[@4 T][@(64) >_]operato
+r`+[@(64) (][^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^@(64) Size`_][@(64) <
+][@4 T][@(64) >_][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns the result of the addition of two [* Point`_ ]values, 
 a [* Point`_ ]with a [* Size`_ ]or a [* Point`_ ]with single value.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,`:`:Point`_`):%- friend_[^topic`:`/`/Core`/src`/Size`$en`-us^ S
-ize`_]<[@4 T][@(64) >_]operator`-[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- friend_[^`:`:Point`_^ P
-oint`_]_operator`-[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^topic`:`/`/Core`/src`/Size`$en`-us^@(64) Size`_][@(64) <][@4 T][@(64) >_][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,T`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator`-[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , T_][@3 t][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`:`:Sz`,`:`:Point`_`):%- friend_[^topic`:`/`/Core`/src`/Size`$en`-us^ S
-ize`_]<[@4 T][@(64) >_]operator`-[@(64) (][^topic`:`/`/Core`/src`/Size`$en`-us^@(64) Size
-`_][@(64) <][@4 T][@(64) >_][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_]<[@4 T][@(64) >_]operator`-[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- [@(0.0.255) friend]_
+[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ Point`_]_operator`-[@(64) (
+][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) Point`_][@(64) _][@3 a][@(64) ,
+ ][^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^@(64) Size`_][@(64) <][@4 T][@(64) >
+_][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`,T`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`-[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , T_][@3 t][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`-`(`:`:Point`_`:`:Sz`,`:`:Point`_`):%- [@(0.0.255) friend]_
+[^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ Size`_]<[@4 T][@(64) >_]operato
+r`-[@(64) (][^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^@(64) Size`_][@(64) <
+][@4 T][@(64) >_][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns the result of the subtraction of two [* Point`_ ]values, 
 a [* Point`_ ]with a [* Size`_] or a [* Point`_ ]with single value.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`*`(`:`:Point`_`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Poi
-nt`_]_operator`*[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`*`(`:`:Point`_`,T`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator`*[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , T_][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`*`(T`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator`*[@(64) (T_][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`*`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`*[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`*`(`:`:Point`_`,T`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`*[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , T_][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`*`(T`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator`*[@(64) (T_][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns the result of the multiplication of two [* Point`_ ]values 
 or[*  ]a [* Point`_ ]with single value.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`/`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- friend_[^`:`:Point`_^ P
-oint`_]_operator/[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_`:`:Sz^@(64) Sz][@(64) _][@3 b][@(64) )]&]
-[s5;:`:`:Point`_`:`:operator`/`(`:`:Point`_`,T`):%- friend_[^`:`:Point`_^ Point`_]_oper
-ator/[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , T_][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`/`(`:`:Point`_`,`:`:Point`_`:`:Sz`):%- [@(0.0.255) friend]_
+[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ Point`_]_operator/[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Upp`:`:Point`_`:`:Sz^@(64) S
+z][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`/`(`:`:Point`_`,T`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator/[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , T_][@3 b][@(64) )]&]
 [s2; Returns the result of the division of a [* Point`_ ]with a [* Size`_] 
 or a [* Point`_ ]with single value.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`<`<`(`:`:Point`_`,int`):%- friend_[^`:`:Point`_^ Point`_]_
-operator<<[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][@(0.0.255) int][@(64) _][@3 sh][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`<`<`(`:`:Point`_`,int`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator<<[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][@(0.0.255) int][@(64) _][@3 sh][@(64) )]&]
 [s2; Returns the result of left shifting [*@3 a] by [*@3 sh].&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`>`>`(`:`:Point`_`,int`):%- friend_[^`:`:Point`_^ Point`_]_
-operator>>[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][@(0.0.255) int][@(64) _][@3 sh][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`>`>`(`:`:Point`_`,int`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_operator>>[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][@(0.0.255) int][@(64) _][@3 sh][@(64) )]&]
 [s2; Returns the result of right shifting [*@3 a] by [*@3 sh].&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`=`=`(`:`:Point`_`,`:`:Point`_`):%- friend_[@(0.0.255) bool
-][@(64) _]operator`=`=[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`=`=`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[@(0.0.255) b
+ool][@(64) _]operator`=`=[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns [* true ]if [*@3 a ]and [*@3 b ]have their respective coordinates 
 equal, [* false ]otherwise.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:operator`!`=`(`:`:Point`_`,`:`:Point`_`):%- friend_[@(0.0.255) bool
-][@(64) _]operator!`=[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , 
-][^`:`:Point`_^@(64) Point`_][@(64) _][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:operator`!`=`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[@(0.0.255) b
+ool][@(64) _]operator!`=[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns [* true ]if [*@3 a ]and [*@3 b ]have at least an unequal coordinates 
 , [* false ]otherwise.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Point`_`:`:min`(`:`:Point`_`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_m
-in[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _
-][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:min`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_min[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) Po
+int`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2;%- [%% Returns a ][%%* Point`_][%%  with it`'s coordinates equaling 
 the minimum of the respective coordinates between ][*@3 a][@3  ]and[%%  
 ][*@3 b].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:Point`_`:`:max`(`:`:Point`_`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_m
-ax[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _
-][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:max`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_max[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) Po
+int`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2;%- [%% Returns a ][%%* Point`_][%%  with it`'s coordinates equaling 
 the maximum of the respective coordinates between ][*@3 a][@3  ]and[%%  
 ][*@3 b].&]
 [s3;%- &]
 [s4; &]
-[s5;:`:`:Point`_`:`:Nvl`(`:`:Point`_`,`:`:Point`_`):%- friend_[^`:`:Point`_^ Point`_]_N
-vl[@(64) (][^`:`:Point`_^@(64) Point`_][@(64) _][@3 a][@(64) , ][^`:`:Point`_^@(64) Point`_][@(64) _
-][@3 b][@(64) )]&]
+[s5;:`:`:Point`_`:`:Nvl`(`:`:Point`_`,`:`:Point`_`):%- [@(0.0.255) friend]_[^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint`_]_Nvl[@(64) (][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) Po
+int`_][@(64) _][@3 a][@(64) , ][^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^@(64) P
+oint`_][@(64) _][@3 b][@(64) )]&]
 [s2; Returns [%-*@3 b] if [%-*@3 a] is Null, [%-*@3 a] otherwise.&]
 [s3; &]
 [s0; ]]

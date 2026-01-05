@@ -111,9 +111,8 @@ Navigator::Navigator()
 	dlgmode = false;
 }
 
-AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
+AnnotationItem AssistEditor::FindAnnotation(Point pos, bool allow_define)
 {
-	Point pos = GetCurrentPos();
 	AnnotationItem q;
 	bool line1st = true;
 	for(const AnnotationItem& m : annotations)
@@ -134,6 +133,11 @@ AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
 				break;
 		}
 	return q;
+}
+
+AnnotationItem AssistEditor::FindCurrentAnnotation(bool allow_define)
+{
+	return FindAnnotation(GetCurrentPos(), allow_define);
 }
 
 void Navigator::SyncCursor()
