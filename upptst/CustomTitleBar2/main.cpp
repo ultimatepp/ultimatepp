@@ -22,7 +22,7 @@ struct MyApp : TopWindow {
 	Label                title;
 	Label                label;
 	TestRect             rect;
-	Button               button;
+	Button               button, button2;
 	bool                 zooming = true;
 	WithDropChoice<EditString> ed;
 	
@@ -39,6 +39,16 @@ struct MyApp : TopWindow {
 			bar.Add("Blue", [=] { CustomTitleBar(Blue()); });
 			bar.Add("Gray", [=] { CustomTitleBar(Gray()); });
 			bar.Separator();
+			bar.Add("GTK dialog", [=] {
+				FileSelNative sel;
+				sel.ActiveDir(GetHomeDirectory());
+				sel.ExecuteSelectDir("Just a test");
+			});
+			bar.Add("U++ dialog", [=] {
+				SelectFileOpen("Text files\t*.txt\nAll files\t*.*");
+			});
+			bar.Separator();
+			
 			bar.Add("Exit", [=] { Break(); });
 		});
 	}
@@ -49,17 +59,11 @@ struct MyApp : TopWindow {
 		});
 	}
 
-	bool IsCustomTitleBarDragArea(Point p) override
-	{ // identifies which titlebar areas can be clicked for dragging the window
-		p += GetScreenRect().TopLeft();
-		return !menubar.GetScreenRect().Contains(p);
-	}
-	
 	virtual void Layout() override
 	{
 		String s = IsMinimized() ? "Minimized" : IsMaximized() ? "Maximized" : "Overlapped";
 		Title(s);
-		LOG("Layout " << s << ", rect: " << GetScreenRect() << ", mousepos: " << GetMousePos());
+		// LOG("Layout " << s << ", rect: " << GetScreenRect() << ", mousepos: " << GetMousePos());
 	}
 	
 	MyApp() {
@@ -84,6 +88,11 @@ struct MyApp : TopWindow {
 				Break();
 			};
 			*tb << ed.RightPos(DPI(110), DPI(100)).VSizePos(2, 2);
+			button2.SetLabel("RefreshF");
+			*tb << button2.RightPos(DPI(222), DPI(100)).VSizePos(2, 2);
+			button2 << [=] {
+				RefreshFrame();
+			};
 			for(int i = 0; i < 200; i++)
 				ed.AddList(AsString(i));
 		}
@@ -92,6 +101,8 @@ struct MyApp : TopWindow {
 		for(int i = 0; i < 200; i++)
 			txt << i << '\n';
 		editor <<= txt;
+		
+		DDUMP(rect.IsIgnoreMouse());
 	};
 };
 
