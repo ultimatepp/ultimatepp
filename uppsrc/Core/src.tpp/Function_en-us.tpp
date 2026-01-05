@@ -12,7 +12,7 @@ topic "Function";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Function]]}}&]
 [s3;%- &]
-[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 typename][3 _][*@4;3 Res][3 , 
+[s1;%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 typename][3 _][*@4;3 Res][3 , 
 ][@(0.0.255)3 typename...][3 _][*@4;3 ArgTypes][3 >]&]
 [s1;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:class:%- [@(0.0.255) class]_[* Function<Res(Ar
 gTypes...)>_]:_[@(0.0.255) private]_[*@3 Moveable]<Function<[*@4 Res]([*@4 ArgTypes][@(0.0.255) .
