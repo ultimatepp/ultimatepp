@@ -244,7 +244,7 @@ void TopWindow::SetIco()
 		ico = new_ico;
 		lico = new_lico;
 
-		if(custom_titlebar) {
+		if(custom_bar) {
 			Rect r = GetTitleBarRect(this);
 
 			bool maximized = IsMaximized();

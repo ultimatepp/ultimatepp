@@ -575,35 +575,26 @@ void Ide::FindDs(int where, bool all)
 			String text = LoadFile(fn);
 			try {
 				CParser p(text);
-				bool ignore = false;
 				while(!p.IsEof()) {
 					CParser::Pos pos = p.GetPos();
-					if(p.Char('#')) {
-						if(!all) {
-							if(p.Id("if") || p.Id("ifdef"))
-								ignore = true;
-							else
-							if(p.Id("endif"))
-								ignore = false;
-						}
+					if(p.Char('#'))
 						p.SkipLine();
-					}
 					else
 					if(p.IsId()) {
 						static Index<String> ds = {
 							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
-						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT"
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT", "_DBG_"
 						};
 						static Index<String> ds_all = {
 							"DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
-						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT",
+						    "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT", "_DBG_",
 							"RLOG", "RDUMP", "RDUMPC", "RDUMPM", "RTIMING",
 						    "RLOGHEX", "RDUMPHEX", "RTIMESTOP", "RHITCOUNT",
 							"LOG", "DUMP", "DUMPC", "DUMPM", "TIMING",
 						    "LOGHEX", "DUMPHEX", "TIMESTOP", "HITCOUNT",
 						};
 						String id = p.ReadId();
-						if((all ? ds_all : ds).Find(id) >= 0 && p.Char('(') && !ignore) {
+						if((all ? ds_all : ds).Find(id) >= 0 && p.Char('(')) {
 							String line;
 							for(const char *s = pos.lineptr; findarg(*s, '\0', '\r', '\n') < 0; s++)
 								line.Cat(*s);
