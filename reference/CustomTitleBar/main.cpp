@@ -27,7 +27,7 @@ struct MyApp : TopWindow {
 		Icon(CtrlImg::new_doc());
 
 		int h = menubar.GetStdHeight();
-		Ctrl *custom_bar = CustomTitleBar(h);
+		Ctrl *custom_bar = CustomTitleBar(SColorFace());
 		
 		if(custom_bar) {
 			menubar.Transparent();

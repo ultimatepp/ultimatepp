@@ -199,15 +199,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->sync_rect = true;
 	WndRectsSync();
 	RefreshLayoutDeep();
-	
-	#if 0
-	gint double_click_distance;
-	GtkSettings *settings;
-	settings = gtk_widget_get_settings (GTK_WIDGET (gtk()));
-	g_object_get(settings,
-	             "gtk-double-click-distance", &double_click_distance,
-	             NULL);
-	#endif
 }
 
 void Ctrl::WndDestroy()

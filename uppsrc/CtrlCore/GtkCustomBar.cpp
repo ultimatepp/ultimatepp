@@ -112,7 +112,7 @@ void TopWindow::SyncCustomBar()
 bool Ctrl::prevent_custombar_drag;
 
 void Ctrl::SetCustomBarDragPrevention()
-{
+{ // ugly as hell, but seems to be the only simple way how to prevent window drag in custom titlebar
 	static gint p1, p2;
 	GtkSettings *gs = gtk_settings_get_default();
 	ONCELOCK {
@@ -121,7 +121,7 @@ void Ctrl::SetCustomBarDragPrevention()
 	gint s1 = p1;
 	gint s2 = p2;
 	if(prevent_custombar_drag)
-		s1 = s2 = 1000000;
+		s1 = s2 = 1000000; // no drags for you, GtkWindow...
 	g_object_set (gs, "gtk-double-click-distance", s1, "gtk-dnd-drag-threshold", s2, NULL);
 }
 
