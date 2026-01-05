@@ -123,6 +123,7 @@ CONSOLE_APP_MAIN
 	bool update_hub = false;
 	bool only_hub = false;
 	String hub_dir;
+	String out_dir;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
 
@@ -145,6 +146,16 @@ CONSOLE_APP_MAIN
 			else
 			if(ar == "hub-only") {
 				only_hub = true;
+			}
+			else
+			if(ar == "out-dir") {
+				if(i + 1 >= args.GetCount()) {
+					Puts("Output directory not specified");
+					SetExitCode(7);
+					return;
+				}
+				
+				out_dir = args[++i];
 			}
 			else {
 				Puts(String("Unrecognized parameter \"") + a + "\".");
@@ -237,12 +248,30 @@ CONSOLE_APP_MAIN
 			String x = Join(h, ";");
 			SetVar("UPP", x, false);
 			PutVerbose("Inline assembly: " + x);
-			String outdir = GetDefaultUppOut();
-			if (flatpak_build) {
-				outdir = GetExeFolder() + DIR_SEPS + ".cache" + DIR_SEPS + "upp.out";
+			if(out_dir.IsEmpty()) {
+				if(flatpak_build)
+					out_dir = GetExeFolder() + DIR_SEPS + ".cache" + DIR_SEPS + "upp.out";
+				else
+					out_dir = GetDefaultUppOut();
 			}
-			RealizeDirectory(outdir);
-			SetVar("OUTPUT", outdir, false);
+
+			if(!RealizeDirectory(out_dir)) {
+				Puts("Failed to realize output directory \"" + out_dir + "\".");
+				SetExitCode(8);
+				return;
+			}
+			if(!IsFullPath(out_dir)) {
+				out_dir = GetCurrentDirectory() + DIR_SEPS + out_dir;
+				if(!DirectoryExists(out_dir)) {
+					Puts(
+						"Failed to find output directory after relative path noramlization \"" +
+						out_dir + "\".");
+					SetExitCode(8);
+					return;
+				}
+			}
+
+			SetVar("OUTPUT", out_dir, false);
 		}
 		else {
 			if(!LoadVars(v)) {
@@ -384,6 +413,8 @@ CONSOLE_APP_MAIN
 		     "        --hub-dir  - specifies the directory where UppHub packages should be downloaded, using\n"
 		     "                     the second parameter, dir, to set the path.\n"
 		     "        --hub-only - instructs UMK to handle only the logic related to UppHub.\n"
+		     "        --out-dir  - specifies the directory where UMK stores build artifacts,\n"
+		     "                     using the second parameter, dir, to define the path.\n"
 		     "    Additional options [-options for example -brU]:\n"
 		     "        a - rebuild all.\n"
 		     "        b - use BLITZ.\n"
