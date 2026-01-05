@@ -27,7 +27,8 @@ zero.&]
 [s3; &]
 [s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(`):%- [* Function]()&]
 [s5;:Upp`:`:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(const Upp`:`:Nuller`&`):%- [* F
-unction]([@(0.0.255) const]_[_^Upp`:`:Nuller^ Nuller][@(0.0.255) `&])&]
+unction]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2; Creates empty Function. Invoking empty function is NOP and eventual 
 return value is Res() (which results in 0 for fundamental types). 
 Variant with Nuller is useful when defining function declaration 
@@ -116,9 +117,9 @@ and THISFN serve to reduce typing overhead.&]
 [s0;%- &]
 [s5;:Upp`:`:MemFn`(Upp`:`:Ptr`,Res`(`*`)`(ArgTypes`.`.`.`)`):%- [@(0.0.255) template]_<
 [@(0.0.255) class]_[*@4 Ptr], [@(0.0.255) class]_[*@4 Class], [@(0.0.255) class]_[*@4 Res], 
-[@(0.0.255) class...]_[*@4 ArgTypes]>_[_^Upp`:`:Event^ Event]<[*@4 ArgTypes][@(0.0.255) ...
-]>_[* MemFn]([*@4 Ptr]_[*@3 object], [*@4 Res]_(Class`::[@(0.0.255) `*][*@3 member`_function])
-([*@4 ArgTypes][@(0.0.255) ...]))&]
+[@(0.0.255) class...]_[*@4 ArgTypes]>_[_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<[*@4 ArgTypes][@(0.0.255) ...]>_[* MemFn]([*@4 Ptr]_[*@3 object], 
+[*@4 Res]_(Class`::[@(0.0.255) `*][*@3 member`_function])([*@4 ArgTypes][@(0.0.255) ...]))&]
 [s2; Equivalent of std`::mem`_fn returning U`+`+ Function. Creates 
 Function that represents calling [%-*@3 member`_function] of instance 
 [%-*@3 object].&]
