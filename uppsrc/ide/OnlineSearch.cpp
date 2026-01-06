@@ -50,7 +50,7 @@ void SearchEnginesDefaultSetup()
 		{ "C++ reference", "https://en.cppreference.com/mwiki/index.php?search=%s" },
 		{ "Wikipedia", "https://en.wikipedia.org/w/index.php?search=%s" },
 		{ "GitHub", "https://github.com/search?q=%s" },
-		{ "CodeProject", "https://www.codeproject.com/search.aspx?q=%s" },
+		{ "CodeProject", "https://www.codeproject.com/search?q=%s" },
 		{ "WolframAlpha", "https://www.wolframalpha.com/input/?i=%s" },
 	};
 	
