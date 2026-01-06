@@ -968,7 +968,6 @@ void Ide::HelpMenu(Bar& menu)
 {
 	LTIMESTOP("HelpMenu");
 	if(!IsEditorMode()) {
-//		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
 		menu.Add(editor.GetWord().GetCount(), AK_SEARCHTOPICS, THISBACK(SearchTopics));
 	}
 	menu.AddMenu(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
@@ -984,13 +983,15 @@ void Ide::HelpMenu(Bar& menu)
 		menu.Separator();
 		menu.Add("About..", IdeImg::info(), THISBACK(About));
 	}
-	else {
-		if(!toolbar_in_row) {
-			menu.GapRight();
-			menu.Separator();
-		}
-		menu.Add(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
+}
+
+void Ide::HelpShowTopicMenu(Bar& menu)
+{
+	if(!toolbar_in_row) {
+		menu.GapRight();
 	}
+	menu.Separator();
+	menu.Add(AK_BROWSETOPICS_WIN, CtrlImg::help(), THISBACK(ShowTopicsWin));
 }
 
 void Ide::MainMenu(Bar& menu)
@@ -1058,6 +1059,7 @@ void Ide::MainTool(Bar& bar)
 #ifdef PLATFORM_COCOA
 	bar.GapRight();
 	bar.Add(display, HorzLayoutZoom(170));
+	HelpShowTopicMenu(bar);
 #endif
 }
 

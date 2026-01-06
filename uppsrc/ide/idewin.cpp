@@ -523,7 +523,6 @@ Ide::Ide()
 	menubar.AreaLook(1);
 	toolbar.WhenHelp = ~statusbar;
 	toolbar.AreaLook(1);
-	toolbar_in_row = false;
 	WhenClose = THISBACK(Exit);
 
 	editor_p.Add(editor.SizePos());

@@ -627,7 +627,13 @@ public:
 	byte      default_charset;
 	bool      indent_spaces;
 	bool      show_status_bar;
-	bool      toolbar_in_row;
+	bool      toolbar_in_row =
+#ifdef PLATFORM_MACOS
+		true
+#else
+		false
+#endif
+		;
 	bool      disable_custom_caption = false;
 	bool      show_tabs;
 	bool      show_spaces;
@@ -1042,6 +1048,7 @@ public:
 		void  InsertParameters();
 
 	void      HelpMenu(Bar& menu);
+	void      HelpShowTopicMenu(Bar& menu);
 	    void  ViewIdeLogFile();
 		void  About();
 
