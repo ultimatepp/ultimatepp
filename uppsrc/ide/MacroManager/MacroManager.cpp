@@ -15,7 +15,7 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlSt
 	, globalMacrosChanged(false)
 {
 	CtrlLayout(*this, t_("Macro Manager"));
-	Zoomable().Sizeable().MinimizeBox(false);
+	Zoomable().Sizeable();
 	globalTree.NoRoot();
 	localTree.NoRoot();
 	
