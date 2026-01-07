@@ -290,9 +290,15 @@ void TopWindow::SyncCaption()
 	GuiLock __;
 	if(top) {
 		SyncTitle();
-		NSWindow *window = GetTop()->coco->window;
-		[[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:!minimizebox];
-		[[window standardWindowButton:NSWindowZoomButton] setHidden:!maximizebox];
+		NSWindow* window = GetTop()->coco->window;
+
+		NSWindowStyleMask mask = [window styleMask];
+		mask = minimizebox ? (mask | NSWindowStyleMaskMiniaturizable)
+		                   : (mask & ~NSWindowStyleMaskMiniaturizable);
+		mask = maximizebox ? (mask | NSWindowStyleMaskResizable)
+		                   : (mask & ~NSWindowStyleMaskResizable);
+
+		[window setStyleMask:mask];
 	}
 	SyncAppIcon();
 }
