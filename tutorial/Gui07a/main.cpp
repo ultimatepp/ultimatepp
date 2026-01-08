@@ -5,23 +5,23 @@ using namespace Upp;
 struct MyAppWindow : TopWindow {
 	MenuBar menu;
 
+	void Exit() {
+		if(PromptOKCancel("Exit MyApp?"))
+			Break();
+	}
+
+	void SubMenu(Bar& bar) {
+		bar.Add("Exit", [=] { Exit(); });
+	}
+
+	void MainMenu(Bar& bar) {
+		bar.Sub("Menu", [=](Bar& bar) { SubMenu(bar); });
+	}
+
 	MyAppWindow() {
 		Title("My application with menu").Sizeable();
 		AddFrame(menu);
-		menu.Set(
-			[=](Bar& bar) {
-				bar.Sub("Menu",
-						[=](Bar& bar) {
-							bar.Add("Exit",
-								[=] {
-									if(PromptOKCancel("Exit MyApp?"))
-										Break();
-								}
-							);
-						}
-				);
-			}
-		);
+		menu.Set([=](Bar& bar) { MainMenu(bar); });
 	}
 };
 
