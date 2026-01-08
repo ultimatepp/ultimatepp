@@ -82,7 +82,6 @@ bool Ide::FindLOG()
 			String text = LoadFile(fn);
 			try {
 				CParser p(text);
-				bool ignore = false;
 				while(!p.IsEof()) {
 					CParser::Pos pos = p.GetPos();
 					int priority = 1;
@@ -168,8 +167,10 @@ bool Ide::FindLOG()
 	}
 	
 	if(bestl.file.GetCount()) {
+		AddHistory();
 		EditFile(bestl.file);
 		editor.SetCursor(editor.GetPos(bestl.line - 1, 0));
+		AddHistory();
 	}
 	return true;
 }
