@@ -150,6 +150,7 @@ void  TopWindow::DoZoom()
 
 void  TopWindow::DoMoveWindow()
 {
+	DLOG("============= MOVE");
 #if GTK_CHECK_VERSION(3, 22, 0)
 	if(CurrentEvent.device)
 		gdk_window_begin_move_drag_for_device(gdk(), CurrentEvent.device,

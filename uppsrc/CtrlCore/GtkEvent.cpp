@@ -122,8 +122,10 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 
-		p->WndRectsSync();
-		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
+
+		DLOG("A");
+		p->InvalidateScreenRect(); // for some reason Draw seems to be sent sooner than CONFIGURE
+		p->SyncWndRect(); // avoid black areas when resizing
 
 		SystemDraw w(cr);
 		painting = true;
@@ -162,6 +164,13 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	return true;
 }
 
+void Ctrl::InvalidateScreenRect()
+{
+	Top *top = GetTop();
+	if(top)
+		top->sync_rect = true;
+}
+
 gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
 #ifdef LOG_EVENTS
@@ -171,13 +180,16 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 		ev = f->b;
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
-	if(event->type == GDK_CONFIGURE) {
+	switch(event->type) {
+	case GDK_CONFIGURE:
+		AddEvent(user_data, GDK_CONFIGURE, Value(), event);
+	case GDK_EXPOSE: {
 		Ctrl *p = GetTopCtrlFromId(user_data);
-		if(p) {
-			Top *top = p->GetTop();
-			if(top)
-				top->sync_rect = true;
+		if(p)
+			p->InvalidateScreenRect();
 		}
+	default:
+		break;
 	}
 	return false;
 }
@@ -273,13 +285,10 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			}
 		}
 		break;
+	case GDK_EXPOSE:
 	case GDK_CONFIGURE: {
 		retval = false;
-		GdkEventConfigure *e = (GdkEventConfigure *)event;
-		value = SCL(e->x, e->y, e->width, e->height);
-		Top *top = p->GetTop();
-		if(top)
-			top->sync_rect = true;
+		p->InvalidateScreenRect();
 		break;
 	}
 	default:
@@ -378,7 +387,6 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
-	e.mousepos = prev_mouse_pos;
 	e.state = prev_state;
 	bool press = false;
 	if(event)
@@ -427,6 +435,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 		default:
 			break;
 		}
+	e.mousepos = prev_mouse_pos;
 	e.count = 1;
 	e.event = nullptr;
 	e.device = nullptr;
@@ -642,8 +651,9 @@ void Ctrl::Proc()
 #endif
 
 	for(Ctrl *q : GetTopCtrls()) {
-		q->WndRectsSync();
-		q->SyncWndRect(q->GetWndScreenRect());
+		DDUMP(utop && utop->sync_rect);
+		DLOG("B");
+		q->SyncWndRect();
 	}
 	
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
@@ -825,15 +835,19 @@ void Ctrl::Proc()
 		activeCtrl = NULL;
 		break;
 	case GDK_DELETE: {
-		TopWindow *w = dynamic_cast<TopWindow *>(this);
-		if(w) {
+		if(tw) {
 			if(IsEnabled()) {
 				IgnoreMouseUp();
-				w->WhenClose();
+				tw->WhenClose();
 			}
 		}
 		return;
 	}
+	case GDK_CONFIGURE:
+		DLOG("Configure!");
+		InvalidateScreenRect();
+		SyncWndRect();
+		return;
 	default:
 		return;
 	}
@@ -841,20 +855,25 @@ void Ctrl::Proc()
 		_this->PostInput();
 }
 
-void Ctrl::SyncWndRect(const Rect& rect)
+void Ctrl::SyncWndRect()
 {
-	TopWindow *w = dynamic_cast<TopWindow *>(this);
-	bool force = false;
-	if(w) {
-		w->SyncIcons();
-		if(w->state == TopWindow::OVERLAPPED)
-			w->overlapped = rect;
+	WndRectsSync();
+	Rect rect = GetWndScreenRect();
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	if(tw) {
+		tw->SyncIcons();
+		if(tw->state == TopWindow::OVERLAPPED)
+			tw->overlapped = rect;
+
+		Top *top = GetTop();
+		int cy = utop->header_rect.GetHeight();
+		if(top && tw->custom_bar_frame && tw->custom_bar_frame->GetHeight() != cy)
+			tw->custom_bar_frame->Height(cy);
 	}
 	if(GetRect() != rect)
 		SetWndRect(rect);
-	else
-	if(force)
-		Layout();
+	if(TopWindow *tw = dynamic_cast<TopWindow *>(this)) {
+	}
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)

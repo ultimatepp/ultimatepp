@@ -351,7 +351,7 @@ void  Ctrl::SetRect(int x, int y, int cx, int cy)
 
 void  Ctrl::SetWndRect(const Rect& r)
 {
-	LLOG("SetWndRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
+	DLOG("SetWndRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
 	SetPos0(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);
 }
 

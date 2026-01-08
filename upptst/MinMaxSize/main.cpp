@@ -8,7 +8,6 @@ struct App : public TopWindow
 	Button   move;
 
 	void Paint(Draw& w) override {
-		DLOG("PAINT ---------------------");
 		w.DrawRect(GetSize(), LtCyan());
 		DrawFrame(w, 0, 0, 500, 500, Black());
 		DrawFrame(w, 0, 0, 400, 400, Black());
@@ -38,7 +37,7 @@ struct App : public TopWindow
 
     App()
     {
-        SetRect(10, 10, 500, 500);
+        SetRect(10, 100, 500, 500);
 		Sizeable().Zoomable();
 		
 		Add(dl.LeftPos(10, 101).BottomPos(0));
@@ -54,9 +53,28 @@ struct App : public TopWindow
 	}
 };
 
+struct App2 : App {
+	Label title;
+	
+	App2() {
+        SetRect(500, 100, 500, 500);
+		Ctrl *tb = CustomTitleBar(SYellow(), GetStdFontCy() + DPI(4));
+		if(tb)
+			*tb << title.SizePos();
+		
+		title = "\1[g= [* custom [/_ titlebar";
+	}
+};
 
 
 GUI_APP_MAIN
 {
-	App().Run();
+	App app;
+	App2 app2;
+	app.OpenMain();
+//	app2.OpenMain();
+	
+//	Ctrl::EventLoop();
+	app.Run();
+//	app.Run();
 }

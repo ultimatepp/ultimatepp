@@ -53,8 +53,8 @@
 		guint      state;
 		int        count;
 		GdkDevice *device;
-		int        x_root;
-		int        y_root;
+		double     x_root;
+		double     y_root;
 
 		bool       pen;
 		bool       pen_barrel;
@@ -88,10 +88,12 @@
 	void   Proc();
 	bool   SweepConfigure(bool wait);
 	bool   SweepFocus(bool wait);
-	void   SyncWndRect(const Rect& rect);
+	void   SyncWndRect();
+	void   InvalidateScreenRect();
 
 	void   SetCustomBarColor(Color c);
-	void   WndRectsSync();
+	void   WndRectsSync() const;
+
 
 	static BiVector<GEvent>  Events;
 	static Vector<Ptr<Ctrl>> activePopup; // created with 'activate' flag - usually menu
@@ -121,11 +123,6 @@
 	static void StartGrabPopup();
 	static bool ReleaseWndCapture0();
 	static void DoCancelPreedit();
-
-	static Rect frameMargins;
-	static Rect GetFrameMargins();
-
-	       Rect CSDMargins() const;
 
 	static Index<String>   dnd_targets;
 	static String          dnd_text_target;
@@ -172,6 +169,13 @@
 	                        guint time, gpointer user_data, bool paste);
 	static bool   ProcessInvalids();
 
+	static Rect csd_border;
+	static int  csd_std_header_cy;
+	static Rect frameMargins;
+	
+	static void UpdateWindowDecorationsGeometry();
+
+
 	static bool prevent_custombar_drag;
 	static bool custom_titlebar_drag_click;
 
@@ -207,6 +211,7 @@ public: // really private:
 	static Point           prev_mouse_pos;
 
 	static int    SCL(int x)                        { return scale * x; }
+	static int    SCL(double x)                     { return scale * x; }
 	static Rect   SCL(int x, int y, int cx, int cy) { return RectC(SCL(x), SCL(y), SCL(cx), SCL(cy)); }
 	static double LSC(int x)                        { return (double)x / scale; }
 	static int    LSCH(int x)                       { return (x + scale - 1) / scale; }

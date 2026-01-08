@@ -6,14 +6,6 @@ namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
-Rect Ctrl::frameMargins;
-
-Rect Ctrl::GetFrameMargins()
-{
-	GuiLock __;
-	return frameMargins != Rect(0, 0, 0, 0) ? frameMargins : Rect(8, 32, 8, 8);
-}
-
 void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
@@ -23,23 +15,35 @@ void TopWindow::SyncSizeHints()
 	LLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
 	Top *top = GetTop();
 	if(top) {
-		Rect g = CSDMargins();
+		int mcx = 0;
+		int mcy = 0;
+		
+		if(top->csd) {
+			DDUMP(csd_border);
+			mcx += csd_border.left + csd_border.right;
+			mcy += csd_border.top + csd_border.bottom;
+			if(!custom_bar)
+				mcy += csd_std_header_cy;
+		}
 		
 		GdkGeometry m;
 
-		Size minsz = sz0;
-		if(sizeable)
-			minsz = GetMinSize();
-		m.min_width = LSCH(minsz.cx) + g.left + g.right;
-		m.min_height = LSCH(minsz.cy) + g.top + g.bottom;
-		Size maxsz = sz0;
-		if(sizeable)
-			maxsz = GetMaxSize();
-		m.max_width = LSCH(maxsz.cx) + g.left + g.right;
-		m.max_height = LSCH(maxsz.cy) + g.top + g.bottom;
+		m.base_width = sz0.cx;
+		m.base_height = sz0.cy;
+
+		Size minsz = sizeable ? GetMinSize() : sz0;
+		m.min_width = LSCH(minsz.cx + mcx);
+		m.min_height = LSCH(minsz.cy + mcy);
+
+		Size maxsz = sizeable ? GetMaxSize() : sz0;
+		m.max_width = LSCH(maxsz.cx + mcx);
+		m.max_height = LSCH(maxsz.cy + mcy);
+		
+		DDUMP(m.min_width);
+	
 		gtk_window_set_resizable(gtk(), sizeable);
-		gtk_window_set_geometry_hints(gtk(), top->window, &m,
-		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+		gtk_window_set_geometry_hints(gtk(), NULL, &m,
+		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE|GDK_HINT_BASE_SIZE));
 		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
 	}
 	
@@ -78,8 +82,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 	SetupRect(owner);
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
-		Rect wr = owner? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
-		Rect fm = GetFrameMargins();
+		Rect wr = owner ? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
+		Rect fm = frameMargins;
 		Rect r = (center == 1 && owner ? owner->GetRect() : wr)
 		         .CenterRect(sz);
 		wr.left += fm.left;
@@ -161,10 +165,11 @@ void TopWindow::Open(Ctrl *owner)
 	GdkRectangle fr;
 	gdk_window_get_frame_extents(gdk(), &fr);
 	Rect r = GetRect();
-	frameMargins.left = max(frameMargins.left, minmax(r.left - SCL(fr.x), 0, DPI(32)));
-	frameMargins.right = max(frameMargins.right, minmax(SCL(fr.x + fr.width) - r.right, 0, DPI(32)));
-	frameMargins.top = max(frameMargins.top, minmax(r.top - SCL(fr.y), 0, DPI(80)));
-	frameMargins.bottom = max(frameMargins.bottom, minmax(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48)));
+	frameMargins.left = clamp(r.left - SCL(fr.x), 0, DPI(32));
+	frameMargins.right = clamp(SCL(fr.x + fr.width) - r.right, 0, DPI(32));
+	frameMargins.top = clamp(r.top - SCL(fr.y), 0, DPI(80));
+	frameMargins.bottom = clamp(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48));
+	DLOG("Margins2 " << frameMargins);
 }
 
 void TopWindow::Open()
@@ -271,7 +276,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
 		Rect limit = GetVirtualWorkArea();
-		Rect fm = GetFrameMargins();
+		Rect fm = frameMargins;
 		limit.left += fm.left;
 		limit.right -= fm.right;
 		limit.top += fm.top;

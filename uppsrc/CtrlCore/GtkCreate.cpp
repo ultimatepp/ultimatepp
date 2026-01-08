@@ -54,6 +54,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
+	
+	ONCELOCK {
+		frameMargins = Rect(DPI(8), DPI(32), DPI(8), DPI(8));
+	}
 
 	Top *top = new Top;
 	SetTop(top);
@@ -91,6 +95,9 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	top->csd = !popup;
 #endif
 	if(top->csd) {
+		ONCELOCK {
+			UpdateWindowDecorationsGeometry();
+		}
 		top->client = gtk_drawing_area_new();
 		if(custom_bar) {
 		    top->header = gtk_event_box_new ();
@@ -103,7 +110,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		}
 		else {
 			top->header = gtk_header_bar_new();
-			if (findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0)
+			if(findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0)
 				gtk_widget_set_size_request(top->header, 1, 1);
 			else
 				gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
@@ -114,6 +121,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		gtk_window_set_titlebar(gtk(), top->header);
 
 		gtk_widget_set_can_focus(top->client, TRUE);
+
+		gtk_container_add(GTK_CONTAINER(top->window), top->client);
 
 		g_signal_connect(top->window, "delete-event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	}
@@ -139,28 +148,11 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	if(top->header_area)
 		SetupEvents2(top->header_area);
 
-	gtk_window_set_default_size(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
-	gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
-
-	if(top->csd) { // CSD is active
-		GdkRect gr(Rect(0, 0, LSCH(r.GetWidth()), LSCH(r.GetHeight())));
-		gtk_container_add(GTK_CONTAINER(top->window), top->client);
-		gtk_widget_show_all(top->window);
-
-		GtkWidget *win = GTK_WIDGET(gtk());
-
-		gtk_widget_show_all(win);
-		gtk_widget_size_allocate(top->client, &gr);
-	}
-	else {
-		gtk_widget_realize(top->window);
-		gtk_window_resize(gtk(), LSCH(r.GetWidth()), LSCH(r.GetHeight()));
-	}
-
-	if(tw) {
+	if(tw)
 		if(findarg(gtk_window_get_type_hint(gtk()), GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
 			tw->SyncSizeHints();
-	}
+
+	gtk_widget_show_all(top->window);
 
 	w.gdk = gtk_widget_get_window(top->window);
 
@@ -178,6 +170,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	g_signal_connect(top->im_context, "preedit-end", G_CALLBACK(IMPreeditEnd), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), (gpointer)(uintptr_t)top->id);
 
+	DLOG("=================");
+	WndSetPos(r);
 	WndShow(IsShown());
 
 	SweepConfigure(true);
@@ -198,6 +192,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top->sync_rect = true;
 	WndRectsSync();
+	DDUMP(GetScreenRect());
 	RefreshLayoutDeep();
 }
 

@@ -150,33 +150,58 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 #endif
 
-Rect Ctrl::CSDMargins() const
-{
-	if(top && utop->csd && gtk_widget_get_realized(GTK_WIDGET(gtk()))) {
-		int client_cx = gtk_widget_get_allocated_width(utop->client);
-		int client_cy = gtk_widget_get_allocated_height(utop->client);
-		
-		int client_x, client_y;
-		gtk_widget_translate_coordinates(utop->client, GTK_WIDGET(gtk()), 0, 0, &client_x, &client_y);
+Rect Ctrl::csd_border;
+int  Ctrl::csd_std_header_cy;
+Rect Ctrl::frameMargins;
 
-		gint window_x, window_y, window_cx, window_cy;
-		gdk_window_get_geometry(gdk(), &window_x, &window_y, &window_cx, &window_cy);
-		
-		return Rect(client_x, client_y, window_cx - client_cx - client_x, window_cy - client_cy - client_y);
-	}
-	return Rect(0, 0, 0, 0);
+void Ctrl::UpdateWindowDecorationsGeometry()
+{
+	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	GtkWidget* header = gtk_header_bar_new();
+
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_window_set_titlebar((GtkWindow *)win, header);
+
+	GtkWidget* client = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(win), client);
+	gtk_widget_show_all(win);
+
+	gint left, top;
+
+	gdk_window_get_origin(gtk_widget_get_window(client), &left, &top);
+
+	int win_cx = gtk_widget_get_allocated_width(win);
+	int win_cy = gtk_widget_get_allocated_height(win);
+
+	csd_std_header_cy = gtk_widget_get_allocated_height(header);
+
+	int client_cx = gtk_widget_get_allocated_width(client);
+	int client_cy = gtk_widget_get_allocated_height(client);
+
+	csd_border.left = SCL(left);
+	csd_border.right = SCL(win_cx - client_cx - left);
+	csd_border.top = SCL(top - csd_std_header_cy);
+
+	csd_border.bottom = SCL(win_cy - client_cy - top);
+	csd_std_header_cy = SCL(csd_std_header_cy);
+
+	gtk_widget_destroy(win);
 }
 
-void Ctrl::WndRectsSync()
+void Ctrl::WndRectsSync() const
 {
+	DTIMING("WndRectsSync");
+//	utop->sync_rect = true; _DBG_
 	if(utop && utop->sync_rect) {
+		DTIMING("WndRectsSync 2");
 		auto GetScreenRect = [&](GtkWidget *w) {
 			gint x, y;
 			gint width, height;
-		
+
 			width = gtk_widget_get_allocated_width(w);
 			height = gtk_widget_get_allocated_height(w);
-		
+
 		/* TODO: Remove?
 			if(IsWayland()) {
 				if(top && utop->csd) {
@@ -204,16 +229,13 @@ void Ctrl::WndRectsSync()
 
 		utop->client_rect = GetScreenRect(utop->client);
 		utop->screen_rect = utop->client_rect;
-		TopWindow *tw = dynamic_cast<TopWindow *>(this);
-		if(tw) {
-			if(tw->custom_bar_frame) {
-				utop->header_rect = GetScreenRect(utop->header_area);
-				utop->screen_rect.Union(utop->header_rect);
-				if(tw->custom_bar_frame) // TODO: Maybe consider wrongly placed ones?
-					tw->custom_bar_frame->Height(utop->header_rect.GetHeight());
-			}
+		const TopWindow *tw = dynamic_cast<const TopWindow *>(this);
+		if(tw && tw->custom_bar_frame) {
+			utop->header_rect = GetScreenRect(utop->header_area);
+			utop->screen_rect.Union(utop->header_rect);
 		}
 		utop->sync_rect = false;
+		DDUMP(utop->screen_rect);
 	}
 }
 
@@ -224,6 +246,8 @@ Rect Ctrl::GetWndScreenRect() const
 	if(!IsOpen() || !top)
 		return Null;
 	
+	WndRectsSync();
+
 	return utop->screen_rect;
 }
 
@@ -476,7 +500,7 @@ void WakeUpGuiThread();
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	
+
 	Rect rr = r;
 	if(IsWayland())
 		rr.Inflate(DPI(2), DPI(2)); // TODO: This is temporary fix
@@ -523,6 +547,7 @@ bool Ctrl::SweepConfigure(bool wait)
 			LLOG("SweepConfigure " << e.value);
 			if(top) {
 				utop->sync_rect = true;
+				DLOG("Sweep");
 				SetWndRect(GetWndScreenRect());
 			}
 			r = true;
@@ -539,29 +564,36 @@ void Ctrl::WndSetPos(const Rect& rect)
 	GuiLock __;
 	if(!IsOpen())
 		return;
-	Ptr<Ctrl> this_ = this;
+/*	Ptr<Ctrl> this_ = this;
 	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
 	if(!this_ || !IsOpen())
 		return;
-
+*/ _DBG_
+	DLOG("SetWndPos");
+	ReleaseCtrlCapture();
 	SetWndRect(rect);
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(tw)
 		tw->SyncSizeHints();
 	if(top && utop->csd) {
-		Rect m = CSDMargins();
-		gdk_window_move_resize(gdk(), LSC(rect.left) - m.left, LSC(rect.top) - m.top,
-		                               LSCH(rect.GetWidth()) + m.left + m.right,
-		                               LSCH(rect.GetHeight()) + m.top + m.bottom);
+		int top = csd_border.top;
+		if(!tw || !tw->custom_bar)
+			top += csd_std_header_cy;
+		gdk_window_move_resize(gdk(), LSC(rect.left - csd_border.left), LSC(rect.top - top),
+		                              LSCH(rect.GetWidth() + csd_border.left + csd_border.right),
+		                              LSCH(rect.GetHeight() + top + csd_border.bottom));
 	}
 	else {
 		Rect m(0, 0, 0, 0);
 		if(tw)
-			m = GetFrameMargins();
+			m = frameMargins;
+		DDUMP(frameMargins);
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
-		                               LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
+		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}
-	utop->sync_rect = true;
+	InvalidateScreenRect();
+	SyncWndRect();
+	ReleaseCtrlCapture();
 	LLOG("-- WndSetPos0 " << rect);
 }
 
@@ -663,4 +695,3 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 
 
 #endif
-
