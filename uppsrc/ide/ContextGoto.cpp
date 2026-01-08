@@ -263,6 +263,7 @@ bool Ide::GotoId(const String& ref_id, const String& name, Point ref_pos, int li
 
 void Ide::ContextGoto()
 {
+	if(FindLOG()) return;
 	ContextGoto0(editor.GetCursor());
 }
 
