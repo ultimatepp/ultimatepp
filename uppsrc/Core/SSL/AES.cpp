@@ -18,10 +18,10 @@ namespace {
 }
 
 Aes256Gcm::Aes256Gcm()
-: iteration(AES_GCM_DEFAULT_ITERATION)
-, chunksize(1024)
-, ctx(nullptr)
+: ctx(nullptr)
 , cipher(nullptr)
+, chunksize(1024)
+, iteration(AES_GCM_DEFAULT_ITERATION)
 {
 	SslInitThread();
 	
