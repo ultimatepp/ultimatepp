@@ -157,9 +157,16 @@ void Ctrl::WndDestroy()
 		return;
 	bool focus = HasFocusDeep();
 	Ptr<Ctrl> owner = GetOwner();
-	[GetTop()->coco->window close];
-	delete GetTop()->coco;
+
+	auto* coco = GetTop()->coco;
+	auto* window = coco->window;
+
+	[window setCollectionBehavior:NSWindowCollectionBehaviorTransient];
+	[window close];
+
+	delete coco;
 	DeleteTop();
+
 	popup = isopen = false;
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
@@ -290,9 +297,15 @@ void TopWindow::SyncCaption()
 	GuiLock __;
 	if(top) {
 		SyncTitle();
-		NSWindow *window = GetTop()->coco->window;
-		[[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:!minimizebox];
-		[[window standardWindowButton:NSWindowZoomButton] setHidden:!maximizebox];
+		NSWindow* window = GetTop()->coco->window;
+
+		NSWindowStyleMask mask = [window styleMask];
+		mask = minimizebox ? (mask | NSWindowStyleMaskMiniaturizable)
+		                   : (mask & ~NSWindowStyleMaskMiniaturizable);
+		mask = maximizebox ? (mask | NSWindowStyleMaskResizable)
+		                   : (mask & ~NSWindowStyleMaskResizable);
+
+		[window setStyleMask:mask];
 	}
 	SyncAppIcon();
 }
