@@ -12,9 +12,9 @@ topic "Size";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Size`_]]}}&]
 [s3; &]
-[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
+[s1;%- [@(0.0.255)3 template ][3 <][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Size`_`:`:struct:%- [@(0.0.255) struct]_[* Size`_]_:_[@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
-]_[* Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
+][* Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]>&]
 [s0;%- &]
 [s0; [* Size`_] is a generic structure that describes a two dimensional 
 size object. The horizontal dimension is represented by [*@(154.0.0) cx][@(154.0.0)  
@@ -25,26 +25,31 @@ type [*@4 T]. &]
 [s0; To get a specialized version of [* Size`_], use one of the following:&]
 [s0; &]
 [s1;%- [* Size]&]
-[s5;:Size`:`:typedef:%- [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <int>]_[* Size]&]
-[s2; Size`_ with with [* int] dimensions.&]
+[s5;:Upp`:`:Size:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <int>]_[* Size]&]
+[s2; Size`_ with [* int] dimensions. This is the most common variant, 
+suitable for general`-purpose UI coordinate systems with typical 
+precision requirements.&]
 [s3; &]
 [s4; &]
 [s1;%- [* Size16]&]
-[s5;:Size16`:`:typedef:%- [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <][_^int16^ int1
-6][@(0.0.255) >]_[* Size16]&]
-[s2; Size`_ with with [* int16][@(0.0.255)  ]dimensions.&]
+[s5;:Upp`:`:Size16:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ i
+nt16][@(0.0.255) >]_[* Size16]&]
+[s2; Size`_ with [* int16][@(0.0.255)  ]dimensions.&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s1;%- [* Size64]&]
-[s5;:Size64`:`:typedef:%- [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <][_^int64^ int6
-4][@(0.0.255) >]_[* Size64]&]
-[s2; Size`_ with with [* int64][@(0.0.255)  ]dimensions.&]
+[s5;:Upp`:`:Size64:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
+nt64][@(0.0.255) >]_[* Size64]&]
+[s2; Size`_ with [* int64][@(0.0.255)  ]dimensions.&]
 [s3; &]
 [s4;*@(154.0.0) &]
 [s1;%- [* Sizef]&]
-[s5;:Sizef`:`:typedef:%- [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <double>]_[* Size
-f]&]
-[s2; Size`_ with with [* double][@(0.0.255)  ]dimensions.&]
+[s5;:Upp`:`:Sizef:%- [@(0.0.255) typedef]_[_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) <double>]_[* Sizef]&]
+[s2; Size`_ with [* double][@(0.0.255)  ]dimensions.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -57,8 +62,8 @@ and cy (height), set to 0.&]
 sEmpty()] method on such a [* Size`_] object will return true.&]
 [s3; &]
 [s4; &]
-[s5;:Size`_`:`:Size`_`(const Value`&`):%- [* Size`_]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[*@3 src])&]
+[s5;:Size`_`:`:Size`_`(const Value`&`):%- [* Size`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 src])&]
 [s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
@@ -72,8 +77,9 @@ int>`&]_[*@3 sz])&]
 [s2; Creates a [* Size`_] object and initializes it with a [* Size] [*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:Size`_`(const Size`_`<short`>`&`):%- [* Size`_]([@(0.0.255) const]_[* Size`_
-][@(0.0.255) <short>`&]_[*@3 sz])&]
+[s5;:Size`_`:`:Size`_`(const Size`_`<int16`>`&`):%- [* Size`_]([@(0.0.255) const]_[* Size`_
+][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int16^ int
+16][@(0.0.255) >`&]_[*@3 sz])&]
 [s2; Creates a [* Size`_] object and initializes it with a [* Size16] 
 [*@3 sz].&]
 [s3; &]
@@ -85,19 +91,20 @@ int>`&]_[*@3 sz])&]
 [s3; &]
 [s4;%- &]
 [s5;:Size`_`:`:Size`_`(const Size`_`<int64`>`&`):%- [* Size`_]([@(0.0.255) const]_[* Size`_
-][@(0.0.255) <][_^int64^ int64][@(0.0.255) >`&]_[*@3 sz])&]
+][@(0.0.255) <][_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ int
+64][@(0.0.255) >`&]_[*@3 sz])&]
 [s2; Creates a [* Size`_ ]object and initializes it with a [* Size64] 
 [%-*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:Size`_`(const Point`_`<T`>`&`):%- [* Size`_]([@(0.0.255) const]_[_^Point`_^ P
+[s5;:Size`_`:`:Size`_`(const Point`_`<T`>`&`):%- [* Size`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint`_][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 pt])&]
 [s2; Creates a [* Size`_ ]object and initializes it with a [* Point] 
 [%-*@3 sz].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:Size`_`(const Nuller`&`):%- [* Size`_]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
-])&]
+[s5;:Size`_`:`:Size`_`(const Nuller`&`):%- [* Size`_]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2; Creates a [* Size`_ ]object and initializes it with [* Null].&]
 [s3; &]
 [s0; &]
@@ -135,69 +142,76 @@ onst]&]
 [s2; Returns the hash value of the size.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
+[s5;:Size`_`:`:ToString`(`)const:%- [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Returns the [* String] representation of the size.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`+`=`(Size`_`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`+`=](
-[_^Size`_^ Size`_]_[*@3 p])&]
+[s5;:Size`_`:`:operator`+`=`(Size`_`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`+`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_]_[*@3 p])&]
 [s2; Increases [* cx] with [*@3 p]`'s horizontal dimension and [* cy] with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`+`=`(T`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`+`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Size`_`:`:operator`+`=`(T`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`+`=]([*@4 T]_[*@3 t])&]
 [s2; Increases both dimension with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`-`=`(Size`_`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`-`=](
-[_^Size`_^ Size`_]_[*@3 p])&]
+[s5;:Size`_`:`:operator`-`=`(Size`_`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`-`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_]_[*@3 p])&]
 [s2; Decreases [* cx ]with [*@3 p]`'s horizontal dimension and [* cy ]with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`-`=`(T`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`-`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Size`_`:`:operator`-`=`(T`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`-`=]([*@4 T]_[*@3 t])&]
 [s2; Decreases both dimension with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`*`=`(Size`_`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`*`=](
-[_^Size`_^ Size`_]_[*@3 p])&]
+[s5;:Size`_`:`:operator`*`=`(Size`_`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`*`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_]_[*@3 p])&]
 [s2; Multiplies [* cx ]with [*@3 p]`'s horizontal dimension and [* cy ]with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`*`=`(T`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`*`=]([*@4 T
-]_[*@3 t])&]
+[s5;:Size`_`:`:operator`*`=`(T`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`*`=]([*@4 T]_[*@3 t])&]
 [s2; Multiplies both dimension with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`/`=`(Size`_`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator/`=](
-[_^Size`_^ Size`_]_[*@3 p])&]
+[s5;:Size`_`:`:operator`/`=`(Size`_`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator/`=]([_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_]_[*@3 p])&]
 [s2; Divides [* cx ]with [*@3 p]`'s horizontal dimension and [* cy ]with 
 [*@3 p]`'s vertical dimension.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`/`=`(T`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator/`=]([*@4 T]_
-[*@3 t])&]
+[s5;:Size`_`:`:operator`/`=`(T`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator/`=]([*@4 T]_[*@3 t])&]
 [s2; Divides both dimension with the same value [*@3 t].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`<`<`=`(int`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator<<`=](
-[@(0.0.255) int]_[*@3 sh])&]
+[s5;:Size`_`:`:operator`<`<`=`(int`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator<<`=]([@(0.0.255) int]_[*@3 sh])&]
 [s2; Shift both dimensions left by [*@3 sh].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`>`>`=`(int`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator>>`=](
-[@(0.0.255) int]_[*@3 sh])&]
+[s5;:Size`_`:`:operator`>`>`=`(int`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator>>`=]([@(0.0.255) int]_[*@3 sh])&]
 [s2; Shift both dimensions right by [*@3 sh].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`+`+`(`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`+`+]()&]
+[s5;:Size`_`:`:operator`+`+`(`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`+`+]()&]
 [s2; Increments both dimensions.&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:operator`-`-`(`):%- [_^Size`_^ Size`_][@(0.0.255) `&]_[* operator`-`-]()&]
+[s5;:Size`_`:`:operator`-`-`(`):%- [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize`_][@(0.0.255) `&]_[* operator`-`-]()&]
 [s2; Decrements both dimensions.&]
 [s3; &]
 [s4;%- &]
@@ -205,8 +219,8 @@ onst]&]
 [s2; Returns a conversion of the size to [* Value].&]
 [s3; &]
 [s4;%- &]
-[s5;:Size`_`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:Size`_`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the size to a stream [*@(141.42.0) s].&]
 [s3; &]
 [s0; &]

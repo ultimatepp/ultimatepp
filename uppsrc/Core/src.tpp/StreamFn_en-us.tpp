@@ -14,17 +14,17 @@ topic "Stream utilities";
 [s0;%% &]
 [ {{10000t/25b/25@1 [s0; [* Function List]]}}&]
 [s3; &]
-[s5;:LoadStream`(Stream`&`): [_^String^ String]_[* LoadStream]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 in])&]
+[s5;:LoadStream`(Stream`&`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* LoadStream]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 in])&]
 [s2;%% Reads the stream starting with the current position till the 
 end is reached and returns data in String.&]
 [s7;%% [%-*C@3 in]-|Stream.&]
 [s7;%% [*/ Return value]-|Content of stream.&]
 [s3; &]
 [s4; &]
-[s5;:SaveStream`(Stream`&`,const String`&`): [@(0.0.255) bool]_[* SaveStream]([_^Stream^ St
-ream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 dat
-a])&]
+[s5;:SaveStream`(Stream`&`,const String`&`): [@(0.0.255) bool]_[* SaveStream]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Writes data to stream.&]
 [s7;%% [%-*C@3 out]-|Output stream.&]
 [s7;%% [%-*C@3 data]-|Data to write.&]
@@ -32,52 +32,59 @@ a])&]
 to the stream.&]
 [s3; &]
 [s4; &]
-[s5;:CopyStream`(Stream`&`,Stream`&`,int64`): [_^int64^ int64]_[* CopyStream]([_^Stream^ St
-ream][@(0.0.255) `&]_[*@3 dest], [_^Stream^ Stream][@(0.0.255) `&]_[*@3 src], 
-[_^int64^ int64]_[*@3 count] `= INT64`_MAX)&]
+[s5;:CopyStream`(Stream`&`,Stream`&`,int64`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* CopyStream]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream
+][@(0.0.255) `&]_[*@3 dest], [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 src], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
+nt64]_[*@3 count] `= INT64`_MAX)&]
 [s2;%% Copies at most [%-*@3 count] bytes from source to destination 
 stream. Returns the actual number of bytes copied. With default 
 [%-*@3 count] value it copies all data from [%-*@3 src] until EOF.&]
 [s3; &]
 [s4; &]
-[s5;:Cout`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* Cout]()&]
+[s5;:Cout`(`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&
+]_[* Cout]()&]
 [s2;%% Returns special output stream representing console output. 
 Data written to this stream are displayed as characters in console.&]
 [s3; &]
 [s4; &]
-[s5;:Cerr`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* Cerr]()&]
+[s5;:Cerr`(`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&
+]_[* Cerr]()&]
 [s2;%% Returns special output stream representing console error output. 
 Data written to this stream are displayed as characters in console.&]
 [s3; &]
 [s4; &]
-[s5;:ReadStdIn`(`): [_^String^ String]_[* ReadStdIn]()&]
+[s5;:ReadStdIn`(`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ String]_[* R
+eadStdIn]()&]
 [s2;%% Reads one line of input data from the console.&]
 [s7;%% [*/ Return value]-|Console input.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ReadSecret`(`): [_^Upp`:`:String^ String]_[* ReadSecret]()&]
+[s5;:Upp`:`:ReadSecret`(`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ReadSecret]()&]
 [s2;%% Reads one line of input data from the console without echoing. 
 This function is useful for reading passwords, secret phrases, 
 etc. from the console.&]
 [s7;%% [*/ Return value]-|Console input.&]
 [s3; &]
 [s4; &]
-[s5;:NilStream`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* NilStream]()&]
+[s5;:NilStream`(`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&
+]_[* NilStream]()&]
 [s2;%% Returns special stream that is always in IsEof state and simply 
 discards all data written to it.&]
 [s7;%% [*/ Return value]-|`"Black hole`" stream.&]
 [s3; &]
 [s4; &]
-[s5;:LoadFile`(const char`*`): [_^String^ String]_[* LoadFile]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 filename])&]
+[s5;:LoadFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* LoadFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 filename])&]
 [s2;%% Loads the content of specified file.&]
 [s7;%% [%-*C@3 filename]-|File name.&]
 [s7;%% [*/ Return value]-|Content of file.&]
 [s3; &]
 [s4; &]
 [s5;:SaveFile`(const char`*`,const String`&`): [@(0.0.255) bool]_[* SaveFile]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
-]_[*@3 data])&]
+onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Saves data as the file (overwrites existing).&]
 [s7;%% [%-*C@3 filename]-|File name.&]
 [s7;%% [%-*C@3 data]-|Data to write.&]
@@ -85,8 +92,9 @@ onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[_^String^ String][
 [s3; &]
 [s4; &]
 [s5;:operator`%`(Stream`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >
-]_[_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], 
-[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+]_[_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&]_[* o
+perator%]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&
+]_[*@3 s], [*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2;%% Serialization operator. Simply invokes x.Serialize(s);&]
 [s7;%% [*C@4 T]-|Type of variable to be serialized.&]
 [s7;%% [%-*C@3 s]-|Stream.&]
@@ -94,9 +102,9 @@ onst]_[@(0.0.255) char]_`*[*@3 filename], [@(0.0.255) const]_[_^String^ String][
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,const char`*`): [_^Stream^ Stream][@(0.0.255) `&]_[* operator<
-<]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 x])
-&]
+[s5;:operator`<`<`(Stream`&`,const char`*`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
 [s7;%% [%-*C@3 s]-|Output stream.&]
@@ -105,7 +113,8 @@ stream.&]
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,char`*`): [_^Stream^ Stream][@(0.0.255) `&]_[* operator<<]([_^Stream^ S
+[s5;:operator`<`<`(Stream`&`,char`*`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
 tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) char]_`*[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
@@ -115,9 +124,10 @@ stream.&]
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,const String`&`): [_^Stream^ Stream][@(0.0.255) `&]_[* operato
-r<<]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^String^ String]_`&[*@3 x
-])&]
+[s5;:operator`<`<`(Stream`&`,const String`&`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_`&[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
 [s7;%% [%-*C@3 s]-|Output stream.&]
@@ -126,7 +136,8 @@ stream.&]
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,char`): [_^Stream^ Stream][@(0.0.255) `&]_[* operator<<]([_^Stream^ S
+[s5;:operator`<`<`(Stream`&`,char`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
 tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) char]_[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
@@ -135,9 +146,9 @@ Insertion operator uses formatted stream output (Putf).&]
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,const void`*`): [_^Stream^ Stream][@(0.0.255) `&]_[* operator<
-<]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 x])
-&]
+[s5;:operator`<`<`(Stream`&`,const void`*`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
 [s7;%% [%-*C@3 s]-|Output stream.&]
@@ -146,7 +157,8 @@ value.&]
 [s7;%% [*/ Return value]-|s for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:operator`<`<`(Stream`&`,void`*`): [_^Stream^ Stream][@(0.0.255) `&]_[* operator<<]([_^Stream^ S
+[s5;:operator`<`<`(Stream`&`,void`*`): [_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[* operator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
 tream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) void]_`*[*@3 x])&]
 [s2;%% Overload of stream insertion operator to get simple case work. 
 Insertion operator uses formatted stream output (Putf).&]
@@ -157,8 +169,9 @@ value.&]
 [s3; &]
 [s4; &]
 [s5;:operator`<`<`(Stream`&`,const T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >
-]_[_^Stream^ Stream][@(0.0.255) `&]_[* operator<<]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s],
- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+]_[_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&]_[* o
+perator<<]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ Stream][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2;%% Global stream insertion operator. Calls AsString for x and 
 stores the result to the stream. Global AsString version in turn 
 calls ToString method of x.&]

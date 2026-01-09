@@ -53,25 +53,21 @@ as name of build method (which is then searched for in [@3 .config/u`+`+/umk
 to the .bm file. If not specified, [* CLANG] build method is assumed. 
 Note that in POSIX, umk automatically creates [* CLANG] and [* GCC] 
 build methods if they do not exist.&]
-[s11;l128;i150;O0; [*@(0.0.255) `-`-hub`-dir] [@N specifies the directory 
+[s11;l128;i150;O0; Additional optional parameters:&]
+[s11;l256;i150;O0; [*@(0.0.255) `-`-hub`-dir] [@N specifies the directory 
 where UppHub packages should be downloaded, using the second 
 parameter, ][*@(0.0.255) dir][@N , to set the path. This ensures 
 packages are kept in a consistent location that is independent 
 of the current project and TheIDE configuration.]&]
-[s11;l128;i150;O0; [*@(0.0.255) `-`-hub`-only] [@N instructs UMK to handle 
+[s11;l256;i150;O0; [*@(0.0.255) `-`-hub`-only] [@N instructs UMK to handle 
 only the logic related to UppHub. However, please note that even 
 when this option is active, you must still specify either the 
 ][*@N `-][*C@4;3 U][@N  or ][*@N `-][*C@4;3 h][@N  option to indicate how 
 UMK should handle UppHub.]&]
-[s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
-tion flags]. If flags are not specified, the first main configuration 
-entry in .upp file is used.&]
-[s11;l128;i150;O0; [*@(0.0.255) out] overrides output name, file or 
-directory.&]
-[s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
-should be also executed after successful build, using optional 
-arguments after [*C@(0.0.255)3 !] as its arguments.&]
-[s11;l128;i160;O0; All other options are located below:&]
+[s11;l128;i160;O0; Additional UMK build options are listed below. 
+If using multiple options, they must be combined into a single 
+argument, such as `-[*@4 brU]). If no parameters are provided, 
+UMK will build the project in debug mode with symbols by default.&]
 [ {{1914:8086<283;h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
 ::^@2 [s0; [*C@4;3 a]]
@@ -109,7 +105,8 @@ words this option makes sure that latest versions of UppHub packages
 required to build are downloaded.]]
 ::^ [s0;%- [*C@4;3 U]]
 ::= [s0; [3 Install missing packages from UppHub and update all UppHub 
-nests to the latest versions.]]
+nests to the latest versions. Unlike the ][%-*C@4;3 h][3  option, 
+this command will not delete any currently installed UppHub packages.]]
 ::^ [s0;%- [*C@4;3 j]]
 ::= [s0; [3 Generate ][^https`:`/`/clang`.llvm`.org`/docs`/JSONCompilationDatabase`.html^3 co
 mpile`_commands.json]]
@@ -119,6 +116,15 @@ mpile`_commands.json]]
 ::= [s0; [3 Export entire project]]
 ::^ [s0;%- [*C@4;3 k]]
 ::= [s0; [3 Delete target directory before project export]]}}&]
+[s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
+tion flags]. If flags are not specified, the first main configuration 
+entry in .upp file is used by default. Use commas to chain multiple 
+flags, such as [*@4 `+GUI,SHARED].&]
+[s11;l128;i150;O0; [*@(0.0.255) out] overrides output name, file or 
+directory.&]
+[s11;l128;i150;O0; [*C@(0.0.255)3 !] means the the resulting binary 
+should be also executed after successful build, using optional 
+arguments after [*C@(0.0.255)3 !] as its arguments.&]
 [s0; &]
 [s12;:3: 3. Examples&]
 [s11; Sample usage of UMK is located below:&]

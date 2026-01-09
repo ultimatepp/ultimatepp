@@ -29,6 +29,5 @@ struct MyAppWindow : TopWindow {
 
 GUI_APP_MAIN
 {
-	MyAppWindow app;
-	app.Run();
+	MyAppWindow().Run();
 }
