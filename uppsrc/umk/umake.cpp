@@ -255,18 +255,13 @@ CONSOLE_APP_MAIN
 					out_dir = GetDefaultUppOut();
 			}
 
+			if(!IsFullPath(out_dir))
+                out_dir = GetCurrentDirectory() + DIR_SEPS + out_dir;
+
 			if(!RealizeDirectory(out_dir)) {
-				Puts("Failed to realize the output directory \"" + out_dir + "\".");
+				Puts("Invalid output directory \"" + out_dir + "\".");
 				SetExitCode(8);
 				return;
-			}
-			if(!IsFullPath(out_dir)) {
-				out_dir = GetCurrentDirectory() + DIR_SEPS + out_dir;
-				if(!DirectoryExists(out_dir)) {
-					Puts("Failed to find the output directory \"" + out_dir + "\".");
-					SetExitCode(8);
-					return;
-				}
 			}
 
 			SetVar("OUTPUT", out_dir, false);
