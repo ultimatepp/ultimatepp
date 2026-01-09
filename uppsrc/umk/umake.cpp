@@ -256,16 +256,14 @@ CONSOLE_APP_MAIN
 			}
 
 			if(!RealizeDirectory(out_dir)) {
-				Puts("Failed to realize output directory \"" + out_dir + "\".");
+				Puts("Failed to realize the output directory \"" + out_dir + "\".");
 				SetExitCode(8);
 				return;
 			}
 			if(!IsFullPath(out_dir)) {
 				out_dir = GetCurrentDirectory() + DIR_SEPS + out_dir;
 				if(!DirectoryExists(out_dir)) {
-					Puts(
-						"Failed to find output directory after relative path noramlization \"" +
-						out_dir + "\".");
+					Puts("Failed to find the output directory \"" + out_dir + "\".");
 					SetExitCode(8);
 					return;
 				}
