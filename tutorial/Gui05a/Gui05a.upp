@@ -1,4 +1,4 @@
-description "Reacting to input events\377";
+description "Reacting to input events - mouse\377";
 
 uses
 	CtrlLib;

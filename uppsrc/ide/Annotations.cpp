@@ -40,7 +40,7 @@ bool AssistEditor::GetAnnotationRefs(Vector<String>& tl, String& coderef, int q)
 int GetMatchLen(const char *s, const char *t)
 {
 	int i = 0;
-	while(s[i] == t[i] && s[i])
+	while(s[i] == t[i] && s[i] && t[i])
 		i++;
 	return i;
 }
