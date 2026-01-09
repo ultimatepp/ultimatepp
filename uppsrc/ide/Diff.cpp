@@ -4,6 +4,7 @@ struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
 	Button   copy_hash;
+	Button   github;
 	
 	String repo_dir;
 	int    kind;
@@ -84,16 +85,36 @@ void RepoDiff::Set(const String& f)
 
 	if(kind == GIT_DIR) {
 		pane << branch.LeftPos(0, Zx(100)).VSizePos()
-		     << r.HSizePos(Zx(100) + DPI(2), Zx(80) + DPI(2)).VSizePos()
-		     << copy_hash.RightPos(0, Zx(80)).VSizePos();
+		     << r.HSizePos(Zx(100) + DPI(2), Zx(80) + DPI(24)).VSizePos()
+		     << copy_hash.RightPos(0, Zx(80)).VSizePos()
+		     << github.RightPos(Zx(80) + DPI(2), DPI(20)).VCenterPos(DPI(20));
+
 		copy_hash.SetLabel("Copy Hash");
 		
-		copy_hash << [=] {
+		auto GetHash = [=] {
 			String h = ~~r;
 			String commit, path;
 			SplitTo(h, ':', commit, path);
-			WriteClipboardText(commit);
+			return commit;
 		};
+		
+		copy_hash << [=] {
+			WriteClipboardText(GetHash());
+		};
+		
+		github.SetImage(IdeImg::GitHub());
+		String origin = HostSys("git -C " + GetFileFolder(f) + " remote get-url origin");
+		if(origin.StartsWith("https://github.com/")) {
+			github.Enable();
+			origin.TrimEnd("\n");
+			origin.TrimEnd("\r");
+			origin.TrimEnd(".git");
+			github << [=] {
+				LaunchWebBrowser(origin + "/commit/" + GetHash());
+			};
+		}
+		else
+			github.Disable();
 
 		LoadBranches(branch, GetFileFolder(f));
 		LoadGit();
