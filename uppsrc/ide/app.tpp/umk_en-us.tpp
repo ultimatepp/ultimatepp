@@ -64,6 +64,11 @@ only the logic related to UppHub. However, please note that even
 when this option is active, you must still specify either the 
 ][*@N `-][*C@4;3 U][@N  or ][*@N `-][*C@4;3 h][@N  option to indicate how 
 UMK should handle UppHub.]&]
+[s11;l256;i150;O0; [*@(0.0.255) `-`-out`-dir] [@N specifies the directory 
+where UMK stores build artifacts, using the second parameter, 
+][*@(0.0.255) dir][@N , to define the path.] While UMK and TheIDE 
+share a global output directory by default, using this flag allows 
+you to isolate build files for specific projects or environments.&]
 [s11;l128;i160;O0; Additional UMK build options are listed below. 
 If using multiple options, they must be combined into a single 
 argument, such as `-[*@4 brU]). If no parameters are provided, 
