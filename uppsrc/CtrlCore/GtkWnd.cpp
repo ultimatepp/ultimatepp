@@ -191,10 +191,7 @@ void Ctrl::UpdateWindowDecorationsGeometry()
 
 void Ctrl::WndRectsSync() const
 {
-	DTIMING("WndRectsSync");
-//	utop->sync_rect = true; _DBG_
 	if(utop && utop->sync_rect) {
-		DTIMING("WndRectsSync 2");
 		auto GetScreenRect = [&](GtkWidget *w) {
 			gint x, y;
 			gint width, height;
@@ -235,7 +232,6 @@ void Ctrl::WndRectsSync() const
 			utop->screen_rect.Union(utop->header_rect);
 		}
 		utop->sync_rect = false;
-		DDUMP(utop->screen_rect);
 	}
 }
 
@@ -547,7 +543,7 @@ bool Ctrl::SweepConfigure(bool wait)
 			LLOG("SweepConfigure " << e.value);
 			if(top) {
 				utop->sync_rect = true;
-				DLOG("Sweep");
+				LLOG("Sweep");
 				SetWndRect(GetWndScreenRect());
 			}
 			r = true;
@@ -564,12 +560,7 @@ void Ctrl::WndSetPos(const Rect& rect)
 	GuiLock __;
 	if(!IsOpen())
 		return;
-/*	Ptr<Ctrl> this_ = this;
-	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
-	if(!this_ || !IsOpen())
-		return;
-*/ _DBG_
-	DLOG("SetWndPos");
+
 	ReleaseCtrlCapture();
 	SetWndRect(rect);
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
@@ -587,7 +578,6 @@ void Ctrl::WndSetPos(const Rect& rect)
 		Rect m(0, 0, 0, 0);
 		if(tw)
 			m = frameMargins;
-		DDUMP(frameMargins);
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
 		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}

@@ -19,7 +19,6 @@ void TopWindow::SyncSizeHints()
 		int mcy = 0;
 		
 		if(top->csd) {
-			DDUMP(csd_border);
 			mcx += csd_border.left + csd_border.right;
 			mcy += csd_border.top + csd_border.bottom;
 			if(!custom_bar)
@@ -39,8 +38,6 @@ void TopWindow::SyncSizeHints()
 		m.max_width = LSCH(maxsz.cx + mcx);
 		m.max_height = LSCH(maxsz.cy + mcy);
 		
-		DDUMP(m.min_width);
-	
 		gtk_window_set_resizable(gtk(), sizeable);
 		gtk_window_set_geometry_hints(gtk(), NULL, &m,
 		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE|GDK_HINT_BASE_SIZE));
@@ -169,7 +166,6 @@ void TopWindow::Open(Ctrl *owner)
 	frameMargins.right = clamp(SCL(fr.x + fr.width) - r.right, 0, DPI(32));
 	frameMargins.top = clamp(r.top - SCL(fr.y), 0, DPI(80));
 	frameMargins.bottom = clamp(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48));
-	DLOG("Margins2 " << frameMargins);
 }
 
 void TopWindow::Open()

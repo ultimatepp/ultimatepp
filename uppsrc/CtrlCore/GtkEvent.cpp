@@ -122,10 +122,9 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 
-
-		DLOG("A");
+		// TODO:
 		p->InvalidateScreenRect(); // for some reason Draw seems to be sent sooner than CONFIGURE
-		p->SyncWndRect(); // avoid black areas when resizing
+		p->SyncWndRect(); // try to avoid black areas when resizing
 
 		SystemDraw w(cr);
 		painting = true;
@@ -166,7 +165,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 void Ctrl::InvalidateScreenRect()
 {
-	DLOG("InvalidateScreenRect");
+	LLOG("InvalidateScreenRect");
 	Top *top = GetTop();
 	if(top)
 		top->sync_rect = true;
@@ -651,11 +650,8 @@ void Ctrl::Proc()
 	}
 #endif
 
-	for(Ctrl *q : GetTopCtrls()) {
-		DDUMP(utop && utop->sync_rect);
-		DLOG("B");
+	for(Ctrl *q : GetTopCtrls())
 		q->SyncWndRect();
-	}
 	
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	
@@ -845,7 +841,6 @@ void Ctrl::Proc()
 		return;
 	}
 	case GDK_CONFIGURE:
-		DLOG("Configure!");
 		InvalidateScreenRect();
 		SyncWndRect();
 		return;

@@ -170,7 +170,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	g_signal_connect(top->im_context, "preedit-end", G_CALLBACK(IMPreeditEnd), (gpointer)(uintptr_t)top->id);
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), (gpointer)(uintptr_t)top->id);
 
-	DLOG("=================");
 	WndSetPos(r);
 	WndShow(IsShown());
 
@@ -192,7 +191,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top->sync_rect = true;
 	WndRectsSync();
-	DDUMP(GetScreenRect());
 	RefreshLayoutDeep();
 }
 
