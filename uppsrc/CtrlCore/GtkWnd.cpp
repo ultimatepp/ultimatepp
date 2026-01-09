@@ -109,6 +109,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 #endif
 		}
 		if(c && topctrl->IsOpen()) {
+			static GdkCursor *blank_cursor = gdk_cursor_new_for_display(gdk_display_get_default(), GDK_BLANK_CURSOR);
+			gdk_window_set_cursor(topctrl->gdk(), blank_cursor); // should help in [x]wayland
 			gdk_window_set_cursor(topctrl->gdk(), c);
 			g_object_unref(c);
 			if(IsXWayland()) // xwayland is broken, need some paint to change the cursor...
