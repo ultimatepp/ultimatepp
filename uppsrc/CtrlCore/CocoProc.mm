@@ -196,7 +196,21 @@ struct MMImp {
 		dbl_pos = np;
 		return b;
 	}
-	
+
+	static bool OtherMouseDownEvent(CocoView* view, NSEvent* e)
+	{
+		static const Upp::VectorMap<NSInteger, Upp::CtrlCoreFlags> buttons_map = {
+			{3, Upp::K_MOUSE_BACKWARD},
+			{4, Upp::K_MOUSE_FORWARD}
+		};
+
+		if(auto i = buttons_map.Find([e buttonNumber]); i >= 0) {
+			view->ctrl->DispatchKey(buttons_map[i], 1);
+			return true;
+		}
+		return false;
+	}
+
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
 	{
 		if(!ctrl)
@@ -360,6 +374,13 @@ struct MMImp {
 	coco_mouse_left = true;
 	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::LEFT))
 		[super mouseDown:e];
+}
+
+- (void)otherMouseDown:(NSEvent*)e {
+	Upp::GuiLock __;
+	if(!Upp::MMImp::OtherMouseDownEvent(self, e)) {
+		[super otherMouseDown:e];
+	}
 }
 
 - (void)mouseUp:(NSEvent *)e {
