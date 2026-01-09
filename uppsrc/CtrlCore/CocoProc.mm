@@ -206,9 +206,9 @@ struct MMImp {
 
 		if(auto i = buttons_map.Find([e buttonNumber]); i >= 0) {
 			view->ctrl->DispatchKey(buttons_map[i], 1);
-			return;
+			return true;
 		}
-		[super otherMouseDown:e];
+		return false;
 	}
 
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
