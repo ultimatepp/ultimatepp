@@ -72,9 +72,7 @@ GUI_APP_MAIN
 	App app;
 	App2 app2;
 	app.OpenMain();
-//	app2.OpenMain();
+	app2.OpenMain();
 	
-//	Ctrl::EventLoop();
-	app.Run();
-//	app.Run();
+	Ctrl::EventLoop();
 }

@@ -166,6 +166,7 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 void Ctrl::InvalidateScreenRect()
 {
+	DLOG("InvalidateScreenRect");
 	Top *top = GetTop();
 	if(top)
 		top->sync_rect = true;
