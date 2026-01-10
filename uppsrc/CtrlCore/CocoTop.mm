@@ -31,7 +31,7 @@ void TopWindow::GuiPlatformConstruct()
 void TopWindow::SetBadgeLabel(const String& label)
 {
 	NSString* nlabel = [NSString stringWithUTF8String:~label];
-	[[[NSApplication sharedApplication] dockTile] setBadgeLabel:nlabel];
+	[[NSApp dockTile] setBadgeLabel:nlabel];
 }
 
 }
