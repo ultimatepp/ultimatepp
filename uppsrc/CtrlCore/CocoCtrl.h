@@ -23,8 +23,8 @@ public:
 	static void EndSession()              {}
 	static bool IsEndSession()            { return false; }
 	
-	static void SetAlwaysUseBundledIcon(bool enable = true){ always_use_bundled_icon = enable; }
-	static bool IsAlwaysUseBundledIcon()                   { return always_use_bundled_icon; }
+	static void SetAlwaysUseBundledIcon(bool enable = true) { always_use_bundled_icon = enable; }
+	static bool IsAlwaysUseBundledIcon()                    { return always_use_bundled_icon; }
 	
 	void  *GetNSWindow() const;
 	void  *GetNSView() const;
