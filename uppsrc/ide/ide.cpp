@@ -570,6 +570,12 @@ void Ide::SetIdeState(int newstate)
 }
 
 void Ide::MakeIcon() {
+#ifdef PLATFORM_COCOA
+	String badge = IsOpen() ? main : "";
+	SetBadgeLabel(badge);
+	return;
+#endif
+	
 	Image li = IdeImg::Icon256();
 #ifndef PLATFORM_POSIX // Kubuntu is using this icon for window while ignoring it in taskbar...
 	WString mp = main.ToWString();

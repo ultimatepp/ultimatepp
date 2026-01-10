@@ -124,7 +124,7 @@ file
 	CocoClip.mm,
 	CocoCtrl.cpp,
 	CocoWnd.cpp,
-	CocoTop.cpp,
+	CocoTop.mm,
 	CocoChSysInit.cpp,
 	"RTF support" readonly separator,
 	ParseRTF.cpp,

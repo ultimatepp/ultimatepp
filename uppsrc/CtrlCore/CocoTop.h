@@ -21,3 +21,5 @@ public:
 	Event<Bar&> WhenDockMenu;
 
 	void SetMainMenu(Event<Bar&> menu);
+	void SetBadgeLabel(const String& label = String());
+	

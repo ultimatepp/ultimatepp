@@ -2,7 +2,9 @@
 
 #ifdef GUI_COCOA
 
-NAMESPACE_UPP
+#include <CtrlCore/CocoMM.h>
+
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -25,7 +27,13 @@ bool TopWindow::IsTopMost() const
 void TopWindow::GuiPlatformConstruct()
 {
 }
-	
-END_UPP_NAMESPACE
+
+void TopWindow::SetBadgeLabel(const String& label)
+{
+	NSString* nlabel = [NSString stringWithUTF8String:~label];
+	[[NSApp dockTile] setBadgeLabel:nlabel];
+}
+
+}
 
 #endif

@@ -217,6 +217,9 @@ void AppMain___()
 	Ctrl::SetDarkThemeEnabled();
 	Ctrl::SkinChangeSensitive();
 	Ctrl::SetAppName("TheIDE");
+#ifdef PLATFORM_COCOA
+	Ctrl::SetAlwaysUseBundledIcon();
+#endif
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
