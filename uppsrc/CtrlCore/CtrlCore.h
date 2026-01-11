@@ -101,10 +101,10 @@ enum CtrlCoreFlags : dword {
 	K_PEN          = 0x80,
 
 	IK_DBL_CLICK   = 0x40000001, // this is just to get the info that the entry is equal to dbl-click to the menu
-	IK_CLICK   = 0x40000002, // this is just to get the info that the entry is equal to dbl-click to the menu
+	IK_CLICK       = 0x40000002, // this is just to get the info that the entry is equal to dbl-click to the menu
 
-	K_MOUSE_FORWARD = 0x40000002,
-	K_MOUSE_BACKWARD = 0x40000003
+	K_MOUSE_FORWARD  = 0x40000003,
+	K_MOUSE_BACKWARD = 0x40000004
 };
 
 #include "MKeys.h"
