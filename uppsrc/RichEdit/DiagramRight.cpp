@@ -78,14 +78,9 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 		mdata = LoadFile(path);
 		if(IsNull(mdata))
 			return;
-		bool loaded = false;
-		if(IsSVG(mdata)) {
-			loaded = true;
-		}
-		else {
+		if(!IsSVG(mdata)) {
 			StringStream ss(mdata);
 			One<StreamRaster> r = StreamRaster::OpenAny(ss);
-			loaded = true;
 		}
 		if(IsNull(size)) {
 			Exclamation(t_("Unsupported image format."));
