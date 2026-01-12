@@ -152,6 +152,7 @@ static XPicture sGetSolidFill(Color c)
 void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	GuiLock __;
+	DTIMING("PAINT IMAGE");
 	x += w.GetOffset().x;
 	y += w.GetOffset().y;
 	Size sz = img.GetSize();
