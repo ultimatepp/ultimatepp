@@ -43,24 +43,24 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 			if(event->xclient.message_type == XAtom("WM_PROTOCOLS")) {
 				Atom a = event->xclient.data.l[0];
 				if(a == XAtom("WM_DELETE_WINDOW") && IsEnabled()) {
-					DLOG("DELETE_WINDOW " << Name());
+					LLOG("DELETE_WINDOW " << Name());
 					WhenClose();
 					return;
 				}
 				if(a == XAtom("WM_TAKE_FOCUS")) {
-					DLOG("TAKE_FOCUS serial: " << event->xclient.serial);
+					LLOG("TAKE_FOCUS serial: " << event->xclient.serial);
 					Xeventtime = event->xclient.data.l[1];
 					TakeFocus();
 					return;
 				}
 				if(a == XAtom("_NET_WM_PING")) {
-					DLOG("_NET_WM_PING");
+					LLOG("_NET_WM_PING");
 					XEvent ev = *event;
 					ev.xclient.window = Xroot;
 					XSendEvent(Xdisplay, Xroot, 0, SubstructureRedirectMask|SubstructureNotifyMask, &ev);
 					return;
 				}
-				DLOG("Unknown WM_PROTOCOLS: " << XAtomName(a));
+				LLOG("Unknown WM_PROTOCOLS: " << XAtomName(a));
 			}
 	}
 	else

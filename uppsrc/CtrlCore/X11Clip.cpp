@@ -142,6 +142,23 @@ String Ctrl::Xclipboard::Read(int fmt, int selection, int property)
 	return Null;
 }
 
+bool Ctrl::Xclipboard::IsAvailable(int fmt, bool primary)
+{
+	GuiLock __;
+	if(data.GetCount())
+		return data.Find(fmt) >= 0;
+	String& formats = this->formats[primary];
+	if(formats.IsVoid())
+		formats = Read(XAtom("TARGETS"), XAtom(primary ? "PRIMARY" : "CLIPBOARD"), XAtom("CLIPDATA"));
+	int c = formats.GetCount() / sizeof(Atom);
+	const Atom *m = (Atom *) ~formats;
+	for(int i = 0; i < c; i++) {
+		if(m[i] == (dword)fmt)
+			return true;
+	}
+	return false;
+}
+
 Ctrl::Xclipboard& Ctrl::xclipboard()
 {
 	static Xclipboard xc;
@@ -200,21 +217,6 @@ WString ReadClipboardUnicodeText()
 	return ToUtf32(ReadClipboard("UTF8_STRING"));
 }
 
-bool Ctrl::Xclipboard::IsAvailable(int fmt, const char *type)
-{
-	GuiLock __;
-	if(data.GetCount())
-		return data.Find(fmt) >= 0;
-	String formats = Read(XAtom("TARGETS"), XAtom(type), XAtom("CLIPDATA"));
-	int c = formats.GetCount() / sizeof(Atom);
-	const Atom *m = (Atom *) ~formats;
-	for(int i = 0; i < c; i++) {
-		if(m[i] == (dword)fmt)
-			return true;
-	}
-	return false;
-}
-
 bool Ctrl::ClipHas(int type, const char *fmt)
 {
 	GuiLock __;
@@ -222,11 +224,11 @@ bool Ctrl::ClipHas(int type, const char *fmt)
 	if(strcmp(fmt, "files") == 0)
 		fmt = "text/uri-list";
 	if(type == 0)
-		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
+		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), false);
 	if(type == 2) {
 		if(sel_ctrl)
 			return sel_formats.Find(fmt) >= 0;
-		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "PRIMARY");
+		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), true);
 	}
 	return drop_formats.Find(fmt) >= 0;
 }
@@ -318,7 +320,7 @@ void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 bool IsClipboardAvailable(const char *fmt)
 {
 	GuiLock __;
-	return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
+	return Ctrl::xclipboard().IsAvailable(XAtom(fmt), false);
 }
 
 bool IsClipboardAvailableText()

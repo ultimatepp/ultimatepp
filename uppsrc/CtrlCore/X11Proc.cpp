@@ -68,7 +68,7 @@ void Ctrl::SetLastActive(XWindow *w, Ctrl *la)
 
 void Ctrl::EventProc(XWindow& w, XEvent *event)
 {
-	GuiLock __; 
+	GuiLock __;
 	eventid++;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
@@ -109,10 +109,12 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 	LTIMING("XUserInput");
 	switch(event->type) {
 	case FocusIn:
+		xclipboard().InvalidateFormats();
 		if(w.xic)
 			XSetICFocus(w.xic);
 		break;
 	case FocusOut:
+		xclipboard().InvalidateFormats();
 		if(w.xic)
 			XUnsetICFocus(w.xic);
 		break;
