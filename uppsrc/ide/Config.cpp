@@ -187,7 +187,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 35;
+	int version = 36;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -280,6 +280,8 @@ void Ide::Serialize(Stream& s)
 		s % libclang_options;
 	if(version >= 24)
 		s % libclang_coptions;
+	if(version >= 36)
+		s % macos_update_icon;
 	SerializeGlobalConfigs(s);
 	doc.Serialize(s);
 	s % right_split;

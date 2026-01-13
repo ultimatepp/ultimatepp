@@ -217,9 +217,6 @@ void AppMain___()
 	Ctrl::SetDarkThemeEnabled();
 	Ctrl::SkinChangeSensitive();
 	Ctrl::SetAppName("TheIDE");
-#ifdef PLATFORM_COCOA
-	Ctrl::SetAlwaysUseBundledIcon();
-#endif
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
@@ -405,6 +402,11 @@ void AppMain___()
 #endif
 		
 		ide.LoadConfig();
+
+#ifdef PLATFORM_COCOA
+		if(!ide.macos_update_icon)
+			Ctrl::SetAlwaysUseBundledIcon();
+#endif
 
 		if(!ide.disable_custom_caption)
 			ide.CustomTitleBar();
