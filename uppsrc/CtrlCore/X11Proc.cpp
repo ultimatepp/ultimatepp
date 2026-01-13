@@ -68,7 +68,7 @@ void Ctrl::SetLastActive(XWindow *w, Ctrl *la)
 
 void Ctrl::EventProc(XWindow& w, XEvent *event)
 {
-	GuiLock __; 
+	GuiLock __;
 	eventid++;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
@@ -90,10 +90,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			XConfigureEvent& e = event->xconfigure;
 			int x, y;
 			Window dummy;
-// 01/12/2007 - mdelfede
-// added support for windowed controls
-//			if(top)
-//				XTranslateCoordinates(Xdisplay, top->window, Xroot, 0, 0, &x, &y, &dummy);
 			Window xwin = GetWindow();
 			if(xwin) {
 				Window DestW = (GetParent() ? GetParentWindow() : Xroot);
@@ -105,8 +101,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			}
 			// Synchronizes native windows (NOT the main one)
 			SyncNativeWindows();
-// 01/12/2007 - END
-
 		}
 		return;
 	default:
@@ -115,58 +109,59 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 	LTIMING("XUserInput");
 	switch(event->type) {
 	case FocusIn:
+		xclipboard().InvalidateFormats();
 		if(w.xic)
 			XSetICFocus(w.xic);
 		break;
 	case FocusOut:
+		xclipboard().InvalidateFormats();
 		if(w.xic)
 			XUnsetICFocus(w.xic);
 		break;
-	case KeyPress:
+	case KeyPress: {
 		pressed = true;
 		LLOG("event type:" << event->type << " state:" << event->xkey.state <<
 		     "keycode:" << event->xkey.keycode);
+		Vector<XEvent> events;
+		while(IsWaitingEvent())
+			XNextEvent(Xdisplay, &events.Add());
+		auto SameKey = [&](XEvent& ev) {
+			return ev.xkey.state == event->xkey.state && ev.xkey.keycode == event->xkey.keycode;
+		};
+		int from = 0;
 		for(;;) {
-			XEvent ev1[1], ev2[1];
-			bool hasev2 = false;
-			if(!IsWaitingEvent()) break;
-			do
-				XNextEvent(Xdisplay, ev1);
-			while(ev1->type == NoExpose && IsWaitingEvent());
-			LLOG("ev1 type:" << ev1->type << " state:" << ev1->xkey.state <<
-			     "keycode:" << ev1->xkey.keycode);
-			if(ev1->type == KeyPress)
-				*ev2 = *ev1;
-			else {
-				if(ev1->type != KeyRelease ||
-				   ev1->xkey.state != event->xkey.state ||
-				   ev1->xkey.keycode != event->xkey.keycode ||
-				   !IsWaitingEvent()) {
-					XPutBackEvent(Xdisplay, ev1);
+			int up_i = -1;
+			for(int i = from; i < events.GetCount(); i++) {
+				XEvent& ev = events[i];
+				if(ev.type == KeyRelease) {
+					if(SameKey(ev))
+						up_i = i;
 					break;
 				}
-				do
-					XNextEvent(Xdisplay, ev2);
-				while(ev2->type == NoExpose && IsWaitingEvent());
-				LLOG("ev2 type:" << ev2->type << " state:" << ev2->xkey.state <<
-				     "keycode:" << ev2->xkey.keycode);
-				hasev2 = true;
 			}
-			if(ev2->type != KeyPress ||
-			   ev2->xkey.state != event->xkey.state ||
-			   ev2->xkey.keycode != event->xkey.keycode) {
-				if(hasev2)
-					XPutBackEvent(Xdisplay, ev2);
-				XPutBackEvent(Xdisplay, ev1);
+			if(up_i < 0)
 				break;
+			int down_i = -1;
+			for(int i = up_i + 1; i < events.GetCount(); i++) {
+				XEvent& ev = events[i];
+				if(ev.type == KeyRelease) {
+					if(SameKey(ev))
+						down_i = i;
+					break;
+				}
 			}
-			else {
-				XFilterEvent(ev1, None);
-				if(hasev2)
-					XFilterEvent(ev2, None);
-			}
+			if(down_i < 0)
+				break;
 			count++;
+			from = down_i + 1;
+			events[up_i].type = events[down_i].type = -1;
 		}
+		for(int i = events.GetCount() - 1; i >= 0; i--) {
+			XEvent& ev = events[i];
+			if(ev.type >= 0)
+				XPutBackEvent(Xdisplay, &ev);
+		}
+	}
 	case KeyRelease: {
 			mousePos = Point(event->xkey.x_root, event->xkey.y_root);
 			char buff[128];

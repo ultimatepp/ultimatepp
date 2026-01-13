@@ -9,7 +9,7 @@ namespace Upp {
 #include <sys/wait.h>
 #endif
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 void LocalProcess::Init() {
 #ifdef PLATFORM_WIN32
@@ -231,7 +231,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 				*cmd_out++ = '\0';
 			}
 	}
-	
+
 	if(args.GetCount() == 0)
 		return false;
 
@@ -240,7 +240,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	String app_full = GetFileOnPath(args[0], getenv("PATH"), true);
 	if(IsNull(app_full))
 		return false;
-	
+
 	Buffer<char> arg0(app_full.GetCount() + 1);
 	memcpy(~arg0, ~app_full, app_full.GetCount() + 1);
 	args[0] = ~arg0;
@@ -250,7 +250,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 
 	if(spliterr && pipe(epipe))
 		return false;
-	
+
 	LLOG("\nLocalProcess::Start");
 	LLOG("rpipe[" << rpipe[0] << ", " << rpipe[1] << "]");
 	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
@@ -265,7 +265,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		}
 		env.Add(NULL);
 	}
-	
+
 	pid = fork();
 	// Warning: other threads are dead after this point, which means heap might be locked
 
@@ -294,7 +294,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		LLOG("\tfork2, pid2 = " << (int)pid2 << ", getpid = " << (int)getpid());
 		if (pid2 < 0) {
 			LLOG("fork2 failed");
-			Exit(1);
+			abort();
 		}
 		if (pid2) {
 			LLOG("exiting intermediary process");
@@ -308,8 +308,8 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 			}
 			// we call exec instead of Exit, because exit doesn't behave nicelly with threads
 			execl("/usr/bin/true", "[closing fork]", (char*)NULL);
-			// only call Exit when execl fails
-			Exit(0);
+			// only call abort when execl fails
+			abort(); // do not use exit here: it calls global destructors...
 		}
 	}
 
@@ -337,10 +337,8 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		(void)!chdir(cd); // that (void)! strange thing is to silence GCC warning
 
 	LLOG("running execve, app = " << app << ", #args = " << args.GetCount());
-	if(envptr) {
-		env.Add(NULL);
+	if(envptr)
 		execve(app_full, args.Begin(), (char *const *)env.Begin());
-	}
 	else
 		execv(app_full, args.Begin());
 	LLOG("execve failed, errno = " << errno);
@@ -506,7 +504,7 @@ bool LocalProcess::Read2(String& reso, String& rese)
 		reso = FromOEMCharset(reso);
 		rese = FromOEMCharset(rese);
 	}
-	
+
 	return reso.GetCount() || rese.GetCount() || was_running;
 #endif
 #ifdef PLATFORM_POSIX
