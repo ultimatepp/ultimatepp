@@ -563,7 +563,6 @@ void Ctrl::WndSetPos(const Rect& rect)
 	if(!IsOpen())
 		return;
 
-	ReleaseCtrlCapture();
 	SetWndRect(rect);
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(tw)
@@ -580,13 +579,21 @@ void Ctrl::WndSetPos(const Rect& rect)
 		Rect m(0, 0, 0, 0);
 		if(tw)
 			m = frameMargins;
+		DDUMP(m);
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
 		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}
 	InvalidateScreenRect();
 	SyncWndRect();
-	ReleaseCtrlCapture();
-	LLOG("-- WndSetPos0 " << rect);
+/*	if(dynamic_cast<TopWindow *>(this)) { _DBG_
+		
+		
+		
+		Ctrl popup; // _DBG_
+		popup.SetRect(10, 10, 10, 10);
+		popup.PopUp(this);
+	}
+*/	LLOG("-- WndSetPos0 " << rect);
 }
 
 void Ctrl::WndEnable(bool b)

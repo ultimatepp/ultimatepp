@@ -180,14 +180,13 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 		ev = f->b;
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
+	Ctrl *p = GetTopCtrlFromId(user_data);
 	switch(event->type) {
 	case GDK_CONFIGURE:
 		AddEvent(user_data, GDK_CONFIGURE, Value(), event);
-	case GDK_EXPOSE: {
-		Ctrl *p = GetTopCtrlFromId(user_data);
+//	case GDK_EXPOSE:
 		if(p)
 			p->InvalidateScreenRect();
-		}
 	default:
 		break;
 	}
@@ -285,7 +284,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			}
 		}
 		break;
-	case GDK_EXPOSE:
+//	case GDK_EXPOSE:
 	case GDK_CONFIGURE: {
 		retval = false;
 		p->InvalidateScreenRect();
@@ -430,7 +429,21 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 			press = true;
 		case GDK_KEY_RELEASE: {
 			auto *kev = (GdkEventKey *)event;
-			e.state = prev_state = kev->state;
+			prev_state = kev->state;
+			dword mask = decode(kev->keyval,
+			                    GDKEY(Control_L), GDK_CONTROL_MASK,
+			                    GDKEY(Control_R), GDK_CONTROL_MASK,
+			                    GDKEY(Shift_L), GDK_SHIFT_MASK,
+			                    GDKEY(Shift_R), GDK_SHIFT_MASK,
+			                    GDKEY(Alt_L), GDK_MOD1_MASK,
+			                    GDKEY(Alt_R), GDK_MOD1_MASK, 0);
+			if(mask) {
+				if(press)
+					prev_state |= mask;
+				else
+					prev_state &= ~mask;
+			}
+			e.state = prev_state;
 		}
 		default:
 			break;
