@@ -383,6 +383,10 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 		fnt.Face(Font::SANSSERIF); // otherwise devangari font is used, which looks off
 #endif
 
+#ifdef flagX11 // forces the legacy X11 backend (instead of GTK)
+	fnt.NoColor(); // no color emojis in pure X11 for now
+#endif
+
 	bool prefer_color = PreferColorEmoji(chr) && !fnt.IsNoColor();
 	static VectorMap<int, sRFace *> rface[2]; // face index to font info
 	static Vector<int> color[2]; // colorimg faces

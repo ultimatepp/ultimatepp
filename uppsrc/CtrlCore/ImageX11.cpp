@@ -430,7 +430,7 @@ Image Image::SizeBottomLeft() FCURSOR_(XC_bottom_left_corner)
 Image Image::SizeBottom() FCURSOR_(XC_bottom_side)
 Image Image::SizeBottomRight()  FCURSOR_(XC_bottom_right_corner)
 Image Image::Cross() FCURSOR_(XC_crosshair)
-Image Image::Hand() FCURSOR_(XC_hand1)
+Image Image::Hand() FCURSOR_(XC_hand2)
 
 void *CursorX11(const Image& img)
 {

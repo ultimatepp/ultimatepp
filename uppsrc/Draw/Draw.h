@@ -153,10 +153,10 @@ public:
 	Font& Strikeout()               { v.flags |= FONT_STRIKEOUT; return *this; }
 	Font& NoStrikeout()             { v.flags &= ~FONT_STRIKEOUT; return *this; }
 	Font& Strikeout(bool b)         { return b ? Strikeout() : NoStrikeout(); }
+	Font& NoColor(bool b = true)    { if(b) v.flags |= FONT_NOCOLOR; else v.flags &= ~FONT_NOCOLOR; return *this; }
 	Font& NonAntiAliased()          { v.flags |= FONT_NON_ANTI_ALIASED; return *this; }
 	Font& NoNonAntiAliased()        { v.flags &= ~FONT_NON_ANTI_ALIASED; return *this; } // deprecated
 	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); } // deprecated
-	Font& NoColor()                 { v.flags |= FONT_NOCOLOR; return *this; }
 	Font& TrueTypeOnly()            { v.flags |= FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
 	Font& NoTrueTypeOnly()          { v.flags &= ~FONT_TRUE_TYPE_ONLY; return *this; } // deprecated
 	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); } // deprecated

@@ -34,7 +34,6 @@ private:
 	bool          shrink_oversized_objects;
 	bool          icursor = true;
 	bool          copy_with_tabs = false;
-	bool          mono_glyphs = false;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -121,7 +120,6 @@ public:
 	RichTextView&   ICursor(bool b = true)                    { icursor = b; return *this; }
 	RichTextView&   NoICursor()                               { return ICursor(false); }
 	RichTextView&   CopyWithTabs(bool b = true)               { copy_with_tabs = b; return *this; }
-	RichTextView&   MonoGlyphs(bool b = true)                 { mono_glyphs = b; return *this; }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 

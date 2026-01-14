@@ -24,6 +24,7 @@ bool __X11_Grabbing = false;
 
 #define x_Event(x) { x, #x },
 
+#ifdef _DEBUG
 static
 struct XEventMap {
 	int         ID;
@@ -33,6 +34,7 @@ sXevent[] = {
 #include "X11Event.i"
 	{ 0, NULL }
 };
+#endif
 
 ArrayMap<Window, Ctrl::XWindow>& Ctrl::Xwindow()
 {
@@ -47,8 +49,6 @@ int       Ctrl::PopupGrab;
 Ptr<Ctrl> Ctrl::popupWnd;
 
 Point     Ctrl::mousePos;
-
-static int s_starttime;
 
 void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
