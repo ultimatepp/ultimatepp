@@ -654,7 +654,9 @@ void LaunchWebBrowser(const String& url)
 void    LaunchWebBrowser(const String& url)
 {
 #ifdef PLATFORM_MACOS
-	IGNORE_RESULT(system("open " + url));
+	String u = url;
+	u.Replace("$", "\\$");
+	IGNORE_RESULT(system("open " + u));
 #else
 	const char * browser[] = {
 		"htmlview", "xdg-open", "x-www-browser", "firefox", "konqueror", "opera", "epiphany", "galeon", "netscape"
