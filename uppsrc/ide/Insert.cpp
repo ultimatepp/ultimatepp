@@ -314,6 +314,12 @@ void Ide::InsertMenu(Bar& bar)
 			bar.Separator();
 	}
 	bar.Add("Insert color..", THISBACK(InsertColor));
+	bar.Add("Insert symbol..", [=] {
+		int c = SelectSpecialSymbol();
+		if(IsNull(c))
+			return;
+		editor.InsertChar(c);
+	});
 	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
 	bar.Add("Insert sequence..", THISBACK(InsertSequence));
 	bar.Add("Insert function parameters..", [=] { InsertParameters(); });
