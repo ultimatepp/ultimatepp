@@ -33,8 +33,8 @@ public:
 	Size isz = Size(64, 32);
 	int  count = 18;
 
-	Event<int>                    WhenSelect;
-	Event<Draw&, Size, int, bool> WhenPaintItem;
+	Event<int>                           WhenSelect;
+	Event<Draw&, const Rect&, int, bool> WhenPaintItem;
 
 	ColumnPopUp();
 };
@@ -75,6 +75,8 @@ private:
 
 	bool           allow_dark_content = false;
 	bool           dark_content = false;
+	
+	Size           icon_sz;
 
 	Point          sizehandle = Point(0, 0);
 	Point          draghandle = Point(0, 0);
@@ -148,7 +150,7 @@ private:
 	double GetZoom() const               { return DPI(1) * 0.01 * zoom_percent; }
 	void   Map(Point& p);
 	Image  MakeIcon(DiagramItem& m, Size isz);
-	Size   IconSz()                      { return Size(DPI(24), DPI(16)); }
+	int    IconDlCx()                    { return DPI(24 + 4 + 18); }
 	Image  ShapeIcon(int i);
 	Image  CapIcon(int start, int end);
 	Image  DashIcon(int i);
@@ -158,7 +160,7 @@ private:
 	void   Grid(Point& p);
 	void   Grid(Pointf& p);
 	void   ChangeSize();
-	void   PopPaint(Draw& w, const Image& m, bool sel);
+	void   PopPaint(Draw& w, const Rect& r, const Image& m, bool sel);
 	void   Shapes(ColumnPopUp& shape);
 	void   Caps(ColumnPopUp& m, bool left);
 	void   Dashes(ColumnPopUp& m);
