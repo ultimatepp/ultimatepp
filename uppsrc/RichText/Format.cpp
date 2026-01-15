@@ -44,6 +44,10 @@ void RichTxt::FormatInfo::Combine(const RichPara::CharFormat& fmt)
 		charvalid &= ~DASHED;
 		dashed = false;
 	}
+	if(IsNoColor() != fmt.IsNoColor()) {
+		charvalid &= ~NO_COLOR;
+		dashed = false;
+	}
 	if(sscript != fmt.sscript) {
 		charvalid &= ~SSCRIPT;
 		sscript = 0;
@@ -156,6 +160,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::CharFormat& fmt) const
 		fmt.capitals = capitals;
 	if(charvalid & DASHED)
 		fmt.dashed = dashed;
+	if(charvalid & NO_COLOR)
+		fmt.NoColor(IsNoColor());
 	if(charvalid & SSCRIPT)
 		fmt.sscript = sscript;
 	if(charvalid & FACE)

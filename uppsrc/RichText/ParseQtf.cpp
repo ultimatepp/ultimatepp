@@ -622,6 +622,7 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				case '*': format.Bold(!format.IsBold()); break;
 				case '_': format.Underline(!format.IsUnderline()); break;
 				case 'T': format.NonAntiAliased(!format.IsNonAntiAliased()); break;
+				case 'M': format.NoColor(!format.IsNoColor()); break;
 				case '-': format.Strikeout(!format.IsStrikeout()); break;
 				case 'c': format.capitals = !format.capitals; break;
 				case 'd': format.dashed = !format.dashed; break;

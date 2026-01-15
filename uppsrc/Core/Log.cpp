@@ -174,6 +174,14 @@ void LogOut::Line(const char *s, int len, int depth)
 		p += ll;
 		prev_msecs = t;
 	}
+#ifdef PLATFORM_POSIX
+	if((options & LOG_PROCESS_ID) && line_begin) {
+		ll = snprintf(p, 600, "PID %d ", getpid());
+		if(ll < 0)
+			return;
+		p += ll;
+	}
+#endif
 	if((options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) && line_begin) {
 		Time t = (options & LOG_TIMESTAMP_UTC) ? GetUtcTime() : GetSysTime();
 		ll = snprintf(p, 600, "%02d.%02d.%04d %02d:%02d:%02d ",

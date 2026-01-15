@@ -54,6 +54,7 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 					return;
 				}
 				if(a == XAtom("_NET_WM_PING")) {
+					LLOG("_NET_WM_PING");
 					XEvent ev = *event;
 					ev.xclient.window = Xroot;
 					XSendEvent(Xdisplay, Xroot, 0, SubstructureRedirectMask|SubstructureNotifyMask, &ev);

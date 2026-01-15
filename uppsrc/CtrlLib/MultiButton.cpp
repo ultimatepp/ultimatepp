@@ -599,13 +599,18 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 	return cr;
 }
 
+Rect MultiButton::GetContentRect()
+{
+	NilDraw nw;
+	return Paint0(nw, true);
+}
+
 void MultiButton::SyncInfo()
 {
 	if((HasMouse() || info.HasMouse()) && display &&
 	   (GetMouseFlags() & (K_MOUSELEFT|K_MOUSERIGHT|K_MOUSEMIDDLE)) == 0) {
 		Point p = GetMouseViewPos();
-		NilDraw nw;
-		Rect r = Paint0(nw, true);
+		Rect r = GetContentRect();
 		if(r.Contains(p)) {
 			Value v = convert->Format(value);
 			int cm = DPI(2);

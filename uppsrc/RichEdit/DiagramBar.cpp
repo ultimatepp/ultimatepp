@@ -55,7 +55,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	bar.Separator();
 	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
 	bar.Separator();
-	int icx = IconSz().cx + DPI(4) + DPI(18);
+	int icx = IconDlCx();
 	bar.Add(shape, icx);
 	shape.Enable(!(IsCursor() && findarg(CursorItem().shape, DiagramItem::SHAPE_SVGPATH, DiagramItem::SHAPE_IMAGE) >= 0));
 	bar.Add(line_start, icx);
@@ -94,7 +94,7 @@ void DiagramEditor::TheBar(Bar& bar)
 	})
 	.Check(ar);
 	bar.Separator();
-	Size isz = IconSz();
+	Size isz = icon_sz;
 	for(int i = 0; i < tool_count; i++) {
 		DiagramItem m = tl[i];
 		if(m.IsLine()) {

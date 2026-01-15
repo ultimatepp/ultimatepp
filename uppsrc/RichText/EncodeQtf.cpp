@@ -44,6 +44,7 @@ void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFor
 	if(a.IsNonAntiAliased() != b.IsNonAntiAliased()) fmt.Cat('t');
 	if(a.capitals != b.capitals) fmt.Cat('c');
 	if(a.dashed != b.dashed) fmt.Cat('d');
+	if(a.IsNoColor() != b.IsNoColor()) fmt.Cat('M');
 	if(a.sscript != b.sscript)
 		fmt.Cat(b.sscript == 0 ? a.sscript == 1 ? '`' : ',' :
 		        b.sscript == 1 ? '`' : ',');

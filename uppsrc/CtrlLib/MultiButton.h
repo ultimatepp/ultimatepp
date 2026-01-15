@@ -113,7 +113,6 @@ private:
 
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
-	Rect ContentRect();
 	void GetLR(int& lx, int& rx);
 	bool GetPos(SubButton& b,  int& lx, int& rx, int& x, int& cx, int px = -1);
 	void GetPos(int ii, int& x, int& cx);
@@ -166,6 +165,7 @@ public:
 	SubButton& MainButton();
 
 	Rect  GetPushScreenRect() const                  { return pushrect; }
+	Rect  GetContentRect();
 
 	const Display& GetDisplay() const                { return *display; }
 	const Convert& GetConvert() const                { return *convert; }

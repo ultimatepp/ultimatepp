@@ -469,6 +469,9 @@ CharEntry GetGlyphEntry(Font font, int chr, hash_t hash)
 {
 	Mutex::Lock __(sFontLock);
 	GlyphInfoMaker m;
+#ifdef flagX11
+	font.NoColor();
+#endif
 	m.font = font;
 	m.chr = chr;
 	return MakeValue(m).To<CharEntry>();

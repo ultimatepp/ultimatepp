@@ -46,6 +46,9 @@ struct RichPara {
 		NONAA0      = 1,
 		NONAA1      = 2,
 		NONAAS      = 3,
+		NOCOLOR0    = 4,
+		NOCOLOR1    = 5,
+		NOCOLORS    = 6,
 	};
 
 	enum BULLET_STYLE {

@@ -672,6 +672,7 @@ public:
 	bool      win_deactivated = false;
 	bool      block_caret = false;
 	bool      bar_branch = true;
+	bool      macos_update_icon = false;
 	bool      search_downloads =
 #ifdef PLATFORM_MACOS
 		false

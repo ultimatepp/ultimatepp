@@ -17,6 +17,7 @@ public:
 		INDEXENTRY = 0x00002000,
 		DASHED     = 0x00004000,
 		NOAA       = 0x00008000,
+		NO_COLOR   = 0x00010000,
 	};
 
 	enum {
