@@ -55,10 +55,6 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
 	
-	ONCELOCK {
-		frameMargins = Rect(DPI(8), DPI(32), DPI(8), DPI(8));
-	}
-
 	Top *top = new Top;
 	SetTop(top);
 	top->window = gtk_window_new(popup && owner ? GTK_WINDOW_POPUP : GTK_WINDOW_TOPLEVEL);
@@ -126,8 +122,12 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 		g_signal_connect(top->window, "delete-event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
 	}
-	else
+	else {
+		ONCELOCK {
+			UpdateWindowFrameMargins();
+		}
 		top->client = top->window;
+	}
 
 	top->cursor_id = -1;
 

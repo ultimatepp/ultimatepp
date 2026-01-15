@@ -174,6 +174,7 @@
 	static Rect frameMargins;
 	
 	static void UpdateWindowDecorationsGeometry();
+	static void UpdateWindowFrameMargins();
 
 
 	static bool prevent_custombar_drag;

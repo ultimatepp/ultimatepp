@@ -191,6 +191,24 @@ void Ctrl::UpdateWindowDecorationsGeometry()
 	gtk_widget_destroy(win);
 }
 
+void Ctrl::UpdateWindowFrameMargins()
+{
+#ifdef GDK_WINDOWING_X11
+	// No realiable way how to do this in wayland, but there the window pos is ignored anyway
+	GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_widget_show_all(win);
+	gdk_display_sync(gdk_display_get_default());
+	Vector<int> fe = GetPropertyInts(gtk_widget_get_window(win), "_NET_FRAME_EXTENTS");
+	if(fe.GetCount() >= 4) {
+		frameMargins.left = clamp(fe[0], 0, DPI(32));
+		frameMargins.right = clamp(fe[1], 0, DPI(32));
+		frameMargins.top = clamp(fe[2], 0, DPI(96));
+		frameMargins.bottom = clamp(fe[3], 0, DPI(32));
+	}
+	gtk_widget_destroy(win);
+#endif
+}
+
 void Ctrl::WndRectsSync() const
 {
 	if(utop && utop->sync_rect) {

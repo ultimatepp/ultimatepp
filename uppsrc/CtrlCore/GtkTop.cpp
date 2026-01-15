@@ -17,14 +17,14 @@ void TopWindow::SyncSizeHints()
 	if(top) {
 		int mcx = 0;
 		int mcy = 0;
-		
+
 		if(top->csd) {
 			mcx += csd_border.left + csd_border.right;
 			mcy += csd_border.top + csd_border.bottom;
 			if(!custom_bar)
 				mcy += csd_std_header_cy;
 		}
-		
+
 		GdkGeometry m;
 
 		m.base_width = sz0.cx;
@@ -37,13 +37,13 @@ void TopWindow::SyncSizeHints()
 		Size maxsz = sizeable ? GetMaxSize() : sz0;
 		m.max_width = LSCH(maxsz.cx + mcx);
 		m.max_height = LSCH(maxsz.cy + mcy);
-		
+
 		gtk_window_set_resizable(gtk(), sizeable);
 		gtk_window_set_geometry_hints(gtk(), NULL, &m,
 		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE|GDK_HINT_BASE_SIZE));
 		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
 	}
-	
+
 	SyncCustomBar();
 }
 
@@ -159,13 +159,6 @@ void TopWindow::Open(Ctrl *owner)
 	state = OVERLAPPED;
 	SetMode(q);
 	SyncTopMost();
-	GdkRectangle fr;
-	gdk_window_get_frame_extents(gdk(), &fr);
-	Rect r = GetRect();
-	frameMargins.left = clamp(r.left - SCL(fr.x), 0, DPI(32));
-	frameMargins.right = clamp(SCL(fr.x + fr.width) - r.right, 0, DPI(32));
-	frameMargins.top = clamp(r.top - SCL(fr.y), 0, DPI(80));
-	frameMargins.bottom = clamp(SCL(fr.y + fr.height) - r.bottom, 0, DPI(48));
 }
 
 void TopWindow::Open()
