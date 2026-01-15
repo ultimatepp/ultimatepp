@@ -122,8 +122,8 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
 
-		// TODO:
-		p->InvalidateScreenRect(); // for some reason Draw seems to be sent sooner than CONFIGURE
+		// TODO: this makes it slow(er)
+		p->InvalidateScreenRect(); // for some reason Draw seems to be sent sooner than CONFIGURE (?)
 		p->SyncWndRect(); // try to avoid black areas when resizing
 
 		SystemDraw w(cr);
@@ -181,7 +181,12 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
 	Ctrl *p = GetTopCtrlFromId(user_data);
+	TopWindow *tw = dynamic_cast<TopWindow *>(p);
 	switch(event->type) {
+	case GDK_SETTING:
+		if(tw)
+			tw->SetCustomBarDragPrevention();
+		break;
 	case GDK_CONFIGURE:
 		AddEvent(user_data, GDK_CONFIGURE, Value(), event);
 //	case GDK_EXPOSE:
@@ -309,7 +314,7 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 			MouseState &= ~m;
 		return e->button;
 	}
-*/	
+*/
 	// 1 2 3 left middle right
 	// 8 9 FW / BK
 	return findarg(e->button, 1, 2, 3, 8, 9) >= 0 ? (int)e->button : (int)Null;
@@ -665,9 +670,9 @@ void Ctrl::Proc()
 
 	for(Ctrl *q : GetTopCtrls())
 		q->SyncWndRect();
-	
+
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	
+
 	auto IsCustomBarAction = [&] {
 		return tw && tw->custom_bar_frame && tw->custom_bar_frame->GetScreenRect().Contains(GetMousePos())
 		          && tw->IsCustomTitleBarDragArea(GetMousePos() - GetScreenRect().TopLeft());
@@ -697,9 +702,9 @@ void Ctrl::Proc()
 			ignoreclick = false;
 			ignoremouseup = false;
 		}
-		
+
 		custom_titlebar_drag_click = CurrentEvent.value == 1 && IsCustomBarAction();
-		
+
 		if(!ignoreclick) {
 			bool dbl = msecs(clicktime) < 250;
 			clicktime = dbl ? clicktime - 1000 : msecs();
@@ -723,6 +728,10 @@ void Ctrl::Proc()
 		else
 		if(!dnd_events)
 			GtkButtonEvent(UP);
+		if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft()) {
+			StopGrabPopup();
+			ReleaseWndCapture0();
+		}
 		break;
 	case GDK_SCROLL: {
 		Point delta = CurrentEvent.value;
@@ -881,8 +890,6 @@ void Ctrl::SyncWndRect()
 	}
 	if(GetRect() != rect)
 		SetWndRect(rect);
-	if(TopWindow *tw = dynamic_cast<TopWindow *>(this)) {
-	}
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)

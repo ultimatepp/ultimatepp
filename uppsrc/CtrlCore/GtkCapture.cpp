@@ -52,11 +52,11 @@ void Ctrl::UngrabMouse()
 {
 	if(grabwindow && grabwindow->top && grabwindow->utop->csd) // (*)
 		return;
-	return;
+	DLOG("Ungrab");
 #if GTK_CHECK_VERSION(3, 20, 0)
-		gdk_seat_ungrab(GetSeat());
+	gdk_seat_ungrab(GetSeat());
 #else
-		gdk_device_ungrab(GetMouseDevice(), GDK_CURRENT_TIME);
+	gdk_device_ungrab(GetMouseDevice(), GDK_CURRENT_TIME);
 #endif
 }
 
@@ -102,7 +102,7 @@ bool Ctrl::ReleaseWndCapture0()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	LLOG("ReleaseWndCapture");
+	DLOG("ReleaseWndCapture");
 	if(grabwindow) {
 		UngrabMouse();
 		grabwindow = NULL;

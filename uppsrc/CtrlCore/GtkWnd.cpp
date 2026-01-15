@@ -563,8 +563,9 @@ void Ctrl::WndSetPos(const Rect& rect)
 	if(!IsOpen())
 		return;
 
-	SetWndRect(rect);
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	DDUMP(HasWndCapture());
+	DDUMP(MouseIsGrabbed());
 	if(tw)
 		tw->SyncSizeHints();
 	if(top && utop->csd) {
@@ -579,9 +580,12 @@ void Ctrl::WndSetPos(const Rect& rect)
 		Rect m(0, 0, 0, 0);
 		if(tw)
 			m = frameMargins;
+		DDUMP(m);
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
 		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}
+	DDUMP(HasWndCapture());
+	DDUMP(MouseIsGrabbed());
 	InvalidateScreenRect();
 	SyncWndRect();
 /*	if(dynamic_cast<TopWindow *>(this)) { _DBG_

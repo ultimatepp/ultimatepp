@@ -128,7 +128,7 @@ void Ctrl::SetCustomBarDragPrevention()
 void Ctrl::SyncPreventCustomBarDragPrevention()
 {
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	prevent_custombar_drag = tw && tw->custom_bar_frame && tw->GetScreenRect().Contains(GetMousePos());
+	prevent_custombar_drag = tw && tw->custom_bar_frame;
 	SetCustomBarDragPrevention();
 }
 
