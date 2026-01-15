@@ -45,8 +45,6 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		if(!IsNull(f.paper) && !highlight && IsNull(pi.textcolor))
 			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y, pi.ResolvePaper(f.paper));
 		Font fnt = f;
-		if(pi.mono_glyphs)
-			fnt.NoColor();
 		int zht = z * tabs(f.GetHeight());
 		int ssa = 0;
 		int ssd = 0;

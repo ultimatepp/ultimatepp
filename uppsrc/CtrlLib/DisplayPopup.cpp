@@ -25,7 +25,8 @@ DisplayPopup::DisplayPopup()
 
 void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 {
-	if(ctrl && !IsNull(screen_rect) && (tw == ctrl->GetTopCtrl() || tw && tw != ctrl->GetOwner())) {
+	if(ctrl && tw && !IsNull(screen_rect) && ctrl->HasMouseDeep() &&
+	   (tw == ctrl->GetTopCtrl() || tw == ctrl->GetTopCtrl()->GetOwner())) {
 		Rect r = screen_rect - tw->GetScreenRect().TopLeft();
 		DrawFrame(w, r, SBlack());
 		r.Deflate(1, 1);

@@ -69,12 +69,15 @@ public:
 		Window win;
 
 		VectorMap<int, ClipData> data;
+		
+		String formats[2]; // 0 CLIPBOARD, 1 PRIMARY
 
 		String Read(int fmt, int selection, int property);
 		void   Write(int fmt, const ClipData& data);
-		bool   IsAvailable(int fmt, const char *type);
+		bool   IsAvailable(int fmt, bool primary);
 
-		void   Clear()                     { data.Clear(); }
+		void   InvalidateFormats()         { formats[0] = String::GetVoid(); formats[1] = String::GetVoid(); }
+		void   Clear()                     { data.Clear(); InvalidateFormats(); }
 		void   Request(XSelectionRequestEvent *se);
 
 		Xclipboard();

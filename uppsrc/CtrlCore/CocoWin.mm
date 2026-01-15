@@ -35,6 +35,8 @@ namespace Upp {
 
 static Vector<Ptr<Ctrl>> mmtopctrl; // should work without Ptr, but let us be defensive....
 
+bool Ctrl::always_use_bundled_icon = false;
+
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
@@ -276,6 +278,9 @@ void TopWindow::SyncTitle()
 
 void Ctrl::SyncAppIcon()
 {
+	if(always_use_bundled_icon)
+		return;
+	
 	Ctrl *q = GetFocusCtrl();
 	if(!q)
 		q = lastActive;

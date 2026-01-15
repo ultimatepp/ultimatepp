@@ -30,19 +30,20 @@ Vector<String>     GetStringLineMap(const String &s);
 
 class TextCompareCtrl : public Ctrl {
 public:
-	virtual void   Paint(Draw& draw);
-	virtual void   Layout();
-	virtual void   MouseWheel(Point pt, int zdelta, dword keyflags);
-	virtual void   HorzMouseWheel(Point pt, int zdelta, dword keyflags);
-	virtual void   MouseMove(Point pt, dword keyflags);
-	virtual void   LeftDown(Point pt, dword keyflags);
-	virtual void   LeftDouble(Point pt, dword keyflags);
-	virtual void   LeftUp(Point pt, dword keyflags);
-	virtual void   LeftRepeat(Point pt, dword keyflags);
-	virtual void   RightDown(Point p, dword keyflags);
-	virtual Image  CursorImage(Point p, dword keyflags);
-	virtual bool   Key(dword key, int repcnt);
-	virtual void   LostFocus();
+	void   Paint(Draw& draw) override;
+	void   Layout() override;
+	void   MouseWheel(Point pt, int zdelta, dword keyflags) override;
+	void   HorzMouseWheel(Point pt, int zdelta, dword keyflags) override;
+	void   MouseMove(Point pt, dword keyflags) override;
+	void   MouseLeave() override;
+	void   LeftDown(Point pt, dword keyflags) override;
+	void   LeftDouble(Point pt, dword keyflags) override;
+	void   LeftUp(Point pt, dword keyflags) override;
+	void   LeftRepeat(Point pt, dword keyflags) override;
+	void   RightDown(Point p, dword keyflags) override;
+	Image  CursorImage(Point p, dword keyflags) override;
+	bool   Key(dword key, int repcnt) override;
+	void   LostFocus() override;
 
 	struct Blame : Moveable<Blame> {
 		String hash;

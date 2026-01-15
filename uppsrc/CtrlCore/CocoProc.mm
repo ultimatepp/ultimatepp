@@ -205,7 +205,8 @@ struct MMImp {
 		ctrl->UpdateArea(w, r);
 	}
 
-	static bool KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up) {
+	static bool KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up)
+	{
 		if(!ctrl)
 			return false;
 		Flags(e);
@@ -245,6 +246,11 @@ struct MMImp {
 				ctrl->DispatchKey(' ', 1);
 		}
 		return true;
+	}
+
+	static void DispatchKey(Upp::Ctrl *ctrl, int k)
+	{ // just to solve prive by MMImp being friend...
+		ctrl->DispatchKey(k, 1);
 	}
 
 	static void BecomeKey(Upp::Ctrl *ctrl)
@@ -360,6 +366,15 @@ struct MMImp {
 	coco_mouse_left = true;
 	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::LEFT))
 		[super mouseDown:e];
+}
+
+- (void)otherMouseDown:(NSEvent*)e {
+	Upp::GuiLock __;
+	int m = decode([e buttonNumber], 3, Upp::K_MOUSE_BACKWARD, 4, Upp::K_MOUSE_FORWARD, 0);
+	if(m)
+		Upp::MMImp::DispatchKey(ctrl, m);
+	else
+		[super otherMouseDown:e];
 }
 
 - (void)mouseUp:(NSEvent *)e {

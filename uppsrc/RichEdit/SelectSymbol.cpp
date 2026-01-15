@@ -57,7 +57,6 @@ SelectSymbolDlg::SelectSymbolDlg(bool show_variants)
 	search ^= group ^= [=] { Sync(); };
 
 	symbols.NoHyperlinkDecoration();
-	symbols.MonoGlyphs();
 
 	if(show_variants) {
 		symbols.WhenLink << [=](const String& s) { Variants(Atoi(s)); };
@@ -81,7 +80,7 @@ void SelectSymbolDlg::Sync()
 
 	int g = ~group;
 	String s = ToLower(~~search);
-	String qtf = "[A5 ";
+	String qtf = "[MA5 ";
 	for(int i = 0; i < syms.GetCount(); i++)
 		if(g == 0 || g == i + 1)
 			for(Tuple<int, String> h : syms[i])
@@ -92,7 +91,7 @@ void SelectSymbolDlg::Sync()
 
 void SelectSymbolDlg::Variants(int codepoint)
 {
-	String qtf = "[A5 ";
+	String qtf = "[MA5 ";
 	Index<Image> h;
 	svg.Clear();
 	for(int i = 0; i < Font::GetFaceCount(); i++) {

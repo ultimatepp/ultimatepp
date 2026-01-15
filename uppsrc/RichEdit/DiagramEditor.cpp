@@ -8,6 +8,14 @@ namespace Upp {
 
 DiagramEditor::DiagramEditor()
 {
+	{ // estimate the size of icons
+		DropList shape;
+		shape.SetRect(0, 0, IconDlCx(), shape.MultiButton::GetStdSize().cy);
+		icon_sz = shape.GetContentRect().GetSize();
+		icon_sz.cx = max(icon_sz.cx, 8); // sanity
+		icon_sz.cy = max(icon_sz.cy, 8);
+	}
+	
 	AddFrame(toolbar);
 
 	Add(text_editor);

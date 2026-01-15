@@ -385,6 +385,10 @@ void Ide::SetupFormat() {
 	}
 #endif
 
+#ifndef GUI_COCOA
+	ide.update_icon.Hide();
+#endif
+
 	bool show_basic_hints = IsBasicHintsEnabled();
 
 	rtvr
@@ -462,6 +466,7 @@ void Ide::SetupFormat() {
 		(ide.search_downloads, search_downloads)
 		(ide.show_basic_hints, show_basic_hints)
 		(ide.valgrind, valgrind_options)
+		(ide.update_icon, macos_update_icon)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);
@@ -592,7 +597,7 @@ void Ide::SetupFormat() {
 		CurrentFileDeleteCache();
 		editor.SyncCurrentFile();
 	}
-
+	
 #ifdef GUI_GTK
 	if(IsWayland() || IsXWayland()) {
 		if(FileExists(use_wayland_path) != ide.wayland) {

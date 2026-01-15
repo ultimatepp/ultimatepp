@@ -61,7 +61,6 @@ PaintInfo::PaintInfo()
 	showlabels = false;
 	shrink_oversized_objects = false;
 	textcolor = Null;
-	mono_glyphs = false;
 	DrawSelection = [] (Draw& w, int x, int y, int cx, int cy) {
 		w.DrawRect(x, y, cx, cy, InvertColor);
 	};
@@ -194,6 +193,11 @@ void RichPara::Charformat(Stream& out, const RichPara::CharFormat& o,
 		out.Put(EXT);
 		out.Put(n.IsNonAntiAliased() == s.IsNonAntiAliased() ? NONAAS
 		                                                     : NONAA0 + n.IsNonAntiAliased());
+	}
+	if(o.IsNoColor() != n.IsNoColor()) {
+		out.Put(EXT);
+		out.Put(n.IsNoColor() == s.IsNoColor() ? NOCOLORS
+		                                       : NOCOLOR0 + n.IsNoColor());
 	}
 	if(o.capitals != n.capitals)
 		out.Put(n.capitals == s.capitals ? CAPITALSS
@@ -512,6 +516,15 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 					case NONAAS:
 						format.NonAntiAliased(chrstyle.IsNonAntiAliased());
 						break;
+					case NOCOLOR0:
+						format.NoColor(false);
+						break;
+					case NOCOLOR1:
+						format.NoColor(true);
+						break;
+					case NOCOLORS:
+						format.NoColor(chrstyle.IsNoColor());
+						break;
 					}
 				}
 			while((c = in.Term()) < 31 && c != 9 && c != FIELD && c >= 0);
@@ -747,6 +760,8 @@ void ApplyCharStyle(RichPara::CharFormat& format, const RichPara::CharFormat& f0
 		format.capitals = newstyle.capitals;
 	if(format.dashed == f0.dashed)
 		format.dashed = newstyle.dashed;
+	if(format.IsNoColor() == f0.IsNoColor())
+		format.NoColor(newstyle.IsNoColor());
 	if(format.sscript == f0.sscript)
 		format.sscript = newstyle.sscript;
 	if(format.GetFace() == f0.GetFace())

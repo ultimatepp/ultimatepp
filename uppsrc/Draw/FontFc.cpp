@@ -29,7 +29,7 @@ bool sInitFt(void)
 
 FcPattern *CreateFcPattern(Font font)
 {
-	LTIMING("CreateXftFont");
+	LTIMING("CreateFcPattern");
 	int hg = abs(font.GetHeight());
 	if(hg == 0) hg = 10;
 	String face = font.GetFaceName();

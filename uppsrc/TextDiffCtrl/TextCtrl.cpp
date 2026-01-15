@@ -140,6 +140,14 @@ void TextCompareCtrl::MouseMove(Point pt, dword flags)
 	}
 }
 
+void Upp::TextCompareCtrl::MouseLeave()
+{
+	if(blame_line >= 0) {
+		blame_line = -1;
+		Refresh();
+	}
+}
+
 void TextCompareCtrl::LeftRepeat(Point pt, dword keyflags)
 {
 	if(HasCapture())
@@ -533,7 +541,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 	draw.End();
 	draw.DrawRect(0, lcy, n_width, sz.cy - lcy, number_bg);
 	
-	if(blame_y >= 0) {
+	if(blame_y >= 0 && HasMouse()) {
 		RichText txt = ParseQTF(blame_qtf);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
 		int cx = clamp(txt.GetWidth(), 10, sz.cx - n_width);
