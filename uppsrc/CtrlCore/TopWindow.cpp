@@ -456,7 +456,7 @@ bool Ctrl::MouseActiveCtrl(Ctrl *w, Point p)
 	for(Ctrl *q = w->GetLastChild(); q; q = q->GetPrev())
 		if(q->GetScreenRect().Contains(p))
 			return MouseActiveCtrl(q, p);
-			
+
 	return w->IsMouseActive();
 }
 
