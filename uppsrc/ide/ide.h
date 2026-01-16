@@ -389,7 +389,6 @@ public:
 	virtual   void   Activate();
 	virtual   void   Layout();
 	virtual   void   Skin();
-	virtual   bool   IsCustomTitleBarDragArea(Point p);
 
 	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);

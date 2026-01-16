@@ -132,4 +132,12 @@ void StaticBarArea::Paint(Draw& w)
 		             upperframe ? Null : GetScreenRect().bottom);
 }
 
+Color GetBarAreaAvgColor()
+{
+	Size sz(8, 8);
+	ImageDraw w(sz);
+	ChPaint(w, sz, Nvl(ToolBar().StyleDefault().arealook, ToolBar().StyleDefault().look));
+	return AvgColor(w);
+}
+
 }

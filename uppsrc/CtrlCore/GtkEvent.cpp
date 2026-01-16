@@ -9,7 +9,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-// #define LOG_EVENTS  _DBG_
+// #define LOG_EVENTS _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -17,7 +17,6 @@ Point         Ctrl::CurrentMousePos;
 guint         Ctrl::CurrentState;
 guint32       Ctrl::CurrentTime;
 Ctrl::GEvent  Ctrl::CurrentEvent;
-guint         Ctrl::MouseState;
 
 bool  GetShift() { return Ctrl::CurrentState & GDK_SHIFT_MASK; }
 bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK; }
@@ -87,10 +86,26 @@ bool Ctrl::ProcessInvalids()
 	GuiLock __;
 	if(invalids) {
 		for(Win& win : wins) {
-			for(const Rect& r : win.invalid)
-				if(win.drawing_area && win.ctrl)
-					gdk_window_invalidate_rect(gtk_widget_get_window(win.drawing_area),
-					                           GdkRect(Nvl(r, win.ctrl->GetRect().GetSize())), TRUE);
+			Top *top = win.ctrl->GetTop();
+			TopWindow *tw = dynamic_cast<TopWindow *>(~win.ctrl);
+			if(top)
+				for(const Rect& r : win.invalid)
+					if(top->client && win.ctrl) {
+						win.ctrl->WndRectsSync();
+						Rect rr = Nvl(r, win.ctrl->GetRect().GetSize());
+						auto Invalidate = [](GtkWidget *w, Rect r) {
+							if(r.IsEmpty())
+								return;
+							r = LSCH(r);
+							gtk_widget_queue_draw_area(w, r.left, r.top, r.GetWidth(), r.GetHeight());
+						};
+						if(top && tw && top->header_area) {
+							int h = tw->custom_bar_frame->GetHeight();
+							Invalidate(top->header_area, rr & Rect(0, 0, INT_MAX, h));
+							rr.Offset(0, -h);
+						}
+						Invalidate(top->client, rr);
+					}
 			win.invalid.Clear();
 		}
 		invalids = false;
@@ -104,8 +119,15 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 	Ctrl *p = GetTopCtrlFromId(user_data);
 	if(p) {
 		p->fullrefresh = false;
+
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
-		p->SyncWndRect(p->GetWndScreenRect()); // avoid black areas when resizing
+		
+		Top *top = p->GetTop();
+		if(top && top->draw_after_configure) {
+			p->InvalidateScreenRect();
+			top->draw_after_configure = false;
+		}
+		p->SyncWndRect();
 
 		SystemDraw w(cr);
 		painting = true;
@@ -113,7 +135,6 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		double x1, y1, x2, y2;
 		cairo_clip_extents (cr, &x1, &y1, &x2, &y2);
 		Rect r = RectC((int)x1, (int)y1, (int)ceil(x2 - x1), (int)ceil(y2 - y1));
-		w.Clip(r); // Because of IsPainting
 
 		cairo_rectangle_list_t *list = cairo_copy_clip_rectangle_list(cr);
 		if(list->status == CAIRO_STATUS_SUCCESS && list->num_rectangles < 10) {
@@ -126,11 +147,60 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		}
 		cairo_rectangle_list_destroy(list);
 
+		TopWindow *tw = dynamic_cast<TopWindow *>(p);
+		if(top && tw && top->header_area && widget != top->header_area) {
+			int h = tw->GetCustomTitleBarMetrics().height;
+			w.Offset(0, -h);
+			r.OffsetVert(h);
+		}
+		else
+			w.Begin();
+
+		w.Clip(r);
 		p->UpdateArea(w, r);
+		w.End();
 		w.End();
 		painting = false;
 	}
 	return true;
+}
+
+void Ctrl::InvalidateScreenRect()
+{
+	LLOG("InvalidateScreenRect");
+	Top *top = GetTop();
+	if(top)
+		top->sync_rect = true;
+}
+
+gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+#ifdef LOG_EVENTS
+	String ev = "? " + AsString((int)event->type);
+	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
+	if(f)
+		ev = f->b;
+	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
+#endif
+	Ctrl *p = GetTopCtrlFromId(user_data);
+	Top *top = p ? p->GetTop() : nullptr;
+	TopWindow *tw = dynamic_cast<TopWindow *>(p);
+	switch(event->type) {
+	case GDK_SETTING:
+		if(tw)
+			tw->SetCustomBarDragPrevention();
+		break;
+	case GDK_CONFIGURE:
+		AddEvent(user_data, GDK_CONFIGURE, Value(), event);
+//	case GDK_EXPOSE:
+		if(p)
+			p->InvalidateScreenRect();
+		if(top)
+			top->draw_after_configure = true;
+	default:
+		break;
+	}
+	return false;
 }
 
 gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
@@ -141,6 +211,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	bool  retval = true;
 	Value value;
 	Ctrl *p = GetTopCtrlFromId(user_data);
+	Top *top = p ? p->GetTop() : nullptr;
 #ifdef LOG_EVENTS
 	String ev = "? " + AsString((int)event->type);
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
@@ -149,6 +220,8 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	LOG(rmsecs() << " FETCH EVENT " << ev << " ctrl: " << Name(p));
 #endif
 
+	if(!p)
+		return false;
 	switch(event->type) {
 	case GDK_DELETE:
 		p->CancelPreedit();
@@ -175,12 +248,13 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		if(IsNull(value))
 			return false;
 		break;
+/*	this only adds issues
 	case GDK_2BUTTON_PRESS:
 		p->CancelPreedit();
 		value = DoButtonEvent(event, true);
 		if(IsNull(value))
 			return false;
-		break;
+		break;*/
 	case GDK_BUTTON_RELEASE:
 		p->CancelPreedit();
 		value = DoButtonEvent(event, false);
@@ -212,19 +286,16 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_KEY_RELEASE:
 		key = (GdkEventKey *)event;
 		value << (int) key->keyval << (int) key->hardware_keycode;
-		if(pressed) {
-			p = GetTopCtrlFromId(user_data);
-			if(p) {
-				Top *top = p->GetTop();
-				if(top && gtk_im_context_filter_keypress(top->im_context, key))
-					return true;
-			}
-		}
+		if(pressed && top && gtk_im_context_filter_keypress(top->im_context, key))
+			return true;
 		break;
+//	case GDK_EXPOSE:
 	case GDK_CONFIGURE: {
 		retval = false;
-		GdkEventConfigure *e = (GdkEventConfigure *)event;
-		value = SCL(e->x, e->y, e->width, e->height);
+		if(p)
+			p->InvalidateScreenRect();
+		if(top)
+			top->draw_after_configure = true;
 		break;
 	}
 	default:
@@ -237,7 +308,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 {
 	GdkEventButton *e = (GdkEventButton *)event;
-	static int mask[] = { GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK };
+/*	static int mask[] = { GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK };
 	if(e->button >= 1 && e->button <= 3) {
 		int m = mask[e->button - 1];
 		if(press)
@@ -246,7 +317,10 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 			MouseState &= ~m;
 		return e->button;
 	}
-	return findarg(e->button, 8, 9) >= 0 ? (int)e->button : (int)Null;
+*/
+	// 1 2 3 left middle right
+	// 8 9 FW / BK
+	return findarg(e->button, 1, 2, 3, 8, 9) >= 0 ? (int)e->button : (int)Null;
 }
 
 Ctrl::GEvent::GEvent()
@@ -294,7 +368,8 @@ void Ctrl::GEvent::operator=(const GEvent& e)
 	Set(e);
 }
 
-static Point s_mousepos;
+Point Ctrl::prev_mouse_pos = Null;
+guint Ctrl::prev_state = 0;
 
 Point Ctrl::GetMouseInfo(GdkWindow *win, GdkModifierType& mod)
 {
@@ -303,7 +378,7 @@ Point Ctrl::GetMouseInfo(GdkWindow *win, GdkModifierType& mod)
 	GdkDevice *pointer = gdk_seat_get_pointer (gdk_display_get_default_seat (display));
 	double x, y;
 	gdk_window_get_device_position_double (win, pointer, &x, &y, &mod);
-	return s_mousepos; //return Point((int)SCL(x), (int)SCL(y));
+	return prev_mouse_pos; //return Point((int)SCL(x), (int)SCL(y));
 #else
 	gint x, y;
 	gdk_window_get_pointer(win, &x, &y, &mod);
@@ -319,24 +394,77 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
-	GdkModifierType mod;
-	e.mousepos = GetMouseInfo(gdk_get_default_root_window(), mod);
-	if(event && event->type == GDK_MOTION_NOTIFY){
-		GdkEventMotion *mevent = (GdkEventMotion *)event;
-		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
-	}
-	if(event && event->type == GDK_LEAVE_NOTIFY){
-		GdkEventCrossing *mevent = (GdkEventCrossing *)event;
-		e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
-	}
-	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
+	e.state = prev_state;
+	bool press = false;
+	if(event)
+		switch(event->type) {
+		case GDK_MOTION_NOTIFY: {
+			GdkEventMotion *mevent = (GdkEventMotion *)event;
+			prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+			prev_state = e.state = mevent->state;
+			e.x_root = mevent->x_root;
+			e.y_root = mevent->y_root;
+			break;
+		}
+		case GDK_LEAVE_NOTIFY: {
+			GdkEventCrossing *mevent = (GdkEventCrossing *)event;
+			prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+			prev_state = e.state = mevent->state;
+			e.x_root = mevent->x_root;
+			e.y_root = mevent->y_root;
+			break;
+		}
+		case GDK_BUTTON_PRESS:
+			press = true;
+		case GDK_BUTTON_RELEASE: {
+			GdkEventButton *mevent = (GdkEventButton *)event;
+			prev_mouse_pos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
+			prev_state = mevent->state;
+			int n = mevent->button;
+			if(n >= 1 && n <= 5) { // gdk reports one state back, without current event
+				dword mask = get_i(n - 1, GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK, GDK_BUTTON4_MASK, GDK_BUTTON5_MASK);
+				if(press)
+					prev_state |= mask;
+				else
+					prev_state &= ~mask;
+			}
+			e.state = prev_state;
+			e.x_root = mevent->x_root;
+			e.y_root = mevent->y_root;
+			break;
+		}
+		case GDK_KEY_PRESS:
+			press = true;
+		case GDK_KEY_RELEASE: {
+			auto *kev = (GdkEventKey *)event;
+			prev_state = kev->state;
+			dword mask = decode(kev->keyval,
+			                    GDKEY(Control_L), GDK_CONTROL_MASK,
+			                    GDKEY(Control_R), GDK_CONTROL_MASK,
+			                    GDKEY(Shift_L), GDK_SHIFT_MASK,
+			                    GDKEY(Shift_R), GDK_SHIFT_MASK,
+			                    GDKEY(Alt_L), GDK_MOD1_MASK,
+			                    GDKEY(Alt_R), GDK_MOD1_MASK, 0);
+			if(mask) {
+				if(press)
+					prev_state |= mask;
+				else
+					prev_state &= ~mask;
+			}
+			e.state = prev_state;
+		}
+		default:
+			break;
+		}
+	e.mousepos = prev_mouse_pos;
 	e.count = 1;
-	e.event = NULL;
+	e.event = nullptr;
+	e.device = nullptr;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	GdkDevice *d = event ? gdk_event_get_source_device(event) : NULL;
-	if(d && findarg(gdk_device_get_source(d), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
+	e.device = event ? gdk_event_get_source_device(event) : NULL;
+	if(e.device && findarg(gdk_device_get_source(e.device), GDK_SOURCE_PEN, GDK_SOURCE_TOUCHSCREEN) >= 0) {
 		e.pen = true;
-		e.pen_barrel = MouseState & GDK_BUTTON3_MASK;
+		e.pen_barrel = e.state & GDK_BUTTON3_MASK;
 		double *axes = NULL;
 		switch(event->type){
 			case GDK_BUTTON_PRESS:
@@ -350,18 +478,16 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 				axes = ((GdkEventButton *)event)->axes;
 				break;
 			case GDK_MOTION_NOTIFY:{
-				GdkEventMotion *mevent = (GdkEventMotion *)event;
-				e.mousepos = s_mousepos = Point(SCL(mevent->x_root), SCL(mevent->y_root));
 				axes = ((GdkEventMotion *)event)->axes;
 				break;
 			}
 			default:;
 		}
 		if(axes) {
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_PRESSURE, &e.pen_pressure)) e.pen_pressure=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_ROTATION, &e.pen_rotation)) e.pen_rotation=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_XTILT, &e.pen_tilt.x)) e.pen_tilt.x=Null;
-			if(!gdk_device_get_axis(d, axes, GDK_AXIS_YTILT, &e.pen_tilt.y)) e.pen_tilt.y=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_PRESSURE, &e.pen_pressure)) e.pen_pressure=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_ROTATION, &e.pen_rotation)) e.pen_rotation=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_XTILT, &e.pen_tilt.x)) e.pen_tilt.x=Null;
+			if(!gdk_device_get_axis(e.device, axes, GDK_AXIS_YTILT, &e.pen_tilt.y)) e.pen_tilt.y=Null;
 		}
 	}
 #endif
@@ -488,10 +614,12 @@ void Ctrl::GtkButtonEvent(int action)
 	GtkMouseEvent(action, act, 0);
 }
 
+bool Ctrl::custom_titlebar_drag_click;
+
 void Ctrl::Proc()
 {
 #ifdef LOG_EVENTS
-	String ev = "?";
+	String ev = "?" + AsString(CurrentEvent.type);
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), CurrentEvent.type);
 	if(f)
 		ev = f->b;
@@ -543,9 +671,22 @@ void Ctrl::Proc()
 	}
 #endif
 
+	for(Ctrl *q : GetTopCtrls())
+		q->SyncWndRect();
+
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+
+	auto IsCustomBarAction = [&] {
+		return tw && tw->custom_bar_frame && tw->custom_bar_frame->GetScreenRect().Contains(GetMousePos())
+		          && tw->IsCustomTitleBarDragArea(GetMousePos() - GetScreenRect().TopLeft());
+	};
+
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY:
 		GtkMouseEvent(MOUSEMOVE, MOUSEMOVE, 0);
+		SyncPreventCustomBarDragPrevention();
+		if(GetMouseLeft() && custom_titlebar_drag_click && IsCustomBarAction())
+			tw->DoMoveWindow();
 		break;
 	case GDK_BUTTON_PRESS:
 		if(CurrentEvent.value == 8) {
@@ -565,17 +706,18 @@ void Ctrl::Proc()
 			ignoremouseup = false;
 		}
 
+		custom_titlebar_drag_click = CurrentEvent.value == 1 && IsCustomBarAction();
+
 		if(!ignoreclick) {
 			bool dbl = msecs(clicktime) < 250;
 			clicktime = dbl ? clicktime - 1000 : msecs();
-			GtkButtonEvent(dbl ? DOUBLE : DOWN);
+			if(dbl && IsCustomBarAction())
+				tw->DoZoom();
+			else
+				GtkButtonEvent(dbl ? DOUBLE : DOWN);
 		}
 		break;
-/*	case GDK_2BUTTON_PRESS:
-		if(!ignoreclick)
-			GtkButtonEvent(DOUBLE);
-		break;
-*/	case GDK_BUTTON_RELEASE:
+	case GDK_BUTTON_RELEASE:
 		if(CurrentEvent.value == 8) {
 			DispatchKey(K_MOUSE_BACKWARD|K_KEYUP, 1);
 			break;
@@ -589,11 +731,17 @@ void Ctrl::Proc()
 		else
 		if(!dnd_events)
 			GtkButtonEvent(UP);
+		if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft()) {
+			StopGrabPopup();
+			ReleaseWndCapture0();
+		}
 		break;
 	case GDK_SCROLL: {
 		Point delta = CurrentEvent.value;
-		if(delta.y!=0.0) GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, delta.y);
-		if(delta.x!=0.0) GtkMouseEvent(MOUSEHWHEEL, MOUSEHWHEEL, delta.x);
+		if(delta.y)
+			GtkMouseEvent(MOUSEWHEEL, MOUSEWHEEL, delta.y);
+		if(delta.x)
+			GtkMouseEvent(MOUSEHWHEEL, MOUSEHWHEEL, delta.x);
 		break;
 	}
 	case GDK_KEY_PRESS:
@@ -680,7 +828,6 @@ void Ctrl::Proc()
 				}
 				kv += K_DELTA;
 			}
-			GetKeyDesc(kv);
 			if(GetShift() && kv != K_SHIFT_KEY)
 				kv |= K_SHIFT;
 			if(GetCtrl() && kv != K_CTRL_KEY)
@@ -710,18 +857,18 @@ void Ctrl::Proc()
 		activeCtrl = NULL;
 		break;
 	case GDK_DELETE: {
-		TopWindow *w = dynamic_cast<TopWindow *>(this);
-		if(w) {
+		if(tw) {
 			if(IsEnabled()) {
 				IgnoreMouseUp();
-				w->WhenClose();
+				tw->WhenClose();
 			}
 		}
 		return;
 	}
 	case GDK_CONFIGURE:
-		SyncWndRect(CurrentEvent.value);
-		break;
+		InvalidateScreenRect();
+		SyncWndRect();
+		return;
 	default:
 		return;
 	}
@@ -729,13 +876,23 @@ void Ctrl::Proc()
 		_this->PostInput();
 }
 
-void Ctrl::SyncWndRect(const Rect& rect)
+void Ctrl::SyncWndRect()
 {
+	WndRectsSync();
+	Rect rect = GetWndScreenRect();
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	if(tw) {
+		tw->SyncIcons();
+		if(tw->state == TopWindow::OVERLAPPED)
+			tw->overlapped = rect;
+
+		Top *top = GetTop();
+		int cy = utop->header_rect.GetHeight();
+		if(top && tw->custom_bar_frame && tw->custom_bar_frame->GetHeight() != cy)
+			tw->custom_bar_frame->Height(cy);
+	}
 	if(GetRect() != rect)
 		SetWndRect(rect);
-	TopWindow *w = dynamic_cast<TopWindow *>(this);
-	if(w && w->state == TopWindow::OVERLAPPED)
-		w->overlapped = rect;
 }
 
 bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
@@ -769,6 +926,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		Value val = e.value;
 		Events.DropHead();
 		Ctrl *w = GetTopCtrlFromId(e.windowid);
+		SetCustomBarDragPrevention();
 		FocusSync();
 		CaptureSync();
 		if(w) {
@@ -839,8 +997,6 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
-	if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft())
-		ReleaseCtrlCapture();
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;

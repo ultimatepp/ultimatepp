@@ -184,9 +184,50 @@ void TopWindow::SyncCaption()
 
 	SetIco();
 	Ptr<TopWindow> ptr = this;
-	PostCallback([=] { // windows 11 ignores icon if Window does not start processing messages within ~200ms
+	PostCallback([=] { // windows 11 seems to ignore icon if Window does not start processing messages within ~200ms
 		if(ptr) ptr->SetIco(); // set it again when we are processing events
 	});
+	
+	SyncCustomBar();
+}
+
+void TopWindow::SyncCustomBar()
+{
+	if(custom_bar_frame)
+		custom_bar_frame->Height(GetCustomTitleBarMetrics().height);
+	if(custom_bar) {
+		auto cm = GetCustomTitleBarMetrics();
+		custom_bar->VSizePos().HSizePos(cm.lm, cm.rm);
+		RefreshFrame(0, 0, GetRect().Width(), cm.height);
+	}
+}
+
+bool TopWindow::IsCustomTitleBar__() const
+{
+	return custom_bar;
+}
+
+Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
+{
+	if(!custom_bar && IsWin11()) {
+		custom_bar_frame.Create();
+		custom_bar_frame->Transparent();
+		custom_bar.Create();
+	}
+	if(custom_bar) {
+		if(&GetFrame(0) != ~custom_bar_frame) {
+			RemoveFrame(*custom_bar_frame);
+			if(&GetFrame(0) == &NullFrame())
+				SetFrame(0, *custom_bar_frame);
+			else
+				InsertFrame(0, *custom_bar_frame);
+		}
+		custom_bar_frame->Add(*custom_bar);
+	}
+	custom_titlebar_bk = bk;
+	custom_titlebar_cy = mincy;
+	SyncCustomBar();
+	return ~custom_bar;
 }
 
 void TopWindow::SetIco()
@@ -203,7 +244,7 @@ void TopWindow::SetIco()
 		ico = new_ico;
 		lico = new_lico;
 
-		if(custom_titlebar) {
+		if(custom_bar) {
 			Rect r = GetTitleBarRect(this);
 
 			bool maximized = IsMaximized();

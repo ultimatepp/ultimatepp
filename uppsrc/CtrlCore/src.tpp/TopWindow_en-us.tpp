@@ -539,6 +539,14 @@ windows decoration on the left / right side of area, [@(0.0.255) height
 would use to draw the background of title bar area.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:TopWindow`:`:IsCustomTitleBarDragArea`(Point`): [@(0.0.255) virtual 
+bool] [* IsCustomTitleBarDragArea](Point [*@3 p])&]
+[s2;%% This method can be overriden to determine whether mouse at 
+[%-*@3 p] should possibly drag the window. Default implementation 
+allows that in mouse inactive areas and is probably fine for 
+most use cases.&]
+[s3; &]
+[s4; &]
 [s5;:TopWindow`:`:SerializePlacement`(Stream`&`,bool`): [@(0.0.255) void]_[* SerializePla
 cement]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 s], [@(0.0.255) bool]_[*@3 reminimize]_`=_[@(0.0.255) f
 alse])&]
