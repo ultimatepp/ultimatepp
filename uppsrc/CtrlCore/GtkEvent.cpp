@@ -9,7 +9,7 @@
 namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
-// #define LOG_EVENTS _DBG_
+#define LOG_EVENTS _DBG_
 
 BiVector<Ctrl::GEvent> Ctrl::Events;
 
@@ -121,10 +121,13 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		p->fullrefresh = false;
 
 		cairo_scale(cr, 1.0 / scale, 1.0 / scale); // cancel scaling to be pixel perfect
-
-		// TODO: this makes it slow(er)
-		p->InvalidateScreenRect(); // for some reason Draw seems to be sent sooner than CONFIGURE (?)
-		p->SyncWndRect(); // try to avoid black areas when resizing
+		
+		Top *top = p->GetTop();
+		if(top && top->draw_after_configure) {
+			p->InvalidateScreenRect();
+			top->draw_after_configure = false;
+		}
+		p->SyncWndRect();
 
 		SystemDraw w(cr);
 		painting = true;
@@ -144,7 +147,6 @@ gboolean Ctrl::GtkDraw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 		}
 		cairo_rectangle_list_destroy(list);
 
-		Top *top = p->GetTop();
 		TopWindow *tw = dynamic_cast<TopWindow *>(p);
 		if(top && tw && top->header_area && widget != top->header_area) {
 			int h = tw->GetCustomTitleBarMetrics().height;
@@ -181,6 +183,7 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 	LOG(rmsecs() << " TOP FETCH EVENT " << ev);
 #endif
 	Ctrl *p = GetTopCtrlFromId(user_data);
+	Top *top = p ? p->GetTop() : nullptr;
 	TopWindow *tw = dynamic_cast<TopWindow *>(p);
 	switch(event->type) {
 	case GDK_SETTING:
@@ -192,6 +195,8 @@ gboolean Ctrl::TopGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_dat
 //	case GDK_EXPOSE:
 		if(p)
 			p->InvalidateScreenRect();
+		if(top)
+			top->draw_after_configure = true;
 	default:
 		break;
 	}
@@ -206,6 +211,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	bool  retval = true;
 	Value value;
 	Ctrl *p = GetTopCtrlFromId(user_data);
+	Top *top = p ? p->GetTop() : nullptr;
 #ifdef LOG_EVENTS
 	String ev = "? " + AsString((int)event->type);
 	Tuple2<int, const char *> *f = FindTuple(xEvent, __countof(xEvent), event->type);
@@ -280,19 +286,16 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 	case GDK_KEY_RELEASE:
 		key = (GdkEventKey *)event;
 		value << (int) key->keyval << (int) key->hardware_keycode;
-		if(pressed) {
-			p = GetTopCtrlFromId(user_data);
-			if(p) {
-				Top *top = p->GetTop();
-				if(top && gtk_im_context_filter_keypress(top->im_context, key))
-					return true;
-			}
-		}
+		if(pressed && top && gtk_im_context_filter_keypress(top->im_context, key))
+			return true;
 		break;
 //	case GDK_EXPOSE:
 	case GDK_CONFIGURE: {
 		retval = false;
-		p->InvalidateScreenRect();
+		if(p)
+			p->InvalidateScreenRect();
+		if(top)
+			top->draw_after_configure = true;
 		break;
 	}
 	default:

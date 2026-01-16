@@ -197,6 +197,7 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 	String                bar_css_class; \
 	Color                 bar_color; \
 	int                   bar_cy; \
+	bool                  draw_after_configure = false; \
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/GtkCtrl.h>
 
