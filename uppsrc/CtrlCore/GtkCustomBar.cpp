@@ -128,7 +128,7 @@ void Ctrl::SetCustomBarDragPrevention()
 void Ctrl::SyncPreventCustomBarDragPrevention()
 {
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	prevent_custombar_drag = tw && tw->custom_bar_frame;
+	prevent_custombar_drag = !(tw && !tw->custom_bar_frame); // prevent for popup too to avoid problems with menu
 	SetCustomBarDragPrevention();
 }
 
@@ -150,6 +150,7 @@ void  TopWindow::DoZoom()
 
 void  TopWindow::DoMoveWindow()
 {
+	DLOG(">>>>> MoveWindow");
 #if GTK_CHECK_VERSION(3, 22, 0)
 	if(CurrentEvent.device)
 		gdk_window_begin_move_drag_for_device(gdk(), CurrentEvent.device,
