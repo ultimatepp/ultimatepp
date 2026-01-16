@@ -74,13 +74,15 @@ GUI_APP_MAIN
 	App2 app2;
 
     app.Title("SSD");
+	app.OpenMain();
 
+#ifdef PLATFORM_POSIX
     app_csd.Title("CSD");
 	app_csd.Force_csd_();
 	app_csd.SetRect(1300, 200, 500, 500);
-	
-	app.OpenMain();
 	app_csd.OpenMain();
+#endif
+
 	app2.OpenMain();
 	
 	app.Run();
