@@ -87,9 +87,10 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	bool custom_bar = tw && tw->custom_bar;
 	static bool need_csd = IsWayland() && GetEnv("XDG_SESSION_DESKTOP") != "KDE";
 	top->csd = !popup && (need_csd || custom_bar);
-#ifdef flagFORCE_CSD // Force using client side decorations even when server side is available
-	top->csd = !popup;
+#ifndef flagFORCE_CSD // Force using client side decorations even when server side is available
+	if(tw && tw->force_csd)
 #endif
+		top->csd = !popup;
 	if(top->csd) {
 		ONCELOCK {
 			UpdateWindowDecorationsGeometry();

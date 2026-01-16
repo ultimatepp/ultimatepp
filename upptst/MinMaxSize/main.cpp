@@ -12,9 +12,10 @@ struct App : public TopWindow
 		DrawFrame(w, 0, 0, 500, 500, Black());
 		DrawFrame(w, 0, 0, 400, 400, Black());
 		DrawFrame(w, 0, 0, 600, 600, Black());
-		w.DrawText(10, 10, AsString(GetScreenRect()));
-		w.DrawText(10, 50, AsString(GetRect()));
-		w.DrawText(10, 90, AsString(GetMousePos()));
+		w.DrawText(10, 10, AsString(GetScreenView()));
+		w.DrawText(10, 50, AsString(GetScreenRect()));
+		w.DrawText(10, 90, AsString(GetRect()));
+		w.DrawText(10, 130, AsString(GetMousePos()));
 	}
 	
 	void MouseMove(Point p, dword keyflags) override {
@@ -37,7 +38,7 @@ struct App : public TopWindow
 
     App()
     {
-        SetRect(10, 100, 500, 500);
+        SetRect(100, 200, 500, 500);
 		Sizeable().Zoomable();
 		
 		Add(dl.LeftPos(10, 101).BottomPos(0));
@@ -57,7 +58,7 @@ struct App2 : App {
 	Label title;
 	
 	App2() {
-        SetRect(500, 100, 500, 500);
+        SetRect(700, 200, 500, 500);
 		Ctrl *tb = CustomTitleBar(SYellow(), GetStdFontCy() + DPI(4));
 		if(tb)
 			*tb << title.SizePos();
@@ -69,10 +70,18 @@ struct App2 : App {
 
 GUI_APP_MAIN
 {
-	App app;
+	App app, app_csd;
 	App2 app2;
+
+    app.Title("SSD");
+
+    app_csd.Title("CSD");
+	app_csd.Force_csd_();
+	app_csd.SetRect(1300, 200, 500, 500);
+	
 	app.OpenMain();
+	app_csd.OpenMain();
 	app2.OpenMain();
 	
-	Ctrl::EventLoop();
+	app.Run();
 }

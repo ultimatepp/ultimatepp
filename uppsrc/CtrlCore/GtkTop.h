@@ -24,7 +24,12 @@
 	CustomBarIcon         minicon, maxicon, closeicon;
 	Color                 custom_titlebar_bk = SColorFace();
 	int                   custom_titlebar_cy = -1;
-	
+	bool                  force_csd = false;
+
+public:
+	void Force_csd_()                 { force_csd = true; } // this is for testing...
+
+private:
 	enum { FULLSCREEN = 99 };
 
 	void     CenterRect(Ctrl *owner);

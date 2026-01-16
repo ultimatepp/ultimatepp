@@ -219,18 +219,6 @@ void Ctrl::WndRectsSync() const
 			width = gtk_widget_get_allocated_width(w);
 			height = gtk_widget_get_allocated_height(w);
 
-		/* TODO: Remove?
-			if(IsWayland()) {
-				if(top && utop->csd) {
-					gdk_window_get_origin(gtk_widget_get_window(w), &x, &y);
-					width = gtk_widget_get_allocated_width(w);
-					height = gtk_widget_get_allocated_height(w);
-				}
-				else
-					gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
-			}
-			else
-		*/
 			if(top && utop->csd) {
 				gdk_window_get_root_origin(gdk(), &x, &y);
 				int x1, y1;
@@ -584,10 +572,15 @@ void Ctrl::WndSetPos(const Rect& rect)
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(tw)
 		tw->SyncSizeHints();
+
 	if(top && utop->csd) {
 		int top = csd_border.top;
-		if(!tw || !tw->custom_bar)
-			top += csd_std_header_cy;
+		if(tw) {
+			if(tw->custom_bar_frame)
+				top += tw->GetCustomTitleBarMetrics().height;
+			else
+				top += csd_std_header_cy;
+		}
 		gdk_window_move_resize(gdk(), LSC(rect.left - csd_border.left), LSC(rect.top - top),
 		                              LSCH(rect.GetWidth() + csd_border.left + csd_border.right),
 		                              LSCH(rect.GetHeight() + top + csd_border.bottom));
@@ -596,6 +589,7 @@ void Ctrl::WndSetPos(const Rect& rect)
 		Rect m(0, 0, 0, 0);
 		if(tw)
 			m = frameMargins;
+
 		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
 		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
 	}

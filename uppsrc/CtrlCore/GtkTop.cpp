@@ -21,7 +21,9 @@ void TopWindow::SyncSizeHints()
 		if(top->csd) {
 			mcx += csd_border.left + csd_border.right;
 			mcy += csd_border.top + csd_border.bottom;
-			if(!custom_bar)
+			if(custom_bar_frame)
+				mcy += GetCustomTitleBarMetrics().height;
+			else
 				mcy += csd_std_header_cy;
 		}
 
