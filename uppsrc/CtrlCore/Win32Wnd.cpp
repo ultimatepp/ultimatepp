@@ -472,14 +472,40 @@ void Ctrl::UseImmersiveDarkModeForWindowBorder()
 	}
 }
 
+Rect Ctrl::AdjustWindowRect(const Rect& client, dword style, dword exstyle)
+{
+	Rect r = client;
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	if(tw && tw->custom_bar_frame) {
+		Rect mr(100, 100, 200, 200);
+		AdjustWindowRectEx(mr, style, FALSE, exstyle);
+		
+		r.left -= (100 - mr.left);
+		r.right += (mr.right - 200);
+		r.bottom += (mr.bottom - 200);
+		
+		r.top -= tw->GetCustomTitleBarMetrics().height;
+	}
+	else
+		AdjustWindowRectEx(r, style, FALSE, exstyle);
+	
+	return r;
+}
+
+Rect Ctrl::AdjustWindowRect(const Rect& client)
+{
+	HWND hwnd = GetHWND();
+	return hwnd ? AdjustWindowRect(client, ::GetWindowLong(hwnd, GWL_STYLE), ::GetWindowLong(hwnd, GWL_EXSTYLE))
+	            : client;
+}
+
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
 	GuiLock __;
 	ASSERT_(IsMainThread(), "Window creation can only happen in the main thread");
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
-	Rect r = GetRect();
-	AdjustWindowRectEx(r, style, FALSE, exstyle);
+	Rect r = AdjustWindowRect(GetRect(), style, exstyle);
 	isopen = true;
 	Top *top = new Top;
 	SetTop(top);
@@ -1100,9 +1126,7 @@ void Ctrl::WndSetPos(const Rect& rect)
 	LLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	HWND hwnd = GetHWND();
 	if(hwnd) {
-		Rect r = rect;
-		AdjustWindowRectEx(r, ::GetWindowLong(hwnd, GWL_STYLE), FALSE,
-		                   ::GetWindowLong(hwnd, GWL_EXSTYLE));
+		Rect r = AdjustWindowRect(rect);
 		SetWindowPos(hwnd, NULL, r.left, r.top, r.Width(), r.Height(),
 		             SWP_NOACTIVATE|SWP_NOZORDER);
 		if(HasFocusDeep()) {

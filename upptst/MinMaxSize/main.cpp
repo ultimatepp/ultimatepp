@@ -57,9 +57,9 @@ struct App : public TopWindow
 struct App2 : App {
 	Label title;
 	
-	App2() {
+	App2(int h = GetStdFontCy() + DPI(4)) {
         SetRect(700, 200, 500, 500);
-		Ctrl *tb = CustomTitleBar(SYellow(), GetStdFontCy() + DPI(4));
+		Ctrl *tb = CustomTitleBar(SYellow(), h);
 		if(tb)
 			*tb << title.SizePos();
 		
@@ -71,7 +71,7 @@ struct App2 : App {
 GUI_APP_MAIN
 {
 	App app, app_csd;
-	App2 app2;
+	App2 app2, app3(DPI(128));
 
     app.Title("SSD");
 	app.OpenMain();
@@ -84,6 +84,9 @@ GUI_APP_MAIN
 #endif
 
 	app2.OpenMain();
+	
+	app3.SetRect(1900, 200, 500, 500);
+	app3.OpenMain();
 	
 	app.Run();
 }
