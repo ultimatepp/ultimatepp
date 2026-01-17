@@ -286,8 +286,8 @@ void InstantSetup()
 				kit81 = df.Get("/windows kits/8.1", "include");
 			
 			LOG("=============");
-			RLOG(method);
-			RLOG(vc);
+			DUMP(method);
+			DUMP(vc);
 			DUMP(bin);
 			DUMP(inc);
 			DUMP(kit81);
