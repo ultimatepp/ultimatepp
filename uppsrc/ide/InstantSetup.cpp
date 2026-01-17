@@ -217,7 +217,7 @@ void InstantSetup()
 		VS_2017, BT_2017,
 		VS_2019, VSP_2019, BT_2019,
 		VS_2022, VSP_2022, BT_2022,
-		VS_2026, BT_2026
+		VS_2026, VSP_2026, BT_2026
 	};
 	DirFinder df;
 
@@ -227,7 +227,7 @@ void InstantSetup()
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVSP19", BT_2019, "MSBT19",
 			                                   VS_2022, "MSVS22", VSP_2022, "MSVSP22", BT_2022, "MSBT22",
-			                                   VS_2026, "MSVS26", BT_2026, "MSBT26",
+			                                   VS_2026, "MSVS26", VSP_2026, "MSVSP26", BT_2026, "MSBT26",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
@@ -235,7 +235,7 @@ void InstantSetup()
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
 			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
 			                                 VS_2022, "MSC22", VSP_2022, "MSC22", BT_2022, "MSC22",
-			                                 VS_2026, "MSC26", BT_2026, "MSC26",
+			                                 VS_2026, "MSC26", VSP_2026, "MSC26", BT_2026, "MSC26",
 			                                 "MSC26"
 			                 ) + ToUpper(x64s);
 		
@@ -271,6 +271,7 @@ void InstantSetup()
 				                            VSP_2022, "/microsoft visual studio/2022/professional/vc/tools/msvc",
 				                            BT_2026, "/microsoft visual studio/18/buildtools/vc/tools/msvc",
 				                            VS_2026, "/microsoft visual studio/18/community/vc/tools/msvc",
+				                            VSP_2026, "/microsoft visual studio/18/professional/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
