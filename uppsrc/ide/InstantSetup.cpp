@@ -212,15 +212,22 @@ void InstantSetup()
 				default_method = Nvl(default_method, method);
 		}
 
-	enum { VS_2015, VS_2017, BT_2017, VS_2019, VSP_2019, BT_2019, VS_2022, VSP_2022, BT_2022 };
+	enum {
+		VS_2015,
+		VS_2017, BT_2017,
+		VS_2019, VSP_2019, BT_2019,
+		VS_2022, VSP_2022, BT_2022,
+		VS_2026, BT_2026
+	};
 	DirFinder df;
 
-	for(int version = VS_2019; version <= BT_2022; version++)
+	for(int version = VS_2019; version <= BT_2026; version++)
 		for(int x64 = 0; x64 < 2; x64++) {
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVSP19", BT_2019, "MSBT19",
 			                                   VS_2022, "MSVS22", VSP_2022, "MSVSP22", BT_2022, "MSBT22",
+			                                   VS_2026, "MSVS26", BT_2026, "MSBT26",
 			                                   "MSBT");
 			String x64s = x64 ? "x64" : "";
 			String method = x86method + x64s;
@@ -228,7 +235,8 @@ void InstantSetup()
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
 			                                 VS_2019, "MSC19", VSP_2019, "MSC19", BT_2019, "MSC19",
 			                                 VS_2022, "MSC22", VSP_2022, "MSC22", BT_2022, "MSC22",
-			                                 "MSC22"
+			                                 VS_2026, "MSC26", BT_2026, "MSC26",
+			                                 "MSC26"
 			                 ) + ToUpper(x64s);
 		
 		#ifdef INSTANT_TESTING
@@ -261,6 +269,8 @@ void InstantSetup()
 				                            BT_2022, "/microsoft visual studio/2022/buildtools/vc/tools/msvc",
 				                            VS_2022, "/microsoft visual studio/2022/community/vc/tools/msvc",
 				                            VSP_2022, "/microsoft visual studio/2022/professional/vc/tools/msvc",
+				                            BT_2026, "/microsoft visual studio/18/buildtools/vc/tools/msvc",
+				                            VS_2026, "/microsoft visual studio/18/community/vc/tools/msvc",
 				                            ""),
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
@@ -275,8 +285,8 @@ void InstantSetup()
 				kit81 = df.Get("/windows kits/8.1", "include");
 			
 			LOG("=============");
-			DUMP(method);
-			DUMP(vc);
+			RLOG(method);
+			RLOG(vc);
 			DUMP(bin);
 			DUMP(inc);
 			DUMP(kit81);
