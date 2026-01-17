@@ -124,8 +124,6 @@ void AppendClipboard(bool dnd, const char *format, const Value& value, String (*
 {
 	GuiLock __;
 
-	RLOG(String("AppendClipboard: format: ") + format + " value: " + String(value));
-
 	auto& data = ClipboardOwner(dnd)->data;
 
 	for(String fmt : Split(format, ';'))
