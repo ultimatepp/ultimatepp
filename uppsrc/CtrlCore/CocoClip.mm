@@ -441,8 +441,6 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	ASSERT_(sCurrentMouseEvent__, "Drag can only start within LeftDrag!");
 	if(!sCurrentMouseEvent__)
 		return DND_NONE;
-	if(data.GetCount() == 0)
-		return DND_NONE; // Cocoa crashes if there is nothing to drop
 	NSWindow *nswindow = (NSWindow *)GetTopCtrl()->GetNSWindow();
 	ASSERT_(nswindow, "Ctrl is not in open window");
 	if(!nswindow)
