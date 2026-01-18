@@ -103,7 +103,7 @@ void DiagramEditor::TheBar(Bar& bar)
 		}
 		else {
 			m.pos = Pointf(Point(isz)) / 2;
-			m.size = m.pos - 2;
+			m.size = m.pos - 2.0;
 		}
 		m.width = log(m.width + 1);
 		bar.Add(MakeIcon(m, isz), [=] {
