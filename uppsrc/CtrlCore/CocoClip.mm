@@ -43,6 +43,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	};
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
+	[pasteboard clearContents];
 
 	if([type isEqualTo:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
@@ -50,6 +51,21 @@ NSPasteboard *Pasteboard(bool dnd = false)
 			raw = source->GetDropData("text");
 	    [pasteboard setString:[NSString stringWithUTF8String:raw]
 	                forType:type];
+		return;
+	}
+	else if([type isEqualTo:NSPasteboardTypeFileURL]) {
+		Upp::String raw = render("files");
+		Upp::Value v = ParseJSON(raw);
+		if(!IsValueArray(v))
+			return;
+		Upp::ValueArray va = v;
+
+		NSMutableArray* array = [NSMutableArray array];
+		for(int i = 0; i < va.GetCount(); ++i) {
+			NSString *path = [NSString stringWithUTF8String:~va[i]];
+			[array addObject:[NSURL fileURLWithPath:path]];
+		}
+		[pasteboard writeObjects:array];
 		return;
 	}
 	
@@ -386,21 +402,12 @@ Vector<String> GetFiles(PasteClip& clip)
 }
 
 void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
-{ // TODO (does not work in modern MacOS)
-#if 0
-	if(files.GetCount() == 0)
-		return;
-	String xml =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
-        "<plist version=\"1.0\"><array>\n"
-    ;
-	for(String f : files)
-		xml << XmlTag("string").Text(f);
-	xml << "</array></plist>";
-	DDUMP(xml);
-	clip.GetAdd("files") = xml;
-#endif
+{
+	JsonArray array;
+	for(auto f : files) {
+		array << f;
+	}
+	clip.GetAdd("files") = ~array;
 }
 
 Ctrl * Ctrl::GetDragAndDropSource()
