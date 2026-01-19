@@ -228,7 +228,7 @@ void Ctrl::WndRectsSync() const
 			}
 			else
 				gdk_window_get_position(gdk(), &x, &y);
-
+			
 			return SCL(x, y, width, height);
 		};
 

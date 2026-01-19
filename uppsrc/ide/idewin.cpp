@@ -309,7 +309,7 @@ void Ide::SetupBars()
 	display.IgnoreMouse();
 	bararea.Add(barrect.SizePos());
 	Ctrl *custom_bar = nullptr;
-	if(!disable_custom_caption)
+	if(!disable_custom_caption2)
 		custom_bar = CustomTitleBar(GetBarAreaAvgColor());
 	if(custom_bar)
 		*custom_bar << bararea.SizePos();
@@ -742,7 +742,6 @@ Ide::Ide()
 	editfile_line_endings = Null;
 
 	HideBottom();
-	SetupBars();
 	SetBar();
 
 	libclang_options = "-Wno-logical-op-parentheses -Wno-pragma-pack";

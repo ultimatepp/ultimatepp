@@ -635,6 +635,7 @@ public:
 		false;
 #endif
 	bool      disable_custom_caption = false;
+	bool      disable_custom_caption2 = true; // this one is initial config
 	bool      show_tabs;
 	bool      show_spaces;
 	bool      warnwhitespace;

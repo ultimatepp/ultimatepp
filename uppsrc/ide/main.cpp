@@ -402,6 +402,10 @@ void AppMain___()
 #endif
 		
 		ide.LoadConfig();
+		
+		ide.disable_custom_caption2 = ide.disable_custom_caption;
+
+		ide.SetupBars();
 
 #ifdef PLATFORM_COCOA
 		if(!ide.macos_update_icon)

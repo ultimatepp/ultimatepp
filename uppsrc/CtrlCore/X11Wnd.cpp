@@ -50,6 +50,8 @@ Ptr<Ctrl> Ctrl::popupWnd;
 
 Point     Ctrl::mousePos;
 
+static int s_starttime;
+
 void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
 	GuiLock __;
@@ -498,9 +500,9 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	cw.ctrl = this;
 	cw.exposed = false;
 	cw.owner = owner;
-	
+
 	cw.xic = NULL;
-	
+
 	if(xim) {
 		cw.xic = XCreateIC(xim,
 		                   XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
@@ -529,9 +531,9 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 		XChangeProperty(Xdisplay, w, XInternAtom(Xdisplay, "_NET_WM_WINDOW_TYPE", false), XA_ATOM, 32, 
 		                PropModeReplace, (byte *)&windowType, 1);
 	}
-	
+
 	RefreshLayoutDeep();
-	
+
 	SyncIMPosition();
 }
 
