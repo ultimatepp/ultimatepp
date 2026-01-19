@@ -11,7 +11,7 @@ namespace Upp {
 NSString *PasteboardType(const String& fmt)
 {
 	return decode(fmt, "text", NSPasteboardTypeString, "png", NSPasteboardTypePNG,
-	                   "files", NSFilenamesPboardType, "url", NSURLPboardType,
+	                   "files", NSPasteboardTypeFileURL, "url", NSPasteboardTypeURL,
 	                   "rtf", NSPasteboardTypeRTF,
 	                   [NSString stringWithUTF8String:~fmt]);
 }
@@ -43,6 +43,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	};
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
+	[pasteboard clearContents];
 
 	if([type isEqualTo:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
@@ -50,6 +51,21 @@ NSPasteboard *Pasteboard(bool dnd = false)
 			raw = source->GetDropData("text");
 	    [pasteboard setString:[NSString stringWithUTF8String:raw]
 	                forType:type];
+		return;
+	}
+	else if([type isEqualTo:NSPasteboardTypeFileURL]) {
+		Upp::String raw = render("files");
+		Upp::Value v = ParseJSON(raw);
+		if(!IsValueArray(v))
+			return;
+		Upp::ValueArray va = v;
+
+		NSMutableArray* array = [NSMutableArray array];
+		for(int i = 0; i < va.GetCount(); ++i) {
+			NSString *path = [NSString stringWithUTF8String:~va[i]];
+			[array addObject:[NSURL fileURLWithPath:path]];
+		}
+		[pasteboard writeObjects:array];
 		return;
 	}
 	
@@ -166,6 +182,16 @@ bool IsFormatAvailable(NSPasteboard *pasteboard, const char *fmt)
 
 String ReadFormat(NSPasteboard *pasteboard, const char *fmt)
 {
+	if(bool is_files = String(fmt) == "files"; is_files || String(fmt) == "url") {
+		JsonArray array;
+		
+		NSArray *urls = [pasteboard readObjectsForClasses:@[[NSURL class]] options:nil];
+		for (NSURL *url : urls) {
+			array << String(is_files ? [url.path UTF8String] : [url.absoluteString UTF8String]);
+		}
+		return ~array;
+	}
+	
 	NSData *data = [pasteboard dataForType:PasteboardType(fmt)];
 	return String((const char *)[data bytes], [data length]);
 }
@@ -357,40 +383,31 @@ bool IsAvailableFiles(PasteClip& clip)
 Vector<String> GetFiles(PasteClip& clip)
 {
 	GuiLock __;
+	bool is_files = clip.IsAvailable("files");
+	bool is_url = clip.IsAvailable("url");
+	if(!is_files && !is_url) {
+		return {};
+	}
+	
+	Value v = ParseJSON(clip.Get(is_files ? "files" : "url"));
+	if(!IsValueArray(v))
+		return {};
+		
+	ValueArray va = v;
 	Vector<String> f;
-	String raw;
-	bool files = clip.IsAvailable("files");
-	if(files)
-		raw = clip.Get("files");
-	else
-	if(clip.IsAvailable("url"))
-		raw = clip.Get("url");
-	XmlNode n = ParseXML(raw);
-	for(const auto& e : n["plist"]["array"])
-		if(e.IsTag("string")) {
-			String fn = e.GatherText();
-			if(files ? fn.GetCount() : fn.TrimStart("file://"))
-				f.Add(fn);
-		}
+	for (int i = 0; i < va.GetCount(); ++i) {
+		f.Add(va[i]);
+	}
 	return f;
 }
 
 void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
-{ // TODO (does not work in modern MacOS)
-#if 0
-	if(files.GetCount() == 0)
-		return;
-	String xml =
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
-        "<plist version=\"1.0\"><array>\n"
-    ;
-	for(String f : files)
-		xml << XmlTag("string").Text(f);
-	xml << "</array></plist>";
-	DDUMP(xml);
-	clip.GetAdd("files") = xml;
-#endif
+{
+	JsonArray array;
+	for(auto f : files) {
+		array << f;
+	}
+	clip.GetAdd("files") = ~array;
 }
 
 Ctrl * Ctrl::GetDragAndDropSource()
@@ -431,8 +448,6 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	ASSERT_(sCurrentMouseEvent__, "Drag can only start within LeftDrag!");
 	if(!sCurrentMouseEvent__)
 		return DND_NONE;
-	if(data.GetCount() == 0)
-		return DND_NONE; // Cocoa crashes if there is nothing to drop
 	NSWindow *nswindow = (NSWindow *)GetTopCtrl()->GetNSWindow();
 	ASSERT_(nswindow, "Ctrl is not in open window");
 	if(!nswindow)
