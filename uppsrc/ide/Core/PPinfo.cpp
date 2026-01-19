@@ -180,6 +180,15 @@ void PPInfo::PPFile::Parse(Stream& in)
 					speculative++;
 				}
 				else
+				if(p.Id("elif")) {
+					while(!p.IsEof()) {
+						if(p.IsId())
+							Flag(p.ReadId());
+						else
+							p.Skip();
+					}
+				}
+				else
 				if(p.Id("endif"))
 					speculative--;
 				else

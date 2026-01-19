@@ -91,6 +91,7 @@ FlagsDlg::FlagsDlg()
 		for(int i = 0; i < pk.file.GetCount(); i++)
 			if(!pk.file[i].separator)
 				for(auto m : ~pp.GetFileFlags(SourcePath(pk_name, pk.file[i]))) {
+					DDUMP(m.key);
 					String f = m.key;
 					f.TrimStart("flag");
 					if(ignore_flags.Find(f) < 0) {

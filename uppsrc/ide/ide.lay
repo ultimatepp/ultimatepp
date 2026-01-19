@@ -12,7 +12,7 @@ LAYOUT(SelectPackageLayout, 816, 588)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
-LAYOUT(ConfigLayout, 724, 216)
+LAYOUT(ConfigLayout, 724, 468)
 	ITEM(Upp::ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(6, 34))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(5, 23))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(5, 23))

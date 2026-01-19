@@ -109,10 +109,11 @@ about the same speed. Provided mostly for completeness.&]
 [* memeq8len]([@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 p], 
 [@(0.0.255) const] [@(0.0.255) void] [@(0.0.255) `*][*@3 q], size`_t 
 [*@3 count])&]
-[s2;%% Returns the [/ position] such that [/ position ]< [*@3 count ][@(0.0.255) `&`&] 
-[*@3 p][@(0.0.255) `[][/ position][@(0.0.255) `] !`=] [*@3 q][@(0.0.255) `[][/ position][@(0.0.255) `]
-]. If no such position exists, returns [*@3 count]. In other words 
-returns count of bytes at p and q that are equal.&]
+[s2;%% Returns the minimal [/ position] such that [/ position ]< [*@3 count 
+][@(0.0.255) `&`&] [*@3 p][@(0.0.255) `[][/ position][@(0.0.255) `] !`=] 
+[*@3 q][@(0.0.255) `[][/ position][@(0.0.255) `]]. If no such position 
+exists, returns [*@3 count]. In other words returns count of bytes 
+at p and q that are equal.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:memcnt8`(const void`*`,dword`,size`_t`): size`_t [* memcnt8]([@(0.0.255) cons
