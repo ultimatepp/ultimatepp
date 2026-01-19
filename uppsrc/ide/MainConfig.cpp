@@ -237,7 +237,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	};
 
 	list.WhenBar = [=](Bar& bar) {
-		bar.Add("Add", IdeImg::add(), [=] { add.WhenAction(); });
+		bar.Add("Append", IdeImg::add(), [=] { add.WhenAction(); });
 		bar.Add("Insert", IdeImg::insert(), [=] { insert.WhenAction(); });
 		bar.Add("Duplicate", IdeImg::duplicate(), [=] { duplicate.WhenAction(); });
 		bar.Add("Edit", IdeImg::pencil(), [=] { edit.WhenAction(); });
