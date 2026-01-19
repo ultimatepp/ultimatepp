@@ -12,7 +12,7 @@ topic "Vector";
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Vector]]}}&]
 [s3; &]
-[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
+[s1;%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Vector`:`:class:%- [@(0.0.255) class]_[* Vector]_:_[@(0.0.255) public]_[*@3 MoveableAndDe
 epCopyOption][@(0.0.255) <]_[* Vector][@(0.0.255) <][*@4 T][@(0.0.255) >]_>&]
 [s8; [*C@4 T]-|Type of elements stored in Vector. T is required to be 
