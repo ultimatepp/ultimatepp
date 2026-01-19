@@ -15,7 +15,8 @@ topic "Image and ImageBuffer";
 [s1;:Image`:`:class: [*@(0.0.255) class][* _Image_:_][*@(0.0.255) public][* _][*@3 AssignValueTy
 peNo][* <_Image, ][*@3 150][* , ][*_^Moveable^ Moveable][* <Image>_>_]&]
 [s9;%% Image represents an immutable image value. Image can be directly 
-painted to Draw. To create or change Image, use [^`:`:ImageBuffer^ ImageBuffer].&]
+painted to Draw. To create or change Image, use [^topic`:`/`/Draw`/src`/ImageBuffer`_en`-us`#ImageBuffer`:`:class^ I
+mageBuffer].&]
 [s9;%% Image has low`-cost constant time deep copy. It is moveable 
 and Rich`-Value compatible type.&]
 [s9;%% U`+`+ expects pixels to be in premultiplied alpha format.&]
@@ -23,62 +24,64 @@ and Rich`-Value compatible type.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:Image`:`:operator`~`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA][@(0.0.255) `*]_operato
-r`~()_[@(0.0.255) const]&]
-[s5;:Image`:`:operator const RGBA`*`(`)const: operator_const_RGBA`*()_[@(0.0.255) const
-]&]
+[s5;:Image`:`:operator`~`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA][@(0.0.255) `*]_[* operator`~()]_[@(0.0.255) const]&]
+[s5;:Image`:`:operator const RGBA`*`(`)const: [* operator_const_RGBA`*()]_[@(0.0.255) con
+st]&]
 [s2;%% Returns a pointer to Image pixels.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[_^RGBA^ RGBA][@(0.0.255) `*]_op
-erator`[`]([@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
+[s5;:Image`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA][@(0.0.255) `*]_[* operator`[`]]([@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns a pointer to the first pixel in the line [%-*@3 i].&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetSize`(`)const: [_^topic`:`/`/Core`/src`/Size`$en`-us^ Size]_GetSize()_
-[@(0.0.255) const]&]
+[s5;:Image`:`:GetSize`(`)const: [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize]_[* GetSize()]_[@(0.0.255) const]&]
 [s2;%% Returns the dimension of Image.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetWidth`(`)const: [@(0.0.255) int]_GetWidth()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetWidth`(`)const: [@(0.0.255) int]_[* GetWidth()]_[@(0.0.255) const]&]
 [s2;%% Same as GetSize().cx.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetHeight`(`)const: [@(0.0.255) int]_GetHeight()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetHeight`(`)const: [@(0.0.255) int]_[* GetHeight()]_[@(0.0.255) const]&]
 [s2;%% Same as GetSize().cy.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetLength`(`)const: [@(0.0.255) int]_GetLength()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetLength`(`)const: [@(0.0.255) int]_[* GetLength()]_[@(0.0.255) const]&]
 [s2;%% Number of pixels in Image `- GetWidth() `* GetHeight().&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetHotSpot`(`)const: [_^topic`:`/`/Core`/src`/Point`$en`-us^ Point]_GetHo
-tSpot()[@(64) _][@(0.0.255) const]&]
+[s5;:Image`:`:GetHotSpot`(`)const: [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint]_[* GetHotSpot()][@(64) _][@(0.0.255) const]&]
 [s2;%% Returns the reference point.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Get2ndSpot`(`)const: [_^topic`:`/`/Core`/src`/Point`$en`-us^ Point]_Get2n
-dSpot()_[@(0.0.255) const]&]
+[s5;:Image`:`:Get2ndSpot`(`)const: [_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
+oint]_[* Get2ndSpot()]_[@(0.0.255) const]&]
 [s2;%% Returns secondary reference point.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetDots`(`)const: [_^topic`:`/`/Core`/src`/Size`$en`-us^ Size]_GetDots()[@(64) _
-][@(0.0.255) const]&]
+[s5;:Image`:`:GetDots`(`)const: [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ S
+ize]_[* GetDots()][@(64) _][@(0.0.255) const]&]
 [s2;%% Gets the physical size of Image. If physical size is not set, 
 returns Size(0, 0).&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetDPI`(`): [_^Upp`:`:Size^ Size]_[* GetDPI]()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetDPI`(`): [_^topic`:`/`/Core`/src`/Size`_en`-us`#Size`_`:`:struct^ Size
+]_[* GetDPI]()_[@(0.0.255) const]&]
 [s2;%% Returns the image resolution in dpi (dots per inch).&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetKindNoScan`(`)const: [@(0.0.255) int]_GetKindNoScan()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetKindNoScan`(`)const: [@(0.0.255) int]_[* GetKindNoScan()]_[@(0.0.255) cons
+t]&]
 [s2;%% Returns the kind of image. Unlike GetKind(), it does not perform 
 the scan of image if the kind it not know, therefore it can return 
 IMAGE`_UNKNOWN.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetKind`(`)const: [@(0.0.255) int]_GetKind()_[@(0.0.255) const]&]
+[s5;:Image`:`:GetKind`(`)const: [@(0.0.255) int]_[* GetKind()]_[@(0.0.255) const]&]
 [s2;%% Returns the kind of image, either set by ImageBuffer`::SetKind 
 or (if it is IMAGE`_UNKNOWN) resolved by scanning pixels. If 
 the kind is IMAGE`_UNKNOWN, the pixels are scanned and the type 
@@ -86,81 +89,87 @@ is determined, it is then stored (in private Image instance variable)
 for future use and returned.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Begin`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* Begin]()_[@(0.0.255) con
-st]&]
-[s5;:Upp`:`:Image`:`:begin`(`)const: [@(0.0.255) const]_[_^Upp`:`:RGBA^ RGBA]_`*[* begin]()
-_[@(0.0.255) const]&]
+[s5;:Image`:`:Begin`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA]_`*[* Begin]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Image`:`:begin`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA]_`*[* begin]()_[@(0.0.255) const]&]
 [s2;%% Returns a pointer to the first pixel.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:End`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* End]()_[@(0.0.255) const]&]
-[s5;:Upp`:`:Image`:`:end`(`)const: [@(0.0.255) const]_[_^Upp`:`:RGBA^ RGBA]_`*[* end]()_[@(0.0.255) c
-onst]&]
+[s5;:Image`:`:End`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA]_`*[* End]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Image`:`:end`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/RGBA`_en`-us`#Upp`:`:RGBA`:`:struct^ R
+GBA]_`*[* end]()_[@(0.0.255) const]&]
 [s2;%% Returns begin() `+ GetLength().&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetSerialId`(`)const: [_^int64^ int64]_GetSerialId()[@(64) _][@(0.0.255) cons
-t]&]
+[s5;:Image`:`:GetSerialId`(`)const: [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:int64^ i
+nt64]_[* GetSerialId()][@(64) _][@(0.0.255) const]&]
 [s2;%% Returns the unique, per application run, identifier of Image. 
 All Images with the same serial id can be considered equal (this 
 is useful for caching images).&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:IsSame`(const Image`&`)const: [@(0.0.255) bool]_IsSame([@(0.0.255) const]_[_^Image^ I
-mage][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
+[s5;:Image`:`:IsSame`(const Image`&`)const: [@(0.0.255) bool]_[* IsSame]([@(0.0.255) const]_
+[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ Image][@(0.0.255) `&]_[@3 img])
+_[@(0.0.255) const]&]
 [s2;%% Same as GetSerialId() `=`= img.GetSerialId().&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:operator`=`=`(const Image`&`)const: [@(0.0.255) bool]_operator`=`=([@(0.0.255) c
-onst]_[_^Image^ Image][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
-[s5;:Image`:`:operator`!`=`(const Image`&`)const: [@(0.0.255) bool]_operator!`=([@(0.0.255) c
-onst]_[_^Image^ Image][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
+[s5;:Image`:`:operator`=`=`(const Image`&`)const: [@(0.0.255) bool]_[* operator`=`=]([@(0.0.255) c
+onst]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ Image][@(0.0.255) `&]_[@3 i
+mg])_[@(0.0.255) const]&]
+[s5;:Image`:`:operator`!`=`(const Image`&`)const: [@(0.0.255) bool]_[* operator!`=]([@(0.0.255) c
+onst]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ Image][@(0.0.255) `&]_[@3 i
+mg])_[@(0.0.255) const]&]
 [s2;%% Tests whether two Images are equal (or not equal). Dimensions, 
 hot`-spots, dots and all pixels are compared. Note that the comparison 
 can be slow.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:GetHashValue`(`)const: [_^dword^ dword]_GetHashValue()[@(64) _][@(0.0.255) co
-nst]&]
+[s5;:Image`:`:GetHashValue`(`)const: [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:dword^ d
+word]_[* GetHashValue()][@(64) _][@(0.0.255) const]&]
 [s2;%% Returns the hash`-value for image. All pixels combined into 
 hash value (potentially slow).&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:ToString`(`)const: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_ToStr
-ing()[@(64) _][@(0.0.255) const]&]
+[s5;:Image`:`:ToString`(`)const: [_^topic`:`/`/Core`/src`/String`_en`-us`#String`:`:class^ S
+tring]_[* ToString()][@(64) _][@(0.0.255) const]&]
 [s2;%% Returns the basic Image informations as String.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Serialize`(Stream`&`): [@(0.0.255) void]_Serialize([_^Stream^ Stream][@(0.0.255) `&
-]_[@3 s])&]
+[s5;:Image`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`_en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[@3 s])&]
 [s2;%% Serializes Image.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Clear`(`): [@(0.0.255) void]_Clear()&]
+[s5;:Image`:`:Clear`(`): [@(0.0.255) void]_[* Clear()]&]
 [s2;%% Assigns an empty Image.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:operator`=`(const Image`&`): [_^Image^ Image][@(0.0.255) `&]_operator`=([@(0.0.255) c
-onst]_[_^Image^ Image][@(0.0.255) `&]_[@3 img])&]
+[s5;:Image`:`:operator`=`(const Image`&`): [_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[* operator`=]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[@3 img])&]
 [s2;%% Assigns another Image.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:operator`=`(ImageBuffer`&`): [_^Image^ Image][@(0.0.255) `&]_operator`=([_^ImageBuffer^ I
+[s5;:Image`:`:operator`=`(ImageBuffer`&`): [_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Draw`/src`/ImageBuffer`_en`-us`#ImageBuffer`:`:class^ I
 mageBuffer][@(0.0.255) `&]_[@3 img])&]
 [s2;%% Assigns Image created in ImageBuffer. ImageBuffer is emptied 
 by this operation.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:IsNullInstance`(`)const: [@(0.0.255) bool]_IsNullInstance()_[@(0.0.255) con
-st]&]
+[s5;:Image`:`:IsNullInstance`(`)const: [@(0.0.255) bool]_[* IsNullInstance()]_[@(0.0.255) c
+onst]&]
 [s2;%% Test whether Image has nonzero dimension.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:IsEmpty`(`)const: [@(0.0.255) bool]_IsEmpty()_[@(0.0.255) const]&]
+[s5;:Image`:`:IsEmpty`(`)const: [@(0.0.255) bool]_[* IsEmpty()]_[@(0.0.255) const]&]
 [s2;%% Same as IsNullInstance.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:operator Value`(`)const: operator_Value()[@(64) _][@(0.0.255) const]&]
+[s5;:Image`:`:operator Value`(`)const: [* operator_Value()][@(64) _][@(0.0.255) const]&]
 [s2;%% Converts Image to Value.&]
 [s3; &]
 [s4; &]
@@ -172,32 +181,32 @@ Draw`::DrawImage.,&]
 [s0; &]
 [ {{10000t/25b/25@1 [s0; [* Constructor Detail]]}}&]
 [s3; &]
-[s5;:Image`:`:Image`(`): Image()&]
+[s5;:Image`:`:Image`(`): [* Image]()&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Image`(const Nuller`&`): Image([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
-])&]
+[s5;:Image`:`:Image`(const Nuller`&`): [* Image]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Nuller`_en`-us`#Upp`:`:Nuller^ N
+uller][@(0.0.255) `&])&]
 [s2;%% Constructs empty Image.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Image`(const Value`&`): Image([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[@3 src])&]
+[s5;:Image`:`:Image`(const Value`&`): [* Image]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[@3 src])&]
 [s2;%% Converts Image from Value.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Image`(const Image`&`): Image([@(0.0.255) const]_Image[@(0.0.255) `&]_[@3 img
-])&]
+[s5;:Image`:`:Image`(const Image`&`): [* Image]([@(0.0.255) const]_Image[@(0.0.255) `&]_[@3 i
+mg])&]
 [s2;%% Copy constructor.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Image`(Image`(`*`)`(`)`): Image(Image_(`*fn)())&]
+[s5;:Image`:`:Image`(Image`(`*`)`(`)`): [* Image](Image_(`*fn)())&]
 [s2;%% This function allow Image to be directly constructed from 
 pointer to function returning the Image. This allows omitting 
 parenthesis when passing Iml image constants as arguments.&]
 [s3; &]
 [s4; &]
-[s5;:Image`:`:Image`(ImageBuffer`&`): Image([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[@3 b
-])&]
+[s5;:Image`:`:Image`(ImageBuffer`&`): [* Image]([_^topic`:`/`/Draw`/src`/ImageBuffer`_en`-us`#ImageBuffer`:`:class^ I
+mageBuffer][@(0.0.255) `&]_[@3 b])&]
 [s2;%% Uses Image created in ImageBuffer. ImageBuffer is emptied 
 by this operation.&]
 [s3;%% &]
