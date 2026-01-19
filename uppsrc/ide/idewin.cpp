@@ -15,13 +15,15 @@ void Ide::Skin()
 	SyncUsc();
 }
 
-void Ide::ToggleVerboseBuild() {
+void Ide::ToggleVerboseBuild()
+{
 	console.verbosebuild = !console.verbosebuild;
 
 	SetToolBar();
 }
 
-void Ide::ToggleStopOnErrors() {
+void Ide::ToggleStopOnErrors()
+{
 	stoponerrors = !stoponerrors;
 }
 
@@ -306,18 +308,25 @@ void Ide::SetupBars()
 	menubar.Transparent();
 	display.IgnoreMouse();
 	bararea.Add(barrect.SizePos());
-	AddFrame(bararea);
+	Ctrl *custom_bar = nullptr;
+	if(!disable_custom_caption)
+		custom_bar = CustomTitleBar(GetBarAreaAvgColor());
+	if(custom_bar)
+		*custom_bar << bararea.SizePos();
+	else
+		AddFrame(bararea);
+	menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight());
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
-		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(menubar);
 		barrect.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
 		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(max(menubar.GetStdHeight(), tcy));
 		toolbar.Transparent();
 	}
 	else {
-		barrect.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
+		barrect.Add(menubar);
 		barrect.Add(display.RightPos(4, r).VSizePos(2, 3));
 		bararea.Height(menubar.GetStdHeight());
 		AddFrame(TopSeparatorFrame());
@@ -345,14 +354,13 @@ void Ide::Layout()
 		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
 		
 		auto cm = GetCustomTitleBarMetrics();
-		barrect.HSizePos(cm.lm, cm.rm);
 	
 		int x = 0;
 
 		int mh = menubar.GetStdHeight();
 		menubar.LeftPos(0, mw).TopPos((cm.height - mh) / 2, mh);
 		x += mw;
-
+		
 		if(toolbar_in_row) {
 			int tw = toolbar.GetWidth();
 			int bah = 0;
@@ -382,12 +390,6 @@ void Ide::Layout()
 		display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
-bool Ide::IsCustomTitleBarDragArea(Point p)
-{
-	p += GetScreenRect().TopLeft();
-	return !menubar.GetScreenRect().Contains(p) && !toolbar.GetScreenRect().Contains(p);
-}
-
 void Ide::DoDisplay()
 {
 	if(replace_in_files)
@@ -400,7 +402,11 @@ void Ide::DoDisplay()
 		s << "[g [";
 		if(editfile_isreadonly)
 			s << "@B";
-		s << " \1" << editfile << "\1]";
+		int q = max(editfile.ReverseFind('/'), editfile.ReverseFind('\\'));
+		if(q >= 0)
+			s << " [1 \1" << editfile.Mid(0, q + 1) << "\1]\1" << editfile.Mid(q + 1) << "\1]";
+		else
+			s << " \1" << editfile << "\1]";
 		if(!designer) {
 			s << ": [* " << p.y + 1 << "]:" << p.x + 1;
 			int64 l, h;
@@ -523,7 +529,6 @@ Ide::Ide()
 	menubar.AreaLook(1);
 	toolbar.WhenHelp = ~statusbar;
 	toolbar.AreaLook(1);
-	toolbar_in_row = false;
 	WhenClose = THISBACK(Exit);
 
 	editor_p.Add(editor.SizePos());

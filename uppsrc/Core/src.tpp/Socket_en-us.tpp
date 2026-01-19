@@ -34,11 +34,10 @@ tring]_[* GetHostName]()&]
 [s4; &]
 [s5;:Socket`:`:GetPeerPid`(`)const: [@(0.0.255) int] [* GetPeerPid]() 
 [@(0.0.255) const]&]
-[s6; POSIX only&]
 [s2;%% Returns the process ID (pid) of the peer on success, `-1 on 
 failure. On non`-blocking mode, make sure that socket is actually 
 connected or accepted. This is only available on unix domain 
-(local) sockets.&]
+(local) sockets and will fail with return code `-1 on Windows.&]
 [s3; &]
 [s4; &]
 [s5;:Socket`:`:GetDone`(`)const: [@(0.0.255) int]_[* GetDone]()_[@(0.0.255) const]&]
@@ -120,8 +119,7 @@ pAddrInfo][@(0.0.255) `&]_[*@3 info])&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Socket`:`:ConnectFileSystem`(const String`&`): [@(0.0.255) bool] 
-[* ConnectFileSystem]([@(0.0.255) const] String[@(0.0.255) `&] [*@3 path])&]
-[s6;%% POSIX only&]
+[* ConnectFileSystem]([@(0.0.255) const] String[@(0.0.255) `&] [@3 path])&]
 [s2;%% Connects socket to a Unix domain server bound at the given 
 file system [%-*@3 path]. The path must exist on the file system. 
 Returns true if connection is successful (blocking mode) or connection 
@@ -138,8 +136,8 @@ and does not correspond to a file system path. Returns true if
 connection is successful (blocking mode) or connection is in 
 progress (non blocking mode). Abstract sockets exist only in 
 kernel memory and disappear when processes exit. On non`-Linux 
-POSIX systems, this function will fail and set the socket into 
-error state. &]
+systems, this function will fail and set the socket into error 
+state. &]
 [s3; &]
 [s4; &]
 [s5;:Socket`:`:WaitConnect`(`): [@(0.0.255) bool]_[* WaitConnect]()&]
@@ -169,15 +167,23 @@ for ipv6`=`=true.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Socket`:`:ListenFileSystem`(const String`&`,int`,bool`): [@(0.0.255) bool] 
-[* ListenFileSystem]([@(0.0.255) const ]String[@(0.0.255) `&] [*@3 path], 
-[@(0.0.255) int] [*@3 listen`_count] [@(0.0.255) `=] [@3 5], [@(0.0.255) bool] 
-[*@3 reuse] [@(0.0.255) `=] [@(0.0.255) true])&]
-[s6; POSIX only&]
+[* ListenFileSystem(][*@(0.0.255) const ][* String][*@(0.0.255) `&][*  
+][*@3 path][* , ][*@(0.0.255) int][*  ][*@3 listen`_count][*  ][*@(0.0.255) `=][*  
+][*@3 5][* , ][*@(0.0.255) bool][*  ][*@3 reuse][*  ][*@(0.0.255) `=][*  ][*@(0.0.255) true][* )]&]
 [s2;%% Creates a Unix domain server socket bound to the given file 
 system [%-*@3 path]. [%-*@3 listen`_count] specifies the maximum 
 number of pending connections in the queue. [%-*@3 reuse] indicates 
 whether the socket should allow reuse of the address if it already 
-exists. returns true if the listen is successful.&]
+exists. returns true if the listen is successful. &]
+[s2;%% &]
+[s2;%% Notes:&]
+[s2;i150;O0;%%  [%-*@3 reuse] option is not supported on Windows and 
+if specified the listen will fail and set the socket into error 
+state. &]
+[s2;i150;O0;%% Client code is responsible for the socket [%-*@3 path]’s 
+lifetime. For filesystem`-based Unix domain sockets, the pathname 
+must be unlinked explicitly after shutdown, as it is not removed 
+automatically when the socket is closed.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Socket`:`:ListenAbstract`(const String`&`,int`,bool`): [@(0.0.255) bool] 
@@ -191,8 +197,8 @@ not correspond to a file system path). [%-*@3 listen`_count] specifies
 the maximum number of pending connections. [%-*@3 reuse] indicates 
 whether the abstract socket name can be reused. Abstract sockets 
 exist only in kernel memory and disappear when processes exit. 
-On non`-Linux POSIX systems, this method will fail and set the 
-socket into error state.&]
+On non`-Linux systems, this method will fail and set the socket 
+into error state.&]
 [s3; &]
 [s4;%% &]
 [s5;:Socket`:`:Accept`(Socket`&`): [@(0.0.255) bool]_[* Accept]([_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ S

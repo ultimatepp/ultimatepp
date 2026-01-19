@@ -152,32 +152,115 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 #endif
 
+Rect Ctrl::csd_border;
+int  Ctrl::csd_std_header_cy;
+Rect Ctrl::frameMargins;
+
+void Ctrl::UpdateWindowDecorationsGeometry()
+{
+	GtkWidget* win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	GtkWidget* header = gtk_header_bar_new();
+
+	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header), TRUE);
+	gtk_window_set_titlebar((GtkWindow *)win, header);
+
+	GtkWidget* client = gtk_drawing_area_new();
+	gtk_container_add(GTK_CONTAINER(win), client);
+	gtk_widget_show_all(win);
+
+	gint left, top;
+
+	gdk_window_get_origin(gtk_widget_get_window(client), &left, &top);
+
+	int win_cx = gtk_widget_get_allocated_width(win);
+	int win_cy = gtk_widget_get_allocated_height(win);
+
+	csd_std_header_cy = gtk_widget_get_allocated_height(header);
+
+	int client_cx = gtk_widget_get_allocated_width(client);
+	int client_cy = gtk_widget_get_allocated_height(client);
+
+	csd_border.left = SCL(left);
+	csd_border.right = SCL(win_cx - client_cx - left);
+	csd_border.top = SCL(top - csd_std_header_cy);
+
+	csd_border.bottom = SCL(win_cy - client_cy - top);
+	csd_std_header_cy = SCL(csd_std_header_cy);
+
+	gtk_widget_destroy(win);
+}
+
+void Ctrl::UpdateWindowFrameMargins()
+{
+#ifdef GDK_WINDOWING_X11
+	// No realiable way how to do this in wayland, but there the window pos is ignored anyway
+	GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_widget_show_all(win);
+	gdk_display_sync(gdk_display_get_default());
+	Vector<int> fe = GetPropertyInts(gtk_widget_get_window(win), "_NET_FRAME_EXTENTS");
+	if(fe.GetCount() >= 4) {
+		frameMargins.left = clamp(fe[0], 0, DPI(32));
+		frameMargins.right = clamp(fe[1], 0, DPI(32));
+		frameMargins.top = clamp(fe[2], 0, DPI(96));
+		frameMargins.bottom = clamp(fe[3], 0, DPI(32));
+	}
+	gtk_widget_destroy(win);
+#endif
+}
+
+void Ctrl::WndRectsSync() const
+{
+	if(utop && utop->sync_rect) {
+		auto GetScreenRect = [&](GtkWidget *w) {
+			gint x, y;
+			gint width, height;
+
+			width = gtk_widget_get_allocated_width(w);
+			height = gtk_widget_get_allocated_height(w);
+
+			if(top && utop->csd) {
+				gdk_window_get_root_origin(gdk(), &x, &y);
+				int x1, y1;
+				gtk_widget_translate_coordinates(w, GTK_WIDGET(gtk()), 0, 0, &x1, &y1);
+				x += x1;
+				y += y1;
+			}
+			else
+				gdk_window_get_position(gdk(), &x, &y);
+			
+			if(IsPopUp()) {
+				DDUMP(Name(this));
+				DDUMP(x);
+				DDUMP(y);
+				DDUMP(width);
+				DDUMP(height);
+			}
+
+			return SCL(x, y, width, height);
+		};
+
+		utop->client_rect = GetScreenRect(utop->client);
+		utop->screen_rect = utop->client_rect;
+		const TopWindow *tw = dynamic_cast<const TopWindow *>(this);
+		if(tw && tw->custom_bar_frame) {
+			utop->header_rect = GetScreenRect(utop->header_area);
+			utop->screen_rect.Union(utop->header_rect);
+		}
+		utop->sync_rect = false;
+	}
+}
+
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
 
-	if(!IsOpen())
+	if(!IsOpen() || !top)
 		return Null;
+	
+	WndRectsSync();
 
-	gint x, y;
-	gint width, height;
-
-	if(IsWayland()) {
-		if(top && utop->csd.IsEnabled()) {
-			gdk_window_get_origin(gtk_widget_get_window(utop->drawing_area), &x, &y);
-			width = gtk_widget_get_allocated_width(utop->drawing_area);
-			height = gtk_widget_get_allocated_height(utop->drawing_area);
-		}
-		else
-			gdk_window_get_geometry(gdk(), &x, &y, &width, &height);
-	}
-	else {
-		gdk_window_get_position(gdk(), &x, &y);
-		width = gdk_window_get_width(gdk());
-		height = gdk_window_get_height(gdk());
-	}
-
-	return SCL(x, y, width, height);
+	return utop->screen_rect;
 }
 
 void Ctrl::WndShow(bool b)
@@ -431,27 +514,24 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 
 	Rect rr = r;
-	if(scale > 1) {
-		rr.left = r.left / 2;
-		rr.top = r.top / 2;
-		rr.right = (r.right + 1) / 2;
-		rr.bottom = (r.bottom + 1) / 2;
-	}
-
 	if(IsWayland())
-		rr.Inflate(2, 2); // TODO: This is temporary fix
+		rr.Inflate(DPI(2), DPI(2)); // TODO: This is temporary fix
 
 	// as gtk3 dropped thread locking, we need to push invalid rectangles onto main loop
 	for(Win& win : wins) {
 		if(win.ctrl == this) {
 			if(win.invalid.GetCount() && IsNull(win.invalid[0]))
 				return;
+			for(const Rect& ir : win.invalid)
+				if(ir.Contains(r)) // ignore repeated invalidates
+					return;
 			if(win.invalid.GetCount() > 40) { // keep things sane
 				win.invalid.Clear();
 				win.invalid.Add(Null);
 			}
-			else
+			else {
 				win.invalid.Add(rr);
+			}
 			if(!invalids) {
 				invalids = true;
 				WakeUpGuiThread();
@@ -476,10 +556,12 @@ bool Ctrl::SweepConfigure(bool wait)
 		GEvent& e = Events[i];
 		Top *top = GetTop();
 		if(e.type == GDK_CONFIGURE && this_ && top && top->id == e.windowid) {
-			Rect rect = e.value;
-			LLOG("SweepConfigure " << rect);
-			if(GetRect() != rect)
-				SetWndRect(rect);
+			LLOG("SweepConfigure " << e.value);
+			if(top) {
+				utop->sync_rect = true;
+				LLOG("Sweep");
+				SetWndRect(GetWndScreenRect());
+			}
 			r = true;
 			e.type = EVENT_NONE;
 		}
@@ -489,22 +571,38 @@ bool Ctrl::SweepConfigure(bool wait)
 
 void Ctrl::WndSetPos(const Rect& rect)
 {
+	LLOG("========================== WNDSETPOS");
 	LLOG("WndSetPos " << UPP::Name(this) << " " << rect);
 	GuiLock __;
 	if(!IsOpen())
 		return;
-	Ptr<Ctrl> this_ = this;
-	SweepConfigure(false); // Remove any previous GDK_CONFIGURE for this window
-	if(!this_ || !IsOpen())
-		return;
 
-	Rect m(0, 0, 0, 0);
-	if(dynamic_cast<TopWindow *>(this))
-		m = GetFrameMargins();
-	SetWndRect(rect);
-	if(TopWindow *tw = dynamic_cast<TopWindow *>(this))
+	TopWindow *tw = dynamic_cast<TopWindow *>(this);
+	if(tw)
 		tw->SyncSizeHints();
-	gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top), LSC(rect.GetWidth()), LSC(rect.GetHeight()));
+
+	if(top && utop->csd) {
+		int top = csd_border.top;
+		if(tw) {
+			if(tw->custom_bar_frame)
+				top += tw->GetCustomTitleBarMetrics().height;
+			else
+				top += csd_std_header_cy;
+		}
+		gdk_window_move_resize(gdk(), LSC(rect.left - csd_border.left), LSC(rect.top - top),
+		                              LSCH(rect.GetWidth() + csd_border.left + csd_border.right),
+		                              LSCH(rect.GetHeight() + top + csd_border.bottom));
+	}
+	else {
+		Rect m(0, 0, 0, 0);
+		if(tw)
+			m = frameMargins;
+
+		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
+		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
+	}
+	InvalidateScreenRect();
+	SyncWndRect();
 	LLOG("-- WndSetPos0 " << rect);
 }
 
@@ -557,8 +655,8 @@ TopFrameDraw::TopFrameDraw(Ctrl *ctrl, const Rect& r)
 	cairo_rectangle_int_t rr;
 	rr.x = Ctrl::LSC(r.left);
 	rr.y = Ctrl::LSC(r.top);
-	rr.width = Ctrl::LSC(r.GetWidth());
-	rr.height = Ctrl::LSC(r.GetHeight());
+	rr.width = Ctrl::LSCH(r.GetWidth());
+	rr.height = Ctrl::LSCH(r.GetHeight());
 	cairo_region_t *rg = cairo_region_create_rectangle(&rr);
 	ctx = gdk_window_begin_draw_frame(top->gdk(), rg);
 	cairo_region_destroy(rg);
@@ -606,4 +704,3 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 
 
 #endif
-

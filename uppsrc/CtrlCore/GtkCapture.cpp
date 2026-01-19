@@ -25,13 +25,20 @@ GdkDevice *Ctrl::GetMouseDevice()
 #endif
 }
 
+// (*) it is not really possible to do system-wide grab as there is conflict with csd
+// so we depend on gtk doing automatic grab when mouse is down
+
 bool Ctrl::MouseIsGrabbed()
 {
+	if(grabwindow && grabwindow->top && grabwindow->utop->csd) // (*)
+		return true;
 	return gdk_display_device_is_grabbed(gdk_display_get_default(), GetMouseDevice());
 }
 
 bool Ctrl::GrabMouse()
 {
+	if(top && utop->csd) // (*)
+		return true;
 	return
 #if GTK_CHECK_VERSION(3, 20, 0)
 		gdk_seat_grab(GetSeat(), gdk(), GDK_SEAT_CAPABILITY_ALL_POINTING, true, NULL, NULL, NULL, 0)
@@ -43,10 +50,12 @@ bool Ctrl::GrabMouse()
 
 void Ctrl::UngrabMouse()
 {
+	if(grabwindow && grabwindow->top && grabwindow->utop->csd) // (*)
+		return;
 #if GTK_CHECK_VERSION(3, 20, 0)
-		gdk_seat_ungrab(GetSeat());
+	gdk_seat_ungrab(GetSeat());
 #else
-		gdk_device_ungrab(GetMouseDevice(), GDK_CURRENT_TIME);
+	gdk_device_ungrab(GetMouseDevice(), GDK_CURRENT_TIME);
 #endif
 }
 
@@ -92,7 +101,6 @@ bool Ctrl::ReleaseWndCapture0()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	LLOG("ReleaseWndCapture");
 	if(grabwindow) {
 		UngrabMouse();
 		grabwindow = NULL;

@@ -45,6 +45,9 @@ protected:
 	void  Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow);
 	Image DoMouse(int e, Point p, int zd = 0);
 
+	Rect AdjustWindowRect(const Rect& client, dword style, dword exstyle);
+	Rect AdjustWindowRect(const Rect& client);
+
 	void   PaintWinBarBackground(SystemDraw& w, const Rect& clip);
 	void   PaintWinBar(SystemDraw& w, const Rect& clip);
 	int    GetActiveTitleBarButton();

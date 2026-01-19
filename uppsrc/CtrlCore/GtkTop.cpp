@@ -6,39 +6,47 @@ namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
-Rect Ctrl::frameMargins;
-
-Rect Ctrl::GetFrameMargins()
-{
-	GuiLock __;
-	return frameMargins != Rect(0, 0, 0, 0) ? frameMargins : Rect(8, 32, 8, 8);
-}
-
 void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
 	if(!top)
 		return;
-	GdkGeometry m;
 	Size sz0 = GetRect().GetSize();
 	LLOG("SyncSizeHints sz0: " << sz0 << ", sizeable: " << sizeable << ", min: " << GetMinSize() << ", max: " << GetMaxSize());
-	Size sz = sz0;
-	if(sizeable)
-		sz = GetMinSize();
-	m.min_width = LSC(sz.cx + utop->csd.ExtraWidth());
-	m.min_height = LSC(sz.cy + utop->csd.ExtraHeight());
-	sz = sz0;
-	if(sizeable)
-		sz = GetMaxSize();
-	m.max_width = LSC(sz.cx + utop->csd.ExtraWidth());
-	m.max_height = LSC(sz.cy + utop->csd.ExtraHeight());
-	gtk_window_set_resizable(gtk(), sizeable);
 	Top *top = GetTop();
 	if(top) {
-		gtk_window_set_geometry_hints(gtk(), top->window, &m,
-		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE));
+		int mcx = 0;
+		int mcy = 0;
+
+		if(top->csd) {
+			mcx += csd_border.left + csd_border.right;
+			mcy += csd_border.top + csd_border.bottom;
+			if(custom_bar_frame)
+				mcy += GetCustomTitleBarMetrics().height;
+			else
+				mcy += csd_std_header_cy;
+		}
+
+		GdkGeometry m;
+
+		m.base_width = sz0.cx;
+		m.base_height = sz0.cy;
+
+		Size minsz = sizeable ? GetMinSize() : sz0;
+		m.min_width = LSCH(minsz.cx + mcx);
+		m.min_height = LSCH(minsz.cy + mcy);
+
+		Size maxsz = sizeable ? GetMaxSize() : sz0;
+		m.max_width = LSCH(maxsz.cx + mcx);
+		m.max_height = LSCH(maxsz.cy + mcy);
+
+		gtk_window_set_resizable(gtk(), sizeable);
+		gtk_window_set_geometry_hints(gtk(), NULL, &m,
+		                              GdkWindowHints(GDK_HINT_MIN_SIZE|GDK_HINT_MAX_SIZE|GDK_HINT_BASE_SIZE));
 		gtk_widget_set_size_request(top->window, m.min_width, m.min_height);
 	}
+
+	SyncCustomBar();
 }
 
 void TopWindow::SyncTitle()
@@ -73,8 +81,8 @@ void TopWindow::CenterRect(Ctrl *owner)
 	SetupRect(owner);
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
-		Rect wr = owner? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
-		Rect fm = GetFrameMargins();
+		Rect wr = owner ? owner->GetWorkArea() : Ctrl::GetPrimaryWorkArea();
+		Rect fm = frameMargins;
 		Rect r = (center == 1 && owner ? owner->GetRect() : wr)
 		         .CenterRect(sz);
 		wr.left += fm.left;
@@ -107,6 +115,7 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 {
 	TopWindow *w = (TopWindow *)user_data;
 	dword h = event->new_window_state;
+	int prev = w->state;
 	if(h & GDK_WINDOW_STATE_FULLSCREEN)
 		w->state = FULLSCREEN;
 	else
@@ -119,7 +128,14 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 		w->state = OVERLAPPED;
 		w->overlapped = w->GetRect();
 	}
+	LLOG("StateEvent " << prev << " -> " << (int)w->state);
 	w->topmost = h & GDK_WINDOW_STATE_ABOVE;
+	w->Layout();
+	if(prev == MINIMIZED && w->state != MINIMIZED) {
+		prev_mouse_pos = CurrentMousePos = Null; // we lost the track of mouse, otherwise "minimize" button would render highlighted
+		if(w->custom_bar_icons)
+			w->custom_bar_icons->RefreshFrame();
+	}
 	return FALSE;
 }
 
@@ -145,13 +161,6 @@ void TopWindow::Open(Ctrl *owner)
 	state = OVERLAPPED;
 	SetMode(q);
 	SyncTopMost();
-	GdkRectangle fr;
-	gdk_window_get_frame_extents(gdk(), &fr);
-	Rect r = GetRect();
-	frameMargins.left = max(frameMargins.left, minmax(r.left - SCL(fr.x), 0, 32));
-	frameMargins.right = max(frameMargins.right, minmax(SCL(fr.x + fr.width) - r.right, 0, 32));
-	frameMargins.top = max(frameMargins.top, minmax(r.top - SCL(fr.y), 0, 64));
-	frameMargins.bottom = max(frameMargins.bottom, minmax(SCL(fr.y + fr.height) - r.bottom, 0, 48));
 }
 
 void TopWindow::Open()
@@ -178,29 +187,24 @@ void TopWindow::SetMode(int mode)
 	if(w)
 		switch(state) {
 		case MINIMIZED:
-			gtk_window_deiconify(w);
-			break;
-		case MAXIMIZED:
-			gtk_window_unmaximize(w);
-			break;
-		case FULLSCREEN:
-			gtk_window_unfullscreen(w);
-			break;
-		}
-	state = mode;
-	if(w)
-		switch(state) {
-		case MINIMIZED:
+			fullscreen = false;
 			gtk_window_iconify(w);
 			break;
 		case MAXIMIZED:
+			fullscreen = false;
+			gtk_window_deiconify(w);
 			gtk_window_maximize(w);
+			break;
+		case OVERLAPPED:
+			fullscreen = false;
+			gtk_window_deiconify(w);
+			gtk_window_unmaximize(w);
 			break;
 		case FULLSCREEN:
 			gtk_window_fullscreen(w);
+			fullscreen = true;
 			break;
 		}
-	fullscreen = state == FULLSCREEN;
 }
 
 void TopWindow::Minimize(bool effect)
@@ -263,7 +267,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	if(s.IsLoading()) {
 		if(mn) rect = overlapped;
 		Rect limit = GetVirtualWorkArea();
-		Rect fm = GetFrameMargins();
+		Rect fm = frameMargins;
 		limit.left += fm.left;
 		limit.right -= fm.right;
 		limit.top += fm.top;

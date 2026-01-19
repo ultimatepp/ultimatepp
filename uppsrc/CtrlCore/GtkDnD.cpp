@@ -288,7 +288,10 @@ PasteClip Ctrl::GtkDnd(GtkWidget *widget, GdkDragContext *context, gint x, gint 
 	if(w) {
 		GetMouseInfo(gdk_get_default_root_window(), mod);
 		CurrentState = mod;
-		CurrentMousePos = Point(SCL(x), SCL(y)) + w->GetScreenRect().TopLeft();
+		CurrentMousePos = Point(SCL(x), SCL(y));
+		int x1, y1;
+		gdk_window_get_position(w->gdk(), &x1, &y1);
+		CurrentMousePos += Point(SCL(x1), SCL(y1));
 		w->DnD(CurrentMousePos, clip);
 	}
 	gdk_drag_status(context, clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? GDK_ACTION_MOVE
@@ -358,3 +361,4 @@ void Ctrl::DndExit()
 }
 
 #endif
+

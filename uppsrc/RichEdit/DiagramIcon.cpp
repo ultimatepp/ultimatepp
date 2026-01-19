@@ -41,7 +41,7 @@ Image DiagramEditor::ShapeIcon(int i)
 	}
 	else {
 		m.pos = Pointf(Point(isz)) / 2;
-		m.size = m.pos - 2;
+		m.size = m.pos - 2.0;
 	}
 	m.width = DPI(1);
 	m.paper = Null;

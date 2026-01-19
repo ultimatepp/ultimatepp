@@ -154,7 +154,7 @@ void Ctrl::SyncLayout(int force)
 	GuiLock __;
 	if(destroying)
 		return;
-	LLOG("SyncLayout " << Name() << " size: " << GetSize());
+	LLOG("SyncLayout " << Name() << " size: " << GetSize() << " force: " << force);
 	fullrefresh = false;
 	bool refresh = false;
 	Rect oview = GetView();
@@ -174,7 +174,6 @@ void Ctrl::SyncLayout(int force)
 	if(oview.Size() != view.Size() || force > 1) {
 		for(Ctrl& q : *this) {
 			q.rect = q.CalcRect(rect, view);
-			LLOG("Layout set rect " << q.Name() << " " << q.rect);
 			q.SyncLayout(force > 1 ? force : 0);
 		}
 		Refresh();
@@ -264,10 +263,11 @@ void Ctrl::UpdateRect0(bool sync)
 		Rect pwa = GetPrimaryWorkArea();
 		rect = OffsetMegaRect(CalcRect(pwa, pwa));
 	}
-	LLOG("UpdateRect0 " << Name() << " to " << rect);
+
+	LLOG("UpdateRect0 " << Name() << " to " << rect << ", sync: " << sync);
 	LTIMING("UpdateRect0 SyncLayout");
 	if(sync)
-		SyncLayout();
+		SyncLayout(sync);
 }
 
 

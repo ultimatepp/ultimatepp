@@ -893,8 +893,6 @@ void Ide::BrowseMenu(Bar& menu)
 				.Help("Go to given line");
 			AssistMenu(menu);
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
-			AssistEdit(menu);
-			Reformat(menu);
 			menu.MenuSeparator();
 		}
 

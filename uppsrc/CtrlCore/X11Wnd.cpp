@@ -56,7 +56,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
 	GuiLock __;
 	Window xwin = GetWindow();
-	if(utop && IsVisible()) {
+	if(top && IsVisible()) {
 		LTIMING("DoPaint");
 		fullrefresh = false;
 //		if(GLX) return;
@@ -649,7 +649,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 	WndShow(visible);
 	if(activate && IsEnabled())
 		SetFocus();
-	if(utop) utop->owner = owner;
+	if(top) utop->owner = owner;
 	StateH(OPEN);
 }
 

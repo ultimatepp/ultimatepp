@@ -280,14 +280,11 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		rt.top = top - h;
 		rt.bottom = rt.top + h;
 	}
-	if(up) {
+	if(up)
 		popup->SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
-		popup->Add(popup->ac.TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
-	}
-	else {
+	else
 		popup->SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
-		popup->Add(popup->ac.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
-	}
+	popup->Add(popup->ac.SizePos());
 	if(GUI_PopUpEffect()) {
 		popup->ac.CenterCursor();
 		popup->PopUp(owner, true, true, GUI_DropShadows());

@@ -41,7 +41,7 @@ private:
 	void            PutTxt(const RichTxt& txt, int nesting, int dot_width);
 	void            PutTable(const RichTable& table, int nesting, int dot_width);
 	void            PutParts(const Array<RichPara::Part>& parts,
-		RichPara::CharFormat& base, int bpart, int boff, int epart, int eoff);
+	                         RichPara::CharFormat& base, int bpart, int boff, int epart, int eoff);
 
 	void            Begin()                           { stream.Put('{'); }
 	void            Begin(const char *cmd)            { Begin(); Command(cmd); }

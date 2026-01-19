@@ -2,16 +2,17 @@
 
 namespace Upp {
 
-Rect           DisplayPopup::screen_rect;
-Ptr<Ctrl>      DisplayPopup::ctrl;
-Rect           DisplayPopup::item;
-Value          DisplayPopup::value;
-Color          DisplayPopup::paper;
-Color          DisplayPopup::ink;
-dword          DisplayPopup::style;
-const Display *DisplayPopup::display;
-int            DisplayPopup::margin;
-bool           DisplayPopup::usedisplaystdsize_s;
+Rect              DisplayPopup::screen_rect;
+Ptr<Ctrl>         DisplayPopup::ctrl;
+Ptr<DisplayPopup> DisplayPopup::owner;
+Rect              DisplayPopup::item;
+Value             DisplayPopup::value;
+Color             DisplayPopup::paper;
+Color             DisplayPopup::ink;
+dword             DisplayPopup::style;
+const Display    *DisplayPopup::display;
+int               DisplayPopup::margin;
+bool              DisplayPopup::usedisplaystdsize_s;
 	
 DisplayPopup::DisplayPopup()
 {
@@ -24,7 +25,8 @@ DisplayPopup::DisplayPopup()
 
 void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 {
-	if(ctrl && !IsNull(screen_rect) && (tw == ctrl->GetTopCtrl() || tw && tw != ctrl->GetOwner())) {
+	if(ctrl && tw && !IsNull(screen_rect) && ctrl->HasMouseDeep() &&
+	   (tw == ctrl->GetTopCtrl() || tw == ctrl->GetTopCtrl()->GetOwner())) {
 		Rect r = screen_rect - tw->GetScreenRect().TopLeft();
 		DrawFrame(w, r, SBlack());
 		r.Deflate(1, 1);
@@ -37,6 +39,7 @@ void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 				r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
 			display->Paint(w, r, value, ink, paper, style);
 		}
+		w.End();
 	}
 }
 
@@ -101,15 +104,15 @@ bool DisplayPopup::StateHook(Ctrl *, int reason)
 }
 
 
-bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
+bool DisplayPopup::MouseHook(Ctrl *, bool, int event, Point, int, dword)
 {
 	Sync();
 	return false;
 }
 
 void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
-                            const Value& _value, const Display *_display,
-                            Color _ink, Color _paper, dword _style, int _margin)
+                       const Value& _value, const Display *_display,
+                       Color _ink, Color _paper, dword _style, int _margin)
 {
 	if(!GUI_ToolTips())
 		return;
@@ -119,6 +122,7 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		RefreshRect();
 		item = _item;
 		ctrl = _ctrl;
+		owner = this;
 		value = _value;
 		display = _display;
 		ink = _ink;
@@ -132,8 +136,10 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 
 void DisplayPopup::Cancel()
 {
-	screen_rect = Null;
-	Sync();
+	if(owner == this) {
+		screen_rect = Null;
+		Sync();
+	}
 }
 
 bool DisplayPopup::IsOpen()

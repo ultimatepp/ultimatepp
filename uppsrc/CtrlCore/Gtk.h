@@ -163,25 +163,6 @@ public:
 	~ImageGdk();
 };
 
-class GtkCSD final : Rect { // wayland client side decoration handling
-	bool enabled = false;
-
-public:
-	static bool IsSSDSupported();
-	
-	void Create(GdkWindowTypeHint hint);
-	
-	bool IsEnabled() const   { return enabled; }
-	
-	int ExtraWidth() const   { return left + right; }
-	int ExtraHeight() const  { return top + bottom; }
-	
-	int LeftMargin() const   { return left; }
-	int RightMargin() const  { return right; }
-	int TopMargin() const    { return top; }
-	int BottomMargin() const { return bottom; }
-};
-
 String FilesClipFromUrisFree(gchar **uris);
 String ImageClipFromPixbufUnref(GdkPixbuf *pixbuf);
 
@@ -200,13 +181,23 @@ Vector<int> GetPropertyInts(GdkWindow *w, const char *property);
 #define GUIPLATFORM_CTRL_TOP_DECLS \
 	GtkWidget            *window; \
 	GtkWidget            *header = nullptr; \
-	GtkWidget            *drawing_area = nullptr; \
+	GtkWidget            *client = nullptr; \
+	GtkWidget            *header_area = nullptr; \
+	Ptr<Ctrl>             hdr_screen[2]; \
 	GtkIMContext         *im_context = nullptr; \
 	GtkIMContext         *im_context_simple; \
 	GtkIMContext         *im_context_multi; \
-	GtkCSD                csd; \
 	int64                 cursor_id; \
 	int                   id; \
+	bool                  csd = false; \
+	bool                  sync_rect = true; \
+	Rect                  client_rect; \
+	Rect                  header_rect; \
+	Rect                  screen_rect; \
+	String                bar_css_class; \
+	Color                 bar_color; \
+	int                   bar_cy; \
+	bool                  draw_after_configure = false; \
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/GtkCtrl.h>
 

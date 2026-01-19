@@ -675,6 +675,8 @@ private:
 	static Point     dndpos;
 	static bool      dndframe;
 	static PasteClip dndclip;
+	
+	static int       last_mouse_action;
 
 	void    DnD(Point p, PasteClip& clip);
 	static void DnDRepeat();
@@ -700,8 +702,11 @@ private:
 	Rect    GetPreeditScreenRect();
 	void    SyncPreedit();
 	void    ShowPreedit(const WString& text, int cursor = INT_MAX);
-	static void HidePreedit();
-	static void PreeditSync(void (*enable_preedit)(Ctrl *top, bool enable));
+
+	static  void HidePreedit();
+	static  void PreeditSync(void (*enable_preedit)(Ctrl *top, bool enable));
+
+	static  bool MouseActiveCtrl(Ctrl *w, Point p);
 
 // System window interface...
 	void WndShow(bool b);
