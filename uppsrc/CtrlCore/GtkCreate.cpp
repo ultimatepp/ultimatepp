@@ -68,20 +68,15 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.ctrl = this;
 	w.gtk = top->window;
 	w.gdk = nullptr;
-
+	
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	GdkWindowTypeHint type_hint;
-	if(popup && !owner) {
+	if(popup)
 		gtk_window_set_decorated(gtk(), FALSE);
-		type_hint = GDK_WINDOW_TYPE_HINT_POPUP_MENU;
-	}
-	else {
-		type_hint = popup ? GDK_WINDOW_TYPE_HINT_COMBO
-		                  : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
-		                  : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
-		                  : GDK_WINDOW_TYPE_HINT_NORMAL;
-	}
-	gtk_window_set_type_hint(gtk(), type_hint);
+	gtk_window_set_type_hint(gtk(),
+	            popup ? /*owner ? GDK_WINDOW_TYPE_HINT_COMBO : */GDK_WINDOW_TYPE_HINT_POPUP_MENU
+	                  : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
+	                  : owner ? GDK_WINDOW_TYPE_HINT_DIALOG
+	                  : GDK_WINDOW_TYPE_HINT_NORMAL);
 
 	Rect r = GetRect();
 	bool custom_bar = tw && tw->custom_bar;
@@ -107,11 +102,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		}
 		else {
 			top->header = gtk_header_bar_new();
-			if(findarg(type_hint, GDK_WINDOW_TYPE_HINT_POPUP_MENU) >= 0)
-				gtk_widget_set_size_request(top->header, 1, 1);
-			else
-				gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
-
+			gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(top->header), TRUE);
 			gtk_header_bar_set_has_subtitle(GTK_HEADER_BAR(top->header), false);
 		}
 
@@ -153,7 +144,16 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		if(findarg(gtk_window_get_type_hint(gtk()), GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
 			tw->SyncSizeHints();
 
-	gtk_widget_show_all(top->window);
+	if(IsWayland()) {
+		gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
+		gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
+		gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
+	}
+	
+	if(IsWayland() && popup)
+		gtk_widget_realize(top->window);
+	else
+		gtk_widget_show_all(top->window);
 
 	w.gdk = gtk_widget_get_window(top->window);
 
