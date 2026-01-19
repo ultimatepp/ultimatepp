@@ -51,8 +51,6 @@ protected:
 	void MainBar(Bar& bar);
 
 public:
-	typedef UWord CLASSNAME;
-
 	static void SerializeApp(Stream& s);
 
 	UWord();
@@ -243,7 +241,7 @@ void UWord::SetBar()
 UWord::UWord()
 {
 #ifdef PLATFORM_COCOA
-	SetMainMenu(THISBACK(MainMenu));
+	SetMainMenu([=](Bar& bar) { MainMenu(bar); });
 #else
 	AddFrame(menubar);
 #endif
@@ -253,7 +251,7 @@ UWord::UWord()
 	Add(editor.SizePos());
 	menubar.Set([=](Bar& bar) { MainMenu(bar); });
 	Sizeable().Zoomable();
-	WhenClose = THISBACK(Destroy);
+	WhenClose = [=] { Destroy(); };
 	menubar.WhenHelp = toolbar.WhenHelp = statusbar;
 	static int doc;
 	Title(Format("Document%d", ++doc));
@@ -261,7 +259,7 @@ UWord::UWord()
 	editor.AllowDarkContent();
 	editor.ClearModify();
 	SetBar();
-	editor.WhenRefreshBar = THISBACK(SetBar);
+	editor.WhenRefreshBar = [=] { SetBar(); };
 	OpenMain();
 	ActiveFocus(editor);
 }
