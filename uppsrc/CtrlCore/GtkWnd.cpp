@@ -229,14 +229,6 @@ void Ctrl::WndRectsSync() const
 			else
 				gdk_window_get_position(gdk(), &x, &y);
 			
-			if(IsPopUp()) {
-				DDUMP(Name(this));
-				DDUMP(x);
-				DDUMP(y);
-				DDUMP(width);
-				DDUMP(height);
-			}
-
 			return SCL(x, y, width, height);
 		};
 
