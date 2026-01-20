@@ -35,6 +35,7 @@ LAYOUT(ConfLayout, 764, 576)
 	ITEM(Upp::EditString, name, HSizePosZ(92, 8).BottomPosZ(41, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::EditString, search, RightPosZ(8, 172).TopPosZ(8, 19))
 END_LAYOUT
 
 LAYOUT(CustomLayout, 608, 410)

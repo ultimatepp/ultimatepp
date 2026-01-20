@@ -13,12 +13,15 @@ struct MainConfigDlg : public WithConfigLayout<TopWindow> {
 };
 
 struct FlagsDlg : WithConfLayout<TopWindow> {
+	VectorMap<String, Tuple<String, Index<String>>> code_flags;
 	Index<String> recognized_flags;
+	int           standard_flags;
 
 	enum { CC_SET, CC_FLAG, CC_PACKAGES, CC_COUNT };
 	
 	void Options();
 	void Flags();
+	void Reload();
 
 	void Get(ArrayCtrl& a) { flags <<= a.Get(0); name <<= a.Get(1); Flags(); }
 	void Set(ArrayCtrl& a) { a.Set(0, ~flags); a.Set(1, ~name); Flags(); }
@@ -68,8 +71,6 @@ FlagsDlg::~FlagsDlg()
 
 FlagsDlg::FlagsDlg()
 {
-	VectorMap<String, Tuple<String, Index<String>>> code_flags;
-
 	CtrlLayoutOKCancel(*this, "Configuration flags");
 	
 	Sizeable().Zoomable();
@@ -118,13 +119,7 @@ FlagsDlg::FlagsDlg()
 	accepts.ColumnWidths("29 140 458 117");
 	accepts.EvenRowColor();
 	accepts.NoCursor();
-	for(int pass = 0; pass < 2; pass++) // second pass for "hidden" flags
-		for(const auto& f : ~code_flags)
-			if(IsNull(f.value.a) == pass) {
-				accepts.Add(false, f.key, AttrText(f.value.a).Italic(pass), Join(f.value.b.GetKeys(), ", "));
-				recognized_flags.FindAdd(f.key);
-			}
-	
+
 	flags.SetFilter(FlagFilterM);
 	flags << [=] { Flags(); };
 	gui <<= false;
@@ -133,6 +128,32 @@ FlagsDlg::FlagsDlg()
 	debugcode << [=] { Options(); };
 	recognized_flags.FindAdd("GUI");
 	recognized_flags.FindAdd("DEBUGCODE");
+	standard_flags = recognized_flags.GetCount();
+
+	search.NullText("Search");
+	search.SetFilter([](int c) { return ToUpper(c); });
+	search << [=] { Reload(); };
+
+	Reload();
+}
+
+void FlagsDlg::Reload()
+{
+	String s = ~search;
+	int c = accepts.GetCursor();
+	int sc = accepts.GetScroll();
+	accepts.Clear();
+	recognized_flags.Trim(standard_flags);
+	for(int pass = 0; pass < 2; pass++) // second pass for "hidden" flags
+		for(const auto& f : ~code_flags) {
+			String packages = Join(f.value.b.GetKeys(), ", ");
+			if(IsNull(f.value.a) == pass && ToUpper(f.key + f.value.a + packages).Find(s) >= 0) {
+				accepts.Add(false, f.key, AttrText(f.value.a).Italic(pass), packages);
+				recognized_flags.FindAdd(f.key);
+			}
+		}
+	accepts.ScrollTo(sc);
+	accepts.SetCursor(c);
 }
 
 void MainConfigDlg::Sync()
