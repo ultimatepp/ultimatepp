@@ -763,10 +763,9 @@ void Ide::Periodic()
 		RefreshFrame(GetFileInfoRect());
 		fileinfo_visible = b;
 	}
-	b = display_main.GetScreenRect().Contains(GetMousePos());
+	b = display_main.IsVisible() && display_main.GetScreenRect().Contains(GetMousePos());
 	if(assemblyinfo_visible != b) {
 		RefreshFrame(GetAssemblyInfoRect());
-		RefreshFrame();
 		assemblyinfo_visible = b;
 	}
 }
