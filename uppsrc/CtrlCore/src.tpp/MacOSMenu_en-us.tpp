@@ -1,4 +1,4 @@
-topic "MacOS menu support";
+topic "macOS menu support";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -10,21 +10,21 @@ topic "MacOS menu support";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[ {{10000@(113.42.0) [s0; [*@7;4 MacOS menu support]]}}&]
+[ {{10000@(113.42.0) [s0; [*@7;4 macOS menu support]]}}&]
 [s0; &]
-[s0; U`+`+ applications without changes to support MacOS application 
+[s0; U`+`+ applications without changes to support macOS application 
 menu will run with menu inside the window.&]
 [s0; &]
-[s0; To properly support MacOS menu, application needs to provide 
-different code for MacOS (conditional compilation depending on 
+[s0; To properly support macOS menu, application needs to provide 
+different code for macOS (conditional compilation depending on 
 PLATFORM`_COCOA macro). Usually, the changes are minimal, e.g. 
 in Uword application the only change is&]
 [s0; &]
-[s0; [*C #ifdef PLATFORM`_COCOA]&]
-[s0; [*C -|SetMainMenu(THISBACK(MainMenu));]&]
-[s0; [*C #else]&]
-[s0; [*C -|AddFrame(menubar);]&]
-[s0; [*C #endif]&]
+[s0;l320; [*C #ifdef PLATFORM`_COCOA]&]
+[s0;l320; [*C     SetMainMenu(`[`=`](Bar`& bar) `{ MainMenu(bar); `});]&]
+[s0;l320; [*C #else]&]
+[s0;l320; [*C     AddFrame(menubar);]&]
+[s0;l320; [*C #endif]&]
 [s0; &]
 [s0; replacing the call to AddFrame to add the main menu bar with 
 the call to TopWindow`::SetMainMenu.&]
@@ -34,26 +34,28 @@ defined and change menu setting code (which is called on any
 main menu changes) to something like&]
 [s0; &]
 [s0; [*C #ifdef PLATFORM`_COCOA]&]
-[s0; [*C -|SetMainMenu(THISBACK(MainMenu));]&]
+[s0; [*C -|SetMainMenu(`[`=`](Bar`& bar) `{ MainMenu(bar); `});]&]
 [s0; [*C #else]&]
-[s0; [*C -|menubar.Set(THISBACK(MainMenu));]&]
+[s0; [*C -|menubar.Set(`[`=`](Bar`& bar) `{ MainMenu(bar); `});]&]
 [s0; [*C #endif]&]
 [s0; &]
 [s0; Another MacOS feature is the dock menu. This can be set using 
 TopWindow`::WhenDockMenu.&]
 [s0; &]
 [s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* TopWindow members for MacOS style menu support]]}}&]
+[ {{10000F(128)G(128)@1 [s0; [* TopWindow members for macOS style menu support]]}}&]
 [s3;%- &]
-[s5;:Upp`:`:TopWindow`:`:WhenDockMenu:%- [_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[* Whe
-nDockMenu]&]
+[s5;:Upp`:`:TopWindow`:`:WhenDockMenu:%- [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<[_^topic`:`/`/CtrlLib`/src`/Bar`_en`-us`#Bar`:`:class^ Bar][@(0.0.255) `&]>_[* Wh
+enDockMenu]&]
 [s2; Represents application dock menu. Gets called if TopWindow is 
 on top and user invokes the dock menu for application (e.g. by 
 right`-click on application icon).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:TopWindow`:`:SetMainMenu`(Upp`:`:Event`<Upp`:`:Bar`&`>`):%- [@(0.0.255) voi
-d]_[* SetMainMenu]([_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[*@3 menu])&]
+d]_[* SetMainMenu]([_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ Event]<[_^topic`:`/`/CtrlLib`/src`/Bar`_en`-us`#Bar`:`:class^ B
+ar][@(0.0.255) `&]>_[*@3 menu])&]
 [s2; Sets the main application menu. This menu will be active if 
-given toplevel TopWindow is on the top.&]
+given top level TopWindow is on the top.&]
 [s0; ]]

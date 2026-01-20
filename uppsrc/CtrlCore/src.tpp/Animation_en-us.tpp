@@ -13,12 +13,15 @@ topic "Animation functions";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Animation functions]]}}&]
 [s0;%% &]
 [s5;:Upp`:`:Animate`(Ctrl`&`,const Rect`&`,int`): [@(0.0.255) void] 
-[* Animate](Ctrl[@(0.0.255) `&] [*@3 ctrl], [@(0.0.255) const] Upp[@(0.0.255) `::]Rect[@(0.0.255) `&
-] [*@3 target], [@(0.0.255) int] [*@3 type] [@(0.0.255) `=] [@(0.0.255) `-][@3 1])&]
+[* Animate]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ Ctrl][@(0.0.255) `&
+] [*@3 ctrl], [@(0.0.255) const] [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect][@(0.0.255) `&] [*@3 target], [@(0.0.255) int] [*@3 type] [@(0.0.255) `=] 
+[@(0.0.255) `-][@3 1])&]
 [s5;:Upp`:`:Animate`(Ctrl`&`,int`,int`,int`,int`,int`): [@(0.0.255) void] 
-[* Animate](Ctrl[@(0.0.255) `&] [*@3 ctrl], [@(0.0.255) int] [*@3 x], [@(0.0.255) int] 
-[*@3 y], [@(0.0.255) int] [*@3 cx], [@(0.0.255) int] [*@3 cy], [@(0.0.255) int] 
-[*@3 type] [@(0.0.255) `=] [@(0.0.255) `-][@3 1])&]
+[* Animate]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ Ctrl][@(0.0.255) `&
+] [*@3 ctrl], [@(0.0.255) int] [*@3 x], [@(0.0.255) int] [*@3 y], [@(0.0.255) int] 
+[*@3 cx], [@(0.0.255) int] [*@3 cy], [@(0.0.255) int] [*@3 type] [@(0.0.255) `=] 
+[@(0.0.255) `-][@3 1])&]
 [s0;l288;%% Animates a [%-*@3 ctrl ]to transition smoothly to a [%-*@3 target 
 ]rectangle using a specified animation effect. The animation 
 effect [%-*@3 type] can be [*C@3 GUIEFFECT`_SLIDE], which moves the 
@@ -30,17 +33,19 @@ value will cause the the [%- ctrl ]to jump directly to the target
 rectangle without any animation.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:Animate`(Event`,int`): [@(0.0.255) void] [* Animate](Event<[@(0.0.255) double]>
- [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] [@(0.0.255) `=] [@3 100])&]
+[s5;:Upp`:`:Animate`(Event`,int`): [@(0.0.255) void] [* Animate]([_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<[@(0.0.255) double]> [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] 
+[@(0.0.255) `=] [@3 100])&]
 [s2;%% Performs GUI animation, repeatedly calling [%-*@3 update] with 
 increasing numbers from the interval 0..1 for [%- duration] in 
 milliseconds.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Animate`(Vector`&`,const Vector`&`,int`): [@(0.0.255) void] 
-[* Animate](Vector<Ptr<Ctrl>>[@(0.0.255) `&] [*@3 ctrls], [@(0.0.255) const] 
-Vector<Rect>[@(0.0.255) `&] [*@3 targets], [@(0.0.255) int] [*@3 duration`_ms] 
-[@(0.0.255) `=] [@3 100])&]
+[* Animate]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ Vector]<Ptr<[_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl]>>[@(0.0.255) `&] [*@3 ctrls], [@(0.0.255) const] [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ Rect]>[@(0.0.255) `&] 
+[*@3 targets], [@(0.0.255) int] [*@3 duration`_ms] [@(0.0.255) `=] [@3 100])&]
 [s2;%% Animates the transition of multiple [%-*@3 ctrls] from their 
 current positions to the target positions specified by the [%-*@3 targets] 
 parameter, over a given [%-*@3 duration]. The default duration 
@@ -52,9 +57,11 @@ return without modifying anything.&]
 [s5;:Upp`:`:Animate`(Vector`&`,const Vector`&`,Event`,int`): [@(0.0.255) template] 
 <[@(0.0.255) class] T>&]
 [s5;:Upp`:`:Animate`(Vector`&`,const Vector`&`,Event`,int`): [@(0.0.255) void] 
-[* Animate](Vector<T>[@(0.0.255) `&] [*@3 data], [@(0.0.255) const] Vector<T>[@(0.0.255) `&
-] [*@3 targets], Event<> [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] 
-[@(0.0.255) `=] [@3 100])&]
+[* Animate]([_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ Vector]<T>[@(0.0.255) `&
+] [*@3 data], [@(0.0.255) const] [_^topic`:`/`/Core`/src`/Vector`_en`-us`#Vector`:`:class^ V
+ector]<T>[@(0.0.255) `&] [*@3 targets], [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<> [*@3 update], [@(0.0.255) int] [*@3 duration`_ms] [@(0.0.255) `=] 
+[@3 100])&]
 [s2;%% Animates the transition of multiple [%-*@3 data] values from 
 their current positions to the target positions specified by 
 the [%-*@3 targets] parameter, over a given [%-*@3 duration]. The 
