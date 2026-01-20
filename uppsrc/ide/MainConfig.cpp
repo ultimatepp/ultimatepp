@@ -130,7 +130,7 @@ FlagsDlg::FlagsDlg()
 	gui <<= false;
 	debugcode <<= false;
 	gui << [=] { Options(); };
-	debugcode << [=] { Flags(); };
+	debugcode << [=] { Options(); };
 	recognized_flags.FindAdd("GUI");
 	recognized_flags.FindAdd("DEBUGCODE");
 }
