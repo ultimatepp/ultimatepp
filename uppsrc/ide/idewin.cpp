@@ -762,7 +762,7 @@ Ide::Ide()
 
 	InstallPaintHook([](Ctrl *ctrl, Draw& draw, const Rect&) {
 		if(ctrl == TheIde())
-			TheIde()->PaintFileInfo(draw);
+			TheIde()->PaintTitlebarInfo(draw);
 	});
 }
 

@@ -698,7 +698,8 @@ public:
 	ParentCtrl              barrect; // to do custom caption clipping
 	CursorInfoCtrl          display, display_main;
 	ImageCtrl               indeximage, indeximage2;
-	bool                    fileinfo_visible = false; // show file time when cursor points to display
+	bool                    fileinfo_visible = false; // show file info when mouse cursor points to display
+	bool                    assemblyinfo_visible = false; // show assembly info when mouse cursor points to display_main
 
 	byte      hilite_scope;
 	int       hilite_bracket;
@@ -1186,7 +1187,9 @@ public:
 	void      SyncClang();
 
 	Rect      GetFileInfoRect();
-	void      PaintFileInfo(Draw& w);
+	String    GetAssemblyInfoQtf();
+	Rect      GetAssemblyInfoRect();
+	void      PaintTitlebarInfo(Draw& w);
 
 	void      PassEditor(AssistEditor& editor2);
 	void      PassEditor();

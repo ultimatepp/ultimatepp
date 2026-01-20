@@ -657,7 +657,7 @@ Rect Ide::GetFileInfoRect()
 	return r - GetScreenRect().TopLeft();
 }
 
-void Ide::PaintFileInfo(Draw& w)
+void Ide::PaintTitlebarInfo(Draw& w)
 {
 	if(fileinfo_visible) {
 		Time tm(edittime);
@@ -698,6 +698,55 @@ void Ide::PaintFileInfo(Draw& w)
 		Size sz = r.GetSize();
 		txt.Paint(w, DPI(2) + r.left, (sz.cy - tsz.cy) / 2 + r.top, INT_MAX / 2);
 	}
+	if(assemblyinfo_visible) {
+		Vector<String> nests = GetUppDirs();
+		Rect r = GetAssemblyInfoRect();
+		RichText txt = ParseQTF(GetAssemblyInfoQtf());
+		txt.ApplyZoom(GetRichTextStdScreenZoom());
+		Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
+		DrawFrame(w, r, SBlack());
+		r.Deflate(1, 1);
+		w.DrawRect(r, SColorPaper());
+		Size sz = r.GetSize();
+		txt.Paint(w, DPI(2) + r.left, (sz.cy - tsz.cy) / 2 + r.top, INT_MAX / 2);
+	}
+}
+
+String Ide::GetAssemblyInfoQtf()
+{
+	String qtf  = "[g ";
+	const Workspace& wspc = GetIdeWorkspace();
+	Vector<String> nests = GetUppDirs();
+	Index<String> done;
+	for(String s : nests) {
+		String nest = UnixPath(s);
+		for(int i = 0; i < wspc.GetCount(); i++)
+			if(UnixPath(NormalizePath(PackageDirectory(wspc[i]))).StartsWith(nest) && done.Find(s) < 0) {
+				done.Add(s);
+				qtf << "\1" << s << "\1&";
+				String g = GetGitBranch(s);
+				if(g.GetCount())
+					qtf << "[@b     \1" << g << "\1]&";
+				else
+					qtf << "[@K/     not a git repo]&";
+				break;
+			}
+	}
+	qtf.TrimEnd("&");
+	return qtf;
+}
+
+Rect Ide::GetAssemblyInfoRect()
+{
+	Vector<String> nests = GetUppDirs();
+	Rect r = display_main.GetScreenRect();
+	r.top = r.bottom - GetStdFontCy() / 2;
+	RichText txt = ParseQTF(GetAssemblyInfoQtf());
+	txt.ApplyZoom(GetRichTextStdScreenZoom());
+	Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
+	r.left = r.right - tsz.cx - DPI(4) - 2;
+	r.bottom = r.top + tsz.cy + DPI(4) + 2;
+	return r - GetScreenRect().TopLeft();
 }
 
 void Ide::Periodic()
@@ -713,6 +762,12 @@ void Ide::Periodic()
 	if(fileinfo_visible != b) {
 		RefreshFrame(GetFileInfoRect());
 		fileinfo_visible = b;
+	}
+	b = display_main.GetScreenRect().Contains(GetMousePos());
+	if(assemblyinfo_visible != b) {
+		RefreshFrame(GetAssemblyInfoRect());
+		RefreshFrame();
+		assemblyinfo_visible = b;
 	}
 }
 
@@ -730,7 +785,6 @@ struct IndexerProgress : ImageMaker {
 		ImagePainter iw(sz);
 		iw.Clear(RGBAZero());
 		iw.Move(sz.cx / 2, sz.cy / 2).Arc(sz.cx / 2, sz.cy / 2, sz.cx / 2, -M_PI/2, pos * M_2PI).Line(sz.cx / 2, sz.cy / 2).Fill(SGray());
-	//	iw.DrawImage(0, 0, IdeImg::Indexer());
 		return iw;
 	}
 };
