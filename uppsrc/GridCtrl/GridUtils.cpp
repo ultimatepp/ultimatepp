@@ -6,23 +6,24 @@ LineEdit *dlog = NULL;
 int dlev = 0;
 
 static int pos = 0;
+static constexpr int buff_size = 1024;
 
 void LogCon(const char *fmt, ...)
 {
-	char buffer[1024];
+	char buffer[buff_size];
 	va_list argptr;
 	va_start(argptr, fmt);
-	vsprintf(buffer, fmt, argptr);
+	vsnprintf(buffer, buff_size, fmt, argptr);
 	va_end(argptr);
 	LOG(buffer);
 }
 
 void LogCon(int level, const char *fmt, ...)
 {
-	char buffer[1024];
+	char buffer[buff_size];
 	va_list argptr;
 	va_start(argptr, fmt);
-	vsprintf(buffer, fmt, argptr);
+	vsnprintf(buffer, buff_size, fmt, argptr);
 	va_end(argptr);
 	LOG(buffer);
 }
@@ -33,10 +34,10 @@ void LogGui(const char *fmt, ...)
 		return;
 
 	pos = dlog->GetLength();
-	char buffer[1024];
+	char buffer[buff_size];
 	va_list argptr;
 	va_start(argptr, fmt);
-	int l = vsprintf(buffer, fmt, argptr);
+	int l = vsnprintf(buffer, buff_size, fmt, argptr);
 	va_end(argptr);
 
 	dlog->Insert(pos, buffer);
@@ -52,10 +53,10 @@ void LogGui(int level, const char *fmt, ...)
 		return;
 
 	pos = dlog->GetLength();
-	char buffer[1024];
+	char buffer[buff_size];
 	va_list argptr;
 	va_start(argptr, fmt);
-	int l = vsprintf(buffer, fmt, argptr);
+	int l = vsnprintf(buffer, buff_size, fmt, argptr);
 	va_end(argptr);
 
 	dlog->Insert(pos, buffer);
