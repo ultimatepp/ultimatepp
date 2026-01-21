@@ -412,7 +412,7 @@ CONSOLE_APP_MAIN
 		     "        a - rebuild all.\n"
 		     "        b - use BLITZ.\n"
 		     "        l - silent mode.\n"
-		     "        u - silent mode.\n"
+		     "        u - use target directory.\n"
 		     "        m - create a map file.\n"
 		     "        r - release mode.\n"
 		     "        d - debug mode without debug symbols.\n"
