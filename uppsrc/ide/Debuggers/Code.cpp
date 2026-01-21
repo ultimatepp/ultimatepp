@@ -97,8 +97,8 @@ void Pdb::SetFrame()
 	frame_up.Enable(fi > 0 && lock == 0);
 	frame_down.Enable(fi < framelist.GetCount() - 1 && lock == 0);
 	if(fi >= 0 && fi < frame.GetCount()) {
-		Frame& f = frame[fi];
-		current_frame = &f;
+		Frame f = frame[fi];
+		current_frame = f;
 		bool df = disas.HasFocus();
 		FilePos fp = GetFilePos(f.pc);
 		IdeHidePtr();
@@ -131,7 +131,9 @@ void Pdb::SetFrame()
 
 		if(df)
 			disas.SetFocus();
+		
 		Data();
+		UpdateBTs();
 	}
 	SyncFrameButtons();
 }
@@ -192,10 +194,10 @@ bool Pdb::ConditionalPass()
 				if(q >= 0) {
 					Thread& ctx = threads[q];
 					Array<Frame> frame = Backtrace(ctx, true);
-					current_frame = &frame[0];
+					current_frame = frame[0];
 					CParser p(exp);
 					if(!GetInt64(Exp(p))) {
-						current_frame = NULL;
+						current_frame.Clear();
 						return true;
 					}
 				}
@@ -205,7 +207,7 @@ bool Pdb::ConditionalPass()
 			}
 		}
 	}
-	current_frame = NULL;
+	current_frame.Clear();
 	Sync();
 	if(err.GetCount())
 		Exclamation("Error in condition&\1" + err);

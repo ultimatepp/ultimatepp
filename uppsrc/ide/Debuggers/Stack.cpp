@@ -95,7 +95,7 @@ void Pdb::Sync0(Thread& ctx)
 
 	framelist.Clear();
 	frame.Clear();
-	current_frame = NULL;
+	current_frame.Clear();
 
 	frame = Backtrace(ctx);
 	for(const Frame& f : frame)
@@ -103,11 +103,26 @@ void Pdb::Sync0(Thread& ctx)
 	framelist.GoBegin();
 }
 
+static bool bts_lock;
+
+void Pdb::UpdateBTs()
+{
+	if(tab.Get() != TAB_BTS) return;
+	if(bts_lock) return;
+	bts_lock = true;
+	bts.KillCursor();
+	int id = bts.Find(~~threadlist);
+	if(id >= 0) {
+		if(!bts.IsOpen(id))
+			bts.Open(id);
+		bts.FindSetCursor("#" + ~~framelist + "#" + ~~threadlist);
+	}
+	bts_lock = false;
+}
+
 void Pdb::BTs()
 {
-	static bool lock;
-	
-	if(lock) return;
+	if(bts_lock) return;
 	
 	int cid = bts.GetCursor();
 	Value cursor = bts.Get();
@@ -181,7 +196,7 @@ void Pdb::BTs()
 		});
 	};
 	
-	bts.WhenSel = [=] {
+	bts << [=] {
 		String k = ~bts.Get();
 		if(*k == '#') {
 			int id = bts.GetParent(bts.GetCursor());
@@ -194,21 +209,29 @@ void Pdb::BTs()
 					if(k == "#" + AsString(i) + "#" + thid) {
 						int tid = atoi(thid);
 						if(threadlist.HasKey(tid)) {
-							lock = true;
+							bts_lock = true;
 							threadlist <<= tid;
 							SetThread();
-							if(ii < framelist.GetCount()) {
+							if(i < framelist.GetCount()) {
 								framelist.SetIndex(i);
 								SetFrame();
-								lock = false;
+								bts_lock = false;
 								return;
 							}
-							lock = false;
+							bts_lock = false;
 						}
 					}
 					i++;
 				}
 			}
+		}
+		else {
+			int tid = StrInt(k);
+			if(!IsNull(tid))
+			bts_lock = true;
+			threadlist <<= tid;
+			SetThread();
+			bts_lock = false;
 		}
 	};
 }

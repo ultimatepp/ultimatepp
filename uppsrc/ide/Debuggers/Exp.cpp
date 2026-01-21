@@ -399,8 +399,8 @@ Pdb::Val Pdb::Term(CParser& p)
 	String id = p.ReadId();
 	while(p.Char2(':', ':') && p.IsId())
 		id << "::" << p.ReadId();
-	if(current_frame) {
-		Frame& f = *current_frame;
+	if(current_frame.pc) {
+		Frame& f = current_frame;
 		int q = f.local.Find(id);
 		if(q >= 0)
 			return f.local[q];

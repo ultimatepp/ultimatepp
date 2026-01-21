@@ -138,11 +138,13 @@ struct Pdb : Debugger, ParentCtrl {
 	};
 
 	struct Frame : Moveable<Frame> {
-		adr_t                  pc, frame, stack;
-		FnInfo                 fn;
-		VectorMap<String, Val> param;
-		VectorMap<String, Val> local;
-		String                 text;
+		adr_t                                pc, frame, stack;
+		FnInfo                               fn;
+		WithDeepCopy<VectorMap<String, Val>> param;
+		WithDeepCopy<VectorMap<String, Val>> local;
+		String                               text;
+		
+		void Clear()                         { pc = 0; param.Clear(); local.Clear(); }
 	};
 
 	struct VisualPart : Moveable<VisualPart> {
@@ -223,7 +225,7 @@ struct Pdb : Debugger, ParentCtrl {
 	String                      disas_name;
 
 	Array<Frame>                frame;
-	Frame                      *current_frame;
+	Frame                       current_frame;
 	String                      autotext;
 	
 	VectorMap<adr_t, FnInfo>    fninfo_cache;
@@ -509,6 +511,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      AddWatch(const String& s);
 	void      EditWatch();
 	void      BTs();
+	void      UpdateBTs();
 
 	void      SetTab(int i);
 

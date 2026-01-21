@@ -803,7 +803,6 @@ void TreeCtrl::UpdateSelect()
 {
 	WhenSelection();
 	WhenSel();
-	WhenAction();
 }
 
 bool TreeCtrl::IsSel(int id) const

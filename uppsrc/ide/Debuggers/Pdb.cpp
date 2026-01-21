@@ -271,7 +271,7 @@ Pdb::Pdb()
 :	visual_display(this) {
 	hWnd = NULL;
 	hProcess = INVALID_HANDLE_VALUE;
-	current_frame = NULL;
+	current_frame.Clear();
 
 	autos.NoHeader();
 	autos.AddColumn("", 1);
@@ -350,7 +350,7 @@ Pdb::Pdb()
 
 	tab <<= THISBACK(Tab);
 
-	framelist <<= THISBACK(SetFrame);
+	framelist << [=] { SetFrame(); };
 	threadlist <<= THISBACK(SetThread);
 
 	tree.WhenOpen = THISBACK(TreeExpand);
