@@ -203,7 +203,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	alist.AddColumn("Description");
 	alist.AddIndex();
 	alist.EvenRowColor();
-	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
+	alist.SetLineCy(max(DPI(16), Draw::GetStdFontCy()));
 	alist.ColumnWidths("108 79 317");
 	list.Add(clist.SizePos());
 	list.Add(alist.SizePos());
@@ -735,7 +735,7 @@ struct PackageDisplay : Display {
 		ValueArray va = q;
 		Size sz = GetTextSize(String(va[0]), fnt);
 		sz.cx += Zx(20);
-		sz.cy = max(sz.cy, Zy(16));
+		sz.cy = max(sz.cy, DPI(16));
 		return sz;
 	}
 

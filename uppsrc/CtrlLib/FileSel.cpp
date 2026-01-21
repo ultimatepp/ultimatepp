@@ -1818,7 +1818,7 @@ bool FileSel::Execute(int _mode) {
 		sort_lbl.Hide();
 		ok.SetLabel(t_("&Select"));
 		Logc p = filename.GetPos().y;
-		int q = ok.GetPos().y.GetA() + ok.GetPos().y.GetB() + Zy(16);
+		int q = ok.GetPos().y.GetA() + ok.GetPos().y.GetB() + DPI(16);
 		p.SetA(q);
 		filename.SetPosY(p);
 		filesize.SetPosY(p);

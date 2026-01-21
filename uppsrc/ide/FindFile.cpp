@@ -79,7 +79,7 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	list.AddColumn("File").SetDisplay(Single<FindFileFileDisplay>());
 	list.AddColumn("Package");
 	list.WhenLeftDouble = Acceptor(IDOK);
-	list.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
+	list.SetLineCy(max(DPI(16), Draw::GetStdFontCy()));
 	list.HorzGrid(false);
 	list.MultiSelect();
 	list.WantFocus(false);

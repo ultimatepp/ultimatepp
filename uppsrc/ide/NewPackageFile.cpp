@@ -14,7 +14,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 {
 	CtrlLayoutOKCancel(*this, "New package file");
 
-	type.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
+	type.SetLineCy(max(DPI(16), Draw::GetStdFontCy()));
 	type.SetDropLines(20);
 	Type("cpp", "C++ source file");
 	Type("h", "C++ header file");
