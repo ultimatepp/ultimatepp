@@ -17,7 +17,8 @@ NewPackageFileWindow::NewPackageFileWindow()
 	type.SetLineCy(max(DPI(16), Draw::GetStdFontCy()));
 	type.SetDropLines(20);
 	Type("cpp", "C++ source file");
-	Type("h", "C++ header file");
+	Type("h", "C/C++ header file (h)");
+	Type("hpp", "C++ header file (hpp)");
 	Type("c", "C source file");
 	Type("lay", "Layout file (dialog templates)");
 	Type("iml", "Image file (icons)");
@@ -87,7 +88,11 @@ String NewPackageFileWindow::GetError()
 	if(FileExists(p))
 		return String().Cat() << "File&[* \1" << p << "\1]&already exists!";
 	if(*n == '.') {
-		Index<String> exceptions = {".clang-format"};
+		Index<String> exceptions = {
+			".clang-format",
+			".gitignore",
+			".gitmodules"
+		};
 		if(exceptions.Find(n) == -1) {
 			return "Invalid filename!";
 		}
