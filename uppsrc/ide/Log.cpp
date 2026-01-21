@@ -157,11 +157,14 @@ bool Ide::FindLOG()
 	LogLine bestl;
 	int best = -1;
 	int bestp = false;
+	int bestr = INT_MIN;
 	for(const LogLine& l : logs) {
 		int ml = GetMatchLen(l.text, ln);
-		if(ml > best || ml == best && l.priority > bestp) {
+		int rest = ml - l.text.GetCount();
+		if(CombineCompare(ml, best)(rest, bestr)(l.priority, bestp) > 0) {
 			best = ml;
 			bestp = l.priority;
+			bestr = rest;
 			bestl = l;
 		}
 	}
