@@ -2,6 +2,8 @@
 
 namespace Upp {
 
+#define LLOG(x) // DLOG(x)
+
 void GridCtrl::Select(int n, int cnt /* = 1*/)
 {
 	SelectCount(n + fixed_rows, cnt, true);
@@ -250,7 +252,7 @@ bool GridCtrl::IsSelected()
 
 void GridCtrl::ClearSelection()
 {
-	LG(0, "Cleared %d", selected_rows);
+	LLOG("Cleared " << selected_rows);
 	if(selected_rows > 0)
 	{
 		for(int i = fixed_rows; i < total_rows; i++)

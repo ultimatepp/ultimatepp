@@ -6,7 +6,6 @@ namespace Upp {
 #define  IMAGECLASS GridImg
 #define  IMAGEFILE <GridCtrl/GridCtrl.iml>
 #include <Draw/iml_source.h>
-#include "GridUtils.h"
 
 
 GridDisplay& StdGridDisplay()

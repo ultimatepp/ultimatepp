@@ -7,13 +7,36 @@
 
 namespace Upp {
 
-#include "GridUtils.h"
 #include "GridDisplay.h"
 
 #define FOREACH_ROW(x) for(x.Begin(); x.IsEnd(); x.Next())
 #define FOREACH_SELECTED_ROW(x) FOREACH_ROW(x) if(x.IsSelected())
 #define FOREACH_MODIFIED_ROW(x) FOREACH_ROW(x) if(x.IsUpdatedRow())
 #define FOREACH_ROW_NOT_CURRENT(x) FOREACH_ROW(x) if(!x.IsCurrentRow())
+
+#define BIT(x) (1 << x)
+
+inline bool IsSet(int s, int b)
+{
+	return s & b;
+}
+
+inline void BitSet(dword &k, dword v, bool s)
+{
+	if(s) k |= v; else  k &= ~v;
+}
+
+inline bool BitInverse(dword &k, dword v)
+{
+	bool s = k & v;
+	BitSet(k, v, !s);
+	return s;
+}
+
+inline int Distance(const Point &p0, const Point &p1)
+{
+	return max(abs(p0.x - p1.x), abs(p0.y - p1.y));
+}
 
 namespace GF
 {

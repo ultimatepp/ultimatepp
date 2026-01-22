@@ -2,6 +2,8 @@
 #include <GridCtrl/GridCtrl.h>
 
 namespace Upp {
+	
+#define LLOG(x) // DLOG(x)
 
 #ifdef COMPILER_MSC
 #pragma warning(disable: 4355)
@@ -1534,7 +1536,7 @@ void GridCtrl::ChildAction(Ctrl *child, int event)
 	{
 		if(event == LEFTDOWN || event == RIGHTDOWN || event == MOUSEWHEEL)
 		{
-			//LG(2, "got event :%x child: %x", event, child);
+			//LLOG("got event :%x child: %x", event, child);
 			Point cp = GetCtrlPos(child);
 			if(cp.x < 0 || cp.y < 0)
 				return;
@@ -1549,7 +1551,7 @@ void GridCtrl::ChildAction(Ctrl *child, int event)
 	{
 		if(live_cursor)
 		{
-			LG(2, "Child:LiveCursor");
+			LLOG("Child:LiveCursor");
 			Point p = GetMouseViewPos();
 			if(IsMouseBody(p))
 				SetCursor0(p, CU_MOUSE | CU_HIGHLIGHT);
@@ -1713,7 +1715,7 @@ void GridCtrl::Scroll()
 	if(!doscroll)
 		return;
 
-	LG(0, "Scroll (%d, %d)", delta.cx, delta.cy);
+	LLOG("Scroll " << delta);
 
 	SyncCtrls();
 	UpdateCtrls(UC_CHECK_VIS | UC_SHOW | UC_SCROLL);
@@ -1747,7 +1749,7 @@ void GridCtrl::SetFixedRows(int n)
 {
 	if(n >= 0 && n <= total_rows)
 	{
-		LG(0, "SetFixedRows");
+		LLOG("SetFixedRows");
 		fixed_rows = n;
 		firstRow = -1;
 		UpdateSizes();
@@ -1763,7 +1765,7 @@ void GridCtrl::SetFixedCols(int n)
 {
 	if(n >= 0 && n < total_cols)
 	{
-		LG(0, "SetFixedCols");
+		LLOG("SetFixedCols");
 		fixed_cols = n + 1; /* +1 - indicator! */
 		firstCol = -1;
 		UpdateSizes();
@@ -2320,7 +2322,7 @@ void GridCtrl::MouseAccel(const Point &p, bool horz, bool vert, dword keyflags)
 
 	if(speedx || speedy)
 	{
-		LG(0, "speedx %d, speedy %d", speedx, speedy);
+		LLOG("speedx " << Point(speedx, speedy));
 		MouseMove(p, keyflags);
 	}
 
@@ -2719,7 +2721,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	if(isnewrow)
 		SetCtrlsData();
 	
-	LG(0, "cur(%d, %d)", curpos.x, curpos.y);
+	LLOG("cur " << curpos);
 
 	return cs;
 }
@@ -2810,7 +2812,7 @@ GridCtrl& GridCtrl::SetColWidth(int n, int width, bool recalc /* = true */)
 
 GridCtrl& GridCtrl::SetRowHeight(int n, int height, bool recalc)
 {
-	LG(0, "SetRowHeight %d %d", n, height);
+	LLOG("SetRowHeight " << n << height);
 
 	if(resize_row_mode > 0 && n >= fixed_rows)
 		return *this;
@@ -2960,7 +2962,7 @@ void GridCtrl::CalcIntPos(RectItems &its, int n, int maxsize, int cnt, int resiz
 
 	for(int i = (renumber ? 1 : max(1, n)); i <= cnt ; i++)
 	{
-		its[i].npos = Round(its[i].Left());
+		its[i].npos = (int)(its[i].Left());
 		its[i - 1].nsize = its[i].npos - its[i - 1].npos;
 
 		if(renumber)
@@ -2979,7 +2981,7 @@ void GridCtrl::CalcIntPos(RectItems &its, int n, int maxsize, int cnt, int resiz
 		its[last_vis].nsize = size ;//>= its[cnt].min && size <= its[cnt].max ? size : Round(its[cnt].size);
 	}
 	else
-		its[last_vis].nsize = Round(its[last_vis].size);
+		its[last_vis].nsize = (int)(its[last_vis].size);
 }
 
 bool GridCtrl::UpdateSizes()
@@ -4310,7 +4312,7 @@ bool GridCtrl::CanMoveCol(int n, int m)
 	{
 		if(hitems[n].join > 0)
 		{
-			LG(2, "n=%d(%d) m=%d(%d)", n, hitems[n].join, m, hitems[m].join);
+			LLOG(Format("n=%d(%d) m=%d(%d)", n, hitems[n].join, m, hitems[m].join));
 			if(m == n - 2 && hitems[n].join == hitems[n - 1].join)
 				return true;
 
@@ -4324,7 +4326,7 @@ bool GridCtrl::CanMoveCol(int n, int m)
 
 void GridCtrl::MoveCol(int n, int m)
 {
-	LG(0, "%d->%d", n, m);
+	LLOG(n << " -> " << m);
 
 	if(!CanMoveCol(n, m))
 	{
@@ -4348,7 +4350,7 @@ void GridCtrl::MoveCol(int n, int m)
 
 bool GridCtrl::MoveRow(int n, int m, bool repaint)
 {
-	LG(0, "%d->%d", n, m);
+	LLOG(n << " -> " << m);
 
 	if(m == n || m == n - 1 ||
 	   n < 0 || n > total_rows - 1 ||
@@ -5263,7 +5265,7 @@ GridCtrl& GridCtrl::SetColsMax(int size)
 
 void GridCtrl::GotFocus()
 {
-	LG(3, "GotFocus");
+	LLOG("GotFocus");
 	RestoreFocus();
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
@@ -5271,7 +5273,7 @@ void GridCtrl::GotFocus()
 
 void GridCtrl::LostFocus()
 {
-	LG(3, "LostFocus");
+	LLOG("LostFocus");
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
 	popup.Close();
@@ -5279,7 +5281,7 @@ void GridCtrl::LostFocus()
 
 void GridCtrl::ChildGotFocus()
 {
-	LG(3, "ChildGotFocus");
+	LLOG("ChildGotFocus");
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
 	Ctrl::ChildGotFocus();
@@ -5287,7 +5289,7 @@ void GridCtrl::ChildGotFocus()
 
 void GridCtrl::ChildLostFocus()
 {
-	LG(3, "ChildLostFocus");
+	LLOG("ChildLostFocus");
 	if(valid_cursor)
 	{
 		//if(focus_lost_accepting && !HasFocusDeep())
@@ -5941,7 +5943,7 @@ void GridCtrl::DoRemove()
 		if(keep_last_row && (maxRowSelected - minRowSelected + 1) == GetCount())
 			maxRowSelected--;
 
-		LG(0, "Min:%d, Max:%d", minRowSelected, maxRowSelected);
+		LLOG(Format("Min:%d, Max:%d", minRowSelected, maxRowSelected));
 
 		for(int i = minRowSelected; i <= maxRowSelected; i++)
 		{
@@ -6231,7 +6233,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 	{
 		if(change || search_highlight)
 		{
-			LG(0, "Repaint %d", search_hide);
+			LLOG("Repaint " << search_hide);
 			Repaint(false, search_hide, 0);
 		}
 	}
@@ -6251,7 +6253,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 		WhenSearchCursor();
 	}
 
-	LG(0, "Matched rows %d", rows);
+	LLOG("Matched rows " << rows);
 	return rows;
 }
 
@@ -6406,54 +6408,54 @@ void GridCtrl::Debug(int n)
 {
 	if(n == 0)
 	{
-		LG("---- DEBUG 0 ----------");
-		LG("firstVisCol    %d", firstVisCol);
-		LG("lastVisCol     %d", lastVisCol);
-		LG("firstVisRow    %d", firstVisRow);
-		LG("lastVisRow     %d", lastVisRow);
-		LG("firstCol       %d", firstCol);
-		LG("firstRow       %d", firstRow);
-		LG("lastCol        %d", lastCol);
-		LG("lastRow        %d", lastRow);
-		LG("total_cols     %d", total_cols);
-		LG("total_rows     %d", total_rows);
-		LG("curpos         %d, %d", curpos.x, curpos.y);
-		LG("sbPos          %d, %d", sbx.Get(), sby.Get());
-		LG("sbTotal        %d, %d", sbx.GetTotal(), sby.GetTotal());
-		LG("sbPage         %d, %d", sbx.GetPage(), sby.GetPage());
-		LG("Size           %d, %d", GetSize().cx, GetSize().cy);
-		LG("fixed_width    %d", fixed_width);
-		LG("fixed_height   %d", fixed_height);
-		LG("total_width    %d", total_width);
-		LG("total_height   %d", total_height);
-		LG("row_modified   %d", row_modified);
-		LG("selected_rows  %d", selected_rows);
-		LG("selected_items %d", selected_items);
-		LG("---- END --------------");
+		LLOG("---- DEBUG 0 ----------");
+		LLOG("firstVisCol " << firstVisCol);
+		LLOG("lastVisCol " << lastVisCol);
+		LLOG("firstVisRow " << firstVisRow);
+		LLOG("lastVisRow " << lastVisRow);
+		LLOG("firstCol " << firstCol);
+		LLOG("firstRow " << firstRow);
+		LLOG("lastCol " << lastCol);
+		LLOG("lastRow " << lastRow);
+		LLOG("total_cols " << total_cols);
+		LLOG("total_rows " << total_rows);
+		LLOG("curpos " << curpos.x << curpos.y);
+		LLOG("sbPos " << sbx.Get() << sby.Get());
+		LLOG("sbTotal " << sbx.GetTotal() << sby.GetTotal());
+		LLOG("sbPage " << sbx.GetPage() << sby.GetPage());
+		LLOG("Size " << GetSize().cx << GetSize().cy);
+		LLOG("fixed_width " << fixed_width);
+		LLOG("fixed_height " << fixed_height);
+		LLOG("total_width " << total_width);
+		LLOG("total_height " << total_height);
+		LLOG("row_modified " << row_modified);
+		LLOG("selected_rows " << selected_rows);
+		LLOG("selected_items " << selected_items);
+		LLOG("---- END --------------");
 	}
 	if(n == 1)
 	{
-		LG("---- DEBUG 1 ----------");
+		LLOG("---- DEBUG 1 ----------");
 		for(int i = 0; i < total_cols; i++)
 		{
-			LG("Col %d h:%d p:%d s:%d", i, hitems[i].hidden, hitems[i].npos, hitems[i].nsize);
-			//LG("ismin %d ismax %d", hitems[i].ismin, hitems[i].ismax);
+			LLOG(Format("Col %d h:%d p:%d s:%d", i, hitems[i].hidden, hitems[i].npos, hitems[i].nsize));
+			//LLOG("ismin %d ismax %d", hitems[i].ismin, hitems[i].ismax);
 		}
-		LG("---- END --------------");
+		LLOG("---- END --------------");
 	}
 	if(n == 2)
 	{
-		LG("---- DEBUG 2 ----------");
+		LLOG("---- DEBUG 2 ----------");
 		for(int i = 0; i < total_rows; i++)
 		{
-			LG("Row %d p:%d s:%d", i, vitems[i].npos, vitems[i].nsize);
+			LLOG(Format("Row %d p:%d s:%d", i, vitems[i].npos, vitems[i].nsize));
 		}
-		LG("---- END --------------");
+		LLOG("---- END --------------");
 	}
 	if(n == 3)
 	{
 		Point p = GetCtrlPos(focused_ctrl);
-		LG(2, "Focused %x (%d, %d)", focused_ctrl, p.x, p.y);
+		LLOG(Format("Focused %x (%d, %d)", focused_ctrl, p.x, p.y));
 	}
 }
 

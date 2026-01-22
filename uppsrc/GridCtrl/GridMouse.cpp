@@ -1,6 +1,8 @@
 #include "GridCtrl.h"
 
 namespace Upp {
+
+#define LLOG(x) // DLOG(x)
 	
 int GridCtrl::GetMouseCol(Point &p, bool relative, bool fixed, bool full)
 {
@@ -254,7 +256,7 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 
 	if(live_cursor && popup.IsOpen())
 	{
-		LG(2, "MouseMove:LiveCursor");
+		LLOG("MouseMove:LiveCursor");
 		if(IsMouseBody(p))
 			SetCursor0(p, CU_MOUSE | CU_HIGHLIGHT);
 		else
@@ -364,7 +366,7 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 
 void GridCtrl::LeftUp(Point p, dword keyflags)
 {
-	LG(0, "LeftUp");
+	LLOG("LeftUp");
 
 	ReleaseCapture();
 	Refresh();
@@ -375,7 +377,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 
 	if(moving_header)
 	{
-		LG(0, "moving_header");
+		LLOG("moving_header");
 		pophdr.Close();
 
 		moving_header = false;
@@ -496,7 +498,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 
 void GridCtrl::LeftDouble(Point p, dword keyflags)
 {
-	LG(0, "LeftDouble");
+	LLOG("LeftDouble");
 
 	if(full_col_resizing && curSplitCol >= 0)
 		return;
@@ -555,7 +557,7 @@ void GridCtrl::MouseLeave()
 {
 	if(live_cursor)
 	{
-		LG(2, "MouseLeave:LiveCursor");
+		LLOG("MouseLeave:LiveCursor");
 		SetCursor0(-1, -1, CU_HIGHLIGHT);
 	}
 	UpdateHighlighting(GS_BORDER, Point(0, 0));
