@@ -413,7 +413,8 @@ void ChHostSkin()
 		                      : get_i(i, 192, 200, 128, 128);
 		s.vthumb[i] = MakeRoundScrollbarThumb(DPI(16), DPI(4), GrayColor(g));
 		s.hthumb[i] = RotateClockwise(s.vthumb[i]);
-		s.hupper[i] = s.hlower[i] = s.vupper[i] = s.vlower[i] = IsDarkTheme() ? Color(20, 20, 20) : Color(240, 240, 240);
+		s.hupper[i] = s.hlower[i] =
+		s.vupper[i] = s.vlower[i] = Blend(SColorFace(), SWhite(), 50);
 	}
 
 #if 0 // let us play it safe....
