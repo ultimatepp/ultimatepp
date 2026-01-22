@@ -6,7 +6,7 @@ namespace Upp {
 
 void GridCtrl::Paint(Draw &w)
 {
-	static int paintcnt = 0;
+	[[maybe_unused]] static int paintcnt = 0;
 
 	Font stdfont(StdFont());
 

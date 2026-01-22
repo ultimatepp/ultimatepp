@@ -6454,7 +6454,7 @@ void GridCtrl::Debug(int n)
 	}
 	if(n == 3)
 	{
-		Point p = GetCtrlPos(focused_ctrl);
+		[[maybe_unused]] Point p = GetCtrlPos(focused_ctrl);
 		LLOG(Format("Focused %x (%d, %d)", focused_ctrl, p.x, p.y));
 	}
 }
