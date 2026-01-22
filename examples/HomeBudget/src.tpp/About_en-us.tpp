@@ -9,7 +9,8 @@ topic "";
 [ {{7295:2705f0;g0; [s0;l256;~~~1152; [4 Author:                                        
          ]&]
 [s0;l480;i150;O0;~~~1152; [4 Daniel Kos]&]
-[s0;l480;i150;O0;~~~1152; [*^http`:`/`/dgs`.pac`.pl^4 DIGITAL SOFTWARE]&]
+[s0;l480;i150;O0;~~~1152; [*^https`:`/`/www`.digitalsoftware`.pl`/^4 DIGITAL 
+SOFTWARE]&]
 [s0;4 ]
 :: [s0;%- 
 @@image:743&656

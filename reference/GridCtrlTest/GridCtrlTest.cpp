@@ -54,16 +54,11 @@ void App::TabChange()
 		panel.Init(testPropertyGrid.grid);
 	else if(t == 4)
 		panel.Init(testFocusLost.grid0);
-	
-	dlog->Clear();
 }
 		
 void App::Serialize(Stream &s)
 {
 	SerializePlacement(s);
-	s % panel.level;
-	if(s.IsLoading())
-		dlev = ~panel.level;		
 }
 
 void App::Resort()

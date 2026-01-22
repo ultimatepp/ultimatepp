@@ -35,10 +35,7 @@ void TestArrayCtrl::Init()
 	arr.Inserting();
 	arr.SetLineCy(DPI(20));
 
-	const int total_cols = 15;
-	const int total_rows = 10;
-	
-	for(int i = 0; i < total_cols; i++)
+	for(int i = 0; i < 15; i++)
 	{
 		String name = Format("Column %d", i + 1);
 		int size = rand() % 40 + 50;
