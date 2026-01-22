@@ -83,24 +83,6 @@ Panel::Panel()
 	
 	clear_grid                << [=] { Actions(4); };
 	reset_grid                << [=] { Actions(5); };
-
-	#ifndef flagDEBUG
-	debug.Hide();
-	level.Hide();
-	#else
-	clear                     << [=] { Actions(400); };
-	debug                     << [=] { Actions(401); };
-	level                     << [=] { Actions(402); };
-	#endif
-		
-	level.Add(0, "All")
-	     .Add(1, "1")
-	     .Add(2, "2")
-	     .Add(3, "3");
-	     
-	level <<= 0;
-	
-	dlog = &log0;
 }
 
 void Panel::Init(GridCtrl& g)
@@ -245,14 +227,8 @@ void Panel::Actions(int n)
 		case 5:
 			grid->Reset();
 			break;
-		case 400:
-			log0.Clear();
-			break;
 		case 401:
 			grid->Debug(0);
-			break;
-		case 402:
-			dlev = ~level;
 			break;
 		case 403:
 			grid->ReSort();
