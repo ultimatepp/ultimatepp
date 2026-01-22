@@ -1,6 +1,8 @@
 #include "GridCtrl.h"
 
 namespace Upp {
+	
+#define LLOG(x) // DLOG(x)
 
 void GridCtrl::Paint(Draw &w)
 {
@@ -21,11 +23,11 @@ void GridCtrl::Paint(Draw &w)
 	bool skip;
 	Rect r;
 
-	LG(0, "---- Paint(%d)", ++paintcnt);
+	LLOG("---- Paint " << ++paintcnt);
 
 	if(total_cols <= 1 || total_rows == 0)
 	{
-		LG(0, "---- Paint(%d) Empty.", paintcnt);
+		LLOG("---- Paint " << paintcnt << " Empty.");
 		w.DrawRect(sz, SColorPaper);
 		return;
 	}
@@ -36,8 +38,8 @@ void GridCtrl::Paint(Draw &w)
 	if(firstCol < 0) firstCol = GetFirstVisCol(fixed_width);
 	if(firstRow < 0) firstRow = GetFirstVisRow(fixed_height);
 
-	LG(0, "firstCol %d", firstCol);
-	LG(0, "firstRow %d", firstRow);
+	LLOG("firstCol " << firstCol);
+	LLOG("firstRow " << firstRow);
 
 	int en = IsShowEnabled() ? 0 : GD::READONLY;
 
@@ -60,7 +62,7 @@ void GridCtrl::Paint(Draw &w)
 
 	if(w.IsPainting(r) && total_cols > 1)
 	{
-		LG(0, "Top header");
+		LLOG("Top header");
 		w.Clip(r);
 
 		x = hitems[total_cols - 1].nRight(sbx);
@@ -190,7 +192,7 @@ void GridCtrl::Paint(Draw &w)
 
 	if(can_paint && w.IsPainting(r))
 	{
-		LG(0, "Left header");
+		LLOG("Left header");
 		w.Clip(r);
 		y = vitems[total_rows - 1].nBottom(sby);
 
@@ -277,7 +279,7 @@ void GridCtrl::Paint(Draw &w)
 
 	if(can_paint && w.IsPainting(r))
 	{
-		LG(0, "Body");
+		LLOG("Body");
 		w.Clip(r);
 
 		x = hitems[total_cols - 1].nRight(sbx);
@@ -511,7 +513,7 @@ void GridCtrl::Paint(Draw &w)
 	if(++paint_flag > 100)
 		paint_flag = 0;
 
-	LG(0, "---- Paint(%d).", paintcnt);
+	LLOG("---- Paint " << paintcnt);
 }
 
 };

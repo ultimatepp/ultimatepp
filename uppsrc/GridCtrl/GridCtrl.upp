@@ -18,8 +18,6 @@ file
 	GridBase.cpp,
 	GridSort.cpp,
 	GridCtrl.iml,
-	GridUtils.h,
-	GridUtils.cpp,
 	ToDo.txt,
 	changelog.txt,
 	GridCtrl.t charset "UTF-8",

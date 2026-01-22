@@ -6,7 +6,6 @@ namespace Upp {
 #define  IMAGECLASS GridImg
 #define  IMAGEFILE <GridCtrl/GridCtrl.iml>
 #include <Draw/iml_source.h>
-#include "GridUtils.h"
 
 
 GridDisplay& StdGridDisplay()
@@ -287,13 +286,11 @@ int GridDisplay::GetLinesCount(int cx, const wchar* s, const Font& font, bool wr
 		
 	const wchar * e = t;
 	int ccx = max(5, cx);
-	int enters = 0;
 	int lines = 0;
 
 	while(*p)
 	{
 		bool nextline = *p == '\n';
-		enters += int(nextline);
 
 		if(nextline || *(p + 1) == '\0')
 		{
@@ -304,7 +301,7 @@ int GridDisplay::GetLinesCount(int cx, const wchar* s, const Font& font, bool wr
 				{
 					lines += tcx / ccx;
 					if(tcx % ccx > 0)
-						lines++;						
+						lines++;
 				}
 				else
 					lines++;
