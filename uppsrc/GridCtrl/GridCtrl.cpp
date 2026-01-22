@@ -6453,9 +6453,7 @@ void GridCtrl::Debug(int n)
 		LLOG("---- END --------------");
 	}
 	if(n == 3)
-	{
-		LLOG(Format("Focused %x ") << GetCtrlPos(focused_ctrl));
-	}
+		LLOG(Format("Focused %x (%d, %d)", focused_ctrl, p.x, p.y));
 }
 
 void GridCtrl::Serialize(Stream &s)
