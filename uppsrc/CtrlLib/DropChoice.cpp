@@ -73,9 +73,9 @@ bool DropChoice::DataSelect(Ctrl& owner, DropChoice& drop, const String& appends
 	if(g.IsVoid()) return false;
 	Value s = owner.GetData();
 	if(!appends.IsVoid()) {
-		String txt = s;
+		String txt = ~s;
 		if(!txt.IsEmpty()) txt.Cat(appends);
-		txt.Cat((String)g);
+		txt.Cat(~g);
 		s = txt;
 	}
 	else
