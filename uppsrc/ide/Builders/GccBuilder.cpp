@@ -632,6 +632,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 
 bool GccBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
 {
+	MakeBuild::PkgConfig(GetIdeWorkspace(), config, pkg_config);
+
 	Package pkg;
 	pkg.Load(PackageFile(package));
 	String packageDir = PackageDirectory(package);

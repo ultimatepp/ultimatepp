@@ -306,7 +306,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 				sNoBlock(epipe[0]);
 				close(epipe[1]); epipe[1]=-1;
 			}
-			// we call exec instead of Exit, because exit doesn't behave nicelly with threads
+			// we call exec instead of Exit, because exit doesn't behave nicely with threads
 			execl("/usr/bin/true", "[closing fork]", (char*)NULL);
 			// only call abort when execl fails
 			abort(); // do not use exit here: it calls global destructors...

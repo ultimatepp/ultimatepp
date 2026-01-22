@@ -77,7 +77,7 @@ public:
 	One<Builder> CreateBuilder(Host *host);
 	String OutDir(const Index<String>& cfg, const String& package,
 	              const VectorMap<String, String>& bm, bool use_target = false);
-	void PkgConfig(const Workspace& wspc, const Index<String>& config, Index<String>& pkg_config);
+	static void PkgConfig(const Workspace& wspc, const Index<String>& config, Index<String>& pkg_config);
 	void MainConf(const Workspace& wspc);
 	bool BuildPackage(const Workspace& wspc, int pkindex, int pknumber, int pkcount,
 	                  String mainparam, String outfile, Vector<String>& linkfile, Vector<String>& immfile,
