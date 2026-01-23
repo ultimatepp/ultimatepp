@@ -302,7 +302,7 @@ String GetTextClip(const String& text, const String& fmt)
 
 const char *ClipFmtsImage()
 {
-	return "png";
+	return "image;png";
 }
 
 bool AcceptImage(PasteClip& clip)
