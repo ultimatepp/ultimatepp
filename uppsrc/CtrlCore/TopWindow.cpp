@@ -509,9 +509,8 @@ void TopWindow::ShutdownWindows()
 					if(w)
 						w->Close();
 				}
-				if(!w || !w->IsOpen()) {
+				if(!w || !w->IsOpen())
 					break;
-				}
 			}
 		}
 	}
