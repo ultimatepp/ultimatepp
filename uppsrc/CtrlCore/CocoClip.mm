@@ -43,17 +43,17 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	};
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
-	[pasteboard clearContents];
 
-	if([type isEqualTo:NSPasteboardTypeString]) {
+	if([type isEqualToString:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
 		if(raw.GetCount() == 0 && source)
 			raw = source->GetDropData("text");
+		[pasteboard clearContents];
 	    [pasteboard setString:[NSString stringWithUTF8String:raw]
 	                forType:type];
 		return;
 	}
-	else if([type isEqualTo:NSPasteboardTypeFileURL]) {
+	else if([type isEqualToString:NSPasteboardTypeFileURL]) {
 		Upp::String raw = render("files");
 		Upp::Value v = ParseJSON(raw);
 		if(!IsValueArray(v))
@@ -65,16 +65,20 @@ NSPasteboard *Pasteboard(bool dnd = false)
 			NSString *path = [NSString stringWithUTF8String:~va[i]];
 			[array addObject:[NSURL fileURLWithPath:path]];
 		}
+		[pasteboard clearContents];
 		[pasteboard writeObjects:array];
 		return;
 	}
+
+	bool is_png = [type isEqualToString:NSPasteboardTypePNG];
+	bool is_rtf = [type isEqualToString:NSPasteboardTypeRTF];
+	Upp::String fmt = is_png ? "png" : is_rtf ? "rtf" : Upp::ToString(type);
 	
-	Upp::String fmt = [type isEqualTo:NSPasteboardTypePNG] ? "png" :
-	                  [type isEqualTo:NSPasteboardTypeRTF] ? "rtf" :
-	                                                          Upp::ToString(type);
 	Upp::String raw = render(fmt);
 	if(raw.GetCount() == 0 && source)
 		raw = source->GetDropData(fmt);
+	if(is_png || is_rtf)
+		[pasteboard clearContents];
 	[pasteboard setData:[NSData dataWithBytes:~raw length:raw.GetCount()] forType:type];
 }
 
@@ -298,7 +302,7 @@ String GetTextClip(const String& text, const String& fmt)
 
 const char *ClipFmtsImage()
 {
-	return "image;png";
+	return "png";
 }
 
 bool AcceptImage(PasteClip& clip)
