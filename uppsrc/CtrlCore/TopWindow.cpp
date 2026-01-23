@@ -500,12 +500,15 @@ void TopWindow::ShutdownWindows()
 		again = false;
 		for(int i = 0; i < tc.GetCount(); i++) {
 			Ptr<TopWindow> w = dynamic_cast<TopWindow *>(tc[i]);
-			if(w && w->IsOpen() && w->IsEnabled()) {
+			if(w && w->IsOpen()) {
 				again = true;
 				w->SetForeground();
 				w->ShutdownWindow();
-				if(w && w->IsOpen())
+				if(w && w->IsOpen()) {
 					w->WhenClose();
+					if(w)
+						w->Close();
+				}
 				if(!w || !w->IsOpen())
 					break;
 			}

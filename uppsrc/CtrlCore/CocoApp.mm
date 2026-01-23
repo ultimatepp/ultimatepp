@@ -45,6 +45,11 @@ NSMenu *Cocoa_DockMenu();
 	Upp::Ctrl::PostReSkin();
 }
 
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+	Upp::GuiLock __;
+	Upp::TopWindow::ShutdownWindows();
+	return NSTerminateCancel;
+}
 
 @end
 
