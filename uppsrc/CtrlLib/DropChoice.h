@@ -12,8 +12,9 @@ protected:
 	struct Popup : Ctrl {
 		PopUpTable *table;
 
-		virtual void Deactivate() { table->PopupDeactivate(); }
-		virtual void CancelMode() { table->PopupCancelMode(); }
+		void Paint(Draw& w) override { w.DrawRect(GetSize(), SColorPaper()); }
+		void Deactivate() override   { table->PopupDeactivate(); }
+		void CancelMode() override   { table->PopupCancelMode(); }
 	};
 
 	int          droplines;
@@ -47,8 +48,8 @@ protected:
 	struct PopupArrayCtrl : ArrayCtrl {
 		PopUpList *list;
 
-		virtual void LeftUp(Point p, dword keyflags);
-		virtual bool Key(dword key, int);
+		void LeftUp(Point p, dword keyflags) override;
+		bool Key(dword key, int) override;
 	};
 
 	struct Popup : Ctrl {
@@ -56,8 +57,9 @@ protected:
 		PopupArrayCtrl ac;
 		bool           closing = false;
 
-		virtual void Deactivate() { if(!closing) list->PopupDeactivate(); }
-		virtual void CancelMode() { if(!closing) list->PopupCancelMode(); }
+		void Paint(Draw& w) override { w.DrawRect(GetSize(), SColorPaper()); }
+		void Deactivate() override   { if(!closing) list->PopupDeactivate(); }
+		void CancelMode() override   { if(!closing) list->PopupCancelMode(); }
 
 		Popup(PopUpList *list);
 	};

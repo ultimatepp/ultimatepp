@@ -97,7 +97,6 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		SetFocus();
 		Ctrl::ProcessEvents();
 		Animate(*popup, rt, GUIEFFECT_SLIDE);
-//		Ctrl::Remove();
 	}
 	if(!open) {
 		popup->SetRect(rt);
@@ -107,6 +106,7 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		SetFocus();
 		open = true;
 	}
+	SizePos(); // the size of popup can be slightly bigger than requested
 	inpopup--;
 }
 
