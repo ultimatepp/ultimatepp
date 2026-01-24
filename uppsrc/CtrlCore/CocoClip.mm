@@ -16,6 +16,13 @@ NSString *PasteboardType(const String& fmt)
 	                   [NSString stringWithUTF8String:~fmt]);
 }
 
+bool IsStandardPasteboardType(NSString *type)
+{
+	return [type isEqual:NSPasteboardTypeString] || [type isEqual:NSPasteboardTypePNG] ||
+	       [type isEqual:NSPasteboardTypeFileURL] || [type isEqual:NSPasteboardTypeURL] ||
+	       [type isEqual:NSPasteboardTypeRTF];
+}
+
 NSPasteboard *Pasteboard(bool dnd = false)
 {
 	return dnd ? [NSPasteboard pasteboardWithName:NSPasteboardNameDrag] : [NSPasteboard generalPasteboard];
@@ -34,6 +41,8 @@ NSPasteboard *Pasteboard(bool dnd = false)
 @implementation CocoClipboardOwner
 -(void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
+	RLOG(Upp::ToString(type));
+	
 	Upp::GuiLock __;
 	auto render = [&](const Upp::String& fmt) -> Upp::String {
 		int q = data.Find(fmt);
@@ -43,9 +52,12 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	};
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
-	[pasteboard clearContents];
+	if(Upp::IsStandardPasteboardType(type)) {
+		RLOG("Standard type - clearning contents!");
+		[pasteboard clearContents];
+	}
 
-	if([type isEqualTo:NSPasteboardTypeString]) {
+	if([type isEqual:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
 		if(raw.GetCount() == 0 && source)
 			raw = source->GetDropData("text");
@@ -53,7 +65,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	                forType:type];
 		return;
 	}
-	else if([type isEqualTo:NSPasteboardTypeFileURL]) {
+	else if([type isEqual:NSPasteboardTypeFileURL]) {
 		Upp::String raw = render("files");
 		Upp::Value v = ParseJSON(raw);
 		if(!IsValueArray(v))
@@ -68,10 +80,11 @@ NSPasteboard *Pasteboard(bool dnd = false)
 		[pasteboard writeObjects:array];
 		return;
 	}
+
+	bool is_png = [type isEqual:NSPasteboardTypePNG];
+	bool is_rtf = [type isEqual:NSPasteboardTypeRTF];
+	Upp::String fmt = is_png ? "png" : is_rtf ? "rtf" : Upp::ToString(type);
 	
-	Upp::String fmt = [type isEqualTo:NSPasteboardTypePNG] ? "png" :
-	                  [type isEqualTo:NSPasteboardTypeRTF] ? "rtf" :
-	                                                          Upp::ToString(type);
 	Upp::String raw = render(fmt);
 	if(raw.GetCount() == 0 && source)
 		raw = source->GetDropData(fmt);
