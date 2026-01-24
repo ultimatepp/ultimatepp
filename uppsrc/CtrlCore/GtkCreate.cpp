@@ -144,7 +144,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		if(findarg(gtk_window_get_type_hint(gtk()), GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
 			tw->SyncSizeHints();
 
-	if(IsWayland()) {
+	if(IsWayland() || IsPopUp()) {
 		gtk_window_set_default_size(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
 		gtk_window_move(gtk(), LSC(r.left), LSC(r.top));
 		gtk_window_resize(gtk(), LSC(r.GetWidth()), LSC(r.GetHeight()));
