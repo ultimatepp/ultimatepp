@@ -16,6 +16,13 @@ NSString *PasteboardType(const String& fmt)
 	                   [NSString stringWithUTF8String:~fmt]);
 }
 
+bool IsStandardPasteboardType(NSString *type)
+{
+	return [type isEqual:NSPasteboardTypeString] || [type isEqual:NSPasteboardTypePNG] ||
+	       [type isEqual:NSPasteboardTypeFileURL] || [type isEqual:NSPasteboardTypeURL] ||
+	       [type isEqual:NSPasteboardTypeRTF];
+}
+
 NSPasteboard *Pasteboard(bool dnd = false)
 {
 	return dnd ? [NSPasteboard pasteboardWithName:NSPasteboardNameDrag] : [NSPasteboard generalPasteboard];
@@ -34,6 +41,8 @@ NSPasteboard *Pasteboard(bool dnd = false)
 @implementation CocoClipboardOwner
 -(void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
+	RLOG(Upp::ToString(type));
+	
 	Upp::GuiLock __;
 	auto render = [&](const Upp::String& fmt) -> Upp::String {
 		int q = data.Find(fmt);
@@ -43,12 +52,15 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	};
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
+	if(Upp::IsStandardPasteboardType(type)) {
+		RLOG("Standard type - clearning contents!");
+		[pasteboard clearContents];
+	}
 
 	if([type isEqual:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
 		if(raw.GetCount() == 0 && source)
 			raw = source->GetDropData("text");
-		[pasteboard clearContents];
 	    [pasteboard setString:[NSString stringWithUTF8String:raw]
 	                forType:type];
 		return;
@@ -65,7 +77,6 @@ NSPasteboard *Pasteboard(bool dnd = false)
 			NSString *path = [NSString stringWithUTF8String:~va[i]];
 			[array addObject:[NSURL fileURLWithPath:path]];
 		}
-		[pasteboard clearContents];
 		[pasteboard writeObjects:array];
 		return;
 	}
@@ -77,8 +88,6 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	Upp::String raw = render(fmt);
 	if(raw.GetCount() == 0 && source)
 		raw = source->GetDropData(fmt);
-	if(is_png || is_rtf)
-		[pasteboard clearContents];
 	[pasteboard setData:[NSData dataWithBytes:~raw length:raw.GetCount()] forType:type];
 }
 
