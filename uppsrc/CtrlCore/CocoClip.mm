@@ -44,7 +44,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
 
-	if([type isEqualToString:NSPasteboardTypeString]) {
+	if([type isEqual:NSPasteboardTypeString]) {
 		Upp::String raw = render("text");
 		if(raw.GetCount() == 0 && source)
 			raw = source->GetDropData("text");
@@ -53,7 +53,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	                forType:type];
 		return;
 	}
-	else if([type isEqualToString:NSPasteboardTypeFileURL]) {
+	else if([type isEqual:NSPasteboardTypeFileURL]) {
 		Upp::String raw = render("files");
 		Upp::Value v = ParseJSON(raw);
 		if(!IsValueArray(v))
@@ -70,8 +70,8 @@ NSPasteboard *Pasteboard(bool dnd = false)
 		return;
 	}
 
-	bool is_png = [type isEqualToString:NSPasteboardTypePNG];
-	bool is_rtf = [type isEqualToString:NSPasteboardTypeRTF];
+	bool is_png = [type isEqual:NSPasteboardTypePNG];
+	bool is_rtf = [type isEqual:NSPasteboardTypeRTF];
 	Upp::String fmt = is_png ? "png" : is_rtf ? "rtf" : Upp::ToString(type);
 	
 	Upp::String raw = render(fmt);
