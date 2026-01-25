@@ -70,8 +70,12 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 	w.gdk = nullptr;
 	
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
-	if(popup)
+	if(popup) {
 		gtk_window_set_decorated(gtk(), FALSE);
+		if(IsWayland() && !owner) {
+			gtk_window_set_titlebar(gtk(), gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+		}
+	}
 	gtk_window_set_type_hint(gtk(),
 	            popup ? /*owner ? GDK_WINDOW_TYPE_HINT_COMBO : */GDK_WINDOW_TYPE_HINT_POPUP_MENU
 	                  : tw && tw->tool ? GDK_WINDOW_TYPE_HINT_UTILITY
