@@ -21,8 +21,8 @@ However, only two are currently utilized.&]
 [s2; &]
 [s2; The following example shows how the structure is used, assuming 
 the presence of the following entries in the [* MyApp.key] file:&]
-[s2;l480; [1 KEY(SAVEFILE, `"Save`", K`_CTRL`_S)]&]
-[s2;l480; [1 KEY2(CUTLINE, `"Cut line`", K`_CTRL`_Y, K`_CTRL`_L)]&]
+[s2;l480; [1 KEY(SAVE`_FILE, `"Save`", K`_CTRL`_S)]&]
+[s2;l480; [1 KEY2(CUT`_LINE, `"Cut line`", K`_CTRL`_Y, K`_CTRL`_L)]&]
 [s2;~~~384;@(89) &]
 [s2;~~~384; In this case, the file should be imported as follows 
 in the [* .cpp] file:&]
@@ -38,8 +38,8 @@ trlLib][C@(0.0.255)1 /][C@(35.38.41)1 key`_source][C@(0.0.255)1 .][C@(35.38.41)1
 [s2;~~~384; The structure can now be used in various contexts, such 
 as when creating a menu bar entry, as shown below:&]
 [s2;l480;~~~384;%- [C@(35.38.41)1 menu][C@(0.0.255)1 .][C@(35.38.41)1 AddMenu(MyAppKeys`::][C1 A
-K`_SAVE][C@(35.38.41)1 , ][C@(0.0.255)1 `[`=`]][C@(35.38.41)1  `{ Save(); 
-`});]&]
+K`_SAVE`_FILE][C@(35.38.41)1 , ][C@(0.0.255)1 `[`=`]][C@(35.38.41)1  
+`{ Save(); `});]&]
 [s2;~~~384; &]
 [s2;~~~384; Typically, at the beginning of your file, you can use 
 [* using namespace MyAppKeys] to simplify the line above to:&]
@@ -47,8 +47,8 @@ K`_SAVE][C@(35.38.41)1 , ][C@(0.0.255)1 `[`=`]][C@(35.38.41)1  `{ Save();
 MyAppsKeys;]&]
 [s2;l480;~~~384~288;%- [C@(35.38.41)1 ...]&]
 [s2;l480;~~~384~288;%- [C@(35.38.41)1 menu][C@(0.0.255)1 .][C@(35.38.41)1 AddMenu(][C1 AK`_SA
-VE][C@(35.38.41)1 , ][C@(0.0.255)1 `[`=`]][C@(35.38.41)1  `{ Save(); 
-`});]&]
+VE`_FILE][C@(35.38.41)1 , ][C@(0.0.255)1 `[`=`]][C@(35.38.41)1  `{ 
+Save(); `});]&]
 [s2;~~~384; &]
 [s2;~~~384; In this case,[*  AK`_SAVE] is a [* KeyInfo ]structure.&]
 [s2;~~~384; &]
