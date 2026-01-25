@@ -118,6 +118,8 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 		ONCELOCK {
 			UpdateWindowFrameMargins();
 		}
+		if(IsWayland() && !owner)
+			gtk_window_set_titlebar(gtk(), gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
 		top->client = top->window;
 	}
 
