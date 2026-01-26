@@ -259,6 +259,9 @@ void TopicEditor::FileBar(Bar& bar)
 	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
 	bar.Add("Export to HTML..", THISBACK(ExportHTML));
 	bar.Add("Export group to HTML..", THISBACK(ExportGroupHTML));
+	bar.Add("Export as GitHub Markdown", [=] {
+		ExportMarkdown(editor.GetQTF());
+	});
 }
 
 void TopicEditor::EditMenu(Bar& bar)
@@ -280,10 +283,6 @@ void TopicEditor::EditMenu(Bar& bar)
 	   .Check(allfonts);
 	bar.Separator();
 	bar.Add("Table", THISBACK(TableMenu));
-	bar.Separator();
-	bar.Add("Export as GitHub Markdown", [=] {
-		ExportMarkdown(editor.GetQTF());
-	});
 }
 
 void TopicEditor::FormatMenu(Bar& bar)
