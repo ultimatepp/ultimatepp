@@ -499,6 +499,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	
 	local_dnd_copy = false; // macos does not have ability to change action in performDragOperation
 
+	RLOG("DragImage");
 	[nswindow dragImage:nsimg
 	                 at:p
 	             offset:NSMakeSize(0, 0)
@@ -510,8 +511,8 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	ClipboardOwner(true)->source = NULL;
 
 	[pool release];
-
     CGImageRelease(cgimg);
+    ReleaseCapture();
     
     if(local_dnd_copy) // action was local and changed to copy in DragAndDrop
         return DND_COPY;
