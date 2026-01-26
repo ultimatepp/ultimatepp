@@ -49,6 +49,10 @@ void IdeQtfDes::Save()
 void IdeQtfDes::EditMenu(Bar& menu)
 {
 	EditTools(menu);
+	menu.Separator();
+	menu.Add("Export as GitHub Markdown", [=] {
+		ExportMarkdown(GetQTF());
+	});
 }
 
 void IdeQtfDes::Serialize(Stream& s)

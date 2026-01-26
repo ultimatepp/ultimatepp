@@ -1,0 +1,6 @@
+LAYOUT(ExportMDLayout, 400, 488)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("\001[g Markdown text copied! Since Markdown doesn't natively embed images, please use the table to manually copy images for their respective placeholders (IMAGE:N).")).SetVAlign(Upp::ALIGN_TOP).LeftPosZ(160, 236).TopPosZ(4, 88))
+	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 150).TopPosZ(4, 480))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).LeftPosZ(332, 64).TopPosZ(460, 24))
+END_LAYOUT
+

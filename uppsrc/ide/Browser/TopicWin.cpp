@@ -280,6 +280,10 @@ void TopicEditor::EditMenu(Bar& bar)
 	   .Check(allfonts);
 	bar.Separator();
 	bar.Add("Table", THISBACK(TableMenu));
+	bar.Separator();
+	bar.Add("Export as GitHub Markdown", [=] {
+		ExportMarkdown(editor.GetQTF());
+	});
 }
 
 void TopicEditor::FormatMenu(Bar& bar)

@@ -14,5 +14,7 @@ file
 	TreeDes.cpp,
 	Xml.cpp,
 	Json.cpp,
-	md.cpp;
+	md.cpp,
+	export_md.cpp,
+	Designers.lay;
 

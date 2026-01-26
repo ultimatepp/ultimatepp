@@ -116,4 +116,6 @@ void QTFEdit(String& text);
 
 void IdeHelpButton(Button& help, const String& link);
 
+void ExportMarkdown(const char *qtf);
+
 #endif

@@ -200,7 +200,8 @@ RTFParser::Cell::Cell()
 RTFParser::RTFParser(const char *rtf)
 :	rtf(rtf)
 {
-#ifdef _DEBUG0
+#ifdef _DEBUG
+	_DBG_
 	SaveFile(ConfigFile("rtfparser.rtf"), rtf);
 	LOG(rtf);
 #endif
@@ -543,6 +544,13 @@ bool RTFParser::PassEndGroup(int level)
 {
 	if(Token() == T_EOF)
 		return true;
+	if(PassQ("pict")) { // insert anchored images too
+		Flush(false, 1);
+		ReadPict();
+		Flush(false, 1);
+		para.part.Clear();
+		output.Cat(para);
+	}
 	if(token != T_END_GROUP)
 		return false;
 	is_full = false;
@@ -671,6 +679,7 @@ void RTFParser::ReadFaceTable()
 		Face n;
 		n.face = Font::ARIAL;
 		n.charset = default_charset;
+		String facename;
 		while(!PassEndGroup()) {
 			if(PassCmd("f"))
 				fx = command_arg;
@@ -716,13 +725,9 @@ void RTFParser::ReadFaceTable()
 					case 255: n.charset = CHARSET_WIN1252; break; // OEM
 				}
 			}
-/*			else if(PassText()) {
-				String s = FromUnicode(text, charset);
-				if(!s.IsEmpty() && *s.Last() == ';')
-					s.Trim(s.GetLength() - 1);
-				if(!s.IsEmpty())
-					f = Font::FindFaceNameIndex(s);
-			}
+			else if(PassText())
+				facename = text.ToString();
+			/*
 			else if(PassGroup()) {
 				int level = Level();
 				if(PassCmd("falt") && PassText() && f < 0)
@@ -733,7 +738,10 @@ void RTFParser::ReadFaceTable()
 				Skip();
 		}
 		if(fx >= 0 && fx < MAX_FONTS) {
-//			if(f < 0) // Cxl 2005-11-29
+			facename.TrimEnd(";");
+			int fi = Font::FindFaceNameIndex(facename);
+			if(fi >= 0 && (Font::GetFaceInfo(fi) & Font::FIXEDPITCH))
+				n.face = Font::MONOSPACE;
 			if(default_font == fx) {
 				plain_format.Face(n.face);
 				plain_charset = n.charset;
