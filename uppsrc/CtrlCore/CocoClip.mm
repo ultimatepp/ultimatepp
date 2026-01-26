@@ -499,7 +499,6 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	
 	local_dnd_copy = false; // macos does not have ability to change action in performDragOperation
 
-	RLOG("DragImage");
 	[nswindow dragImage:nsimg
 	                 at:p
 	             offset:NSMakeSize(0, 0)
