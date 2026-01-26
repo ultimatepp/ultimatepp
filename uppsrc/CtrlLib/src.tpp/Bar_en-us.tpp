@@ -229,12 +229,14 @@ issues.&]
 [s5;:Bar`:`:MenuGap`(int`):%- [@(0.0.255) void]_[* MenuGap]([@(0.0.255) int]_[*@3 size]_`=_[@3 8
 ])&]
 [s5;:Bar`:`:MenuGapRight`(`):%- [@(0.0.255) void]_[* MenuGapRight]()&]
-[s5;:Bar`:`:AddMenu`(Ctrl`&`):%- [@(0.0.255) void]_[* AddMenu]([_^Ctrl^ Ctrl][@(0.0.255) `&]_
-[*@3 ctrl])&]
-[s5;:Bar`:`:AddMenu`(Ctrl`&`,Size`):%- [@(0.0.255) void]_[* AddMenu]([_^Ctrl^ Ctrl][@(0.0.255) `&
-]_[*@3 ctrl], [_^topic`:`/`/Core`/src`/Size`_en`-us`#Upp`:`:Size^ Size]_[*@3 sz])&]
-[s5;:Bar`:`:AddMenu`(Ctrl`&`,int`,int`):%- [@(0.0.255) void]_[* AddMenu]([_^Ctrl^ Ctrl][@(0.0.255) `&
-]_[*@3 ctrl], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0])&]
+[s5;:Bar`:`:AddMenu`(Ctrl`&`):%- [@(0.0.255) void]_[* AddMenu]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s5;:Bar`:`:AddMenu`(Ctrl`&`,Size`):%- [@(0.0.255) void]_[* AddMenu]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl][@(0.0.255) `&]_[*@3 ctrl], [_^topic`:`/`/Core`/src`/Size`_en`-us`#Upp`:`:Size^ Siz
+e]_[*@3 sz])&]
+[s5;:Bar`:`:AddMenu`(Ctrl`&`,int`,int`):%- [@(0.0.255) void]_[* AddMenu]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl][@(0.0.255) `&]_[*@3 ctrl], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0])
+&]
 [s5;:Upp`:`:Bar`:`:AddMenu`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^topic`:`/`/CtrlLib`/src`/Bar`_en`-us`#Bar`:`:Item`:`:struct^ I
 tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 text], [@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
