@@ -513,7 +513,7 @@ public:
 		cc.clock      <<= THISBACK(OnClockChoice);
 		cc.WhenPopDown  = THISBACK(OnClose);
 		cc.calendar.WhenSelect = WhenSelect.Proxy();
-		this->WhenPaper = [=](Color c) {
+		this->WhenPaper = [this](Color c) {
 			drop.SetPaper(c);
 		};
 	}

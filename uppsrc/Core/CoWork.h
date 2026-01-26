@@ -183,7 +183,7 @@ class AsyncWork {
 		Ret2   ret;
 	
 		template<class Function, class... Args>
-		void        Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
+		void        Do(Function&& f, Args&&... args) { co.Do([=, *this]() { ret = f(args...); }); }
 		const Ret2& Get()                            { return ret; }
 		Ret2        Pick()                           { return pick(ret); }
 	};

@@ -402,11 +402,12 @@ void MemoryProfileInfo() {
 };
 
 FileSelButton::FileSelButton(MODE mode, const char *title)
-: title(title), mode(mode)
+	: title(title)
+	, mode(mode)
 {
 	button.NoWantFocus();
 	button.SetImage(mode == MODE_DIR ? CtrlImg::DirSmall() : CtrlImg::FileSmall());
-	button << [=] { OnAction(); };
+	button << [this] { OnAction(); };
 }
 
 void FileSelButton::Attach(Ctrl& parent)
