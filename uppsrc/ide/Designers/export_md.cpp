@@ -4,6 +4,9 @@
 #include <CtrlCore/lay.h>
 
 struct ExportMD : WithExportMDLayout<TopWindow> {
+	bool               exporting;
+	String             qtf;
+	String             name;
 	String             md;
 	Vector<RichObject> img;
 
@@ -13,7 +16,7 @@ struct ExportMD : WithExportMDLayout<TopWindow> {
 	
 	static bool IsPreformatted(const RichPara& p);
 	
-	void Do(const char *qtf);
+	void Do(const char *qtf, const char *name);
 	
 	ExportMD();
 };
@@ -21,6 +24,39 @@ struct ExportMD : WithExportMDLayout<TopWindow> {
 ExportMD::ExportMD()
 {
 	CtrlLayoutExit(*this, "Export as GitHub Markdown");
+	sel.SetImage(Upp::CtrlImg::Dir());
+	sel << [=] {
+		dir <<= Nvl(SelectDirectory(), ~~dir);
+	};
+	
+	list.NoWantFocus();
+	
+	doexport << [=] {
+		exporting = true;
+		Export(ParseQTF(qtf));
+		String d = ~dir;
+		if(!DirectoryExists(d)) {
+			if(!PromptYesNo("Create directory [* \1 " + d))
+				return;
+			if(!RealizeDirectory(d))
+				Exclamation("Cannot create [* \1 " + d);
+		}
+		Progress pi("Exporting", 2 * img.GetCount());
+		SaveFile(d + "/" + name + ".md", md);
+		for(int i = 0; i < img.GetCount(); i++) {
+			for(int half = 0; half < 2; half++) {
+				if(pi.StepCanceled())
+					return;
+				RichObjectPaintInfo pi;
+				pi.ink = SBlack();
+				Image m = img[i].ToImage(img[i].GetPixelSize(), pi);
+				PNGEncoder().SaveFile(d + "/" + AsString(i) + (half ? "_half.png" : ".png"),
+				                      half ? Downscale2x(m) : m);
+			}
+		}
+		exporting = false;
+		Export(ParseQTF(qtf));
+	};
 }
 
 void ExportMD::Export(const RichPara& p)
@@ -33,7 +69,11 @@ void ExportMD::Export(const RichPara& p)
 		const RichPara::Part& part = p.part[i];
 		int q;
 		if(part.object) {
-			md << "IMAGE:" << img.GetCount();
+			int n = img.GetCount();
+			if(exporting)
+				md << "![IMAGE " << n << "](" << n << ".png)";
+			else
+				md << "IMAGE:" << n;
 			img << part.object;
 		}
 		else {
@@ -127,6 +167,8 @@ bool ExportMD::IsPreformatted(const RichPara& p)
 
 void ExportMD::Export(const RichText& txt)
 {
+	img.Clear();
+	md.Clear();
 	int i = 0;
 	while(i < txt.GetPartCount())
 		if(txt.IsPara(i)) {
@@ -155,34 +197,44 @@ void ExportMD::Export(const RichText& txt)
 			i++;
 }
 
-void ExportMD::Do(const char *qtf)
+void ExportMD::Do(const char *qtf_, const char *name_)
 {
+	name = name_;
+	dir <<= GetHomeDirectory() + "/" + name;
+	qtf = qtf_;
 	Export(ParseQTF(qtf));
 	WriteClipboardText(md);
 	if(img.GetCount()) {
 		list.SetLineCy(DPI(28));
 		list.AddColumn("Image").Ctrls([&](int ii, One<Ctrl>& ctrl) {
+			int half = ii & 1;
+			ii /= 2;
 			Button& b = ctrl.Create<Button>();
+			b.NoWantFocus();
 			b.SetImage(CtrlImg::copy());
-			b.SetLabel("Copy IMAGE:" + AsString(ii));
+			b.SetLabel("Copy IMAGE:" + AsString(ii) + (half ? " 50%" : ""));
 			b << [=] {
 				if(ii >= 0 && ii < img.GetCount()) {
 					RichObjectPaintInfo pi;
 					pi.ink = SBlack();
-					WriteClipboardImage(img[ii].ToImage(img[ii].GetPixelSize(), pi));
+					Image m = img[ii].ToImage(img[ii].GetPixelSize(), pi);
+					preview.SetImage(CoRescaleFilter(m, GetFitSize(m.GetSize(), preview.GetSize()), FILTER_BILINEAR));
+					WriteClipboardImage(half ? Downscale2x(m) : m);
 				}
 			};
 		});
-		for(int i = 0; i < img.GetCount(); i++)
+		for(int i = 0; i < img.GetCount(); i++) {
 			list.Add();
+			list.Add();
+		}
 		Run();
 	}
 	else
 		PromptOK("Markdown copied to clipboard.");
 }
 
-void ExportMarkdown(const char *qtf)
+void ExportMarkdown(const char *qtf, const char *name)
 {
 	ExportMD md;
-	md.Do(qtf);
+	md.Do(qtf, name);
 }

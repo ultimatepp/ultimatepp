@@ -50,8 +50,8 @@ void IdeQtfDes::EditMenu(Bar& menu)
 {
 	EditTools(menu);
 	menu.Separator();
-	menu.Add("Export as GitHub Markdown", [=] {
-		ExportMarkdown(GetQTF());
+	menu.Add("Export as GitHub Markdown..", [=] {
+		ExportMarkdown(GetQTF(), GetFileTitle(filename));
 	});
 }
 
