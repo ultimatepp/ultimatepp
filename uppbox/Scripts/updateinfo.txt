@@ -403,16 +403,26 @@ initial: 8.41
 ------------------------------------------------------------------
 plugin/sqlite3
 
-https://github.com/resilar/sqleet/releases/tag/v0.27.2
+https://github.com/utelle/SQLite3MultipleCiphers/releases
 
-Download amalgamation, replace files lib/sqleet.[c|h]
+Download  sqlite3mc-*-sqlite-*-amalgamation.zip 
 
-(sqleet has crypto support)
+replace files in /lib
+
+fix FORCEDINLINE problem (by editing the .c file)
 
 2019-03-22: 3.27.2
 2019-03-22: sqleet 0.27.2
 2020-09-03: updated coolman 3.33
 2024-06-26: 3.46.0
+2026-01-27: updated to SQLite3 Multiple Ciphers 2.2.7 (based on SQLite 3.51.2)
+
+(sqleet has crypto support)
+
+https://github.com/resilar/sqleet/releases/tag/v0.27.2
+
+Download amalgamation, replace files lib/sqleet.[c|h]
+
 ------------------------------------------------------------------
 SDL2
 
