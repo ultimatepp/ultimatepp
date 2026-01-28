@@ -972,38 +972,9 @@ void GridCtrl::Nothing()
 {
 }
 
-void GridCtrl::DrawLine(bool iniLine, bool delLine)
-{
-	if((resizeCol || resizeRow) && resize_paint_mode < 2)
-	{
-		int sx = resize_paint_mode == 1 ? fixed_width : 0;
-		int sy = resize_paint_mode == 1 ? fixed_height : 0;
-		ViewDraw w(this);
-		Size sz = GetSize();
-
-		Point curPnt;
-		static Point oldPnt = curPnt;
-
-		if(resizeCol)
-		{
-			curPnt.x = hitems[splitCol].nRight(sbx) - 1;
-			if(delLine) w.DrawRect(oldPnt.x, sy, 1, sz.cy, InvertColor());
-			if(iniLine) w.DrawRect(curPnt.x, sy, 1, sz.cy, InvertColor());
-	    }
-		if(resizeRow)
-		{
-			curPnt.y = vitems[splitRow].nBottom(sby) - 1;
-			if(delLine) w.DrawRect(sx, oldPnt.y, sz.cx, 1, InvertColor());
-			if(iniLine) w.DrawRect(sx, curPnt.y, sz.cx, 1, InvertColor());
-		}
-
-		oldPnt = curPnt;
-	}
-}
-
 Value GridCtrl::GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi)
 {
-	Value val = hi.IsConvertion() && vi.IsConvertion() 
+	Value val = hi.IsConvertion() && vi.IsConvertion()
 		? GetConvertedColumn(id, it.val)
 		: it.val;
 	
@@ -4164,24 +4135,8 @@ Point GridCtrl::GetCtrlPos(Ctrl * ctrl)
 	return Point(-1, -1);
 }
 
-void GridCtrl::Split(int state, bool sync)
+void GridCtrl::Split(GridState state)
 {
-	if(resize_paint_mode < 2)
-	{
-		if(resize_paint_mode > 0 && state != GS_DOWN)
-		{
-			if(resizeCol) RefreshTop();
-			if(resizeRow) RefreshLeft();
-		}
-
-		if(state == GS_DOWN)
-			DrawLine(true, false);
-		else if(state == GS_MOVE)
-			DrawLine(true, true);
-		else
-			DrawLine(false, true);
-	}
-
 	if(state == GS_DOWN)
 	{
 		firstCol = firstRow = -1;
@@ -4193,7 +4148,6 @@ void GridCtrl::Split(int state, bool sync)
 		UpdateSizes();
 		UpdateHolder();
 		UpdateSb();
-		Refresh();
 	}
 
 	if((resize_paint_mode > 1 && state > GS_UP) || state == GS_UP)
@@ -4202,8 +4156,8 @@ void GridCtrl::Split(int state, bool sync)
 		UpdateCtrls(UC_CHECK_VIS | UC_SHOW);
 	}
 
-	if(sync)
-		Sync();
+	Refresh();
+	Sync();
 }
 
 bool GridCtrl::TabKey(bool enter_mode)

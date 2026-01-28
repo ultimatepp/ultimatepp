@@ -1003,7 +1003,6 @@ class GridCtrl : public Ctrl
 
 		bool valid_cursor;
 
-
 		/* Values */
 
 		int  curSplitCol, curSplitRow;
@@ -1718,15 +1717,13 @@ class GridCtrl : public Ctrl
 		int  GetFocusedCtrlIndex();
 		Point GetCtrlPos(Ctrl * ctrl);
 
-		void Split(int state = 0, bool sync = false);
+		void Split(GridState gstate);
 		void Scroll();
 
 		bool IsTopHeader()  { return fixed_rows > 0; }
 		bool IsLeftHeader() { return fixed_cols > 1 || indicator; }
 
 		bool IsMouseBody(Point &p);
-
-		void DrawLine(bool iniLine, bool delLine);
 
 		Rect GetItemRect(int r, int c, bool hgrid = false, bool vgrid = false, bool hrel = false, bool vrel = false);
 
