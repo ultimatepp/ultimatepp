@@ -78,8 +78,8 @@ inline  void LOGNOP__() {}
 void InitBlockBegin__(const char *fn, int line, const char *kind);
 void InitBlockEnd__(const char *fn, int line, const char *kind);
 #else
-inline void InitBlockBegin__(const char *, int) {}
-inline void InitBlockEnd__(const char *, int) {}
+inline void InitBlockBegin__(const char *, int, const char *) {}
+inline void InitBlockEnd__(const char *, int, const char *) {}
 #endif
 
 struct Callinit {
