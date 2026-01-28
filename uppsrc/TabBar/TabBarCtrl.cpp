@@ -50,13 +50,13 @@ void TabBarCtrl::RemoveCtrl(Ctrl &ctrl)
 
 Ctrl * TabBarCtrl::GetCtrl(Value key)
 {
-	int ix = ctrls.Find(key); 
+	int ix = ctrls.Find(key);
 	return (ix >= 0) ? ctrls[ix] : NULL;
 }
 
 Ctrl * TabBarCtrl::GetCtrl(int ix)
 {
-	ASSERT(ix >= 0 && ix < ctrls.GetCount()); 
+	ASSERT(ix >= 0 && ix < ctrls.GetCount());
 	return GetCtrl(GetKey(ix));
 }
 
@@ -72,15 +72,15 @@ int TabBarCtrl::GetCurrentIndex()
 
 void TabBarCtrl::SetCtrl(Value key)
 {
-	int ix = ctrls.Find(key); 
-	if (ix < 0) 
+	int ix = ctrls.Find(key);
+	if (ix < 0)
 		return;
 	SetData(key);
 }
 
 void TabBarCtrl::SetCtrl(int ix)
 {
-	ASSERT(ix < GetCount()); 
+	ASSERT(ix < GetCount());
 	return SetCtrl(GetKey(ix));
 }
 
