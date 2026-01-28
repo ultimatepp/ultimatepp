@@ -287,7 +287,7 @@ struct MMImp {
 		Upp::Ctrl::ReleaseCtrlCapture();
 	}
 
-	static int  DnD(Upp::Ctrl *ctrl, id<NSDraggingInfo> info, bool paste = false)
+	static int DnD(Upp::Ctrl *ctrl, id<NSDraggingInfo> info, bool paste = false)
 	{
 		if(!ctrl)
 			return false;
@@ -300,7 +300,8 @@ struct MMImp {
 		clip.action = info.draggingSourceOperationMask & NSDragOperationMove ? DND_MOVE
 		                                                                     : DND_COPY;
 		NSPoint np = [nsview convertPoint:[info draggingLocation] fromView:nil];
-		ctrl->DnD(Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenRect().TopLeft(), clip);
+		coco_mouse_pos = Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenRect().TopLeft();
+		ctrl->DnD(coco_mouse_pos, clip);
 		if(paste && clip.IsAccepted() && clip.GetAction() == DND_COPY)
 			Ctrl::local_dnd_copy = true;
 		return clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? NSDragOperationMove

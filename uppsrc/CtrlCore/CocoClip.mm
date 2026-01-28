@@ -510,8 +510,8 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	ClipboardOwner(true)->source = NULL;
 
 	[pool release];
-
     CGImageRelease(cgimg);
+    ReleaseCapture();
     
     if(local_dnd_copy) // action was local and changed to copy in DragAndDrop
         return DND_COPY;
