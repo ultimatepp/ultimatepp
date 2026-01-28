@@ -67,7 +67,6 @@ void ExportMD::Export(const RichPara& p)
 		md << "- ";
 	for(int i = 0; i < p.part.GetCount(); i++) {
 		const RichPara::Part& part = p.part[i];
-		int q;
 		if(part.object) {
 			int n = img.GetCount();
 			if(exporting)
