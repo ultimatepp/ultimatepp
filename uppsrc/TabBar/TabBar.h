@@ -16,7 +16,7 @@ struct AlignedFrame : FrameCtrl<Ctrl>
 	int layout;
 	int framesize;
 	int border;
-public:	
+public:
 	enum
 	{
 		LEFT = 0,
@@ -31,10 +31,10 @@ public:
 	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual void FrameLayout(Rect& r);
 	
-	bool		  IsVert() const	{ return (layout & 1) == 0; }
-	bool		  IsHorz() const	{ return layout & 1; }
-	bool		  IsTL() const		{ return layout < 2; }
-	bool		  IsBR() const		{ return layout >= 2; }
+	bool IsVert() const { return (layout & 1) == 0; }
+	bool IsHorz() const { return layout & 1; }
+	bool IsTL() const   { return layout < 2; }
+	bool IsBR() const   { return layout >= 2; }
 	
 	AlignedFrame& SetAlign(int align) { layout = align; FrameSet(); RefreshParentLayout(); return *this; }
 	AlignedFrame& SetLeft()		{ return SetAlign(LEFT); }
@@ -42,10 +42,11 @@ public:
 	AlignedFrame& SetRight()	{ return SetAlign(RIGHT); }
 	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }
 	AlignedFrame& SetFrameSize(int sz, bool refresh = true);
-		
-	int 		  GetAlign() const		{ return layout; }
-	int			  GetFrameSize() const 	{ return framesize; }
-	int			  GetBorder() const		{ return border; }
+	
+	int GetAlign() const     { return layout; }
+	int GetFrameSize() const { return framesize; }
+	int	GetBorder() const    { return border; }
+
 protected:
 	void Fix(Size& sz);
 	void Fix(Point& p);
@@ -274,45 +275,45 @@ protected:
 	int scrollbar_sz;
 	bool allowreorder;
 
-	TabSort *tabsorter;
-	TabSort *groupsorter;
-	TabSort *stacksorter;
-	TabValueSort valuesorter_inst;
-	TabKeySort 	 keysorter_inst;
-	TabValueSort stacksorter_inst;
+	TabSort      *tabsorter;
+	TabSort      *groupsorter;
+	TabSort      *stacksorter;
+	TabValueSort  valuesorter_inst;
+	TabKeySort    keysorter_inst;
+	TabValueSort  stacksorter_inst;
 
 	void    PaintTab(Draw& w, const Size& sz, int i, bool enable, bool dragsample = false);
 	
-	int  	TabPos(const String& g, bool& first, int i, int j, bool inactive);	
+	int     TabPos(const String& g, bool& first, int i, int j, bool inactive);
 	void    ShowScrollbarFrame(bool b);
-	void 	SyncScrollBar(bool synctotal = true);
-	void 	Scroll();
+	void    SyncScrollBar(bool synctotal = true);
+	void    Scroll();
 
-	int  	FindId(int id) const;
-	int  	GetNext(int n, bool drag = false) const;
-	int  	GetPrev(int n, bool drag = false) const;
+	int     FindId(int id) const;
+	int     GetNext(int n, bool drag = false) const;
+	int     GetPrev(int n, bool drag = false) const;
 
-	int 	GetWidth(int n);
-	int 	GetExtraWidth(int n);
-	int 	GetWidth() const;
-	int 	GetHeight(bool scrollbar = true) const;
+	int     GetWidth(int n);
+	int     GetExtraWidth(int n);
+	int     GetWidth() const;
+	int     GetHeight(bool scrollbar = true) const;
 
 	bool	SetCursor0(int n, bool action = false);
 
-	void 	DoStacking();
-	void 	DoUnstacking();
-	void 	InsertIntoStack(Tab& t, int ix);
-	int  	GetStackCount(int stackix) const;
-	int  	FindStackHead(int stackix) const;
-	int  	FindStackTail(int stackix) const;
-	bool 	IsStackHead(int n) const;
-	bool 	IsStackTail(int n) const;
-	int 	SetStackHead(Tab& t);
-	void 	CycleTabStack(int head, int n);
-	int 	CycleTabStack(int n);
+	void    DoStacking();
+	void    DoUnstacking();
+	void    InsertIntoStack(Tab& t, int ix);
+	int     GetStackCount(int stackix) const;
+	int     FindStackHead(int stackix) const;
+	int     FindStackTail(int stackix) const;
+	bool    IsStackHead(int n) const;
+	bool    IsStackTail(int n) const;
+	int     SetStackHead(Tab& t);
+	void    CycleTabStack(int head, int n);
+	int     CycleTabStack(int n);
 		
-	int   	GetNextId();
-	int   	GetScrollPos() 				{ return sc.GetPos(); }		
+	int     GetNextId();
+	int     GetScrollPos() { return sc.GetPos(); }
 	
 	int GetStyleHeight() const;
 	static Image AlignImage(int align, const Image& img);
@@ -366,7 +367,7 @@ protected:
 	bool ProcessMouse(int i, const Point& p);
 	bool ProcessStackMouse(int i, const Point& p);
 	void SetHighlight(int n);
-	int  GetTargetTab(Point p);	
+	int  GetTargetTab(Point p);
 	void Repos();
 	Size GetBarSize(Size ctrlsz) const;
 	Rect GetClientArea() const;
@@ -515,7 +516,7 @@ public:
 	String  GetGroupName() const            { return (group == 0) ? Null : groups[group].name; }
 	String  GetGroupName(int i) const       { return groups[i].name;       }
 	int     SetGroup(const String& s)       { DoGrouping(max(0, FindGroup(s))); return group; }
-	int     SetGroup(int c)                 { DoGrouping(c); return group;     }
+	int     SetGroup(int c)                 { DoGrouping(c); return group; }
 	int     GetGroup() const                { return group;                }
 	int     GetGroupCount() const           { return groups.GetCount();    }
 	void    SetGroupActive(int id)          { groups[group].active = id;   }

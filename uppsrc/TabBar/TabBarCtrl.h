@@ -5,8 +5,8 @@ private:
 	StaticRect pane;
 	
 public:
-	TabBarCtrl()							{ Ctrl::Add(pane); }
-	virtual void Layout() 					{ TabBar::Layout(); pane.SetRect(GetClientArea()); }
+	TabBarCtrl()          { Ctrl::Add(pane); }
+	virtual void Layout() { TabBar::Layout(); pane.SetRect(GetClientArea()); }
 	
 	TabBarCtrl& AddCtrl(Ctrl &ctrl, Value key, Value value, Image icon = Null, String group = Null, bool make_active = false);
 	TabBarCtrl& AddCtrl(Ctrl &ctrl, Value value, Image icon = Null, String group = Null, bool make_active = false);

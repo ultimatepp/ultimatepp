@@ -124,8 +124,8 @@ void FileTabs::InsertFiles(int ix, const Vector<String> &files, const Vector<Ima
 	if (!files.GetCount()) return;
 	bool useimg = img.GetCount() == files.GetCount();
 	for (int i = files.GetCount() - 1; i > 0; i--) {
-		TabBar::InsertKey0(ix, files[i].ToWString(), GetFileName(files[i]), 
-			useimg ? img[i] : NativePathIcon(files[i]), GetFileGroup(files[i]));	
+		TabBar::InsertKey0(ix, files[i].ToWString(), GetFileName(files[i]),
+			useimg ? img[i] : NativePathIcon(files[i]), GetFileGroup(files[i]));
 	}
 	InsertFile(ix, files[0].ToWString(), useimg ? img[0] : NativePathIcon(files[0]), make_active);
 }
@@ -141,8 +141,8 @@ FileTabs& FileTabs::FileIcons(bool normal, bool stacked, bool stacked_greyedout)
 {
 	stackedicons = stacked;
 	greyedicons = stacked_greyedout;
-	TabBar::Icons(normal); 
-	return *this;	
+	TabBar::Icons(normal);
+	return *this;
 }
 
 Vector<String> FileTabs::GetFiles() const
@@ -151,7 +151,7 @@ Vector<String> FileTabs::GetFiles() const
 	files.SetCount(tabs.GetCount());
 	for (int i = 0; i < tabs.GetCount(); i++)
 		files[i] = tabs[i].key;
-	return files;	
+	return files;
 }
 
 FileTabs& FileTabs::operator<<(const FileTabs &src)
@@ -161,7 +161,7 @@ FileTabs& FileTabs::operator<<(const FileTabs &src)
 	SortGroups(false);
 	Grouping(false);
 	AddFiles(src.GetFiles(), src.GetIcons(), false);
-	CopySettings(src);	
+	CopySettings(src);
 	stackedicons = src.stackedicons;
 	greyedicons = src.greyedicons;
 	
