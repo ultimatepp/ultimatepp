@@ -75,15 +75,15 @@ inline  void LOGNOP__() {}
 #endif
 
 #ifdef flagCHECKINIT
-void InitBlockBegin__(const char *fn, int line);
-void InitBlockEnd__(const char *fn, int line);
+void InitBlockBegin__(const char *fn, int line, const char *kind);
+void InitBlockEnd__(const char *fn, int line, const char *kind);
 #else
 inline void InitBlockBegin__(const char *, int) {}
 inline void InitBlockEnd__(const char *, int) {}
 #endif
 
 struct Callinit {
-	Callinit(void (*fn)(), const char *cpp, int line) { InitBlockBegin__(cpp, line); fn(); InitBlockEnd__(cpp, line); }
+	Callinit(void (*fn)(), const char *cpp, int line) { InitBlockBegin__(cpp, line, "INITBLOCK"); fn(); InitBlockEnd__(cpp, line, "INITBLOCK"); }
 	Callinit(void (*fn)())                            { fn(); }
 };
 
@@ -118,7 +118,9 @@ void x##__initializer_fn(); \
 void x##__initializer() \
 { \
 	ONCELOCK { \
+		InitBlockBegin__(__FILE__, __LINE__, "INITIALIZER(" #x ")"); \
 		x##__initializer_fn(); \
+		InitBlockEnd__(__FILE__, __LINE__, "INITIALIZER(" #x ")"); \
 	} \
 } \
 void x##__initializer_fn()

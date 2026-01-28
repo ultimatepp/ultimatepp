@@ -318,8 +318,8 @@ void  LogStream::_Put(const void *data, dword size)
 
 #ifdef flagCHECKINIT // Adds heap check and additional logging INITBLOCKs
 
-void InitBlockBegin__(const char *fn, int line) {
-	RLOG(fn << " " << line << " init block");
+void InitBlockBegin__(const char *fn, int line, const char *kind) {
+	RLOG(fn << " " << line << " " << kind << " started");
 #ifdef HEAPDBG
 	MemoryCheckDebug();
 #else
@@ -327,8 +327,8 @@ void InitBlockBegin__(const char *fn, int line) {
 #endif
 }
 
-void InitBlockEnd__(const char *fn, int line) {
-	RLOG(fn << " " << line << " init block finished");
+void InitBlockEnd__(const char *fn, int line, const char *kind) {
+	RLOG(fn << " " << line << " " << kind << " finished");
 #ifdef HEAPDBG
 	MemoryCheckDebug();
 #else

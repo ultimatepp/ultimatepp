@@ -1,6 +1,7 @@
 /* jconfig.vc --- jconfig.h for Microsoft Visual C++ on Windows 9x or NT.
  * This file also works for Borland/Embarcadero C++ for Win32 or Win64
- * (CLI: bcc32, bcc32c, bcc32x, bcc64; GUI IDE: C++Builder/RAD Studio).
+ * (CLI: bcc32, bcc32c, bcc32x, bcc64, bcc64x;
+ * GUI IDE: C++Builder/RAD Studio).
  * See jconfig.txt for explanations.
  */
 
@@ -22,7 +23,9 @@
 #ifdef boolean
 #undef boolean
 #endif
-#define boolean int
+#ifndef __RPCNDR_H__		/* don't conflict if rpcndr.h already read */
+typedef unsigned char boolean;
+#endif
 #ifndef FALSE			/* in case these macros already exist */
 #define FALSE	0		/* values of boolean */
 #endif
