@@ -34,6 +34,12 @@ enum_property Orientation {
 	"ORIENTATION_ANTICLOCKWISE"
 };
 
+enum_property ColumnListMode {
+	"0" : "MODE_LIST",
+	"1" : "MODE_COLUMN",
+	"2" : "MODE_ROWS"
+};
+
 fn IsUHD()
 {
 	return GetTextSize("X", StdFont()).cy > 24;
@@ -1320,6 +1326,17 @@ ctrl TreeCtrl {
 
 	GetStdSize() { return Size(150, 100); }
 	Frame SetFrame = default @1;
+	bool NoCursor = false;
+	bool NoRoot = false;
+	int LevelCx;
+	bool MultiSelect = false;
+	bool NoBackground = false;
+	bool PopUpEx = true;
+	bool MouseMoveCursor = false;
+	bool Accel = false;
+	bool HighlightCtrl = false;
+	bool RenderMultiRoot = false;
+	bool ScrollIntoX = false;
 
 //	Qtf  SetInfo @1 ? "Info of control" ;
 
@@ -1334,10 +1351,14 @@ ctrl TreeCtrl {
 		w.DrawText(3, r.bottom - fontcy, "TreeCtrl", Arial(10), :SMagenta);
 		DeflateRect(r);
 		DeflateRect(r);
-		DrawTreeItem(w, r.left + 2 + 0 * fontcy, r.top + 2 + 0 * fontcy, "Root", 1);
-		DrawTreeItem(w, r.left + 2 + 1 * fontcy, r.top + 2 + 1 * fontcy, "Node 1", 0);
-		DrawTreeItem(w, r.left + 2 + 1 * fontcy, r.top + 2 + 2 * fontcy, "Node 2", 1);
-		DrawTreeItem(w, r.left + 2 + 2 * fontcy, r.top + 2 + 3 * fontcy, "Node 3", 0);
+		align = 0;
+		if(!.NoRoot) {
+			DrawTreeItem(w, r.left + 2, r.top + 2, "Root", 1);
+			align = 1;
+		}
+		DrawTreeItem(w, r.left + 2 + align * fontcy, r.top + 2 + align * fontcy, "Node 1", 0);
+		DrawTreeItem(w, r.left + 2 + align * fontcy, r.top + 2 + (align + 1) * fontcy, "Node 2", 1);
+		DrawTreeItem(w, r.left + 2 + (align + 1) * fontcy, r.top + 2 + (align + 2) * fontcy, "Node 3", 0);
 	}
 };
 
@@ -1346,6 +1367,16 @@ ctrl ColumnList {
 
 	GetStdSize() { return Size(150, 100); }
 	Frame SetFrame = default @1;
+	ColumnListMode Mode = 0;
+	int Columns = 1;
+	int ItemHeight;
+	int ItemWidth = 50;
+	bool RoundSize = true;
+	bool ClickKill = false;
+	bool NoBackground = false;
+	bool MultiSelect = false;
+	bool PopUpEx = true;
+	bool AutoHideSb = true;
 
 //	Qtf  SetInfo @1 ? "Info of control" ;
 
@@ -1700,7 +1731,6 @@ ctrl ProgressIndicator {
 	int SetTotal = 0;
 	bool Percent = false;
 	Color SetColor = Null;
-	
 
 	Paint(w) {
 		r = GetRect();
