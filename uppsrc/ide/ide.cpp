@@ -700,15 +700,15 @@ void Ide::PaintTitlebarInfo(Draw& w)
 	}
 	if(assemblyinfo_visible) {
 		Vector<String> nests = GetUppDirs();
-		Rect r = GetAssemblyInfoRect();
+		Size tsz;
+		Rect r = GetAssemblyInfoRect(&tsz);
 		RichText txt = ParseQTF(GetAssemblyInfoQtf());
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
-		Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
 		DrawFrame(w, r, SBlack());
 		r.Deflate(1, 1);
 		w.DrawRect(r, SColorPaper());
 		Size sz = r.GetSize();
-		txt.Paint(w, DPI(2) + r.left, (sz.cy - tsz.cy) / 2 + r.top, INT_MAX / 2);
+		txt.Paint(w, DPI(2) + r.left, (sz.cy - tsz.cy) / 2 + r.top, tsz.cx);
 	}
 }
 
@@ -717,42 +717,62 @@ String Ide::GetAssemblyInfoQtf()
 	String qtf  = "[g ";
 	const Workspace& wspc = GetIdeWorkspace();
 	Vector<String> nests = GetUppDirs();
-	VectorMap<String, Vector<String>> map;
-	Index<String> done;
+	struct PkgInfo : Moveable<PkgInfo> {
+		String name;
+		bool   bold, italic;
+		Color  ink;
+	};
+	VectorMap<String, Vector<PkgInfo>> map;
 	for(String s : nests) {
 		String nest = UnixPath(s);
 		for(int i = 0; i < wspc.GetCount(); i++)
-			if(UnixPath(NormalizePath(PackageDirectory(wspc[i]))).StartsWith(nest))
-				map.GetAdd(nest).Add(wspc[i]);
+			if(UnixPath(NormalizePath(PackageDirectory(wspc[i]))).StartsWith(nest)) {
+				PkgInfo& m = map.GetAdd(nest).Add();
+				m.name = wspc[i];
+				const Package& p = wspc.GetPackage(i);
+				m.bold = p.bold || i == 0;
+				m.italic = p.italic;
+				m.ink = p.ink;
+			}
 	}
 	for(const auto& m : ~map) {
 		qtf << "\1" << m.key << "\1&";
 		String g = GetGitBranch(m.key);
 		if(g.GetCount())
-			qtf << "[@b     \1" << g << "\1]";
+			qtf << "[$L@bl100 \1" << g << "\1&]";
 		else
-			qtf << "[@K/     not a git repo]";
+			qtf << "[@K/l100 not a git repo&]";
+		qtf << "[l100 ";
 		for(int i = 0; i < m.value.GetCount(); i++) {
+			const PkgInfo& p = m.value[i];
 			if(i)
 				qtf << ", ";
-			if(i % 5 == 0)
-				qtf << "&    ";
-			qtf << "[* \1" << m.value[i] << "\1]";
+			qtf << "[";
+			if(p.bold)
+				qtf << "*";
+			if(p.italic)
+				qtf << "/";
+			if(!IsNull(p.ink))
+				qtf << "@(" << p.ink.GetR() << "." << p.ink.GetG() << "." << p.ink.GetB() << ")";
+			qtf << " \1" << p.name << "\1]";
 		}
-		qtf << "&";
+		qtf << "&]";
 	}
-	qtf.TrimEnd("&");
+	qtf.TrimEnd("&]");
 	return qtf;
 }
 
-Rect Ide::GetAssemblyInfoRect()
+Rect Ide::GetAssemblyInfoRect(Size *tp)
 {
-	Vector<String> nests = GetUppDirs();
 	Rect r = display_main.GetScreenRect();
 	r.top = r.bottom - GetStdFontCy() / 2;
 	RichText txt = ParseQTF(GetAssemblyInfoQtf());
 	txt.ApplyZoom(GetRichTextStdScreenZoom());
-	Size tsz(txt.GetWidth(), txt.GetHeight(INT_MAX));
+	Size tsz;
+	tsz.cx = min(txt.GetWidth(), DPI(450));
+	tsz.cy = txt.GetHeight(tsz.cx);
+	if(tp)
+		*tp = tsz;
 	r.left = r.right - tsz.cx - DPI(4) - 2;
 	r.bottom = r.top + tsz.cy + DPI(4) + 2;
 	return r - GetScreenRect().TopLeft();

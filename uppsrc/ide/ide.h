@@ -1188,7 +1188,7 @@ public:
 
 	Rect      GetFileInfoRect();
 	String    GetAssemblyInfoQtf();
-	Rect      GetAssemblyInfoRect();
+	Rect      GetAssemblyInfoRect(Size *tsz = nullptr);
 	void      PaintTitlebarInfo(Draw& w);
 
 	void      PassEditor(AssistEditor& editor2);
