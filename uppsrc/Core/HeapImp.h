@@ -1,6 +1,4 @@
-void  OutOfMemoryPanic();
-
-void *SysAllocRaw(size_t size, size_t reqsize);
+void *SysAllocRaw(size_t size);
 void  SysFreeRaw(void *ptr, size_t size);
 
 const char *asString(int i);

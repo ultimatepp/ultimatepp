@@ -30,7 +30,7 @@ EXITBLOCK {
 }
 #endif
 
-size_t sKBLimit = INT_MAX;
+size_t sKBLimit = SIZE_MAX;
 
 void  MemoryLimitKb(int kb)
 {
@@ -80,7 +80,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		
 	if(count > sys_block_limit) { // we are wasting 4KB to store just 4 bytes here, but this is n MB after all..
 		LTIMING("SysAlloc");
-		byte *sysblk = (byte *)SysAllocRaw((count + 1) * 4096, 0);
+		byte *sysblk = (byte *)SysAllocRaw((count + 1) * 4096);
 		BlkHeader *h = (BlkHeader *)(sysblk + 4096);
 		h->size = 0;
 		*((size_t *)sysblk) = count;
@@ -112,7 +112,7 @@ void *Heap::HugeAlloc(size_t count) // count in 4kb pages
 		}
 
 		if(!FreeSmallEmpty(wcount, INT_MAX)) { // try to coalesce 4KB small free blocks back to huge storage
-			void *ptr = SysAllocRaw(HPAGE * 4096, 0); // failed, add HPAGE from the system
+			void *ptr = SysAllocRaw(HPAGE * 4096); // failed, add HPAGE from the system
 
 			HugePage *pg; // record in set of huge pages
 			if(free_huge_pages) {

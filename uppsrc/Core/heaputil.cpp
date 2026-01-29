@@ -12,8 +12,12 @@ namespace Upp {
 
 void OutOfMemoryPanic(size_t size)
 {
-	char h[200];
-	snprintf(h, 200, "Out of memory!\nU++ allocated memory: %d KB", MemoryUsedKb());
+	char h[1024];
+	snprintf(h, 200,
+		"Out of memory!\n"
+		"U++ allocated memory (including failed request): %zu KB\n"
+		"System allocation request: %zu (0x%zx)\n",
+		4 * (Heap::huge_4KB_count - Heap::free_4KB), size, size);
 	Panic(h);
 }
 
@@ -36,7 +40,7 @@ int MemoryUsedKbMax()
 	return int(4 * Heap::huge_4KB_count_max);
 }
 
-void *SysAllocRaw(size_t size, size_t reqsize)
+void *SysAllocRaw(size_t size)
 {
 	void *ptr = NULL;
 #ifdef PLATFORM_WIN32
@@ -68,12 +72,12 @@ void *MemoryAllocPermanent(size_t size)
 {
 	Mutex::Lock __(Heap::mutex);
 	if(size > 10000)
-		return SysAllocRaw(size, size);
+		return SysAllocRaw(size);
 	static byte *ptr = NULL;
 	static byte *limit = NULL;
 	ASSERT(size < INT_MAX);
 	if(!ptr || ptr + size >= limit) {
-		ptr = (byte *)SysAllocRaw(16384, 16384);
+		ptr = (byte *)SysAllocRaw(16384);
 		limit = ptr + 16384;
 	}
 	void *p = ptr;
