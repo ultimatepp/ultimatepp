@@ -717,20 +717,29 @@ String Ide::GetAssemblyInfoQtf()
 	String qtf  = "[g ";
 	const Workspace& wspc = GetIdeWorkspace();
 	Vector<String> nests = GetUppDirs();
+	VectorMap<String, Vector<String>> map;
 	Index<String> done;
 	for(String s : nests) {
 		String nest = UnixPath(s);
 		for(int i = 0; i < wspc.GetCount(); i++)
-			if(UnixPath(NormalizePath(PackageDirectory(wspc[i]))).StartsWith(nest) && done.Find(s) < 0) {
-				done.Add(s);
-				qtf << "\1" << s << "\1&";
-				String g = GetGitBranch(s);
-				if(g.GetCount())
-					qtf << "[@b     \1" << g << "\1]&";
-				else
-					qtf << "[@K/     not a git repo]&";
-				break;
-			}
+			if(UnixPath(NormalizePath(PackageDirectory(wspc[i]))).StartsWith(nest))
+				map.GetAdd(nest).Add(wspc[i]);
+	}
+	for(const auto& m : ~map) {
+		qtf << "\1" << m.key << "\1&";
+		String g = GetGitBranch(m.key);
+		if(g.GetCount())
+			qtf << "[@b     \1" << g << "\1]";
+		else
+			qtf << "[@K/     not a git repo]";
+		for(int i = 0; i < m.value.GetCount(); i++) {
+			if(i)
+				qtf << ", ";
+			if(i % 5 == 0)
+				qtf << "&    ";
+			qtf << "[* \1" << m.value[i] << "\1]";
+		}
+		qtf << "&";
 	}
 	qtf.TrimEnd("&");
 	return qtf;

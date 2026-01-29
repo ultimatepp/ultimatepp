@@ -164,7 +164,7 @@ Rect DiagramItem::GetTextEditRect() const
 {
 	if(IsLine()) {
 		int d = max(10, int(Length(size) + 0.5));
-		return Rect(pos.x - d / 2, pos.y, pos.x + d, pos.y);
+		return Rect(int(pos.x - d / 2), (int)pos.y, int(pos.x + d), (int)pos.y);
 	}
 	return GetRect();
 }

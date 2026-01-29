@@ -16,7 +16,7 @@ void GuiMainFn_();\
 \
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
 { \
-	DLOG("WinMain"); UPP::AppInitEnvironment__(); \
+	UPP::AppInitEnvironment__(); \
 	GUI_APP_MAIN_HOOK \
 	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::AppExecute__(GuiMainFn_); \
