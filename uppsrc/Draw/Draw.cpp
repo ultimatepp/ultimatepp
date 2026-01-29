@@ -441,7 +441,7 @@ bool HasPainter()
 
 Image RenderGlyphByPainter(Point at, int angle, int chr, Font fnt, Color color, Size sz)
 {
-	return sRG ? (*sRG)(at, angle, chr, fnt, color, sz) : Image();
+	return sRG && sz.cx > 0 && sz.cy > 0 ? (*sRG)(at, angle, chr, fnt, color, sz) : Image();
 }
 
 void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, int mode)
