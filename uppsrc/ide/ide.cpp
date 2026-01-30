@@ -735,16 +735,21 @@ String Ide::GetAssemblyInfoQtf()
 				m.ink = p.ink;
 			}
 	}
-	for(const auto& m : ~map) {
-		qtf << "\1" << m.key << "\1&";
-		String g = GetGitBranch(m.key);
+	for(int i = 0; i < map.GetCount(); i++) {
+		String nest = map.GetKey(i);
+		Vector<PkgInfo>& pkgs = map[i];
+		Sort(pkgs, [=](const PkgInfo& a, const PkgInfo& b) {
+			return a.name < b.name;
+		});
+		qtf << "\1" << nest << "\1&";
+		String g = GetGitBranch(nest);
 		if(g.GetCount())
 			qtf << "[$L@bl100 \1" << g << "\1&]";
 		else
 			qtf << "[@K/l100 not a git repo&]";
 		qtf << "[l100 ";
-		for(int i = 0; i < m.value.GetCount(); i++) {
-			const PkgInfo& p = m.value[i];
+		for(int i = 0; i < pkgs.GetCount(); i++) {
+			const PkgInfo& p = pkgs[i];
 			if(i)
 				qtf << ", ";
 			qtf << "[";
