@@ -264,6 +264,8 @@ protected:
 	bool    withfindreplace;
 	bool    wordwrap;
 	bool    blk0_header;
+	
+	bool    console_mode = false;
 
 	int     ff_start_pos;
 
@@ -550,6 +552,7 @@ public:
 	int      GetActiveAnnotationLine() const          { return bar.GetActiveAnnotationLine(); }
 	Size     GetBarSize() const                       { return bar.GetSize(); }
 	void     HideBar()                                { bar.Hide(); }
+	void     ConsoleMode()                            { console_mode = true; }
 	void     AnimateBar(const Vector<Color>& a)       { bar.SetAnimate(a); }
 	void     BarColor(Color c)                        { bar.Background(c); }
 	void     BarText(const String& text, Color c)     { bar.Text(text, c); }

@@ -252,6 +252,7 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 		if(text.GetCount() > 200 || GetRefreshInfo(pos) != refresh_info || text.Find('\n') >= 0)
 			Refresh();
 		else
+		if(!console_mode)
 			CheckSyntaxRefresh(pos, text);
 	}
 	WhenUpdate();
@@ -341,7 +342,7 @@ void CodeEditor::CheckBrackets()
 	CancelBracketHighlight(highlight_bracket_pos0);
 	CancelBracketHighlight(highlight_bracket_pos);
 	if(!IsSelection()) {
-		if(GetSyntax(GetCursorLine())->CheckBrackets(*this, highlight_bracket_pos0, highlight_bracket_pos)) {
+		if(!console_mode && GetSyntax(GetCursorLine())->CheckBrackets(*this, highlight_bracket_pos0, highlight_bracket_pos)) {
 			RefreshLine(GetLine(highlight_bracket_pos0));
 			RefreshLine(GetLine(highlight_bracket_pos));
 			bracket_start = GetTimeClick();

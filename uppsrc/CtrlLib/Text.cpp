@@ -615,6 +615,11 @@ String TextCtrl::GetEncodedLine(int i, byte charset) const
 
 int   TextCtrl::GetLinePos64(int64& pos) const {
 	GuiLock __;
+	if(pos == total) { // Appending at the end - accelerate
+		int l = GetLineCount() - 1;
+		pos = GetLineLength(l);
+		return l;
+	}
 	if(pos < cpos && cpos - pos < pos && !view) {
 		int i = cline;
 		int64 ps = cpos;
@@ -858,10 +863,10 @@ void TextCtrl::Remove0(int pos, int size) {
 	GuiLock __;
 	int rmpos = pos, rmsize = size;
 	PreRemove(rmpos, rmsize);
-	total -= size;
 	if(pos < cpos)
 		cpos = cline = 0;
 	int i = GetLinePos32(pos);
+	total -= size; // GetLinePos32 is using total, so this mush be after it!
 	DirtyFrom(i);
 	WString ln = GetWLine(i);
 	int sz = min(LimitSize(ln.GetLength() - pos), size);

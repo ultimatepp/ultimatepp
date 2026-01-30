@@ -50,6 +50,7 @@ Console::Console() {
 	input.Hide();
 	serial = 0;
 	HideBar();
+	ConsoleMode();
 }
 
 void Console::LeftDouble(Point p, dword) {
@@ -78,38 +79,43 @@ void Console::Append(const String& s) {
 		Puts(t);
 		return;
 	}
-	int l, h;
-	GetSelection32(l, h);
-	if(GetCursor32() == GetLength32()) l = -1;
-	EditPos p = GetEditPos();
-	SetEditable();
-	MoveTextEnd();
-	WString t = Filter(s, sAppf).ToWString();
-	int mg = max(40, sb.GetReducedViewSize().cx / GetFontSize().cx);
-	if(wrap_text && mg > 4) {
-		int x = GetColumnLine(GetCursor32()).x;
-		WStringBuffer tt;
-		const wchar *q = t;
-		while(*q) {
-			if(x > mg - 1) {
-				tt.Cat('\n');
-				tt.Cat("    ");
-				x = 4;
+
+	text_buffer << s;
+	flush.KillPost([=] {
+		int l, h;
+		GetSelection32(l, h);
+		if(GetCursor32() == GetLength32()) l = -1;
+		EditPos p = GetEditPos();
+		SetEditable();
+		MoveTextEnd();
+		WString t = Filter(text_buffer, sAppf).ToWString();
+		int mg = max(40, sb.GetReducedViewSize().cx / GetFontSize().cx);
+		if(wrap_text && mg > 4) {
+			int x = GetColumnLine(GetCursor32()).x;
+			WStringBuffer tt;
+			const wchar *q = t;
+			while(*q) {
+				if(x > mg - 1) {
+					tt.Cat('\n');
+					tt.Cat("    ");
+					x = 4;
+				}
+				x++;
+				if(*q == '\n')
+					x = 0;
+				tt.Cat(*q++);
 			}
-			x++;
-			if(*q == '\n')
-				x = 0;
-			tt.Cat(*q++);
+			Paste(tt);
 		}
-		Paste(tt);
-	}
-	else
-		Paste(t);
-	SetReadOnly();
-	if(l >= 0) {
-		SetEditPos(p);
-		SetSelection(l, h);
-	}
+		else
+			Paste(t);
+		SetReadOnly();
+		if(l >= 0) {
+			SetEditPos(p);
+			SetSelection(l, h);
+		}
+		text_buffer.Clear();
+	});
 }
 
 bool Console::Key(dword key, int count) {

@@ -101,6 +101,9 @@ protected:
 	FrameBottom<EditString> input;
 	String line;
 	int    serial;
+	
+	String       text_buffer;
+	TimeCallback flush;
 
 	void CheckEndGroup();
 	void FlushConsole();
