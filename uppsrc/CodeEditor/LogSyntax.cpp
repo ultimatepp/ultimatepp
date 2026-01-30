@@ -49,7 +49,7 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			static Index<String> rws, sws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "warn" << "failed" << "exit"
-				    << "fatal" << "failure" << "rejected";
+				    << "fatal" << "failure" << "rejected" << "invalid";
 				sws << "ok" << "success";
 			}
 			String w;
