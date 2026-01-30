@@ -1,5 +1,4 @@
 topic "Button";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Button";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@(229)4 Button]]}}&]
 [s3;%% &]
@@ -17,33 +17,16 @@ er]&]
 [s0;%% &]
 [s2;%% 
 @@image:456&175
-€ƒÉ€œ€€€ƒäÿ€€€€ø‡œí˜ÁË‚Ñ¦Çû˜ıÎ’ÁĞ×ˆ‚îÁ³Ğ©ËÔÅÛÚ ‘á—¨Ã„˜ÈÁİŒº„ÁÒˆ¯Á©˜ŠÊŠ¡ÄÚâí©
-šå®Ù°ıá¯¯õ±êŒ”ƒ¼¾ş‡™·ÏõÚşŒ óÌÊÎ¤œ¢ŸìºÊìÄï¯Ï…‚àÑö×¯°»è¢ŸŸÚš›“ßÁÄôÊüòĞ–¨ç­æÍÃ
-ûúğ‚»á‹ÈÀÉ¢–«Œ¸Çï§É½ıË¨ÿï¶å¡†æ¢šßğŠ…’Òˆ¿¬Ÿ­®…Ñ»ßÛ¶½ÕĞâô¬‹Ÿ±…¬¨í¸„Ñ¶İƒš„šµŸ¡‹ê
-ıÛÛ‘¾ÔÚíÈ¯‘ÔÚ­‹Éˆ²ÔÍíÌ† ÖüìğÀ‡ÙÚ´³àÂĞ”ëüÔ¹ òíê„®§œˆê£ïõª‡”¯Í›ß§óåª„¯µê›Éõë
-ÌÓÇùò•‚ûÚ«Ùá€úµÍ©“¸ò ¨¡½¼›œĞ¼¶•íŒ˜ÔªÆù‰ƒª×¦ê¾™ëŒ‚šÑşşà¢ş¯©›®²³Ìï¡¨•Ÿ©‹¢ ¨•î³
-Œ¢ ¨å²·¢éèËóÔîÉ’×¢€Úğó©¨—µÌô˜ÛøñŞşÀÁä³ŒÏÛ­•ˆº•Ã¸æÖÌ÷è×ô€ƒşÁëÁå·ƒ¼¯²éáøÓ©µôî
-ãßïóú„ı‚§—Õ¬ùßû€Îœ€şŸßƒ°Œ–ŠîêµÄ„¿¹¨¢ö
+(A0kAHAAAAOT/AAAAAHic7ZhBSwJREMf7GH2QTkHQVwiCbkHQqUsQ1MVbIJFhl6hDhEhBXYy6BB3SCC9BKRiKCqFE2mJtqWWuWbD9YS+P9bHqDJQDPn6HmbfPdX6MIPPMSs4cIp9sOp5KRG+vzwWBglF2Vy8wu+gfn1oaHZsTwcT0yvxy0CjnrWbNQw368AK74YvISSIWKww4x6fJvf1LqIHvtuWhhuaiX/AKhZJSCKyfra6F0Tvbtr3V0GL0Cx+xhSyobQQPUbbdgxoaDbUfIQtq21uRvtTa7S8RENRaLYvJiLLUTW1MhqDW/GxwQNnatDNgQlBrfNQ5oHJt6gSupxwIau/1KgcUr02d3yfz5SoEteqbyQH1a1NHjflyFYLaq1nhgPq1qRO4nnIgqL08GxxQvDbtDJgQ1CpGiQMq16bqvusMDYKaUX5gov6vqZuuM8xvIaiVH4siIKgV7jMiIKjlMjci6EsN8x3U7pJXIoBacPOoFzXMdJhbcV4Q/sDB5IzPWy2ViDrDOOZWzHdo9ICDfsFrwbcDvC8Qsun4UykPNfTu3+9zegT9gpfVrHlf+wAcgP6fXwOwFgru6jVEBL85KCJ2)
  
 @@image:431&187
-€ƒÅ€€€€ƒâÿ€€€€øœí˜ÏË‚Á–”Çû³úÃº„…ÁÿÂô‹Ù‚Îİ‚ ®ô»öˆÊë¢×¢ıİº„„É…•˜ŠŠÑ˜ã®¿ØÓ“İÔ
-÷¤¾°ËÌÎñ¼×éº°Ãçƒ°ûü³ï¾¼”¯ïíêÖˆéø÷²©øòîâöúÜ ğáÖÜÛ×…¬îî¹Î¯íÍÎ­™¿ÁÂòÎúöŞ»ÙÊ¹İ¦ ƒ
-Í¸€øÍ²ßé¬üÎıú±ªò×‰”ôÀ ïĞˆºèœú‚—äÉßóçëÿèü½Âƒ¬ƒö¡¯Ãá‡ÁÄñ£áÜÛ¥ƒøºàĞ·ˆ³Ó“Í½Î¯÷î¤
-›ãô™Ìø–Äÿ—óäæ¦©÷Óé´¹ ¢æÇõğÏ£õÚÁí–‡ÔäæşŞ‚şá¤ÎÛ«Á•Õñ÷ùãÓ¼‘¹Çµ‹–ƒ©ÓìØœĞç‘“àŞÒˆÈ
-æ¹šˆÒçµşŞã€Šªø÷Ş’Òäˆ¼Å•£‚Ô±ë•û¨¨ºÏúˆê¨ßÃı¡õäêÕ‹ƒªÊ¯ÇŞà¨¢úÈÊ¹ÀÄûÑÎ……Ÿ„œù—
-ùÉÂê”¬¼²ÁºÖáÙ ŞÈ§Ç´ÁèĞõ°“åÓ‰ƒçˆÅÕº˜ƒÊ°ß½ÜßšÄ¬Á¤²¸’’õ¬°Ü»ƒªæ»ùÌÄèâ”ƒ¾¡Àå£”†òğ
-•ÉÅËÅœô×Ğ£‰ÿÓà‚¯¾ÀÅé¶åÏĞŸ€Áèÿ¾ŸåÂ…ıİ‚ö‚ÆÍ—òª€§
+(A0UAHgAAAOL/AAAAAHic7ZjPSwJBFMf7M/pDOgVB/0IQdAuCTl2CoC6eO3aISuui1w79AV06hASFFRiKClGYrr9YUxPd1KS+sBDLzM68V2k6sMPnsPt8M28+PC9v7WrWDgj4dzKpePLu4vb63CBwYVzb1wWsbu7OL23Nzq0ZwcLyzvr2XtnKOd2moANNuID4TTJfrHxO/XqxqleJFHTAoO8IOmgc+gKXSV/zZ2v/6BA9woOsg/ahL8Phh0FEo2FcW6WD+GDQN4iz0xO9Tq/3bhCkjuN0mcx4Fn8X82RmJqnT6bQ5oKLm9Y/wTyN12u0WB1RkZv4C/uGkzlurwQEVVXF3edO8ETlHtYsDqdNs2BxQkZPgXlKIyDmaiB5S57Ve44CKqvj3EtLkiLxFlaOC1LFrFQ6oqA+6z/qI6ijfw30hdWpViwMqyq/e4KgiekidSrnAxPsPUQWFn4QceZeQSULqlKy8QZA6VuHZIEidp8e0Qeh1MBNl0wmDiMWOVTqYgzDfPdxfGsRBJLK4EpJ1MFy7gyrmO8xEaOKUg77AZSMUBvJwnUnFS8UcdNCjiX/TYIK+wMXpNuVPHwBBaI5/vh/lwoV9XQICxs0X8pCqJw==)
  
-@@image:150&162
-€ƒ˜€š€€€ƒæÿ€€€€ø½œûóòÆ›Ñµ„›åõ®£„¥ÁùÏÀåƒÎéÛŸæìı˜ÄŒ‚ªÄãĞÄ±ˆ¨’¿ˆ¹§ï¼£†‘®´çÄõ·Ä 
-»‚æœ¿úš˜ÄĞœ£×ŞÂ±÷Ü¹œ©–ÂĞœ£—ß€à‘Ğ‹„Á¸˜¤¢„Í¹üñ™Ú„Áµ¢±¡ˆ¡ ¹‡¯¼£‘¸öˆÂ–¢èÛÎó‘‘Ü
-¸´ñ‚æì¿¡ûÁ”Ì¤èÎ¾³ˆ–Á„ıõú†±ˆğ¼Ÿ¾ÈŒÙÂïµò»©²€Ùœê•‡ƒ†Ş°Óˆ€ò‡ÓşÉ
+@@image:175&185
+(AxgAGgAAAOb/AAAAAHice/PyxptRhBvlda6jBMEN+U8BwGXO6VsfZmx9RAwCqsRjDkQBMQioEr85J2+8IwYRNOfE9TfEIILmHL/6mhhE0JyjV15CkHdcOZyNKULQnCOXXwARUAsEQbiYIgTNOXzxGQTBNaKxIYigOQcvPIEjuHYIQpYiaM6Bc4+REdwQNHGC5uw/+xANAQ3BFCRozr4zD4hBhP11+gYxiHC8n75IDMJvDrXyO6kA2RxqlYcDXrDTCAEActP+yQ==)
  
-@@image:118&125
-€ƒ“€”€€€ƒìÿ€€€€ø§œ½“¿ŠÂ°Ê”‡è¼‚©«—ğñˆŠ‡ğğ¨îş©Ú¨´Ğ‘Ó´ÕÊÀğ‚ñ§Ï±Í‚ö˜°üÃøåıÉ
-¼ ¯²ØÉßÑ¤Ê…ıÎ…ÔûÌÔ»‘ÅŞ¶ÓºÃÆûà‚«Á¨±Ä¤ ¹æÛòşĞ¶œ«®Ô¦‹Øùì¦£ıˆ¸Â¥®åâ¦Ø³Üßü¤éüªü–±
-‹™ŠÂ§Öïš‹Éçˆ‹øåàä‘úè’§Ñ…®à‹àÜ¥×¢¹àúãÜâù¦Õæ„¸ÄÃÑòŒĞÃ“†Ê“·øòã•ñ‰óñğÓşÇ÷êœÅöï§Ü
-ş¹Ô„È±§õ”» Çê¹×«ÛÿÿşÇ§’ÿµ
+@@image:171&182
+(AxMAFAAAAOz/AAAAAHicvZM/CsIwFIcP6B08gqsXcPEIigdwKG4O/qmODtqonbRQEbTVSkDwAvGnTx4xTQJ2MHxD+OV9SSAvstjJ31FKBf1OBdR7VDuRxV4QtrrDRnvgAquoMUQkIDnm8v5QtoEcq1Smi9gN+Wwj/Yg4QqUu4ibYM1zf/KRp/Kr8FjGZikKnVm8ayecIi3hlYBF66BIn0YVgi+DcJY5XOeB6Yw7cYqZVZoSeuMTR8gxQQxOGE7d48mMV8Y5zcfBTfkfqnMV276fcOdSEyLGn9Tsgx2q5Vyv/jn/+xyeSj381)
 &]
 [s0;%% &]
 [s9;%% The famous foundation of any GUI. It has no Value.&]
@@ -63,115 +46,121 @@ er]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:Button`:`:SetImage`(const Image`&`): [_^Button^ Button][@(0.0.255) `&]_[* SetImage]([@(0.0.255) c
-onst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s5;:Button`:`:SetImage`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* SetImage]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Sets the image of the button.&]
 [s7;%% [%-*C@3 img]-|Image.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:SetMonoImage`(const Image`&`): [_^Button^ Button][@(0.0.255) `&]_[* SetMonoI
-mage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s5;:Button`:`:SetMonoImage`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* SetMonoImage]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Sets the monochromatic image. Image is colored according to 
 current GUI look`&feel.&]
 [s7;%% [%-*C@3 img]-|Image.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:EdgeStyle`(`): [_^Button^ Button][@(0.0.255) `&]_[* EdgeStyle]()&]
+[s5;:Button`:`:EdgeStyle`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* EdgeStyle]()&]
 [s2;%% Activates visual style suitable for buttons used inside frame 
 of other Ctrls, like drop`-down buttons in droplists.&]
 [s2;%% 
 @@image:362&150
-€ƒº€˜€€€ƒèÿ€€€€ø§œíÖÍŠÂ°†áŞÏ»ø„·Á›øŠ„÷îµâÅ¥ªÔ–•ƒ«ÿ‹†Á¼††ÂÍæè™ØÂ¿¡á¤İ¤Ó®ºè
-½«’©êê¾ë¬õú€åèßàõ«Ú­¸¼ºı³§ıçåÚââğÒ÷¢èçòÃÉé‡í„Ö©‘Ö‘íì¯¸°ùéİØÖŞ×Â»İ½¸•ü¶˜åé§Û„ê´
-åÛæïÎÀ´Ñ÷æ®Ó°Šîè„Ä»ï”á€ÙûŠÄ»Úß¨Í†É¥¯è›ÃÕ¥¡Úó²íğù²ÒÔÌ÷ˆò¾¬õœÀ¾å¡œÀ´‘ˆ¹¡è
-«ÿëŸÌ÷åë¾ËÒÖ•Û‡ˆ«°„­
+(AzoAGAAAAOj/AAAAAHic7dZNCsIwEIbh3s87eAS3nsEbeAp3brViRSUqFhWDK/8Qi0G8gQYGQk1omdhCP6HhXSTTLh66aKsSqerqvmt1eoDlaN9gq1qtOLy6/TMnfWflWmJw0nciaOfyyekHbRAE1pFWEe1srzh5aV1Y1t5XO909OBV8tmVpJ9uEajTbZu9OQLTR5q7TMIqO7gREO45vlOFZewpEO1pfTQZJpS+BaMPVJZ2hWnMQ7XB5stJUdwjyvh0sjpxAvmWhkJxAtJGIOSFo/+sfzHflawHL0taV2wcrMASt)
 &]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:ScrollStyle`(`): [_^Button^ Button][@(0.0.255) `&]_[* ScrollStyle]()&]
+[s5;:Button`:`:ScrollStyle`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* ScrollStyle]()&]
 [s2;%% Activates visual style suitable for buttons used in Scrollbars.&]
 [s2;%% 
 @@image:125&325
-€ƒ”€´€€€ƒÌÿ€€€€ø§œí“½‚ÀÈÆè¼‚­—°ñˆš”àÁì¬üÁË„‹…•ÊÍ°¦Òˆ‚¡±ñ‚øËÉèæ³¬ãÔÅŠäÉ«¶³ó
-ö–ÂÌØıõö“ÙûÉ“İ·¬¨îÏ²Ûİá¡£½¨ƒÙÔ”ìİ„Áá”¥·âû¦ûÇ–Êà”—÷¢µÛ¤Î¼®ç Òññ†É¸ÙŞßùüÁßûÖ–Üœ¦
-èî¢Ó«·•Èë­ú·–À¤•ä ãÎœ‹¡äÄÂÄ™÷¼Š¥€Ğ”³àİĞğª‰¹Â¸£å™ Œ‚‘áİ€§ÌÅÿ×çî‘ÇÛßš»«ÅöÏ£«
-”šÔ¤ğ³öñğÇÖ»ÏÿìöÑ¥÷—‹–¯ŞÌŒéÍç°Ì¹§¢ÀƒÊş³¿õ÷£ËìïÇë—™Éãš×¸¥Æµ®ñ«ç¾Š€Íıû—
+(AxQANAAAAMz/AAAAAHic7ZM9DoJAEEYP6B08gq0XsPEIGg9gQews/EFLCwWVSk0wJgiCITHxAvjJ6GazLGPUimTJKzYz8xbCzFj9jvUT2ftJk923KG7PslvdYaM9KANZ1BRdBMHhFKW3e6Z7EEeWyhQXdyI126Q8ruegUnHxSbjZXl95fN97VhZcHKZuIlOrN5XI6y16NxZAJOQg406cCyFEQsQZd7yKgFCUM2DdUCoOCTnCuKPlGaCMDgIRYd2Ap8xFf+fukUfbX5qrxXbPo50rGlSkcLN2cRBHVjvP/+xRpfcXi5avTIzpzecwzKciQIPK/jP196PL7O9Hl5lJ4xrXuMY1rnEr5z4AzX37Fw==)
 &]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:NormalStyle`(`): [_^Button^ Button][@(0.0.255) `&]_[* NormalStyle]()&]
+[s5;:Button`:`:NormalStyle`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* NormalStyle]()&]
 [s2;%% Activates the visual style suitable for a standard button.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:LeftEdgeStyle`(`): [_^Button^ Button][@(0.0.255) `&]_[* LeftEdgeStyle]()&]
+[s5;:Button`:`:LeftEdgeStyle`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* LeftEdgeStyle]()&]
 [s2;%% Activates visual style suitable for buttons used inside frame 
 of other Ctrls, on the left side, like in MultiButton.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:AutoStyle`(`): [_^Button^ Button][@(0.0.255) `&]_[* AutoStyle]()&]
+[s5;:Button`:`:AutoStyle`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* AutoStyle]()&]
 [s2;%% Sets the button to automatic look, clearing all style information.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s0; &]
 [s4; &]
-[s5;:Button`:`:Ok`(`): [_^Button^ Button][@(0.0.255) `&]_[* Ok]()&]
+[s5;:Button`:`:Ok`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ But
+ton][@(0.0.255) `&]_[* Ok]()&]
 [s2;%% Makes button `"default accept`" `- it might have different 
 visual representation and it is activated by Enter hotkey.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:Cancel`(`): [_^Button^ Button][@(0.0.255) `&]_[* Cancel]()&]
+[s5;:Button`:`:Cancel`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* Cancel]()&]
 [s2;%% Makes button `"default cancel`" `- it might have different 
 visual representation and it is activated by Esc hotkey.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:Exit`(`): [_^Button^ Button][@(0.0.255) `&]_[* Exit]()&]
+[s5;:Button`:`:Exit`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* Exit]()&]
 [s2;%% Makes button `"default exit`" `- it might have different visual 
 representation and it is activated by both Esc or Enter hotkey.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:Normal`(`): [_^Button^ Button][@(0.0.255) `&]_[* Normal]()&]
+[s5;:Button`:`:Normal`(`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* Normal]()&]
 [s2;%% Makes button (previously modifies with Ok, Cancel or Exit) 
 `"normal`".&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:SetStyle`(const Button`:`:Style`&`): [_^Button^ Button][@(0.0.255) `&]_[* Se
-tStyle]([@(0.0.255) const]_[_^Button`:`:Style^ Style][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Button`:`:SetStyle`(const Button`:`:Style`&`): [_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:class^ B
+utton][@(0.0.255) `&]_[* SetStyle]([@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
+tyle][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Sets the style of to button to [^topic`:`/`/CtrlLib`/src`/Button`$en`-us`#Button`:`:Style`:`:struct^ B
 utton`::Style] [%-*@3 s].&]
 [s3;%% &]
 [s4; &]
-[s5;:Button`:`:StyleNormal`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^Button`:`:Style^ S
+[s5;:Button`:`:StyleNormal`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
 tyle][@(0.0.255) `&]_[* StyleNormal]()&]
 [s2;%% Returns the style used when painting `"normal`" buttons.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:StyleOk`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^Button`:`:Style^ Styl
-e][@(0.0.255) `&]_[* StyleOk]()&]
+[s5;:Button`:`:StyleOk`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
+tyle][@(0.0.255) `&]_[* StyleOk]()&]
 [s2;%% Returns the style used when painting `"default accept`" buttons.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:StyleEdge`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^Button`:`:Style^ St
-yle][@(0.0.255) `&]_[* StyleEdge]()&]
+[s5;:Button`:`:StyleEdge`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
+tyle][@(0.0.255) `&]_[* StyleEdge]()&]
 [s2;%% Returns the style used when painting buttons on the inside 
 of a frame.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:StyleLeftEdge`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^Button`:`:Style^ S
+[s5;:Button`:`:StyleLeftEdge`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
 tyle][@(0.0.255) `&]_[* StyleLeftEdge]()&]
 [s2;%% Returns the style used when painting buttons on the inside 
 of a frame, on the left side.&]
 [s3; &]
 [s4; &]
-[s5;:Button`:`:StyleScroll`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^Button`:`:Style^ S
+[s5;:Button`:`:StyleScroll`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^topic`:`/`/CtrlLib`/src`/Button`_en`-us`#Button`:`:Style`:`:struct^ S
 tyle][@(0.0.255) `&]_[* StyleScroll]()&]
 [s2;%% Returns the style used when painting scrollbar buttons.&]
 [s3; &]
@@ -184,4 +173,4 @@ tyle][@(0.0.255) `&]_[* StyleScroll]()&]
 ][*@3;3 ChStyle][@(0.0.255)3 <][*3 Style][@(0.0.255)3 >][3 _]&]
 [s9;%% This structure defines the look of a Button.&]
 [s3; &]
-[s0; ]
+[s0; ]]
