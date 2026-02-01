@@ -13,25 +13,28 @@ topic "Color widgets";
 [ {{10000@3 [s0;%% [*@(229)4 WheelRampCtrl]]}}&]
 [s3; &]
 [s1;:Upp`:`:WheelRampCtrl: [*3 WheelRampCtrl][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
-Ctrl]&]
+][_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^3 Ctrl]&]
 [s2;%% Implements either color ramp or color wheel. Base class of 
 ColorWheelCtrl and ColorRampCtrl. Widget implements usual SetData 
 / GetData protocol where Value is Color.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:Upp`:`:WheelRampCtrl`:`:WhenLeftDouble: Event<> [* WhenLeftDouble]&]
+[s5;:Upp`:`:WheelRampCtrl`:`:WhenLeftDouble: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<> [* WhenLeftDouble]&]
 [s2;%% Invoked when user double clicks the widget.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:WheelRampCtrl`:`:DarkContent`(bool`): WheelRampCtrl[@(0.0.255) `&] 
-[* DarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:WheelRampCtrl`:`:DarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#Upp`:`:WheelRampCtrl^ W
+heelRampCtrl][@(0.0.255) `&] [* DarkContent]([@(0.0.255) bool] [*@3 b] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function. Default is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:WheelRampCtrl`:`:AllowDarkContent`(bool`): WheelRampCtrl[@(0.0.255) `&] 
-[* AllowDarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:WheelRampCtrl`:`:AllowDarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#Upp`:`:WheelRampCtrl^ W
+heelRampCtrl][@(0.0.255) `&] [* AllowDarkContent]([@(0.0.255) bool] 
+[*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function, but only if dark mode is active.&]
 [s3; &]
@@ -44,7 +47,8 @@ with DarkTheme function.&]
 [ {{10000@3 [s0;%% [*@(229)4 ColorWheelCtrl]]}}&]
 [s3; &]
 [s1;:Upp`:`:ColorWheelCtrl: [*3 ColorWheelCtrl][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
-WheelRampCtrl]&]
+][_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#Upp`:`:WheelRampCtrl^3 WheelRampCt
+rl]&]
 [s2;%% Color wheel widget.&]
 [s2;%% [*@(229)4 
 @@image:803&696
@@ -54,7 +58,8 @@ WheelRampCtrl]&]
 [ {{10000@3 [s0;%% [*@(229)4 ColorRampCtrl]]}}&]
 [s3; &]
 [s1;:Upp`:`:ColorRampCtrl: [*3 ColorRampCtrl][3  ][@(0.0.255)3 :][3  ][@(0.0.255)3 public][3  
-WheelRampCtrl]&]
+][_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#Upp`:`:WheelRampCtrl^3 WheelRampCt
+rl]&]
 [s2;%% Color ramp widget.&]
 [s2;%% [*@(229)4 
 @@image:793&696
@@ -82,78 +87,85 @@ trl]&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:ColorPopUp`:`:PopUp`(Ctrl`*`,Color`): [@(0.0.255) void]_[* PopUp]([_^Ctrl^ Ctrl]_`*[*@3 o
-wner], [_^Color^ Color]_[*@3 c]_`=_White)&]
+[s5;:ColorPopUp`:`:PopUp`(Ctrl`*`,Color`): [@(0.0.255) void]_[* PopUp]([_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl]_`*[*@3 owner], [%%_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ Color]_
+[*@3 c]_`=_White)&]
 [s2;%% Opens ColorPopUp as pop`-up window.&]
 [s7;%% [%-*C@3 owner]-|Owner Ctrl. ColorPopUp appears bellow or above 
 this Ctrl.&]
 [s7;%% [%-*C@3 c]-|Initial color for wheel and ramp selectors.&]
 [s3; &]
 [s4; &]
-[s5;:ColorPopUp`:`:Get`(`)const: [_^Color^ Color]_[* Get]()_[@(0.0.255) const]&]
+[s5;:ColorPopUp`:`:Get`(`)const: [%%_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor]_[* Get]()_[@(0.0.255) const]&]
 [s7;%% [*/ Return value]-|Returns current color selected.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColorPopUp`:`:Hint`(Color`): [@(0.0.255) static] [@(0.0.255) void] 
-[* Hint](Color [*@3 c])&]
+[* Hint]([%%_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ Color][%%_  
+][*@3 c])&]
 [s2;%% Adds the color to the list of recently used colors (see Hints).&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPopUp`:`:NotNull`(bool`): [_^ColorPopUp^ ColorPopUp][@(0.0.255) `&]_[* NotNull]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ColorPopUp`:`:NotNull`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&]_[* NotNull]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Setups whether Null (that is transparent) color choice is 
 enabled. Constructor setting is NotNull(false).&]
 [s7;%% [%-*C@3 b]-|true disables Null color choice. &]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPopUp`:`:SColors`(bool`): [_^ColorPopUp^ ColorPopUp][@(0.0.255) `&]_[* SColors]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ColorPopUp`:`:SColors`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&]_[* SColors]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Setups whether choice of system colors is allowed. Constructor 
 setting is SColors(false).&]
 [s7;%% [%-*C@3 b]-|true enables choice of system colors.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPopUp`:`:NullText`(const char`*`): [_^ColorPopUp^ ColorPopUp][@(0.0.255) `&]_[* N
-ullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:ColorPopUp`:`:NullText`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&]_[* NullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Setups text for Null color choice. Constructor setting for 
 en`-us is `"(transparent)`".&]
 [s7;%% [%-*C@3 s]-|New text for Null color choice.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:WithVoid`(bool`): [_^Upp`:`:ColorPopUp^ ColorPopUp][@(0.0.255) `&
-]_[* WithVoid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPopUp`:`:WithVoid`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&]_[* WithVoid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Enables special VoidColor() (labeled `"(None)`", unless the 
 name is changed by VoidText).&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:VoidText`(const char`*`): [_^Upp`:`:ColorPopUp^ ColorPopUp][@(0.0.255) `&
-]_[* VoidText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Upp`:`:ColorPopUp`:`:VoidText`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&]_[* VoidText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Changes the label of VoidColor().&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:NoRampWheel`(bool`): ColorPopUp[@(0.0.255) `&] 
-[* NoRampWheel]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPopUp`:`:NoRampWheel`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&] [* NoRampWheel]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
 [s2;%% If active, there will be no color wheel nor ramp. Default 
 is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:Hints`(bool`): ColorPopUp[@(0.0.255) `&] 
-[* Hints]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPopUp`:`:Hints`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&] [* Hints]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
 [s2;%% If active, widget will contain a global list of recently used 
 colors. Default is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:DarkContent`(bool`): ColorPopUp[@(0.0.255) `&] 
-[* DarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPopUp`:`:DarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&] [* DarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function. Default is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPopUp`:`:AllowDarkContent`(bool`): ColorPopUp[@(0.0.255) `&] 
-[* AllowDarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPopUp`:`:AllowDarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPopUp`:`:class^ C
+olorPopUp][@(0.0.255) `&] [* AllowDarkContent]([@(0.0.255) bool] [*@3 b] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function, but only if dark mode is active.&]
 [s3; &]
@@ -164,12 +176,14 @@ function, but only if dark mode is active.&]
 with DarkTheme function. .&]
 [s3; &]
 [s4; &]
-[s5;:ColorPopUp`:`:WhenCancel: [_^Callback^ Callback]_[* WhenCancel]&]
+[s5;:ColorPopUp`:`:WhenCancel: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]_[* WhenCancel]&]
 [s2;%% This callback is invoked when ColorPopUp is canceled (e.g. 
 by clicking outside).&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPopUp`:`:WhenSelect: [_^Callback^ Callback]_[* WhenSelect]&]
+[s5;:ColorPopUp`:`:WhenSelect: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]_[* WhenSelect]&]
 [s2;%% This callback is invoked when color is chosen. Resulting color 
 can be obtained by Get().&]
 [s3;%% &]
@@ -202,84 +216,89 @@ trl]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:ColorPusher`:`:NullText`(const char`*`): [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_
-[* NullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:ColorPusher`:`:NullText`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* NullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Sets a text to be displayed if Color value is Null. Constructor 
 setting for en`-us is `"(transparent)`".&]
 [s7;%% [%-*C@3 s]-|Text.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3; &]
 [s4; &]
-[s5;:ColorPusher`:`:NotNull`(bool`): [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* NotNull
-]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ColorPusher`:`:NotNull`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* NotNull]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Setups whether Null (that is transparent) color choice is 
 enabled. Constructor setting is NotNull(false).&]
 [s7;%% [%-*C@3 b]-|true disables Null color choice. &]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:WithVoid`(bool`): [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
-]_[* WithVoid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:WithVoid`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* WithVoid]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Enables special VoidColor() (labeled `"(None)`", unless the 
 name is changed by VoidText).&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:VoidText`(const char`*`): [_^Upp`:`:ColorPusher^ ColorPusher
-][@(0.0.255) `&]_[* VoidText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Upp`:`:ColorPusher`:`:VoidText`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* VoidText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Changes the label of VoidColor().&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPusher`:`:SColors`(bool`): [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* SColors
-]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ColorPusher`:`:SColors`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* SColors]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Setups whether choice of system colors is allowed. Constructor 
 setting is SColors(false).&]
 [s7;%% [%-*C@3 b]-|true enables choice of system colors.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:WithText`(bool`): [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
-]_[* WithText]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:WithText`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* WithText]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% ColorPusher will display text representation of color (either 
 known name, or numbers).&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:WithHex`(bool`): [_^Upp`:`:ColorPusher^ ColorPusher][@(0.0.255) `&
-]_[* WithHex]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:WithHex`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* WithHex]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% ColorPusher will hexadecimal representation of color.&]
 [s3; &]
 [s4; &]
-[s5;:ColorPusher`:`:Track`(bool`): [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* Track]([@(0.0.255) b
-ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:ColorPusher`:`:Track`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* Track]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Setups track mode. Constructor setting is Track(false).&]
 [s7;%% [%-*C@3 b]-|true enables track mode.&]
 [s7;%% [*/ Return value]-|`*this&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorPusher`:`:NoTrack`(`): [_^ColorPusher^ ColorPusher][@(0.0.255) `&]_[* NoTrack]()&]
+[s5;:ColorPusher`:`:NoTrack`(`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&]_[* NoTrack]()&]
 [s2;%% Same as Track(false).&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:NoRampWheel`(bool`): ColorPusher[@(0.0.255) `&] 
-[* NoRampWheel]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:NoRampWheel`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&] [* NoRampWheel]([@(0.0.255) bool] [*@3 b] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, there will be no color wheel nor ramp. Default 
 is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:Hints`(bool`): ColorPusher[@(0.0.255) `&] 
-[* Hints]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:Hints`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&] [* Hints]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
 [s2;%% If active, widget will contain a list of recently used colors. 
 Default is true.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:DarkContent`(bool`): ColorPusher[@(0.0.255) `&] 
-[* DarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:DarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&] [* DarkContent]([@(0.0.255) bool] [*@3 b] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function. Default is false.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColorPusher`:`:AllowDarkContent`(bool`): ColorPusher[@(0.0.255) `&] 
-[* AllowDarkContent]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s5;:Upp`:`:ColorPusher`:`:AllowDarkContent`(bool`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
+olorPusher][@(0.0.255) `&] [* AllowDarkContent]([@(0.0.255) bool] [*@3 b] 
+[@(0.0.255) `=] [@(0.0.255) true])&]
 [s2;%% If active, colors are displayed converted through DarkTheme 
 function, but only if dark mode is active.&]
 [s3;%% &]
@@ -302,23 +321,26 @@ olorPusher]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:ColorButton`:`:ColorImage`(const Image`&`): [_^ColorButton^ ColorButton][@(0.0.255) `&
-]_[* ColorImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s5;:ColorButton`:`:ColorImage`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorButton`:`:class^ C
+olorButton][@(0.0.255) `&]_[* ColorImage]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Sets image to display color. This image is drawn (in the center 
 of ColorButton) with selected color.&]
 [s7;%% [%-*C@3 img]-|Image.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3; &]
 [s4; &]
-[s5;:ColorButton`:`:NullImage`(const Image`&`): [_^ColorButton^ ColorButton][@(0.0.255) `&
-]_[* NullImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s5;:ColorButton`:`:NullImage`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorButton`:`:class^ C
+olorButton][@(0.0.255) `&]_[* NullImage]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Sets image to display null color.&]
 [s7;%% [%-*C@3 img]-|Image.&]
 [s7;%% [*/ Return value]-|`*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:ColorButton`:`:StaticImage`(const Image`&`): [_^ColorButton^ ColorButton][@(0.0.255) `&
-]_[* StaticImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s5;:ColorButton`:`:StaticImage`(const Image`&`): [_^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorButton`:`:class^ C
+olorButton][@(0.0.255) `&]_[* StaticImage]([@(0.0.255) const]_[_^topic`:`/`/Draw`/src`/Image`_en`-us`#Image`:`:class^ I
+mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Sets static image that is always displayed with ColorImage 
 and NullImage.&]
 [s7;%% [%-*C@3 img]-|Image.&]
@@ -326,20 +348,22 @@ and NullImage.&]
 [s3;%% &]
 [ {{10000@3 [s0;%% [*@(229)4 Utility Functions]]}}&]
 [s3;%% &]
-[s5;:Upp`:`:FormatColor`(Color`): String [* FormatColor](Color [*@3 c])&]
+[s5;:Upp`:`:FormatColor`(Color`): String [* FormatColor]([%%_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor][%%_  ][*@3 c])&]
 [s2;%% Formats the color into readable form compatible with C`+`+ 
 syntax, using color names where possible.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ReadColor`(CParser`&`): Color [* ReadColor](CParser[@(0.0.255) `&] 
-[*@3 p])&]
+[s5;:Upp`:`:ReadColor`(CParser`&`): [%%_^topic`:`/`/Core`/src`/Color`_en`-us`#Color`:`:class^ C
+olor][%%_  ][* ReadColor]([_^topic`:`/`/Core`/src`/CParser`_en`-us`#CParser`:`:class^ C
+Parser][@(0.0.255) `&] [*@3 p])&]
 [s2;%% Converts text formatted with FormatColor to Color. Can throw 
 CParser`::Error.&]
 [s3; &]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:StdColorDisplayNull`(`): [@(0.0.255) const] Display[@(0.0.255) `&] 
-[* StdColorDisplayNull]()&]
+[s5;:Upp`:`:StdColorDisplayNull`(`): [@(0.0.255) const] [%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&] [* StdColorDisplayNull]()&]
 [s2;%% Returns Display which paints text `"(no color)`" if value 
 is Null or paints the rectangle with value color.&]
 [s3;%% ]]
