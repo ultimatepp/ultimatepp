@@ -315,7 +315,7 @@ function, but only if dark mode is active.&]
 [s9;%% This class is similar to ColorPusher, but intended to be used 
 in ToolBar. It supports displaying color using Image too.&]
 [s0;%% &]
-[s0; [%%/ Derived from][%%  ][^topic`:`/`/CtrlLib`/src`/ColorPopUp`$en`-us`#`:`:ColorPusher`:`:class ColorPusher^ C
+[s0; [%%/ Derived from][%%  ][^topic`:`/`/CtrlLib`/src`/ColorPopUp`_en`-us`#ColorPusher`:`:class^ C
 olorPusher]&]
 [s3;%% &]
 [s0; &]
