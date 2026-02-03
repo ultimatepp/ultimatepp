@@ -40,10 +40,13 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 		files_pane.Add(mode[i].TopPos(y, cy).HSizePos());
 		y += lcy;
 		files_pane.Add((i ? dir2 : dir1).TopPos(y, cy).HSizePos());
-		files_pane << branch[i].HSizePos(0, Zx(80)).TopPos(y, cy);
+		files_pane << branch[i].HSizePos(0, 2 * Zx(80)).TopPos(y, cy);
+		files_pane << log[i].RightPos(Zx(80), Zx(80) - DPI(2)).TopPos(y, cy);
 		files_pane << hash[i].RightPos(0, Zx(80) - DPI(2)).TopPos(y, cy);
-		hash[i].SetLabel("Copy hash");
+		hash[i].SetLabel("Copy Hash");
 		hash[i] << [=] { WriteClipboardText(~~r[i]); };
+		log[i].SetLabel("Copy Log");
+		log[i] << [=] { CopyGitRevisions(r[i]); };
 		y += lcy;
 		files_pane << r[i].HSizePos().TopPos(y, cy);
 		y += lcy + lcy / 2;
@@ -116,6 +119,7 @@ void DirRepoDiffDlg::Mode(int i)
 	(i ? dir2 : dir1).Show(b);
 	branch[i].Show(!b);
 	hash[i].Show(!b);
+	log[i].Show(!b);
 	r[i].Show(!b);
 
 	if(!b) {
