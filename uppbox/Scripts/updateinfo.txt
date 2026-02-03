@@ -215,61 +215,30 @@ plugin/tif
 
 http://download.osgeo.org/libtiff/
 
-current version 3.8.2
-
 keep files from current lib (include redirectors):
 	jpeglib.h
 	jerror.h
 	zlib.h
+	tif_config.h
+	tiffconf.h
 
 copy new sources from libtiff
 
 rename:
-	tif_config.vc.h -> tif_config.h
-	tiffconf.vc.h -> tiffconf.h
+	compare tif_config.h.in
+	        tiffconf.h.in
 
+	to eventually fix tif_config.h / tiffconf.h
 
-Fix size_t in tif_config.h:
-
-#define TIFF_SSIZE_T ptrdiff_t
-#define TIFF_SIZE_T size_t
-
-Fix macros in tiffconf.h:
-
-#include <stddef.h>
-
-#if defined(__WIN32) || defined(_WIN32) || defined(WIN32)
-	#define TIFF_INT32_T long
-	#define TIFF_UINT32_T unsigned long
-	#if __GNUC__
-		#define TIFF_INT64_T  long long int
-		#define TIFF_UINT64_T long long unsigned
-	#else
-		#define TIFF_INT64_T signed __int64
-		#define TIFF_UINT64_T unsigned __int64
-	#endif
-#else
-	#define TIFF_INT32_T int
-	#define TIFF_UINT32_T unsigned int
-	#define TIFF_INT64_T long long int
-	#define TIFF_UINT64_T long long unsigned
-#endif
-
-#define TIFF_SSIZE_T ptrdiff_t
-#define TIFF_SIZE_T size_t
-
-#define TIFF_INT32_FORMAT "%d"
-#define TIFF_UINT32_FORMAT "%u"
-#define TIFF_INT64_FORMAT "%I64d"
-#define TIFF_UINT64_FORMAT "%I64u"
-
-Test with ImageView / upptst/data/tif, all platforms and compilers....
+Compare backuped
 
 update Copying
 
 2019-03-22: 4.0.10
 2020-09-03: 4.1.0
 2024-05-19: 4.6.0
+2026-02-03: 4.7.1
+
 -------------------------------------------------------------------
 plugin/png
 
