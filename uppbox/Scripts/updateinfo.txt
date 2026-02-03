@@ -408,6 +408,7 @@ take docs, include and lib from VC variant
 copy to lib/x64 x32 libSDL2.dll.a and libSDL2main.a from corresponding mingw directories
 
 2024-06-27: 2.30.4
+2026-02-03: 2.32.10
 
 ------------------------------------------------------------------
 PostgresSQL
@@ -435,14 +436,14 @@ plugin/glew
 
 ------------------------------------------------------------------
 plugin/FT_fontsys
-
-lz4plugin/astyle
 plugin/box2d
 plugin/ndisasm
 
 
 ====================================================================
 DEPRECATED (NOT USED ANYMORE)
+
+plugin/astyle
 
 ------------------------------------------------------------------
 mingw64 (not anymore...)
