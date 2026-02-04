@@ -3,7 +3,7 @@
 struct RepoDiff : DiffDlg {
 	FrameTop<ParentCtrl> pane;
 	DropList r, branch;
-	Button   copy_hash;
+	Button   copy_hash, copy_log;
 	Button   github;
 	
 	String repo_dir;
@@ -85,12 +85,13 @@ void RepoDiff::Set(const String& f)
 
 	if(kind == GIT_DIR) {
 		pane << branch.LeftPos(0, Zx(100)).VSizePos()
-		     << r.HSizePos(Zx(100) + DPI(2), Zx(80) + DPI(24)).VSizePos()
-		     << copy_hash.RightPos(0, Zx(80)).VSizePos()
-		     << github.RightPos(Zx(80) + DPI(2), DPI(20)).VCenterPos(DPI(20));
+		     << r.HSizePos(Zx(100) + DPI(2), 2 * Zx(80) + DPI(4) + DPI(20)).VSizePos()
+		     << copy_hash.RightPos(0, Zx(79)).VSizePos()
+		     << copy_log.RightPos(Zx(80), Zx(79)).VSizePos()
+		     << github.RightPos(2 * Zx(80) + DPI(2), DPI(20)).VSizePos();
 
 		copy_hash.SetLabel("Copy Hash");
-		
+
 		auto GetHash = [=] {
 			String h = ~~r;
 			String commit, path;
@@ -100,6 +101,11 @@ void RepoDiff::Set(const String& f)
 		
 		copy_hash << [=] {
 			WriteClipboardText(GetHash());
+		};
+		
+		copy_log.SetLabel("Copy Log");
+		copy_log << [=] {
+			CopyGitRevisions(r);
 		};
 		
 		github.SetImage(IdeImg::GitHub());
@@ -154,6 +160,17 @@ void LoadBranches(DropList& branch, const String& dir)
 		branch.SetIndex(ci);
 }
 
+void CopyGitRevisions(const DropList& dl)
+{
+	String qtf;
+	for(int i = 0; i < dl.GetCount(); i++) {
+		String s = ~dl.GetValue(i);
+		s.TrimStart("\1");
+		MergeWith(qtf, "&", s);
+	}
+	AppendClipboard(ParseQTF(qtf));
+}
+
 void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file)
 {
 	String gitcmd = "log --format=medium --date=short --name-only ";
@@ -173,7 +190,7 @@ void LoadGitRevisions(DropList& r, const String& dir, const String& branch, cons
 				h.Trim(6);
 			r.Add(IsNull(file) ? commit : commit + ":" + path,
 			      "\1[g [@b \1" + date + "\1] [@g \1" + h + "\1] [@r \1" + author + "\1]: "
-			      "[* \1" + Join(Split(msg, CharFilterWhitespace), " "));
+			      "[* \1" + Join(Split(msg, CharFilterWhitespace), " ") + "\1]");
 		}
 		date = commit = author = msg = Null;
 	};
