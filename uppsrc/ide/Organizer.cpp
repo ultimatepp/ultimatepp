@@ -93,7 +93,7 @@ struct UsesDisplay : Display {
 };
 
 int FlagFilter(int c) {
-	return IsAlNum(c) || c == '_' || c == ' ' ? ToUpper(c) : 0;
+	return IsAlNum(c) || c == '_' || c == ' ' ? ToUpper(c) : strchr(":;,/", c) ? ' ' : 0;
 }
 
 int FlagFilterM(int c) {
