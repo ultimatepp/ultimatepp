@@ -121,9 +121,11 @@ RichText AssistEditor::GetCodeTopic(const String& tl, const String& coderef, boo
 			}
 			else
 			if(CleanupTppId(topic_text.Get(i).format.label) == cr) {
-				while(i < topic_text.GetPartCount() && CleanupTppId(topic_text.Get(i).format.label) == cr)
+				while(i < topic_text.GetPartCount() && CleanupTppId(topic_text.Get(i).format.label) == cr) {
 					if(!skip_header)
-						result.Cat(topic_text.Get(i++));
+						result.Cat(topic_text.Get(i));
+					i++;
+				}
 				while(i < topic_text.GetPartCount() && topic_text.Get(i).format.label.GetCount() == 0
 				      && !IsBeginEnd(topic_text, i)) {
 					if(topic_text.IsPara(i))
