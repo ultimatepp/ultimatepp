@@ -168,7 +168,9 @@ void CopyGitRevisions(const DropList& dl)
 		s.TrimStart("\1");
 		MergeWith(qtf, "&", s);
 	}
-	AppendClipboard(ParseQTF(qtf));
+	RichText txt = ParseQTF(qtf);
+	ClearClipboard();
+	AppendClipboard(pick(txt));
 }
 
 void LoadGitRevisions(DropList& r, const String& dir, const String& branch, const String& file)

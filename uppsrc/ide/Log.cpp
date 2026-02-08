@@ -63,6 +63,33 @@ bool Ide::FindLOG()
 	if(!IsInLogFile())
 		return false;
 
+	String ln = editor.GetUtf8Line(editor.GetCursorLine());
+
+	for(const char *s = ln; *s;) { // try to find source file path first
+		if(*s == ' ' || *s == '\t') {
+			while(*s == ' ' || *s == '\t') s++;
+			if(*s)
+				for(const char *q = s + 1; *q; q++) {
+					String path = String(s, q);
+					if(FileExists(path)) {
+						while(*q) {
+							if(IsDigit(*q)) {
+								AddHistory();
+								EditFile(path);
+								editor.SetCursor(editor.GetPos(Atoi(q) - 1, 0));
+								AddHistory();
+								return true;
+							}
+							q++;
+						}
+						break;
+					}
+				}
+		}
+		else
+			s++;
+	}
+
 	Vector<String> files = FindXFiles(3);
 
 	int n = 0;
@@ -151,8 +178,6 @@ bool Ide::FindLOG()
 			catch(CParser::Error) {}
 		}
 	}
-	
-	String ln = editor.GetUtf8Line(editor.GetCursorLine());
 	
 	LogLine bestl;
 	int best = -1;
