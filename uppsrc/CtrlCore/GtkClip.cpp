@@ -384,8 +384,10 @@ void AppendFiles(VectorMap<String, ClipData>& data, const Vector<String>& files)
 	if(files.GetCount() == 0)
 		return;
 	String h;
-	for(String f : files)
+	for(const String& f : files) {
 		h << "file://" << UrlEncode(f) << '\n';
+		h.Replace("%2F", "/");
+	}
 	data.GetAdd("files") = h;
 }
 
