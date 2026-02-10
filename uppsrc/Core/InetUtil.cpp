@@ -105,7 +105,8 @@ String MIMECharsetName(byte charset)
 
 static const char hex_digits[] = "0123456789ABCDEF";
 
-String UrlEncode(const char *p, const char *e)
+static
+String UrlEncode_(const char *p, const char *e, bool path)
 {
 	StringBuffer out;
 	out.Reserve((int)(e - p));
@@ -113,8 +114,12 @@ String UrlEncode(const char *p, const char *e)
 	{
 		const char *b = p;
 		while(p < e && (byte)*p > ' ' && (byte)*p < 127
-		      && (IsAlNum(*p) || *p == '.' || *p == '-' || *p == '_'))
+		      && (IsAlNum(*p) || *p == '.' || *p == '-' || *p == '_' || path && *p == '/'))
 			p++;
+		if(*p == '?' && path) {
+			p++;
+			path = false;
+		}
 		if(p > b)
 			out.Cat(b, int(p - b));
 		if(p >= e)
@@ -124,15 +129,36 @@ String UrlEncode(const char *p, const char *e)
 	return String(out);
 }
 
+String UrlEncode(const char *p, const char *e)
+{
+	return UrlEncode_(p, e, false);
+}
+
 String UrlEncode(const char *s, int len)
 {
-	return UrlEncode(s, s + len);
+	return UrlEncode_(s, s + len, false);
 }
 
 String UrlEncode(const String& s)
 {
 	return UrlEncode(~s, s.GetLength());
 }
+
+String UrlEncodePath(const char *p, const char *e)
+{
+	return UrlEncode_(p, e, true);
+}
+
+String UrlEncodePath(const char *s, int len)
+{
+	return UrlEncode_(s, s + len, true);
+}
+
+String UrlEncodePath(const String& s)
+{
+	return UrlEncodePath(~s, s.GetLength());
+}
+
 
 String UrlDecode(const char *b, const char *e, bool plus_is_space)
 {

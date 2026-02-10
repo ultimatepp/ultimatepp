@@ -4,9 +4,14 @@ Time   ScanWwwTime(const char *s);
 
 String MIMECharsetName(byte charset);
 
-String UrlEncode(const char *s, const char *end);
+String UrlEncode(const char *p, const char *e);
 String UrlEncode(const char *s, int len);
 String UrlEncode(const String& s);
+
+String UrlEncodePath(const char *p, const char *e);
+String UrlEncodePath(const char *s, int len);
+String UrlEncodePath(const String& s);
+
 String UrlDecode(const char *s, const char *end, bool plus_is_space = true);
 String UrlDecode(const char *s, int len, bool plus_is_space = true);
 String UrlDecode(const String& s, bool plus_is_space = true);
