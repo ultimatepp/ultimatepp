@@ -31,57 +31,33 @@ har]_`*[*@3 s])&]
 [s5;:MIMECharsetName`(byte`): [_^String^ String]_[* MIMECharsetName]([_^byte^ byte]_[*@3 char
 set])&]
 [s2;%% Returns U`+`+ [%-*@3 charset] formatted as required by MIME.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:UrlEncode`(const char`*`,const char`*`): String [* UrlEncode]([@(0.0.255) con
 st] [@(0.0.255) char] [@(0.0.255) `*][*@3 p], [@(0.0.255) const] [@(0.0.255) char] 
 [@(0.0.255) `*][*@3 e])&]
-[s2;%%  [%-*@3 p] [%-*@3 e] .&]
-[s3; &]
-[s4; &]
 [s5;:Upp`:`:UrlEncode`(const char`*`,int`): String [* UrlEncode]([@(0.0.255) const] 
 [@(0.0.255) char] [@(0.0.255) `*][*@3 s], [@(0.0.255) int] [*@3 len])&]
-[s2;%%  [%-*@3 s] [%-*@3 len] .&]
-[s3; &]
-[s4; &]
 [s5;:Upp`:`:UrlEncode`(const String`&`): String [* UrlEncode]([@(0.0.255) const] 
 String[@(0.0.255) `&] [*@3 s])&]
-[s2;%%  [%-*@3 s] .&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:UrlEncodePath`(const char`*`,const char`*`): String [* UrlEncodePath]([@(0.0.255) c
-onst] [@(0.0.255) char] [@(0.0.255) `*][*@3 p], [@(0.0.255) const] [@(0.0.255) char] 
-[@(0.0.255) `*][*@3 e])&]
-[s2;%%  [%-*@3 p] [%-*@3 e] .&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:UrlEncodePath`(const char`*`,int`): String [* UrlEncodePath]([@(0.0.255) cons
-t] [@(0.0.255) char] [@(0.0.255) `*][*@3 s], [@(0.0.255) int] [*@3 len])&]
-[s2;%%  [%-*@3 s] [%-*@3 len] .&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:UrlEncodePath`(const String`&`): String [* UrlEncodePath]([@(0.0.255) const] 
-String[@(0.0.255) `&] [*@3 s])&]
-[s2;%%  [%-*@3 s] .&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:UrlEncode`(const char`*`,const char`*`,bool`): String 
-[* UrlEncode]([@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 p], 
-[@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 e], [@(0.0.255) bool] 
-[*@3 keepslash] [@(0.0.255) `=] [@(0.0.255) false])&]
-[s5;:Upp`:`:UrlEncode`(const char`*`,int`,bool`): String [* UrlEncode]([@(0.0.255) const] 
-[@(0.0.255) char] [@(0.0.255) `*][*@3 s], [@(0.0.255) int] [*@3 len], [@(0.0.255) bool] 
-[*@3 keepslash] [@(0.0.255) `=] [@(0.0.255) false])&]
-[s5;:Upp`:`:UrlEncode`(const String`&`,bool`): String [* UrlEncode]([@(0.0.255) const] 
-String[@(0.0.255) `&] [*@3 s], [@(0.0.255) bool] [*@3 keepslash] [@(0.0.255) `=] 
-[@(0.0.255) false])&]
 [s2;%% Encodes data as required by [^http`:`/`/www`.w3`.org`/TR`/html401`/interact`/forms`.html`#h`-17`.13`.4`.1^ M
 IME type application/x`-www`-form`-urlencoded]. ASCII alphanumeric 
 characters and characters `'.`', `'`-`', `'`_`' are passed directly, 
 space is represented by `'`+`' and anything else as %HH, where 
-HH is two digit hexadecimal number. If [%-*@3 keepslash] is true, 
-`'/`' is also passed directly (this is usually required when 
-sanitizing path).&]
+HH is two digit hexadecimal number.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:UrlEncodePath`(const char`*`,const char`*`): String [* UrlEncodePath]([@(0.0.255) c
+onst] [@(0.0.255) char] [@(0.0.255) `*][*@3 p], [@(0.0.255) const] [@(0.0.255) char] 
+[@(0.0.255) `*][*@3 e])&]
+[s5;:Upp`:`:UrlEncodePath`(const char`*`,int`): String [* UrlEncodePath]([@(0.0.255) cons
+t] [@(0.0.255) char] [@(0.0.255) `*][*@3 s], [@(0.0.255) int] [*@3 len])&]
+[s5;:Upp`:`:UrlEncodePath`(const String`&`): String [* UrlEncodePath]([@(0.0.255) const] 
+String[@(0.0.255) `&] [*@3 s])&]
+[s2;%% Similar to UrlEncode, but does not encode `'/`' until the 
+first `'?`' which is not encoded as well. After that, it encodes 
+`'/`' and `'?`' too. E.g. [C UrlEncodePath(`"//this/is/test?/?`")] 
+returns [C@5 `"//this/is/test?%2F%3F`"].&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:UrlDecode`(const char`*`,const char`*`,bool`): String 
