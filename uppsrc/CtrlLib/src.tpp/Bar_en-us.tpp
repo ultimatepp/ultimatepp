@@ -39,8 +39,9 @@ item are ignored.&]
 [s4;%- &]
 [s5;:Bar`:`:Scan`(Callback1`<Bar`&`>`,dword`):%- [@(0.0.255) static] 
 [@(0.0.255) bool]_[* Scan]([_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ Eve
-nt][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 proc], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:dword^ d
-word]_[*@3 key])&]
+nt][@(0.0.255) <][%%_^topic`:`/`/CtrlLib`/src`/Bar`_en`-us`#Bar`:`:class^ Bar][@(0.0.255) `&
+>]_[*@3 proc], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`_en`-us`#Upp`:`:dword^ dwo
+rd]_[*@3 key])&]
 [s2; Scans bar routines hierarchy testing for[*  ][%-*@3 key] accelerator. 
 If any Item has this accelerator, associated action Callback 
 of item is invoked and method returns true.&]
