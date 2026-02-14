@@ -1,7 +1,5 @@
 #include "Builders.h"
 
-#ifdef PLATFORM_OSX
-
 #include <Draw/Draw.h>
 #include <plugin/png/png.h>
 
@@ -53,8 +51,13 @@ void GccBuilder::CocoaAppBundle()
 			PNGEncoder().SaveFile(AppendFileName(icons, fn), Rescale(img, n, n));
 		}
 
+#ifdef PLATFORM_OSX
 		String exec = String() << "iconutil --convert icns --output \"" << icns << "\" \"" << icons << "\"";
-		Execute(exec);
+#else
+		String exec = String() << "icnsutil -c icns -o \"" << icns << "\" \"" << icons << "\"";
+#endif
+		if (Execute(exec) != 0)
+            PutConsole("Failed to create icons");
 	}
 
 	if(IsNull(Info_plist)) {
@@ -82,11 +85,12 @@ void GccBuilder::CocoaAppBundle()
 	}
 	String Info_plist_path = GetFileFolder(GetFileFolder(target)) + "/Info.plist";
 	if(LoadFile(Info_plist_path) != Info_plist) {
+#ifdef PLATFORM_OSX
 		if(FileExists(Info_plist_path))
 			Execute("defaults delete " + Info_plist_path); // Force MacOS to reload plist
+#endif
 		SaveFile(Info_plist_path, Info_plist);
 		PutConsole("Saving " << Info_plist_path);
 	}
 }
 
-#endif

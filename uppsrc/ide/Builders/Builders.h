@@ -87,6 +87,9 @@ struct GccBuilder : CppBuilder {
 	                 const String& link_options);
 
 	String Info_plist; // apple bundle Info.plist
+
+  protected:
+    String MakeToolName(const char* tn);
 };
 
 struct MscBuilder : CppBuilder {
