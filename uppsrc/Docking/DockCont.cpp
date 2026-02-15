@@ -17,18 +17,12 @@ void ImgButton::Paint(Draw &w)
 }
 
 // DockContHandle frame
-int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style &s) const
+int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style& s) const
 {
-	return 	(IsNull(s.title_font) ? DPI(12) : s.title_font.GetCy() + DPI(2))
-			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
+	return (IsNull(s.title_font) ? DPI(12) : s.title_font.GetCy() + DPI(2)) +
+	       (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight());
 }
-/*
-void DockCont::DockContHandle::RefreshFocus(bool _focus)
-{
-	if (focus != _focus) 	
-		{ focus = _focus; Refresh(); }
-}
-*/
+
 void DockCont::DockContHandle::FrameLayout(Rect& r)
 {
 	if (!dc || !IsShown()) return;
@@ -80,7 +74,7 @@ void DockCont::DockContHandle::Paint(Draw& w)
 				p.x += isz + 2;
 			}
 		}
-		if (!IsNull(s.title_font)) {		
+		if (!IsNull(s.title_font)) {
 			Ctrl *c = GetLastChild();
 			while (c && !c->IsShown() && c->GetParent())
 				c = c->GetPrev();
@@ -93,7 +87,7 @@ void DockCont::DockContHandle::Paint(Draw& w)
 			w.DrawText(p.x, p.y, s.handle_vert ? 900 : 0, text, s.title_font, s.title_ink[0/*focus*/]);
 			w.End();
 		}
-	}	
+	}
 }
 
 void DockCont::Layout()
@@ -131,20 +125,20 @@ void DockCont::ChildRemoved(Ctrl *child)
 
 void DockCont::ChildAdded(Ctrl *child)
 {
-	if (child->GetParent() != this) 
+	if (child->GetParent() != this)
 		return;
-	else if (DockableCtrl *dc = dynamic_cast<DockableCtrl *>(child)) {
+	else if (DockableCtrl *dc = dynamic_cast<DockableCtrl*>(child)) {
 		Value v = ValueCast(dc);
 		tabbar.InsertKey(0, v, dc->GetTitle(), dc->GetIcon(), dc->GetGroup(), true);
-	}	
-	else if (DockCont *dc = dynamic_cast<DockCont *>(child)) {
+	}
+	else if (DockCont *dc = dynamic_cast<DockCont*>(child)) {
 		Value v = ValueCast(dc);
 		tabbar.InsertKey(0, v, dc->GetTitle(), Null, Null, true);
-	}	
-	else 
-		return;	
+	}
+	else
+		return;
 	child->SizePos();
-	TabSelected();	
+	TabSelected();
 	if (GetCount() >= 2) RefreshLayout();
 }
 
@@ -158,25 +152,25 @@ bool DockCont::Key(dword key, int count)
 // The use of Single<> here is bad form, but I am unable to declare it a 
 //  member in the header (dependencies) and I can't think of a better way
 void DockCont::MoveBegin() 
-{ 
+{
 	static bool in_move = false;
-	if (!in_move && !base->IsLocked()) { 
-		in_move = true;	
-		base->SaveDockerPos(GetCurrent(), Single<DockWindow::PosInfo>()); 
-		base->ContainerDragStart(*this); 
+	if (!in_move && !base->IsLocked()) {
+		in_move = true;
+		base->SaveDockerPos(GetCurrent(), Single<DockWindow::PosInfo>());
+		base->ContainerDragStart(*this);
 		in_move = false;
-	} 
+	}
 }
 
-void DockCont::Moving() { 
-	if (!base->IsLocked()) base->ContainerDragMove(*this); 
+void DockCont::Moving() {
+	if (!base->IsLocked()) base->ContainerDragMove(*this);
 }
 
-void DockCont::MoveEnd() { 
-	if (!base->IsLocked()) { 
-		SetAllDockerPos(); 
-		base->ContainerDragEnd(*this); 
-	}	
+void DockCont::MoveEnd() {
+	if (!base->IsLocked()) {
+		SetAllDockerPos();
+		base->ContainerDragEnd(*this);
+	}
 }
 
 void DockCont::WindowMenu()
@@ -192,7 +186,7 @@ void DockCont::WindowMenu()
 void DockCont::Animate(Rect target, int ticks, int interval)
 {
 	if (!IsOpen() || GetParent()) return;
-	animating = true;	
+	animating = true;
 	Rect dr = GetRect();
 	target -= dr;
 #ifdef PLATFORM_WIN32
@@ -208,11 +202,11 @@ void DockCont::Animate(Rect target, int ticks, int interval)
 		Sync();
 		ProcessEvents();
 		Sleep(interval);
-	}	
-	animating = false;	
+	}
+	animating = false;
 }
 
-void DockCont::TabSelected() 
+void DockCont::TabSelected()
 {
 	int ix = tabbar.GetCursor();
 	if (ix >= 0) {
@@ -221,7 +215,7 @@ void DockCont::TabSelected()
 		
 		Ctrl *ctrl = GetCtrl(ix);
 		for (Ctrl *c = FindFirstChild(); c; c = c->GetNext())
-			if (c != ctrl && !c->InFrame()) 
+			if (c != ctrl && !c->InFrame())
 				c->Hide();
 		ctrl->Show();
 
@@ -260,16 +254,17 @@ void DockCont::TabDragged(int ix)
 			c->Remove();
 			base->FloatFromTab(*this, *c);
 		}
-		if (tabbar.IsAutoHide()) 
-			RefreshLayout();		
+		if (tabbar.IsAutoHide())
+			RefreshLayout();
 	}
 }
 
 void DockCont::TabContext(int ix)
 {
-	MenuBar 		bar;
-	DockContMenu 	menu(base);
-	DockMenu 		tabmenu(base);
+	MenuBar bar;
+	DockContMenu menu(base);
+	DockMenu tabmenu(base);
+
 	if (ix >= 0) {
 		Value v = tabbar.GetKey(ix);
 		if (IsDockCont(v))
@@ -296,7 +291,7 @@ void DockCont::TabClosed0(Value v)
 		DockableCtrl *c = DockCast(v);
 		base->SaveDockerPos(*c);
 		c->Remove();
-		c->WhenState();		
+		c->WhenState();
 	}
 	waitsync = true;
 }
@@ -305,7 +300,7 @@ void DockCont::TabClosed(Value v)
 {
 	TabClosed0(v);
 	Layout();
-	if (tabbar.GetCount() == 1) 
+	if (tabbar.GetCount() == 1)
 		RefreshLayout();
 }
 
@@ -314,8 +309,8 @@ void DockCont::TabsClosed(ValueArray vv)
 	for (int i = vv.GetCount()-1; i >= 0 ; --i)
 		TabClosed0(vv[i]);
 	Layout();
-	if (tabbar.GetCount() == 1) 
-		RefreshLayout();	
+	if (tabbar.GetCount() == 1)
+		RefreshLayout();
 }
 
 void DockCont::SortTabs(bool b)
@@ -365,10 +360,10 @@ void DockCont::AutoHideAlign(int align)
 	if (IsAutoHide()) {
 		if (align == DockWindow::DOCK_NONE)
 			base->FloatContainer(*this, Null, false);
-		else			
-			base->DockContainer(align, *this);	
+		else
+			base->DockContainer(align, *this);
 	}
-	else	
+	else
 		base->AutoHideContainer((align == DockWindow::DOCK_NONE) ? DockWindow::DOCK_TOP : align, *this);
 }
 
@@ -385,8 +380,8 @@ void DockCont::AddFrom(DockCont& cont, int except)
 		if (i != except) {
 			Ctrl *c = cont.GetCtrl(i);
 			c->Remove();
-			Add(*c);				
-		}		
+			Add(*c);
+		}
 	if (all)
 		cont.tabbar.Clear();
 	SignalStateChange(ix, GetCount()-1);
@@ -395,8 +390,8 @@ void DockCont::AddFrom(DockCont& cont, int except)
 void DockCont::Clear()
 {
 	if (tabbar.GetCount()) {
-		// Copy tabbar values and clear to prevent this being called multple times if child 
-		//  if destroyed on closing. pfft
+		// Copy tabbar values and clear to prevent this being called multple times if child
+		// if destroyed on closing. pfft
 		Vector<Value> v;
 		v.SetCount(tabbar.GetCount());
 		for (int i = 0; i < tabbar.GetCount(); i++)
@@ -404,7 +399,7 @@ void DockCont::Clear()
 		tabbar.Clear();
 		// Remove ctrls and signal correct state change
 		for (int i = 0; i < v.GetCount(); i++) {
-			if (IsDockCont(v[i])) { 
+			if (IsDockCont(v[i])) {
 				DockCont *dc = ContCast(v[i]);
 				dc->Remove();
 				dc->State(*base, STATE_NONE);
@@ -414,7 +409,7 @@ void DockCont::Clear()
 				dc->Remove();
 				dc->WhenState();
 			}
-		}		
+		}
 
 	}
 	handle.dc = NULL;
@@ -423,10 +418,10 @@ void DockCont::Clear()
 void DockCont::State(DockWindow& dock, DockCont::DockState state)
 {
 	base = &dock;
-	dockstate = state;	
+	dockstate = state;
 	SyncFrames();
 	SyncButtons();
-	Show(); 
+	Show();
 	SignalStateChange();
 }
 
@@ -456,7 +451,7 @@ void DockCont::SyncButtons(DockableCtrl& dc)
 		
 		Logc& inc = s.handle_vert ? lp.y : lp.x;
 		lp.x = s.handle_vert ? Ctrl::Logc(ALIGN_LEFT, 1, btnsize) : Ctrl::Logc(ALIGN_RIGHT, 1, btnsize);
-		lp.y = Ctrl::Logc(ALIGN_TOP, 1, btnsize);		
+		lp.y = Ctrl::Logc(ALIGN_TOP, 1, btnsize);
 		
 		if (close.GetParent()) {
 			close.SetLook(s.close).SetPos(lp).Show();
@@ -466,7 +461,7 @@ void DockCont::SyncButtons(DockableCtrl& dc)
 		autohide.Show(ah);
 		if (ah && autohide.GetParent()) {
 			autohide.SetLook(IsAutoHide() ? s.pin : s.autohide).SetPos(lp);
-			inc.SetA(inc.GetA() + btnsize + 1);		
+			inc.SetA(inc.GetA() + btnsize + 1);
 		}
 		if (windowpos.GetParent())
 			windowpos.SetLook(s.windowpos).SetPos(lp).Show();
@@ -494,7 +489,7 @@ Ctrl * DockCont::FindFirstChild() const
 
 void DockCont::SetCursor(Ctrl& c)
 {
-	for (int i = 0; i < GetCount(); i++) 
+	for (int i = 0; i < GetCount(); i++)
 		if (GetCtrl(i) == &c)
 			return SetCursor(i);
 }
@@ -525,7 +520,7 @@ void DockCont::GetGroups(Vector<String>& groups)
 					}
 				if (!found)
 					groups.Add(g);
-			}				
+			}
 		}
 	}
 }
@@ -560,16 +555,16 @@ void DockCont::WindowButtons(bool menu, bool hide, bool _close)
 
 void DockCont::AddRemoveButton(Ctrl& c, bool state)
 {
-	if (state && !c.GetParent()) 
-		handle.Add(c); 
-	else if (!state) 
-		c.Remove();	
+	if (state && !c.GetParent())
+		handle.Add(c);
+	else if (!state)
+		c.Remove();
 }
 
 void DockCont::Highlight()
 {
 	if (!GetCount() || (!IsOpen() && !IsPopUp() && !GetParent())) return;
-	ViewDraw v(this); 
+	ViewDraw v(this);
 	ChPaint(v, GetSize(), GetCurrent().GetStyle().highlight[1]);
 }
 
@@ -592,7 +587,7 @@ Image DockCont::GetHighlightImage()
 Size DockCont::GetMinSize() const
 { 
 	if (animating) return Size(0, 0);
-	Size sz = tabbar.GetCount() ? GetCurrent().GetMinSize() : Size(0, 0); 
+	Size sz = tabbar.GetCount() ? GetCurrent().GetMinSize() : Size(0, 0);
 	sz = AddFrameSize(sz);
 	return sz;
 }
@@ -623,12 +618,12 @@ void DockCont::SyncUserSize(bool h, bool v)
 
 int DockCont::GetDockAlign() const
 {
-	return base->GetDockAlign(*this); 	
+	return base->GetDockAlign(*this);
 }
 
 int DockCont::GetAutoHideAlign() const
 {
-	return base->GetAutoHideAlign(*this); 		
+	return base->GetAutoHideAlign(*this);
 }
 
 bool DockCont::IsDockAllowed(int align, int dc_ix) const
@@ -647,17 +642,18 @@ bool DockCont::IsDockAllowed0(int align, const Value& v) const
 }
 
 DockableCtrl * DockCont::Get0(int ix) const
-{ 
+{
 	if (ix < 0 || ix > tabbar.GetCount()) return NULL;
-	Value v = tabbar.GetKey(ix); 
-	return IsDockCont(v) ? ContCast(v)->GetCurrent0() : DockCast(v); 
+	Value v = tabbar.GetKey(ix);
+	return IsDockCont(v) ? ContCast(v)->GetCurrent0() : DockCast(v);
 }
 
 WString DockCont::GetTitle(bool force_count) const
 {
-	if ((IsTabbed() || force_count) && tabbar.GetCount() > 1) 
-		return (WString)Format("%s (%d/%d)", GetCurrent().GetTitle(), tabbar.GetCursor()+1, tabbar.GetCount()); 
-	return GetCurrent().GetTitle();	
+	if((IsTabbed() || force_count) && tabbar.GetCount() > 1)
+		return (WString)Format("%s (%d/%d)", GetCurrent().GetTitle(), tabbar.GetCursor() + 1,
+		                       tabbar.GetCount());
+	return GetCurrent().GetTitle();
 }
 
 void DockCont::ChildTitleChanged(DockableCtrl &dc)
@@ -677,7 +673,7 @@ void DockCont::ChildTitleChanged(Ctrl *child, WString title, Image icon)
 		    tabbar.Set(i, tabbar.GetKey(i), title, icon);
 		    break;
 		}
-	if (!GetParent()) 
+	if (!GetParent())
 		Title(GetTitle());
 	RefreshFrame();
 }
@@ -688,7 +684,7 @@ void DockCont::Serialize(Stream& s)
 	int cont = 'C';
 	const Vector<DockableCtrl *>& dcs = base->GetDockableCtrls();
 	
-	if (s.IsStoring()) {		
+	if (s.IsStoring()) {
 		if (GetCount() == 1 && IsDockCont(tabbar.GetKey(0)))
 			return ContCast(tabbar.GetKey(0))->Serialize(s);
 
@@ -700,8 +696,8 @@ void DockCont::Serialize(Stream& s)
 			else {
 				DockableCtrl *dc = DockCast(tabbar.GetKey(i));
 				int ix = base->FindDocker(dc);
-				s / ctrl / ix;					
-			}									
+				s / ctrl / ix;
+			}
 		}
 		int cursor = tabbar.GetCursor();
 		int groupix = tabbar.GetGroup();
@@ -729,14 +725,14 @@ void DockCont::Serialize(Stream& s)
 					Add(*dcs[ix]);
 			}
 			else
-				ASSERT(false);								
+				ASSERT(false);
 		}
 		int cursor, groupix;
 		s / cursor / groupix;
 		tabbar.SetGroup(groupix);
 		tabbar.SetCursor(min(tabbar.GetCount()-1, cursor));
 		TabSelected();
-	}	
+	}
 }
 void DockCont::DockContMenu::ContainerMenu(Bar& bar, DockCont *c, bool withgroups)
 {
@@ -747,7 +743,7 @@ void DockCont::DockContMenu::ContainerMenu(Bar& bar, DockCont *c, bool withgroup
 	withgroups = false;
 	
 	// If grouping, find all groups
-	DockMenu::WindowMenu(bar, dc);	
+	DockMenu::WindowMenu(bar, dc);
 	if (withgroups && dock->IsGrouping()) {
 		Vector<String> groups;
 		cont->GetGroups(groups);
@@ -756,7 +752,7 @@ void DockCont::DockContMenu::ContainerMenu(Bar& bar, DockCont *c, bool withgroup
 			Sort(groups);
 			for (int i = 0; i < groups.GetCount(); i++)
 				bar.Add(groups[i], THISBACK1(GroupWindowsMenu, groups[i]));
-			bar.Add(t_("All"), THISBACK1(GroupWindowsMenu, String(Null)));	
+			bar.Add(t_("All"), THISBACK1(GroupWindowsMenu, String(Null)));
 		}
 	}
 }
@@ -784,8 +780,8 @@ void DockCont::DockContMenu::MenuClose(DockableCtrl *dc)
 void DockCont::Lock(bool lock)
 {
 	tabbar.Crosses(!lock && base && base->HasCloseButtons());
-	tabbar.WhenDrag 		= lock ? Callback1<int>() : THISBACK(TabDragged);
-	tabbar.WhenContext 		= lock ? Callback1<int>() : THISBACK(TabContext);	
+	tabbar.WhenDrag = lock ? Callback1<int>() : THISBACK(TabDragged);
+	tabbar.WhenContext = lock ? Callback1<int>() : THISBACK(TabContext);
 	SyncFrames(lock && !base->IsShowingLockedHandles());
 	RefreshLayout();
 }
@@ -801,7 +797,7 @@ void DockCont::SyncFrames(bool hidehandle)
 	handle.Show(frames);
 	if (frames)
 		SetFrame(0, Single<DockCont::DockContFrame>());
-	else 
+	else
 		SetFrame(0, NullFrame());
 }
 
@@ -809,7 +805,7 @@ DockCont::DockCont()
 {
 	dockstate = STATE_NONE;
 	base = NULL;
-	waitsync = false;	
+	waitsync = false;
 	animating = false;
 	usersize.cx = usersize.cy = Null;
 	NoCenter();
@@ -821,7 +817,7 @@ DockCont::DockCont()
 	tabbar<<= THISBACK(TabSelected);
 	tabbar.WhenClose = THISBACK(TabClosed);
 	tabbar.WhenCloseSome = THISBACK(TabsClosed);
-	tabbar.SetBottom();	
+	tabbar.SetBottom();
 
 	WhenClose = THISBACK(CloseAll);
 	
@@ -829,15 +825,15 @@ DockCont::DockCont()
 	handle.WhenContext = THISBACK(WindowMenu);
 	handle.WhenLeftDrag = THISBACK(MoveBegin);
 	handle.WhenLeftDouble = THISBACK(RestoreCurrent);
-	close.Tip(t_("Close")) 				<<= THISBACK(CloseAll);
-	autohide.Tip(t_("Auto-Hide")) 		<<= THISBACK(AutoHide);
-	windowpos.Tip(t_("Window Menu")) 	<<= THISBACK(WindowMenu);		
-	
+	close.Tip(t_("Close")) <<= THISBACK(CloseAll);
+	autohide.Tip(t_("Auto-Hide")) <<= THISBACK(AutoHide);
+	windowpos.Tip(t_("Window Menu")) <<= THISBACK(WindowMenu);
+
 	AddFrame(NullFrame());
 	AddFrame(tabbar);
 	AddFrame(handle);
 
-	Lock(false);	
+	Lock(false);
 }
 
 }

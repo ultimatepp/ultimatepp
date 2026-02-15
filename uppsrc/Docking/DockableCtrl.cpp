@@ -18,30 +18,31 @@ DockableCtrl&  DockableCtrl::Set(const Image& _icon, const char *_title, String 
 
 bool DockableCtrl::IsHotKey(dword key)
 {
-	return (keycode == key || (keyinfo && 
-		(key == keyinfo().key[0] || key == keyinfo().key[1] || key == keyinfo().key[2] || key == keyinfo().key[3])));
+	return (keycode == key ||
+	        (keyinfo && (key == keyinfo().key[0] || key == keyinfo().key[1] ||
+	                     key == keyinfo().key[2] || key == keyinfo().key[3])));
 }
 
 DockableCtrl&  DockableCtrl::SizeHint(const Size& min, const Size& max, const Size& std)
 {
 	minsize = min; maxsize = max; stdsize = std; 
-	return *this;	
+	return *this;
 }
 
 DockableCtrl& DockableCtrl::Title(const WString& _title)
 {
-	title = _title; 
-	if (GetContainer()) 
-		GetContainer()->ChildTitleChanged(*this); 
+	title = _title;
+	if (GetContainer())
+		GetContainer()->ChildTitleChanged(*this);
 	return *this;
 }
 
 DockableCtrl& DockableCtrl::Icon(const Image& m)
 {
 	icon = m;
-	if (GetContainer()) 
+	if (GetContainer())
 		GetContainer()->ChildTitleChanged(*this); 
-	return *this;	
+	return *this;
 }
 
 bool DockableCtrl::IsFloating() const
@@ -59,19 +60,19 @@ bool DockableCtrl::IsDocked() const
 bool DockableCtrl::IsAutoHide() const
 {
 	DockCont *c = GetContainer();
-	return c && c->IsAutoHide();		
+	return c && c->IsAutoHide();
 }
 
 bool DockableCtrl::IsTabbed() const
 {
 	DockCont *c = GetContainer();
-	return c && (c->IsTabbed() || c->GetCount() > 1);	
+	return c && (c->IsTabbed() || c->GetCount() > 1);
 }
 
 bool DockableCtrl::IsHidden() const
 {
 	DockCont *c = GetContainer();
-	return !c || c->IsHidden();	
+	return !c || c->IsHidden();
 }
 
 int DockableCtrl::GetDockAlign() const
@@ -91,8 +92,8 @@ DockableCtrl&  DockableCtrl::SetGroup(const String& g)
 void DockableCtrl::Highlight()
 {
 	if (!GetParent() || !IsOpen()) return;
-	ViewDraw v(this); 
-	ChPaint(v, GetSize(), GetStyle().highlight[1]);	
+	ViewDraw v(this);
+	ChPaint(v, GetSize(), GetStyle().highlight[1]);
 }
 
 void DockableCtrl::TimedHighlight(int ms)
@@ -172,8 +173,8 @@ CH_STYLE(DockableCtrl, Style, StyleDefault)
 	handle_vert = false;
 	
 	title_font = StdFont();
-	title_ink[0] = SColorInfoText(); 		// No focus
-	title_ink[1] = SColorHighlightText(); 	// Focus
+	title_ink[0] = SColorInfoText();      // No focus
+	title_ink[1] = SColorHighlightText(); // Focus
 	
 	DockableCtrlImgsLook(close, DockingImg::I_DClosed, 4);
 	DockableCtrlImgsLook(windowpos, DockingImg::I_DMenud, 4);
