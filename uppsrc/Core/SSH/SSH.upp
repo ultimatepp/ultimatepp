@@ -47,8 +47,10 @@ file
 	libssh2/COPYING,
 	Docs readonly separator,
 	src.tpp,
+	srcdoc.tpp,
 	Info readonly separator,
 	ReadMe.md,
 	Copying,
 	Todo,
 	Issues;
+
