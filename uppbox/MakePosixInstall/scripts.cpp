@@ -1,5 +1,5 @@
 const char *install_script =
-R"--(##!/usr/bin/env bash
+R"--(#!/usr/bin/env bash
 
 AskContinue()
 {
