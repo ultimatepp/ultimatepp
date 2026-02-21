@@ -213,7 +213,7 @@ void Ide::FindDs(int where, bool all)
 
 	int n = 0;
 	Progress pi;
-	for(String fn : files) {
+	for(const String& fn : files) {
 		if(pi.SetCanceled(n++, files.GetCount()))
 			break;
 
@@ -253,7 +253,9 @@ void Ide::FindDs(int where, bool all)
 							String line;
 							for(const char *s = pos.lineptr; findarg(*s, '\0', '\r', '\n') < 0; s++)
 								line.Cat(*s);
-							AddFoundFile(fn, pos.line, line, pos.ptr - pos.lineptr, id.GetCount());
+							AddFoundFile(fn, pos.line, line,
+							             static_cast<int>(pos.ptr - pos.lineptr),
+							             id.GetCount());
 						}
 					}
 					else
