@@ -80,7 +80,7 @@ Image DiagramEditor::DashIcon(int i)
 			 .Stroke(DPI(2), SColorText());
 			Image m = p;
 			v = m;
-			return m.GetLength() * sizeof(RGBA);
+			return static_cast<int>(m.GetLength() * sizeof(RGBA));
 		}
 	).To<Image>();
 }
@@ -98,7 +98,7 @@ Image DiagramEditor::WidthIcon(int i)
 			 .Stroke(i, SColorText());
 			Image m = p;
 			v = m;
-			return m.GetLength() * sizeof(RGBA);
+			return static_cast<int>(m.GetLength() * sizeof(RGBA));
 		}
 	).To<Image>();
 }

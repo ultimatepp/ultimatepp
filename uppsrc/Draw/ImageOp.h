@@ -181,7 +181,7 @@ Image MakeImage(T key, M make, bool paintonly = false) {
 			if(paintonly && !IsNull(img) && img.GetRefCount() == 1)
 				SetPaintOnly__(img);
 			v = img;
-			return img.GetLength() * sizeof(RGBA);
+			return static_cast<int>(img.GetLength() * sizeof(RGBA));
 		}
 	).template To<Image>();
 };

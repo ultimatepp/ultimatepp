@@ -105,7 +105,7 @@ bool DiagramItem::IsClick(Point p, const Diagram& diagram, bool relaxed) const
 			m.Paint(p, diagram);
 			Image img = p.GetResult();
 			v = img;
-			return img.GetLength() * sizeof(RGBA);
+			return static_cast<int>(img.GetLength() * sizeof(RGBA));
 		}
 	).To<Image>();
 	return test[clamp(int(64 * (p.y - rect.top) / rect.GetHeight()), 0, 63)]
