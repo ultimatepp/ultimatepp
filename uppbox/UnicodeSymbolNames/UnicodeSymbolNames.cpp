@@ -53,6 +53,10 @@ CONSOLE_APP_MAIN
 		if(h.GetCount() > 2) {
 			int codepoint = stou(~h[0], NULL, 16);
 			String text = h[1];
+			if((codepoint < 0x24F || codepoint >= 0x2070 && codepoint <= 0x209F || codepoint >= 0x2150 && codepoint <= 0x218F)
+			   && findarg(h[2], "No", "Sm") >= 0)
+				out.GetAdd("mathematical") << MakeTuple(codepoint , ToLower(text));
+			else
 			for(SymbolRange r : symbol_ranges) {
 				out2 << MakeTuple(codepoint , ToLower(text));
 				if(codepoint >= r.from && codepoint <= r.to) {
