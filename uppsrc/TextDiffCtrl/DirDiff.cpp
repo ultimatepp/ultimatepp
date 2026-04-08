@@ -344,8 +344,6 @@ void DirDiffDlg::File()
 	diff.Set(Null, Null);
 	f1 = LoadFile(p1);
 	f2 = LoadFile(p2);
-	SaveFile("C:/xxx/f1.txt", f1); _DBG_
-	SaveFile("C:/xxx/f2.txt", f2); _DBG_
 	if(split_lines) {
 	    f1 = SplitLines(f1);
 	    f2 = SplitLines(f2);
