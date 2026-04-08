@@ -970,7 +970,7 @@ void Ide::Diff()
 	DoDiff(&diffdlg);
 }
 
-void Ide::DiffWith(const String& path)
+void Ide::DiffWith(const String& path, const Image& icon)
 {
 #ifdef CPU_64
 	int64 maxsize = 2000*1024*1024;
@@ -984,6 +984,7 @@ void Ide::DiffWith(const String& path)
 		return;
 	}
 	FileDiff& diffdlg = CreateNewWindow<FileDiff>(AnySourceFs());
+	diffdlg.Icon(icon);
 	diffdlg.Set(editfile, path);
 	DoDiff(&diffdlg);
 }

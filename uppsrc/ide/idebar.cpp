@@ -587,14 +587,14 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	if(i >= 0 && i < fileindex.GetCount() && fileindex[i] < actual.file.GetCount())
 		path = SourcePath(actualpackage, actual.file[fileindex[i]]);
 	menu.Sub(candiff, "Compare with", [=](Bar& bar) {
-		bar.AddMenu(candiff, AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
+		bar.AddMenu(candiff, AK_DIFF, IdeImg::Diff(), [=] { Diff(); })
 		    .Help("Show differences between the current and selected file");
 		bar.AddMenu(candiff && FileExists(GetTargetLogPath()),
-		            AK_DIFFLOG, IdeImg::DiffLog(), [=] { DiffWith(GetTargetLogPath()); })
+		            AK_DIFFLOG, IdeImg::DiffLog(), [=] { DiffWith(GetTargetLogPath(), IdeImg::DiffLog()); })
 		    .Help("Show differences between the current file and the log");
 		if(FileExists(path))
 			bar.AddMenu(candiff && FileExists(path), path,
-			            IdeImg::DiffNext(), [=] { DiffWith(path); })
+			            IdeImg::DiffNext(), [=] { DiffWith(path, IdeImg::DiffNext()); })
 			    .Help("Show differences between the current and the next file");
 		Vector<String> file;
 		if(bar.IsMenuBar()) {
@@ -613,7 +613,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 					sep = false;
 					if(++ii > 80) // sanity..
 						return;
-					bar.AddMenu(p, IdeImg::DiffNext(), [=] { DiffWith(p); })
+					bar.AddMenu(p, IdeImg::DiffNext(), [=] { DiffWith(p, IdeImg::DiffNext()); })
 					    .Help("Show differences between the current and that file");
 				}
 		}
@@ -1111,12 +1111,13 @@ void Ide::EditorMenu(Bar& bar)
 	bar.MenuSeparator();
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
-            "Compare with clipboard..", [=]() {
+            "Compare with clipboard..", IdeImg::DiffClip(), [=]() {
         DiffDlg& dlg = CreateNewWindow<DiffDlg>();
         dlg.diff.left.RemoveFrame(dlg.p);
         dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
                                                                : editor.Get());
 		dlg.Title("Compare with clipboard");
+		dlg.Icon(IdeImg::DiffClip());
         dlg.OpenMain();
     });
 	bar.MenuSeparator();

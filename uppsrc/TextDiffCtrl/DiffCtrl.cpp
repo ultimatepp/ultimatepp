@@ -259,6 +259,8 @@ Event<const String&, Vector<LineEdit::Highlight>&, const WString&> DiffDlg::When
 
 DiffDlg::DiffDlg()
 {
+	Icon(DiffImg::Diff());
+
 	Add(diff.SizePos());
 	Sizeable().Zoomable();
 	diff.InsertFrameLeft(p);

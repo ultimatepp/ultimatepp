@@ -857,7 +857,7 @@ public:
 		void   Print();
 		void   DoDiff(FileDiff *diffdlg);
 		void   Diff();
-		void   DiffWith(const String& path);
+		void   DiffWith(const String& path, const Image& icon);
 		void   DiffFiles(const char *lname, const String& l, const char *rname, const String& r);
 		String LoadConflictFile(const String& n);
 
