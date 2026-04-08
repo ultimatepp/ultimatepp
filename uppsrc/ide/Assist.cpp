@@ -297,11 +297,39 @@ void AssistEditor::SyncAssist()
 	Buffer<bool> found(assist_item.GetCount(), false);
 	VectorMap<String, int> found_name; // to accelerate resolving duplicities
 	Index<String> cpp;
+
+	bool iml1 = false;
+	bool iml2 = false;
+	bool iml3 = false;
+	for(int i = 0; i < assist_item.GetCount(); i++) {
+		const AssistItem& m = assist_item[i];
+		if(m.pretty == "Upp::Iml& Iml()")
+			iml1 = true;
+		if(m.pretty == "Upp::Image Get(int i)")
+			iml2 = true;
+		if(m.pretty.EndsWith("::COUNT"))
+			iml3 = true;
+	}
+	
+	bool isiml = iml1 && iml2 && iml3;
+	
+	auto ImlIgnore = [&](const String& name) {
+		if(!isiml)
+			return false;
+		static String ie[] = {
+			"__DARK", "__UHD", "__100", "__150", "__200", "__250", "__300", "__350", "__600"
+		};
+		for(const String& s : ie)
+			if(name.EndsWith(s))
+				return true;
+		return false;
+	};
+
 	for(int pass = 0; pass < 2; pass++) {
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const AssistItem& m = assist_item[i];
 			if(!found[i] &&
-			   (typei < 0 || m.typei == typei) &&
+			   (typei < 0 || m.typei == typei) && !ImlIgnore(m.name) &&
 			   ((pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) || m.kind == KIND_ERROR)) {
 			    int q = found_name.Find(m.name);
 			    if(q >= 0) { // resolve duplicities
