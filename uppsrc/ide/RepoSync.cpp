@@ -222,7 +222,10 @@ bool RepoSync::ListGit(const String& path)
 		if(h.GetCount() > 3) {
 			if(!h.TrimEnd("/"))
 				h.TrimEnd("\\");
-			String file = AppendFileName(path, h.Mid(3));
+			String n = h.Mid(3);
+			n.TrimStart("\"");
+			n.TrimEnd("\"");
+			String file = AppendFileName(path, n);
 			actions = true;
 			int action = String("M.?DR").Find(h[1]);
 			if(action < 0 || h[0] != '?' && h[0] != ' ')
