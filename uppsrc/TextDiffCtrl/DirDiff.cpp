@@ -346,8 +346,8 @@ void DirDiffDlg::File()
 	};
 
 	diff.Set(Null, Null);
-	String f1 = LoadFile(p1);
-	String f2 = LoadFile(p2);
+	f1 = LoadFile(p1);
+	f2 = LoadFile(p2);
 	if(split_lines) {
 	    f1 = SplitLines(f1);
 	    f2 = SplitLines(f2);
@@ -396,10 +396,11 @@ void DirDiffDlg::Copy(bool left)
 	}
 	if(PromptYesNo("Copy [* \1" + src + "\1]&to [* \1" + dst + "\1] ?")) {
 		Backup(dst);
-		FileIn  in(src);
-		FileOut out(dst);
-		CopyStream(out, in);
-		out.Close();
+		String src_data = f1;
+		String dst_data = f2;
+		if(left)
+			Swap(src_data, dst_data);
+		SaveFile(dst, src_data);
 		Refresh();
 	}
 }

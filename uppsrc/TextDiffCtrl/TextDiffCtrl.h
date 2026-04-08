@@ -307,6 +307,8 @@ protected:
 	
 	bool                       editable_left = true;
 	bool                       editable_right = true;
+
+	String                     f1, f2;
 	
 	int                        lmid = 0; // for git support
 	int                        rmid = 0; // for git support
