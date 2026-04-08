@@ -187,10 +187,9 @@ bool DirDiffDlg::FileEqual(const String& f1, const String& f2, int& kind)
 	FileIn in2(f2);
 	if(in1 && in2) {
 		kind = NORMAL_FILE;
-		while(!in1.IsEof() && !in2.IsEof()) {
+		while(!in1.IsEof() && !in2.IsEof())
 			if(in1.GetLine() != in2.GetLine())
 				return false;
-		}
 		return true;
 	}
 	else
