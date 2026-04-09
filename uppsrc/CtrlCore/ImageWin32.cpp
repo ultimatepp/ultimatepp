@@ -305,11 +305,14 @@ struct ImageSysDataMaker : LRUCache<ImageSysData, int64>::Maker {
 	virtual int    Make(ImageSysData& object) const { object.Init(img); return (int)img.GetLength(); }
 };
 
-void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
+void SystemDraw::SysDrawImageOp(int x, int y, const Image& _img, const Rect& src, Color color)
 {
 	LLOG("SysDrawImageOp " << img.GetSerialId() << ' ' << img.GetSize());
 
 	GuiLock __;
+
+	Image img = _img;
+
 	if(img.GetLength() == 0)
 		return;
 
@@ -323,6 +326,11 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, const Rect& src,
 		LTIMING("Image Opaque direct set");
 		SetSurface(*this, x, y, sz.cx, sz.cy, ~img);
 		return;
+	}
+	
+	if(!IsNull(color)) { // avoid SW emulation
+		img = CachedSetColorKeepAlpha(img, color);
+		color = Null;
 	}
 
 	ImageSysDataMaker m;
