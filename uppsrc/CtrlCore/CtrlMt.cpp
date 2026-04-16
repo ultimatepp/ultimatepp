@@ -40,7 +40,7 @@ void EnterGuiMutex(int n)
 
 bool TryEnterGuiMutex()
 {
-	if(sGLockLevel == 0 && sGLock.TryEnter()) {
+	if(sGLockLevel || sGLock.TryEnter()) {
 		sGLockLevel++;
 		return true;
 	}
