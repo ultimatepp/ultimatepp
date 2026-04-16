@@ -193,6 +193,7 @@ public:
 struct TextDiffCtrl : public Splitter {
 	TextCompareCtrl left;
 	TextCompareCtrl right;
+	FrameTop<ButtonOption> indent;
 	FrameTop<Button> next, prev;
 	int             cl = 0; // to lock WhenCursor -> SetLine
 
@@ -292,7 +293,6 @@ protected:
 	WithDropChoice<EditString> dir2;
 	Option                     hidden;
 	Option                     split_lines;
-	Option                     ignore_indentation;
 	Button                     compare;
 	
 	Option                     removed, added, modified;
@@ -359,7 +359,7 @@ public:
 	int    GetLMid() const                      { return lmid; }
 	int    GetRMid() const                      { return rmid; }
 	
-	static bool GetIgnoreIndentation(Ctrl *q)   { auto *p = q->GetAscendant<DirDiffDlg>(); return p && p->ignore_indentation; }
+	static bool GetIgnoreIndentation(Ctrl *q)   { auto *p = q->GetAscendant<DirDiffDlg>(); return p && !p->diff.indent; }
 
 	DirDiffDlg();
 };

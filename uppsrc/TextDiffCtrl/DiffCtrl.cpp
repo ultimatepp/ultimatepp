@@ -9,8 +9,14 @@ namespace Upp {
 TextDiffCtrl::TextDiffCtrl()
 {
 	left.SetLeft();
+	indent.SetImage(DiffImg::Indent());
+	indent.Tip("Compare indentation");
+	indent <<= true;
 	next.SetImage(DiffImg::Next());
+	next.Tip("Next difference");
 	prev.SetImage(DiffImg::Prev());
+	prev.Tip("Previous difference");
+	left.scroll.y.AddFrame(indent);
 	left.scroll.y.AddFrame(prev);
 	left.scroll.y.AddFrame(next);
 	next << [=] { FindDiff(true); };
@@ -70,7 +76,7 @@ static bool SmallDiff(const char *s1, const char *s2)
 
 void TextDiffCtrl::Set(Stream& l, Stream& r)
 {
-	bool ignore_indent = DirDiffDlg::GetIgnoreIndentation(this);
+	bool ignore_indent = !indent;
 	Vector<String> ll = GetLineMap(l, ignore_indent);
 	Vector<String> rl = GetLineMap(r, ignore_indent);
 	Array<TextSection> sections = CompareLineMaps(ll, rl);
@@ -331,6 +337,7 @@ FileDiff::FileDiff(FileSel& fs_)
 	Icon(DiffImg::Diff());
 	diff.InsertFrameRight(r);
 	r <<= THISBACK(Open);
+	diff.indent << [=] { Finish(); };
 }
 
 void FileDiff::Set(const String& f)

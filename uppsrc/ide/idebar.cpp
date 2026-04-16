@@ -1114,8 +1114,11 @@ void Ide::EditorMenu(Bar& bar)
             "Compare with clipboard..", IdeImg::DiffClip(), [=]() {
         DiffDlg& dlg = CreateNewWindow<DiffDlg>();
         dlg.diff.left.RemoveFrame(dlg.p);
-        dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
-                                                               : editor.Get());
+        String left = ReadClipboardText();
+        String right = editor.IsSelection() ? editor.GetSelection() : editor.Get();
+        dlg.diff.Set(left, right);
+        dlg.diff.indent <<= false;
+        dlg.diff.indent << [=, &dlg] { dlg.diff.Set(left, right); };
 		dlg.Title("Compare with clipboard");
 		dlg.Icon(IdeImg::DiffClip());
         dlg.OpenMain();
