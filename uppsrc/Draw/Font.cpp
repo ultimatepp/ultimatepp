@@ -164,6 +164,9 @@ bool Font::std_font_override;
 void Font::SetDefaultFont(Font font)
 {
 	LLOG("SetDefaultFont " << font);
+	int override_scale = Atoi(GetEnv("UPP_SCALE__"));
+	if(override_scale)
+		font.Height(decode(override_scale, 3, 18, 4, 24, 6, 36, 12));
 	if(!std_font_override)
 		SetStdFont0(font);
 }
