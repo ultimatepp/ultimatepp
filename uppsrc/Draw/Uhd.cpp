@@ -158,9 +158,9 @@ Image Downscale6x(const Image& src)
 	return Image(h);
 }
 
-int    DPIScaleGlobal_;
-double DPIScaleGlobalF_;
-double IDPIScaleGlobalF_;
+int    DPIScaleGlobal_ = 2;
+double DPIScaleGlobalF_ = 1;
+double IDPIScaleGlobalF_ = 1;
 
 void SetDPIScale(int scale)
 {

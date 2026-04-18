@@ -1,5 +1,9 @@
 //#BLITZ_APPROVE
 
+#ifdef VERSION
+#undef VERSION
+#endif
+
 #define VERSION(v)
 #define PREMULTIPLIED
 

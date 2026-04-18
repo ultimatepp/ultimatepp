@@ -13,10 +13,10 @@
 #define LLOG(x)  // LOG(x)
 
 String targetdir = GetHomeDirFile("www2");
-String rootdir   = GetHomeDirFile("upp.src");
-//String devdir    = GetHomeDirFile("upp.src");
+String rootdir   = GetHomeDirFile("upp.stable");
+String masterdir = GetHomeDirFile("upp.src");
 
-String uppbox    = rootdir + "/uppbox";
+String uppbox    = masterdir + "/uppbox";
 String uppsrc    = rootdir + "/uppsrc";
 //String devsrc    = devdir + "/uppsrc";
 String reference = rootdir + "/reference";
@@ -116,6 +116,7 @@ String GetImageSrc(ImageFn img)
 		q = il.GetCount();
 		il.Add(img);
 		PNGEncoder png;
+		(*img)();
 		png.SaveFile(AppendFileName(targetdir, ImgName(q)),(*img)());
 	}
 	return ImgName(q);
@@ -842,234 +843,237 @@ CONSOLE_APP_MAIN
 	RLOG("--- uppweb started at " << GetSysTime());
 
 	bool isdev = false;
+	
+	if(CommandLine().GetCount() && CommandLine()[0] == "dev") {
+		isdev = true;
+		rootdir = masterdir;
+		targetdir << "/dev";
+	}
+	
+	uppsrc = AppendFileName(rootdir, "uppsrc");
 
-	for(int pass = 0; pass < 1; pass++) {
-		uppsrc = AppendFileName(rootdir, "uppsrc");
-	
-		RealizeDirectory(targetdir);
-	
-		RLOG("RootDir: " << rootdir);
-		RLOG("TargetDir: " << targetdir);
-	
-		String downloads = Downloads();
+	RealizeDirectory(targetdir);
 
-		FindFile ff(AppendFileName(targetdir, "*.*"));
-		while(ff) {
-			if(ff.IsFile())
-				FileDelete(ff.GetPath());
-			ff.Next();
+	RLOG("RootDir: " << rootdir);
+	RLOG("TargetDir: " << targetdir);
+
+	String downloads = Downloads();
+
+	FindFile ff(AppendFileName(targetdir, "*.*"));
+	while(ff) {
+		if(ff.IsFile())
+			FileDelete(ff.GetPath());
+		ff.Next();
+	}
+
+	if (!DirectoryExists(rootdir)) {
+		Cout() << ("Directory " + DeQtf(rootdir) + " does not exist\n");
+		return;
+	}
+
+	uppbox =    AppendFileName(rootdir, "uppbox");
+	reference = AppendFileName(rootdir, "reference");
+	examples =  AppendFileName(rootdir, "examples");
+
+	InitWwwTpp();
+
+	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
+
+	RealizeDirectory(targetdir);
+
+	RLOG("Gather ref links " << uppsrc);
+	GatherRefLinks(uppsrc, false);
+
+	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
+
+#ifdef bmGIT_REVCOUNT
+	auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
+	escape.Add("LATESTGIT", version);
+#endif
+
+	String release = "17810";
+	escape.Add("RELEASE", release);
+	escape.Add("RELEASET", release);
+	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
+
+	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
+
+	header = HtmlPackedTable()
+	       .Width(-100)
+	       .BgColor(White)
+	       .Attr("style", "border: 1px solid #6E89AE;"
+	                      "padding-left: 10px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;")
+	       /
+			HtmlRow() / (
+			    HtmlCell() / HtmlLink("index.html") / Wimg(WWW::Logo6) +
+			    HtmlCell().Right().Bottom()
+			              .Style("padding-bottom: 5px; "
+			                     "background-image: url('" + GetImageSrc(WWW::HB) + "')")
+			    / HtmlArial(14) / (/*AdSense() + "&nbsp;&nbsp;" + */(isdev ? "<br>development version (master branch)" : ""))
+			);
+
+	bar.SetCount(languages.GetCount());
+
+	int currentLang = GetCurrentLanguage();
+	for (int i = 0; i < languages.GetCount(); ++i) {
+		Cout() << "Language " << LNGAsText(languages[i]);
+		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
+		int lang = languages[i];
+
+		SetLanguage(lang);
+
+		Www("index", lang);
+		Www("contribweb", lang);
+	//	bi << BarLink("index.html", "Home", false);
+		bi << BarLink(Www("overview", lang), t_("Overview"), false);
+		bi << BarLink(Www("examples", lang), t_("Examples"));
+		{
+			IGNORE_RESULT(Www("reference", lang));
+
+			int ri = tt.Find(webtopic + "/www/reference$" + ToLower(LNGAsText(lang)));
+			int di = tt.Find(webtopic + "/www/examples$" + ToLower(LNGAsText(lang)));
+
+			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
+			tt[di].text << tt[ri].text << '\n';
+			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
-	
-		if (!DirectoryExists(rootdir)) {
-			Cout() << ("Directory " + DeQtf(rootdir) + " does not exist\n");
-			return;
+
+		bi << BarLink(Www("ss", lang), t_("Screenshots"));
+		bi << BarLink(Www("comparison", lang), t_("Comparisons"));
+		bi << BarLink(Www("apps", lang), t_("Applications"));
+		bi << BarLink(Www("download", lang), t_("Download"));
+
+		bi << BarLink(Www("documentation", lang), t_("Documentation"));
+		{
+			int di = tt.Find(webtopic + "/www/documentation$" + ToLower(LNGAsText(lang)));
+			if (di >= 0) {
+				Index<String> x;
+				x.Clear();
+				String qtf;
+				PackageDocsGenerator dgen;
+
+				dgen.Generate(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
+				dgen.Generate(x, qtf, "Core/POP3", lang, 2, String("/") + FormatInt(di) + "/[Core/POP3]");
+				dgen.Generate(x, qtf, "Core/SMTP", lang, 2, String("/") + FormatInt(di) + "/[Core/SMTP]");
+				dgen.Generate(x, qtf, "Core/SSH", lang, 2, String("/") + FormatInt(di) + "/[Core/SSH]");
+				dgen.Generate(x, qtf, "Draw", lang, 2, String("/") + FormatInt(di) + "/[Draw]");
+				dgen.Generate(x, qtf, "CtrlCore", lang, 2, String("/") + FormatInt(di) + "/[CtrlCore]");
+				dgen.Generate(x, qtf, "CtrlLib", lang, 2, String("/") + FormatInt(di) + "/[CtrlLib]");
+				dgen.Generate(x, qtf, "RichText", lang, 2, String("/") + FormatInt(di) + "/[RichText]");
+				dgen.Generate(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
+				dgen.Generate(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
+
+				String d = AppendFileName(uppsrc, "*.*");
+				String p;
+				for(int pass = 0; pass < 2; pass++) {
+					FindFile ff(d);
+					Array <String> folders;
+					folders.Clear();
+					while(ff) {
+						if(ff.IsFolder() && ff.GetName() != "Web")
+							folders.Add(p + ff.GetName());
+						ff.Next();
+					}
+					Sort(folders);
+					for (int ifold = 0; ifold < folders.GetCount(); ++ifold) {
+						dgen.Generate(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
+					}
+					d = AppendFileName(uppsrc, "plugin/*.*");
+					p = "plugin/";
+				}
+				tt[di].text.Replace("[s5; <#packages#>]", qtf);
+
+				String toc_qtf;
+				const auto& headers = dgen.GetHeaders();
+				for (int i = 0; i < headers.GetCount(); i++) {
+					toc_qtf
+						<< "[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#4`_"
+						<< IntStr(i + 1) << "^ " << headers[i] << "]&]";
+				}
+
+				tt[di].text.Replace("[s0;l128; <#packages`_toc#>&]", toc_qtf);
+			}
 		}
-	
-		uppbox =    AppendFileName(rootdir, "uppbox");
-		reference = AppendFileName(rootdir, "reference");
-		examples =  AppendFileName(rootdir, "examples");
-	
-		InitWwwTpp();
-	
-		languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
-	
-		RealizeDirectory(targetdir);
-	
-		RLOG("Gather ref links " << uppsrc);
-		GatherRefLinks(uppsrc, false);
-	
-		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
-	
-	#ifdef bmGIT_REVCOUNT
-		auto version = AsString(atoi(bmGIT_REVCOUNT) + 2270);
-		escape.Add("LATESTGIT", version);
-	#endif
-	
-		String release = "17810";
-		escape.Add("RELEASE", release);
-		escape.Add("RELEASET", release);
-		escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
-	
-		escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
-	
-		header = HtmlPackedTable()
+		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
+		bi << BarLink(Www("UppHub", lang, "topic://ide/app/"), t_("UppHub"));
+		bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
+		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
+		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
+
+		bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
+	//	bcom << BarLink(Www("mailing"), "Mailing lists");
+	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
+		bi << BarLink(Www("Funding", lang), t_("Funding U++"));
+	//	bcom << BarLink(Www("helpus"), "Getting involved");
+	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
+
+		bsearch << BarCaption(t_("Search on this site"));
+		bsearch << SearchBar("ultimatepp.org");
+
+		HtmlTag bf = HtmlPackedTable()
 		       .Width(-100)
 		       .BgColor(White)
-		       .Attr("style", "border: 1px solid #6E89AE;"
-		                      "padding-left: 10px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;")
-		       /
-				HtmlRow() / (
-				    HtmlCell() / HtmlLink("index.html") / Wimg(WWW::Logo6) +
-				    HtmlCell().Right().Bottom()
-				              .Style("padding-bottom: 5px; "
-				                     "background-image: url('" + GetImageSrc(WWW::HB) + "')")
-				    / HtmlArial(14) / (/*AdSense() + "&nbsp;&nbsp;" + */(isdev ? "<br>development version (master branch)" : ""))
-				);
-	
-		bar.SetCount(languages.GetCount());
-	
-		int currentLang = GetCurrentLanguage();
-		for (int i = 0; i < languages.GetCount(); ++i) {
-			Cout() << "Language " << LNGAsText(languages[i]);
-			Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
-			int lang = languages[i];
-	
-			SetLanguage(lang);
-	
-			Www("index", lang);
-			Www("contribweb", lang);
-		//	bi << BarLink("index.html", "Home", false);
-			bi << BarLink(Www("overview", lang), t_("Overview"), false);
-			bi << BarLink(Www("examples", lang), t_("Examples"));
-			{
-				IGNORE_RESULT(Www("reference", lang));
-	
-				int ri = tt.Find(webtopic + "/www/reference$" + ToLower(LNGAsText(lang)));
-				int di = tt.Find(webtopic + "/www/examples$" + ToLower(LNGAsText(lang)));
-	
-				tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
-				tt[di].text << tt[ri].text << '\n';
-				tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
-			}
-	
-			bi << BarLink(Www("ss", lang), t_("Screenshots"));
-			bi << BarLink(Www("comparison", lang), t_("Comparisons"));
-			bi << BarLink(Www("apps", lang), t_("Applications"));
-			bi << BarLink(Www("download", lang), t_("Download"));
-	
-			bi << BarLink(Www("documentation", lang), t_("Documentation"));
-			{
-				int di = tt.Find(webtopic + "/www/documentation$" + ToLower(LNGAsText(lang)));
-				if (di >= 0) {
-					Index<String> x;
-					x.Clear();
-					String qtf;
-					PackageDocsGenerator dgen;
-	
-					dgen.Generate(x, qtf, "Core", lang, 2, String("/") + FormatInt(di) + "/[Core]");
-					dgen.Generate(x, qtf, "Core/POP3", lang, 2, String("/") + FormatInt(di) + "/[Core/POP3]");
-					dgen.Generate(x, qtf, "Core/SMTP", lang, 2, String("/") + FormatInt(di) + "/[Core/SMTP]");
-					dgen.Generate(x, qtf, "Core/SSH", lang, 2, String("/") + FormatInt(di) + "/[Core/SSH]");
-					dgen.Generate(x, qtf, "Draw", lang, 2, String("/") + FormatInt(di) + "/[Draw]");
-					dgen.Generate(x, qtf, "CtrlCore", lang, 2, String("/") + FormatInt(di) + "/[CtrlCore]");
-					dgen.Generate(x, qtf, "CtrlLib", lang, 2, String("/") + FormatInt(di) + "/[CtrlLib]");
-					dgen.Generate(x, qtf, "RichText", lang, 2, String("/") + FormatInt(di) + "/[RichText]");
-					dgen.Generate(x, qtf, "RichEdit", lang, 2, String("/") + FormatInt(di) + "/[RichEdit]");
-					dgen.Generate(x, qtf, "Sql", lang, 2, String("/") + FormatInt(di) + "/[Sql]");
-	
-					String d = AppendFileName(uppsrc, "*.*");
-					String p;
-					for(int pass = 0; pass < 2; pass++) {
-						FindFile ff(d);
-						Array <String> folders;
-						folders.Clear();
-						while(ff) {
-							if(ff.IsFolder() && ff.GetName() != "Web")
-								folders.Add(p + ff.GetName());
-							ff.Next();
-						}
-						Sort(folders);
-						for (int ifold = 0; ifold < folders.GetCount(); ++ifold) {
-							dgen.Generate(x, qtf, folders[ifold], lang, 2, String("/") + FormatInt(di) + "/[" + folders[ifold] + "]");
-						}
-						d = AppendFileName(uppsrc, "plugin/*.*");
-						p = "plugin/";
-					}
-					tt[di].text.Replace("[s5; <#packages#>]", qtf);
-	
-					String toc_qtf;
-					const auto& headers = dgen.GetHeaders();
-					for (int i = 0; i < headers.GetCount(); i++) {
-						toc_qtf
-							<< "[s0;l128; [^topic`:`/`/uppweb`/www`/documentation`$en`-us`#4`_"
-							<< IntStr(i + 1) << "^ " << headers[i] << "]&]";
-					}
-	
-					tt[di].text.Replace("[s0;l128; <#packages`_toc#>&]", toc_qtf);
-				}
-			}
-			bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
-			bi << BarLink(Www("UppHub", lang, "topic://ide/app/"), t_("UppHub"));
-			bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
-			bi << BarLink(Www("FAQ", lang), t_("FAQ"));
-			bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
-	
-			bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
-		//	bcom << BarLink(Www("mailing"), "Mailing lists");
-		//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
-			bi << BarLink(Www("Funding", lang), t_("Funding U++"));
-		//	bcom << BarLink(Www("helpus"), "Getting involved");
-		//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
-	
-			bsearch << BarCaption(t_("Search on this site"));
-			bsearch << SearchBar("ultimatepp.org");
-	
-			HtmlTag bf = HtmlPackedTable()
-			       .Width(-100)
-			       .BgColor(White)
-			       .Attr("style", "border-style: solid; border-width: 1px; border-color: #6E89AE;"
-			                      "padding: 0px");
-			String div = HtmlTable().Border(0).Width(-100) / HtmlLine();
-			bar[i] = bf / bi + div +
-		//	      bf / bex + div +
-		//	      bf / bdoc + div +
-		//	      bf / bcom + div +
-		//	      bf / bcon + div +
-			      bf / bsearch + div;
-		//	      bf / blang + div;
-		}
-		SetLanguage(currentLang);
-	
-		for(int i = 0; i < tt.GetCount(); i++) {
-			String topic = tt.GetKey(i);
-			links.Add(topic, topic == webtopic + "/www/index$en-us" ? "index.html" :
-			                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic, false));
-		}
-	
-		for(int i = 0; i < tt.GetCount(); i++) {
-			if(tt[i].title == "Nightly builds" || tt[i].title.Find("Download") >= 0)
-				tt[i].text.Replace(String("<#downloads#>"), downloads);
-			else if (links[i].Find("index") >= 0) {
-				String win32 = "upp-win32-RELEASE.exe";
-				String win32release = win32;
-				win32release.Replace(String("RELEASE"), release);
-				String x11 = "upp-x11-src-RELEASE.tar.gz";
-				String x11release = x11;
-				x11release.Replace(String("RELEASE"), release);
-				tt[i].text.Replace(DeQtf(x11), DeQtf(x11release));
-				tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
-			}
-		}
-		for(int i = 0; i < reflink.GetCount(); i++) {
-			String l = reflink.GetKey(i);
-			String lbl = Filter(l, CharFilterLbl);
-			String f = links.Get(reflink[i], Null) + '#' + lbl;
-			links.Add(l, f);
-			static const char *x[] = { "::struct", "::class", "::union" };
-			for(int ii = 0; ii < 3; ii++) {
-				String e = x[ii];
-				if(EndsWith(l, e)) {
-					links.Add(l.Mid(0, l.GetLength() - e.GetLength()), f);
-				}
-			}
-			labels.Add(l, lbl);
-		}
-	
-		lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
-		                   (String().Cat() << "Last update " << GetSysDate());
-	
-		RLOG("Creating htmls");
-	
-		for(int i = 0; i < tt.GetCount(); i++)
-			ExportPage(i);
-		SetLanguage(currentLang);
-	
-		FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
-		
-//		rootdir = devdir;
-		targetdir << "/dev";
-		isdev = true;
+		       .Attr("style", "border-style: solid; border-width: 1px; border-color: #6E89AE;"
+		                      "padding: 0px");
+		String div = HtmlTable().Border(0).Width(-100) / HtmlLine();
+		bar[i] = bf / bi + div +
+	//	      bf / bex + div +
+	//	      bf / bdoc + div +
+	//	      bf / bcom + div +
+	//	      bf / bcon + div +
+		      bf / bsearch + div;
+	//	      bf / blang + div;
 	}
+	SetLanguage(currentLang);
+
+	for(int i = 0; i < tt.GetCount(); i++) {
+		String topic = tt.GetKey(i);
+		links.Add(topic, topic == webtopic + "/www/index$en-us" ? "index.html" :
+		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic, false));
+	}
+
+	for(int i = 0; i < tt.GetCount(); i++) {
+		if(tt[i].title == "Nightly builds" || tt[i].title.Find("Download") >= 0)
+			tt[i].text.Replace(String("<#downloads#>"), downloads);
+		else if (links[i].Find("index") >= 0) {
+			String win32 = "upp-win32-RELEASE.exe";
+			String win32release = win32;
+			win32release.Replace(String("RELEASE"), release);
+			String x11 = "upp-x11-src-RELEASE.tar.gz";
+			String x11release = x11;
+			x11release.Replace(String("RELEASE"), release);
+			tt[i].text.Replace(DeQtf(x11), DeQtf(x11release));
+			tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
+		}
+	}
+	for(int i = 0; i < reflink.GetCount(); i++) {
+		String l = reflink.GetKey(i);
+		String lbl = Filter(l, CharFilterLbl);
+		String f = links.Get(reflink[i], Null) + '#' + lbl;
+		links.Add(l, f);
+		static const char *x[] = { "::struct", "::class", "::union" };
+		for(int ii = 0; ii < 3; ii++) {
+			String e = x[ii];
+			if(EndsWith(l, e)) {
+				links.Add(l.Mid(0, l.GetLength() - e.GetLength()), f);
+			}
+		}
+		labels.Add(l, lbl);
+	}
+
+	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
+	                   (String().Cat() << "Last update " << GetSysDate());
+
+	RLOG("Creating htmls");
+
+	for(int i = 0; i < tt.GetCount(); i++)
+		ExportPage(i);
+	SetLanguage(currentLang);
+
+	FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
+	
+//		rootdir = devdir;
+	targetdir << "/dev";
 
 	RLOG("Finished OK");
 }

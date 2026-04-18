@@ -1,5 +1,9 @@
 //#BLITZ_APPROVE
 
+#ifdef VERSION
+#undef VERSION
+#endif
+
 #define IMAGE_META(k, v)
 #define IMAGE_VERSION(v)
 #define IMAGE_SCAN(s)
