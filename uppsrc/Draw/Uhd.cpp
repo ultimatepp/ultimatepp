@@ -70,6 +70,7 @@ Image Upscale2x_(const Image& src)
 
 Image Upscale2x(const Image& src)
 {
+	DTIMING("Upscale2x");
 	if(IsNull(src))
 		return src;
 	Size s2 = src.Get2ndSpot();
@@ -104,13 +105,14 @@ Image Upscale2x(const Image& src)
 
 Image DPIRescale(const Image& src, Size sz)
 {
+	DTIMING("DPIRescale");
 	if(IsNull(src))
 		return src;
 	Size s2 = src.Get2ndSpot();
 	Size sz0 = src.GetSize();
 	if(sz0 == sz)
 		return src;
-	// When 2nd spot is defined, it is likely Chameleon rescaling item (e.g. button)
+	// When 2nd spot is defined, it are likely rescaling Chameleon item (e.g. button image)
 	// in that case, filtering by smarter rescale methods could lead to artifacts (stay BILINEAR)
 	Image m = RescaleFilter(src, sz, s2.cx > 0 || s2.cy > 0 ? FILTER_BILINEAR : FILTER_LANCZOS3);
 	ImageBuffer h(m);
@@ -121,6 +123,7 @@ Image DPIRescale(const Image& src, Size sz)
 
 Image DPISmartRescale(const Image& src, Size sz)
 {
+	DTIMING("DPISmartRescale");
 	Image m = src;
 	for(;;) {
 		Size isz = m.GetSize();
@@ -130,6 +133,7 @@ Image DPISmartRescale(const Image& src, Size sz)
 			break;
 		m = Upscale2x(m);
 	}
+	DTIMING("DPISmartRescale 2");
 	return DPIRescale(m, sz);
 }
 
@@ -143,6 +147,7 @@ Image DPISmartRescaleCached(const Image& src, Size sz)
 
 Image Downscale2x(const Image& src)
 {
+	DTIMING("Downscale2x");
 	return DPIRescale(src, src.GetSize() / 2);
 }
 

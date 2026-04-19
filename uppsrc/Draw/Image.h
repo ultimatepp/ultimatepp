@@ -275,7 +275,7 @@ Vector<ImageIml> UnpackImlDataUncompressed(const String& data);
 Vector<ImageIml> UnpackImlData(const void *ptr, int len);
 Vector<ImageIml> UnpackImlData(const String& d);
 
-enum {
+enum { // internal - represents binary flags in imported iml data
 	IML_IMAGE_FLAG_FIXED        = 0x1,
 	IML_IMAGE_FLAG_FIXED_COLORS = 0x2,
 	IML_IMAGE_FLAG_FIXED_SIZE   = 0x4,
@@ -283,6 +283,8 @@ enum {
 	IML_IMAGE_FLAG_DARK         = 0x10,
 	IML_IMAGE_FLAG_S3           = 0x20,
 	IML_IMAGE_FLAG_QHD          = 0x40,
+	
+	IML_IMAGE_FLAGS_UNKNOWN     = 0xffffffff, // internal - flags are not yet known
 };
 
 Image MakeImlImage(const String& id, Event<int, ImageIml&, String&> GetRaw);
@@ -304,7 +306,7 @@ class Iml {
 	bool  premultiply;
 
 	VectorMap<String, IImage> map;
-	Index<String>             id;
+	Buffer<dword>             flags;
 	
 	int                       version = 0;
 
@@ -320,6 +322,7 @@ public:
 	void   Set(int i, const Image& img);
 
 	ImageIml GetRaw(int i);
+	dword    GetRawFlags(int i);
 
 // these methods serve for .iml import
 	Iml(const char **name, int n);//Deprecated - legacy .iml
