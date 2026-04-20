@@ -307,6 +307,7 @@ class Iml {
 
 	VectorMap<String, IImage> map;
 	Buffer<dword>             flags;
+	int                       img_count = 0;
 	
 	int                       version = 0;
 

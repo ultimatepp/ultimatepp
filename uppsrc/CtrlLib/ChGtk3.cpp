@@ -400,7 +400,7 @@ void ChHostSkin()
 		Gtk_OverrideDialogIcon(CtrlImg::I_exclamation, "gtk-dialog-warning");
 		Gtk_OverrideDialogIcon(CtrlImg::I_error, "gtk-dialog-error");
 	}
-	
+
 	YesButtonImage_Write(Gtk_IconAdjusted("gtk-yes", DPI(16)));
 	Image no_image = Gtk_IconAdjusted("gtk-no", DPI(16));
 	if(Difference(no_image, cancel_image) > 20) // it is ugly when No and Cancel buttons have the same icon

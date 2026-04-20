@@ -82,6 +82,7 @@ void Iml::AddData(const byte *s, int len, int count)
 	d.data = (const char *)s;
 	d.len = len;
 	d.count = count;
+	img_count += count;
 	data.Shrink();
 }
 
@@ -106,6 +107,7 @@ ImageIml Iml::GetRaw(int i)
 				[&](Value& v) {
 					Vector<ImageIml>& m = CreateRawValue<Vector<ImageIml>>(v);
 					m = UnpackImlData(d.data, d.len);
+					ASSERT(m.GetCount() == d.count);
 					int sz = 0;
 					int ii = i0;
 					for(ImageIml& img : m) {
@@ -237,7 +239,7 @@ Image Iml::Get(int i)
 				[&](int i, dword& rflags, String& id) {
 					id.Clear();
 					rflags = 0;
-					if(i < GetCount()) {
+					if(i < img_count) {
 						id = map.GetKey(i);
 						if(flags[i] != IML_IMAGE_FLAGS_UNKNOWN)
 							rflags = flags[i];

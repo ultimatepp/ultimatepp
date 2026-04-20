@@ -188,24 +188,15 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
-//	StdLogSetup(LOG_FILE|LOG_ELAPSED);
-//	Ctrl::SetDarkThemeEnabled();
-//	Ctrl::SetSkin(ChStdSkin);
-//	Ctrl::SetSkin(ChClassicSkin);
-
-	#ifdef UPP_HEAP
-	#endif
-
+	DDUMP(CtrlsImg::DA().GetSize());
+	
 	RDUMPM(Environment());
 	RDUMP(GetDPIScale());
-	
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());
 	
 	RDUMP(EditField::StyleDefault().disabled);
-	
-	DDUMP(CtrlsImg::DA().GetSize());
 	
 	while(TestChStyle().Run() == IDOK);
 }
