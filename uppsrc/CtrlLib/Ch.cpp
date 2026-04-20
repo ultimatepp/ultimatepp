@@ -621,7 +621,7 @@ int ChSynthetic(Image *button100x100, Color *text, bool macos, int dpi)
 				s.edge[i] = Espots(MakeButton(roundness, i == CTRL_DISABLED ? SColorFace() : SColorPaper(), lw, ink));
 			s.margin = Rect(DPI(3), 2, lw, 2);
 			s.activeedge = true;
-			s.stdwidth = DPI(17);
+			s.stdwidth = max(GetStdFontCy(), DPI(17));
 		}
 		{
 			SpinButtons::Style& sp = SpinButtons::StyleDefault().Write();

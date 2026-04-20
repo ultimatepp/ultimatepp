@@ -153,12 +153,6 @@ bool LRUCache<T, K>::RemoveOne(P predicate)
 template <class T, class K>
 void LRUCache<T, K>::Shrink(int maxsize, int maxcount)
 {
-	if(count > maxcount || size > maxsize) {
-		DDUMP(count);
-		DDUMP(maxcount);
-		DDUMP(size);
-		DDUMP(maxsize);
-	}
 	if(maxsize >= 0 && maxcount >= 0)
 		while(count > maxcount || size > maxsize)
 			DropLRU();

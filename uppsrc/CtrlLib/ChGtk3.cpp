@@ -84,11 +84,11 @@ Image CairoImage(int cx, int cy, Event<cairo_t *> draw)
 {
 	Image m[2];
 	for(int i = 0; i < 2; i++) {
-		ImageDraw iw(DPI(cx), DPI(cy));
-		iw.DrawRect(0, 0, DPI(cx), DPI(cy), i ? Black() : White());
+		ImageDraw iw(cx, cy);
+		iw.DrawRect(0, 0, cx, cy, i ? Black() : White());
 		cairo_t *cr = iw;
 #if GTK_CHECK_VERSION(3, 20, 0)
-		cairo_surface_set_device_scale(cairo_get_target(cr), DPI(1), DPI(1));
+		cairo_surface_set_device_scale(cairo_get_target(cr), Ctrl::SCL(1), Ctrl::SCL(1));
 #endif
 		draw(cr);
 		m[i] = iw;
@@ -100,8 +100,10 @@ Image CairoImage(int cx, int cy, Event<cairo_t *> draw)
 Image CairoImage(GtkStyleContext *ctx, int cx = 40, int cy = 32)
 {
 	return CairoImage(cx, cy, [&](cairo_t *cr) {
-		gtk_render_background(ctx, cr, 0, 0, cx, cy);
-		gtk_render_frame(ctx, cr,  0, 0, cx, cy);
+		double sx = cx / Ctrl::SCL(1);
+		double sy = cy / Ctrl::SCL(1);
+		gtk_render_background(ctx, cr, 0, 0, sx, sy);
+		gtk_render_frame(ctx, cr,  0, 0, sx, sy);
 	});
 }
 
@@ -166,7 +168,7 @@ void Gtk_New(const char *name, int state = 0, dword flags = 0)
 		sCtx = context2;
 	}
 	ASSERT(sCtx);
-	gtk_style_context_set_scale(sCtx, DPI(1));
+	gtk_style_context_set_scale(sCtx, GetDPIScaleRatio());
 	Gtk_State(state, flags);
 	
 	GtkBorder border, padding;
@@ -205,15 +207,16 @@ Color GetInkColor()
 
 void SOImages(int imli, dword flags)
 {
-	int n = (GetStdFontCy() - 2) / DPI(1);
-	if(n < 18) // sometimes it gets too small relative to text..
+	int n = GetStdFontCy() - 2;
+	if(n < 14) // sometimes it gets too small relative to text..
 		n = 14;
 	for(int st = 0; st < 4; st++) {
 		Gtk_State(st, flags);
 		CtrlsImg::Set(imli++, CairoImage(n, n, [&](cairo_t *cr) {
-			gtk_render_background(sCtx, cr, 0, 0, n, n);
-			gtk_render_frame(sCtx, cr,  0, 0, n, n);
-			gtk_render_check(sCtx, cr, 0, 0, n, n);
+			double sz = n / Ctrl::SCL(1);
+			gtk_render_background(sCtx, cr, 0, 0, sz, sz);
+			gtk_render_frame(sCtx, cr,  0, 0, sz, sz);
+			gtk_render_check(sCtx, cr, 0, 0, sz, sz);
 		}));
 	}
 }
@@ -250,8 +253,8 @@ Image Gtk_Icon(const char *icon_name, int size)
 	GdkPixbuf *pixbuf = gtk_icon_theme_load_icon_for_scale(gtk_icon_theme_get_default(), icon_name,
 		                                                   size, 2, (GtkIconLookupFlags)0, NULL);
 	if(pixbuf) {
-		int cx = gdk_pixbuf_get_width(pixbuf);
-		int cy = gdk_pixbuf_get_height(pixbuf);
+		int cx = gdk_pixbuf_get_width(pixbuf) * Ctrl::SCL(1);
+		int cy = gdk_pixbuf_get_height(pixbuf) * Ctrl::SCL(1);
 	
 		Image m = CairoImage(cx, cy, [&](cairo_t *cr) {
 			gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);

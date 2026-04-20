@@ -19,8 +19,6 @@ DropList::DropList()
 	usewheel = true;
 }
 
-DropList::~DropList() {}
-
 int DropList::FindKey(const Value& k) const
 {
 	return key.Find(k);

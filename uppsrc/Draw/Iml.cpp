@@ -33,7 +33,6 @@ Vector<ImageIml> UnpackImlDataUncompressed(const String& data)
 
 Vector<ImageIml> UnpackImlData(const void *ptr, int len)
 {
-	DTIMING("UnpackImlData");
 	return UnpackImlDataUncompressed(ZDecompress(ptr, len));
 }
 
@@ -95,7 +94,6 @@ static StaticMutex sImlLock;
 
 ImageIml Iml::GetRaw(int i)
 {
-	DTIMING("GetRaw");
 	int i0 = 0;
 	for(const Data& d : data) {
 		if(i >= i0 && i < i0 + d.count) {
@@ -106,12 +104,9 @@ ImageIml Iml::GetRaw(int i)
 					return key;
 				},
 				[&](Value& v) {
-					DTIMING("GetRaw 2");
 					Vector<ImageIml>& m = CreateRawValue<Vector<ImageIml>>(v);
-					DTIMING("GetRaw 3");
 					m = UnpackImlData(d.data, d.len);
 					int sz = 0;
-					DTIMING("GetRaw 4");
 					int ii = i0;
 					for(ImageIml& img : m) {
 						sz += img.image.GetLength();
@@ -141,13 +136,12 @@ void Iml::Set(int i, const Image& img)
 
 Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Function<ImageIml(int)> GetRaw)
 {
-	DTIMING("MakeImlImage");
 	int  scale = GetDPIScale();
 	bool dark = IsDarkTheme();
 	int best_i  = -1;
 	int exact_scale_i = -1;
-	int  best_dark = 10; // minimize this
-	int  best_scale = -1; // maximize this
+	int best_dark = 10; // minimize this
+	int best_scale = -1; // maximize this
 	int ii = 0;
 	for(;;) {
 		dword    flags;
@@ -177,9 +171,9 @@ Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Fu
 		}
 		ii++;
 	}
-
+	
 	auto AdjustColor0 = [&](const Image& img, dword flags) { // flip light to dark if needed
-		if(dark && !(flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
+		if(dark && !(flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS|IML_IMAGE_FLAG_DARK)))
 			return DarkTheme(img);
 		return img;
 	};
@@ -202,7 +196,6 @@ Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Fu
 		return AdjustColor(best.image);
 	
 	if(best_scale == DPI_600) {
-		DTIMING("Master");
 		if(scale == DPI_100)
 			return AdjustColor(Downscale6x(best.image));
 		if(scale == DPI_150)

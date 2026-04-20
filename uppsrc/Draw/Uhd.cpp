@@ -70,7 +70,6 @@ Image Upscale2x_(const Image& src)
 
 Image Upscale2x(const Image& src)
 {
-	DTIMING("Upscale2x");
 	if(IsNull(src))
 		return src;
 	Size s2 = src.Get2ndSpot();
@@ -105,16 +104,25 @@ Image Upscale2x(const Image& src)
 
 Image DPIRescale(const Image& src, Size sz)
 {
-	DTIMING("DPIRescale");
 	if(IsNull(src))
 		return src;
+
 	Size s2 = src.Get2ndSpot();
 	Size sz0 = src.GetSize();
 	if(sz0 == sz)
 		return src;
-	// When 2nd spot is defined, it are likely rescaling Chameleon item (e.g. button image)
-	// in that case, filtering by smarter rescale methods could lead to artifacts (stay BILINEAR)
-	Image m = RescaleFilter(src, sz, s2.cx > 0 || s2.cy > 0 ? FILTER_BILINEAR : FILTER_LANCZOS3);
+
+	// When 2nd spot is defined, we are likely rescaling Chameleon item (e.g. button image)
+	// in that case, filtering by smarter Lanczos could lead to artifacts - stay BILINEAR
+	Image m;
+	if(s2.cx > 0 || s2.cy > 0)
+		m = RescaleFilter(src, sz, FILTER_BILINEAR);
+	else
+	if(sz.cx * sz.cy > 128*128)
+		m = CoRescaleFilter(src, sz, FILTER_LANCZOS3);
+	else
+		m = RescaleFilter(src, sz, FILTER_LANCZOS3);
+
 	ImageBuffer h(m);
 	h.SetHotSpot(s2 * sz / sz0);
 	h.Set2ndSpot(src.Get2ndSpot() * sz / sz0);
@@ -123,7 +131,6 @@ Image DPIRescale(const Image& src, Size sz)
 
 Image DPISmartRescale(const Image& src, Size sz)
 {
-	DTIMING("DPISmartRescale");
 	Image m = src;
 	for(;;) {
 		Size isz = m.GetSize();
@@ -133,7 +140,6 @@ Image DPISmartRescale(const Image& src, Size sz)
 			break;
 		m = Upscale2x(m);
 	}
-	DTIMING("DPISmartRescale 2");
 	return DPIRescale(m, sz);
 }
 
@@ -147,7 +153,6 @@ Image DPISmartRescaleCached(const Image& src, Size sz)
 
 Image Downscale2x(const Image& src)
 {
-	DTIMING("Downscale2x");
 	return DPIRescale(src, src.GetSize() / 2);
 }
 
@@ -181,6 +186,9 @@ void SyncDPIScale()
 	int scale = clamp((fcy + 3) / 8, 2, 5);
 	if(scale == 5)
 		scale = DPI_300;
+	int override_scale = Atoi(GetEnv("UPP_SCALE__"));
+	if(override_scale)
+		scale = override_scale;
 	if(scale != GetDPIScale())
 		SetDPIScale(scale);
 }

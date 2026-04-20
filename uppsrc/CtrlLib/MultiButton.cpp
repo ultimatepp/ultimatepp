@@ -2,6 +2,26 @@
 
 namespace Upp {
 
+static CtrlFrame& sNullFrame()
+{
+	static NullFrameClass f;
+	return f;
+}
+
+MultiButton::MultiButton()
+{
+	Transparent();
+	SetStyle(StyleDefault());
+	display = &StdDisplay();
+	convert = &NoConvert();
+	valuecy = Null;
+	push = false;
+	SetFrame(sNullFrame());
+	nobg = false;
+	hl = NONE;
+	droppush = false;
+}
+
 CH_STYLE(MultiButton, Style, StyleDefault)
 {
 	for(int i = 0; i < 4; i++) {
@@ -12,6 +32,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 		look[i] = trivial[i] = ChLookWith(simple[i], CtrlsImg::DA(), monocolor[i]);
 		edge[i] = EditFieldEdge();
 	}
+
 	activeedge = false;
 	trivialborder = DPI(1);
 	border = DPI(1);
@@ -213,12 +234,6 @@ void MultiButton::GotFocus()
 void MultiButton::LostFocus()
 {
 	Refresh();
-}
-
-static CtrlFrame& sNullFrame()
-{
-	static NullFrameClass f;
-	return f;
 }
 
 int MultiButton::OverPaint() const
@@ -814,22 +829,6 @@ void MultiButton::MainClick()
 }
 
 void MultiButton::DropPush() {}
-
-MultiButton::MultiButton()
-{
-	Transparent();
-	SetStyle(StyleDefault());
-	display = &StdDisplay();
-	convert = &NoConvert();
-	valuecy = Null;
-	push = false;
-	SetFrame(sNullFrame());
-	nobg = false;
-	hl = NONE;
-	droppush = false;
-}
-
-// 
 
 void MultiButtonFrame::FrameAdd(Ctrl& parent)
 {

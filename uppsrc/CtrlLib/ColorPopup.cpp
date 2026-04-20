@@ -156,15 +156,12 @@ int ColorPopUp::GetCy()
 	        (withvoid ? StdFont().Info().GetHeight() + DPI(3 + 2) : 0);
 }
 
-void ColorPopUp::DrawFilledFrame(Draw &w, int x, int y, int cx, int cy, Color fcol, Color bcol)
+Rect ColorPopUp::DrawFilledFrame(Draw &w, Rect r, Color fcol, Color col)
 {
-	DrawFrame(w, x, y, cx, cy, fcol);
-	w.DrawRect(x + DPI(1), y + DPI(1), cx - DPI(2), cy - DPI(2), bcol);
-}
-
-void ColorPopUp::DrawFilledFrame(Draw &w, Rect &r, Color fcol, Color bcol)
-{
-	DrawFilledFrame(w, r.left, r.top, r.GetWidth(), r.GetHeight(), fcol, bcol);
+	DrawFrame(w, r, fcol);
+	r.Deflate(DPI(1) + 1);
+	w.DrawRect(r, col);
+	return r;
 }
 
 void ColorPopUp::Paint(Draw& w)
@@ -213,7 +210,7 @@ void ColorPopUp::Paint(Draw& w)
 	for(;;) {
 		for(int x = 0; x < 18 * DPI(16); x += DPI(16)) {
 			if(i >= GetColorCount()) {
-				if(!norampwheel) {
+				if(!norampwheel) { // draw selected color in the bottom
 					Rect r(DPI(8 * 16 + 1), cy + DPI(4), DPI(10 * 16 - 1), sz.cy - DPI(4) - DPI(24));
 					DrawFilledFrame(w, r, SColorText, dark ? DarkThemeCached(color) : color);
 
@@ -229,15 +226,19 @@ void ColorPopUp::Paint(Draw& w)
 			}
 
 			Color c = RealizeColor(GetColor(i));
-			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, dark ? DarkThemeCached(c) : c);
-			if(i < 18 && scolors)
-				w.DrawRect(x + DPI(2) + DPI(6), y + DPI(1), DPI(6), DPI(12), dark ? c : DarkThemeCached(c));
+			Rect r = RectC(x + DPI(1), y, DPI(14), DPI(14));
+			Rect rc = DrawFilledFrame(w, r, SColorText, dark ? DarkThemeCached(c) : c);
+			if(i < 18 && scolors) {
+				rc.left += rc.Width() / 2;
+				w.DrawRect(rc, dark ? c : DarkThemeCached(c));
+			}
 
 			if(i == colori) {
+				r.Inflate(1);
 				if(GetMouseLeft())
-					DrawFrame(w, x, y - DPI(1), DPI(16), DPI(16), SColorShadow, SColorLight);
+					DrawFrame(w, r, SColorShadow, SColorLight);
 				else
-					DrawFrame(w, x, y - DPI(1), DPI(16), DPI(16), GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
+					DrawFrame(w, r, GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
 			}
 			i++;
 		}

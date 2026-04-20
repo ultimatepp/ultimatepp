@@ -70,7 +70,7 @@ TestChStyle::TestChStyle()
 
 	AddFrame(bar);
 	
-	CtrlLayoutOKCancel(*this, "Window title");
+	CtrlLayoutOKCancel(*this, "Scale " + AsString(GetDPIScaleRatio() * 100) + "%");
 	
 	normal.NullText("Normal");
 	readonly <<= "Read only";
@@ -102,11 +102,6 @@ TestChStyle::TestChStyle()
 	
 	switch1.Disable();
 	switch1 <<= 1;
-	
-	auto AddSkin = [=](void (*fn)(), const char *name) {
-		skin.Add(skin_fn.GetCount(), name);
-		skin_fn.Add(fn);
-	};
 	
 	for(auto sk : GetAllChSkins()) {
 		skin.Add(skin_fn.GetCount(), sk.b);
@@ -202,12 +197,15 @@ GUI_APP_MAIN
 	#endif
 
 	RDUMPM(Environment());
-	RDUMP(IsUHDMode());
+	RDUMP(GetDPIScale());
+	
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());
 	
 	RDUMP(EditField::StyleDefault().disabled);
+	
+	DDUMP(CtrlsImg::DA().GetSize());
 	
 	while(TestChStyle().Run() == IDOK);
 }
