@@ -94,7 +94,7 @@ String NoCr(const char *s)
 	return out;
 }
 
-void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd)
+void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	{
@@ -114,6 +114,8 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 			env.GetAdd("UPP_DISABLE_UHD__") = "1";
 		if(darkmode)
 			env.GetAdd("UPP_DARKMODE__") = "1";
+		if(scale)
+			env.GetAdd("UPP_SCALE__") = AsString(scale);
 		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
 #ifdef PLATFORM_POSIX
 		if(target != "")
@@ -145,10 +147,10 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	}
 }
 
-void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd)
+void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd, int scale)
 {
 	SetupDefaultMethod();
-	CreateHost(host, method, darkmode, disable_uhd);
+	CreateHost(host, method, darkmode, disable_uhd, scale);
 }
 
 One<Builder> MakeBuild::CreateBuilder(Host *host)
@@ -341,7 +343,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 		return false;
 	}
 	Host host;
-	CreateHost(host, false, false);
+	CreateHost(host, false, false, 0);
 	One<Builder> b = CreateBuilder(&host);
 	b->onefile = onefile;
 	if(!b)
@@ -579,7 +581,7 @@ bool MakeBuild::Build()
 		return false;
 	}
 	Host host;
-	CreateHost(host, false, false);
+	CreateHost(host, false, false, 0);
 	One<Builder> builder = CreateBuilder(&host);
 	if(!builder)
 		return false;
@@ -599,7 +601,7 @@ void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 {
 	PutConsole(Format("Cleaning %s", wspc[package]));
 	Host host;
-	CreateHost(host, false, false);
+	CreateHost(host, false, false, 0);
 	One<Builder> builder = CreateBuilder(&host);
 	if(!builder)
 		return;
@@ -616,7 +618,7 @@ void MakeBuild::Clean()
 	ConsoleClear();
 
 	Host host;
-	CreateHost(host, false, false);
+	CreateHost(host, false, false, 0);
 	One<Builder> builder = CreateBuilder(&host);
 	if(!builder)
 		return;
@@ -664,7 +666,7 @@ int HostSys(const char *cmd, String& out)
 	if(!mb)
 		return Null;
 	Host host;
-	mb->CreateHost(host, false, false);
+	mb->CreateHost(host, false, false, 0);
 	LocalProcess p;
 	host.canlog = false;
 	if(host.StartProcess(p, cmd))

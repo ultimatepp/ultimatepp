@@ -188,8 +188,6 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
-	DDUMP(CtrlsImg::DA().GetSize());
-	
 	RDUMPM(Environment());
 	RDUMP(GetDPIScale());
 

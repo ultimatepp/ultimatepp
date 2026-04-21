@@ -217,8 +217,6 @@ void Ide::FindPrevError() {
 		return;
 	int ln = console.GetLine(console.GetCursor());
 	int l = ln;
-	Host h;
-	CreateHost(h, false, disable_uhd);
 	for(l = ln - 2; l >= 0; l--)
 		if(FindLineError(l)) return;
 	for(l = console.GetLineCount() - 1; l > ln; l--)

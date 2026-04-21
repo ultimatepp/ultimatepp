@@ -608,6 +608,7 @@ public:
 	bool      disable_uhd = false;
 	bool      darkmode = false;
 	bool      minimize = false;
+	int       scale = 0;
 	String    stdout_file;
 	String    recent_stdout_file;
 

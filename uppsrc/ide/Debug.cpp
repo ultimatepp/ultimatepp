@@ -51,6 +51,13 @@ void Ide::RunArgs() {
 	dlg.disable_uhd <<= disable_uhd;
 	dlg.darkmode <<= darkmode;
 	dlg.minimize <<= minimize;
+	dlg.scale <<= scale;
+	
+	dlg.scale.Add(0, AttrText("Host").Ink(Gray()).Italic());
+	dlg.scale.Add(2, "100% (HD)");
+	dlg.scale.Add(3, "150% (QHD)");
+	dlg.scale.Add(4, "200% (UHD)");
+	dlg.scale.Add(6, "300% (XHD)");
 
 	auto Ins = [&](bool file) {
 		int l, h;
@@ -88,6 +95,7 @@ void Ide::RunArgs() {
 			disable_uhd = ~dlg.disable_uhd;
 			darkmode = ~dlg.darkmode;
 			minimize = ~dlg.minimize;
+			scale = ~dlg.scale;
 			dlg.arg.AddHistory();
 			{
 				StringStream ss;
@@ -109,7 +117,7 @@ void Ide::RunArgs() {
 
 void Ide::CreateHostRunDir(Host& h)
 {
-	CreateHost(h, darkmode, disable_uhd);
+	CreateHost(h, darkmode, disable_uhd, scale);
 	if(IsNull(rundir))
 		h.ChDir(GetFileFolder(target));
 	else
@@ -281,7 +289,7 @@ void Ide::ExecuteApk()
 		return;
 	
 	Host host;
-	CreateHost(host, darkmode, disable_uhd);
+	CreateHost(host, darkmode, disable_uhd, scale);
 	Apk apk(target, sdk);
 	String packageName = apk.FindPackageName();
 	String activityName = apk.FindLaunchableActivity();
@@ -512,7 +520,7 @@ void Ide::ConditionalBreak()
 		brk = "1";
 	
 	Host h;
-	CreateHost(h, darkmode, disable_uhd);
+	CreateHost(h, darkmode, disable_uhd, scale);
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam, h,
 	                                  *CreateBuilder(&h));
 #ifdef PLATFORM_WIN32
