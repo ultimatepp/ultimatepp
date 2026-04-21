@@ -56,11 +56,6 @@ void IconDes::GoTo(int q)
 	ilist.FindSetCursor(q);
 }
 
-static int sCharFilterCid(int c)
-{
-	return IsAlNum(c) || c == '_' ? c : 0;
-}
-
 void IconDes::PlaceDlg(TopWindow& dlg)
 {
 	Rect r = ilist.GetScreenRect();
@@ -93,7 +88,21 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 			if(dynamic_cast<Option *>(&q))
 				q << [&] { dlg.Break(-1000); };
 	}
-	dlg.name.SetFilter(sCharFilterCid);
+	dlg.name.SetConvert(
+		LambdaConvert(
+			[](const Value& text) {
+				return text;
+			},
+			[](const Value& text) {
+				if(AsString(text).Find("__") >= 0)
+					return ErrorValue("Image names must not contain '__'");
+				return text;
+			},
+			[](int c) {
+				return IsAlNum(c) || c == '_' ? c : 0;
+			}
+		)
+	);
 }
 
 void IconDes::SyncDlg(WithImageLayout<TopWindow>& dlg)
