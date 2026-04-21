@@ -6,21 +6,17 @@ namespace Upp {
 // should eventually lead you to a forum topic where he made the algorithm public:
 // http://board.byuu.org/viewtopic.php?f=10&t=2248
  
-namespace Upscale2x_helper {
-	int d(RGBA c1, RGBA c2)
-	{
+Image Upscale2x_(const Image& src)
+{
+	auto d = [](RGBA c1, RGBA c2) -> int {
 		int r = abs(c1.r - c2.r);
 		int g = abs(c1.g - c2.g);
 		int b = abs(c1.b - c2.b);
 		return 48 * (r *  299 + g *  587 + b *  114)
 		     +  7 * (r * -169 + g * -331 + b *  500)
 		     +  6 * (r *  500 + g * -419 + b *  -81);
-	}
-};
+	};
 
-Image Upscale2x_(const Image& src)
-{
-	using namespace Upscale2x_helper;
 	Size isz = src.GetSize();
 	ImageBuffer dst;
 	dst.Create(2 * isz);
