@@ -14,6 +14,7 @@ file
 	P7S.cpp,
 	AES.cpp,
 	Buffer.hpp,
+	Random.cpp,
 	SSL.icpp,
 	Docs readonly separator,
 	src.tpp;
