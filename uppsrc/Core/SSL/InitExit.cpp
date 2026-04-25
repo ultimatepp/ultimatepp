@@ -26,6 +26,7 @@ static void *SslAlloc(size_t size)
 }
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
+[[maybe_unused]]
 static void SslFree(void *ptr, const char *file, int line)
 #else
 static void SslFree(void *ptr)
@@ -44,6 +45,7 @@ static void SslFree(void *ptr)
 }
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
+[[maybe_unused]]
 static void *SslRealloc(void *ptr, size_t size, const char *file, int line)
 #else
 static void *SslRealloc(void *ptr, size_t size)

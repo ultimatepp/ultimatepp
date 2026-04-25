@@ -561,8 +561,9 @@ struct MMImp {
 - (void)setMarkedText:(id)aString selectedRange:(NSRange)selRange replacementRange:(NSRange)replacementRange
 {
 	Upp::GuiLock __;
-    if(![aString isKindOfClass:[NSAttributedString class]] )
+    if(![aString isKindOfClass:[NSAttributedString class]] ) {
         aString = [[[NSAttributedString alloc] initWithString:aString] autorelease];
+    }
 
 	Upp::MMImp::ShowPreedit(ctrl, Upp::ToWString([aString string]));
 }
