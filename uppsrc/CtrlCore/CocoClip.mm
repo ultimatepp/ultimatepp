@@ -41,7 +41,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 @implementation CocoClipboardOwner
 -(void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
-	RLOG(Upp::ToString(type));
+	LLOG(Upp::ToString(type));
 	
 	Upp::GuiLock __;
 	auto render = [&](const Upp::String& fmt) -> Upp::String {
@@ -53,7 +53,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
 	if(Upp::IsStandardPasteboardType(type)) {
-		RLOG("Standard type - clearning contents!");
+		LLOG("Standard type - clearning contents!");
 		[pasteboard clearContents];
 	}
 

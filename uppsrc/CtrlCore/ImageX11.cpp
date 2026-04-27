@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)   DLOG(x)
 
 static void sInitXImage(XImage& ximg, Size sz)
 {

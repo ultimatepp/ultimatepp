@@ -110,7 +110,7 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 		Ctrl::display_scale = max(Ctrl::display_scale, [screen backingScaleFactor]);
 	
 	Ctrl::display_unscale = 1 / Ctrl::display_scale;
-
+	
 	Font::SetDefaultFont(StdFont(fceil(Ctrl::display_scale * [sysfont pointSize])));
 	
 	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);

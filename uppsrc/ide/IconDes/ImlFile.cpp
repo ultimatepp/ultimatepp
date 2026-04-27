@@ -304,7 +304,6 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 		out << eol;
 	}
 
-	DLOG("================");
 	int ii = 0;
 	while(ii < iml.GetCount()) {
 		int bl = 0;
@@ -318,8 +317,6 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 			bl += (int)c.image.GetLength();
 			bn++;
 		}
-		DDUMP(bimg.GetCount());
-		DDUMP(bl);
 		String bs = PackImlData(bimg);
 		out << eol << "IMAGE_BEGIN_DATA" << eol;
 		bs.Cat(0, ((bs.GetCount() + 31) & ~31) - bs.GetCount());

@@ -66,6 +66,11 @@ Image CocoImg(int type, int value = 0, int state = 0)
 
 Color CocoColor(int k, Color bg = SColorFace())
 {
+#if 0
+	static int ii = 0; _DBG_
+	String p = GetHomeDirFile("Color" + AsString(ii++) + ".png"); _DBG_
+	DDUMP(p); PNGEncoder().SaveFile(p, CocoImg(bg, COCO_NSCOLOR, k, 0));
+#endif
 	return AvgColor(CocoImg(bg, COCO_NSCOLOR, k, 0));
 }
 
