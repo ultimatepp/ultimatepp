@@ -241,11 +241,11 @@ void TopicEditor::FileBar(Bar& bar)
 	}
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
-	bar.Add("Export to PDF..", [=] { ExportPdf(editor); });
-	bar.Add("Export group to PDF..", THISBACK(ExportGroupPdf));
-	bar.Add("Export to HTML..", THISBACK(ExportHTML));
-	bar.Add("Export group to HTML..", THISBACK(ExportGroupHTML));
-	bar.Add("Export as GitHub Markdown..", [=] {
+	bar.Add("Export to PDF..", IdeCommonImg::pdf(), [=] { ExportPdf(editor); });
+	bar.Add("Export group to PDF..", IdeCommonImg::pdf(), THISBACK(ExportGroupPdf));
+	bar.Add("Export to HTML..", IdeCommonImg::html(), THISBACK(ExportHTML));
+	bar.Add("Export group to HTML..", IdeCommonImg::html(), THISBACK(ExportGroupHTML));
+	bar.Add("Export as GitHub Markdown..", IdeCommonImg::MD(), [=] {
 		ExportMarkdown(editor.IsSelection() ? AsQTF(editor.GetSelection()) : editor.GetQTF(), GetFileTitle(topicpath));
 	});
 }

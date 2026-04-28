@@ -170,6 +170,8 @@ void ChHostSkin()
 			ChStdSkin();
 	}
 	catch(ValueTypeError) {}
+
+	SwapOKCancel_Write(Environment().Get("KDE_FULL_SESSION", String()) != "true");
 }
 
 };

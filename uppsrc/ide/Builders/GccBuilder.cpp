@@ -581,11 +581,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -Wl,--start-group ";
 			for(String s : pkg_config)
 				if(portable) {
-					DDUMP(s);
 					Vector<String> libs = Split(HostSys("pkg-config --libs " + s), CharFilterWhitespace);
-					DDUMP(libs);
 					libs.RemoveIf([&](int i) { return findarg(libs[i], "-ldl", "-lpthread", "-lrt", "-lm") >= 0; });
-					DDUMP(libs);
 					if(libs.GetCount())
 						lnk << ' ' << Join(libs, " ");
 				}
