@@ -185,4 +185,21 @@ bool AES256Decrypt(Stream& in, const String& password, Stream& out, Gate<int64, 
 
 // Secure buffer
 #include "Buffer.hpp"
+
+
+
+// Secure Random Generator
+SecureBuffer<byte> SecureRandom(int n);
+SecureBuffer<byte> SecureNonce(int n);
+
+inline SecureBuffer<byte> GetAESGCMNonce()          { return SecureNonce(12); }  // 12 bytes, optimal for AES-GCM
+inline SecureBuffer<byte> GetChaChaPoly1305Nonce()  { return SecureNonce(12); }  // 12 bytes, standard for ChaCha20-Poly1305
+inline SecureBuffer<byte> GetTLSNonce()             { return SecureNonce(12); }  // 12 bytes, used in TLS 1.2/1.3
+inline SecureBuffer<byte> GetAESCCMNonce()          { return SecureNonce(13); }  // 13 bytes, max size for AES-CCM
+inline SecureBuffer<byte> GetJWTNonce()             { return SecureNonce(16); }  // 16 bytes, good for JWT
+inline SecureBuffer<byte> GetOAuthNonce()           { return SecureNonce(16); }  // 16 bytes, common for OAuth
+inline SecureBuffer<byte> GetOCSPNonce()            { return SecureNonce(20); }  // 20 bytes, OCSP nonce extension
+inline SecureBuffer<byte> GetECDSANonce()           { return SecureNonce(32); }  // 32 bytes, for ECDSA signatures
+inline SecureBuffer<byte> GetDTLSCookie()           { return SecureNonce(32); }  // 32 bytes, DTLS cookie
+
 }

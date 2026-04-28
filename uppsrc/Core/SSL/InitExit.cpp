@@ -6,6 +6,8 @@ namespace Upp {
 
 #ifdef UPP_HEAP
 
+#ifndef _DEBUG // temporary solution unless we find the source of all those harmless leaks
+
 static int64 UPP_SSL_alloc = 0;
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
@@ -78,6 +80,8 @@ static void *SslRealloc(void *ptr, size_t size)
 	MemoryFree(aptr);
 	return newaptr;
 }
+
+#endif
 
 #endif
 

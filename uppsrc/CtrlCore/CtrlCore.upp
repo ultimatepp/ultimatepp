@@ -8,7 +8,7 @@ uses
 
 library(WIN32) "advapi32 comdlg32 comctl32 imm32";
 
-library(PORTABLE_HYBRID) "brotlidec brotlicommon bz2 Xau";
+library(PORTABLE_HYBRID) "brotlidec brotlicommon bz2 Xau uuid";
 
 pkg_config(POSIX !OSX !VIRTUALGUI) "freetype2 x11 xinerama xrender xft xdmcp fontconfig xcb xext";
 

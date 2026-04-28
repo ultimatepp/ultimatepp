@@ -580,11 +580,21 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
 			for(String s : pkg_config)
-				lnk << " `" << Host::CMDLINE_PREFIX << "pkg-config --libs " << s << "`";
+				if(portable) {
+					DDUMP(s);
+					Vector<String> libs = Split(HostSys("pkg-config --libs " + s), CharFilterWhitespace);
+					DDUMP(libs);
+					libs.RemoveIf([&](int i) { return findarg(libs[i], "-ldl", "-lpthread", "-lrt", "-lm") >= 0; });
+					DDUMP(libs);
+					if(libs.GetCount())
+						lnk << ' ' << Join(libs, " ");
+				}
+				else
+					lnk << " `" << Host::CMDLINE_PREFIX << "pkg-config --libs " << s << "`";
 			for(int pass = 0; pass < 2; pass++) {
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
-					if(portable && (ln == "dl" || ln == "pthread" || ln == "rt"))
+					if(portable && (ln == "dl" || ln == "pthread" || ln == "rt" || ln == "m"))
 						continue;
 
 					String ext = ToLower(GetFileExt(ln));
@@ -618,7 +628,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					lnk << " -Wl,--end-group";
 			}
 			if(portable)
-				lnk << " -Wl,-Bdynamic -lpthread -ldl -lrt";
+				lnk << " -Wl,-Bdynamic -lpthread -ldl -lrt -lm";
     
 			PutConsole("Linking...");
 			bool error = false;
