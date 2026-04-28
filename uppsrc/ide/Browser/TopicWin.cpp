@@ -100,20 +100,6 @@ void TopicEditor::SerializeEditPos(Stream& s)
 	s % lasttemplate;
 }
 
-void TopicEditor::ExportPdf()
-{
-	FileSel fs;
-	fs.Type("PDF files", "*.pdf")
-	  .AllFilesType()
-	  .DefaultExt("pdf");
-	if(!fs.ExecuteSaveAs("Output PDF file"))
-		return;
-	Size page = Size(3968, 6074);
-	PdfDraw pdf(page + 400);
-	::Print(pdf, editor.Get(), page);
-	SaveFile(~fs, pdf.Finish());
-}
-
 static void UpdateTopicLinks(String &text, const String &ext){
 	int at=0;
 	while((at = text.Find(String("^topic`:"), at)) > 0){
@@ -255,8 +241,8 @@ void TopicEditor::FileBar(Bar& bar)
 	}
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
-	bar.Add("Export to PDF..", THISBACK(ExportPdf));
-	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
+	bar.Add("Export to PDF..", [=] { ExportPdf(editor); });
+	bar.Add("Export group to PDF..", THISBACK(ExportGroupPdf));
 	bar.Add("Export to HTML..", THISBACK(ExportHTML));
 	bar.Add("Export group to HTML..", THISBACK(ExportGroupHTML));
 	bar.Add("Export as GitHub Markdown..", [=] {

@@ -107,6 +107,8 @@ bool HasGit();
 
 int  MaxAscent(Font f);
 
+void ExportPdf(const RichEdit& editor);
+
 String LibClangCommandLine();
 String LibClangCommandLineC();
 

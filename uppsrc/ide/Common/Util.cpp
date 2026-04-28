@@ -1,4 +1,5 @@
 #include "Common.h"
+#include <PdfDraw/PdfDraw.h>
 
 bool Debugger::Tip(const String&, CodeEditor::MouseTip&)
 {
@@ -263,4 +264,18 @@ int MaxAscent(Font f)
 {
 	return max(f.GetAscent(), f().Bold().GetAscent(),
 	           f().Italic().GetAscent(), f().Bold().Italic().GetAscent());
+}
+
+void ExportPdf(const RichEdit& editor)
+{
+	FileSel fs;
+	fs.Type("PDF files", "*.pdf")
+	  .AllFilesType()
+	  .DefaultExt("pdf");
+	if(!fs.ExecuteSaveAs("Output PDF file"))
+		return;
+	Size page = Size(3968, 6074);
+	PdfDraw pdf(page + 400);
+	::Print(pdf, editor.Get(), page);
+	SaveFile(~fs, pdf.Finish());
 }
