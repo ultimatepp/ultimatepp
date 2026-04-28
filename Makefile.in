@@ -18423,6 +18423,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)Painter/Painter.h \
 	$(UPPDIR1)Painter/Painter.hpp \
 	$(UPPDIR1)Painter/Painting.h \
+	$(UPPDIR1)PdfDraw/PdfDraw.h \
 	$(UPPDIR1)plugin/bz2/bz2.h \
 	$(UPPDIR1)plugin/lz4/lz4.h \
 	$(UPPDIR1)plugin/lzma/lzma.h \
@@ -18430,6 +18431,7 @@ $(OutDir_ide_Common)Util.o: $(UPPDIR1)ide/Common/Util.cpp \
 	$(UPPDIR1)plugin/pcre/Pcre.h \
 	$(UPPDIR1)plugin/pcre/RegExp.h \
 	$(UPPDIR1)plugin/png/png.h \
+	$(UPPDIR1)plugin/z/z.h \
 	$(UPPDIR1)plugin/zstd/lib/zstd.h \
 	$(UPPDIR1)plugin/zstd/zstd.h \
 	$(UPPDIR1)RichEdit/Diagram.iml \
