@@ -124,7 +124,7 @@ struct MMImp {
 		}
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		Rect r = view->ctrl->GetRect();
-		Upp::Point p(DPI(np.x), DPI(np.y));
+		Upp::Point p(Upp::Ctrl::SCL(np.x), Upp::Ctrl::SCL(np.y));
 		coco_mouse_pos = p + r.TopLeft();
 
 		if(event == Ctrl::MOUSEMOVE) {
@@ -300,7 +300,7 @@ struct MMImp {
 		clip.action = info.draggingSourceOperationMask & NSDragOperationMove ? DND_MOVE
 		                                                                     : DND_COPY;
 		NSPoint np = [nsview convertPoint:[info draggingLocation] fromView:nil];
-		coco_mouse_pos = Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenRect().TopLeft();
+		coco_mouse_pos = Upp::Point(Upp::Ctrl::SCL(np.x), Upp::Ctrl::SCL(np.y)) + ctrl->GetScreenRect().TopLeft();
 		ctrl->DnD(coco_mouse_pos, clip);
 		if(paste && clip.IsAccepted() && clip.GetAction() == DND_COPY)
 			Ctrl::local_dnd_copy = true;
@@ -358,7 +358,7 @@ struct MMImp {
 	Upp::GuiLock __;
 	if(ctrl) {
 		Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
-		Upp::MMImp::Paint(ctrl, w, MakeRect(r, Upp::DPI(1)));
+		Upp::MMImp::Paint(ctrl, w, MakeRect(r, Upp::Ctrl::SCL(1)));
 	}
 }
 

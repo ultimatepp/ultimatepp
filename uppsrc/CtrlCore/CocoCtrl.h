@@ -39,3 +39,4 @@ public:
 	static Rect GetScreenArea(Point pt);
 	static double GetDisplayScale()       { return display_scale; }
 	static double GetDisplayUnScale()     { return display_unscale; }
+	static int    SCL(int x)              { return (int)(display_scale * x); }

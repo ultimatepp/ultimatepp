@@ -140,11 +140,20 @@ void ChHostSkin()
 
 	SColorPaper_Write(CocoColor(COCO_PAPER));
 
+	if(Atoi(GetEnv("UPP_SCALE__"))) {
+		if(IsDarkTheme())
+			ChDarkSkin();
+		else
+			ChStdSkin();
+		return;
+	}
+
 	SColorFace_Write(CocoColor(COCO_WINDOW, White()));
 	SColorHighlight_Write(CocoColor(COCO_SELECTEDPAPER));
 	SColorHighlightText_Write(CocoColor(COCO_SELECTEDTEXT));
 	SColorText_Write(CocoColor(COCO_TEXT));
 	SColorDisabled_Write(CocoColor(COCO_DISABLED));
+	
 
 	ChBaseSkin();
 

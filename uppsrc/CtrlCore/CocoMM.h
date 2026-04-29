@@ -111,11 +111,6 @@ inline Upp::Rect MakeRect(const CGRect& r, int dpi) {
 	return Upp::RectC(dpi * r.origin.x, dpi * r.origin.y, dpi * r.size.width, dpi * r.size.height);
 }
 
-inline CGRect CGRectDPI(const Upp::Rect& r) {
-	double sc = Upp::GetDPIUnScaleRatio();
-	return CGRectMake(sc * r.left, sc * r.top, sc * r.GetWidth(), sc * r.GetHeight());
-}
-
 #endif
 
 #endif

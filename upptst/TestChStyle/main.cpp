@@ -189,7 +189,9 @@ TestChStyle::TestChStyle()
 GUI_APP_MAIN
 {
 	RDUMPM(Environment());
+
 	RDUMP(GetDPIScale());
+	RDUMP(GetDPIScaleRatio());
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());

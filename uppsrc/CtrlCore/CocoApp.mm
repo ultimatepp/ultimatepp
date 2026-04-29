@@ -293,7 +293,7 @@ Rect Ctrl::GetWorkArea() const
 Rect MakeScreenRect(NSScreen *screen, CGRect r)
 {
 	r.origin.y = [screen frame].size.height - r.origin.y - r.size.height;
-	return MakeRect(r, DPI(1));
+	return MakeRect(r, Upp::Ctrl::SCL(1));
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
