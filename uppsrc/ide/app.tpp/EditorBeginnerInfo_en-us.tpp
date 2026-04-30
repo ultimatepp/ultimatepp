@@ -5,6 +5,7 @@ topic "Ctrl+Tab - cycle through files";
 [{_}%EN-US 
 [s0; [*@(0.0.255)2 Ctrl`+Tab][2  Cycle files.]&]
 [s0; [*@(0.0.255)2 Esc ][2 Show/hide bottom pane.]&]
+[s0; [*@(0.0.255)2 Ctrl`+/][2  Show/hide package/file lists.]&]
 [s0; [*@(0.0.255)2 Alt`+Left][2  / ][*@(0.0.255)2 Alt`+Right][2  Go back/forward.]&]
 [s0; [*@(0.0.255)2 Ctrl`+`[][2  / ][*@(0.0.255)2 Ctrl`+`]][2  Next / previous 
 matching bracket.]&]
