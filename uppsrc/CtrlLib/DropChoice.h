@@ -230,7 +230,6 @@ public:
 	DropList&     SetScrollBarStyle(const ScrollBar::Style& s) { list.SetScrollBarStyle(s); return *this; }
 
 	DropList();
-	virtual ~DropList();
 };
 
 void Append(DropList& list, const VectorMap<Value, Value>& values);

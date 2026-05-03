@@ -111,13 +111,6 @@ inline Upp::Rect MakeRect(const CGRect& r, int dpi) {
 	return Upp::RectC(dpi * r.origin.x, dpi * r.origin.y, dpi * r.size.width, dpi * r.size.height);
 }
 
-inline CGRect CGRectDPI(const Upp::Rect& r) {
-	if(Upp::IsUHDMode())
-		return CGRectMake(0.5 * r.left, 0.5 * r.top, 0.5 * r.GetWidth(), 0.5 * r.GetHeight());
-	else
-		return CGRectMake(r.left, r.top, r.GetWidth(), r.GetHeight());
-}
-
 #endif
 
 #endif

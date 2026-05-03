@@ -110,12 +110,12 @@ close  232,17,35
 
 int Ctrl::GetWin32TitleBarHeight(const TopWindow *tw)
 {
-	return max(tw->custom_titlebar_cy, IsUHDMode() ? 60 : 31);
+	return max(tw->custom_titlebar_cy, DPI(31));
 }
 
 int Ctrl::GetWin32TitleBarButtonWidth()
 {
-	return IsUHDMode() ? 94 : 47;
+	return DPI(47);
 }
 
 Rect Ctrl::GetTitleBarRect(const TopWindow *win) // TODO (image, cy)

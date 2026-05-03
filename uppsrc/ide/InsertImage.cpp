@@ -91,9 +91,13 @@ void InsertImageDlg::Load()
 				id.TrimEnd("__DARK");
 				id.TrimEnd("__UHD");
 				if(map.Find(id) < 0) {
-					Image m = MakeImlImage(id, [&](int mode, const String& id) {
-						return mode ? ImlImage() : img.Get(id, ImlImage());
-					}, 0);
+					Image m = MakeImlImage(id, [&](int ii, ImageIml& m, String& id) {
+						id.Clear();
+						if(ii < img.GetCount()) {
+							id = img.GetKey(ii);
+							m = img[ii];
+						}
+					});
 					Size isz = m.GetSize();
 					if(max(isz.cx, isz.cy) > DPI(32))
 						m = Rescale(m, GetFitSize(isz, DPI(32), DPI(32)));

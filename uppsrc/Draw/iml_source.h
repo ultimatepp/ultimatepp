@@ -1,8 +1,14 @@
 //#BLITZ_APPROVE
 
+#ifdef VERSION
+#undef VERSION
+#endif
+
+#define VERSION(v)
+#define PREMULTIPLIED
+
 #define IMAGE_META(k, v)
 
-#define PREMULTIPLIED
 #define IMAGE_ID(n)
 #define IMAGE_BEGIN_DATA
 #define IMAGE_END_DATA(n, c)
@@ -65,30 +71,6 @@ UPP::Iml& IMAGECLASS::Iml() {
 
 	#include IMAGEFILE
 
-	#ifdef IMAGEFILE_DARK
-		#undef  IMAGE_ID
-		#undef  IMAGE_END_DATA
-		#define IMAGE_ID(n)            iml.AddId(0, #n);
-		#define IMAGE_END_DATA(n, c)   }; iml.AddData(data, n, c, 1); }
-		#include IMAGEFILE_DARK
-	#endif
-	
-	#ifdef IMAGEFILE_UHD
-		#undef IMAGE_ID
-		#undef IMAGE_END_DATA
-		#define IMAGE_ID(n)            iml.AddId(1, #n);
-		#define IMAGE_END_DATA(n, c)   }; iml.AddData(data, n, c, 2); }
-		#include IMAGEFILE_UHD
-	#endif
-
-	#ifdef IMAGEFILE_DARK_UHD
-		#undef IMAGE_ID
-		#undef IMAGE_END_DATA
-		#define IMAGE_ID(n)            iml.AddId(2, #n);
-		#define IMAGE_END_DATA(n, c)   }; iml.AddData(data, n, c, 3); }
-		#include IMAGEFILE_DARK_UHD
-	#endif
-
 	#undef IMAGE_BEGIN_DATA
 	#undef IMAGE_END_DATA
 	#undef IMAGE_DATA
@@ -100,10 +82,13 @@ UPP::Iml& IMAGECLASS::Iml() {
 
 	#undef PREMULTIPLIED
 	#define PREMULTIPLIED iml.Premultiplied();
+	#undef VERSION
+	#define VERSION(v)    iml.Version(v);
 		#include IMAGEFILE
 	#undef PREMULTIPLIED
 	#define PREMULTIPLIED
-
+	#undef VERSION
+	#define VERSION(v)
 	}
 	return iml;
 }
@@ -175,6 +160,9 @@ static COMBINE(IMAGECLASS, __Reg) COMBINE(IMAGECLASS, ___Reg);
 #endif
 
 #undef  IMAGE_META
+
+#undef  PREMULTIPLIED
+#undef  VERSION
 
 #ifdef IMAGEFILE_UHD
 #undef IMAGEFILE_UHD

@@ -66,6 +66,11 @@ Image CocoImg(int type, int value = 0, int state = 0)
 
 Color CocoColor(int k, Color bg = SColorFace())
 {
+#if 0
+	static int ii = 0; _DBG_
+	String p = GetHomeDirFile("Color" + AsString(ii++) + ".png"); _DBG_
+	DDUMP(p); PNGEncoder().SaveFile(p, CocoImg(bg, COCO_NSCOLOR, k, 0));
+#endif
 	return AvgColor(CocoImg(bg, COCO_NSCOLOR, k, 0));
 }
 
@@ -135,11 +140,20 @@ void ChHostSkin()
 
 	SColorPaper_Write(CocoColor(COCO_PAPER));
 
+	if(Atoi(GetEnv("UPP_SCALE__"))) {
+		if(IsDarkTheme())
+			ChDarkSkin();
+		else
+			ChStdSkin();
+		return;
+	}
+
 	SColorFace_Write(CocoColor(COCO_WINDOW, White()));
 	SColorHighlight_Write(CocoColor(COCO_SELECTEDPAPER));
 	SColorHighlightText_Write(CocoColor(COCO_SELECTEDTEXT));
 	SColorText_Write(CocoColor(COCO_TEXT));
 	SColorDisabled_Write(CocoColor(COCO_DISABLED));
+	
 
 	ChBaseSkin();
 

@@ -126,8 +126,6 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 
 	EnterGuiMutex();
 	
-	Ctrl::SetUHDEnabled(true);
-	
 	Ctrl::scale = 1;
 #if GTK_CHECK_VERSION(3, 10, 0)
 	if(Ctrl::IsWayland()) {

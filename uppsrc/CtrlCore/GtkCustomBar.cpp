@@ -68,12 +68,12 @@ void TopWindow::Init()
 
 int Ctrl::GetGtkTitleBarHeight(const TopWindow *tw)
 {
-	return max(tw->custom_titlebar_cy, IsUHDMode() ? 60 : 31);
+	return max(tw->custom_titlebar_cy, DPI(31));
 }
 
 int Ctrl::GetGtkTitleBarButtonWidth()
 {
-	return IsUHDMode() ? 94 : 47;
+	return DPI(47);
 }
 
 void TopWindow::SyncIcons()

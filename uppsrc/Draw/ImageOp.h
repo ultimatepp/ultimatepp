@@ -7,7 +7,7 @@ Image WithHotSpots(const Image& m, Point hotspot, Point hotspot2 = Point(0, 0));
 Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2);
 Image WithHotSpot(const Image& m, int x1, int y1);
 
-void  ScanOpaque(Image& m);
+void ScanOpaque(Image& m);
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
                            void (*op)(RGBA *t, const RGBA *s, int n), bool co = false);
 
@@ -266,19 +266,37 @@ Image Upscale2x(const Image& src);
 Image Downscale2x(const Image& src);
 Image Downscale6x(const Image& src);
 
-void SetUHDMode(bool b = true);
-bool IsUHDMode();
-void SyncUHDMode();
+enum {
+	DPI_100 = 2, // Normal resolution
+	DPI_150 = 3, // QHD
+	DPI_200 = 4, // UHD
+	DPI_300 = 6,
+	DPI_600 = 12, // Used for 'master' Image drawn without aliasing
+};
 
-// Image DPI(const Image& m);
-Image DPI(const Image& img, int expected);
+void   SetDPIScale(int scale);
+void   SyncDPIScale();
 
-inline int    DPI(int a)          { return IsUHDMode() ? 2 * a : a; }
-inline double DPI(double a)       { return IsUHDMode() ? 2 * a : a; }
-inline Size   DPI(Size sz)        { return IsUHDMode() ? 2 * sz : sz; }
-inline Size   DPI(int cx, int cy) { return Size(DPI(cx), DPI(cy)); }
+inline int    GetDPIScale()         { extern int    DPIScaleGlobal_; return DPIScaleGlobal_; }
+inline double GetDPIScaleRatio()    { extern double DPIScaleGlobalF_; return DPIScaleGlobalF_; }
+inline double GetDPIUnScaleRatio()  { extern double IDPIScaleGlobalF_; return IDPIScaleGlobalF_; }
 
-inline Image DPI(const Image& a, const Image& b) { return IsUHDMode() ? b : a; }
+inline int DPI(int a)               { return (GetDPIScale() * a) >> 1; }
+inline double DPI(double a)         { return GetDPIScaleRatio() * a; }
+
+inline Size   DPI(int cx, int cy)   { return Size(DPI(cx), DPI(cy)); }
+inline Size   DPI(Size sz)          { return DPI(sz.cx, sz.cy); }
+
+Image DPISmartRescale(const Image& src, Size sz);
+Image DPISmartRescaleCached(const Image& src, Size sz);
+
+int ImlFlagsToDPIScale(int imlflags);
+int DPIScaleToImlFlags(int dpiscale);
+
+inline int DPI2(int dpi200val, int dpi100val) {
+	int scale = GetDPIScale();
+	return (dpi200val - dpi100val) * (scale - DPI_100) / 2 + dpi100val;
+}
 
 struct RGBAV {
 	dword r, g, b, a;

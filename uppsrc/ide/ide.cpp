@@ -591,7 +591,7 @@ void Ide::MakeIcon() {
 		int fh = 112;
 		Size sz(0, 0);
 		Font font;
-		while(fh > (IsUHDMode() ? 64 : 80)) {
+		while(fh > DPI2(64, 80)) {
 			font = StdFont(fh);
 			sz = GetTextSize(mp, font) + 8 * Size(4, 2);
 			if(sz.cx <= isz.cx)
@@ -632,11 +632,17 @@ void Ide::SetIcon()
 	state_icon = new_state_icon;
 	MakeIcon();
 #ifdef PLATFORM_WIN32
+	auto DoIcon = [&](const Image& shd, const Image& uhd) {
+		if(GetDPIScale() == DPI_100)
+			Icon(shd);
+		else
+			Icon(DPISmartRescaleCached(uhd, DPI(16, 16)));
+	};
 	switch(state_icon) {
-	case 1:  Icon(DPI(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge())); break;
-	case 2:  Icon(DPI(IdeImg::IconRunning(), IdeImg::IconRunningLarge())); break;
-	case 3:  Icon(DPI(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge())); break;
-	default: Icon(DPI(IdeImg::Icon(), IdeImg::PackageLarge()));
+	case 1:  DoIcon(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge()); break;
+	case 2:  DoIcon(IdeImg::IconRunning(), IdeImg::IconRunningLarge()); break;
+	case 3:  DoIcon(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge()); break;
+	default: DoIcon(IdeImg::Icon(), IdeImg::PackageLarge());
 	}
 #else
 	switch(state_icon) {

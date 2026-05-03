@@ -317,5 +317,16 @@ CKWISE. Flip mode values are compatible with Raster`::GetOrientation
 and are equal to EXIF orientation `- 1. This function is intended 
 to flip Image to correct orientation (usually JPEG from digital 
 camera).&]
-[s2;%% &]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:DPISmartRescale`(const Image`&`,Size`): Image [* DPISmartRescale]([@(0.0.255) c
+onst] Image[@(0.0.255) `&] [*@3 src], Size [*@3 sz])&]
+[s2;%% Intended to rescale `"not fitting`" icons to current GUI scaling, 
+using variety of `"smart`" methods (xBR upscaling, Lancosz 3, 
+bilienear downscaling) to maintain the acceptable appearance.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:DPISmartRescaleCached`(const Image`&`,Size`): Image [* DPISmartRescaleCache
+d]([@(0.0.255) const] Image[@(0.0.255) `&] [*@3 src], Size [*@3 sz])&]
+[s2;%% Same as DPISmartRescale, with added caching of results.&]
 [s0;%% ]]

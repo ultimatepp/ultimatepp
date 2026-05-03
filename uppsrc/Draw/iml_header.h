@@ -1,10 +1,16 @@
 //#BLITZ_APPROVE
 
+#ifdef VERSION
+#undef VERSION
+#endif
+
 #define IMAGE_META(k, v)
+#define IMAGE_VERSION(v)
 #define IMAGE_SCAN(s)
 #define IMAGE_PACKED(n, d)
 
 #define PREMULTIPLIED
+#define VERSION(x)
 #define IMAGE_BEGIN_DATA
 #define IMAGE_DATA(a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,aa,ab,ac,ad,ae,af,b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,ba,bb,bc,bd,be,bf)
 #define IMAGE_END_DATA(n, c)
@@ -50,6 +56,7 @@ public:
 #undef  IMAGE_SCAN
 #undef  IMAGE_PACKED
 #undef  IMAGE_META
+#undef  IMAGE_VERSION
 
 #undef  IMAGE_BEGIN_DATA
 #undef  IMAGE_END_DATA
@@ -58,4 +65,8 @@ public:
 #ifndef IMAGE_KEEP
 #undef  IMAGECLASS
 #undef  IMAGEFILE
+
+#undef PREMULTIPLIED
+#undef VERSION
+
 #endif

@@ -93,7 +93,7 @@ bool CtrlLibDisplayError(const Value& e) {
 	String s = GetErrorText(e);
 	if(s.IsEmpty())
 		s = t_("Invalid data.");
-	Exclamation(s);
+	Exclamation("\1" + s);
 	return true;
 }
 
@@ -101,49 +101,7 @@ INITBLOCK
 {
 	DisplayErrorFn() = &CtrlLibDisplayError;
 }
-/*
-String SaveCtrlLayout(Ctrl::LogPos p, const String& classname, const String& variable,
-					  const String& label, const String& help) {
-	String out;
-	if(classname.IsEmpty())
-		out << "\tUNTYPED(";
-	else
-		out << "\tITEM(" << classname << ", ";
-	out << variable << ", ";
-	switch(p.x.GetAlign()) {
-	case Ctrl::LEFT:   out << Format("LeftPos(%d, %d).", p.x.GetA(), p.x.GetB()); break;
-	case Ctrl::RIGHT:  out << Format("RightPos(%d, %d).", p.x.GetA(), p.x.GetB()); break;
-	case Ctrl::SIZE:   out << Format("HSizePos(%d, %d).", p.x.GetA(), p.x.GetB()); break;
-	case Ctrl::CENTER: out << Format("HCenterPos(%d, %d).", p.x.GetB(), p.x.GetA()); break;
-	}
-	switch(p.y.GetAlign()) {
-	case Ctrl::TOP:    out << Format("TopPos(%d, %d)", p.y.GetA(), p.y.GetB()); break;
-	case Ctrl::BOTTOM: out << Format("BottomPos(%d, %d)", p.y.GetA(), p.y.GetB()); break;
-	case Ctrl::SIZE:   out << Format("VSizePos(%d, %d)", p.y.GetA(), p.y.GetB()); break;
-	case Ctrl::CENTER: out << Format("VCenterPos(%d, %d)", p.y.GetB(), p.y.GetA()); break;
-	}
-	if(!label.IsEmpty()) {
-		out << ".SetLabel(\"";
-		for(const char *s = label; *s; s++)
-			if(*s == '\n')
-				out.Cat("\\n");
-			else
-				out.Cat(*s);
-		out << "\")";
-	}
-	if(!help.IsEmpty()) {
-		out << ".HelpC(\"";
-		for(const char *s = help; *s; s++)
-			if(*s == '\n')
-				out.Cat("\\n");
-			else
-				out.Cat(*s);
-		out << "\")";
-	}
-	out << ")\n";
-	return out;
-}
-*/
+
 void Show2(Ctrl& ctrl1, Ctrl& ctrl2, bool show) {
 	ctrl1.Show(show);
 	ctrl2.Show(show);
@@ -473,10 +431,11 @@ struct ZoomIconMaker : ImageMaker {
 		ImagePainter w(sz);
 		w.Clear(RGBAZero());
 		w.Move(DPI(11), DPI(11)).Line(DPI(16), DPI(16)).Stroke(DPI(2), SBlack());
-		w.Circle(DPI(7), DPI(7), IsUHDMode() ? 12 : 6.5).Stroke(IsUHDMode() ? 3 : 1, SBlack());
+		int scale = GetDPIScale();
+		w.Circle(DPI(7), DPI(7), scale > DPI_100 ? scale * 3 : 6.5).Stroke(scale - 1, SBlack());
 		String txt = AsString(int(zoom * 100));
-		Image numbers = IsUHDMode() ? CtrlImg::Numbers2() : CtrlImg::Numbers1();
-		int gcx = IsUHDMode() ? 6 : 4;
+		Image numbers = scale >= DPI_200 ? CtrlImg::Numbers2() : CtrlImg::Numbers1();
+		int gcx = 3 + scale / 2;
 		Size tsz(txt.GetCount() * gcx, numbers.GetHeight());
 		int y = DPI(7) - tsz.cy / 2;
 		int x = DPI(7) - tsz.cx / 2;

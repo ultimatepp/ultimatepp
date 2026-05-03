@@ -748,7 +748,7 @@ struct PackageDisplay : Display {
 		if(IsNull(icon))
 			icon = IdeImg::Package();
 		else
-			icon = DPI(icon, 16);
+			icon = DPISmartRescaleCached(icon, DPI(16, 16));
 		w.DrawRect(r, paper);
 		w.DrawImage(r.left, r.top + (r.Height() - icon.GetHeight()) / 2, icon);
 		w.DrawText(r.left + DPI(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
@@ -808,7 +808,7 @@ void SelectPackageDlg::SyncList(const String& find)
 				icon = pkg.upphub ? IdeImg::HubPackage() : IdeImg::Package();
 		}
 		nest_list.Add(pkg.nest);
-		clist.Add(pkg.package, DPI(icon, 16));
+		clist.Add(pkg.package, DPISmartRescaleCached(icon, DPI(16, 16)));
 		alist.Add(pkg.package, GetFileName(pkg.nest), pkg.description, icon);
 		alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 	}
@@ -940,7 +940,7 @@ void SelectPackageDlg::Load(const String& find)
 
 					if(d.ispackage) {
 						String icon_path;
-						if(IsUHDMode())
+						if(GetDPIScale() >= DPI_200)
 							icon_path = AppendFileName(path, "icon32x32.png");
 						if(IsNull(icon_path) || !FileExists(icon_path))
 							icon_path = AppendFileName(path, "icon16x16.png");

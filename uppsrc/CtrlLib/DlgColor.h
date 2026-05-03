@@ -95,8 +95,7 @@ private:
 	Color    GetColor(int i) const;
 	void     Select();
 
-	void     DrawFilledFrame(Draw &w, int x, int y, int cx, int cy, Color fcol, Color bcol);
-	void     DrawFilledFrame(Draw &w, Rect &r, Color fcol, Color bcol);
+	Rect     DrawFilledFrame(Draw &w, Rect r, Color fcol, Color bcol);
 
 	int      colori;
 	bool     notnull;

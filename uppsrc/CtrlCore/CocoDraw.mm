@@ -12,8 +12,9 @@ void SystemDraw::Init(void *cgContext, void *view)
 	CGContextSetBlendMode(cgHandle, kCGBlendModeNormal);
 	CGContextSetTextPosition(cgHandle, 0, 0);
     CGContextSetTextDrawingMode(cgHandle, kCGTextFill);
-	if(IsUHDMode())
-		CGContextScaleCTM(cgHandle, 0.5, 0.5);
+	double sc = Ctrl::GetDisplayUnScale();
+	if(sc != 1)
+		CGContextScaleCTM(cgHandle, sc, sc);
 }
 
 SystemDraw::SystemDraw(void *cgContext, void *nsview)
@@ -152,7 +153,7 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 	if(cr.IsEmpty())
 		return false;
 	return true;
-	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(1.0 / DPI(1) * cr)] : true;
+//	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(1.0 / DPI(1) * cr)] : true;
 }
 
 Rect SystemDraw::GetPaintRect() const

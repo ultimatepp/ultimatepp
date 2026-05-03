@@ -73,6 +73,9 @@ extern const char *sClipFmtsRTF;
 
 id menubar;
 
+double Ctrl::display_scale = 1;
+double Ctrl::display_unscale = 1;
+
 void CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
@@ -102,16 +105,13 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	
 	Ctrl::SetUHDEnabled(true);
-	bool uhd = true;
-	for (NSScreen *screen in [NSScreen screens]) {
-		if([screen backingScaleFactor] < 2) {
-			uhd = false;
-			break;
-		}
-	}
-	SetUHDMode(uhd);
-
-	Font::SetDefaultFont(StdFont(fceil(DPI([sysfont pointSize]))));
+	Ctrl::display_scale = 1;
+	for (NSScreen *screen in [NSScreen screens])
+		Ctrl::display_scale = max(Ctrl::display_scale, [screen backingScaleFactor]);
+	
+	Ctrl::display_unscale = 1 / Ctrl::display_scale;
+	
+	Font::SetDefaultFont(StdFont(fceil(Ctrl::display_scale * [sysfont pointSize])));
 	
 	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);
 
@@ -293,7 +293,7 @@ Rect Ctrl::GetWorkArea() const
 Rect MakeScreenRect(NSScreen *screen, CGRect r)
 {
 	r.origin.y = [screen frame].size.height - r.origin.y - r.size.height;
-	return MakeRect(r, DPI(1));
+	return MakeRect(r, Upp::Ctrl::SCL(1));
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)

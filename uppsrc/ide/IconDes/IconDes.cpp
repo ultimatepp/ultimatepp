@@ -56,8 +56,6 @@ void IconDes::SyncShow()
 		Slot& c = Current();
 		iconshow.image = c.image;
 		iconshow.flags = c.flags;
-		iconshow.show_downscaled = show_downscaled;
-		iconshow.show_synthetics = show_synthetics;
 		ilist.Set(2, RawToValue(MakeTuple(c.image, c.flags)));
 	}
 	iconshow.Refresh();

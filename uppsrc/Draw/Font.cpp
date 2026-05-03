@@ -129,7 +129,7 @@ void Font::SyncStdFont()
 		}
 
 	LLOG("SyncStdFont " << StdFontSize);
-	SyncUHDMode();
+	SyncDPIScale();
 }
 
 void (*whenSetStdFont)();
@@ -164,6 +164,13 @@ bool Font::std_font_override;
 void Font::SetDefaultFont(Font font)
 {
 	LLOG("SetDefaultFont " << font);
+	int override_scale = Atoi(GetEnv("UPP_SCALE__"));
+	if(override_scale) {
+		int cy = decode(override_scale, 3, 18, 4, 24, 6, 36, 12);
+		for(int i = 0; i < 20; i++)
+			if(font.Height(cy + i).GetCy() >= cy)
+				break;
+	}
 	if(!std_font_override)
 		SetStdFont0(font);
 }

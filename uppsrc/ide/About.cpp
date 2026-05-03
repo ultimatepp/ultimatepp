@@ -135,8 +135,10 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 #endif
 	if(items.GetCount())
 		h << classes.GetCount() << " classes, " << items.GetCount() << " items\n";
-	if(IsUHDMode())
-		h << "UHD ";
+	
+	int scale = GetDPIScale();
+	h << decode(scale, DPI_150, "QHD ", DPI_200, "UHD ", DPI_300, "XHD ",
+	            AsString(50 * scale) + "% ");
 
 #ifdef GUI_GTK
 	if(Ctrl::IsXWayland())

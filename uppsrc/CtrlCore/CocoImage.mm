@@ -2,7 +2,7 @@
 
 #ifdef GUI_COCOA
 
-#define LLOG(x)
+#define LLOG(x) DLOG(x)
 
 namespace Upp {
 
@@ -85,9 +85,7 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 
 
 	if(cgimg) {
-		DLOG("Have cgimg");
 		Size isz = img.GetSize();
-		DDUMP(isz);
 		CGContextSaveGState(cgHandle);
 		Point off = GetOffset();
 		CGContextTranslateCTM(cgHandle, x + off.x, y + off.y);
@@ -103,7 +101,6 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	sCleanImageCache(img);
 
 	ImageSysDataMaker m;
-	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = IsNull(color) ? img : CachedSetColorKeepAlpha(img, color); // TODO: Can setcolor be optimized out? By masks e.g.?
 	ImageSysData& sd = cg_image_cache.Get(m);
 	if(sd.cgimg) {
@@ -273,7 +270,6 @@ NSImage *GetNSImage(const Image& img)
 void Ctrl::SetNSAppImage(const Image& img)
 {
 	ImageSysDataMaker m;
-	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
 	ImageSysData& sd = cg_image_cache.Get(m);
 	static CGImageRef cgimg;
@@ -297,7 +293,6 @@ void  Ctrl::SetMouseCursor(const Image& img)
 		return;
 	}
 	ImageSysDataMaker m;
-	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
 	ImageSysData& sd = cg_image_cache.Get(m);
 	static CGImageRef cgimg;
@@ -329,7 +324,8 @@ void ImageDraw::Init(int cx, int cy)
 	                                               colorSpace, kCGImageAlphaPremultipliedFirst,
 	                                               NULL, NULL), NULL);
 	CGContextTranslateCTM(cgHandle, 0, cy);
-	if(IsUHDMode()) {
+
+	if(Ctrl::GetDisplayScale() == 2) { // scale can only be 1 or 2...
 		CGContextScaleCTM(cgHandle, 2, -2);
 		CGContextTranslateCTM(cgHandle, 0, -cy / 2.0);
 	}

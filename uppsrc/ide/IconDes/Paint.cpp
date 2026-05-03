@@ -9,99 +9,52 @@ void IconShow::Paint(Draw& w)
 	Size sz = GetSize();
 	static Color color[] = { White(), Black(), WhiteGray(), LtGray(), Gray(),
 	                         Yellow(), Brown(), Red(), Green(), Blue(), Cyan(), Magenta() };
-	Image image = this->image;
-	if(show_downscaled || show_synthetics)
-		if(flags & IML_IMAGE_FLAG_S3)
-			image = DownSample3x(image, true);
+
+	int image_scale = ImlFlagsToDPIScale(flags);
+
+	auto GetSize = [&](int scale) {
+		return scale * image.GetSize() / image_scale;
+	};
+
+	auto GetScaled = [&](int scale) {
+		if(image_scale == DPI_600) {
+			if(scale == DPI_100)
+				return Downscale6x(image);
+			if(scale == DPI_150)
+				return Downscale2x(DownSample2x(image));
+			if(scale == DPI_200)
+				return DownSample3x(image);
+			if(scale == DPI_300)
+				return DownSample2x(image);
+		}
+		
+		return DPISmartRescale(image, scale * image.GetSize() / image_scale);
+	};
 	
-	Size msz = image.GetSize();
-	Size isz = msz;
-	int  gap = DPI(8);
-	double fits = msz.cx * msz.cy < 20000;
-
-
-	if(fits) {
-		if(show_downscaled) {
-			isz.cx += (isz.cx + 1) / 2 + gap;
-			isz.cy += max(isz.cy, (isz.cy + 1) / 2 + (isz.cy + 2) / 3 + gap);
-		}
-		if(show_synthetics) {
-			if(flags & IML_IMAGE_FLAG_UHD) {
-				isz.cx += isz.cx + gap;
-				isz.cy += (isz.cy + 1) / 2 + gap;
-				if(IsUHDMode())
-					isz.cy += msz.cy + gap;
-			}
-			else {
-				isz.cx += 3 * isz.cx + gap;
-				isz.cy += 2 * isz.cy + gap;
-			}
-		}
+	Size sz300 = GetSize(DPI_300);
+	if(sz300.cx * sz300.cy > 20000) {
+		w.DrawRect(sz, SColorPaper);
+		w.DrawImage(DPI(5), DPI(5), image);
+		return;
 	}
-
-	int n = isz.cx ? clamp(sz.cx / isz.cx, 1, __countof(color)) : 1;
-	int ncx = sz.cx / n;
-	Image m2, m3;
-	Image dk, s2, s2dk, s22, s2dk2;
-	if(fits) {
-		if(msz.cx && show_downscaled) {
-			m2 = DownSample2x(image);
-			m3 = DownSample3x(image);
+	
+	int n = min(__countof(color), sz.cx / (sz300.cx + DPI(15)));
+	int cx = sz.cx / n;
+	int y = DPI(5);
+	for(int i = 0; i < n; i++)
+		w.DrawRect(i * cx, 0, cx + n, sz.cy, color[i]);
+	for(int sc : { DPI_100, DPI_150, DPI_200, DPI_300 }) {
+		Size isz = GetSize(sc);
+		Image m1 = GetScaled(sc);
+		Image m2 = DarkTheme(m1);
+		for(int i = 0; i < n; i++) {
+			int x = i * cx;
+			if(image_scale == sc)
+				w.DrawRect(x + DPI(1), y, DPI(2), isz.cy, SLtBlue);
+			w.DrawImage(x + DPI(5), y, m1);
+			w.DrawImage(x + sz300.cx + DPI(10), y, m2);
 		}
-		if(show_synthetics) {
-			dk = DarkTheme(image);
-			if(flags & IML_IMAGE_FLAG_UHD) {
-				s2 = Downscale2x(image);
-				s2dk = Downscale2x(DarkTheme(image));
-				if(IsUHDMode()) {
-					s22 = Magnify(s2, 2, 2, true);
-					s2dk2 = Magnify(s2dk, 2, 2, true);
-				}
-			}
-			else {
-				s2 = Upscale2x(image);
-				s2dk = Upscale2x(DarkTheme(image));
-			}
-		}
-	}
-	else
-		isz = msz;
-
-	for(int i = 0; i < n; i++) {
-		int x = i * ncx;
-		int cx = (i + 1) * ncx - x;
-		w.DrawRect(x, 0, cx, sz.cy, color[i]);
-		if(msz.cx) {
-			Point pos(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2);
-			if(fits) {
-				int x2 = pos.x + isz.cx / 2;
-				if(show_synthetics) {
-					w.DrawImage(pos.x, pos.y, image);
-					w.DrawImage(x2, pos.y, dk);
-					pos.y += msz.cy + gap;
-					w.DrawImage(pos.x, pos.y, s2);
-					w.DrawImage(x2, pos.y, s2dk);
-					if((flags & IML_IMAGE_FLAG_UHD) && IsUHDMode()) {
-						pos.y += (msz.cy + 1) / 2 + gap;
-						w.DrawImage(pos.x, pos.y, s22);
-						w.DrawImage(x2, pos.y, s2dk2);
-					}
-				}
-				else {
-					int y = pos.y + (isz.cy - msz.cy) / 2;
-					w.DrawImage(pos.x, y, image);
-					if(show_downscaled) {
-						w.DrawImage(x2, y, m2);
-						w.DrawImage(x2, y + (msz.cx + 1) / 2 + gap, m3);
-					}
-				}
-			}
-			else {
-				w.Clip(x, 0, isz.cx, sz.cy);
-				w.DrawImage(x + DPI(2), DPI(2), image);
-				w.End();
-			}
-		}
+		y += isz.cy + DPI(5);
 	}
 }
 

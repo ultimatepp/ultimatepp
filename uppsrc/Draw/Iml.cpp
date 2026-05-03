@@ -41,10 +41,13 @@ Vector<ImageIml> UnpackImlData(const String& d)
 	return UnpackImlData(~d, d.GetLength());
 }
 
-void iml_ReplaceAll(Image& tgt, Image& src)
+void iml_ReplaceAll(Image& tgt, const Image& src)
 { // this very special function replaces all unmodified instances of Image with new content
-	if(tgt.GetSize() == src.GetSize() && tgt.data) {
-		tgt.data->buffer = src.data->buffer;
+	Image h = src; // make sure src has refcount 1, basically 'clone'
+	ImageBuffer ib = h;
+	h = ib;
+	if(tgt.GetSize() == h.GetSize() && tgt.data && src.data) {
+		tgt.data->buffer = h.data->buffer;
 		tgt.data->NewSerial();
 	}
 	else
@@ -55,6 +58,7 @@ void Iml::Init(int n)
 {
 	for(int i = 0; i < n; i++)
 		map.Add(name[i]);
+	flags.Alloc(map.GetCount(), IML_IMAGE_FLAGS_UNKNOWN);
 }
 
 void Iml::Reset()
@@ -72,16 +76,157 @@ void Iml::Skin()
 		}
 }
 
+void Iml::AddData(const byte *s, int len, int count)
+{
+	Data& d = data.Add();
+	d.data = (const char *)s;
+	d.len = len;
+	d.count = count;
+	img_count += count;
+	data.Shrink();
+}
+
+void Iml::AddId(int mode1, const char *name)
+{
+	map.Add(name);
+}
+
 static StaticMutex sImlLock;
+
+ImageIml Iml::GetRaw(int i)
+{
+	int i0 = 0;
+	for(const Data& d : data) {
+		if(i >= i0 && i < i0 + d.count) {
+			ImageIml m = MakeValue(
+				[&] {
+					String key;
+					RawCat(key, d.data); // all is static
+					return key;
+				},
+				[&](Value& v) {
+					Vector<ImageIml>& m = CreateRawValue<Vector<ImageIml>>(v);
+					m = UnpackImlData(d.data, d.len);
+					ASSERT(m.GetCount() == d.count);
+					int sz = 0;
+					int ii = i0;
+					for(ImageIml& img : m) {
+						sz += img.image.GetLength();
+						if(premultiply)
+							img.image = Premultiply(img.image);
+						if(version == 0) // cleanup some bits that are set for legacy reasons
+							img.flags &= 0x3f;
+						flags[ii++] = img.flags;
+					}
+					return sz;
+				}
+			).To<Vector<ImageIml>>()[i - i0];
+			m.flags |= global_flags;
+			return m;
+		}
+		i0 += d.count;
+	}
+	return ImageIml();
+}
 
 void Iml::Set(int i, const Image& img)
 { // TODO: MT
 	IImage& m = map[i];
-	Image h = img; // make sure h has refcount 1, basically 'clone'
-	ImageBuffer ib = h;
-	h = ib;
-	iml_ReplaceAll(m.image, h);
+	iml_ReplaceAll(m.image, img);
 	m.loaded = true;
+}
+
+Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Function<ImageIml(int)> GetRaw)
+{
+	int  scale = GetDPIScale();
+	bool dark = IsDarkTheme();
+	int best_i  = -1;
+	int exact_scale_i = -1;
+	int best_dark = 10; // minimize this
+	int best_scale = -1; // maximize this
+	int ii = 0;
+	for(;;) {
+		dword    flags;
+		String   iid;
+		GetRawFlags(ii, flags, iid);
+		if(IsNull(iid))
+			break;
+		int q = iid.Find("__");
+		if(q > 0)
+			iid.Trim(q);
+		if(iid == id) {
+			bool isdark = flags & IML_IMAGE_FLAG_DARK;
+			int  iscale = ImlFlagsToDPIScale(flags);
+			
+			if(isdark == dark && iscale == scale) // found perfect match
+				return GetRaw(ii).image;
+			
+			if(iscale == scale)
+				exact_scale_i = ii;
+			
+			int  idark = !!isdark - dark;
+			if(CombineCompare(best_dark, idark)(iscale, best_scale) > 0) { // prioritize color, then find highest scale
+				best_i = ii;
+				best_dark = idark;
+				best_scale = iscale;
+			}
+		}
+		ii++;
+	}
+	
+	auto AdjustColor0 = [&](const Image& img, dword flags) { // flip light to dark if needed
+		if(dark && !(flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS|IML_IMAGE_FLAG_DARK)))
+			return DarkTheme(img);
+		return img;
+	};
+
+	if(best_dark && exact_scale_i >= 0) { // dark color version not found, but we have exact scale
+		ImageIml m = GetRaw(exact_scale_i);
+		return AdjustColor0(m.image, m.flags);
+	}
+	
+	if(best_i < 0)
+		return Null;
+	
+	ImageIml best = GetRaw(best_i);
+
+	auto AdjustColor = [&](const Image& m) { // flip light to dark if needed
+		return best_dark ? AdjustColor0(m, best.flags) : m;
+	};
+	
+	if(best.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))
+		return AdjustColor(best.image);
+	
+	if(best_scale == DPI_600) {
+		if(scale == DPI_100)
+			return AdjustColor(Downscale6x(best.image));
+		if(scale == DPI_150)
+			return AdjustColor(Downscale2x(DownSample2x(best.image)));
+		if(scale == DPI_200)
+			return AdjustColor(DownSample3x(best.image));
+		if(scale == DPI_300)
+			return AdjustColor(DownSample2x(best.image));
+	}
+	
+	return DPISmartRescale(best.image, scale * best.image.GetSize() / best_scale);
+}
+
+Image MakeImlImage(const String& id, Event<int, ImageIml&, String&> GetRaw)
+{
+	return MakeImlImage(id,
+				[&](int i, dword& flags, String& id) {
+					ImageIml m;
+					GetRaw(i, m, id);
+					flags = m.flags;
+				},
+				[&](int i) -> ImageIml {
+					ImageIml m;
+					String   id;
+					GetRaw(i, m, id);
+					return m;
+				}
+			);
+
 }
 
 Image Iml::Get(int i)
@@ -90,7 +235,22 @@ Image Iml::Get(int i)
 	if(!m.loaded) {
 		Mutex::Lock __(sImlLock);
 		if(!m.loaded) {
-			Image h = MakeImlImage(GetId(i), [&](int mode, const String& id) { return GetRaw(mode, id); }, global_flags);
+			Image h = MakeImlImage(GetId(i),
+				[&](int i, dword& rflags, String& id) {
+					id.Clear();
+					rflags = 0;
+					if(i < img_count) {
+						id = map.GetKey(i);
+						if(flags[i] != IML_IMAGE_FLAGS_UNKNOWN)
+							rflags = flags[i];
+						else
+							rflags = GetRaw(i).flags;
+					}
+				},
+				[&](int i) -> ImageIml {
+					return GetRaw(i);
+				}
+			);
 			iml_ReplaceAll(m.image, h);
 			m.loaded = true;
 		}
@@ -98,89 +258,26 @@ Image Iml::Get(int i)
 	return m.image;
 }
 
-ImageIml Iml::GetRaw(int mode, int i)
-{
-	Mutex::Lock __(sImlLock);
-	if(data[mode].GetCount()) {
-		int ii = 0;
-		while(ii < data[mode].GetCount()) {
-			const Data& d = data[mode][ii];
-			if(i < d.count) {
-				static const char *cached_data[4];
-				static Vector<ImageIml> cached[4];
-				if(cached_data[mode] != d.data) { // cache single .iml
-					cached_data[mode] = d.data;
-					cached[mode] = UnpackImlData(d.data, d.len);
-					if(premultiply)
-						for(int i = 0; i < cached[mode].GetCount(); i++)
-							cached[mode][i].image = Premultiply(cached[mode][i].image);
-				}
-				return cached[mode][i];
-			}
-			i -= d.count;
-			ii++;
-		}
-	}
-	return ImageIml();
+int ImlFlagsToDPIScale(int imlflags) {
+	int scale = DPI_100;
+	if(imlflags & IML_IMAGE_FLAG_UHD)
+		scale = DPI_200;
+	if(imlflags & IML_IMAGE_FLAG_S3)
+		scale *= 3;
+	if(imlflags & IML_IMAGE_FLAG_QHD)
+		scale++;
+	return scale;
 }
 
-ImageIml Iml::GetRaw(int mode, const String& id)
-{
-	ASSERT(mode >= 0 && mode < 4);
-	int ii = -1;
-	if(mode == 0)
-		ii = map.Find(id);
-	else
-		ii = ex_name[mode - 1].Find(id);
-	return ii >= 0 ? GetRaw(mode, ii) : ImageIml();
-}
-
-Image MakeImlImage(const String& id, Function<ImageIml(int, const String& id)> GetRaw, dword global_flags)
-{
-	int mode = IsUHDMode() * GUI_MODE_UHD + IsDarkTheme() * GUI_MODE_DARK;
-	
-	const static int mode_candidates[4][4] = {
-		{ GUI_MODE_NORMAL, GUI_MODE_UHD, -1 },
-		{ GUI_MODE_DARK, GUI_MODE_DARK_UHD, GUI_MODE_NORMAL, GUI_MODE_UHD },
-		{ GUI_MODE_UHD, GUI_MODE_NORMAL, -1 },
-		{ GUI_MODE_DARK_UHD, GUI_MODE_DARK, GUI_MODE_UHD, GUI_MODE_NORMAL }
-	};
-	
-	ImageIml im;
-	Image    original;
-	const int *candidates = mode_candidates[mode];
-	
-	for(int i = 0; i < 4 && candidates[i] >= 0; i++) {
-		int cmode = candidates[i];
-		auto Mode = [&](dword m, const char *s) { return cmode & m ? String(s) : String(); };
-		im = GetRaw(GUI_MODE_NORMAL, id + Mode(GUI_MODE_UHD, "__UHD") + Mode(GUI_MODE_DARK, "__DARK"));
-		if(IsNull(im.image))
-			im = GetRaw(cmode, id); // try alternative iml
-		if(!IsNull(im.image)) {
-			original = im.image;
-			if(im.flags & IML_IMAGE_FLAG_S3)
-				im.image = DownSample3x(im.image);
-			break;
-		}
-	}
-	
-	if(IsNull(im.image))
-		return Null;
-
-	if(!(mode & GUI_MODE_UHD) && (im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))) {
-		if(im.flags & IML_IMAGE_FLAG_S3)
-			im.image = Downscale6x(original);
-		else
-			im.image = Downscale2x(im.image);
-	}
-	if((mode & GUI_MODE_UHD) && !(im.flags & IML_IMAGE_FLAG_UHD) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE)))
-		im.image = Upscale2x(im.image);
-	if((mode & GUI_MODE_DARK) && !(im.flags & IML_IMAGE_FLAG_DARK) && !((im.flags | global_flags) & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS)))
-		im.image = DarkTheme(im.image);
-
-	ScanOpaque(im.image);
-	
-	return im.image;
+int DPIScaleToImlFlags(int dpiscale) {
+	return dpiscale == DPI_600 ? IML_IMAGE_FLAG_S3|IML_IMAGE_FLAG_UHD
+	: get_i(dpiscale, 0, 0,
+		0, // DPI_100
+		IML_IMAGE_FLAG_QHD, // DPI_150
+		IML_IMAGE_FLAG_UHD, // DPI_200
+		IML_IMAGE_FLAG_UHD|IML_IMAGE_FLAG_QHD, // 'DPI_250' - not used
+		IML_IMAGE_FLAG_S3 // DPI_300
+	);
 }
 
 Iml::Iml(const char **name, int n)
@@ -188,20 +285,6 @@ Iml::Iml(const char **name, int n)
 {
 	premultiply = true;
 	Init(n);
-}
-
-void Iml::AddData(const byte *s, int len, int count, int mode)
-{
-	Data& d = data[mode].Add();
-	d.data = (const char *)s;
-	d.len = len;
-	d.count = count;
-	data[mode].Shrink();
-}
-
-void Iml::AddId(int mode1, const char *name)
-{
-	ex_name[mode1].Add(name);
 }
 
 void Iml::ResetAll()
