@@ -294,10 +294,11 @@ String SaveIml(const Array<ImlImage>& iml, int format, const String& eol) {
 		int scale = ImlFlagsToDPIScale(c.flags);
 		if(saved_names.Find(c.name) < 0)
 			saved_names.FindAdd(c.name);
-		else
+		else {
 			out << "__" << AsString(scale * 50);
-		if(c.flags & IML_IMAGE_FLAG_DARK)
-			out << "__DARK";
+			if(c.flags & IML_IMAGE_FLAG_DARK)
+				out << "__DARK";
+		}
 		out << ")";
 		if(c.exp)
 			out << " IMAGE_META(\"exp\", \"\")";
