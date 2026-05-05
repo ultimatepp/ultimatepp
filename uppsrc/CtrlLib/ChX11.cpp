@@ -5,6 +5,7 @@
 namespace Upp {
 	
 #define LLOG(x)
+#define LDUMP(x)
 
 VectorMap<String, Value> GetXSettings()
 {
@@ -96,15 +97,15 @@ void ChHostSkin()
 		String theme = map.Get("Net/ThemeName", "");
 		//int scaling = map.Get("Gdk/WindowScalingFactor", 1);
 		int xdpi = map.Get("Xft/DPI", 98347);
-	
+		
 		int fontface = Font::ARIAL;
-		int fontheight = 13;
+		double fontheight = 12;
 		bool bold = false;
 		bool italic = false;
 	
 		const char *q = strrchr(font_name, ' ');
 		if(q) {
-			int h = atoi(q);
+			double h = Atof(q);
 			if(h)
 				fontheight = h;
 			String face(font_name, q);
