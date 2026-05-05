@@ -384,7 +384,7 @@ IconDes::IconDes()
 	AddFrame(sb);
 	AddFrame(ViewFrame());
 
-	leftpane.Left(rgbactrl, 256);
+	leftpane.Left(rgbactrl, DPI(250));
 	rgbactrl.SubCtrl(&imgs);
 
 	rgbactrl <<= THISBACK(ColorChanged);
@@ -415,7 +415,7 @@ IconDes::IconDes()
 	search <<= THISBACK(Search);
 	search.SetFilter(CharFilterToUpper);
 
-	bottompane.Bottom(iconshow, 64);
+	bottompane.Bottom(iconshow, DPI(150));
 	
 	magnify = 13;
 	pen = 1;

@@ -22,6 +22,30 @@ String IconDes::FormatImageName(const Slot& c)
 	return r;
 }
 
+String IconDes::FormatImageNameQtf(const Slot& c)
+{
+	Size sz = c.image.GetSize();
+	String r;
+	r << "\1[g \1" << c.name << "\1 [@r " << sz.cx << "[@K x]" << sz.cy << "]";
+	if(c.flags & IML_IMAGE_FLAG_FIXED)
+		r << " [@B$Y Fxd]";
+	else {
+		if(c.flags & IML_IMAGE_FLAG_FIXED_COLORS)
+			r << " [@B$Y Clr]";
+		if(c.flags & IML_IMAGE_FLAG_FIXED_SIZE)
+			r << " [@B$Y Sz]";
+	}
+	
+	if(!(c.flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_SIZE))) {
+		int scale = ImlFlagsToDPIScale(c.flags);
+		r << "[@B " << decode(scale, DPI_100, " 1[0 00`%]", DPI_150, " 15[0 0`%]", DPI_200, " 2[0 00`%]", DPI_300, " 3[0 00`%]", "") << "]";
+	}
+
+	if(c.exp)
+		r << " X";
+	return r;
+}
+
 void IconDes::SyncList()
 {
 	if(syncinglist)
@@ -34,7 +58,7 @@ void IconDes::SyncList()
 	for(int i = 0; i < slot.GetCount(); i++) {
 		Slot& c = slot[i];
 		if(ToUpper(c.name).Find(s) >= 0)
-			ilist.Add(i, FormatImageName(c), RawToValue(MakeTuple(c.image, c.flags)));
+			ilist.Add(i, FormatImageNameQtf(c), RawToValue(MakeTuple(c.image, c.flags)));
 	}
 	ilist.ScrollTo(sc);
 	ilist.FindSetCursor(q);
@@ -85,7 +109,7 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		dlg.scale = decode(scale, DPI_100, 1, DPI_150, 2, DPI_200, 3, DPI_300, 4, 0);
 		
 		for(Ctrl& q : dlg)
-			if(dynamic_cast<Option *>(&q))
+			if(dynamic_cast<Option *>(&q) || dynamic_cast<Switch *>(&q))
 				q << [&] { dlg.Break(-1000); };
 	}
 	dlg.name.SetConvert(

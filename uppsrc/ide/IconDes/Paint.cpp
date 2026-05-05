@@ -38,7 +38,7 @@ void IconShow::Paint(Draw& w)
 		return;
 	}
 	
-	int n = min(__countof(color), sz.cx / (sz300.cx + DPI(15)));
+	int n = min(__countof(color), sz.cx / (2 * sz300.cx + DPI(20)));
 	int cx = sz.cx / n;
 	int y = DPI(5);
 	for(int i = 0; i < n; i++)

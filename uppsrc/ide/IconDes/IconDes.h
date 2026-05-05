@@ -391,6 +391,7 @@ private:
 
 	static FileSel& ImgFile();
 	static String FormatImageName(const Slot& c);
+	static String FormatImageNameQtf(const Slot& c);
 
 public:
 	void  ListMenu(Bar& bar);
