@@ -52,7 +52,12 @@ void AssistEditor::DCopy()
 				String text;
 				for(int i = m.pos.y; i < GetLineCount(); i++) {
 					String l = GetUtf8Line(i);
-					int q = min(l.ReverseFind(';'), l.ReverseFind('{'));
+					int q = l.ReverseFind(';');
+					int w = l.ReverseFind('{');
+					if(q >= 0 && w >= 0)
+						q = min(q, w);
+					else
+						q = max(q, w);
 					if(q >= 0)
 						l.Trim(q);
 					text << l << ' ';
