@@ -104,7 +104,7 @@ bool WebSocket::Connect(const String& uri_, const String& host_, bool ssl_, int 
 	uri = uri_;
 	host = host_;
 	ssl = ssl_;
-	
+
 	if(socket->IsBlocking()) {
 		if(!addrinfo.Execute(host, port)) {
 			Error("Not found");
