@@ -333,7 +333,7 @@ void AssistEditor::ConvertToOverrides()
 						bool hasfinal = false;
 						const char *q = SkipTrailingQualifiers(s + 1, hasfinal);
 						// Append everything up to insertion point
-						r.Cat(s + 1, q - (s + 1));
+						r.Cat(s + 1, int(q - (s + 1)));
 						// Insert override if not final
 						if(!hasfinal)
 							r.Cat(" override");

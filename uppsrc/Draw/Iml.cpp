@@ -108,7 +108,7 @@ ImageIml Iml::GetRaw(int i)
 					Vector<ImageIml>& m = CreateRawValue<Vector<ImageIml>>(v);
 					m = UnpackImlData(d.data, d.len);
 					ASSERT(m.GetCount() == d.count);
-					int sz = 0;
+					size_t sz = 0;
 					int ii = i0;
 					for(ImageIml& img : m) {
 						sz += img.image.GetLength();
@@ -118,7 +118,7 @@ ImageIml Iml::GetRaw(int i)
 							img.flags &= 0x3f;
 						flags[ii++] = img.flags;
 					}
-					return sz;
+					return (int)sz;
 				}
 			).To<Vector<ImageIml>>()[i - i0];
 			m.flags |= global_flags;
