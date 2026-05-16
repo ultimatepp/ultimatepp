@@ -415,4 +415,25 @@ String sJsonFile(const char *file)
 	return file ? String(file) : ConfigFile(GetExeTitle() + ".json");
 }
 
+Value DereferenceJSON(Value json, const char *path)
+{
+	if(*path == '/')
+		path++;
+	for(String m : Split(path, '/', false)) {
+		if(m.Find('~') >= 0) {
+			m.Replace("~1", "/");
+			m.Replace("~0", "~");
+	    }
+		if(json.Is<ValueArray>()) {
+			int i = StrInt(m);
+			if(i < 0 || i >= json.GetCount())
+				return Value();
+			json = json[i];
+		}
+		else
+			json = json[m];
+	}
+	return json;
+}
+
 }
