@@ -57,7 +57,7 @@ VectorMap<String, String> Ide::GetMethodVars(const String& method)
 	const String method_dir = GetFileFolder(method);
 	const Vector<String> categories_with_method_dir = {"PATH", "INCLUDE", "LIB" };
 	for (const auto& category : categories_with_method_dir) {
-		map.GetAdd(category) = ReplaceMethodDir(map.Get(category), method_dir);
+		map.GetAdd(category) = ReplaceMethodDir(map.Get(category, String()), method_dir);
 	}
 
 	return map;
