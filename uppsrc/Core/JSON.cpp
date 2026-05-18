@@ -415,7 +415,7 @@ String sJsonFile(const char *file)
 	return file ? String(file) : ConfigFile(GetExeTitle() + ".json");
 }
 
-Value DereferenceJSON(Value json, const char *path)
+Value DereferenceJSONPointer(Value json, const char *path)
 {
 	if(*path == '/')
 		path++;

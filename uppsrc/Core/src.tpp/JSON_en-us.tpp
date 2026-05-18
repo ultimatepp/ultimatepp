@@ -73,8 +73,9 @@ alue][@(0.0.255) `&]_[*@3 v], [@(0.0.255) bool]_[*@3 pretty]_`=_[@(0.0.255) fals
 [s2;%% Same as AsJSON([%-*@3 v], String(), [%-*@3 pretty]).&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:DereferenceJSON`(Value`,const char`*`): Value [* DereferenceJSON](Value 
-[*@3 json], [@(0.0.255) const] [@(0.0.255) char] [@(0.0.255) `*][*@3 path])&]
+[s5;:Upp`:`:DereferenceJSONPointer`(Value`,const char`*`): Value 
+[* DereferenceJSONPointer](Value [*@3 json], [@(0.0.255) const] [@(0.0.255) char] 
+[@(0.0.255) `*][*@3 path])&]
 [s2; Returns part of [*@3 json] corresponding to JSON Pointer [*@3 path]. 
 Returns void Value in case of error or missing part.&]
 [s0; &]
