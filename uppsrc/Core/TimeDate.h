@@ -164,7 +164,7 @@ inline Time&  operator-=(Time& a, double i) { return a -= int64(i); }
 Time  GetSysTime();
 Time  GetUtcTime();
 
-String Format(Time time, bool seconds = true);
+String      Format(Time time, bool seconds = true);
 const char *StrToTime(const char *datefmt, Time& d, const char *s);
 const char *StrToTime(Time& d, const char *s);
 Time        ScanTime(const char *datefmt, const char *s, Time def = Null);
@@ -177,7 +177,6 @@ bool SetSysTime(Time time); // only root/sysadmin can do this...
 
 int    GetTimeZone();
 String GetTimeZoneText();
-int    ScanTimeZoneText(const char *s);
 int    ScanTimeZone(const char *s);
 
 int   GetLeapSeconds(Date dt);
