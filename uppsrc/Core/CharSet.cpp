@@ -2070,7 +2070,7 @@ String FromUnicodeBuffer(const wchar *src)
 	return FromUnicodeBuffer(src, strlen__(src));
 }
 
-String  FromUnicode(const WString& src, byte charset, int defchar)
+String FromUnicode(const WString& src, byte charset, int defchar)
 {
 	return FromUnicodeBuffer(~src, src.GetCount(), charset, defchar);
 }
