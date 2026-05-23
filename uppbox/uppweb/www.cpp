@@ -890,7 +890,7 @@ CONSOLE_APP_MAIN
 	escape.Add("LATESTGIT", version);
 #endif
 
-	String release = "17810";
+	String release = "18468";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
