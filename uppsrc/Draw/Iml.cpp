@@ -138,6 +138,7 @@ void Iml::Set(int i, const Image& img)
 
 Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Function<ImageIml(int)> GetRaw)
 {
+
 	int  scale = GetDPIScale();
 	bool dark = IsDarkTheme();
 	int best_i  = -1;
@@ -173,6 +174,7 @@ Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Fu
 		}
 		ii++;
 	}
+
 	
 	auto AdjustColor0 = [&](const Image& img, dword flags) { // flip light to dark if needed
 		if(dark && !(flags & (IML_IMAGE_FLAG_FIXED|IML_IMAGE_FLAG_FIXED_COLORS|IML_IMAGE_FLAG_DARK)))
@@ -180,7 +182,7 @@ Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Fu
 		return img;
 	};
 
-	if(best_dark && exact_scale_i >= 0) { // dark color version not found, but we have exact scale
+	if(best_dark < 0 && exact_scale_i >= 0) { // dark color version not found, but we have exact scale
 		ImageIml m = GetRaw(exact_scale_i);
 		return AdjustColor0(m.image, m.flags);
 	}
@@ -208,7 +210,7 @@ Image MakeImlImage(const String& id, Event<int, dword&, String&> GetRawFlags, Fu
 			return AdjustColor(DownSample2x(best.image));
 	}
 	
-	return DPISmartRescale(best.image, scale * best.image.GetSize() / best_scale);
+	return AdjustColor(DPISmartRescale(best.image, scale * best.image.GetSize() / best_scale));
 }
 
 Image MakeImlImage(const String& id, Event<int, ImageIml&, String&> GetRaw)
