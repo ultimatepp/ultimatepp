@@ -13,12 +13,13 @@ topic "AES256 Encryption & Decryption";
 [ {{10000@(113.42.0) [s0; [*@7;4 Aes256Gcm]]}}&]
 [s1;%- &]
 [s1;:Upp`:`:Aes256Gcm:%- [*3 Aes256Gcm][3  ][@(0.0.255)3 :][3  NoCopy]&]
-[s0;l288; Provides AES`-256`-GCM authenticated encryption and decryption 
-with OpenSSL 3.0 or later.&]
-[s2; This class supports both stream`-based and in`-memory encryption, 
-deriving a strong key from a password using PBKDF2`-HMAC`-SHA256. 
-Intended for secure, verifiable data encryption using modern 
-cryptographic primitives. This class is non`-copyable.&]
+[s0;l288; Provides AES`-256`-GCM authenticated encryption and decryption, 
+fully supporting OpenSSL 3.0`+ while maintaining backward compatibility 
+with older OpenSSL versions. This class supports both stream`-based 
+and in`-memory encryption, deriving a strong key from a password 
+using PBKDF2`-HMAC`-SHA256. Intended for secure, verifiable data 
+encryption using modern cryptographic primitives. This class 
+is non`-copyable.&]
 [s2; &]
 [s2; [* Format]&]
 [s2;* &]
@@ -109,6 +110,10 @@ ool] [* Decrypt](Stream[@(0.0.255) `&] [*@3 in], [@(0.0.255) const] String[@(0.0
 Returns true on success. On failure the error description can 
 be get using [^topic`:`/`/Core`/SSL`/src`/Upp`_SSL`_AES256GCM`_en`-us`#Upp`:`:Aes256Gcm`:`:GetErrorDesc`(`)const^ G
 etErrorDesc()] method.&]
+[s2; &]
+[s2; [/ WARNING: Output data is streamed before final GCM authentication. 
+If Decrypt() returns false, the output contains corrupted data 
+and MUST be discarded immediately.]&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Aes256Gcm`:`:Decrypt`(const String`&`,const String`&`,String`&`):%- [@(0.0.255) b
@@ -118,6 +123,10 @@ String[@(0.0.255) `&] [*@3 password], String[@(0.0.255) `&] [*@3 out])&]
 Returns true on success. On failure the error description can 
 be get using [^topic`:`/`/Core`/SSL`/src`/Upp`_SSL`_AES256GCM`_en`-us`#Upp`:`:Aes256Gcm`:`:GetErrorDesc`(`)const^ G
 etErrorDesc()] method.&]
+[s2; &]
+[s2; [/ WARNING: Output data is streamed before final GCM authentication. 
+If Decrypt() returns false, the output contains corrupted data 
+and MUST be discarded immediately.]&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Aes256Gcm`:`:WhenProgress:%- Gate<int64, int64> [* WhenProgress]&]
@@ -130,7 +139,6 @@ true will abort the operation.&]
 [@(0.0.255) const]&]
 [s2; Returns the last error message as a string or empty if no error 
 occured.&]
-[s3;%- &]
 [s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Function List]]}}&]
 [s3;%- &]
@@ -172,5 +180,9 @@ Gate<int64, int64> WhenProgress [@(0.0.255) `=] [*@3 Null])&]
 writes the decrypted chunks into ][*@3 out][%%  stream. Returns true 
 on success. ][*@3 password ][%% can be empty or null. ]WhenProgress 
 event can be used to track or abort the process.&]
+[s2;%- &]
+[s2; [/ WARNING: Output data is streamed before final GCM authentication. 
+If Decrypt() returns false, the output contains corrupted data 
+and MUST be discarded immediately.]&]
 [s3;%- &]
 [s0; ]]
