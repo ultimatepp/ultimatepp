@@ -267,10 +267,10 @@ Image Downscale2x(const Image& src);
 Image Downscale6x(const Image& src);
 
 enum {
-	DPI_100 = 2, // Normal resolution
+	DPI_100 = 2, // Normal resolution ("standard" displays up to 2K)
 	DPI_150 = 3, // QHD
-	DPI_200 = 4, // UHD
-	DPI_300 = 6,
+	DPI_200 = 4, // UHD (typically 4K displays)
+	DPI_300 = 6, // "XHD" (typically 8K displays)
 	DPI_600 = 12, // Used for 'master' Image drawn without aliasing
 };
 
