@@ -19,7 +19,6 @@
 		#define GUIPLATFORM_KEYCODES_INCLUDE <Turtle/Keys.h>
 		//need to make SDL_keysym.h known before K_ enum
 		#define GUIPLATFORM_INCLUDE          <Turtle/Turtle.h>
-		#define GUIPLATFORM_NOSCROLL
 		#define PLATFORM_TURTLE
 		#define TURTLE
 	#elif VIRTUALGUI
@@ -27,7 +26,6 @@
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
 	#elif PLATFORM_COCOA
 		#define GUIPLATFORM_INCLUDE          "Coco.h"
-		#define GUIPLATFORM_NOSCROLL
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
@@ -499,12 +497,6 @@ private:
 		Rect GetView() const        { return Rect16(view.left, view.top, view.right, view.bottom); }
 	};
 
-	struct Scroll : Moveable<Scroll> {
-		Rect rect;
-		int  dx;
-		int  dy;
-	};
-
 	struct MoveCtrl : Moveable<MoveCtrl> {
 		Ptr<Ctrl>  ctrl;
 		Rect       from;
@@ -515,9 +507,6 @@ private:
 
 	struct Top {
 		GUIPLATFORM_CTRL_TOP_DECLS
-		Vector<Scroll> scroll;
-		VectorMap<Ctrl *, MoveCtrl> move;
-		VectorMap<Ctrl *, MoveCtrl> scroll_move;
 		Ptr<Ctrl>      owner;
 	};
 
@@ -623,7 +612,6 @@ private:
 	void    UpdateRect(bool sync = true);
 	void    SetPos0(LogPos p, bool inframe);
 	void    SetWndRect(const Rect& r);
-	void    SyncMoves();
 
 	static  void  EndIgnore();
 	static  void  LRep();
@@ -683,11 +671,7 @@ private:
 	static void DnDLeave();
 
 	void    SyncLayout(int force = 0);
-	bool    AddScroll(const Rect& sr, int dx, int dy);
 	Rect    GetClippedView();
-	void    ScrollRefresh(const Rect& r, int dx, int dy);
-	void    ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
-	void    SyncScroll();
 	void    Refresh0(const Rect& area);
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
@@ -731,8 +715,6 @@ private:
 	bool HasWndFocus() const;
 
 	void WndInvalidateRect(const Rect& r);
-
-	void WndScrollView(const Rect& r, int dx, int dy);
 
 	void SetWndForeground();
 	bool IsWndForeground() const;

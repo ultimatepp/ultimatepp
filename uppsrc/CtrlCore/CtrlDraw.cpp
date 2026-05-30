@@ -76,46 +76,6 @@ void Ctrl::RefreshFrame() {
 	RefreshFrame(Rect(GetRect().Size()).Inflated(overpaint));
 }
 
-void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
-{
-	sCheckGuiLock();
-	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	LLOG("ScrollRefresh " << r << " " << dx << " " << dy);
-	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
-	int tdx = tabs(dx), tdy = tabs(dy);
-	if(dx) WndInvalidateRect(RectC(dx >= 0 ? r.left : r.right - tdx, r.top - tdy, tdx, r.Height()));
-	if(dy) WndInvalidateRect(RectC(r.left - tdx, dy >= 0 ? r.top : r.bottom - tdy, r.Width(), tdy));
-}
-
-bool Ctrl::AddScroll(const Rect& sr, int dx, int dy)
-{
-	GuiLock __;
-	Top *top = GetTop();
-	if(!top)
-		return true;
-	for(int i = 0; i < top->scroll.GetCount(); i++) {
-		Scroll& sc = top->scroll[i];
-		if(sc.rect == sr && sgn(dx) == sgn(sc.dx) && sgn(dy) == sgn(sc.dy)) {
-			sc.dx += dx;
-			sc.dy += dy;
-			ScrollRefresh(sc.rect, sc.dx, sc.dy);
-			return false;
-		}
-		if(sc.rect.Intersects(sr)) {
-			sc.rect |= sr;
-			sc.dx = sc.dy = 0;
-			WndInvalidateRect(sc.rect);
-			return true;
-		}
-	}
-	Scroll& sc = top->scroll.Add();
-	sc.rect = sr;
-	sc.dx = dx;
-	sc.dy = dy;
-	ScrollRefresh(sc.rect, sc.dx, sc.dy);
-	return false;
-}
-
 Rect  Ctrl::GetClippedView()
 {
 	GuiLock __;
@@ -131,84 +91,11 @@ Rect  Ctrl::GetClippedView()
 	return view - GetScreenRect().TopLeft();
 }
 
-void Ctrl::ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy)
-{
-	if(top && r.Intersects(cr)) { // Uno: Contains -> Intersetcs
-		Rect to = cr;
-		GetTopRect(to, false);
-		if(r.Intersects(cr.Offseted(-dx, -dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
-			Rect from = cr.Offseted(-dx, -dy);
-			GetTopRect(from, false);
-			MoveCtrl *m = FindMoveCtrlPtr(top->move, q);
-			if(m && m->from == from && m->to == to) {
-				LLOG("ScrollView Matched " << from << " -> " << to);
-				m->ctrl = NULL;
-				return;
-			}
-		}
-
-		if(r.Intersects(cr.Offseted(dx, dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
-			Rect from = to;
-			to = cr.Offseted(dx, dy);
-			GetTopRect(to, false);
-			MoveCtrl& m = top->scroll_move.Add(q);
-			m.from = from;
-			m.to = to;
-			m.ctrl = q;
-			LLOG("ScrollView Add " << UPP::Name(q) << from << " -> " << to);
-			return;
-		}
-		cr &= r;
-		if(!cr.IsEmpty()) {
-			Refresh(cr);
-			Refresh(cr + Point(dx, dy));
-		}
-	}
-}
-
 void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("ScrollView " << _r << " " << dx << " " << dy);
-#ifdef GUIPLATFORM_NOSCROLL
-	LLOG("NOSCROLL");
 	Refresh(_r);
-#else
-	if(IsFullRefresh() || !IsVisible())
-		return;
-	if(IsDHCtrl()) {
-		Refresh(_r);
-		return;
-	}
-	Size vsz = GetSize();
-	dx = sgn(dx) * min(abs(dx), vsz.cx);
-	dy = sgn(dy) * min(abs(dy), vsz.cy);
-	Rect r = _r & vsz;
-	LLOG("ScrollView2 " << r << " " << dx << " " << dy);
-	Ctrl *w;
-	for(w = this; w->GetParent(); w = w->GetParent())
-		if(w->InFrame()) {
-			Refresh();
-			return;
-		}
-	if(!w || !w->top) return;
-	Rect view = InFrame() ? GetView() : GetClippedView();
-	Rect sr = (r + view.TopLeft()) & view;
-	sr += GetScreenRect().TopLeft() - w->GetScreenRect().TopLeft();
-	if(w->AddScroll(sr, dx, dy))
-		Refresh();
-	else {
-		LTIMING("ScrollCtrls1");
-		Top *top = GetTopCtrl()->GetTop();
-		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
-			if(q->InView())
-				ScrollCtrl(top, q, r, q->GetRect(), dx, dy);
-		if(GetParent())
-			for(Ctrl *q = GetParent()->GetFirstChild(); q; q = q->GetNext())
-				if(q->InView() && q != this)
-					ScrollCtrl(top, q, r, q->GetScreenRect() - GetScreenView().TopLeft(), dx, dy);
-	}
-#endif
 }
 
 void  Ctrl::ScrollView(int x, int y, int cx, int cy, int dx, int dy) {
@@ -217,30 +104,6 @@ void  Ctrl::ScrollView(int x, int y, int cx, int cy, int dx, int dy) {
 
 void  Ctrl::ScrollView(int dx, int dy) {
 	ScrollView(Rect(GetSize()), dx, dy);
-}
-
-void  Ctrl::SyncScroll()
-{
-	GuiLock __;
-	Top *top = GetTop();
-	if(!top)
-		return;
-	Vector<Scroll> scroll = pick(top->scroll);
-	top->scroll.Clear();
-	if(IsFullRefresh())
-		return;
-	for(int i = 0; i < scroll.GetCount(); i++) {
-		Scroll& sc = scroll[i];
-		if(abs(sc.dx) > 3 * sc.rect.Width() / 4 || abs(sc.dy) > 3 * sc.rect.Height() / 4) {
-			LLOG("Sync scroll Invalidate rect" << sc.rect);
-			WndInvalidateRect(sc.rect);
-		}
-		else
-		if(sc.dx || sc.dy) {
-			LLOG("WndScrollView " << sc.rect);
-			WndScrollView(sc.rect, sc.dx, sc.dy);
-		}
-	}
 }
 
 Rect Ctrl::GetOpaqueRect() const
@@ -496,10 +359,8 @@ void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 	ASSERT(q);
 	LLOG("DoSync " << UPP::Name(q) << " " << r);
 	Ctrl *top = q->GetTopRect(r, inframe);
-	if(top && top->IsOpen()) {
-		top->SyncScroll();
+	if(top && top->IsOpen())
 		top->WndUpdate(r);
-	}
 }
 
 void  Ctrl::Sync()
@@ -509,7 +370,6 @@ void  Ctrl::Sync()
 	Ctrl *parent = GetParent();
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
-		SyncScroll();
 		WndUpdate();
 	}
 	else
@@ -557,30 +417,6 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 //	CtrlPaint(w, GetSize()); _DBG_
 
 	w.End();
-}
-
-void Ctrl::SyncMoves()
-{
-	GuiLock __;
-	Top *top = GetTop();
-	if(!top)
-		return;
-	for(int i = 0; i < top->move.GetCount(); i++) {
-		MoveCtrl& m = top->move[i];
-		if(m.ctrl) {
-			RefreshFrame(m.from);
-			RefreshFrame(m.to);
-		}
-	}
-	for(int i = 0; i < top->scroll_move.GetCount(); i++) {
-		MoveCtrl& s = top->scroll_move[i];
-		if(s.ctrl) {
-			RefreshFrame(s.from);
-			RefreshFrame(s.to);
-		}
-	}
-	top->move.Clear();
-	top->scroll_move.Clear();
 }
 
 void  Ctrl::GlobalBackPaint(bool b)

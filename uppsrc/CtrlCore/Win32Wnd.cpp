@@ -680,10 +680,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			int ticks = msecs();
 			String wname = w->Name();
 #endif
-			Ptr<Ctrl> pw = w;
 			l = w->WindowProc(message, wParam, lParam);
-			if(pw)
-				pw->SyncMoves();
 #if LOGTIMING
 			String msgname;
 			for(WinMsg *m = sWinMsg; m->ID; m++)
@@ -1157,20 +1154,6 @@ void Ctrl::WndUpdate(const Rect& r)
 		ReleaseDC(hwnd, hdc);
 		DeleteObject(hrgn);
 	}
-}
-
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-	LLOG("WndScrollView " << UPP::Name(this));
-	if(caretCtrl && caretCtrl->GetTopCtrl() == this)
-		RefreshCaret();
-#ifdef PLATFORM_WINCE
-	::ScrollWindowEx(GetHWND(), dx, dy, r, r, NULL, NULL, 0);
-#else
-	::ScrollWindow(GetHWND(), dx, dy, r, r);
-#endif
-	SyncCaret();
 }
 
 void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, bool topmost)

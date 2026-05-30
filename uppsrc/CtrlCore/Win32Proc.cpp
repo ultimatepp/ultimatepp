@@ -417,8 +417,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 		ASSERT(hwnd);
 		if(hwnd) {
 			PAINTSTRUCT ps;
-			if(IsVisible())
-				SyncScroll();
 			HDC dc = BeginPaint(hwnd, &ps);
 			fullrefresh = false;
 			if(IsVisible()) {

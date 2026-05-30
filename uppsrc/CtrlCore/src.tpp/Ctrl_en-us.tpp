@@ -1700,52 +1700,16 @@ Actual repaint is deferred for performance reasons.&]
 [s5;:Ctrl`:`:ScrollView`(const Rect`&`,int`,int`):%- [@(0.0.255) void]_[* ScrollView]([@(0.0.255) c
 onst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r], [@(0.0.255) int]_[*@3 dx], 
 [@(0.0.255) int]_[*@3 dy])&]
-[s2; Marks requested view rectangle for repainting, indicating that 
-part of this repaint can be done by scrolling current content 
-of rectangle. Note that actual scroll is deferred to repaint 
-and that U`+`+ is still allowed to solve the situation by repainting 
-rather than scrolling.&]
-[s7;i1120;a17; [%-*C@3 r]-|Area for repainting.&]
-[s7;i1120;a17; [%-*C@3 dx]-|Horizontal scroll.&]
-[s7;i1120;a17; [%-*C@3 dy]-|Vertical scroll.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:ScrollView`(int`,int`,int`,int`,int`,int`):%- [@(0.0.255) void]_[* ScrollVie
 w]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 cy], [@(0.0.255) int]_[*@3 dx], [@(0.0.255) int]_[*@3 dy])&]
-[s2;b17;a17; Marks requested view rectangle for repainting, indicating 
-that part of this repaint can be done by scrolling current content 
-of rectangle. Note that actual scroll is deferred to repaint 
-and that U`+`+ is still allowed to solve the situation by repainting 
-rather than scrolling.&]
-[s7;i1120;a17; [%-*C@3 r]-|Area for repainting.&]
-[s7;i1120;a17; [%-*C@3 x]-|Left position of rectangle.&]
-[s7;i1120;a17; [%-*C@3 y]-|Top position of rectangle.&]
-[s7;i1120;a17; [%-*C@3 cx]-|Width.&]
-[s7;i1120;a17; [%-*C@3 cy]-|Height.&]
-[s7;i1120;a17; [%-*C@3 dx]-|Horizontal scroll.&]
-[s7;i1120;a17; [%-*C@3 dy]-|Vertical scroll.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:ScrollView`(int`,int`):%- [@(0.0.255) void]_[* ScrollView]([@(0.0.255) int]_[*@3 d
 x], [@(0.0.255) int]_[*@3 dy])&]
-[s2;b17;a17; Marks while view area for repainting, indicating that 
-part of this repaint can be done by scrolling current content 
-of rectangle. Note that actual scroll is deferred to repaint 
-and that U`+`+ is still allowed to solve the situation by repainting 
-rather than scrolling.&]
-[s7;i1120;a17; [%-*C@3 dx]-|Horizontal scroll.&]
-[s7;i1120;a17; [%-*C@3 dy]-|Vertical scroll.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:ScrollView`(const Rect`&`,Size`):%- [@(0.0.255) void]_[* ScrollView]([@(0.0.255) c
 onst]_[_^`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 r], [_^`:`:Size^ Size]_[*@3 delta])&]
-[s2;b17;a17; Same as ScrollView(r, delta.cx, delta.cy).&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Ctrl`:`:ScrollView`(Size`):%- [@(0.0.255) void]_[* ScrollView]([_^`:`:Size^ Size]_[*@3 d
 elta])&]
-[s2;b17;a17; Same as ScrollView(delta.cx, delta.cy).&]
+[s2;b17;a17; Deprecated. Same as calling Refresh().&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:Sync`(`):%- [@(0.0.255) void]_[* Sync]()&]

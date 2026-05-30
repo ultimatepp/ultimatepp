@@ -228,18 +228,6 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 				Rect to = GetRect().Size();
 				UpdateRect0();
 				GetTopRect(to, true);
-				MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
-				if(s && s->from == from && s->to == to) {
-					s->ctrl = NULL;
-					LLOG("SetPos Matched " << from << " -> " << to);
-				}
-				else {
-					MoveCtrl& m = top->move.Add(this);
-					m.ctrl = this;
-					m.from = from;
-					m.to = to;
-					LLOG("SetPos Add " << UPP::Name(this) << from << " -> " << to);
-				}
 				StateH(POSITION);
 				return;
 			}
