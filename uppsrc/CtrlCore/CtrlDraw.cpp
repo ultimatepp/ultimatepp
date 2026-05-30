@@ -5,7 +5,6 @@ namespace Upp {
 #define LLOG(x)     // DLOG(x)
 #define LTIMING(x)  // DTIMING(x)
 
-bool Ctrl::globalbackpaint;
 bool Ctrl::globalbackbuffer;
 
 bool Ctrl::was_fullrefresh;
@@ -290,9 +289,8 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	if(globalbackbuffer) {
 		DoCtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
-		return;
 	}
-	if(backpaint == FULLBACKPAINT || globalbackpaint) {
+	else {
 		ShowRepaintRect(draw, clip, LtRed());
 		BackDraw bw;
 		bw.Create(draw, clip.GetSize());
@@ -301,10 +299,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		DoCtrlPaint(bw, clip);
 		bw.Put(draw, clip.TopLeft());
 		LLOG("========== END (FULLBACKPAINT)");
-		return;
 	}
-	DoCtrlPaint(draw, clip);
-	LLOG("========== END");
 }
 
 void SweepMkImageCache();
@@ -417,17 +412,6 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 //	CtrlPaint(w, GetSize()); _DBG_
 
 	w.End();
-}
-
-void  Ctrl::GlobalBackPaint(bool b)
-{
-	GuiLock __;
-	globalbackpaint = b;
-}
-
-void  Ctrl::GlobalBackPaintHint()
-{
-	GlobalBackPaint();
 }
 
 void Ctrl::GlobalBackBuffer(bool b)

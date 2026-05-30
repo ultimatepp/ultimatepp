@@ -327,7 +327,6 @@ TabBar::TabBar()
 
 	SetAlign(TOP);
 	SetFrameSize(GetHeight(false));
-	BackPaint();
 	
 	ConfirmClose = [](Value) { return true; };
 	ConfirmCloseAll = []() { return true; };

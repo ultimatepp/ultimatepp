@@ -771,7 +771,6 @@ RichEdit::RichEdit()
 	floating_zoom = Null;
 
 	Unicode();
-	BackPaint();
 
 	viewborder = Zx(16);
 

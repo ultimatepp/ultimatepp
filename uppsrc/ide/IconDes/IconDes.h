@@ -95,8 +95,6 @@ struct IconShow : public Ctrl {
 	dword flags;
 
 	void Paint(Draw& w);
-
-	IconShow() { BackPaint(); }
 };
 
 void   FloodFill(const Image& source, ImageBuffer& target, RGBA color, Point pt, int tolerance);

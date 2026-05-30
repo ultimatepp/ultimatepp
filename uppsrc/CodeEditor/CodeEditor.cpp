@@ -827,7 +827,6 @@ void CodeEditor::Tip::Paint(Draw& w)
 CodeEditor::Tip::Tip()
 {
 	SetFrame(BlackFrame());
-	BackPaint();
 }
 
 bool CodeEditor::SyncCloseTip()

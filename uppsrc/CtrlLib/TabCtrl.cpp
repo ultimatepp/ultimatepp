@@ -578,7 +578,7 @@ TabCtrl::TabCtrl()
 	no_accept = accept_current = false;
 	Ctrl::Add(tabs);
 	Ctrl::Add(pane);
-	tabs.BackPaint().IgnoreMouse();
+	tabs.IgnoreMouse();
 	Ctrl::Add(left.SetMonoImage(CtrlsImg::SLA()).ScrollStyle().NoWantFocus());
 	left <<= THISBACK(Left);
 	Ctrl::Add(right.SetMonoImage(CtrlsImg::SRA()).ScrollStyle().NoWantFocus());

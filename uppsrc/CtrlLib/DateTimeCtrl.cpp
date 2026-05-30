@@ -792,7 +792,6 @@ LineCtrl::LineCtrl()
 {
 	pos = 0;
 	real_pos = -1;
-	BackPaint();
 }
 
 //Clock
@@ -1270,7 +1269,6 @@ Clock::Clock()
 	accept_time = false;
 
 	SetFrame(BlackFrame());
-	BackPaint();
 	
 	ComputeSize();
 }

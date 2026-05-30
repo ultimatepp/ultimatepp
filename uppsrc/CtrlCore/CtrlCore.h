@@ -570,7 +570,6 @@ private:
 	static  bool      ignorekeyup;
 	static  bool      mouseinview;
 	static  bool      mouseinframe;
-	static  bool      globalbackpaint;
 	static  bool      globalbackbuffer;
 	static  bool      painting;
 	static  int       EventLevel;
@@ -663,7 +662,7 @@ private:
 	static Point     dndpos;
 	static bool      dndframe;
 	static PasteClip dndclip;
-	
+
 	static int       last_mouse_action;
 
 	void    DnD(Point p, PasteClip& clip);
@@ -914,13 +913,6 @@ public:
 		MIDDLETRIPLE   = MIDDLE|TRIPLE
 	};
 
-	enum {
-		NOBACKPAINT,
-		FULLBACKPAINT,
-		TRANSPARENTBACKPAINT,
-		EXCLUDEPAINT,
-	};
-
 	static  Vector<Ctrl *> GetTopCtrls();
 	static  Vector<Ctrl *> GetTopWindows();
 	static  void   CloseTopCtrls();
@@ -1046,7 +1038,7 @@ public:
 	virtual String GetDesc() const;
 
 	virtual void   SetMinSize(Size sz) {}
-	
+
 	virtual void   Skin() {}
 
 	Event<>          WhenAction;
@@ -1188,12 +1180,6 @@ public:
 
 	static bool IsPainting()                             { return painting; }
 
-	void        ScrollView(const Rect& r, int dx, int dy);
-	void        ScrollView(int x, int y, int cx, int cy, int dx, int dy);
-	void        ScrollView(int dx, int dy);
-	void        ScrollView(const Rect& r, Size delta)    { ScrollView(r, delta.cx, delta.cy); }
-	void        ScrollView(Size delta)                   { ScrollView(delta.cx, delta.cy); }
-
 	void        Sync();
 	void        Sync(const Rect& r);
 
@@ -1281,11 +1267,6 @@ public:
 	void    UpdateAction();
 	void    UpdateActionRefresh();
 
-	Ctrl&   BackPaint(int bp = FULLBACKPAINT)  { backpaint = bp; return *this; }
-	Ctrl&   BackPaintHint()                    { return BackPaint(); }
-/*	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
-	Ctrl&   NoBackPaint()                      { return BackPaint(NOBACKPAINT); }
-	int     GetBackPaint() const               { return backpaint; }*/
 	Ctrl&   Transparent(bool bp = true)        { transparent = bp; return *this; }
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }
@@ -1389,7 +1370,7 @@ public:
 
 	static void SetUHDEnabled(bool set = true);
 	static bool IsUHDEnabled();
-	
+
 	static void SetDarkThemeEnabled(bool set = true);
 	static bool IsDarkThemeEnabled();
 
@@ -1416,8 +1397,6 @@ public:
 	static void   SetAppName(const String& appname);
 	static bool   IsCompositedGui();
 
-	static void   GlobalBackPaint(bool b = true);
-	static void   GlobalBackPaintHint();
 	static void   GlobalBackBuffer(bool b = true);
 
 	static void   ReSkin();
@@ -1478,6 +1457,17 @@ public:
 	CtrlIterator begin()            { CtrlIterator c; c.q = GetFirstChild(); return c; }
 	CtrlConstIterator end() const   { CtrlConstIterator c; c.q = NULL; return c; }
 	CtrlIterator end()              { CtrlIterator c; c.q = NULL; return c; }
+
+#ifdef DEPRECATED
+	Ctrl&   BackPaint(int bp = 0)   { return *this; }
+	Ctrl&   BackPaintHint()         { return BackPaint(); }
+
+	void    ScrollView(const Rect& r, int dx, int dy);
+	void    ScrollView(int x, int y, int cx, int cy, int dx, int dy);
+	void    ScrollView(int dx, int dy);
+	void    ScrollView(const Rect& r, Size delta)    { ScrollView(r, delta.cx, delta.cy); }
+	void    ScrollView(Size delta)                   { ScrollView(delta.cx, delta.cy); }
+#endif
 };
 
 inline Size GetScreenSize()  { return Ctrl::GetVirtualScreenArea().GetSize(); } // Deprecated

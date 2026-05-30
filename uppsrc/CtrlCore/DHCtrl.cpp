@@ -108,13 +108,11 @@ DHCtrl::DHCtrl()
 {
 	hwnd = NULL;
 	isdhctrl = true;
-	BackPaint(EXCLUDEPAINT);
 }
 
 DHCtrl::~DHCtrl()
 {
 	CloseHWND();
-	BackPaint(EXCLUDEPAINT);
 	RemoveActive();
 }
 

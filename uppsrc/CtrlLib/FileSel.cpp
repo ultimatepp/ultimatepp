@@ -2354,8 +2354,6 @@ FileSel::FileSel()
 
 	SyncSplitter();
 
-	BackPaintHint();
-	
 	places.AddKey();
 	places.AddColumn().AddIndex().SetDisplay(Single<DisplayPlace>());
 	places.AddIndex();

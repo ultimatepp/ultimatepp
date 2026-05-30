@@ -52,7 +52,6 @@ ScrollBar::ScrollBar() {
 	NoWantFocus();
 	style = NULL;
 	SetStyle(StyleDefault());
-	BackPaint();
 	is_active = false;
 }
 

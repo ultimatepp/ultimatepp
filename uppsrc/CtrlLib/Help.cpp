@@ -323,7 +323,6 @@ HelpWindow::HelpWindow()
 	tree_view.Zoom(1);
 	Sizeable().Zoomable();
 	Title(t_("Help"));
-	BackPaint();
 	view.WhenLink = [=](const String& h) { GoTo(h); };
 	AddFrame(toolbar);
 	view.SetZoom(Zoom(1, 1));
@@ -335,8 +334,6 @@ HelpWindow::HelpWindow()
 	tree.NoRoot();
 	Icon(CtrlImg::help());
 	SetBar();
-	tree.BackPaint();
-	view.BackPaintHint();
 	view.WhenMouseWheel = [=] (int zdelta, dword keyflags) {
 		if(keyflags & K_CTRL) {
 			zoom.m = clamp((zoom.m / 5 + sgn(zdelta)) * 5, 60, 600);

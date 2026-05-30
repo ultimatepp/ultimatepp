@@ -283,8 +283,6 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	Csizeinit();
 #undef ILOG
 
-	GlobalBackPaint();
-
 	custom_titlebar_metrics__ = [](const TopWindow *tw, TopWindow::CustomTitleBarMetrics& m) {
 		if(!tw->custom_bar)
 			return;

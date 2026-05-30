@@ -466,7 +466,6 @@ void  HexView::SerializeSettings(Stream& s)
 HexView::HexView()
 {
 	SetFont(CourierZ(12));
-	BackPaint();
 	charset = CHARSET_WIN1252;
 	sb <<= THISBACK(Scroll);
 	SetFrame(InsetFrame());

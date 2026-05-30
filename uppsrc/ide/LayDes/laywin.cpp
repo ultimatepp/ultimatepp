@@ -351,8 +351,6 @@ LayDes::LayDes()
 	NoWantFocus();
 	item.NoWantFocus();
 
-	BackPaint();
-
 	SyncUsc();
 
 	CtrlLayoutOKCancel(matrix, "Matrix duplicate");

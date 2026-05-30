@@ -431,7 +431,7 @@ ColorPopUp::ColorPopUp()
 	ramp <<= THISBACK(Ramp);
 	wheel <<= THISBACK(Wheel);
 	ramp.WhenLeftDouble = wheel.WhenLeftDouble = THISBACK(Select);
-	BackPaint();
+
 	nulltext = t_("(transparent)");
 	voidtext = t_("(none)");
 	

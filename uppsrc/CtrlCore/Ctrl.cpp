@@ -542,7 +542,6 @@ Ctrl::Ctrl() {
 	frame.SetView(Null);
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
-	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
 	inframe = false;
 	ignoremouse = transparent = false;
 	pos.x = PosLeft(0, 0);
