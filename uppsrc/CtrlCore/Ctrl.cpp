@@ -79,7 +79,7 @@ void Ctrl::Layout()                                 {}
 void Ctrl::PostInput()
 {
 	GuiLock __;
-	Ctrl *parent = GetParent();
+	Ctrl *parent = GetParentI();
 	if(parent)
 		parent->PostInput();
 }
@@ -288,7 +288,7 @@ bool Ctrl::IsOpen() const
 {
 	GuiLock __;
 	const Ctrl *q = GetTopCtrl();
-	return q->isopen && q->IsWndOpen();
+	return q->isopen && q->IsWndOpen() || virtual_popups && virtual_popup && GetOwner();
 }
 
 void Ctrl::Show(bool ashow) {
@@ -559,6 +559,7 @@ Ctrl::Ctrl() {
 	top = false;
 	uparent = nullptr;
 	megarect = false;
+	virtual_popup = false;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);
@@ -574,7 +575,8 @@ void Ctrl::DoRemove() {
 		mouseCtrl = NULL;
 	LLOG("DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
 	GuiPlatformRemove();
-	Ctrl *parent = GetParent();
+	virtual_popup = false;
+	Ctrl *parent = GetParentI();
 	if(HasFocusDeep()) {
 		LLOG("DoRemove - HasFocusDeep");
 		if(destroying) {
@@ -618,27 +620,45 @@ void Ctrl::DoRemove() {
 	LLOG("//DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
 }
 
+void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
+{
+	if(virtual_popups) {
+		virtual_popup = true;
+		owner->AddChild(this);
+		DLOG("=====");
+		DDUMP(GetScreenRect());
+		DDUMP(GetRect());
+		DDUMP(Name(GetOwner()));
+	}
+	else
+		PopUp0(owner, savebits, activate, dropshadow, topmost);
+}
+
 void Ctrl::Close()
 {
 	GuiLock __;
 	Ctrl *q = GetTopCtrl();
 	if(!q->top) return;
-	DoRemove();
 	if(GetParent()) return;
+	DoRemove();
 	StateH(CLOSE);
 	USRLOG("   CLOSE " + Desc(this));
-	WndDestroy();
+	if(virtual_popup)
+		Remove();
+	else
+		WndDestroy();
 	visible = true;
 	popup = false;
+	virtual_popup = false;
 }
 
 Ctrl::~Ctrl() {
 	GuiLock __;
 	LLOG("Ctrl::~Ctrl");
 	destroying = true;
-	while(GetFirstChild())
-		RemoveChild(GetFirstChild());
-	Ctrl *parent = GetParent();
+	while(GetFirstChildI())
+		RemoveChild(GetFirstChildI());
+	Ctrl *parent = GetParentI();
 	if(parent)
 		parent->RemoveChild(this);
 	Close();
@@ -856,6 +876,11 @@ String Ctrl::GetAppName()
 	if(appname.IsEmpty())
 		appname = GetExeTitle();
 	return appname;
+}
+
+void Ctrl::VirtualPopups(bool b)
+{
+	virtual_popups = b;
 }
 
 static bool _ClickFocus;

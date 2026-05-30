@@ -69,6 +69,7 @@ bool PopUpTable::Key(dword key, int n) {
 void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	if(inpopup)
 		return;
+	DLOG("**** PopUpTable::PopUp");
 	inpopup++;
 	DoClose();
 	int h = AddFrameSize(width, min(droplines * GetLineCy(), GetTotalCy())).cy;
@@ -106,6 +107,9 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		SetFocus();
 		open = true;
 	}
+	DDUMP(popup->IsOpen());
+	DDUMP(popup->GetScreenRect());
+	DDUMP(popup->GetOwner()->GetScreenRect());
 	SizePos(); // the size of popup can be slightly bigger than requested
 	inpopup--;
 }

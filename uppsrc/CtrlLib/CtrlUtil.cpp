@@ -15,6 +15,7 @@ void Animate(Ctrl& c, const Rect& target, int type)
 	Rect r0 = c.GetRect();
 	dword time0 = msecs();
 	int anitime = 150;
+	DDUMP(target);
 	if(type)
 		for(;;) {
 			int t = int(msecs() - time0);
@@ -47,6 +48,7 @@ void Animate(Ctrl& c, const Rect& target, int type)
 			Ctrl::GuiSleep(0);
 		}
 	c.SetRect(target);
+	DDUMP(c.GetRect());
 	c.SetAlpha(255);
 }
 

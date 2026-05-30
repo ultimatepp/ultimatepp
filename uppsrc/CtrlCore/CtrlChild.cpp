@@ -34,7 +34,7 @@ void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 	LLOG("Add " << UPP::Name(q) << " to: " << Name());
 	if(p == q) return;
 	bool updaterect = true;
-	Ctrl *qparent = q->GetParent();
+	Ctrl *qparent = q->GetParentI();
 	if(qparent) {
 		ASSERT(!q->inframe);
 		if(qparent == this) {
@@ -85,9 +85,9 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 {
 	GuiLock __;
 	ChildRemoved(q);
-	if(!q->GetParent()) return; // ChildRemoved can remove q
+	if(!q->GetParentI()) return; // ChildRemoved can remove q
 	q->DoRemove();
-	if(!q->GetParent()) return; // DoRemove can remove q
+	if(!q->GetParentI()) return; // DoRemove can remove q
 	q->SetParent(NULL);
 
 	if(q == children) {
@@ -104,7 +104,7 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 void  Ctrl::RemoveChild(Ctrl *q)
 {
 	GuiLock __;
-	if(q->GetParent() != this) return;
+	if(q->GetParentI() != this) return;
 	q->RefreshFrame();
 	RemoveChild0(q);
 	q->ParentChange();
@@ -115,9 +115,51 @@ void  Ctrl::RemoveChild(Ctrl *q)
 void  Ctrl::Remove()
 {
 	GuiLock __;
-	Ctrl *parent = GetParent();
+	Ctrl *parent = GetParentI();
 	if(parent)
 		parent->RemoveChild(this);
+}
+
+Ctrl *Ctrl::GetParentI() const
+{ // virtual popups included
+	return top ? NULL : uparent;
+}
+
+Ctrl *Ctrl::GetFirstChildI() const
+{// virtual popups included
+	return children ? children : nullptr;
+}
+
+Ctrl *Ctrl::GetParent() const
+{
+	if(virtual_popup)
+		return nullptr;
+	return top ? NULL : uparent;
+}
+
+Ctrl *Ctrl::GetLastChild() const
+{
+	if(!children)
+		return nullptr;
+	Ctrl *p = children->prev_sibling;
+	for(;;) {
+		if(!p->virtual_popup)
+			return p;
+		if(p == children)
+			return nullptr;
+		p = p->prev_sibling;
+	}
+}
+
+Ctrl *Ctrl::GetFirstChild() const
+{
+	return children && !children->virtual_popup ? children : nullptr;
+}
+
+Ctrl *Ctrl::GetPrev() const
+{
+	Ctrl *parent = GetParent();
+	return parent && prev_sibling != parent->GetLastChild() && !prev_sibling->virtual_popup ? prev_sibling : nullptr;
 }
 
 int Ctrl::GetChildIndex(const Ctrl *child) const
@@ -135,7 +177,7 @@ int Ctrl::GetChildCount() const
 {
 	GuiLock __;
 	int n = 0;
-	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+	for (Ctrl *c = GetFirstChild(); c && !c->virtual_popup; c = c->GetNext())
 		n++;
 	return n;
 }
@@ -187,12 +229,14 @@ Ctrl * Ctrl::GetViewIndexChild(int ii) const
 bool Ctrl::HasChild(Ctrl *q) const
 {
 	GuiLock __;
-	return q && q->GetParent() == this;
+	return q && !q->virtual_popup && q->GetParent() == this;
 }
 
 bool Ctrl::HasChildDeep(Ctrl *q) const
 {
 	GuiLock __;
+	if(q && q->virtual_popup)
+		return false;
 	while(q && q->IsChild()) {
 		Ctrl *qparent = q->GetParent();
 		if(qparent == this) return true;
@@ -286,6 +330,14 @@ Ctrl *Ctrl::GetTopCtrl()
 }
 
 const Ctrl *Ctrl::GetTopCtrl() const      { return const_cast<Ctrl *>(this)->GetTopCtrl(); }
+
+Ctrl * Ctrl::GetOwner()
+{
+	if(virtual_popups)
+		return top ? NULL : uparent->GetTopCtrl();
+	return GetOwner0();
+}
+
 const Ctrl *Ctrl::GetOwner() const        { return const_cast<Ctrl *>(this)->GetOwner(); }
 Ctrl       *Ctrl::GetTopCtrlOwner()       { return GetTopCtrl()->GetOwner(); }
 const Ctrl *Ctrl::GetTopCtrlOwner() const { return GetTopCtrl()->GetOwner(); }
@@ -326,6 +378,22 @@ TopWindow *Ctrl::GetMainWindow()
 const TopWindow *Ctrl::GetMainWindow() const
 {
 	return const_cast<Ctrl *>(this)->GetMainWindow();
+}
+
+Vector<Ctrl *> Ctrl::GetTopCtrls()
+{
+	Vector<Ctrl *> v;
+	for(Ctrl *q : GetTopCtrls0()) {
+		v.Add(q);
+		if(q->children) {
+			Ctrl *w = q->children->prev_sibling;
+			while(w != q->children && w->virtual_popup) {
+				v.Add(w);
+				w = w->prev_sibling;
+			}
+		}
+	}
+	return v;
 }
 
 }

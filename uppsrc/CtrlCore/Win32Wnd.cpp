@@ -387,7 +387,7 @@ VectorMap< HWND, Ptr<Ctrl> >& Ctrl::Windows()
 	return map;
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls0()
 {
 	Vector<Ctrl *> v;
 	VectorMap< HWND, Ptr<Ctrl> >& w = Windows();
@@ -425,7 +425,7 @@ HWND Ctrl::GetOwnerHWND() const
 	return GetWindow(hwnd, GW_OWNER);
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwner0()
 {
 	GuiLock __;
 	HWND hwnd = GetOwnerHWND();
@@ -1185,7 +1185,7 @@ void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, 
 	if(activate) SetFocus();
 }
 
-void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
+void Ctrl::PopUp0(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	popup = false;
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();

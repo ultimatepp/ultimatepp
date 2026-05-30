@@ -305,6 +305,11 @@ void PopUpList::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		popup->ac.SetFocus();
 	}
 
+	DDUMP(popup->IsOpen());
+	DDUMP(popup->GetRect());
+	DDUMP(popup->GetScreenRect());
+	DDUMP(popup->GetOwner()->GetScreenRect());
+
 	popup->ac.SizePos(); // the size of popup can be slightly bigger than requested
 	inpopup--;
 }

@@ -83,7 +83,7 @@ Rect  Ctrl::GetScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
-	Ctrl *parent = GetParent();
+	Ctrl *parent = GetParentI();
 	if(parent) {
 		Rect pr = inframe ? parent->GetScreenRect() : parent->GetScreenView();
 		r = r + pr.TopLeft();
@@ -103,7 +103,7 @@ Rect  Ctrl::GetVisibleScreenRect() const
 {
 	GuiLock __;
 	Rect r = GetRect();
-	Ctrl *parent = GetParent();
+	Ctrl *parent = GetParentI();
 	if(parent) {
 		Rect pr = inframe ? parent->GetVisibleScreenRect() : parent->GetVisibleScreenView();
 		Rect pr1 = inframe ? parent->GetScreenRect() : parent->GetScreenView();
@@ -227,7 +227,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 				inframe = _inframe;
 				Rect to = GetRect().Size();
 				UpdateRect0();
-				GetTopRect(to, true);
+				GetTopRectI(to, true);
 				MoveCtrl *s = FindMoveCtrlPtr(top->scroll_move, this);
 				if(s && s->from == from && s->to == to) {
 					s->ctrl = NULL;
@@ -283,7 +283,7 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 	GuiLock __;
 	Ctrl *parent = GetParent();
 	if(p != pos || inframe != _inframe) {
-		if(parent || !IsOpen())
+		if(parent || !IsOpen() || virtual_popup)
 			SetPos0(p, _inframe);
 		else {
 			ASSERT(p.x.GetAlign() == ALIGN_LEFT);
@@ -292,6 +292,8 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 			WndSetPos(OffsetMegaRect(CalcRect(p, pwa, pwa)));
 			StateH(POSITION);
 		}
+		if(virtual_popup)
+			StateH(POSITION);
 	}
 	return *this;
 }

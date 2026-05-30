@@ -556,6 +556,7 @@ private:
 	bool         isopen:1;
 	bool         popup:1;
 	bool         popupgrab:1;
+	bool         virtual_popup:1;
 	byte         backpaint:2;//2
 
 	bool         akv:1;
@@ -567,6 +568,8 @@ private:
 	bool         erasebg:1; // true before first Paint (in Win32, do WM_ERASEBKGND to avoid flickering)
 
 	static  bool      was_fullrefresh; // indicates that some widgets might have fullrefresh true
+
+	static  bool      virtual_popups; // popups are emulated
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -697,6 +700,7 @@ private:
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
 	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
+	Ctrl   *GetTopRectI(Rect& r, bool inframe, bool clip = true);
 	void    DoSync(Ctrl *q, Rect r, bool inframe);
 
 	Rect    GetPreeditScreenRect();
@@ -871,6 +875,15 @@ protected:
 
 	template <class T>
 	T     GetAttr(int ii) const   { void *p = GetVoidPtrAttr(ii); return p ? *(T *)p : T(); }
+
+	Ctrl            *GetParentI() const;
+	Ctrl            *GetFirstChildI() const;
+	Ctrl            *GetNextI() const;
+
+	void  PopUp0(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost);
+	Ctrl *GetOwner0();
+
+	static  Vector<Ctrl *> GetTopCtrls0();
 
 public:
 	enum StateReason {
@@ -1073,11 +1086,11 @@ public:
 	void             AddChild(Ctrl *child, Ctrl *insafter);
 	void             AddChildBefore(Ctrl *child, Ctrl *insbefore);
 	void             RemoveChild(Ctrl *child);
-	Ctrl            *GetParent() const     { return top ? NULL : uparent; }
-	Ctrl            *GetLastChild() const  { return children ? children->prev_sibling : nullptr; }
-	Ctrl            *GetFirstChild() const { return children; }
-	Ctrl            *GetPrev() const       { Ctrl *parent = GetParent(); return parent && prev_sibling != parent->GetLastChild() ? prev_sibling : nullptr; }
-	Ctrl            *GetNext() const       { Ctrl *parent = GetParent(); return parent && next_sibling != parent->children ? next_sibling : nullptr; }
+	Ctrl            *GetParent() const;
+	Ctrl            *GetLastChild() const;
+	Ctrl            *GetFirstChild() const;
+	Ctrl            *GetPrev() const;
+	Ctrl            *GetNext() const;
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;
@@ -1437,6 +1450,8 @@ public:
 	static void   GlobalBackPaint(bool b = true);
 	static void   GlobalBackPaintHint();
 	static void   GlobalBackBuffer(bool b = true);
+	
+	static void   VirtualPopups(bool b = true);
 
 	static void   ReSkin();
 	static void   PostReSkin();
@@ -1873,6 +1888,20 @@ T *Ctrl::GetAscendant() const
 		if(T *a = dynamic_cast<T*>(p))
 			return a;
 	return NULL;
+}
+
+inline
+Ctrl * Ctrl::GetNextI() const
+{ // this goes through virtual popups too
+	Ctrl *parent = GetParent();
+	return parent && next_sibling != parent->children ? next_sibling : nullptr;
+}
+
+inline
+Ctrl * Ctrl::GetNext() const
+{
+	Ctrl *parent = GetParent();
+	return parent && next_sibling != parent->children && !next_sibling->virtual_popup ? next_sibling : nullptr;
 }
 
 #ifdef HAS_TopFrameDraw
