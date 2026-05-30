@@ -118,7 +118,7 @@ void AssistEditor::DCopy()
 				auto Clean = [](String& s) {
 					s = NormalizeSpaces((TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; }))));
 				};
-				
+
 				Clean(ret);
 				Clean(name);
 				Clean(params);
@@ -150,14 +150,15 @@ void AssistEditor::DCopy()
 					}
 					params = params2;
 				}
+				
+				if(ret.Find(' ') < 0) // int *foo() vs int* foo()
+					ret << ' ';
 
 				if(ret.GetCount() && name.GetCount() && params.GetCount()) { // prefer original text
 					if(m.definition) {
 						if(IsMethod(m.kind))
 							result << '\t';
-						if(ret.GetCount())
-							result << ret << ' ';
-						result << m.name << params << ";\n";
+						result << ret << m.name << params << ";\n";
 					}
 					else {
 						String cret;
@@ -201,7 +202,7 @@ void AssistEditor::DCopy()
 						}
 						else
 							cret = ret;
-						result << cret << ' ' << cls << m.name << params << "\n{\n}\n\n";
+						result << cret << cls << m.name << params << "\n{\n}\n\n";
 					}
 				}
 				else { // just in case our heuristics split of original text failed
