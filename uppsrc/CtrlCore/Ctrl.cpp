@@ -287,6 +287,8 @@ void Ctrl::SetForeground()
 bool Ctrl::IsOpen() const
 {
 	GuiLock __;
+	if(IsVirtualPopUp())
+		return true;
 	const Ctrl *q = GetTopCtrl();
 	return q->isopen && q->IsWndOpen();
 }
@@ -626,7 +628,10 @@ void Ctrl::Close()
 	if(GetParent()) return;
 	StateH(CLOSE);
 	USRLOG("   CLOSE " + Desc(this));
-	WndDestroy();
+	if(IsVirtualPopUp())
+		CloseVirtualPopUp();
+	else
+		WndDestroy();
 	visible = true;
 	popup = false;
 }

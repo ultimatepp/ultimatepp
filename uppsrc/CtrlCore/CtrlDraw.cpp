@@ -285,6 +285,18 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	#endif
 		for(PaintHook h : painthook())
 			h(this, w, clip);
+		Top *top = GetTop();
+		if(top) {
+			auto& popups = top->virtual_popups;
+			popups.RemoveIf([&](int i) { return !popups[i]; });
+			for(Ptr<Ctrl> p : popups) {
+				Rect sr = GetScreenRect();
+				Rect r = p->GetRect() & sr;
+				w.Offset(p->GetRect().TopLeft() - GetScreenRect().TopLeft());
+				p->CtrlPaint(w, clip);
+				w.End();
+			}
+		}
 	};
 	if(globalbackbuffer) {
 		DoCtrlPaint(draw, clip);

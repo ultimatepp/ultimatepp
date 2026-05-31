@@ -652,10 +652,15 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	return q ? q->DispatchMouseEvent(e, p, zd) : top->MEvent0(e, p, zd);
 }
 
+Ctrl *Ctrl::GetTopCaptureCtrl() const
+{
+	return const_cast<Ctrl *>(IsVirtualPopUp() ? GetTopWindow() : GetTopCtrl());
+}
+
 bool Ctrl::SetCapture() {
 	GuiLock __;
 	ReleaseCtrlCapture();
-	if(!GetTopCtrl()->SetWndCapture()) return false;
+	if(!GetTopCaptureCtrl()->SetWndCapture()) return false;
 	captureCtrl = mouseCtrl = this;
 	return true;
 }
@@ -670,7 +675,7 @@ bool Ctrl::ReleaseCtrlCapture() {
 	LLOG("ReleaseCtrlCapture");
 	if(captureCtrl) {
 		captureCtrl->CancelMode();
-		Ctrl *w = captureCtrl->GetTopCtrl();
+		Ctrl *w = captureCtrl->GetTopCaptureCtrl();
 		captureCtrl = NULL;
 		CheckMouseCtrl();
 		if(w->HasWndCapture()) {
@@ -685,13 +690,13 @@ bool Ctrl::HasCapture() const {
 	GuiLock __;
 	if(captureCtrl != this)
 		return false;
-	return captureCtrl == this && GetTopCtrl()->HasWndCapture();
+	return captureCtrl == this && GetTopCaptureCtrl()->HasWndCapture();
 }
 
 Ctrl * Ctrl::GetCaptureCtrl()
 {
 	GuiLock __;
-	return captureCtrl && captureCtrl->GetTopCtrl()->HasWndCapture() ? captureCtrl : NULL;
+	return captureCtrl && captureCtrl->GetTopCaptureCtrl()->HasWndCapture() ? captureCtrl : NULL;
 }
 
 Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)

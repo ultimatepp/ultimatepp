@@ -423,7 +423,7 @@ HWND Ctrl::GetOwnerHWND() const
 	return GetWindow(hwnd, GW_OWNER);
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	HWND hwnd = GetOwnerHWND();

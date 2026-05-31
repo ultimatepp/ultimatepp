@@ -35,6 +35,7 @@ file
 	LocalLoop.cpp,
 	Preedit.cpp,
 	CtrlCoreInit.cpp,
+	VirtualPopup.cpp,
 	TopWindow.h,
 	TopWindow.cpp,
 	lay0.h,

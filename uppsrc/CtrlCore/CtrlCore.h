@@ -507,7 +507,9 @@ private:
 
 	struct Top {
 		GUIPLATFORM_CTRL_TOP_DECLS
-		Ptr<Ctrl>      owner;
+		Ptr<Ctrl>         owner;
+		Vector<Ptr<Ctrl>> virtual_popups;
+		bool              virtual_popup = false;
 	};
 
 
@@ -635,6 +637,7 @@ private:
 	Image   DispatchMouse(int e, Point p, int zd = 0);
 	Image   DispatchMouseEvent(int e, Point p, int zd = 0);
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
+	Ctrl   *GetTopCaptureCtrl() const;
 
 	struct CallBox;
 	static void PerformCall(CallBox *cbox);
@@ -706,6 +709,8 @@ private:
 	static void DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl);
 	static void DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl);
 	static void DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate);
+
+	Ctrl *GetOwnerWnd();
 
 	bool SetFocus0(bool activate);
 	void ActivateWnd();
@@ -1429,6 +1434,10 @@ public:
 	static void ShutdownThreads();
 
 	static int64 GetEventId()                           { return eventid; }
+	
+	void VirtualPopUp(Ctrl *owner);
+	bool IsVirtualPopUp() const;
+	void CloseVirtualPopUp();
 
 	Ctrl();
 	virtual ~Ctrl();
