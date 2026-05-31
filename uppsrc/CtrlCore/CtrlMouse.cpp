@@ -641,13 +641,29 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	if(!IsEnabled())
 		return Image::Arrow();
 	Ctrl *top = this;
-	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !GetParent()) {
+	if(findarg(e, MOUSEWHEEL, MOUSEHWHEEL) >= 0 && !GetParent()) {
 		Ctrl *w = GetFocusCtrl();
 		if(w) {
 			top = w->GetTopCtrl();
 			p = GetMousePos() - top->GetScreenRect().TopLeft();
 		}
 	}
+	Top *t = top->GetTop();
+	if(t)
+		for(Ptr<Ctrl> popup : ReverseRange(t->virtual_popups)) {
+			if(popup) {
+				DDUMP(Name(popup));
+				Rect r = popup->GetVirtualPopUpRect();
+				DDUMP(p);
+				DDUMP(r);
+				if(r.Contains(p)) {
+					p -= r.TopLeft();
+					DLOG("Contains!");
+					DDUMP(p);
+					return popup->MEvent0(e, p, zd);
+				}
+			}
+		}
 	Ctrl *q = top->ChildFromPoint(p);
 	return q ? q->DispatchMouseEvent(e, p, zd) : top->MEvent0(e, p, zd);
 }

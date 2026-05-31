@@ -52,6 +52,8 @@ void Ctrl::Refresh(const Rect& area) {
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
+	_DBG_ if(IsVirtualPopUp())
+			GetOwner()->Refresh();
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Rect r = Rect(GetSize()).Inflated(OverPaint());

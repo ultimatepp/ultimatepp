@@ -29,6 +29,20 @@ bool Ctrl::IsVirtualPopUp() const
 	return top && top->virtual_popup;
 }
 
+Rect Ctrl::GetVirtualPopUpRect() const
+{ // this is frame rect of its owner window
+	ASSERT(IsVirtualPopUp());
+	Rect sr = GetOwner()->GetScreenRect();
+	Rect r = GetRect() & sr;
+	DLOG("+++ GetVirtualPopUpRect");
+	DDUMP(GetOwner()->GetScreenRect());
+	DDUMP(GetRect());
+	DDUMP(GetScreenRect());
+	r = Rect(r.TopLeft() - sr.TopLeft(), r.GetSize());
+	DDUMP(r);
+	return r;
+}
+
 void Ctrl::CloseVirtualPopUp()
 {
 	ASSERT(IsVirtualPopUp());
