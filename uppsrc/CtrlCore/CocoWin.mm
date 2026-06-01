@@ -209,13 +209,6 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	}
 }
 
-void Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-	LLOG("Scroll View " << r);
-	WndInvalidateRect(r);
-}
-
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
 //	DLOG("IsWndOpen " << Upp::Name(this) << ": " << (bool)top);

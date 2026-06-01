@@ -21,7 +21,6 @@ DHCtrl::DHCtrl()
 	UserVisualInfo = 0;
 
 	// No background painting
-	backpaint = NOBACKPAINT;
 //	transparent = true;
 	hwnd = 0;
 } // END Constructor class DHCtrl

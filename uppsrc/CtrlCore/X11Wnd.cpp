@@ -50,8 +50,6 @@ Ptr<Ctrl> Ctrl::popupWnd;
 
 Point     Ctrl::mousePos;
 
-static int s_starttime;
-
 void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
 	GuiLock __;
@@ -70,27 +68,6 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 		XftDrawDestroy(xftdraw);
 		XFreeGC(Xdisplay, gc);
 	}
-}
-
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-	if(r.IsEmpty() || !GetWindow()) return;
-	int cx = r.Width() - abs(dx);
-	int cy = r.Height() - abs(dy);
-	GC gc = XCreateGC(Xdisplay, GetWindow(), 0, 0);
-	XCopyArea(Xdisplay, GetWindow(), GetWindow(), gc,
-	          r.left + max(-dx, 0), r.top + max(-dy, 0), cx, cy,
-	          r.left + max(dx, 0), r.top + max(dy, 0));
-	XFreeGC(Xdisplay, gc);
-	XWindow *xw = GetXWindow();
-	Vector<Rect> ur;
-	if(xw)
-		for(int i = 0; i < xw->invalid.GetCount(); i++)
-			if(xw->invalid[i].Intersects(r))
-				ur.Add(xw->invalid[i]);
-	for(int i = 0; i < ur.GetCount(); i++)
-		Invalidate(*xw, ur[i].Offseted(dx, dy));
 }
 
 bool Ctrl::IsWaitingEvent()
@@ -305,11 +282,8 @@ void Ctrl::ProcessEvent(XEvent *event)
 		return;
 	}
 	XWindow& w = xmap[q];
-	if(w.ctrl) {
+	if(w.ctrl)
 		w.ctrl->EventProc(w, event);
-		if(w.ctrl)
-			w.ctrl->SyncMoves();
-	}
 	else
 		xmap.SetKey(q, None);
 	DefferedFocusSync();
@@ -332,7 +306,6 @@ void Ctrl::TimerAndPaint() {
 		if(Xwindow().GetKey(i) && xw.exposed && xw.invalid.GetCount()) {
 			if(xw.ctrl) {
 				LLOG("..and paint " << UPP::Name(xw.ctrl));
-				xw.ctrl->SyncScroll();
 				Vector<Rect> x = pick(xw.invalid);
 				xw.invalid.Clear();
 				xw.ctrl->DoPaint(x);
@@ -721,7 +694,6 @@ void Ctrl::WndUpdate()
 	if(!xwin) return;
 	XWindow& xw = Xwindow().Get(xwin);
 	if(xw.exposed && xw.invalid.GetCount()) {
-		SyncScroll();
 		DoPaint(xw.invalid);
 		xw.invalid.Clear();
 		LTIMING("WndUpdate XSync");
@@ -740,7 +712,6 @@ void Ctrl::WndUpdate(const Rect& r)
 	if(!xwin) return;
 	XWindow& xw = Xwindow().Get(xwin);
 	bool dummy;
-	SyncScroll();
 	DoPaint(Intersect(xw.invalid, r, dummy));
 	LTIMING("WndUpdate XSync");
 	XSync(Xdisplay, false);
