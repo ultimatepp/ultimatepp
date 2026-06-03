@@ -127,6 +127,7 @@ struct AnnotationItem : Moveable<AnnotationItem> {
 	String bases; // base classes of struct/class
 	Point  pos = Null;
 	int    kind = Null;
+	int    access = CX_CXXInvalidAccessSpecifier;
 	bool   definition = false;
 	bool   isvirtual = false;
 	bool   isstatic = false;

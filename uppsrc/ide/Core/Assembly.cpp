@@ -246,8 +246,11 @@ String Nest::PackageDirectory0(const String& name)
 	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile), pname) + ".upp") : String();
 }
 
+static Mutex package_cache_mutex;
+
 String Nest::PackageDirectory(const String& name)
 {
+	Mutex::Lock __(package_cache_mutex);
 	int q = package_cache.Find(name);
 	if(q < 0) {
 		String h = PackageDirectory0(name);
@@ -264,6 +267,7 @@ Nest& MainNest()
 
 void Nest::InvalidatePackageCache()
 {
+	Mutex::Lock __(package_cache_mutex);
 	package_cache.Clear();
 	hub_loaded = false;
 }

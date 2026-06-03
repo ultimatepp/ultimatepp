@@ -187,7 +187,7 @@ void Ide::BTabs()
 	for(int i = 0; i < __countof(ffound); i++) {
 		if(!ffound[i])
 			break;
-		String h = GetFoundText(*ffound[i]);
+		String h = Nvl(ffound[i]->text, GetFoundText(*ffound[i]));
 		btabs.Add(Nvl(ffound[i]->icon, IdeImg::query()), Nvl(h, "Empty"), h.GetCount());
 	}
 }
