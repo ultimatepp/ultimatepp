@@ -245,7 +245,7 @@ void JsonSchemaChecker::Check0(Value schema, Value data, int depth)
 	
 	Value c = schema["const"];
 	if(!c.IsVoid() && !(IsNumber(c) && IsNull(c) ? IsNumber(data) && IsNull(data) : data == c))
-		Error("constant mismatch");
+		Error("constant mismatch, required: " + ~c);
 	
 	Value type = schema["type"];
 	bool type_ok = type.IsVoid();
@@ -292,8 +292,15 @@ void JsonSchemaChecker::Check0(Value schema, Value data, int depth)
 	if(data.Is<bool>())
 		CheckType("boolean");
 	
-	if(!type_ok)
-		Error("type mismatch");
+	if(!type_ok) {
+		String s;
+		if(IsValueArray(type))
+			for(Value v : type)
+				MergeWith(s, " or ", ~v);
+		else
+			s = ~type;
+		Error("type mismatch, required " + s);
+	}
 	
 	depth--;
 }
