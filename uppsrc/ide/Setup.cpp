@@ -457,6 +457,7 @@ void Ide::SetupFormat() {
 		(ide.sort, sort)
 		(ide.mute_sounds, mute_sounds)
 		(ide.wrap_console_text, wrap_console_text)
+		(ide.experimental, experimental)
 		(ide.hydra1_threads, hydra1_threads)
 		(ide.chstyle, chstyle)
 		(ide.console, HostConsole)

@@ -673,6 +673,7 @@ LAYOUT(SetupIdeLayout, 512, 400)
 	ITEM(Upp::Button, upphub_sel, RightPosZ(4, 20).TopPosZ(352, 19))
 	ITEM(Upp::Label, dv___39, SetLabel(t_("Additional valgrind options")).LeftPosZ(4, 164).TopPosZ(376, 19))
 	ITEM(Upp::EditString, valgrind, LeftPosZ(172, 336).TopPosZ(376, 19))
+	ITEM(Upp::Option, experimental, SetLabel(t_("Experimental features")).LeftPosZ(272, 224).TopPosZ(192, 16))
 END_LAYOUT
 
 LAYOUT(SetupWebSearchEngineLayout, 564, 84)

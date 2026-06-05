@@ -421,7 +421,6 @@ class HttpRequest : public TcpSocket {
 	String       accept;
 	String       agent;
 	bool         force_digest;
-	bool         is_post;
 	bool         std_headers;
 	bool         hasurlvar;
 	bool		 keep_alive;

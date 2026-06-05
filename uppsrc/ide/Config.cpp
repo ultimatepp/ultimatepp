@@ -189,7 +189,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 36;
+	int version = 37;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -278,6 +278,8 @@ void Ide::Serialize(Stream& s)
 	s % default_charset;
 	s % header_guards;
 	s % insert_include;
+	if(version >= 37)
+		s % experimental;
 	if(version >= 23)
 		s % libclang_options;
 	if(version >= 24)

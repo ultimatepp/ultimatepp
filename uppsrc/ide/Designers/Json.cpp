@@ -1,18 +1,32 @@
 #include "Designers.h"
+#include "JsonValidator.h"
 
-void CopyJsonPath(TreeCtrl& tree)
+Vector<Value> GetJsonPath(TreeCtrl& tree)
 {
 	int id = tree.GetCursor();
-	String path;
+	Vector<Value> path;
 	while(id) {
 		Value k = tree.Get(id);
 		if(!IsNull(k)) {
-			if(IsNumber(k) && tree.GetChildCount(id))
-				path = "[" + AsString(k) + "]" + path;
-			if(IsString(k))
-				path = "[" + AsCString(String(k)) + "]" + path;
+			if(IsNumber(k) && tree.GetChildCount(id) || IsString(k))
+				path << k;
 		}
 		id = tree.GetParent(id);
+	}
+	Reverse(path);
+	return path;
+}
+
+void CopyJsonPath(TreeCtrl& tree)
+{
+	String path;
+	for(Value v : GetJsonPath(tree)) {
+		path << '[';
+		if(IsNumber(v))
+			path << v;
+		else
+			path << AsCString(~v);
+		path << ']';
 	}
 	WriteClipboardText(path);
 }
@@ -98,14 +112,98 @@ void SetupJsonTree(TreeCtrl& tree)
 	tree.WhenBar = [=, &tree](Bar& bar) { JsonTreeMenu(bar, tree); };
 }
 
+bool JsonViewDes::Validate(const String& path)
+{
+	String schema = LoadFile(path);
+	if(schema.GetCount() == 0)
+		return true;
+	errors.Clear();
+	JsonSchemaChecker chk;
+	chk.WhenError = [&](const String& error) {
+		errors_frame.Show();
+		String path;
+		ValueArray va;
+		for(Value v : chk.data_path) {
+			MergeWith(path, "/", ~v);
+			va << v;
+		}
+		errors.Add(path, error, va);
+	};
+	chk.Validate(ParseJSON(schema), ParseJSON(json));
+	return errors.GetCount() == 0;
+}
+
 void JsonViewDes::EditMenu(Bar& bar)
 {
 	JsonTreeMenu(bar, tree);
+	bar.Separator();
+	bar.Add("Validate with schema..", [=] {
+		String p = SelectFileOpen("*.json\t*.schema.json\t*.*");
+		if(IsNull(p))
+			return;
+		schema_path.GetAdd(filename) = p;
+		if(Validate(p))
+			PromptOK("No errors found");
+		else
+			errors_frame.Show();
+	});
 }
+
+void JsonViewDes::GoTo(const Vector<Value>& path)
+{
+	if(!tree.GetChildCount(0))
+		return;
+	int id = tree.GetChild(0, 0);
+	for(Value m : path) {
+		int n = tree.GetChildCount(id);
+		bool found = false;
+		for(int i = 0; i < n; i++) {
+			int cid = tree.GetChild(id, i);
+			if(cid > 0 && tree.Get(cid) == m) {
+				found = true;
+				id = cid;
+				break;
+			}
+		}
+		if(!found)
+			break;
+	}
+	if(id > 0)
+		tree.SetCursor(id);
+}
+
+ArrayMap<String, String> JsonViewDes::schema_path;
 
 JsonViewDes::JsonViewDes()
 {
 	SetupJsonTree(tree);
+	AddFrame(errors_frame);
+	errors_frame.Bottom(errors, GetStdFontCy() * 16);
+	LoadFromGlobal(errors_frame, "JsonViewDes-frame");
+	errors.AddColumn("Path");
+	errors.AddColumn("Error", 2);
+	errors_frame.Hide();
+	errors.WhenSel = [=] {
+		if(errors.IsCursor()) {
+			ValueArray va = errors.Get(2);
+			GoTo(va.Get());
+		}
+	};
+	close_errors.SetImage(IdeImg::SmallClose());
+	errors.HeaderObject() << close_errors.VSizePos(DPI(1), DPI(1)).RightPos(DPI(1), DPI(16));
+	close_errors << [=] {
+		errors_frame.Hide();
+		schema_path.GetAdd(filename) = Null;
+	};
+}
+
+JsonViewDes::~JsonViewDes()
+{
+	StoreToGlobal(errors_frame, "JsonViewDes-frame");
+}
+
+INITBLOCK {
+	RegisterGlobalConfig("JsonViewDes-frame");
 }
 
 void JsonViewDes::CopyPath()
@@ -113,19 +211,28 @@ void JsonViewDes::CopyPath()
 	CopyJsonPath(tree);
 }
 
-String JsonViewDes::Load0(const String& json)
+String JsonViewDes::Load0(const String& json_)
 {
-	return LoadJson(tree, json);
+	json = json_;
+	String s = LoadJson(tree, json);
+	if(s.GetCount())
+		return s;
+	String p = schema_path.Get(filename, Null);
+	if(p.GetCount()) {
+		if(!Validate(p))
+			errors_frame.Show();
+	}
+	return Null;
 }
 
 struct JsonDesModule : public IdeModule {
-	virtual String       GetID() { return "JsonDesModule"; }
-
-	virtual bool         AcceptsFile(const char *path) {
+	String       GetID() override { return "JsonDesModule"; }
+	
+	bool         AcceptsFile(const char *path) override {
 		return ToLower(GetFileExt(path)) == ".json";
 	}
 
-	virtual IdeDesigner *CreateDesigner(const char *path, byte) {
+	IdeDesigner *CreateDesigner(const char *path, byte) override {
 		if(!AcceptsFile(path))
 			return NULL;
 		JsonViewDes *d = new JsonViewDes;
