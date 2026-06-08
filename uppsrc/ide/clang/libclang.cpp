@@ -290,6 +290,11 @@ enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor c)
 	return LibClang().clang_Cursor_getStorageClass(c);
 }
 
+enum CX_CXXAccessSpecifier clang_getCXXAccessSpecifier(CXCursor c)
+{
+	return LibClang().clang_getCXXAccessSpecifier(c);
+}
+
 unsigned clang_getNumOverloadedDecls(CXCursor cursor)
 {
 	return LibClang().clang_getNumOverloadedDecls(cursor);

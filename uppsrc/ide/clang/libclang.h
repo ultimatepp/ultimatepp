@@ -2048,7 +2048,7 @@ enum CX_CXXAccessSpecifier {
   CX_CXXPrivate
 };
 
-CINDEX_LINKAGE enum CX_CXXAccessSpecifier clang_getCXXAccessSpecifier(CXCursor);
+enum CX_CXXAccessSpecifier clang_getCXXAccessSpecifier(CXCursor);
 
 unsigned int clang_getNumOverloadedDecls(CXCursor cursor);
 CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned int index);
