@@ -1,3 +1,5 @@
+struct i32x4; // Forward declaration for f32x4 -> i32x4 cast operator.
+
 struct f32x4 {
 	__m128 data;
 
@@ -18,6 +20,7 @@ struct f32x4 {
 	f32x4(double a, double b, double c, double d) { data = _mm_set_ps((float)a, (float)b, (float)c, (float)d); }
 	
 	operator __m128()            { return data; }
+	explicit operator i32x4() const;
 };
 
 force_inline f32x4  f32all(double f)              { return _mm_set1_ps((float)f); }
@@ -150,6 +153,10 @@ force_inline int    CountTrue(i32x4 a)             { return CountBits(_mm_movema
 force_inline int    FirstTrue(i32x4 a)             { return CountTrailingZeroBits(_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
 force_inline int    FirstFalse(i32x4 a)            { return CountTrailingZeroBits(~_mm_movemask_ps(_mm_castsi128_ps(a.data))); }
 force_inline bool   IsTrue(i32x4 a, int i)         { return _mm_movemask_ps(_mm_castsi128_ps(a.data)) & (1 << i); }
+
+force_inline f32x4::operator i32x4() const              { return i32x4(_mm_castps_si128(data)); }
+force_inline i32x4 IncrementIf(i32x4 value, i32x4 mask) { return value - mask; }
+force_inline i32x4 IncrementIf(i32x4 value, f32x4 mask) { return value - (i32x4) mask; }
 
 struct i8x16 : iTxN<i8x16> { // 16xint8
 	i8x16()                      {}
