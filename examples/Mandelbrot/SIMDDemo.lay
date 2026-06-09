@@ -1,0 +1,9 @@
+LAYOUT(SIMDDemoLayout, 584, 372)
+	ITEM(Upp::ImageCtrl, view, HSizePosZ(4, 4).VSizePosZ(4, 60))
+	ITEM(Upp::Button, render, SetLabel(t_("Reset")).RightPosZ(4, 148).BottomPosZ(5, 23))
+	ITEM(Upp::Option, simd, SetLabel(t_("Use SIMD")).LeftPosZ(264, 164).BottomPosZ(8, 16))
+	ITEM(Upp::StaticText, timing, SetAlign(Upp::ALIGN_CENTER).SetFrame(Upp::ThinInsetFrame()).HSizePosZ(4, 4).BottomPosZ(37, 19))
+	ITEM(Upp::DropList, maxiter, LeftPosZ(96, 160).BottomPosZ(6, 19))
+	ITEM(Upp::Label, dv___5, SetLabel(t_("Max. iterations")).LeftPosZ(4, 88).BottomPosZ(8, 16))
+END_LAYOUT
+

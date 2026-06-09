@@ -1,0 +1,13 @@
+description "A simple Mandelbrot fractal viewer, using SIMD extensions when available\377";
+
+uses
+	CtrlLib;
+
+file
+	Mandelbrot.h,
+	main.cpp,
+	Mandelbrot.lay;
+
+mainconfig
+	"" = "GUI";
+
