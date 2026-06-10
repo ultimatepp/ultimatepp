@@ -24,6 +24,13 @@ topic "WebSocket";
 is blocking mode.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:WebSocket`:`:SSLServerNameIndication`(const String`&`): WebSocket[@(0.0.255) `&
+] [* SSLServerNameIndication]([@(0.0.255) const] String[@(0.0.255) `&] 
+[*@3 name])&]
+[s2;%% Sets [^https`:`/`/cs`.wikipedia`.org`/wiki`/Server`_Name`_Indication^ SNI] 
+for SSL connection.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:WebSocket`:`:Headers`(const Upp`:`:String`&`): [_^Upp`:`:WebSocket^ WebSock
 et][@(0.0.255) `&]_[* Headers]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_
 [*@3 h])&]
