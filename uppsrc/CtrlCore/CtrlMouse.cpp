@@ -318,6 +318,15 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 		return NULL;
 	}
 	for(q = GetLastChild(); q; q = q->GetPrev()) {
+		if(q->InFrame()) {
+			DLOG("@@ " << Name(q));
+			DDUMP(q->IsMouseActive());
+			DDUMP(q->IsShown());
+			DDUMP(q->IsVisible());
+			DDUMP(q->IsEnabled());
+			DDUMP(q->IsOpen());
+			DDUMP(!q->ignoremouse);
+		}
 		if(q->InFrame() && q->IsMouseActive()) {
 			Rect r = q->GetRect();
 			if(r.Contains(p)) {
@@ -652,15 +661,16 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	if(t)
 		for(Ptr<Ctrl> popup : ReverseRange(t->virtual_popups)) {
 			if(popup) {
+				DLOG("+++++ Mouse Event");
 				DDUMP(Name(popup));
-				Rect r = popup->GetVirtualPopUpRect();
+				Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
 				DDUMP(p);
 				DDUMP(r);
 				if(r.Contains(p)) {
 					p -= r.TopLeft();
 					DLOG("Contains!");
 					DDUMP(p);
-					return popup->MEvent0(e, p, zd);
+					return popup->DispatchMouseEvent(e, p, zd);
 				}
 			}
 		}

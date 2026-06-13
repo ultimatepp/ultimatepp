@@ -33,7 +33,14 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	else {
 		LLOG("WndInvalidateRect: " << r << ' ' << Name());
 		LTIMING("RefreshFrame InvalidateRect");
-		WndInvalidateRect(r);
+		if(IsVirtualPopUp()) {
+			DLOG("VirtualRefresh");
+			DDUMP(r);
+			DDUMP(GetVirtualPopUpRect(r));
+			GetOwner()->Refresh(GetVirtualPopUpRect(r));
+		}
+		else
+			WndInvalidateRect(r);
 	}
 }
 
@@ -52,8 +59,6 @@ void Ctrl::Refresh(const Rect& area) {
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	_DBG_ if(IsVirtualPopUp())
-			GetOwner()->Refresh();
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Rect r = Rect(GetSize()).Inflated(OverPaint());
@@ -147,6 +152,14 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	LLOG("=== CtrlPaint " << UPP::Name(this) << ", clip: " << clip << ", rect: " << GetRect() << ", view: " << GetView());
 	Rect rect = GetRect().GetSize();
 	Rect orect = rect.Inflated(overpaint);
+	DLOG("--- CtrlPaint " << Upp::Name(this));
+	DDUMP(IsShown());
+	DDUMP(orect.IsEmpty());
+	DDUMP(clip.IsEmpty());
+	DDUMP(clip.Intersects(orect));
+	DDUMP(clip);
+	DDUMP(orect);
+	DDUMP(GetRect());
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
 		return;
 	Rect view = rect;
@@ -173,6 +186,9 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 				}
 				LEVELCHECK(w, &q);
 				Point off = q.GetRect().TopLeft();
+				DDUMP(q.GetRect());
+				DDUMP(off);
+				DDUMP(clip - off);
 				w.Offset(off);
 				q.CtrlPaint(w, clip - off);
 				w.End();
@@ -278,6 +294,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << ", clip: " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
 	auto DoCtrlPaint = [&](SystemDraw& w, const Rect& clip) {
+		// TODO: Optimize virtual popups
 	#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
 		PaintWinBarBackground(w, clip);
 	#endif
@@ -292,15 +309,19 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 			auto& popups = top->virtual_popups;
 			popups.RemoveIf([&](int i) { return !popups[i]; });
 			for(Ptr<Ctrl> p : popups) {
-				Rect sr = GetScreenRect();
-				Rect r = p->GetRect() & sr;
-				w.Offset(p->GetRect().TopLeft() - GetScreenRect().TopLeft());
-				p->CtrlPaint(w, clip);
+				DLOG("*** Update Virtual Popup area");
+				DDUMP(clip);
+				DDUMP(p->GetScreenRect().TopLeft());
+				DDUMP(GetScreenRect().TopLeft());
+				DDUMP(p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft());
+				Point off = p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft();
+				w.Offset(off);
+				p->CtrlPaint(w, clip - off);
 				w.End();
 			}
 		}
 	};
-	if(globalbackbuffer) {
+	if(globalbackbuffer) { // Host already provides the backbuffer
 		DoCtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 	}

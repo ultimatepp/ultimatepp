@@ -1,8 +1,11 @@
 #include "CtrlCore.h"
 
+#define LLOG(x)
+#define LDUMP(x)
+
 namespace Upp {
 
-void Ctrl::VirtualPopUp(Ctrl *owner)
+void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 {
 	ASSERT(!IsOpen());
 	TopWindow *win = owner->GetTopWindow();
@@ -13,14 +16,19 @@ void Ctrl::VirtualPopUp(Ctrl *owner)
 	}
 	
 	top->virtual_popups.Add(this);
-	Refresh();
-	_DBG_ win->Refresh();
+//	_DBG_ win->Refresh();
 
 
 	Top *vtop = new Top;
 	SetTop(vtop);
 	vtop->virtual_popup = true;
 	vtop->owner = owner;
+	
+	if(activate)
+		SetFocus();
+
+	DLOG("=================");
+	RefreshFrame();
 }
 
 bool Ctrl::IsVirtualPopUp() const
@@ -29,18 +37,16 @@ bool Ctrl::IsVirtualPopUp() const
 	return top && top->virtual_popup;
 }
 
-Rect Ctrl::GetVirtualPopUpRect() const
-{ // this is frame rect of its owner window
+Rect Ctrl::GetVirtualPopUpRect(const Rect& vp_frame_rect) const
+{ // converts frame rect to owner frame rect
 	ASSERT(IsVirtualPopUp());
 	Rect sr = GetOwner()->GetScreenRect();
-	Rect r = GetRect() & sr;
-	DLOG("+++ GetVirtualPopUpRect");
-	DDUMP(GetOwner()->GetScreenRect());
-	DDUMP(GetRect());
-	DDUMP(GetScreenRect());
-	r = Rect(r.TopLeft() - sr.TopLeft(), r.GetSize());
-	DDUMP(r);
-	return r;
+	Rect r = vp_frame_rect.Offseted(GetScreenRect().TopLeft()) & GetScreenRect() & sr;
+//	DLOG("+++ GetVirtualPopUpRect");
+//	DDUMP(GetOwner()->GetScreenRect());
+//	DDUMP(GetRect());
+//	DDUMP(GetScreenRect());
+	return Rect(r.TopLeft() - sr.TopLeft(), r.GetSize());
 }
 
 void Ctrl::CloseVirtualPopUp()

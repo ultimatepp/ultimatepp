@@ -287,10 +287,8 @@ void Ctrl::SetForeground()
 bool Ctrl::IsOpen() const
 {
 	GuiLock __;
-	if(IsVirtualPopUp())
-		return true;
 	const Ctrl *q = GetTopCtrl();
-	return q->isopen && q->IsWndOpen();
+	return q->IsVirtualPopUp() || q->isopen && q->IsWndOpen();
 }
 
 void Ctrl::Show(bool ashow) {

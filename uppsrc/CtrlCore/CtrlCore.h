@@ -1435,9 +1435,9 @@ public:
 
 	static int64 GetEventId()                           { return eventid; }
 	
-	void VirtualPopUp(Ctrl *owner);
+	void VirtualPopUp(Ctrl *owner, bool activate);
 	bool IsVirtualPopUp() const;
-	Rect GetVirtualPopUpRect() const;
+	Rect GetVirtualPopUpRect(const Rect& vp_frame_rect) const;
 	void CloseVirtualPopUp();
 
 	Ctrl();

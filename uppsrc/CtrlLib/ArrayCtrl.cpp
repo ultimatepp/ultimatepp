@@ -1527,6 +1527,7 @@ bool ArrayCtrl::SetCursor0(int i, bool dosel) {
 
 bool ArrayCtrl::SetCursor(int i)
 {
+	DLOG("========= ArrayCtrl::SetCursor");
 	return SetCursor0(i);
 }
 
