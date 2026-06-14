@@ -207,10 +207,13 @@ Rect ScrollBar::GetPartRect(int p) const {
 
 void ScrollBar::Paint(Draw& w)
 {
+	DLOG("+++ ScrollBar::Paint");
 	w.DrawRect(GetSize(), style->bgcolor);
 	int cc;
 	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
 	light = GetMousePart();
+	DDUMP(HasMouseIn());
+	DDUMP((int)light);
 	int p = push;
 	if(!HasCapture() || buttons_capture)
 		p = -1;
@@ -329,11 +332,18 @@ void ScrollBar::LeftDown(Point p, dword) {
 }
 
 void ScrollBar::MouseMove(Point p, dword) {
+	DLOG("----- ScrollBar::MouseMove");
+	DDUMP(HasMouseIn());
+	DDUMP(GetMousePart());
+	DDUMP((int)light);
+	DDUMP(HasCapture());
 	if(HasCapture() && push == 2)
 		Drag(p);
 	else
-	if(light != GetMousePart())
+	if(light != GetMousePart()) {
+		DLOG("ScrollBar Refresh");
 		Refresh();
+	}
 }
 
 void ScrollBar::MouseEnter(Point p, dword)

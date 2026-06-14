@@ -315,7 +315,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 	for(q = GetLastChild(); q; q = q->GetPrev()) {
 		if(q->InFrame()) {
@@ -335,7 +335,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 Image Ctrl::MEvent0(int e, Point p, int zd)
@@ -650,7 +650,8 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	if(!IsEnabled())
 		return Image::Arrow();
 	Ctrl *top = this;
-	if(findarg(e, MOUSEWHEEL, MOUSEHWHEEL) >= 0 && !GetParent()) {
+	bool wheel = findarg(e, MOUSEWHEEL, MOUSEHWHEEL) >= 0;
+	if(wheel && !GetParent()) {
 		Ctrl *w = GetFocusCtrl();
 		if(w) {
 			top = w->GetTopCtrl();
@@ -658,10 +659,11 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 		}
 	}
 	Top *t = top->GetTop();
-	if(t)
+	if(!wheel && t)
 		for(Ptr<Ctrl> popup : ReverseRange(t->virtual_popups)) {
 			if(popup) {
 				DLOG("+++++ Mouse Event");
+				DDUMP(Name(this));
 				DDUMP(Name(popup));
 				Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
 				DDUMP(p);
@@ -686,7 +688,10 @@ Ctrl *Ctrl::GetTopCaptureCtrl() const
 bool Ctrl::SetCapture() {
 	GuiLock __;
 	ReleaseCtrlCapture();
-	if(!GetTopCaptureCtrl()->SetWndCapture()) return false;
+	Ctrl *q = GetTopCaptureCtrl();
+	if(q->IsVirtualPopUp())
+		q = q->GetOwner();
+	if(!q->SetWndCapture()) return false;
 	captureCtrl = mouseCtrl = this;
 	return true;
 }

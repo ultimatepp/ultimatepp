@@ -9,15 +9,11 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 {
 	ASSERT(!IsOpen());
 	TopWindow *win = owner->GetTopWindow();
+	ASSERT(owner && win);
 	Top *top = win->GetTop();
-	if(!win || !top) {
-//		Popup(owner); // Fix this for splash screens
-		return;
-	}
+	ASSERT(top);
 	
 	top->virtual_popups.Add(this);
-//	_DBG_ win->Refresh();
-
 
 	Top *vtop = new Top;
 	SetTop(vtop);
