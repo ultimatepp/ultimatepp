@@ -20,7 +20,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(!IsOpen() || !IsVisible() || r.IsEmpty())
 		return;
 	LTIMING("RefreshFrame");
-	LLOG("RefreshRect " << Name() << ' ' << r);
+	DLOG("RefreshRect " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	if(!top && !IsDHCtrl()) {
@@ -60,7 +60,7 @@ void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
-	LLOG("Refresh " << Name() << " full:" << fullrefresh);
+	DLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Rect r = Rect(GetSize()).Inflated(OverPaint());
 	if(r.IsEmpty())
 		return;
@@ -389,8 +389,12 @@ void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 	ASSERT(q);
 	LLOG("DoSync " << UPP::Name(q) << " " << r);
 	Ctrl *top = q->GetTopRect(r, inframe);
-	if(top && top->IsOpen())
-		top->WndUpdate(r);
+	if(top && top->IsOpen()) {
+		if(top->IsVirtualPopUp())
+			top->GetTopWindow()->WndUpdate(top->GetVirtualPopUpRect(r));
+		else
+			top->WndUpdate(r);
+	}
 }
 
 void  Ctrl::Sync()
@@ -400,7 +404,10 @@ void  Ctrl::Sync()
 	Ctrl *parent = GetParent();
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
-		WndUpdate();
+		if(IsVirtualPopUp())
+			GetTopWindow()->WndUpdate(GetVirtualPopUpRect());
+		else
+			WndUpdate();
 	}
 	else
 	if(parent)

@@ -640,6 +640,9 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 
 Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	GuiLock __;
+	DDUMP(Name(captureCtrl));
+	if(captureCtrl)
+		DDUMP(captureCtrl->IsMouseActive());
 	if(captureCtrl && captureCtrl != this && captureCtrl->IsMouseActive()) {
 		if(captureCtrl->IsEnabled())
 			return captureCtrl->MEvent0(e, p + GetScreenRect().TopLeft() -
@@ -682,7 +685,8 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 
 Ctrl *Ctrl::GetTopCaptureCtrl() const
 {
-	return const_cast<Ctrl *>(IsVirtualPopUp() ? GetTopWindow() : GetTopCtrl());
+	const Ctrl *q = GetTopCtrl();
+	return const_cast<Ctrl *>(q->IsVirtualPopUp() ? q->GetTopWindow() : q);
 }
 
 bool Ctrl::SetCapture() {
@@ -721,6 +725,10 @@ bool Ctrl::HasCapture() const {
 	GuiLock __;
 	if(captureCtrl != this)
 		return false;
+	DDUMP(Name(GetTopCaptureCtrl()));
+	DDUMP(IsVirtualPopUp());
+	DDUMP(Name(GetTopWindow()));
+	DDUMP(captureCtrl->IsVirtualPopUp());
 	return captureCtrl == this && GetTopCaptureCtrl()->HasWndCapture();
 }
 

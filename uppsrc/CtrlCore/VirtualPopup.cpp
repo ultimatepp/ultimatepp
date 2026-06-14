@@ -45,6 +45,11 @@ Rect Ctrl::GetVirtualPopUpRect(const Rect& vp_frame_rect) const
 	return Rect(r.TopLeft() - sr.TopLeft(), r.GetSize());
 }
 
+Rect Ctrl::GetVirtualPopUpRect() const
+{
+	return GetVirtualPopUpRect(GetRect().GetSize());
+}
+
 void Ctrl::CloseVirtualPopUp()
 {
 	ASSERT(IsVirtualPopUp());

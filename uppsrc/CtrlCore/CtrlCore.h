@@ -1438,6 +1438,7 @@ public:
 	void VirtualPopUp(Ctrl *owner, bool activate);
 	bool IsVirtualPopUp() const;
 	Rect GetVirtualPopUpRect(const Rect& vp_frame_rect) const;
+	Rect GetVirtualPopUpRect() const;
 	void CloseVirtualPopUp();
 
 	Ctrl();

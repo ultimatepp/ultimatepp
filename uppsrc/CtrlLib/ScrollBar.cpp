@@ -281,6 +281,7 @@ bool ScrollBar::SetThumb(int _thumbpos, int _thumbsize) {
 	thumbpos = _thumbpos;
 	Bounds();
 	if(thumbsize != ts || thumbpos != tp) {
+		DLOG("===== SetThumb REFRESH");
 		Refresh();
 		return true;
 	}
