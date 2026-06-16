@@ -57,7 +57,7 @@ void Ctrl::CloseVirtualPopUp()
 	Ctrl *owner = GetOwner();
 	ASSERT(owner);
 	TopWindow *win = owner->GetTopWindow();
-	Refresh();
+	RefreshFrame();
 	virtual_popups.RemoveIf([&](int i) {
 		return virtual_popups[i] == this || !virtual_popups[i];
 	});

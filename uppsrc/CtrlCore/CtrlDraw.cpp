@@ -20,7 +20,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(!IsOpen() || !IsVisible() || r.IsEmpty())
 		return;
 	LTIMING("RefreshFrame");
-	DLOG("RefreshRect " << Name() << ' ' << r);
+	DLOG("RefreshFrame " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	if(!top && !IsDHCtrl()) {
@@ -45,6 +45,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 }
 
 void Ctrl::Refresh0(const Rect& area) {
+	DDUMP(area);
 	RefreshFrame((area + GetView().TopLeft()) & GetView().Inflated(OverPaint()));
 }
 
@@ -52,16 +53,20 @@ void Ctrl::Refresh(const Rect& area) {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
-	LLOG("Refresh " << Name() << ' ' <<  area);
+	DLOG("Refresh " << Name() << ' ' <<  area);
 	Refresh0(area);
 }
 
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	DLOG("Refresh " << Name() << " full:" << fullrefresh);
+	DDUMP(fullrefresh);
+	DDUMP(IsVisible());
+	DDUMP(IsOpen());
+	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	Rect r = Rect(GetSize()).Inflated(OverPaint());
+	DDUMP(r);
 	if(r.IsEmpty())
 		return;
 	if(!GuiPlatformSetFullRefreshSpecial())
@@ -317,6 +322,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 					w.Offset(off);
 					p->CtrlPaint(w, clip - off);
 					w.End();
+					p->RemoveFullRefresh();
 				}
 			}
 		}
