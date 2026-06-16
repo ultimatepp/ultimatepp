@@ -558,6 +558,27 @@ bool sDblTime(int time)
 }
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
+	for(Ctrl *popup : ReverseRange(virtual_popups)) {
+		if(popup && popup->GetTopWindow() == this) {
+			DLOG("+++++ Mouse Event");
+			DDUMP(Name(this));
+			DDUMP(Name(popup));
+			Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
+			DDUMP(p);
+			DDUMP(r);
+			if(r.Contains(p)) {
+				p -= r.TopLeft();
+				DLOG("Contains!");
+				DDUMP(p);
+				return popup->DispatchMouse2(e, p, zd);
+			}
+			
+		}
+	}
+	return DispatchMouse2(e, p, zd);
+}
+
+Image Ctrl::DispatchMouse2(int e, Point p, int zd) {
 	GuiLock __;
 	EventLevelDo ___;
 	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !zd) // ignore non-scroll wheel events
@@ -661,24 +682,6 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 			p = GetMousePos() - top->GetScreenRect().TopLeft();
 		}
 	}
-	Top *t = top->GetTop();
-	if(!wheel && t)
-		for(Ptr<Ctrl> popup : ReverseRange(t->virtual_popups)) {
-			if(popup) {
-				DLOG("+++++ Mouse Event");
-				DDUMP(Name(this));
-				DDUMP(Name(popup));
-				Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
-				DDUMP(p);
-				DDUMP(r);
-				if(r.Contains(p)) {
-					p -= r.TopLeft();
-					DLOG("Contains!");
-					DDUMP(p);
-					return popup->DispatchMouseEvent(e, p, zd);
-				}
-			}
-		}
 	Ctrl *q = top->ChildFromPoint(p);
 	return q ? q->DispatchMouseEvent(e, p, zd) : top->MEvent0(e, p, zd);
 }

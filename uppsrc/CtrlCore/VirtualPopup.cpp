@@ -5,20 +5,19 @@
 
 namespace Upp {
 
+Vector<Ptr<Ctrl>> Ctrl::virtual_popups;
+
 void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 {
 	ASSERT(!IsOpen());
 	TopWindow *win = owner->GetTopWindow();
 	ASSERT(owner && win);
-	Top *top = win->GetTop();
-	ASSERT(top);
-	
-	top->virtual_popups.Add(this);
 
 	Top *vtop = new Top;
 	SetTop(vtop);
-	vtop->virtual_popup = true;
 	vtop->owner = owner;
+	
+	virtual_popups << this;
 	
 	if(activate)
 		SetFocus();
@@ -29,14 +28,16 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 
 bool Ctrl::IsVirtualPopUp() const
 {
-	const Top *top = GetTop();
-	return top && top->virtual_popup;
+	for(Ctrl *q : virtual_popups)
+		if(q == this)
+			return true;
+	return false;
 }
 
 Rect Ctrl::GetVirtualPopUpRect(const Rect& vp_frame_rect) const
 { // converts frame rect to owner frame rect
 	ASSERT(IsVirtualPopUp());
-	Rect sr = GetOwner()->GetScreenRect();
+	Rect sr = GetTopWindow()->GetScreenRect();
 	Rect r = vp_frame_rect.Offseted(GetScreenRect().TopLeft()) & GetScreenRect() & sr;
 //	DLOG("+++ GetVirtualPopUpRect");
 //	DDUMP(GetOwner()->GetScreenRect());
@@ -56,14 +57,10 @@ void Ctrl::CloseVirtualPopUp()
 	Ctrl *owner = GetOwner();
 	ASSERT(owner);
 	TopWindow *win = owner->GetTopWindow();
-	_DBG_ win->Refresh();
 	Refresh();
-	Top *top = win->GetTop();
-	if(top) {
-		int q = FindIndex(top->virtual_popups, this);
-		ASSERT(q >= 0);
-		top->virtual_popups.Remove(q);
-	}
+	virtual_popups.RemoveIf([&](int i) {
+		return virtual_popups[i] == this || !virtual_popups[i];
+	});
 	DeleteTop();
 }
 

@@ -306,18 +306,18 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 			h(this, w, clip);
 		Top *top = GetTop();
 		if(top) {
-			auto& popups = top->virtual_popups;
-			popups.RemoveIf([&](int i) { return !popups[i]; });
-			for(Ptr<Ctrl> p : popups) {
-				DLOG("*** Update Virtual Popup area");
-				DDUMP(clip);
-				DDUMP(p->GetScreenRect().TopLeft());
-				DDUMP(GetScreenRect().TopLeft());
-				DDUMP(p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft());
-				Point off = p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft();
-				w.Offset(off);
-				p->CtrlPaint(w, clip - off);
-				w.End();
+			for(Ptr<Ctrl> p : virtual_popups) {
+				if(p && p->GetTopWindow() == this) {
+					DLOG("*** Update Virtual Popup area");
+					DDUMP(clip);
+					DDUMP(p->GetScreenRect().TopLeft());
+					DDUMP(GetScreenRect().TopLeft());
+					DDUMP(p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft());
+					Point off = p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft();
+					w.Offset(off);
+					p->CtrlPaint(w, clip - off);
+					w.End();
+				}
 			}
 		}
 	};

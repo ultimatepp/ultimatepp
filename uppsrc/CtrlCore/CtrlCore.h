@@ -504,14 +504,13 @@ private:
 	};
 
 	friend struct UDropTarget;
-
+	
 	struct Top {
 		GUIPLATFORM_CTRL_TOP_DECLS
 		Ptr<Ctrl>         owner;
-		Vector<Ptr<Ctrl>> virtual_popups;
-		bool              virtual_popup = false;
 	};
-
+	
+	static Vector<Ptr<Ctrl>> virtual_popups;
 
 	Frame        frame;
 	LogPos       pos;//8
@@ -635,6 +634,7 @@ private:
 	Image   FrameMouseEventH(int event, Point p, int zdelta, dword keyflags);
 	Image   MEvent0(int e, Point p, int zd);
 	Image   DispatchMouse(int e, Point p, int zd = 0);
+	Image   DispatchMouse2(int e, Point p, int zd);
 	Image   DispatchMouseEvent(int e, Point p, int zd = 0);
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
 	Ctrl   *GetTopCaptureCtrl() const;
