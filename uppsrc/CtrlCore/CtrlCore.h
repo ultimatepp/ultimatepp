@@ -733,6 +733,8 @@ private:
 	void WndFree();
 	void WndDestroy();
 
+	Rect GetWndWorkArea() const;
+
 	static Vector<Ctrl *> GetTopWndCtrls();
 
 	void SysEndLoop();
@@ -1436,12 +1438,14 @@ public:
 	static void ShutdownThreads();
 
 	static int64 GetEventId()                           { return eventid; }
-	
+
+// protected: TODO
 	void VirtualPopUp(Ctrl *owner, bool activate);
 	bool IsVirtualPopUp() const;
 	Rect GetVirtualPopUpRect(const Rect& vp_frame_rect) const;
 	Rect GetVirtualPopUpRect() const;
 	void CloseVirtualPopUp();
+	static bool use_virtual_popups;
 
 	Ctrl();
 	virtual ~Ctrl();

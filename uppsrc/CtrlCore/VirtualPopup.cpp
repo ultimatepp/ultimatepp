@@ -28,9 +28,11 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 
 bool Ctrl::IsVirtualPopUp() const
 {
-	for(Ctrl *q : virtual_popups)
-		if(q == this)
-			return true;
+	const Top *top = GetTop();
+	if(top && top->owner)
+		for(Ctrl *q : virtual_popups)
+			if(q == this)
+				return true;
 	return false;
 }
 
@@ -63,5 +65,7 @@ void Ctrl::CloseVirtualPopUp()
 	});
 	DeleteTop();
 }
+
+bool Ctrl::use_virtual_popups;
 
 };

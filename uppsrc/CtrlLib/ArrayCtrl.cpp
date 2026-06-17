@@ -1764,6 +1764,7 @@ void ArrayCtrl::ClickSel(dword flags)
 
 void ArrayCtrl::LeftDown(Point p, dword flags)
 {
+	DLOG("ArrayCtrl::LeftDown");
 	if(IsReadOnly()) return;
 	int q = header.GetSplit(p.x);
 	if(q >= 0) {

@@ -938,7 +938,7 @@ Rect MonitorRectForHWND(HWND hwnd)
 	return Ctrl::GetPrimaryWorkArea();
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 // return MonitorRectForHWND(GetHWND());
 // mst:2008-12-08, hack for better multimonitor support.
@@ -1169,6 +1169,10 @@ void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	popup = false;
+	if(use_virtual_popups && owner) {
+		VirtualPopUp(owner, activate);
+		return;
+	}
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();
 	PopUpHWND(q ? q->GetHWND() : NULL, savebits, activate, dropshadow, topmost);
 	Top *top = GetTop();

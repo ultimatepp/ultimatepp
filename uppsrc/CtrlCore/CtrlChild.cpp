@@ -312,7 +312,7 @@ TopWindow *Ctrl::GetTopWindow()
 		if(w) return w;
 		q = q->GetOwner();
 	}
-	return NULL;
+	return nullptr;
 }
 
 const TopWindow *Ctrl::GetTopWindow() const

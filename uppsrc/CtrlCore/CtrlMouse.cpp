@@ -566,6 +566,7 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 			Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
 			DDUMP(p);
 			DDUMP(r);
+			DDUMP(e);
 			if(r.Contains(p)) {
 				p -= r.TopLeft();
 				DLOG("Contains!");

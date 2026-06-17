@@ -212,7 +212,7 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 	GuiLock __;
 	return GetVirtualScreenArea();

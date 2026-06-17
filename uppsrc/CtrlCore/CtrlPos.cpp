@@ -129,6 +129,16 @@ Size  Ctrl::AddFrameSize(int cx, int cy) const
 	return sz;
 }
 
+Rect Ctrl::GetWorkArea() const
+{
+	if(use_virtual_popups) {
+		const TopWindow *win = GetTopWindow();
+		if(win)
+			return win->GetScreenRect();
+	}
+	return GetWndWorkArea();
+}
+
 int EditFieldIsThin();
 
 Size Ctrl::GetMinSize() const
@@ -222,7 +232,6 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			Rect from = GetRect().Size();
 			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
-				LTIMING("SetPos0 MoveCtrl");
 				pos = p;
 				inframe = _inframe;
 				Rect to = GetRect().Size();
@@ -276,8 +285,12 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 		else {
 			ASSERT(p.x.GetAlign() == ALIGN_LEFT);
 			ASSERT(p.y.GetAlign() == ALIGN_TOP);
-			Rect pwa = GetPrimaryWorkArea();
-			WndSetPos(OffsetMegaRect(CalcRect(p, pwa, pwa)));
+			if(IsVirtualPopUp())
+				SetPos0(p, _inframe);
+			else {
+				Rect pwa = GetPrimaryWorkArea();
+				WndSetPos(OffsetMegaRect(CalcRect(p, pwa, pwa)));
+			}
 			StateH(POSITION);
 		}
 	}
@@ -331,7 +344,7 @@ void  Ctrl::MegaRect(Rect& r)
 
 void  Ctrl::SetRect(int x, int y, int cx, int cy)
 {
-	LLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
+	DLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
 	Rect r = RectC(x, y, cx, cy);
 	MegaRect(r);
 	SetPos(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);

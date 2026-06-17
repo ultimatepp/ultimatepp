@@ -536,7 +536,7 @@ void Ctrl::GetWorkArea(Array<Rect>& out)
 		out.Add(GetPrimaryWorkArea());
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 	GuiLock __;
 	return StdGetWorkArea();

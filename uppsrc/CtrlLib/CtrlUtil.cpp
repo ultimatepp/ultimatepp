@@ -10,6 +10,7 @@ namespace Upp {
 
 void Animate(Ctrl& c, const Rect& target, int type)
 {
+	DLOG("=== ANIMATE ====");
 	if(type < 0)
 		type = GUI_PopUpEffect();
 	Rect r0 = c.GetRect();
