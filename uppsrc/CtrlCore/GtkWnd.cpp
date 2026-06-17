@@ -58,7 +58,7 @@ bool Ctrl::IsCompositedGui()
 	return true; // limits some GUI effects that do not play well with advanced desktops
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	GuiLock __;
 	Vector<Ctrl *> h;

@@ -385,7 +385,7 @@ VectorMap< HWND, Ptr<Ctrl> >& Ctrl::Windows()
 	return map;
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	Vector<Ctrl *> v;
 	VectorMap< HWND, Ptr<Ctrl> >& w = Windows();

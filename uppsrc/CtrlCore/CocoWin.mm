@@ -177,7 +177,7 @@ void Ctrl::WndDestroy()
 		owner->SetWndFocus();
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	Vector<Ctrl *> h;
 	for(Ctrl *p : mmtopctrl)

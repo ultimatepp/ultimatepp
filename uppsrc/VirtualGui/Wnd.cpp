@@ -59,7 +59,7 @@ bool Ctrl::IsCompositedGui()
 	return false;
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	Vector<Ctrl *> ctrl;
 	if(desktop)

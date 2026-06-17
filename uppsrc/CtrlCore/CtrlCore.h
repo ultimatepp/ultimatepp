@@ -733,6 +733,8 @@ private:
 	void WndFree();
 	void WndDestroy();
 
+	static Vector<Ctrl *> GetTopWndCtrls();
+
 	void SysEndLoop();
 
 	String Name0() const;

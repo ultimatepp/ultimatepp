@@ -591,7 +591,7 @@ void Ctrl::WndDestroy()
 	FocusSync();
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	GuiLock __;
 	Vector<Ctrl *> v;
