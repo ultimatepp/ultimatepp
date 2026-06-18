@@ -258,10 +258,6 @@ void Ctrl::ProcessEvent(XEvent *event)
 	               && event->type != MotionNotify)
 		for(XEventMap *m = sXevent; m->ID; m++)
 			if(m->ID == event->type) {
-				if(!s_starttime)
-					s_starttime = msecs();
-				int t = msecs() - s_starttime;
-				VppLog() << Format("%d.%01d", t / 1000, t % 1000);
 				VppLog() << " EVENT " << Format("%-20.20s", m->name);
 				VppLog() << "[window: " << event->xany.window << "] ";
 				if(q >= 0)

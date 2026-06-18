@@ -16,7 +16,7 @@ struct Test : TopWindow {
 		int x = 0;
 		for(int mode = 0; mode < 4; mode++) {
 			SColorPaper_Write(mode & 1 ? Black() : White());
-			SetUHDMode(mode & 2);
+//			SetUHDMode(mode & 2);
 			w.DrawRect(x, 0, sz.cx, sz.cy, SColorPaper());
 			w.DrawText(x, 0, get_i(mode, "Normal", "Dark", "UHD", "UHD Dark"), StdFont(), LtMagenta());
 			int y = 200;

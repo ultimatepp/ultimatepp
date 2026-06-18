@@ -25,6 +25,5 @@ MyApp::MyApp()
 GUI_APP_MAIN
 {
 //	SetStdFont(Arial(25));
-	SyncUHDMode();
 	MyApp().Run();
 }
