@@ -50,15 +50,12 @@ Rect Ctrl::GetVirtualPopUpRect(const Rect& vp_frame_rect) const
 
 Rect Ctrl::GetVirtualPopUpRect() const
 {
-	return GetVirtualPopUpRect(GetRect().GetSize());
+	return GetVirtualPopUpRect(GetScreenRect().GetSize());
 }
 
 void Ctrl::CloseVirtualPopUp()
 {
 	ASSERT(IsVirtualPopUp());
-	Ctrl *owner = GetOwner();
-	ASSERT(owner);
-	TopWindow *win = owner->GetTopWindow();
 	RefreshFrame();
 	virtual_popups.RemoveIf([&](int i) {
 		return virtual_popups[i] == this || !virtual_popups[i];

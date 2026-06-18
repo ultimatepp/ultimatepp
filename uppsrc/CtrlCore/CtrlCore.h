@@ -1395,9 +1395,11 @@ public:
 	static Rect   GetVirtualScreenArea();
 	static Rect   GetPrimaryWorkArea();
 	static Rect   GetPrimaryScreenArea();
-	static void   GetWorkArea(Array<Rect>& rc);
+	static void   GetWorkAreas(Array<Rect>& rc);
 	static Rect   GetWorkArea(Point pt);
+	static Rect   GetWorkArea(const Ctrl *owner, Point pt);
 	static Rect   GetMouseWorkArea()                     { return GetWorkArea(GetMousePos()); }
+	static Rect   GetMouseWorkArea(Ctrl *owner)          { return GetWorkArea(owner, GetMousePos()); }
 	static int    GetKbdDelay();
 	static int    GetKbdSpeed();
 	static bool   IsAlphaSupported();

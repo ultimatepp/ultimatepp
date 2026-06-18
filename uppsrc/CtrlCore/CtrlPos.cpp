@@ -458,11 +458,16 @@ Rect Ctrl::GetWorkArea(Point pt)
 {
 	GuiLock __;
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
 	return GetPrimaryWorkArea();
+}
+
+Rect Ctrl::GetWorkArea(const Ctrl *owner, Point pt)
+{
+	return owner ? owner->GetTopCtrl()->GetWorkArea() : GetWorkArea(pt);
 }
 
 Rect Ctrl::StdGetWorkArea() const
@@ -471,7 +476,7 @@ Rect Ctrl::StdGetWorkArea() const
 
 	const Ctrl *top = GetTopCtrl();
 	if(top && top->IsOpen())
-		return GetWorkArea(top->GetScreenRect().TopLeft());
+		return GetWorkArea(GetOwner(), top->GetScreenRect().TopLeft());
 	return GetPrimaryWorkArea();
 }
 

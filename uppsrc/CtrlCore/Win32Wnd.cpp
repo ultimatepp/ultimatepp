@@ -503,7 +503,11 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	ASSERT_(IsMainThread(), "Window creation can only happen in the main thread");
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
+	DDUMP(GetRect());
 	Rect r = AdjustWindowRect(GetRect(), style, exstyle);
+	DDUMP(GetRect());
+	DLOG("Create WND " << r);
+	DDUMP(GetRect());
 	isopen = true;
 	Top *top = new Top;
 	SetTop(top);
@@ -960,7 +964,7 @@ static BOOL CALLBACK sMonEnumProc(HMONITOR monitor, HDC hdc, LPRECT lprcMonitor,
 	return TRUE;
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkAreas(Array<Rect>& rc)
 {
 	GuiLock __;
 	MultiMon().EnumDisplayMonitors(NULL, NULL, &sMonEnumProc, (LPARAM)&rc);
@@ -970,7 +974,7 @@ Rect Ctrl::GetVirtualWorkArea()
 {
 	Rect out = GetPrimaryWorkArea();
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		out |= rc[i];
 	return out;

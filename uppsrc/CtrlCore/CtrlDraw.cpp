@@ -37,7 +37,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 			DLOG("VirtualRefresh");
 			DDUMP(r);
 			DDUMP(GetVirtualPopUpRect(r));
-			GetOwner()->Refresh(GetVirtualPopUpRect(r));
+			GetOwner()->RefreshFrame(GetVirtualPopUpRect(r));
 		}
 		else
 			WndInvalidateRect(r);

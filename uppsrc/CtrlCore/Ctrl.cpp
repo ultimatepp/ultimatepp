@@ -864,7 +864,7 @@ static bool _ClickFocus;
 bool Ctrl::ClickFocus() { return _ClickFocus; }
 void Ctrl::ClickFocus(bool cf) { _ClickFocus = cf; }
 
-Vector<Ctrl *>Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> tops = GetTopWndCtrls();
 	for(Ctrl *c : virtual_popups)
