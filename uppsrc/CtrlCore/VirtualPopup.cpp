@@ -21,6 +21,8 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 	
 	if(activate)
 		SetFocus();
+	
+	popup = true;
 
 	DLOG("=================");
 	RefreshFrame();
@@ -57,6 +59,7 @@ void Ctrl::CloseVirtualPopUp()
 {
 	ASSERT(IsVirtualPopUp());
 	RefreshFrame();
+	popup = false;
 	virtual_popups.RemoveIf([&](int i) {
 		return virtual_popups[i] == this || !virtual_popups[i];
 	});

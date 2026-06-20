@@ -1334,7 +1334,6 @@ public:
 
 	bool   IsPopUp() const          { return popup; }
 
-
 	static void  EventLoop(Ctrl *loopctrl = NULL);
 	static int   GetLoopLevel()     { return LoopLevel; }
 	static Ctrl *GetLoopCtrl()      { return LoopCtrl; }
