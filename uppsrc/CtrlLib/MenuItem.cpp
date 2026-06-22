@@ -460,9 +460,6 @@ void SubMenuBase::Pull(Ctrl *item, Point p, Size sz)
 		menu.SetStyle(*parentmenu->style);
 	proc(menu);
 	if(parentmenu) {
-		DLOG("SetActiveSubmenu " << Name(&menu));
-		DDUMP(menu.IsPopUp());
-		DDUMP(menu.GetParent());
 		parentmenu->SetActiveSubmenu(&menu, item);
 		menu.SetParentMenu(parentmenu);
 	}

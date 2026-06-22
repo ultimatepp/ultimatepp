@@ -508,6 +508,7 @@ private:
 	struct Top {
 		GUIPLATFORM_CTRL_TOP_DECLS
 		Ptr<Ctrl>         owner;
+		bool              virtual_dropshadow = false;
 	};
 	
 	static Vector<Ptr<Ctrl>> virtual_popups;
@@ -1441,7 +1442,10 @@ public:
 	static int64 GetEventId()                           { return eventid; }
 
 // protected: TODO
-	void VirtualPopUp(Ctrl *owner, bool activate);
+	Image VirtualPopUpDropShadow();
+	Rect GetVirtualPopUpOverRect();
+	void RefreshVirtualPopUp();
+	void VirtualPopUp(Ctrl *owner, bool activate, bool dropshadow = false);
 	bool IsVirtualPopUp() const;
 	Rect GetVirtualPopUpRect(const Rect& vp_frame_rect) const;
 	Rect GetVirtualPopUpRect() const;

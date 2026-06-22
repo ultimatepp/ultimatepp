@@ -503,11 +503,8 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	ASSERT_(IsMainThread(), "Window creation can only happen in the main thread");
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
-	DDUMP(GetRect());
 	Rect r = AdjustWindowRect(GetRect(), style, exstyle);
-	DDUMP(GetRect());
-	DLOG("Create WND " << r);
-	DDUMP(GetRect());
+	LLOG("Create WND " << r);
 	isopen = true;
 	Top *top = new Top;
 	SetTop(top);

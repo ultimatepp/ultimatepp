@@ -187,15 +187,11 @@ void MenuBar::Separator()
 
 void MenuBar::CloseMenu()
 {
-	DLOG("CloseMenu");
+	LLOG("CloseMenu");
 	MenuBar *q = GetLastSubmenu();
-	DDUMP(Name(q));
-	DDUMP(Name(this));
-	DDUMP(q && q->IsPopUp());
 	while(q && q->IsPopUp()) {
 		if(q->IsOpen()) {
 			q->doeffect = true;
-			DLOG("q->Close()");
 			q->Close();
 			if(q->parentmenu)
 				q->parentmenu->WhenSubMenuClose();
@@ -242,11 +238,10 @@ void MenuBar::SetupRestoreFocus()
 
 void MenuBar::PostDeactivate()
 {
-	DLOG("MenuBar::PostDeactivate");
+	LLOG("MenuBar::PostDeactivate");
 	MenuBar *q = GetLastSubmenu();
 	MenuBar *u = q;
 	while(q && q->IsPopUp()) {
-		if(q->IsOpen() && q->HasFocusDeep()) DLOG("POPUP RETURN"); _DBG_
 		if(q->IsOpen() && q->HasFocusDeep())
 			return;
 		q = q->parentmenu;
@@ -256,21 +251,18 @@ void MenuBar::PostDeactivate()
 			u = u->parentmenu;
 		Ctrl *w = GetActiveCtrl();
 		while(w) {
-			if(w == u) DLOG("wu RETURN"); _DBG_
 			if(w == u)
 				return;
 			w = w->GetOwner();
 		}
 	}
-	DLOG("CloseMenu");
 	CloseMenu();
 	Refresh();
 }
 
 void MenuBar::Deactivate()
 {
-	DLOG("MenuBar::Deactivate");
-	DDUMP(IsOpen());
+	LLOG("MenuBar::Deactivate");
 	if(IsOpen())
 		SetTimeCallback(0, THISBACK(PostDeactivate), TIMEID_STOP);
 }
@@ -478,7 +470,6 @@ void MenuBar::SetActiveSubmenu(MenuBar *sm, Ctrl *item)
 	}
 	if(submenuitem)
 		submenuitem->Refresh();
-	DLOG("SetActiveSubmenu " << Name(sm) << " item " << Name(item));
 	submenu = sm;
 	submenuitem = item;
 }

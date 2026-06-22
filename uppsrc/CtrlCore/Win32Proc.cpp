@@ -523,7 +523,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	case WM_LBUTTONDOWN:
 		ClickActivate();
 		if(ignoreclick) return 0L;
-		DLOG("**************** LEFTDOWN");
 		DoMouse(LEFTDOWN, MousePos(), 0);
 		if(_this) PostInput();
 		return 0L;

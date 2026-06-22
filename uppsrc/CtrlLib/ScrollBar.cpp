@@ -207,13 +207,10 @@ Rect ScrollBar::GetPartRect(int p) const {
 
 void ScrollBar::Paint(Draw& w)
 {
-	DLOG("+++ ScrollBar::Paint");
 	w.DrawRect(GetSize(), style->bgcolor);
 	int cc;
 	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
 	light = GetMousePart();
-	DDUMP(HasMouseIn());
-	DDUMP((int)light);
 	int p = push;
 	if(!HasCapture() || buttons_capture)
 		p = -1;
@@ -281,7 +278,6 @@ bool ScrollBar::SetThumb(int _thumbpos, int _thumbsize) {
 	thumbpos = _thumbpos;
 	Bounds();
 	if(thumbsize != ts || thumbpos != tp) {
-		DLOG("===== SetThumb REFRESH");
 		Refresh();
 		return true;
 	}
@@ -333,18 +329,11 @@ void ScrollBar::LeftDown(Point p, dword) {
 }
 
 void ScrollBar::MouseMove(Point p, dword) {
-	DLOG("----- ScrollBar::MouseMove");
-	DDUMP(HasMouseIn());
-	DDUMP(GetMousePart());
-	DDUMP((int)light);
-	DDUMP(HasCapture());
 	if(HasCapture() && push == 2)
 		Drag(p);
 	else
-	if(light != GetMousePart()) {
-		DLOG("ScrollBar Refresh");
+	if(light != GetMousePart())
 		Refresh();
-	}
 }
 
 void ScrollBar::MouseEnter(Point p, dword)

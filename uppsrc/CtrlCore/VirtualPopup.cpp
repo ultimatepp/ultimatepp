@@ -7,7 +7,20 @@ namespace Upp {
 
 Vector<Ptr<Ctrl>> Ctrl::virtual_popups;
 
-void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
+Rect Ctrl::GetVirtualPopUpOverRect()
+{
+	Rect r = GetVirtualPopUpRect();
+	const Top *top = GetTop();
+	return top && top->virtual_dropshadow ? r.Inflated(DPI(20)) : r;
+}
+
+void Ctrl::RefreshVirtualPopUp()
+{
+	if(IsVirtualPopUp())
+		GetOwner()->RefreshFrame(GetVirtualPopUpOverRect());
+}
+
+void Ctrl::VirtualPopUp(Ctrl *owner, bool activate, bool dropshadow)
 {
 	ASSERT(!IsOpen());
 	TopWindow *win = owner->GetTopWindow();
@@ -16,6 +29,7 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 	Top *vtop = new Top;
 	SetTop(vtop);
 	vtop->owner = owner;
+	vtop->virtual_dropshadow = dropshadow;
 	
 	virtual_popups << this;
 	
@@ -24,8 +38,8 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate)
 	
 	popup = true;
 
-	DLOG("=================");
-	RefreshFrame();
+	RefreshVirtualPopUp();
+	
 }
 
 bool Ctrl::IsVirtualPopUp() const
@@ -58,7 +72,7 @@ Rect Ctrl::GetVirtualPopUpRect() const
 void Ctrl::CloseVirtualPopUp()
 {
 	ASSERT(IsVirtualPopUp());
-	RefreshFrame();
+	RefreshVirtualPopUp();
 	popup = false;
 	virtual_popups.RemoveIf([&](int i) {
 		return virtual_popups[i] == this || !virtual_popups[i];

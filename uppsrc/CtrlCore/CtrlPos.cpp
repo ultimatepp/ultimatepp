@@ -242,11 +242,13 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			}
 		}
 		RefreshFrame();
+		RefreshVirtualPopUp();
 	}
 	pos = p;
 	inframe = _inframe;
 	UpdateRect();
 	StateH(POSITION);
+	RefreshVirtualPopUp();
 }
 
 void Ctrl::UpdateRect0(bool sync)
@@ -344,10 +346,11 @@ void  Ctrl::MegaRect(Rect& r)
 
 void  Ctrl::SetRect(int x, int y, int cx, int cy)
 {
-	DLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
+	LLOG("SetRect " << Name() << " rect: " << RectC(x, y, cx, cy));
 	Rect r = RectC(x, y, cx, cy);
 	MegaRect(r);
 	SetPos(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);
+	RefreshVirtualPopUp();
 }
 
 void  Ctrl::SetWndRect(const Rect& r)

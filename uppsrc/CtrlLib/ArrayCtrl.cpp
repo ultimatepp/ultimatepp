@@ -1527,7 +1527,6 @@ bool ArrayCtrl::SetCursor0(int i, bool dosel) {
 
 bool ArrayCtrl::SetCursor(int i)
 {
-	DLOG("========= ArrayCtrl::SetCursor");
 	return SetCursor0(i);
 }
 
@@ -1764,7 +1763,6 @@ void ArrayCtrl::ClickSel(dword flags)
 
 void ArrayCtrl::LeftDown(Point p, dword flags)
 {
-	DLOG("ArrayCtrl::LeftDown");
 	if(IsReadOnly()) return;
 	int q = header.GetSplit(p.x);
 	if(q >= 0) {

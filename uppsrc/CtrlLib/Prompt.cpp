@@ -30,7 +30,6 @@ static void sAdd(Ctrl& dlg, int fcy, int bcy, int& bx, int bcx, int gap, Button&
 
 void sExecutePrompt(PromptDlgWnd__ *dlg, int *result)
 {
-	DLOG("============== OPEN PROMPT");
 	dlg->Open();
 	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
 	for(int i = 0; i < wins.GetCount(); i++) {
@@ -159,16 +158,11 @@ int Prompt(int dontshowagain, const char *dsa_id_, int beep,
 		qcx += ScrollBarSize() + fcy;
 		cx += ScrollBarSize() + fcy;
 	}
-	DDUMP(bsz);
-	DDUMP(qcy);
 	int mcy = max(qcy, bsz.cy);
 	int cy = mcy + 48 * fcy / 10;
-	DDUMP(mcy);
-	DDUMP(fcy);
 	if(dontshowagain)
 		cy += fcy;
 	dlg.SetRect(Size(cx, cy));
-	DDUMP(cy);
 	dlg << icon.TopPos(fcy, bsz.cy).LeftPos(fcy, bsz.cx);
 	dlg << qtfctrl.TopPos(fcy + (mcy - qcy) / 2, qcy).RightPos(fcy, qcx);
 	if(okcancel) {

@@ -147,14 +147,10 @@ bool Ctrl::HotKey(dword key)
 void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 {
 	GuiLock __;
-	DLOG("@@@ Deactivate");
-	DDUMP(Name(pfocusCtrl));
-	DDUMP(Name(nfocusCtrl));
 	if(pfocusCtrl) {
 		Ptr<Ctrl> ptop = pfocusCtrl->GetTopCtrl();
 		Ctrl *ntop = nfocusCtrl ? nfocusCtrl->GetTopCtrl() : NULL;
 		if(ntop != ptop && !ptop->destroying) {
-			DLOG("DoDeactivate " << UPP::Name(ptop) << " in favor of " << UPP::Name(ntop));
 			ptop->DeactivateBy(ntop);
 			ptop->Deactivate();
 			if(ptop)
