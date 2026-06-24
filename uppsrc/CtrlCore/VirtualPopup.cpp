@@ -4,6 +4,8 @@
 #define LDUMP(x)
 
 namespace Upp {
+	
+// Virtual popups are intended as implementation option for "difficult" backends, e.g. Wayland
 
 Vector<Ptr<Ctrl>> Ctrl::virtual_popups;
 
@@ -39,7 +41,6 @@ void Ctrl::VirtualPopUp(Ctrl *owner, bool activate, bool dropshadow)
 	popup = true;
 
 	RefreshVirtualPopUp();
-	
 }
 
 bool Ctrl::IsVirtualPopUp() const

@@ -1441,7 +1441,12 @@ public:
 
 	static int64 GetEventId()                           { return eventid; }
 
-// protected: TODO
+	Ctrl();
+	virtual ~Ctrl();
+
+#ifndef flagDEVELOP_VIRTUALPOPUPS // .Makes virtual popup interface public
+private:
+#endif
 	Image VirtualPopUpDropShadow();
 	Rect GetVirtualPopUpOverRect();
 	void RefreshVirtualPopUp();
@@ -1451,9 +1456,6 @@ public:
 	Rect GetVirtualPopUpRect() const;
 	void CloseVirtualPopUp();
 	static bool use_virtual_popups;
-
-	Ctrl();
-	virtual ~Ctrl();
 
 private: // support for for(Ctrl& q : *this)
 	class CtrlConstIterator {
