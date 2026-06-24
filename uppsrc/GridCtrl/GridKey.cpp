@@ -6,12 +6,15 @@ bool GridCtrl::Key(dword key, int)
 {
 	auto NewAnchor = [&] {
 		ClearSelection();
+		WhenSelectAction();
 		anchor = curpos;
 	};
 
 	auto NewSelection = [&] {
+		ClearSelection();
 		if(IsValidCursor(anchor) && IsValidCursor(curpos))
 			SelectRange(Rect(anchor, curpos), true, select_row);
+		WhenSelectAction();
 		Refresh();
 	};
 
@@ -20,6 +23,7 @@ bool GridCtrl::Key(dword key, int)
 	{
 		case K_ENTER:
 			ClearSelection();
+			WhenSelectAction();
 			WhenEnter();
 			#ifdef LOG_CALLBACKS
 			LGR(2, "WhenEnter()");
@@ -143,7 +147,7 @@ bool GridCtrl::Key(dword key, int)
 				else
 					isprev = GoLeft();
 				ClearSelection();
-
+				WhenSelectAction();
 				return isprev;
 			}
 			else
