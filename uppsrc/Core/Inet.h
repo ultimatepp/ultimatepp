@@ -421,7 +421,6 @@ class HttpRequest : public TcpSocket {
 	String       accept;
 	String       agent;
 	bool         force_digest;
-	bool         is_post;
 	bool         std_headers;
 	bool         hasurlvar;
 	bool		 keep_alive;
@@ -715,6 +714,8 @@ class WebSocket {
 public:
 	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
 
+	WebSocket&  SSLServerNameIndication(const String& name)   { socket->SSLServerNameIndication(name); return *this; }
+	
 	WebSocket&  Headers(const String& h)                { request_headers = h; return *this; }
 	WebSocket&  ClearHeaders()                          { return Headers(Null); }
 	WebSocket&  AddHeaders(const String& h)             { request_headers.Cat(h); return *this; }

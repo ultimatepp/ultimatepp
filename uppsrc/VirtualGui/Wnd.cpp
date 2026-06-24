@@ -392,13 +392,6 @@ void Ctrl::WndSetPos(const Rect& rect)
 	SetWndRect(rect);
 }
 
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-	LLOG("ScrollView " << rect);
-	WndInvalidateRect(r);
-}
-
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	ASSERT(!IsChild() && !IsOpen() && FindTopCtrl() < 0);

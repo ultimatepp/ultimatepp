@@ -532,13 +532,6 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	}
 }
 
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-	LLOG("ScrollView " << rect);
-	WndInvalidateRect(r);
-}
-
 bool Ctrl::SweepConfigure(bool wait)
 {
 	Ptr<Ctrl> this_ = this;

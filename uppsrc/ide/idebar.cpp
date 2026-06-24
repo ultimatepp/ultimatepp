@@ -248,6 +248,12 @@ void Ide::SearchMenu(Bar& menu)
 		bar.Add("In workspace files in current file nest", [=] { FindDs(2, true); });
 	});
 	menu.Add("Find GIT conflicts", [=] { FindGitConflicts(); });
+	if(experimental)
+		menu.Sub("Find uninitialized member variables", [=](Bar& bar) {
+			bar.Add("In current file package", [=] { FindUnitializedMemberVariables(0); });
+			bar.Add("In workspace files in current file nest", [=] { FindUnitializedMemberVariables(1); });
+			bar.Add("In workspace", [=] { FindUnitializedMemberVariables(2); });
+		});
 }
 
 void Ide::Edit(Bar& menu)
@@ -539,8 +545,8 @@ void Ide::Project(Bar& menu)
 	menu.MenuSeparator();
 	FilePropertiesMenu0(menu);
 	if(!IsEditorMode()) {
-		menu.MenuSeparator();
 		if(repo_dirs) {
+			menu.MenuSeparator();
 			String pp = GetActivePackageDir();
 			menu.AddMenu(FileExists(pp) && editfile_repo,
 			             (editfile_repo == SVN_DIR ? "Show svn history of " : "Show git history of ") + GetFileName(pp),

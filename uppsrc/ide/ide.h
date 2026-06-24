@@ -497,6 +497,7 @@ public:
 		Button freplace;
 		Button fdelete;
 		Image  icon;
+		String text;
 		
 		FoundList();
 	};
@@ -654,6 +655,7 @@ public:
 	bool      thousands_separator;
 	bool      hline, vline;
 	bool      wrap_console_text;
+	bool      experimental = false;
 	bool      mute_sounds;
 	bool      line_numbers;
 	bool      header_guards;
@@ -1052,6 +1054,7 @@ public:
 		void  FindDesignerItemReferences(const String& id, const String& name);
 		void  NavigatorDlg();
 		void  InsertParameters();
+		void  FindUnitializedMemberVariables(int scope);
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1136,6 +1139,7 @@ public:
 	void      NewFFound();
 	ArrayCtrl& FFound();
 	void      FFoundSetIcon(const Image& m);
+	void      FFoundSetText(const String& text);
 	void      FFoundFinish();
 	void      ShowFound(ArrayCtrl& list);
 	void      CopyFound(ArrayCtrl& list, bool all);

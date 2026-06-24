@@ -70,6 +70,7 @@ void Splitter::Layout() {
 			i++;
 		}
 	}
+	Refresh();
 }
 
 int Splitter::GetSplitWidth() const
@@ -207,7 +208,7 @@ void Splitter::Insert(int ii, Ctrl& pane)
 {
 	if(ii >= GetCount())
 		Add(pane);
-	else {	
+	else {
 		Ctrl::AddChildBefore(&pane, GetIndexChild(ii));
 		pos.Clear();
 		Layout();

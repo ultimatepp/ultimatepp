@@ -12,7 +12,7 @@ String Ide::GetFileLine(const String& path, int linei)
 { // slightly cached fetching of line from file
 	if(path == editfile && !designer)
 		return linei >= 0 && linei < editor.GetLineCount() ? editor.GetUtf8Line(linei)
-		                                                   : String();
+		                                                   : String::GetVoid();
 	if(path != lpath) {
 		lpath = path;
 		FileIn in(path);
@@ -21,7 +21,7 @@ String Ide::GetFileLine(const String& path, int linei)
 			while(!in.IsEof())
 				line.Add(in.GetLine());
 	}
-	return linei >= 0 && linei < line.GetCount() ? line[linei] : String();
+	return linei >= 0 && linei < line.GetCount() ? line[linei] : String::GetVoid();
 }
 
 void Ide::AddReferenceLine(const String& path, Point mpos, const String& name, Index<String>& unique)

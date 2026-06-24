@@ -963,9 +963,6 @@ bool Ctrl::ProcessEvents0(bool *quit, bool fetch)
 	AnimateCaret();
 	if(quit)
 		*quit = IsEndSession();
-	for(int i = 0; i < wins.GetCount(); i++)
-		if(wins[i].ctrl)
-			wins[i].ctrl->SyncScroll();
 	ProcessInvalids();
 	FetchEvents(FALSE); // To perform any pending GDK_EXPOSE
 	gdk_display_flush(gdk_display_get_default());

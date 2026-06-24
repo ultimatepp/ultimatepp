@@ -338,8 +338,6 @@ protected:
 	ScrollBars       sb;
 	int              gcolumn;
 	int64            mpos;
-
-
 	Font             font;
 	Size             fsz;
 	CharFilter       filter;

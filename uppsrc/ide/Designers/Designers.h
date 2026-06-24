@@ -184,7 +184,19 @@ struct JsonViewDes : TreeViewDes {
 	virtual void   CopyPath();
 	virtual void   EditMenu(Bar& menu);
 	
+	void GoTo(const Vector<Value>& path);
+	
+	SplitterFrame  errors_frame;
+	ArrayCtrl      errors;
+	Button         close_errors;
+	String         json;
+
+	bool Validate(const String& path);
+
+	static ArrayMap<String, String> schema_path;
+	
 	JsonViewDes();
+	~JsonViewDes();
 };
 
 INITIALIZE(JsonViewDes)

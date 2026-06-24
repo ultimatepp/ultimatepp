@@ -2041,5 +2041,14 @@ enum CX_StorageClass {
 
 enum CX_StorageClass clang_Cursor_getStorageClass(CXCursor);
 
+enum CX_CXXAccessSpecifier {
+  CX_CXXInvalidAccessSpecifier,
+  CX_CXXPublic,
+  CX_CXXProtected,
+  CX_CXXPrivate
+};
+
+enum CX_CXXAccessSpecifier clang_getCXXAccessSpecifier(CXCursor);
+
 unsigned int clang_getNumOverloadedDecls(CXCursor cursor);
 CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned int index);

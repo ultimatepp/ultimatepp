@@ -329,6 +329,12 @@ void Ide::FFoundSetIcon(const Image& m)
 	ffound[0]->icon = m;
 }
 
+void Ide::FFoundSetText(const String& text)
+{
+	FFound();
+	ffound[0]->text = text;
+}
+
 void Ide::FFoundFinish()
 {
 	ArrayCtrl& ff = FFound();

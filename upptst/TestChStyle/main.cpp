@@ -103,11 +103,6 @@ TestChStyle::TestChStyle()
 	switch1.Disable();
 	switch1 <<= 1;
 	
-	auto AddSkin = [=](void (*fn)(), const char *name) {
-		skin.Add(skin_fn.GetCount(), name);
-		skin_fn.Add(fn);
-	};
-	
 	for(auto sk : GetAllChSkins()) {
 		skin.Add(skin_fn.GetCount(), sk.b);
 		skin_fn.Add(sk.a);
@@ -202,7 +197,6 @@ GUI_APP_MAIN
 	#endif
 
 	RDUMPM(Environment());
-	RDUMP(IsUHDMode());
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());

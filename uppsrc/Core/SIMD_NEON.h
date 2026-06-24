@@ -11,6 +11,8 @@ uint64 cmask16__(uint16x8_t mask) {
 
 const uint64 cmask_all__ = 0xffffffffffffffffull;
 
+struct i32x4; // Forward declaration for f32x4 -> i32x4 cast operator.
+
 struct f32x4 {
 	float32x4_t data;
 
@@ -35,6 +37,7 @@ struct f32x4 {
 	}
 	
 	operator float32x4_t()       { return data; }
+	explicit operator i32x4() const;
 };
 
 force_inline f32x4  f32all(double f) { return vdupq_n_f32((float)f); }
@@ -194,6 +197,10 @@ force_inline int    CountTrue(i32x4 a)              { return CountBits64(cmask32
 force_inline int    FirstTrue(i32x4 a)              { return CountTrailingZeroBits64(cmask32__(a.data)) >> 4; }
 force_inline int    FirstFalse(i32x4 a)             { return CountTrailingZeroBits64(~cmask32__(a.data)) >> 4; }
 force_inline bool   IsTrue(i32x4 a, int i)          { return cmask32__(a.data) & ((uint64)1 << (i << 4)); }
+
+force_inline f32x4::operator i32x4() const              { return i32x4(vreinterpretq_s32_f32(data)); }
+force_inline i32x4 IncrementIf(i32x4 value, i32x4 mask) { return value - mask; }
+force_inline i32x4 IncrementIf(i32x4 value, f32x4 mask) { return value - (i32x4) mask; }
 
 struct i8x16 { // 16*int8
 	int8x16_t data;

@@ -77,7 +77,7 @@ void Stream::Close() {}
 void Stream::Flush() {}
 
 Stream::Stream() {
-	pos = style = 0;
+	errorcode = pos = style = 0;
 	buffer = NULL;
 	ptr = rdlim = wrlim = NULL;
 }

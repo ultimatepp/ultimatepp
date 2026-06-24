@@ -116,9 +116,9 @@ void AssistEditor::DCopy()
 				}
 				
 				auto Clean = [](String& s) {
-					s = NormalizeSpaces((TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; }))));
+					s = NormalizeSpaces(TrimBoth(Filter(s, [](int c) { return c < 32 ? 32 : c; })));
 				};
-
+				
 				Clean(ret);
 				Clean(name);
 				Clean(params);
@@ -131,7 +131,7 @@ void AssistEditor::DCopy()
 				ret.TrimStart("friend ");
 				params.TrimEnd("override");
 				params = TrimBoth(params);
-				
+
 				if(!m.definition) {
 					String params2;
 					const char *s = params;
@@ -151,7 +151,7 @@ void AssistEditor::DCopy()
 					params = params2;
 				}
 				
-				if(ret.Find(' ') < 0) // int *foo() vs int* foo()
+				if(!(ret.Find(' ') >= 0 && findarg(*ret.Last(), '*', '&') >= 0)) // int *foo() vs int* foo()
 					ret << ' ';
 
 				if(ret.GetCount() && name.GetCount() && params.GetCount()) { // prefer original text
