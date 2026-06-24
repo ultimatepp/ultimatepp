@@ -878,6 +878,8 @@ void Ctrl::Proc()
 
 void Ctrl::SyncWndRect()
 {
+	if(IsVirtualPopUp())
+		return;
 	WndRectsSync();
 	Rect rect = GetWndScreenRect();
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);

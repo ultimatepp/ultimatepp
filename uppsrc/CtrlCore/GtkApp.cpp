@@ -101,7 +101,7 @@ extern Event<const TopWindow *, TopWindow::CustomTitleBarMetrics&> custom_titleb
 extern Function<bool (const TopWindow *)> is_custom_titlebar__;
 extern Function<Ctrl *(TopWindow *, Color, int)> custom_titlebar_make__;
 
-bool InitGtkApp(int argc, char **argv, const char **envptr)
+bool Ctrl::InitGtkApp(int argc, char **argv, const char **envptr)
 {
 	LLOG(rmsecs() << " InitGtkApp");
 
@@ -129,6 +129,7 @@ bool InitGtkApp(int argc, char **argv, const char **envptr)
 	Ctrl::scale = 1;
 #if GTK_CHECK_VERSION(3, 10, 0)
 	if(Ctrl::IsWayland()) {
+		Ctrl::use_virtual_popups = true;
 	    GtkWidget *window;
 	    window = gtk_window_new(GTK_WINDOW_POPUP);
 	    gtk_window_set_default_size (GTK_WINDOW (window), 1, 1);

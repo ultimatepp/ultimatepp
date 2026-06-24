@@ -80,6 +80,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		topctrl = mouseCtrl->GetTopCtrl();
 	else
 		topctrl = GetActiveCtrl();
+	if(topctrl && topctrl->IsVirtualPopUp())
+		topctrl = topctrl->GetTopWindow();
 	if(topctrl)
 		top = topctrl->GetTop();
 	if(top && id != top->cursor_id) {
