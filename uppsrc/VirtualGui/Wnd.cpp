@@ -70,7 +70,7 @@ Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 	return ctrl;
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	int q = FindTopCtrl();
@@ -218,7 +218,7 @@ Rect Ctrl::GetWndWorkArea() const
 	return GetVirtualScreenArea();
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkAreas(Array<Rect>& rc)
 {
 	GuiLock __;
 	Array<Rect> r;
