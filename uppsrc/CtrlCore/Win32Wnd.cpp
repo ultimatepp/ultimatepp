@@ -385,7 +385,7 @@ VectorMap< HWND, Ptr<Ctrl> >& Ctrl::Windows()
 	return map;
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	Vector<Ctrl *> v;
 	VectorMap< HWND, Ptr<Ctrl> >& w = Windows();
@@ -423,7 +423,7 @@ HWND Ctrl::GetOwnerHWND() const
 	return GetWindow(hwnd, GW_OWNER);
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	HWND hwnd = GetOwnerHWND();
@@ -504,6 +504,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << LOG_BEGIN);
 	ASSERT(!IsChild() && !IsOpen());
 	Rect r = AdjustWindowRect(GetRect(), style, exstyle);
+	LLOG("Create WND " << r);
 	isopen = true;
 	Top *top = new Top;
 	SetTop(top);
@@ -938,7 +939,7 @@ Rect MonitorRectForHWND(HWND hwnd)
 	return Ctrl::GetPrimaryWorkArea();
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 // return MonitorRectForHWND(GetHWND());
 // mst:2008-12-08, hack for better multimonitor support.
@@ -960,7 +961,7 @@ static BOOL CALLBACK sMonEnumProc(HMONITOR monitor, HDC hdc, LPRECT lprcMonitor,
 	return TRUE;
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkAreas(Array<Rect>& rc)
 {
 	GuiLock __;
 	MultiMon().EnumDisplayMonitors(NULL, NULL, &sMonEnumProc, (LPARAM)&rc);
@@ -970,7 +971,7 @@ Rect Ctrl::GetVirtualWorkArea()
 {
 	Rect out = GetPrimaryWorkArea();
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		out |= rc[i];
 	return out;
@@ -1169,6 +1170,10 @@ void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	popup = false;
+	if(use_virtual_popups && owner) {
+		VirtualPopUp(owner, activate);
+		return;
+	}
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();
 	PopUpHWND(q ? q->GetHWND() : NULL, savebits, activate, dropshadow, topmost);
 	Top *top = GetTop();

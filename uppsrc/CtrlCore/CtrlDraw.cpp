@@ -20,7 +20,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(!IsOpen() || !IsVisible() || r.IsEmpty())
 		return;
 	LTIMING("RefreshFrame");
-	LLOG("RefreshRect " << Name() << ' ' << r);
+	LLOG("RefreshFrame " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
 	if(!top && !IsDHCtrl()) {
@@ -33,7 +33,12 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	else {
 		LLOG("WndInvalidateRect: " << r << ' ' << Name());
 		LTIMING("RefreshFrame InvalidateRect");
-		WndInvalidateRect(r);
+		if(IsVirtualPopUp()) {
+			LLOG("VirtualRefresh " << r);
+			GetOwner()->RefreshFrame(GetVirtualPopUpRect(r));
+		}
+		else
+			WndInvalidateRect(r);
 	}
 }
 
@@ -52,8 +57,8 @@ void Ctrl::Refresh(const Rect& area) {
 void Ctrl::Refresh() {
 	sCheckGuiLock();
 	GuiLock __; // Beware: Even if we have ThreadHasGuiLock ASSERT, we still can be the main thread!
-	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
+	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	Rect r = Rect(GetSize()).Inflated(OverPaint());
 	if(r.IsEmpty())
 		return;
@@ -276,17 +281,54 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << ", clip: " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
 	auto DoCtrlPaint = [&](SystemDraw& w, const Rect& clip) {
-	#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
-		PaintWinBarBackground(w, clip);
-	#endif
-		CtrlPaint(w, clip);
-	#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
-		PaintWinBar(w, clip);
-	#endif
+		bool just_popup = false;
+		Rect screen_clip = clip.Offseted(GetScreenRect().TopLeft());
+		for(Ptr<Ctrl> p : virtual_popups)
+			if(p && p->GetTopWindow() == this && p->GetScreenRect().Contains(screen_clip)) {
+				just_popup = true;
+				break;
+			}
+		if(!just_popup) {
+		#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
+			PaintWinBarBackground(w, clip);
+		#endif
+			CtrlPaint(w, clip);
+		#if defined(PLATFORM_WIN32) && !defined(VIRTUALGUI)
+			PaintWinBar(w, clip);
+		#endif
+		}
+		for(Ptr<Ctrl> p : virtual_popups) {
+			if(p && p->GetTopWindow() == this) {
+				LLOG("*** Update Virtual Popup area " << clip);
+				Point off = p->GetScreenRect().TopLeft() - GetScreenRect().TopLeft();
+				const Top *top = p->GetTop();
+				if(top && top->virtual_dropshadow) {
+					Rect r(off, p->GetScreenRect().GetSize());
+					static Image shadow;
+					static int dark = -1;
+					if((int)IsDarkTheme() != dark) {
+						dark = IsDarkTheme();
+						int r = DPI(20);
+						ImageBuffer iw(2 * r, 2 * r);
+						for(int x = 0; x < r; x++)
+						    for(int y = 0; y < r; y++) {
+						        int alpha = int(sqr(max(r - Distance(Pointf(r, r), Pointf(x, y)), 0.0)) / r / r * 50);
+						        iw[y][x] = alpha * Black();
+						    }
+						shadow = WithHotSpots(HorzSymm(RotateAntiClockwise(HorzSymm(iw))), Point(r, r), Point(r, r));
+					}
+					ChPaint(w, r.Inflated(DPI(20)), shadow);
+				}
+				w.Offset(off);
+				p->CtrlPaint(w, clip - off);
+				w.End();
+				p->RemoveFullRefresh();
+			}
+		}
 		for(PaintHook h : painthook())
 			h(this, w, clip);
 	};
-	if(globalbackbuffer) {
+	if(globalbackbuffer) { // Host already provides the backbuffer
 		DoCtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 	}
@@ -354,8 +396,12 @@ void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 	ASSERT(q);
 	LLOG("DoSync " << UPP::Name(q) << " " << r);
 	Ctrl *top = q->GetTopRect(r, inframe);
-	if(top && top->IsOpen())
-		top->WndUpdate(r);
+	if(top && top->IsOpen()) {
+		if(top->IsVirtualPopUp())
+			top->GetTopWindow()->WndUpdate(top->GetVirtualPopUpRect(r));
+		else
+			top->WndUpdate(r);
+	}
 }
 
 void  Ctrl::Sync()
@@ -365,7 +411,10 @@ void  Ctrl::Sync()
 	Ctrl *parent = GetParent();
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
-		WndUpdate();
+		if(IsVirtualPopUp())
+			GetTopWindow()->WndUpdate(GetVirtualPopUpOverRect());
+		else
+			WndUpdate();
 	}
 	else
 	if(parent)

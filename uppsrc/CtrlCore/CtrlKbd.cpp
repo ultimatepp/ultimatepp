@@ -151,7 +151,6 @@ void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 		Ptr<Ctrl> ptop = pfocusCtrl->GetTopCtrl();
 		Ctrl *ntop = nfocusCtrl ? nfocusCtrl->GetTopCtrl() : NULL;
 		if(ntop != ptop && !ptop->destroying) {
-			LLOG("DoDeactivate " << UPP::Name(ptop) << " in favor of " << UPP::Name(ntop));
 			ptop->DeactivateBy(ntop);
 			ptop->Deactivate();
 			if(ptop)
@@ -281,9 +280,20 @@ void Ctrl::ClickActivateWnd()
 {
 	GuiLock __;
 	LLOG("Ctrl::ClickActivateWnd " << Name(this));
-	if(this == ~focusCtrlWnd && focusCtrl && focusCtrl->GetTopCtrl() != this) {
-		LLOG("Ctrl::ClickActivateWnd -> ActivateWnd");
-		ActivateWnd();
+	if(this == ~focusCtrlWnd && focusCtrl) {
+		Ctrl *target = this;
+		Point sp = GetMousePos();
+		for(Ctrl *q : ReverseRange(virtual_popups)) {
+			Rect sr = q->GetScreenRect();
+			if(q->GetOwner() == this && sr.Contains(sp)) {
+				target = q;
+				break;
+			}
+		}
+		if(focusCtrl->GetTopCtrl() != target) {
+			LLOG("Ctrl::ClickActivateWnd -> ActivateWnd");
+			target->ActivateWnd();
+		}
 	}
 }
 

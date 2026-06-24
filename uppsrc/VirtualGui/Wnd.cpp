@@ -59,7 +59,7 @@ bool Ctrl::IsCompositedGui()
 	return false;
 }
 
-Vector<Ctrl *> Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 {
 	Vector<Ctrl *> ctrl;
 	if(desktop)
@@ -212,7 +212,7 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 	GuiLock __;
 	return GetVirtualScreenArea();

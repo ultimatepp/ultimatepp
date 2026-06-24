@@ -315,7 +315,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 	for(q = GetLastChild(); q; q = q->GetPrev()) {
 		if(q->InFrame() && q->IsMouseActive()) {
@@ -326,7 +326,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 Image Ctrl::MEvent0(int e, Point p, int zd)
@@ -549,6 +549,19 @@ bool sDblTime(int time)
 }
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
+	for(Ctrl *popup : ReverseRange(virtual_popups)) {
+		if(popup && popup->GetTopWindow() == this) {
+			Rect r = popup->GetVirtualPopUpRect(popup->GetScreenRect().GetSize());
+			if(r.Contains(p)) {
+				p -= r.TopLeft();
+				return popup->DispatchMouse2(e, p, zd);
+			}
+		}
+	}
+	return DispatchMouse2(e, p, zd);
+}
+
+Image Ctrl::DispatchMouse2(int e, Point p, int zd) {
 	GuiLock __;
 	EventLevelDo ___;
 	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !zd) // ignore non-scroll wheel events
@@ -641,7 +654,8 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	if(!IsEnabled())
 		return Image::Arrow();
 	Ctrl *top = this;
-	if(((e == MOUSEWHEEL)||(e == MOUSEHWHEEL)) && !GetParent()) {
+	bool wheel = findarg(e, MOUSEWHEEL, MOUSEHWHEEL) >= 0;
+	if(wheel && !GetParent()) {
 		Ctrl *w = GetFocusCtrl();
 		if(w) {
 			top = w->GetTopCtrl();
@@ -652,10 +666,19 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 	return q ? q->DispatchMouseEvent(e, p, zd) : top->MEvent0(e, p, zd);
 }
 
+Ctrl *Ctrl::GetTopCaptureCtrl() const
+{
+	const Ctrl *q = GetTopCtrl();
+	return const_cast<Ctrl *>(q->IsVirtualPopUp() ? q->GetTopWindow() : q);
+}
+
 bool Ctrl::SetCapture() {
 	GuiLock __;
 	ReleaseCtrlCapture();
-	if(!GetTopCtrl()->SetWndCapture()) return false;
+	Ctrl *q = GetTopCaptureCtrl();
+	if(q->IsVirtualPopUp())
+		q = q->GetOwner();
+	if(!q->SetWndCapture()) return false;
 	captureCtrl = mouseCtrl = this;
 	return true;
 }
@@ -670,7 +693,7 @@ bool Ctrl::ReleaseCtrlCapture() {
 	LLOG("ReleaseCtrlCapture");
 	if(captureCtrl) {
 		captureCtrl->CancelMode();
-		Ctrl *w = captureCtrl->GetTopCtrl();
+		Ctrl *w = captureCtrl->GetTopCaptureCtrl();
 		captureCtrl = NULL;
 		CheckMouseCtrl();
 		if(w->HasWndCapture()) {
@@ -685,13 +708,13 @@ bool Ctrl::HasCapture() const {
 	GuiLock __;
 	if(captureCtrl != this)
 		return false;
-	return captureCtrl == this && GetTopCtrl()->HasWndCapture();
+	return captureCtrl == this && GetTopCaptureCtrl()->HasWndCapture();
 }
 
 Ctrl * Ctrl::GetCaptureCtrl()
 {
 	GuiLock __;
-	return captureCtrl && captureCtrl->GetTopCtrl()->HasWndCapture() ? captureCtrl : NULL;
+	return captureCtrl && captureCtrl->GetTopCaptureCtrl()->HasWndCapture() ? captureCtrl : NULL;
 }
 
 Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)

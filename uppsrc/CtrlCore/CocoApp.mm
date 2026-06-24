@@ -285,7 +285,7 @@ void WakeUpGuiThread(void)
 	}
 }
 
-Rect Ctrl::GetWorkArea() const
+Rect Ctrl::GetWndWorkArea() const
 {
 	return StdGetWorkArea();
 }
