@@ -120,7 +120,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 	}
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	Top *top = GetTop();
@@ -285,7 +285,7 @@ Rect Ctrl::GetWndWorkArea() const
 	return StdGetWorkArea();
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkAreas(Array<Rect>& rc)
 {
 	GuiLock __;
 	rc.Clear();
@@ -321,7 +321,7 @@ Rect Ctrl::GetVirtualWorkArea()
 	GuiLock __;
 	Rect r = GetPrimaryWorkArea();
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		r |= rc[i];
 	return r;

@@ -25,8 +25,7 @@ void Ctrl::RefreshVirtualPopUp()
 void Ctrl::VirtualPopUp(Ctrl *owner, bool activate, bool dropshadow)
 {
 	ASSERT(!IsOpen());
-	TopWindow *win = owner->GetTopWindow();
-	ASSERT(owner && win);
+	ASSERT(owner && owner->GetTopWindow());
 
 	Top *vtop = new Top;
 	SetTop(vtop);

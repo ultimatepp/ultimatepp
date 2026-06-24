@@ -652,7 +652,7 @@ bool Ctrl::IsCompositedGui()
 	return b;
 }
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	if(!IsOpen()) return NULL;
