@@ -55,7 +55,10 @@ bool Ctrl::IsVirtualPopUp() const
 Rect Ctrl::GetVirtualPopUpRect(const Rect& vp_frame_rect) const
 { // converts frame rect to owner frame rect
 	ASSERT(IsVirtualPopUp());
-	Rect sr = GetTopWindow()->GetScreenRect();
+	const TopWindow *win = GetTopWindow();
+	if(!win)
+		return Rect(0, 0, 0, 0);
+	Rect sr = win->GetScreenRect();
 	Rect r = vp_frame_rect.Offseted(GetScreenRect().TopLeft()) & GetScreenRect() & sr;
 //	DLOG("+++ GetVirtualPopUpRect");
 //	DDUMP(GetOwner()->GetScreenRect());
@@ -80,6 +83,10 @@ void Ctrl::CloseVirtualPopUp()
 	DeleteTop();
 }
 
-bool Ctrl::use_virtual_popups;
+bool Ctrl::use_virtual_popups
+#ifdef flagDEVELOP_VIRTUALPOPUPS
+	= true
+#endif
+;
 
 };
