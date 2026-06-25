@@ -199,7 +199,7 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl, bool splash)
 
 SplashCtrl::SplashCtrl()
 {
-	SetRect(GetWorkArea().CenterRect(MakeLogo(*this, ctrl) + 2));
+	SetRect(GetPrimaryWorkArea().CenterRect(MakeLogo(*this, ctrl) + 2));
 	SetFrame(BlackFrame());
 }
 
@@ -228,7 +228,7 @@ public:
 	AboutDlg()
 	{
 		Size isz = SplashCtrl::MakeLogo(*this, ctrl, true);
-		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
+		int cx = min(isz.cx * 2, GetPrimaryWorkArea().GetWidth());
 		SetRect(0, 0, cx, isz.cy);
 		about.SetQTF(GetTopic("ide/app/About_en-us"), Zoom(DPI(120), 1024));
 		about.SetZoom(Zoom(1, 1));
