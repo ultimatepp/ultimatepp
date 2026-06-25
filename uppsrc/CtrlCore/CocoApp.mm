@@ -296,7 +296,7 @@ Rect MakeScreenRect(NSScreen *screen, CGRect r)
 	return MakeRect(r, Upp::Ctrl::SCL(1));
 }
 
-void Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkAreas(Array<Rect>& rc)
 {
 	Upp::GuiLock __;
 	for(NSScreen *screen in [NSScreen screens])
@@ -307,7 +307,7 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 Rect Ctrl::GetVirtualWorkArea()
 {
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	Rect r(0, 0, 0, 0);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(i)
@@ -335,7 +335,7 @@ Rect Ctrl::GetVirtualScreenArea()
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	Array<Rect> rc;
-	GetWorkArea(rc);
+	GetWorkAreas(rc);
 	return rc.GetCount() ? rc[0] : Rect(0, 0, 0, 0);
 }
 

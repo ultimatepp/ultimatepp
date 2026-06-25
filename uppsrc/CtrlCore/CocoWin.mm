@@ -37,7 +37,7 @@ static Vector<Ptr<Ctrl>> mmtopctrl; // should work without Ptr, but let us be de
 
 bool Ctrl::always_use_bundled_icon = false;
 
-Ctrl *Ctrl::GetOwner()
+Ctrl *Ctrl::GetOwnerWnd()
 {
 	GuiLock __;
 	return top && GetTop()->coco ? GetTop()->coco->owner : NULL;
