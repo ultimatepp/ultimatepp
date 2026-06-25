@@ -1027,4 +1027,3 @@ LAYOUT(SeqLayout, 764, 544)
 	ITEM(Upp::Label, dv___19, SetLabel(t_("Postfix")).LeftPosZ(672, 32).TopPosZ(8, 19))
 	ITEM(Upp::EditString, postfix, LeftPosZ(708, 48).TopPosZ(8, 19))
 END_LAYOUT
-
