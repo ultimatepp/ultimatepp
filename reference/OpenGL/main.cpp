@@ -92,7 +92,6 @@ struct OpenGLExample : GLCtrl {
 
 GUI_APP_MAIN
 {
-	Ctrl::GlobalBackPaint();
 	TopWindow win;
 	OpenGLExample gl;
 	gl.SetFrame(InsetFrame());

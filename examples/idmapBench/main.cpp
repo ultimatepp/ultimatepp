@@ -169,7 +169,7 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchHashMap(fn);
-		cout << "STL hash_map time: " << tm.Elapsed() << " ms \n";
+		cout << "STL hash_map time: " << tm.Seconds() << " s \n";
 	}
 
 	{
@@ -177,7 +177,7 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchMap(fn);
-		cout << "STL map time: " << tm.Elapsed() << " ms \n";
+		cout << "STL map time: " << tm.Seconds() << " s \n";
 	}
 
 	{
@@ -185,6 +185,6 @@ CONSOLE_APP_MAIN
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchNTL(fn);
-		cout << "NTL time: " << tm.Elapsed() << " ms\n";
+		cout << "NTL time: " << tm.Seconds() << " s\n";
 	}
 }
