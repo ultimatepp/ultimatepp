@@ -24,7 +24,7 @@ void ToolTip::Paint(Draw& w)
 void ToolTip::PopUp(Ctrl *owner, Point p, bool effect)
 {
 	LLOG("ToolTip::PopUp" << Desc(owner) << " @ " << p);
-	Rect r = GetMouseWorkArea(owner);
+	Rect r = GetMouseWorkArea();
 	Size sz = GetMinSize();
 	p.x = max(p.x + sz.cx > r.right ? r.right - sz.cx : p.x, r.left);
 	p.y = max(p.y + sz.cy > r.bottom ? r.bottom - sz.cy : p.y, r.top);
@@ -75,7 +75,7 @@ void ShowToolTip()
 		if(text.GetCount() && top && (top->IsForeground() || top->IsPopUp())) {
 			LLOG("-> foreground");
 			Size sz = q.GetMinSize();
-			Rect r = Ctrl::GetMouseWorkArea(top);
+			Rect r = Ctrl::GetMouseWorkArea();
 			Point p = GetMousePos() + Size(0, DPI(22));
 			if(p.y + sz.cy > r.bottom)
 				p = GetMousePos() - Size(0, DPI(6)) - sz.cy;
@@ -188,7 +188,7 @@ void QTFPopUp::PopUp(Ctrl *parent) {
 	Rect r = Rect(0, 0, width, maxheight);
 	GetFrame().FrameLayout(r);
 	int cy = min(maxheight, GetHeight(r.Width()) + maxheight - r.Height());
-	Rect area = GetMouseWorkArea(parent);
+	Rect area = GetMouseWorkArea();
 	Point p = GetMousePos();
 	r.top = max(area.top, p.y + 16);
 	r.bottom = r.top + cy;

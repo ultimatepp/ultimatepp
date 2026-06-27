@@ -265,10 +265,6 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
 	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
-	if(use_virtual_popups && owner) {
-		VirtualPopUp(owner, activate);
-		return;
-	}
 	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
 	popup = true;
 	Ptr<Ctrl> _this = this;

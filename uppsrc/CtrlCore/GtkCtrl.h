@@ -185,6 +185,7 @@
 	static void SetCustomBarDragPrevention();
 	       void SyncPreventCustomBarDragPrevention();
 
+	friend bool InitGtkApp(int argc, char **argv, const char **envptr);
 	friend void GuiPlatformGripResize(TopWindow *q);
 
 public: // really private:
@@ -200,7 +201,6 @@ public: // really private:
 		Gclipboard(GdkAtom type);
 	};
 
-	static bool InitGtkApp(int argc, char **argv, const char **envptr);
 	static Gclipboard& gclipboard();
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);

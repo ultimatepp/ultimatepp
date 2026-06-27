@@ -504,14 +504,12 @@ private:
 	};
 
 	friend struct UDropTarget;
-	
+
 	struct Top {
 		GUIPLATFORM_CTRL_TOP_DECLS
-		Ptr<Ctrl>         owner;
-		bool              virtual_dropshadow = false;
+		Ptr<Ctrl>      owner;
 	};
-	
-	static Vector<Ptr<Ctrl>> virtual_popups;
+
 
 	Frame        frame;
 	LogPos       pos;//8
@@ -635,10 +633,8 @@ private:
 	Image   FrameMouseEventH(int event, Point p, int zdelta, dword keyflags);
 	Image   MEvent0(int e, Point p, int zd);
 	Image   DispatchMouse(int e, Point p, int zd = 0);
-	Image   DispatchMouse2(int e, Point p, int zd);
 	Image   DispatchMouseEvent(int e, Point p, int zd = 0);
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
-	Ctrl   *GetTopCaptureCtrl() const;
 
 	struct CallBox;
 	static void PerformCall(CallBox *cbox);
@@ -711,8 +707,6 @@ private:
 	static void DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl);
 	static void DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate);
 
-	Ctrl *GetOwnerWnd();
-
 	bool SetFocus0(bool activate);
 	void ActivateWnd();
 	void ClickActivateWnd();
@@ -733,10 +727,6 @@ private:
 
 	void WndFree();
 	void WndDestroy();
-
-	Rect GetWndWorkArea() const;
-
-	static Vector<Ctrl *> GetTopWndCtrls();
 
 	void SysEndLoop();
 
@@ -1335,6 +1325,7 @@ public:
 
 	bool   IsPopUp() const          { return popup; }
 
+
 	static void  EventLoop(Ctrl *loopctrl = NULL);
 	static int   GetLoopLevel()     { return LoopLevel; }
 	static Ctrl *GetLoopCtrl()      { return LoopCtrl; }
@@ -1395,11 +1386,9 @@ public:
 	static Rect   GetVirtualScreenArea();
 	static Rect   GetPrimaryWorkArea();
 	static Rect   GetPrimaryScreenArea();
-	static void   GetWorkAreas(Array<Rect>& rc);
+	static void   GetWorkArea(Array<Rect>& rc);
 	static Rect   GetWorkArea(Point pt);
-	static Rect   GetWorkArea(const Ctrl *owner, Point pt);
 	static Rect   GetMouseWorkArea()                     { return GetWorkArea(GetMousePos()); }
-	static Rect   GetMouseWorkArea(Ctrl *owner)          { return GetWorkArea(owner, GetMousePos()); }
 	static int    GetKbdDelay();
 	static int    GetKbdSpeed();
 	static bool   IsAlphaSupported();
@@ -1443,19 +1432,6 @@ public:
 
 	Ctrl();
 	virtual ~Ctrl();
-
-#ifndef flagDEVELOP_VIRTUALPOPUPS // .Makes virtual popup interface public
-private:
-#endif
-	Image VirtualPopUpDropShadow();
-	Rect GetVirtualPopUpOverRect();
-	void RefreshVirtualPopUp();
-	void VirtualPopUp(Ctrl *owner, bool activate, bool dropshadow = false);
-	bool IsVirtualPopUp() const;
-	Rect GetVirtualPopUpRect(const Rect& vp_frame_rect) const;
-	Rect GetVirtualPopUpRect() const;
-	void CloseVirtualPopUp();
-	static bool use_virtual_popups;
 
 private: // support for for(Ctrl& q : *this)
 	class CtrlConstIterator {

@@ -126,7 +126,6 @@ file
 
 mainconfig
 	"" = "GUI",
-	"" = "GUI DEVELOP_VIRTUALPOPUPS",
 	"" = "GUI LCLANG",
 	"" = "GUI USEMALLOC",
 	"" = "GUI HEAPDBG CHECKINIT",

@@ -285,15 +285,6 @@ Ctrl *Ctrl::GetTopCtrl()
 	}
 }
 
-Ctrl *Ctrl::GetOwner()
-{
-	if(IsVirtualPopUp()) {
-		Top *top = GetTop();
-		return top ? top->owner->GetTopWindow() : nullptr;
-	}
-	return GetOwnerWnd();
-}
-
 const Ctrl *Ctrl::GetTopCtrl() const      { return const_cast<Ctrl *>(this)->GetTopCtrl(); }
 const Ctrl *Ctrl::GetOwner() const        { return const_cast<Ctrl *>(this)->GetOwner(); }
 Ctrl       *Ctrl::GetTopCtrlOwner()       { return GetTopCtrl()->GetOwner(); }
@@ -312,7 +303,7 @@ TopWindow *Ctrl::GetTopWindow()
 		if(w) return w;
 		q = q->GetOwner();
 	}
-	return nullptr;
+	return NULL;
 }
 
 const TopWindow *Ctrl::GetTopWindow() const

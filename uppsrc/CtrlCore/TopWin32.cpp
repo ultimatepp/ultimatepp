@@ -283,9 +283,8 @@ void TopWindow::CenterRect(HWND hwnd, int center)
 		::AdjustWindowRect(frmrc, WS_OVERLAPPEDWINDOW, FALSE);
 	#endif
 		Rect r, wr;
-		Ctrl *owner = Windows().Get(hwnd, nullptr);
-		wr = (owner ? owner->GetWorkArea() : Ctrl::GetWorkArea()).Deflated(-frmrc.left, -frmrc.top,
-			 frmrc.right - sz.cx, frmrc.bottom - sz.cy);
+		wr = Ctrl::GetWorkArea().Deflated(-frmrc.left, -frmrc.top,
+			frmrc.right - sz.cx, frmrc.bottom - sz.cy);
 		sz.cx = min(sz.cx, wr.Width());
 		sz.cy = min(sz.cy, wr.Height());
 		if(center == 1) {

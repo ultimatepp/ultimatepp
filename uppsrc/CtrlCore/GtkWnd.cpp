@@ -58,7 +58,7 @@ bool Ctrl::IsCompositedGui()
 	return true; // limits some GUI effects that do not play well with advanced desktops
 }
 
-Vector<Ctrl *> Ctrl::GetTopWndCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	GuiLock __;
 	Vector<Ctrl *> h;
@@ -80,8 +80,6 @@ void  Ctrl::SetMouseCursor(const Image& image)
 		topctrl = mouseCtrl->GetTopCtrl();
 	else
 		topctrl = GetActiveCtrl();
-	if(topctrl && topctrl->IsVirtualPopUp())
-		topctrl = topctrl->GetTopWindow();
 	if(topctrl)
 		top = topctrl->GetTop();
 	if(top && id != top->cursor_id) {
@@ -122,7 +120,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 	}
 }
 
-Ctrl *Ctrl::GetOwnerWnd()
+Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	Top *top = GetTop();
@@ -282,12 +280,12 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-Rect Ctrl::GetWndWorkArea() const
+Rect Ctrl::GetWorkArea() const
 {
 	return StdGetWorkArea();
 }
 
-void Ctrl::GetWorkAreas(Array<Rect>& rc)
+void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
 	rc.Clear();
@@ -323,7 +321,7 @@ Rect Ctrl::GetVirtualWorkArea()
 	GuiLock __;
 	Rect r = GetPrimaryWorkArea();
 	Array<Rect> rc;
-	GetWorkAreas(rc);
+	GetWorkArea(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		r |= rc[i];
 	return r;

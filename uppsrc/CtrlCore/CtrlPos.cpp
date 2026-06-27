@@ -129,16 +129,6 @@ Size  Ctrl::AddFrameSize(int cx, int cy) const
 	return sz;
 }
 
-Rect Ctrl::GetWorkArea() const
-{
-	if(use_virtual_popups) {
-		const TopWindow *win = GetTopWindow();
-		if(win)
-			return win->GetScreenRect();
-	}
-	return GetWndWorkArea();
-}
-
 int EditFieldIsThin();
 
 Size Ctrl::GetMinSize() const
@@ -232,6 +222,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			Rect from = GetRect().Size();
 			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
+				LTIMING("SetPos0 MoveCtrl");
 				pos = p;
 				inframe = _inframe;
 				Rect to = GetRect().Size();
@@ -242,13 +233,11 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			}
 		}
 		RefreshFrame();
-		RefreshVirtualPopUp();
 	}
 	pos = p;
 	inframe = _inframe;
 	UpdateRect();
 	StateH(POSITION);
-	RefreshVirtualPopUp();
 }
 
 void Ctrl::UpdateRect0(bool sync)
@@ -287,12 +276,8 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 		else {
 			ASSERT(p.x.GetAlign() == ALIGN_LEFT);
 			ASSERT(p.y.GetAlign() == ALIGN_TOP);
-			if(IsVirtualPopUp())
-				SetPos0(p, _inframe);
-			else {
-				Rect pwa = GetPrimaryWorkArea();
-				WndSetPos(OffsetMegaRect(CalcRect(p, pwa, pwa)));
-			}
+			Rect pwa = GetPrimaryWorkArea();
+			WndSetPos(OffsetMegaRect(CalcRect(p, pwa, pwa)));
 			StateH(POSITION);
 		}
 	}
@@ -350,7 +335,6 @@ void  Ctrl::SetRect(int x, int y, int cx, int cy)
 	Rect r = RectC(x, y, cx, cy);
 	MegaRect(r);
 	SetPos(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);
-	RefreshVirtualPopUp();
 }
 
 void  Ctrl::SetWndRect(const Rect& r)
@@ -461,16 +445,11 @@ Rect Ctrl::GetWorkArea(Point pt)
 {
 	GuiLock __;
 	Array<Rect> rc;
-	GetWorkAreas(rc);
+	GetWorkArea(rc);
 	for(int i = 0; i < rc.GetCount(); i++)
 		if(rc[i].Contains(pt))
 			return rc[i];
 	return GetPrimaryWorkArea();
-}
-
-Rect Ctrl::GetWorkArea(const Ctrl *owner, Point pt)
-{
-	return owner ? owner->GetTopCtrl()->GetWorkArea() : GetWorkArea(pt);
 }
 
 Rect Ctrl::StdGetWorkArea() const
@@ -479,7 +458,7 @@ Rect Ctrl::StdGetWorkArea() const
 
 	const Ctrl *top = GetTopCtrl();
 	if(top && top->IsOpen())
-		return GetWorkArea(GetOwner(), top->GetScreenRect().TopLeft());
+		return GetWorkArea(top->GetScreenRect().TopLeft());
 	return GetPrimaryWorkArea();
 }
 

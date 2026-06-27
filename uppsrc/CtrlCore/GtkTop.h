@@ -47,4 +47,5 @@ private:
 	static gboolean StateEvent(GtkWidget *widget, GdkEventWindowState *event, gpointer user_data);
 
 	friend class Ctrl;
+	friend bool InitGtkApp(int argc, char **argv, const char **envptr);
 

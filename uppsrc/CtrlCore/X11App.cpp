@@ -519,7 +519,7 @@ Rect Ctrl::GetDefaultWindowRect()
 	return RectC(left + pos + 20, top + pos + 20, cx, cy);
 }
 
-void Ctrl::GetWorkAreas(Array<Rect>& out)
+void Ctrl::GetWorkArea(Array<Rect>& out)
 {
 	Vector<Rect> workAreas = FindScreensResolutions();
 	Vector<Rect> struts    = FindScreensStruts();
@@ -536,7 +536,7 @@ void Ctrl::GetWorkAreas(Array<Rect>& out)
 		out.Add(GetPrimaryWorkArea());
 }
 
-Rect Ctrl::GetWndWorkArea() const
+Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
 	return StdGetWorkArea();
@@ -567,7 +567,7 @@ Rect Ctrl::GetPrimaryWorkArea()
 	static Rect r;
 	if(r.right == 0) {
 		Array<Rect> rc;
-		GetWorkAreas(rc);
+		GetWorkArea(rc);
 		rc.GetCount() ? r = rc[0] : r = GetVirtualScreenArea();
 	}
 	return r;

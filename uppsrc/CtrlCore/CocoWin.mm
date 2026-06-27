@@ -37,7 +37,7 @@ static Vector<Ptr<Ctrl>> mmtopctrl; // should work without Ptr, but let us be de
 
 bool Ctrl::always_use_bundled_icon = false;
 
-Ctrl *Ctrl::GetOwnerWnd()
+Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	return top && GetTop()->coco ? GetTop()->coco->owner : NULL;
@@ -177,7 +177,7 @@ void Ctrl::WndDestroy()
 		owner->SetWndFocus();
 }
 
-Vector<Ctrl *> Ctrl::GetTopWndCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> h;
 	for(Ctrl *p : mmtopctrl)

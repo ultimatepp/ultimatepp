@@ -59,7 +59,7 @@ bool Ctrl::IsCompositedGui()
 	return false;
 }
 
-Vector<Ctrl *> Ctrl::GetTopWndCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> ctrl;
 	if(desktop)
@@ -70,7 +70,7 @@ Vector<Ctrl *> Ctrl::GetTopWndCtrls()
 	return ctrl;
 }
 
-Ctrl *Ctrl::GetOwnerWnd()
+Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	int q = FindTopCtrl();
@@ -212,13 +212,13 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-Rect Ctrl::GetWndWorkArea() const
+Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
 	return GetVirtualScreenArea();
 }
 
-void Ctrl::GetWorkAreas(Array<Rect>& rc)
+void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
 	Array<Rect> r;
