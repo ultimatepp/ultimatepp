@@ -61,17 +61,15 @@ void IdeBackgroundThread()
 		
 		for(String d : dir)
 			GatherAllFiles(d, filei, file);
-
+		
 		if(TheIde() && TheIde()->search_downloads)
 			GatherAllFiles(GetDownloadFolder(), filei, file);
-
+		
 		{
 			Mutex::Lock __(s_allfiles_lock);
 			s_allfiles = pick(file);
 			s_allnests = dir.PickKeys();
 		}
-		
-		DDUMP(s_allfiles.GetCount());
 	
 		ide_bg_scheduler.Wait();
 	}
