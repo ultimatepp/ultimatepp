@@ -21,7 +21,7 @@ void GatherAllFiles(const String& path, Index<String>& filei, VectorMap<String, 
 	if(path.GetCount() == 0)
 		return;
 	Sleep(0); // This is supposed to be superlazy
-	for(FindFile ff(path + "/*.*"); ff && !Thread::IsShutdownThreads(); ff.Next())
+	for(FindFile ff(path + "/*.*"); ff && !Thread::IsShutdownThreads() && file.GetCount() < 200000; ff.Next())
 		if(ff.IsFolder() && *ff.GetName() != '.')
 			GatherAllFiles(ff.GetPath(), filei, file);
 		else
