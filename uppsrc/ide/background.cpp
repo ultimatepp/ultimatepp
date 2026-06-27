@@ -21,7 +21,7 @@ void GatherAllFiles(const String& path, Index<String>& filei, VectorMap<String, 
 	if(path.GetCount() == 0)
 		return;
 	Sleep(0); // This is supposed to be superlazy
-	for(FindFile ff(path + "/*.*"); ff && !Thread::IsShutdownThreads() && file.GetCount() < 200000; ff.Next())
+	for(FindFile ff(path + "/*.*"); ff && !Thread::IsShutdownThreads() && file.GetCount() < 4000000; ff.Next())
 		if(ff.IsFolder() && *ff.GetName() != '.')
 			GatherAllFiles(ff.GetPath(), filei, file);
 		else
@@ -70,6 +70,8 @@ void IdeBackgroundThread()
 			s_allfiles = pick(file);
 			s_allnests = dir.PickKeys();
 		}
+		
+		DDUMP(s_allfiles.GetCount());
 	
 		ide_bg_scheduler.Wait();
 	}
