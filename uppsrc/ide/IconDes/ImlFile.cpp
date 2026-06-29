@@ -177,8 +177,6 @@ void ScanIML(CParser& parser, Array<ImlImage>& out_images, VectorMap<String, Str
 				exp = false;
 			}
 		}
-		else
-			break;
 	}
 }
 
@@ -275,6 +273,8 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 			ScanIML(p, img, s);
 			if(img.GetCount())
 				format = 1;
+			else
+				return false;
 		}
 		catch(...) {
 			return false;
