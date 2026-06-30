@@ -1299,6 +1299,9 @@ public:
 		void  MacroAllPackages(EscEscape& e);
 		void  MacroTarget(EscEscape& e);
 
+	void ClangTidy();
+	bool HasClangTidy();
+
 	String GetAndroidSdkPath();
 
 	void TriggerIndexer0();

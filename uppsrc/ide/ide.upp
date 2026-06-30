@@ -103,6 +103,7 @@ file
 	Build.cpp,
 	Debug.cpp,
 	Valgrind.cpp,
+	ClangTidy.cpp,
 	Export.cpp,
 	Repo readonly separator,
 	urepo.h,

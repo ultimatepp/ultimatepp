@@ -1028,3 +1028,10 @@ LAYOUT(SeqLayout, 764, 544)
 	ITEM(Upp::EditString, postfix, LeftPosZ(708, 48).TopPosZ(8, 19))
 END_LAYOUT
 
+LAYOUT(ClangTidy, 556, 588)
+	ITEM(Upp::ArrayCtrl, group, LeftPosZ(8, 184).TopPosZ(8, 528))
+	ITEM(Upp::ArrayCtrl, option, LeftPosZ(196, 348).TopPosZ(8, 528))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
