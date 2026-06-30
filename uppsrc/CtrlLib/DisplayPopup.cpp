@@ -138,6 +138,7 @@ void DisplayPopup::Cancel()
 {
 	if(owner == this) {
 		screen_rect = Null;
+		display = nullptr;
 		Sync();
 	}
 }
