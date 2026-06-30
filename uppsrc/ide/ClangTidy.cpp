@@ -4,6 +4,7 @@ struct ClangTidyDlg : WithClangTidy<TopWindow> {
 	static String         path;
 	static Index<String>  options;
 	static Index<String>  groups;
+	static Index<String>  active_checks;
 	
 	static bool HasClangTidy();
 
@@ -14,13 +15,15 @@ struct ClangTidyDlg : WithClangTidy<TopWindow> {
 	ArrayMap<String, OptionWithLink> checks;
 	
 	void Group();
+	void Save();
 
 	ClangTidyDlg();
 };
 
-String ClangTidyDlg::path;
+String        ClangTidyDlg::path;
 Index<String> ClangTidyDlg::options;
 Index<String> ClangTidyDlg::groups;
+Index<String> ClangTidyDlg::active_checks;
 
 ClangTidyDlg::ClangTidyDlg()
 {
@@ -55,7 +58,19 @@ ClangTidyDlg::ClangTidyDlg()
 		}
 		txt << " \1" << s;
 		opt.text <<= txt;
+		opt <<= active_checks.Find(s) >= 0;
 	}
+	
+	auto Set = [=](bool b) {
+		for(int i = 0; i < option.GetCount(); i++) {
+			auto *o = dynamic_cast<Option *>(option.GetCtrl(i, 0));
+			if(o)
+				*o <<= b;
+		}
+	};
+	
+	set << [=] { Set(true); };
+	reset << [=] { Set(false); };
 }
 
 void ClangTidyDlg::Group()
@@ -70,6 +85,20 @@ void ClangTidyDlg::Group()
 			option.Add(m.key);
 			option.SetCtrl(option.GetCount() - 1, 0, m.value, false);
 		}
+}
+
+void ClangTidyDlg::Save()
+{
+	active_checks.Clear();
+	for(auto m : ~checks)
+		if(m.value)
+			active_checks.FindAdd(m.key);
+	Value json;
+	ValueArray va;
+	for(String s : active_checks)
+		va << s;
+	json("active_checks") = va;
+	SaveFile(ConfigFile("ide-clang-tidy.json"), AsJSON(json, true));
 }
 
 bool ClangTidyDlg::HasClangTidy()
@@ -99,6 +128,10 @@ bool ClangTidyDlg::HasClangTidy()
 					groups.FindAdd(s);
 				}
 			}
+
+			Value json = ParseJSON(LoadFile(ConfigFile("ide-clang-tidy.json")));
+			for(Value v : json["active_checks"])
+				active_checks << ~v;
 #ifdef PLATFORM_WIN32
 		}
 #endif
@@ -118,8 +151,10 @@ void Ide::ClangTidy()
 		Exclamation("No clang-tidy...");
 		return;
 	}
-	
+
 	ClangTidyDlg dlg;
 	
 	dlg.Execute();
+	
+	dlg.Save();
 }
