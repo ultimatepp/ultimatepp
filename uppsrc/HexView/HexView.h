@@ -14,7 +14,7 @@ class HexViewInfo : public FrameBottom<Ctrl> {
 private:
 	Font  font;
 	int64 pos;
-	int   data[80];
+	int   data[200];
 	int   mode;
 	bool  longmode;
 	bool  empty = false;
