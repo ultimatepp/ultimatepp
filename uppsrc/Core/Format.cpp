@@ -3,28 +3,6 @@
 
 namespace Upp {
 
-// Old format ---------------------------
-
-String  VFormat(const char *fmt, va_list ptr) {
-	int limit = 2 * (int)strlen(fmt) + 1024;
-	if(limit < 1500) {
-		char buffer[1500];
-		vsnprintf(buffer, 1500, fmt, ptr);
-		va_end(ptr);
-		int len = (int)strlen(buffer);
-		ASSERT(len <= limit);
-		return String(buffer, len);
-	}
-	else {
-		Buffer<char> buffer(limit);
-		vsnprintf(buffer, 1500, fmt, ptr);
-		va_end(ptr);
-		int len = (int)strlen(buffer);
-		ASSERT(len <= limit);
-		return String(buffer, len);
-	}
-}
-
 // Formatting routines ---------------------------
 
 // utoa32, utoa64 inspired by
@@ -1121,10 +1099,33 @@ String Format(int language, const char *s, const Vector<Value>& v)
 
 String Format(const char *s, const Vector<Value>& v) { return Format(GetCurrentLanguage(), s, v); }
 
+// Old format ---------------------------
+
+String  VFormat(const char *fmt, va_list ptr) {
+	int limit = 2 * (int)strlen(fmt) + 1024;
+	if(limit < 1500) {
+		char buffer[1500];
+		vsnprintf(buffer, 1500, fmt, ptr);
+		int len = (int)strlen(buffer);
+		ASSERT(len <= limit);
+		return String(buffer, len);
+	}
+	else {
+		Buffer<char> buffer(limit);
+		vsnprintf(buffer, 1500, fmt, ptr);
+		int len = (int)strlen(buffer);
+		ASSERT(len <= limit);
+		return String(buffer, len);
+	}
+}
+
+
 String Sprintf(const char *fmt, ...) {
 	va_list argptr;
 	va_start(argptr, fmt);
-	return VFormat(fmt, argptr);
+	String s = VFormat(fmt, argptr);
+	va_end(argptr);
+	return s;
 }
 
 String DeFormat(const char *text)

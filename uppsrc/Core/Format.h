@@ -110,7 +110,6 @@ String Format(const char *s, const Args& ...args)
 	return Format(s, gather<Vector<Value>>(args...));
 }
 
-String VFormat(const char *fmt, va_list args);
 String Sprintf(const char *fmt, ...);
 
 String DeFormat(const char *text);

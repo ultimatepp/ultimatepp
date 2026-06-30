@@ -429,7 +429,6 @@ struct RichCellPos {
 	int               tabpos;
 	int               tablen;
 	int               cellpos;
-	int               celllen;
 	int               level;
 	RichCell::Format  format;
 	RichTable::Format tableformat;
