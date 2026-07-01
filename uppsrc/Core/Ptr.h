@@ -3,16 +3,15 @@ template <class T> class Ptr;
 class PteBase {
 protected:
 	struct Prec {
-		PteBase *ptr;
-		Atomic   n;
+		const PteBase *ptr;
+		Atomic         n;
 	};
 
-	volatile Prec  *prec;
+	mutable Prec   *prec = nullptr; // mutable as we need Ptr<const Foo> as well
 
-	Prec           *PtrAdd();
+	Prec           *PtrAdd() const;
 	static void     PtrRelease(Prec *prec);
 
-	PteBase();
 	~PteBase();
 
 	friend class PtrBase;
@@ -21,9 +20,9 @@ protected:
 class PtrBase {
 protected:
 	PteBase::Prec *prec;
-	void Set(PteBase *p);
+	void Set(const PteBase *p);
 	void Release();
-	void Assign(PteBase *p);
+	void Assign(const PteBase *p);
 
 public:
 	~PtrBase();
@@ -36,7 +35,7 @@ class Pte : public PteBase {
 
 template <class T>
 class Ptr : public PtrBase, Moveable< Ptr<T> > {
-	T   *Get() const                          { return prec ? static_cast<T *>(prec->ptr) : NULL; }
+	T   *Get() const                          { return prec ? static_cast<T *>(const_cast<PteBase *>(prec->ptr)) : NULL; }
 
 public:
 	T       *operator->() const               { return Get(); }
@@ -51,20 +50,6 @@ public:
 	Ptr(const Ptr& ptr)                       { Set(ptr.Get()); }
 
 	String ToString() const;
-
-	friend bool operator==(const Ptr& a, const T *b)   { return a.Get() == b; }
-	friend bool operator==(const T *a, const Ptr& b)   { return a == b.Get(); }
-	friend bool operator==(const Ptr& a, const Ptr& b) { return a.prec == b.prec; }
-
-	friend bool operator==(const Ptr& a, T *b)         { return a.Get() == b; }
-	friend bool operator==(T *a, const Ptr& b)         { return a == b.Get(); }
-
-	friend bool operator!=(const Ptr& a, const T *b)   { return a.Get() != b; }
-	friend bool operator!=(const T *a, const Ptr& b)   { return a != b.Get(); }
-	friend bool operator!=(const Ptr& a, const Ptr& b) { return a.prec != b.prec; }
-
-	friend bool operator!=(const Ptr& a, T *b)         { return a.Get() != b; }
-	friend bool operator!=(T *a, const Ptr& b)         { return a != b.Get(); }
 };
 
 template <class T>

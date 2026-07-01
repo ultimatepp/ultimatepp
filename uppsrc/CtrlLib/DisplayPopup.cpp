@@ -2,18 +2,18 @@
 
 namespace Upp {
 
-Rect              DisplayPopup::screen_rect;
-Ptr<Ctrl>         DisplayPopup::ctrl;
-Ptr<DisplayPopup> DisplayPopup::owner;
-Rect              DisplayPopup::item;
-Value             DisplayPopup::value;
-Color             DisplayPopup::paper;
-Color             DisplayPopup::ink;
-dword             DisplayPopup::style;
-const Display    *DisplayPopup::display;
-int               DisplayPopup::margin;
-bool              DisplayPopup::usedisplaystdsize_s;
-	
+Rect               DisplayPopup::screen_rect;
+Ptr<Ctrl>          DisplayPopup::ctrl;
+Ptr<DisplayPopup>  DisplayPopup::owner;
+Rect               DisplayPopup::item;
+Value              DisplayPopup::value;
+Color              DisplayPopup::paper;
+Color              DisplayPopup::ink;
+dword              DisplayPopup::style;
+Ptr<const Display> DisplayPopup::display;
+int                DisplayPopup::margin;
+bool               DisplayPopup::usedisplaystdsize_s;
+
 DisplayPopup::DisplayPopup()
 {
 	ONCELOCK {

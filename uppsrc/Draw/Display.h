@@ -2,7 +2,7 @@
 #define IMAGEFILE <Draw/DrawImg.iml>
 #include <Draw/iml_header.h>
 
-class Display {
+class Display : public Pte<Display> {
 public:
 	enum {
 		CURSOR   = 0x01,

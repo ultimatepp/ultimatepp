@@ -4,7 +4,7 @@ namespace Upp {
 
 static StaticMutex sPteLock;
 
-PteBase::Prec *PteBase::PtrAdd()
+PteBase::Prec *PteBase::PtrAdd() const
 {
 	Mutex::Lock __(sPteLock);
 	if(prec)
@@ -27,11 +27,6 @@ void PteBase::PtrRelease(Prec *prec)
 	}
 }
 
-PteBase::PteBase()
-{
-	prec = NULL;
-}
-
 PteBase::~PteBase()
 {
 	Mutex::Lock __(sPteLock);
@@ -44,12 +39,12 @@ void PtrBase::Release()
 	PteBase::PtrRelease(prec);
 }
 
-void PtrBase::Set(PteBase *p)
+void PtrBase::Set(const PteBase *p)
 {
 	prec = p ? p->PtrAdd() : NULL;
 }
 
-void PtrBase::Assign(PteBase *p)
+void PtrBase::Assign(const PteBase *p)
 {
 	Release();
 	Set(p);
