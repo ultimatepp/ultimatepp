@@ -95,7 +95,10 @@ public:
 	void Clean();
 	void RebuildAll();
 	void SaveMakeFile(const String& fn, bool exporting);
-	void SaveCCJ(const String& fn, bool exporting);
+
+	Array<CompileCommand> GetCompileCommands();
+
+	void  SaveCCJ(const String& fn, bool exporting);
 
 	MakeBuild();
 

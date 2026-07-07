@@ -267,3 +267,96 @@ void MakeBuild::SaveCCJ(const String& fn, bool exporting)
 			PutConsole(NFormat("%s: error writing compile_commands.json", fn));
 	}
 }
+
+void CppBuilder::AddCommands(Array<CompileCommand>& commands, const String& package)
+{
+	Package pkg;
+	pkg.Load(PackageFile(package));
+
+	String pack_ident = MakeIdent(package);
+
+	String ci;
+	for(const String& m : include)
+		ci << " -I" << GetPathQ(UnixPath(m));
+
+	for(const String& m : config)
+		ci << " -Dflag" << m;
+
+	for(int i = 0; i < pkg.GetCount(); i++)
+		if(!pkg[i].separator) {
+			String fn = SourcePath(package, pkg[i]);
+			String ext = ToLower(GetFileExt(fn));
+			if(findarg(ext, ".c", ".cpp", ".cc", ".cxx", ".icpp") >= 0) {
+				String gop = Gather(pkg[i].option, config.GetKeys());
+
+				String outfile;
+				outfile << outdir << "/" << GetFileTitle(fn) << ".o";
+	
+				CompileCommand& cc = commands.Add();
+				cc.command << Nvl(compiler, "c++") << " -c" << " -x";
+				if (ext == ".c")
+					cc.command << " c " << c_options;
+				else
+					cc.command << " c++ " << cpp_options;
+				cc.command << ci << ' ' << debug_options << ' ' << GetPathQ(UnixPath(fn)) << " -o" << GetPathQ(outfile);
+				cc.file = fn;
+				cc.ofile = outfile;
+			}
+		}
+}
+
+Array<CompileCommand> MakeBuild::GetCompileCommands()
+{
+	Array<CompileCommand> commands;
+	VectorMap<String, String> bm = GetMethodVars(method);
+	Host host;
+	CreateHost(host, false, false);
+	One<Builder> b = CreateBuilder(&host);
+
+	if(!b)
+		return commands;
+
+	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, host, *b);
+
+	Workspace wspc;
+	wspc.Scan(GetMain(), allconfig.GetKeys());
+
+	Index<String> pkg_config;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		Index<String> modconfig = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
+		PkgConfig(wspc, modconfig, pkg_config);
+		if(i)
+			for(int a = allconfig.GetCount(); --a >= 0;)
+				if(modconfig.Find(allconfig[a]) < 0)
+					allconfig.Remove(a);
+	}
+
+	String incs;
+	
+	for(const String& s: pkg_config) {
+		String str;
+		String out;
+		str << "pkg-config --cflags " << s;
+		if (Sys(str, out) < 0)
+			continue;
+		out.TrimEnd("\n");
+		if (out.IsEmpty())
+			continue;
+		for(const String& m : Split(out, ' '))
+			b->include << m;
+	}
+	
+	incs << ' ' << "-I" << b->GetPathQ(UnixPath(GetUppOut()));
+	
+	b->cc_inc = incs;
+
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const String package = wspc[i];
+		b->config = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
+		b->method = method;
+		b->outdir = UnixPath(OutDir(b->config, package, bm));
+		b->AddCommands(commands, package);
+	}
+	
+	return commands;
+}

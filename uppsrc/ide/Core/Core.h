@@ -531,6 +531,12 @@ String GetExeExt();
 String NormalizeExePath(String exePath);
 String NormalizePathSeparator(String path);
 
+struct CompileCommand {
+	String command;
+	String file;
+	String ofile;
+};
+
 struct Builder {
 	Host            *host;
 	Index<String>    config;
@@ -564,6 +570,8 @@ struct Builder {
 	Index<String>    pkg_config; // names of packages for pkg-config
 	Vector<String>   CINC;
 	Vector<String>   Macro;
+	
+	String           cc_inc; // for AddCommands only
 
 	VectorMap<String, int> tmpfilei; // for naming automatic response files
 	VectorMap<String, Time> dependencies; // dependencies of the last HdependFileTime call
@@ -589,6 +597,7 @@ struct Builder {
 		const Index<String>& common_config, bool exporting) {}
 	virtual void AddCCJ(MakeFile& mfinfo, String package,
 		const Index<String>& common_config, bool exporting, bool last_ws) {}
+	virtual void AddCommands(Array<CompileCommand>& commands, const String& package) {}
 	virtual String GetTargetExt() const = 0;
 	virtual void SaveBuildInfo(const String& package) {}
 	virtual String GetBuildInfoPath() const { return String(); }

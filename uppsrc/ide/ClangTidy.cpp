@@ -43,14 +43,15 @@ ClangTidyDlg::ClangTidyDlg()
 	option.AddKey();
 	option.AddColumn();
 	option.NoCursor();
-
+	
 	for(String s : options) {
 		OptionWithLink& opt = checks.Add(s);
 		opt.NoWantFocus();
 		opt << opt.text.NoSb().VCenter().HSizePos(DPI(18), 0).VSizePos();
 		String txt = "[g";
-		if(s.TrimStart("clang-analyzer-")) // TODO: Improve
-			txt << "^https://clang.llvm.org/extra/clang-tidy/checks/clang-analyzer/" + s + "^";
+		String cs;
+		if(cs.TrimStart("clang-analyzer-")) // TODO: Improve
+			txt << "^https://clang.llvm.org/extra/clang-tidy/checks/clang-analyzer/" + cs + "^";
 		else {
 			int q = s.Find('-');
 			if(q >= 0)
@@ -71,34 +72,6 @@ ClangTidyDlg::ClangTidyDlg()
 	
 	set << [=] { Set(true); };
 	reset << [=] { Set(false); };
-}
-
-void ClangTidyDlg::Group()
-{
-	String st;
-	if(group.GetCursor() > 0)
-		st = group.GetKey();
-
-	option.Clear();
-	for(auto m : ~checks)
-		if(m.key.StartsWith(st)) {
-			option.Add(m.key);
-			option.SetCtrl(option.GetCount() - 1, 0, m.value, false);
-		}
-}
-
-void ClangTidyDlg::Save()
-{
-	active_checks.Clear();
-	for(auto m : ~checks)
-		if(m.value)
-			active_checks.FindAdd(m.key);
-	Value json;
-	ValueArray va;
-	for(String s : active_checks)
-		va << s;
-	json("active_checks") = va;
-	SaveFile(ConfigFile("ide-clang-tidy.json"), AsJSON(json, true));
 }
 
 bool ClangTidyDlg::HasClangTidy()
@@ -139,6 +112,33 @@ bool ClangTidyDlg::HasClangTidy()
 	return path.GetCount() && options.GetCount();
 }
 
+void ClangTidyDlg::Group()
+{
+	String st;
+	if(group.GetCursor() > 0)
+		st = group.GetKey();
+
+	option.Clear();
+	for(auto m : ~checks)
+		if(m.key.StartsWith(st)) {
+			option.Add(m.key);
+			option.SetCtrl(option.GetCount() - 1, 0, m.value, false);
+		}
+}
+
+void ClangTidyDlg::Save()
+{
+	active_checks.Clear();
+	for(auto m : ~checks)
+		if(m.value)
+			active_checks.FindAdd(m.key);
+	Value json;
+	ValueArray va;
+	for(String s : active_checks)
+		va << s;
+	json("active_checks") = va;
+	SaveFile(ConfigFile("ide-clang-tidy.json"), AsJSON(json, true));
+}
 
 bool Ide::HasClangTidy()
 {
@@ -157,4 +157,50 @@ void Ide::ClangTidy()
 	dlg.Execute();
 	
 	dlg.Save();
+	
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
+	
+	if(!mb)
+		return;
+	
+	Array<CompileCommand> commands = mb->GetCompileCommands();
+	
+	JsonArray ccj;
+	String outdir;
+	for(const auto& m : commands) {
+		String dir = GetFileFolder(m.file);
+		if(IsNull(outdir))
+			outdir = dir; // this is as good place as any
+		ccj << Upp::Json("directory", dir)("command", m.command)("file", GetFileName(m.file));
+	}
+	
+	String cc_path = outdir + "/compile_commands.json";
+	Upp::SaveFile(cc_path, ccj.ToString());
+	
+	DDUMP(cc_path);
+	DDUMP(ccj.ToString());
+
+/*	
+	String files;
+	for(const String& f : ResolveFiles(sc, ccjpath, paths))
+		path << "\"" << f << "\" ";
+
+	if(IsNull(v))
+		return sExeFilePath + " --checks=* " + path;
+
+	String checks    = Nvl(v["checks"],     "*");
+	String extraargs = Nvl(v["extra_args"], "");
+	String standard  = Nvl(v["standard"],   "c++14");
+
+	String s;
+	s << sExeFilePath << " "
+	<< "--checks=\"" << checks << "\" "
+	<< "--quiet ";
+
+	if(FileExists(ccjpath))
+		s << "-p=\"" << ccjdir << "\" ";
+
+	return s + extraargs + (extraargs.GetCount() ? " " : "") + path
+			+ (FileExists(ccjpath) ? "" : "-- -std=" + standard);
+*/
 }
