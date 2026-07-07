@@ -28,7 +28,7 @@ void BoundsPainter::LineOp(const Pointf& p, bool rel)
 	sw.Line(p, rel);
 	Bounds(current);
 	Bounds(p);
-	ccontrol = qcontrol = p;
+	qcontrol = ccontrol = current = p;
 }
 
 void QuadraticMinMax(double p1, double p2, double p3, double& l, double& h) {
