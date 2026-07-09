@@ -607,7 +607,6 @@ struct Builder {
 	virtual ~Builder() {}
 
 	void                   ChDir(const String& path);
-	String                 GetPathQ(const String& path) const;
 	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
 	Host::FileInfo         GetFileInfo(const String& path) const;
 	Time                   GetFileTime(const String& path) const;
@@ -615,6 +614,9 @@ struct Builder {
 	int                    Execute(const char *cl, Stream& out);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
 };
+
+String TrimSlash(String s);
+String GetPathQ(const String& path);
 
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());

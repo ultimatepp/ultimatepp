@@ -158,29 +158,45 @@ void Ide::ClangTidy()
 	
 	dlg.Save();
 	
-	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext()); // TODO: Move to Builders/umk
 	
 	if(!mb)
 		return;
 	
 	Array<CompileCommand> commands = mb->GetCompileCommands();
+
+	String cmdline;
 	
 	JsonArray ccj;
 	String outdir;
 	for(const auto& m : commands) {
-		String dir = GetFileFolder(m.file);
 		if(IsNull(outdir))
-			outdir = dir; // this is as good place as any
-		ccj << Upp::Json("directory", dir)("command", m.command)("file", GetFileName(m.file));
+			outdir = GetFileFolder(m.ofile);
+		ccj << Upp::Json("directory", GetFileFolder(m.file))("command", m.command)("file", GetFileName(m.file));
+		cmdline << ' ' << GetPathQ(m.file);
 	}
 	
 	String cc_path = outdir + "/compile_commands.json";
+	RealizePath(cc_path);
 	Upp::SaveFile(cc_path, ccj.ToString());
 	
 	DDUMP(cc_path);
 	DDUMP(ccj.ToString());
+	
+	cmdline << " -checks=" << Join(ClangTidyDlg::active_checks.GetKeys(), ",")
+	        << " -p " << cc_path;
 
-/*	
+	
+	String rf_path = outdir + "/clang_tidy_parameters_file";
+	Upp::SaveFile(rf_path, cmdline);
+
+	BeginBuilding(true);
+	Host host;
+	CreateHost(host, darkmode, disable_uhd);
+	host.Execute(ClangTidyDlg::path + " @" + rf_path);
+	EndBuilding(true);
+	SetErrorEditor();
+/*
 	String files;
 	for(const String& f : ResolveFiles(sc, ccjpath, paths))
 		path << "\"" << f << "\" ";

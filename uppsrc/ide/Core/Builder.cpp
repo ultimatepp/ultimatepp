@@ -12,7 +12,7 @@ String TrimSlash(String s)
 	return s;
 }
 
-String Builder::GetPathQ(const String& path) const
+String GetPathQ(const String& path)
 {
 	return '\"' + TrimSlash(path) + '\"';
 }

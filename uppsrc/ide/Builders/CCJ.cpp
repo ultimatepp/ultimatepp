@@ -346,7 +346,7 @@ Array<CompileCommand> MakeBuild::GetCompileCommands()
 			b->include << m;
 	}
 	
-	incs << ' ' << "-I" << b->GetPathQ(UnixPath(GetUppOut()));
+	incs << ' ' << "-I" << GetPathQ(UnixPath(GetUppOut()));
 	
 	b->cc_inc = incs;
 
