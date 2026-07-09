@@ -125,6 +125,7 @@ void GridCtrl::LeftDown(Point p, dword keyflags)
 				Refresh();
 			}
 		}
+		WhenSelectAction();
 	}
 
 	#ifdef LOG_CALLBACKS
@@ -490,9 +491,10 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 		return;
 	}
 	
-	if(IsValidCursor(anchor) && IsValidCursor(curpos) && multi_select)
+	if(IsValidCursor(anchor) && IsValidCursor(curpos) && multi_select) {
 		SelectRange(Rect(anchor, curpos), true, select_row);
-	
+		WhenSelectAction();
+	}
 	anchor = curpos;
 }
 
