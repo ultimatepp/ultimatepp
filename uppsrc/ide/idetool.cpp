@@ -420,7 +420,7 @@ void RepoSyncDirs(const Vector<String>& working)
 	for(String d : working)
 		repo.Dir(d);
 	repo.DoSync();
-	SaveFile(repocfg, repo.GetMsgs());
+	SaveChangedFile(repocfg, repo.GetMsgs());
 	if(f)
 		f->SetFocus();
 }

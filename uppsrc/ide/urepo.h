@@ -49,6 +49,8 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 
 	Index<String>            svndir;
 	
+	Index<String>            skip;
+	
 	struct SvnOptions : WithSvnOptionsLayout<ParentCtrl> {
 		SvnOptions() { CtrlLayout(*this); }
 	};
