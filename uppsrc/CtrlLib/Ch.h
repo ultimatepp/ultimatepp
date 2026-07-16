@@ -40,6 +40,8 @@ Color GetInk(const Image& m); // the color that is most different from AvgColor
 int   GetRoundness(const Image& m);
 void  FixButton(Image& button); // fix button if it is too close to face color
 
+Value ImageOrColor(const Image& m);
+
 Image WithRect(Image m, int x, int y, int cx, int cy, Color c);
 Image WithLeftLine(const Image& m, Color c, int w = DPI(1));
 Image WithRightLine(const Image& m, Color c, int w = DPI(1));
