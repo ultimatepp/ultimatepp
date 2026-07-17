@@ -139,6 +139,7 @@ Image HorzSymm(Image src);
 double Difference(const Image& a, const Image& b);
 
 bool   IsSingleColor(const Image& m, const Rect& rect);
+Color  GetSingleColor(const Image& m);
 
 Image  RecreateAlpha(const Image& overwhite, const Image& overblack);
 int    ImageMargin(const Image& m, int p, int dist);

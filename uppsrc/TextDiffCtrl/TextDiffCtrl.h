@@ -330,7 +330,7 @@ protected:
 	static bool FileEqual(const String& f1, const String& f2, int& kind);
 
 	void GatherFilesDeep(VectorMap<String, Time>& files, const String& base, const String& path);
-	void Compare();
+	void Compare(const String& types = Null);
 	void ShowResult();
 	void ClearFiles();
 	virtual void File();

@@ -719,6 +719,9 @@ String GetUserName()
 	::GetUserNameW(temp, &w);
 	return temp;
 #else
+	char user[1000];
+	if(getlogin_r(user, 999))
+		return user;
 	return Nvl(GetEnv("USER"), "root");
 #endif
 }

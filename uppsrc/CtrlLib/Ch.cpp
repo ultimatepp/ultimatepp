@@ -349,6 +349,12 @@ Image Hot3(const Image& m)
 	return WithHotSpots(m, sz.cx / 3, sz.cy / 3, sz.cx - sz.cx / 3, sz.cy - sz.cy / 3);
 }
 
+Value ImageOrColor(const Image& m)
+{
+	Color c = GetSingleColor(m);
+	return IsNull(c) ? (Value)m : (Value)c;
+}
+
 Image ChHot(const Image& m, int n)
 {
 	return WithHotSpots(m, DPI(n), DPI(n), 0, 0);

@@ -247,9 +247,15 @@ bool RepoSync::ListGit(const String& path)
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
 			if(action >= 0) {
-				list.SetCtrl(ii, 0, revert.Add().SetLabel(an + (action == ADD ? "\nSkip" : "\nRevert"))
+				String sw = an;
+				if(action != CONFLICT) {
+					sw << "\nSkip";
+					if(action != ADD)
+						sw << "\nRevert";
+				}
+				list.SetCtrl(ii, 0, revert.Add().SetLabel(sw)
 				    .NoWantFocus());
-				revert.Top() <<= 0;
+				revert.Top() <<= skip.Find(file) >= 0;
 				Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
 				b <<= THISBACK1(DoDiff, ii);
 				list.SetCtrl(ii, 2, b);
@@ -463,8 +469,7 @@ again:
 			if(action == REPOSITORY)
 				break;
 			String path = list.Get(l, 1);
-
-			bool revert = list.Get(l, 2) == 1;
+			Value sw = list.Get(l, 2);
 
 			bool git_commit = git && git->commit.IsEnabled() && git->commit;
 			bool svn_commit = svn && svn->commit.IsEnabled() && svn->commit;
@@ -473,7 +478,7 @@ again:
 				String msg = list.Get(l, 3);
 				if(commit) {
 					if(svn_commit && sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\"") == 0 ||
-				       git_commit && sys.Git(repo_dir, "commit -a -m \"" << msg << "\"") == 0)
+				       git_commit && sys.Git(repo_dir, "commit -m \"" << msg << "\"") == 0)
 						msg.Clear();
 				}
 				msgmap.GetAdd(repo_dir) = msg;
@@ -481,12 +486,18 @@ again:
 				break;
 			}
 
-			if(svn_commit && SvnFile(sys, filelist, action, path, revert))
+			if(svn_commit && SvnFile(sys, filelist, action, path, sw == 1))
 				commit = true;
 
-			if(git_commit && GitFile(sys, action, path, revert))
-				commit = true;
-
+			if(git_commit) {
+				if(sw == 1)
+					skip.FindAdd(path);
+				else
+				if(GitFile(sys, action, path, sw == 2)) {
+					commit = true;
+					skip.UnlinkKey(path);
+				}
+			}
 			l++;
 		}
 		if(svn && svn->update)
@@ -509,6 +520,7 @@ again:
 	sys.Perform();
 	
 	msgmap.RemoveIf([&](int i) { return IsNull(msgmap[i]); });
+	skip.Sweep();
 }
 
 bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool revert)
@@ -520,8 +532,7 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
-	if(action == ADD)
-		sys.Git(repo_dir, "add \"" + file + "\"");
+	sys.Git(repo_dir, "add \"" + file + "\"");
 	return true;
 }
 
@@ -580,9 +591,11 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 
 void RepoSync::Serialize(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
 	s % msgmap;
+	if(version >= 1)
+		s % skip;
 }
 
 void RepoSync::SetMsgs(const String& s)

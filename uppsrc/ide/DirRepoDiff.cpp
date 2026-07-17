@@ -51,21 +51,34 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 		files_pane << r[i].HSizePos().TopPos(y, cy);
 		y += lcy + lcy / 2;
 	}
+	
+	files_pane << masks.TopPos(y, cy).HSizePos();
+	masks.NullText("Scan all file types");
+	y += lcy + div;
+	
+	masks.AddList("*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp");
+	masks.AddList("*.diff *.patch");
+	masks.AddList("*.java");
+	masks.AddList("*.json");
+	masks.AddList("*.py *.pyc *.pyd *.pyo");
+	masks.AddList("*.html *.js *.css *.witz");
+	masks.AddList("*.xml *.xsd");
+	masks.AddList("*.sch *.usc *.dbg *.rc *.brc *.upt");
 
-	files_pane.Add(hidden.TopPos(y, bcy).LeftPos(0, bcx));
-	files_pane.Add(split_lines.TopPos(y, bcy).LeftPosZ(52, 100));
-	files_pane.Add(compare.TopPos(y, bcy).RightPos(0, bcx));
+	files_pane << hidden.TopPos(y, bcy).LeftPos(0, bcx);
+	files_pane << split_lines.TopPos(y, bcy).LeftPosZ(52, 100);
+	files_pane << compare.TopPos(y, bcy).RightPos(0, bcx);
 	y += bcy + div;
 
-	files_pane.Add(added.TopPos(y, bcy).LeftPosZ(2, 60));
-	files_pane.Add(modified.TopPos(y, bcy).LeftPosZ(52, 70));
-	files_pane.Add(removed.TopPos(y, bcy).LeftPosZ(128, 80));
-	files_pane.Add(recent.TopPos(y, bcy).RightPos(0, bcx + Zx(8)));
-	files_pane.Add(extension.TopPos(y, bcy).RightPos(bcx + Zx(8) + DPI(8), bcx));
+	files_pane << added.TopPos(y, bcy).LeftPosZ(2, 60);
+	files_pane << modified.TopPos(y, bcy).LeftPosZ(52, 70);
+	files_pane << removed.TopPos(y, bcy).LeftPosZ(128, 80);
+	files_pane << recent.TopPos(y, bcy).RightPos(0, bcx + Zx(8));
+	files_pane << extension.TopPos(y, bcy).RightPos(bcx + Zx(8) + DPI(8), bcx);
 	y += bcy + div;
 
-	files_pane.Add(files.VSizePos(y, Zy(24)).HSizePos());
-	files_pane.Add(find.BottomPosZ(6, 19).HSizePosZ());
+	files_pane << files.VSizePos(y, Zy(24)).HSizePos();
+	files_pane << find.BottomPosZ(6, 19).HSizePosZ();
 
 	extension.Disable();
 
@@ -173,5 +186,5 @@ void DirRepoDiffDlg::Compare()
 		return true;
 	};
 	if(Clone(0, dir1, lmid) && Clone(1, dir2, rmid))
-		DirDiffDlg::Compare();
+		DirDiffDlg::Compare(~masks);
 }

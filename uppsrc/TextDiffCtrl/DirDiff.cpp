@@ -66,9 +66,9 @@ DirDiffDlg::DirDiffDlg()
 	seldir1.Title("First directory to compare");
 	seldir2.Title("Second directory to compare");
 
-	compare <<= THISBACK(Compare);
-	dir1 <<= THISBACK(ClearFiles);
-	dir2 <<= THISBACK(ClearFiles);
+	compare << [=] { Compare(); };
+	dir1 << [=] { ClearFiles(); };
+	dir2 << [=] { ClearFiles(); };
 
 	modified	<< [=] { ShowResult(); };
 	removed		<< [=] { ShowResult(); };
@@ -196,7 +196,7 @@ bool DirDiffDlg::FileEqual(const String& f1, const String& f2, int& kind)
 	return false;
 }
 
-void DirDiffDlg::Compare()
+void DirDiffDlg::Compare(const String& types)
 {
 	VectorMap<String, Time> fs;
 	GatherFilesDeep(fs, ~dir1, Null);
@@ -219,20 +219,22 @@ void DirDiffDlg::Compare()
 		if(pi.StepCanceled())
 			break;
 		String p = fs.GetKey(i);
-		String p1 = AppendFileName(~dir1, p);
-		String p2 = AppendFileName(~dir2, p);
-		int kind = NORMAL_FILE;
-		auto IsGit = [&](const String& path) {
-			return path.Find("/.git/") >= 0 || path.Find("\\.git/") >= 0 || path.Find("\\.git\\") >= 0 || path.Find("/.git\\") >= 0;
-		};
-		if(!FileEqual(p1, p2, kind) && !IsGit(p1) && !IsGit(p2)) {
-			exts.FindAdd(GetFileExt(p1));
-			FileInfo& m = list.Add();
-			m.file = p;
-			m.path1 = p1;
-			m.path2 = p2;
-			m.time = fs[i];
-			m.kind = kind;
+		if(IsNull(types) || PatternMatchMulti(types, GetFileName(p))) {
+			String p1 = AppendFileName(~dir1, p);
+			String p2 = AppendFileName(~dir2, p);
+			int kind = NORMAL_FILE;
+			auto IsGit = [&](const String& path) {
+				return path.Find("/.git/") >= 0 || path.Find("\\.git/") >= 0 || path.Find("\\.git\\") >= 0 || path.Find("/.git\\") >= 0;
+			};
+			if(!FileEqual(p1, p2, kind) && !IsGit(p1) && !IsGit(p2)) {
+				exts.FindAdd(GetFileExt(p1));
+				FileInfo& m = list.Add();
+				m.file = p;
+				m.path1 = p1;
+				m.path2 = p2;
+				m.time = fs[i];
+				m.kind = kind;
+			}
 		}
 	}
 

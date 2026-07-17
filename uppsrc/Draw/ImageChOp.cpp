@@ -156,6 +156,14 @@ bool IsSingleColor(const Image& m, const Rect& rect_)
 	return true;
 }
 
+Color GetSingleColor(const Image& m)
+{
+	Size sz = m.GetSize();
+	if(sz.cx == 0 || sz.cy == 0 || !IsSingleColor(m, sz))
+		return Null;
+	return m[0][0];
+}
+
 Image RecreateAlpha(const Image& overwhite, const Image& overblack)
 {
 	Size sz = overwhite.GetSize();
