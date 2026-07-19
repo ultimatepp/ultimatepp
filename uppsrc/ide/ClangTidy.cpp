@@ -89,6 +89,7 @@ bool ClangTidyDlg::HasClangTidy()
 			String p = "clang-tidy";
 #endif
 			String s = Sys(p + " -checks=* --list-checks");
+			DDUMP(s);
 			if(s.GetCount()) {
 				path = p;
 				for(String l : Split(s, '\n')) {
@@ -106,13 +107,14 @@ bool ClangTidyDlg::HasClangTidy()
 					groups.FindAdd(s);
 				}
 				Load(ClangTidyConfigPath());
-				break;
+				goto exit; // break not compatible with POSIX
 			}
 
 #ifdef PLATFORM_WIN32
 		}
 #endif
 	}
+exit:
 	return path.GetCount() && options.GetCount();
 }
 
