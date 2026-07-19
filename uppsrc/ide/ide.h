@@ -1134,6 +1134,7 @@ public:
 	void      SyncErrorsMessage();
 	String    GetErrorsText(bool all, bool src);
 	void      CopyError(bool all);
+	void      RemoveError();
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();
 	void      NewFFound();
@@ -1144,6 +1145,7 @@ public:
 	void      ShowFound(ArrayCtrl& list);
 	void      CopyFound(ArrayCtrl& list, bool all);
 	void      FFoundMenu(ArrayCtrl& list, Bar& bar);
+	void      RemoveErrorNotes();
 	void      SelError();
 	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);

@@ -244,7 +244,11 @@ void Ide::ClangTidy()
 	Upp::SaveFile(cc_path, ccj.ToString());
 	
 	cmdline << " -checks=" << Join(ClangTidyDlg::active_checks.GetKeys(), ",")
-	        << " -p " << cc_path;
+	        << " -p " << cc_path
+#ifdef PLATFORM_WIN32
+	        << " -extra-arg=--target=x86_64-w64-mingw32"
+#endif
+	;
 
 	
 	String rf_path = outdir + "/clang_tidy_parameters_file";
