@@ -616,14 +616,44 @@ void Ide::CopyError(bool all)
 		WriteClipboardText(s);
 }
 
+void Ide::RemoveError()
+{
+	if(!error.IsCursor())
+		return;
+	RemoveErrorNotes();
+	String err = ~error.Get(2);
+	int c = error.GetCursor();
+	for(int i = error.GetCount() - 1; i >= 0; i--)
+		if(~error.Get(i, 2) == err)
+			error.Remove(i);
+	error.SetCursor(min(error.GetCount() - 1, c));
+	SelError();
+	SyncErrorsMessage();
+}
+
 void Ide::ErrorMenu(Bar& bar)
 {
-	bar.Add(error.IsCursor(), "Copy", THISBACK1(CopyError, false));
-	bar.Add("Copy all", THISBACK1(CopyError, true));
+	bar.Add(error.IsCursor(), "Copy", [this] { CopyError(false); });
+	bar.Add("Copy all", [this] { CopyError(false); });
 	bar.Separator();
-	bar.Add(error.IsCursor(), "Search the web..", IdeImg::Google(), [=] {
+	bar.Add(error.IsCursor() && error.Get("NOTES") != "0",
+	        "Remove all instances of this error", [this] { RemoveError(); });
+	bar.Separator();
+	bar.Add(error.IsCursor(), "Search the web..", IdeImg::Google(), [this] {
 		LaunchWebBrowser("https://www.google.com/search?q=" + GetErrorsText(false, false));
 	});
+}
+
+void Ide::RemoveErrorNotes()
+{
+	int sc = error.GetScroll();
+	removing_notes = true;
+	for(int i = error.GetCount() - 1; i >= 0; i--)
+		if(error.Get(i, "NOTES") == "0")
+			error.Remove(i);
+	removing_notes = false;
+	error.ScrollTo(sc);
+	error.ScrollIntoCursor();
 }
 
 void Ide::SelError()
@@ -633,14 +663,7 @@ void Ide::SelError()
 	if(error.IsCursor()) {
 		Value v = error.Get("NOTES");
 		if(v != "0") { // "0" - expanded note
-			int sc = error.GetScroll();
-			removing_notes = true;
-			for(int i = error.GetCount() - 1; i >= 0; i--)
-				if(error.Get(i, "NOTES") == "0")
-					error.Remove(i);
-			removing_notes = false;
-			error.ScrollTo(sc);
-			error.ScrollIntoCursor();
+			RemoveErrorNotes();
 			ValueArray n = v;
 			int ii = error.GetCursor();
 			for(int i = 0; i < n.GetCount(); i++) {
