@@ -797,6 +797,9 @@ void Ide::BuildMenu(Bar& menu)
 
 	BuildFileMenu(menu);
 
+	if(HasClangTidy())
+		menu.Add(AK_CLANGTIDY, [=] { ClangTidy(); });
+
 	menu.MenuSeparator();
 
 	menu.Add("Stop on errors", THISBACK(ToggleStopOnErrors))
@@ -850,10 +853,6 @@ void Ide::DebugMenu(Bar& menu)
 				menu.Add(b, AK_VALGRIND, THISBACK(Valgrind))
 					.Help("Build application & run in valgring");
 		#endif
-		
-			if(HasClangTidy())
-				menu.Add(AK_CLANGTIDY, [=] { ClangTidy(); });
-
 			menu.Separator();
 		}
 	}
