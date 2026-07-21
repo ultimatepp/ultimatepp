@@ -974,6 +974,18 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		menu.Separator();
 		if(!isaux) {
 			menu.Sub("Build", [=] (Bar& menu) { BuildFileMenu(menu); });
+			Ide *ide = dynamic_cast<Ide *>(TheIde());
+			if(ide && ide->HasClangTidy()) {
+				menu.Separator();
+				
+				String path = NormalizePath(GetActiveFilePath());
+				
+				menu.Add(IsCSourceFile(path), "Check file with Clang-Tidy", IdeImg::ClangTidy(), [=] {
+					ide->ClangTidy([=](const String& p) {
+						return NormalizePath(p) == path;
+					});
+				});
+			}
 			menu.Separator();
 		}
 	}

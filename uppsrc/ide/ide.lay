@@ -1028,3 +1028,14 @@ LAYOUT(SeqLayout, 764, 544)
 	ITEM(Upp::EditString, postfix, LeftPosZ(708, 48).TopPosZ(8, 19))
 END_LAYOUT
 
+LAYOUT(ClangTidyLayout, 624, 580)
+	ITEM(Upp::ArrayCtrl, group, LeftPosZ(8, 184).TopPosZ(8, 532))
+	ITEM(Upp::ArrayCtrl, option, LeftPosZ(196, 420).TopPosZ(8, 532))
+	ITEM(Upp::Button, save, SetLabel(t_("Save..")).RightPosZ(568, 48).BottomPosZ(8, 24))
+	ITEM(Upp::Button, load, SetLabel(t_("Load..")).RightPosZ(516, 48).BottomPosZ(8, 24))
+	ITEM(Upp::Button, set, SetLabel(t_("Set All")).RightPosZ(380, 48).BottomPosZ(8, 24))
+	ITEM(Upp::Button, reset, SetLabel(t_("Reset All")).RightPosZ(320, 56).BottomPosZ(8, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+

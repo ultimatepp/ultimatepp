@@ -17,8 +17,8 @@ Vector<String> RepoInfo(const String& package);
 String MakeIdent(const char *name);
 
 struct CppBuilder : Builder {
-	virtual String GetTargetExt() const;
-	virtual void   CleanPackage(const String& package, const String& outdir);
+	String GetTargetExt() const override;
+	void   CleanPackage(const String& package, const String& outdir) override;
 
 	const Workspace& wspc;
 	Time             targettime;
@@ -38,8 +38,8 @@ struct CppBuilder : Builder {
 	void                   DoRc(Vector<String>& sfile, Vector<String>& soptions, const Package& pkg, const String& package);
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
-	virtual                String GetBuildInfoPath() const;
-	void                   SaveBuildInfo(const String& package);
+	String                 GetBuildInfoPath() const override;
+	void                   SaveBuildInfo(const String& package) override;
 	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 	bool                   HasAnyDebug() const;
@@ -59,12 +59,14 @@ struct CppBuilder : Builder {
 
 	void                   ShowTime(int count, int start_time);
 
-	virtual void           AddMakeFile(MakeFile& makefile, String package,
+	void AddMakeFile(MakeFile& makefile, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
-		const Index<String>& common_config, bool exporting);
+		const Index<String>& common_config, bool exporting) override;
 
-	virtual void AddCCJ(MakeFile& mfinfo, String package,
-		const Index<String>& common_config, bool exporting, bool last_ws);
+	void AddCCJ(MakeFile& mfinfo, String package,
+		const Index<String>& common_config, bool exporting, bool last_ws) override;
+
+	void AddCommands(Array<CompileCommand>& commands, const String& package) override;
 
 	CppBuilder() : wspc(GetIdeWorkspace()) {}
 };
@@ -170,5 +172,7 @@ INITIALIZE(MscBuilder)
 INITIALIZE(JavaBuilder)
 INITIALIZE(AndroidBuilder)
 INITIALIZE(ScriptBuilder)
+
+#include "ClangTidy.h"
 
 #endif

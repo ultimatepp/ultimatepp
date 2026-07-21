@@ -811,8 +811,6 @@ public:
 
 	void      AKEditor();
 
-	void      PackageMenu(Bar& menu);
-
 	void      UscFile(const String& file);
 	void      UscProcessDir(const String& dir);
 	void      UscProcessDirDeep(const String& dir);
@@ -1134,6 +1132,7 @@ public:
 	void      SyncErrorsMessage();
 	String    GetErrorsText(bool all, bool src);
 	void      CopyError(bool all);
+	void      RemoveError();
 	void      ErrorMenu(Bar& bar);
 	void      ShowError();
 	void      NewFFound();
@@ -1144,6 +1143,7 @@ public:
 	void      ShowFound(ArrayCtrl& list);
 	void      CopyFound(ArrayCtrl& list, bool all);
 	void      FFoundMenu(ArrayCtrl& list, Bar& bar);
+	void      RemoveErrorNotes();
 	void      SelError();
 	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);
@@ -1298,6 +1298,9 @@ public:
 		void  MacroPackageFiles(EscEscape& e);
 		void  MacroAllPackages(EscEscape& e);
 		void  MacroTarget(EscEscape& e);
+
+	void ClangTidy(Gate<const String&> what);
+	bool HasClangTidy();
 
 	String GetAndroidSdkPath();
 

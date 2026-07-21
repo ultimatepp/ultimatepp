@@ -184,8 +184,6 @@ public:
 	virtual String    IdeGetIncludePath() = 0;
 
 	virtual String                    GetDefaultMethod();
-	virtual VectorMap<String, String> GetMethodVars(const String& method);
-	virtual String                    GetMethodName(const String& method);
 
 	virtual bool      IsPersistentFindReplace() = 0;
 
@@ -531,6 +529,12 @@ String GetExeExt();
 String NormalizeExePath(String exePath);
 String NormalizePathSeparator(String path);
 
+struct CompileCommand {
+	String command;
+	String file;
+	String ofile;
+};
+
 struct Builder {
 	Host            *host;
 	Index<String>    config;
@@ -564,6 +568,8 @@ struct Builder {
 	Index<String>    pkg_config; // names of packages for pkg-config
 	Vector<String>   CINC;
 	Vector<String>   Macro;
+	
+	String           cc_inc; // for AddCommands only
 
 	VectorMap<String, int> tmpfilei; // for naming automatic response files
 	VectorMap<String, Time> dependencies; // dependencies of the last HdependFileTime call
@@ -589,6 +595,7 @@ struct Builder {
 		const Index<String>& common_config, bool exporting) {}
 	virtual void AddCCJ(MakeFile& mfinfo, String package,
 		const Index<String>& common_config, bool exporting, bool last_ws) {}
+	virtual void AddCommands(Array<CompileCommand>& commands, const String& package) {}
 	virtual String GetTargetExt() const = 0;
 	virtual void SaveBuildInfo(const String& package) {}
 	virtual String GetBuildInfoPath() const { return String(); }
@@ -598,7 +605,6 @@ struct Builder {
 	virtual ~Builder() {}
 
 	void                   ChDir(const String& path);
-	String                 GetPathQ(const String& path) const;
 	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
 	Host::FileInfo         GetFileInfo(const String& path) const;
 	Time                   GetFileTime(const String& path) const;
@@ -606,6 +612,9 @@ struct Builder {
 	int                    Execute(const char *cl, Stream& out);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
 };
+
+String TrimSlash(String s);
+String GetPathQ(const String& path);
 
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());

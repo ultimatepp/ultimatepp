@@ -25,6 +25,8 @@ String NoCr(const char *s);
 int CharFilterSlash(int c);
 
 String GetDefaultMethod();
+String GetMethodName(const String& method);
+String GetMethodPath(const String& method);
 VectorMap<String, String> GetMethodVars(const String& method);
 
 String MainConf(const Workspace& wspc, String& add_includes);
@@ -95,7 +97,10 @@ public:
 	void Clean();
 	void RebuildAll();
 	void SaveMakeFile(const String& fn, bool exporting);
-	void SaveCCJ(const String& fn, bool exporting);
+
+	Array<CompileCommand> GetCompileCommands();
+
+	void  SaveCCJ(const String& fn, bool exporting);
 
 	MakeBuild();
 
