@@ -811,8 +811,6 @@ public:
 
 	void      AKEditor();
 
-	void      PackageMenu(Bar& menu);
-
 	void      UscFile(const String& file);
 	void      UscProcessDir(const String& dir);
 	void      UscProcessDirDeep(const String& dir);

@@ -33,6 +33,7 @@ bool ClangTidy::HasClangTidy()
 						s.Trim(q);
 					groups.FindAdd(s);
 				}
+				DDUMP(ClangTidyConfigPath());
 				Load(ClangTidyConfigPath());
 				goto exit; // break not compatible with POSIX / ONCELOCK
 			}
@@ -51,10 +52,17 @@ String ClangTidy::ClangTidyConfigPath() {
 
 void ClangTidy::Load(const char *path)
 {
-	Value json = ParseJSON(LoadFile(path));
-	active_checks.Clear();
-	for(Value v : json["active_checks"])
-		active_checks << ~v;
+	if(FileExists(path)) {
+		Value json = ParseJSON(LoadFile(path));
+		active_checks.Clear();
+		for(Value v : json["active_checks"])
+			active_checks << ~v;
+	}
+	else
+	for(const String& s : options) {
+		if(s.StartsWith("clang-analyzer-core."))
+			active_checks << s;
+	}
 }
 
 void ClangTidy::Save(const char *path)
@@ -64,7 +72,8 @@ void ClangTidy::Save(const char *path)
 	for(String s : active_checks)
 		va << s;
 	json("active_checks") = va;
-	SaveFile(path, AsJSON(json, true));
+	DLOG("Save " << path);
+	SaveChangedFile(path, AsJSON(json, true));
 }
 
 void ClangTidy::RunClangTidy(const Array<CompileCommand>& commands)

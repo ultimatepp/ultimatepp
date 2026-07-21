@@ -139,6 +139,9 @@ void Ide::ClangTidy(Gate<const String&> what)
 	}
 
 	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext()); // TODO: Move to Builders/umk
+
+	if(!mb)
+		return;
 	
 	Array<CompileCommand> cs = mb->GetCompileCommands();
 	
@@ -153,13 +156,12 @@ void Ide::ClangTidy(Gate<const String&> what)
 
 	ClangTidyDlg dlg;
 	
-	if(!dlg.ExecuteOK())
-		return;
+	bool b = dlg.ExecuteOK();
 	
 	dlg.ReadOptions();
 	dlg.Save(dlg.ClangTidyConfigPath());
-	
-	if(!mb)
+
+	if(!b)
 		return;
 
 	BeginBuilding(true);

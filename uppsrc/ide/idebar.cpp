@@ -22,11 +22,6 @@ void Ide::AKEditor()
 	CodeEditor::replace_key = AK_DOREPLACE().key[0];
 }
 
-void Ide::PackageMenu(Bar& menu)
-{
-	Project(menu);
-}
-
 void Ide::FileBookmark(Bar& menu)
 {
 	LTIMESTOP("FileBookMark");
