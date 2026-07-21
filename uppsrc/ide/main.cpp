@@ -435,8 +435,6 @@ void AppMain___()
 				clset=true;
 		}
 		
-		ide.HasClangTidy(); _DBG_
-
 		ide.LoadAbbr();
 
 		DelTemps();

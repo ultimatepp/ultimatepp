@@ -1,6 +1,6 @@
 #include "Builders.h"
 
-#define LDUMP(x) DDUMP(x)
+#define LDUMP(x) // DDUMP(x)
 
 String        ClangTidy::path;
 Index<String> ClangTidy::options;
@@ -33,7 +33,6 @@ bool ClangTidy::HasClangTidy()
 						s.Trim(q);
 					groups.FindAdd(s);
 				}
-				DDUMP(ClangTidyConfigPath());
 				Load(ClangTidyConfigPath());
 				goto exit; // break not compatible with POSIX / ONCELOCK
 			}
@@ -72,7 +71,6 @@ void ClangTidy::Save(const char *path)
 	for(String s : active_checks)
 		va << s;
 	json("active_checks") = va;
-	DLOG("Save " << path);
 	SaveChangedFile(path, AsJSON(json, true));
 }
 
