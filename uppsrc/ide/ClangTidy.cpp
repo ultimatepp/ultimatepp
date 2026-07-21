@@ -1,16 +1,6 @@
 #include "ide.h"
 
-struct ClangTidyDlg : WithClangTidyLayout<TopWindow> {
-	static String         path;
-	static Index<String>  options;
-	static Index<String>  groups;
-	static Index<String>  active_checks;
-	
-	static bool   HasClangTidy();
-	static String ClangTidyConfigPath();
-	static void Load(const char *path);
-	static void Save(const char *path);
-
+struct ClangTidyDlg : WithClangTidyLayout<TopWindow>, ClangTidy {
 	struct OptionWithLink : Option {
 		RichTextCtrl text;
 	};
@@ -25,14 +15,9 @@ struct ClangTidyDlg : WithClangTidyLayout<TopWindow> {
 	ClangTidyDlg();
 };
 
-String        ClangTidyDlg::path;
-Index<String> ClangTidyDlg::options;
-Index<String> ClangTidyDlg::groups;
-Index<String> ClangTidyDlg::active_checks;
-
 ClangTidyDlg::ClangTidyDlg()
 {
-	CtrlLayoutOKCancel(*this, "Clang Tidy");
+	CtrlLayoutOKCancel(*this, "Clang-Tidy");
 	
 	group.AddIndex();
 	group.AddColumn("Group");
@@ -79,49 +64,6 @@ ClangTidyDlg::ClangTidyDlg()
 	};
 }
 
-bool ClangTidyDlg::HasClangTidy()
-{
-	ONCELOCK {
-#ifdef PLATFORM_WIN32
-		for(String p : Split(GetMethodVars("CLANGx64").Get("PATH", ""), ';')) {
-			p << "/clang-tidy.exe";
-#else
-			String p = "clang-tidy";
-#endif
-			String s = Sys(p + " -checks=* --list-checks");
-			DDUMP(s);
-			if(s.GetCount()) {
-				path = p;
-				for(String l : Split(s, '\n')) {
-					l = TrimBoth(l);
-					if(*l.Last() != ':') // Ignore "Enabled checks:"
-						options.FindAdd(l);
-				}
-				
-				for(String s : options) {
-					int q = s.Find('.');
-					if(q < 0)
-						q = s.Find('-');
-					if(q >= 0)
-						s.Trim(q);
-					groups.FindAdd(s);
-				}
-				Load(ClangTidyConfigPath());
-				goto exit; // break not compatible with POSIX
-			}
-
-#ifdef PLATFORM_WIN32
-		}
-#endif
-	}
-exit:
-	return path.GetCount() && options.GetCount();
-}
-
-String ClangTidyDlg::ClangTidyConfigPath() {
-	return ConfigFile("ide-clang-tidy.json");
-}
-
 void ClangTidyDlg::Group()
 {
 	String g = ~group.GetKey();
@@ -151,14 +93,6 @@ void ClangTidyDlg::SyncGroupCounts()
 	}
 }
 
-
-void ClangTidyDlg::Load(const char *path)
-{
-	Value json = ParseJSON(LoadFile(path));
-	active_checks.Clear();
-	for(Value v : json["active_checks"])
-		active_checks << ~v;
-}
 
 void ClangTidyDlg::SetOptions()
 {
@@ -192,74 +126,49 @@ void ClangTidyDlg::ReadOptions()
 			active_checks.FindAdd(m.key);
 }
 
-void ClangTidyDlg::Save(const char *path)
-{
-	Value json;
-	ValueArray va;
-	for(String s : active_checks)
-		va << s;
-	json("active_checks") = va;
-	SaveFile(path, AsJSON(json, true));
-}
-
 bool Ide::HasClangTidy()
 {
 	return ClangTidyDlg::HasClangTidy();
 }
 
-void Ide::ClangTidy()
+void Ide::ClangTidy(Gate<const String&> what)
 {
 	if(!HasClangTidy()) {
-		Exclamation("No clang-tidy...");
+		Exclamation("No clang-tidy!");
+		return;
+	}
+
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext()); // TODO: Move to Builders/umk
+	
+	Array<CompileCommand> cs = mb->GetCompileCommands();
+	
+	cs.RemoveIf([&](int i) {
+		return !what(cs[i].file);
+	});
+	
+	if(cs.GetCount() == 0) {
+		Exclamation("No files to check!");
 		return;
 	}
 
 	ClangTidyDlg dlg;
 	
-	dlg.Execute();
+	if(!dlg.ExecuteOK())
+		return;
 	
 	dlg.ReadOptions();
 	dlg.Save(dlg.ClangTidyConfigPath());
 	
-	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext()); // TODO: Move to Builders/umk
-	
 	if(!mb)
 		return;
-	
-	Array<CompileCommand> commands = mb->GetCompileCommands();
-
-	String cmdline;
-	
-	JsonArray ccj;
-	String outdir;
-	for(const auto& m : commands) {
-		if(IsNull(outdir))
-			outdir = GetFileFolder(m.ofile);
-		ccj << Upp::Json("directory", GetFileFolder(m.file))("command", m.command)("file", GetFileName(m.file));
-		cmdline << ' ' << GetPathQ(m.file);
-	}
-	
-	String cc_path = outdir + "/compile_commands.json";
-	RealizePath(cc_path);
-	Upp::SaveFile(cc_path, ccj.ToString());
-	
-	cmdline << " -checks=" << Join(ClangTidyDlg::active_checks.GetKeys(), ",")
-	        << " -p " << cc_path
-#ifdef PLATFORM_WIN32
-	        << " -extra-arg=--target=x86_64-w64-mingw32"
-#endif
-	;
-
-	
-	String rf_path = outdir + "/clang_tidy_parameters_file";
-	Upp::SaveFile(rf_path, cmdline);
 
 	BeginBuilding(true);
-	Host host;
-	CreateHost(host, darkmode, disable_uhd);
-	host.Execute(ClangTidyDlg::path + " @" + rf_path);
+	
+	dlg.RunClangTidy(cs);
+
 	EndBuilding(true);
 	SetErrorEditor();
+
 /*
 	String files;
 	for(const String& f : ResolveFiles(sc, ccjpath, paths))

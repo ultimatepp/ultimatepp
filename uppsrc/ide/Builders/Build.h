@@ -25,6 +25,8 @@ String NoCr(const char *s);
 int CharFilterSlash(int c);
 
 String GetDefaultMethod();
+String GetMethodName(const String& method);
+String GetMethodPath(const String& method);
 VectorMap<String, String> GetMethodVars(const String& method);
 
 String MainConf(const Workspace& wspc, String& add_includes);

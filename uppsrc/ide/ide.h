@@ -1301,7 +1301,7 @@ public:
 		void  MacroAllPackages(EscEscape& e);
 		void  MacroTarget(EscEscape& e);
 
-	void ClangTidy();
+	void ClangTidy(Gate<const String&> what);
 	bool HasClangTidy();
 
 	String GetAndroidSdkPath();

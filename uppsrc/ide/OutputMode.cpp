@@ -309,7 +309,7 @@ void OutMode::CmdOptions()
 		PromptOK("No main package");
 		return;
 	}
-	VectorMap<String, String> bm = ide.GetMethodVars(~method);
+	VectorMap<String, String> bm = GetMethodVars(~method);
 	if (bm.GetCount() == 0) {
 		PromptOK("Invalid build method");
 		return;

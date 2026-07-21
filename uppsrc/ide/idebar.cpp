@@ -524,8 +524,6 @@ void Ide::Project(Bar& menu)
 		menu.Separator();
 	}
 	if(!IsEditorMode()) {
-		WorkspaceWork::PackageMenu(menu);
-		menu.MenuSeparator();
 		menu.AddMenu(AK_ORGANIZER, IdeImg::package_organizer(), THISBACK(EditWorkspace))
 			.Help("Package dependencies, compiler & linker options, output path override");
 		menu.Add(AK_CUSTOM, THISBACK(CustomSteps))
@@ -568,6 +566,11 @@ void Ide::Project(Bar& menu)
 				menu.Add("Repo", THISBACK(ProjectRepo));
 			else
 				menu.Add("Synchronize all repositories..", IdeImg::svn(), THISBACK(SyncRepo));
+		}
+		if(HasClangTidy()) {
+			menu.MenuSeparator();
+			menu.AddMenu("Check project with Clang-Tidy", IdeImg::ClangTidy(),
+			         [=] { ClangTidy([](const String&) { return true; }); });
 		}
 	}
 }
@@ -750,13 +753,23 @@ void Ide::BuildPackageMenu(Bar& menu)
 {
 	int pi = GetPackageIndex();
 	bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();
-	String name;
-	if(b)
-		name = '\'' + IdeWorkspace()[pi] + '\'';
-	menu.Add(b, "Build package " + name, THISBACK(PackageBuild))
+	menu.Add(b, "Build package", THISBACK(PackageBuild))
 		.Help("Build current package");
-	menu.Add(b, "Clean package " + name, THISBACK(PackageClean))
+	menu.Add(b, "Clean package", THISBACK(PackageClean))
 		.Help("Remove all intermediate files of the current package");
+	if(HasClangTidy()) {
+		menu.Separator();
+		menu.Add(b, "Check package with Clang-Tidy", IdeImg::ClangTidy(), [=] {
+			const Package& p = IdeWorkspace().GetPackage(pi);
+			String pp = PackageDirectory(IdeWorkspace()[pi]);
+			Index<String> pf;
+			for(int i = 0; i < p.GetCount(); i++)
+				pf.Add(NormalizePath(pp + '/' + p[i]));
+			ClangTidy([&](const String& p) {
+				return pf.Find(NormalizePath(p)) >= 0;
+			});
+		});
+	}
 	menu.MenuSeparator();
 }
 
@@ -796,9 +809,6 @@ void Ide::BuildMenu(Bar& menu)
 		BuildPackageMenu(menu);
 
 	BuildFileMenu(menu);
-
-	if(HasClangTidy())
-		menu.Add(AK_CLANGTIDY, [=] { ClangTidy(); });
 
 	menu.MenuSeparator();
 

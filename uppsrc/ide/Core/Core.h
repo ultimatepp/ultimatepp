@@ -184,8 +184,6 @@ public:
 	virtual String    IdeGetIncludePath() = 0;
 
 	virtual String                    GetDefaultMethod();
-	virtual VectorMap<String, String> GetMethodVars(const String& method);
-	virtual String                    GetMethodName(const String& method);
 
 	virtual bool      IsPersistentFindReplace() = 0;
 

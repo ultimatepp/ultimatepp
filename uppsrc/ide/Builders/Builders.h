@@ -173,4 +173,6 @@ INITIALIZE(JavaBuilder)
 INITIALIZE(AndroidBuilder)
 INITIALIZE(ScriptBuilder)
 
+#include "ClangTidy.h"
+
 #endif
