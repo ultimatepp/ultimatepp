@@ -138,7 +138,7 @@ void Ide::ClangTidy(Gate<const String&> what)
 		return;
 	}
 
-	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext()); // TODO: Move to Builders/umk
+	MakeBuild *mb = dynamic_cast<MakeBuild *>(TheIdeContext());
 
 	if(!mb)
 		return;
@@ -170,28 +170,4 @@ void Ide::ClangTidy(Gate<const String&> what)
 
 	EndBuilding(true);
 	SetErrorEditor();
-
-/*
-	String files;
-	for(const String& f : ResolveFiles(sc, ccjpath, paths))
-		path << "\"" << f << "\" ";
-
-	if(IsNull(v))
-		return sExeFilePath + " --checks=* " + path;
-
-	String checks    = Nvl(v["checks"],     "*");
-	String extraargs = Nvl(v["extra_args"], "");
-	String standard  = Nvl(v["standard"],   "c++14");
-
-	String s;
-	s << sExeFilePath << " "
-	<< "--checks=\"" << checks << "\" "
-	<< "--quiet ";
-
-	if(FileExists(ccjpath))
-		s << "-p=\"" << ccjdir << "\" ";
-
-	return s + extraargs + (extraargs.GetCount() ? " " : "") + path
-			+ (FileExists(ccjpath) ? "" : "-- -std=" + standard);
-*/
 }
