@@ -56,21 +56,21 @@ class PPInfo {
 		bool                          guarded = false; // has include guards
 		int                           blitz = 0; // AUTO, APPROVED, PROHIBITED
 		Time                          time = Null; // file time
-		
+
 		bool                          dirty = true; // need to be rechecked for change (filetime)
-		
+
 		void Dirty()                          { dirty = true; time = Null; }
 		void Parse(Stream& in);
 		void Serialize(Stream& s);
 	};
-	
+
 	struct Dir : Moveable<Dir> {
 		Index<String>           subdirs;
 		VectorMap<String, Time> files;
-		
+
 		void Load(const String& dir);
 	};
-	
+
 	ArrayMap<String, PPFile>                   files;
 	Vector<String>                             includes; // include dirs
 	int                                        includes_base_count; // for trimming out additional includes
@@ -94,7 +94,7 @@ public:
 
 	void                  SetIncludes(Vector<String>&& includes);
 	void                  SetIncludes(const String& includes);
-	
+
 	void                  BaseIncludes();
 	void                  AddInclude(const String& include);
 
@@ -114,7 +114,7 @@ public:
 	                                         bool speculative = true);
 
 	Time                  GetTime(const String& path, VectorMap<String, Time> *ret_result = nullptr);
-	
+
 	const VectorMap<String, String>& GetFileDefines(const String& path) { return File(NormalizePath(path)).all_defines; }
 	const VectorMap<String, String>& GetFileFlags(const String& path)   { return File(NormalizePath(path)).flags; }
 
@@ -156,7 +156,7 @@ public:
 	virtual bool             IdeConsoleWait() = 0;
 	virtual bool             IdeConsoleWait(int slot) = 0;
 	virtual void             IdeConsoleOnFinish(Event<>  cb) = 0;
-	
+
 	virtual void             IdeProcessEvents() = 0;
 
 	virtual bool      IdeIsDebug() const = 0;
@@ -184,6 +184,8 @@ public:
 	virtual String    IdeGetIncludePath() = 0;
 
 	virtual String                    GetDefaultMethod();
+	virtual VectorMap<String, String> GetMethodVars(const String& method);
+	virtual String                    GetMethodName(const String& method);
 
 	virtual bool      IsPersistentFindReplace() = 0;
 
@@ -568,16 +570,16 @@ struct Builder {
 	Index<String>    pkg_config; // names of packages for pkg-config
 	Vector<String>   CINC;
 	Vector<String>   Macro;
-	
+
 	String           cc_inc; // for AddCommands only
 
 	VectorMap<String, int> tmpfilei; // for naming automatic response files
 	VectorMap<String, Time> dependencies; // dependencies of the last HdependFileTime call
-	
+
 	static VectorMap<String, String> cmdx_cache; // caching e.g. pkg-config
 
 	String                 CmdX(const char *s);
-	
+
 	Time                   HdependFileTime(const String& path);
 
 	virtual bool BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
@@ -688,7 +690,7 @@ enum {
 	ITEM_SIGN,
 	ITEM_UPP,
 	ITEM_TYPE,
-	
+
 	ITEM_PTYPE = ITEM_TYPE + 10000,
 };
 

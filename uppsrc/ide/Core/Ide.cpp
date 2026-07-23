@@ -39,16 +39,16 @@ String IdeContext::GetDefaultMethod()
 	return LoadFile(ConfigFile("default_method"));
 }
 
-String GetMethodName(const String& method)
-{
-	return method + ".bm";
-}
-
-VectorMap<String, String> GetMethodVars(const String& method)
+VectorMap<String, String> IdeContext::GetMethodVars(const String& method)
 {
 	VectorMap<String, String> map;
-	LoadVarFile(GetMethodPath(method), map);
+	LoadVarFile(ConfigFile(GetMethodName(method)), map);
 	return map;
+}
+
+String IdeContext::GetMethodName(const String& method)
+{
+	return (String)~method + ".bm";
 }
 
 String GetDefaultMethod()
@@ -56,9 +56,14 @@ String GetDefaultMethod()
 	return the_ide ? the_ide->GetDefaultMethod() : String();
 }
 
+VectorMap<String, String> GetMethodVars(const String& method)
+{
+	return the_ide ? the_ide->GetMethodVars(method) : VectorMap<String, String>();
+}
+
 String GetMethodPath(const String& method)
 {
-	return ConfigFile(GetMethodName(method));
+	return the_ide ? the_ide->GetMethodName(method) : String();
 }
 
 bool IdeIsBuilding()

@@ -9,6 +9,9 @@ Index<String> ClangTidy::active_checks;
 
 bool ClangTidy::HasClangTidy()
 {
+	if(!TheIdeContext())
+		return false; // so that GetMethodVars returns something real...
+
 	ONCELOCK {
 #ifdef PLATFORM_WIN32
 		for(String p : Split(GetMethodVars("CLANGx64").Get("PATH", ""), ';')) {
@@ -34,9 +37,10 @@ bool ClangTidy::HasClangTidy()
 					groups.FindAdd(s);
 				}
 				Load(ClangTidyConfigPath());
-				goto exit; // break not compatible with POSIX / ONCELOCK
+#ifdef PLATFORM_WIN32
+				break;
+#endif
 			}
-
 #ifdef PLATFORM_WIN32
 		}
 #endif
