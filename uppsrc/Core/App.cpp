@@ -23,7 +23,9 @@
 #undef CY
 #endif
 
+#ifdef PLATFORM_POSIX
 #include <pwd.h>
+#endif
 
 namespace Upp {
 
