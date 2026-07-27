@@ -78,6 +78,9 @@ cannot be used to e.g. LOG inside heap routines).]
 conversion of UTF8 characters, at the price of using heap (so 
 cannot be used to e.g. LOG inside heap routines).]}}&]
 [s3; &]
+[s2; If [%-*@3 filepath] is nullptr, the path is set to the default 
+location.&]
+[s3; &]
 [s4;%- &]
 [s5;:StdLog`(`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* StdLog]()&]
 [s2; Returns a reference to standard log stream.&]

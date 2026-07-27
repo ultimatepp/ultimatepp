@@ -411,6 +411,8 @@ void StdLogSetup(dword options, const char *filepath, int filesize_limit)
 	sLog.sizelimit = filesize_limit;
 	if(filepath)
 		strcpy(sLog.filepath, filepath);
+	else
+		SyncLogPath__();
 	ReopenLog();
 }
 
