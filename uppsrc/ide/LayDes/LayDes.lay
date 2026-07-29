@@ -56,7 +56,7 @@ LAYOUT(InsertLangLayout, 252, 68)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(180, 64).TopPosZ(36, 24))
 END_LAYOUT
 
-LAYOUT(VisGenLayout, 724, 488)
+LAYOUT(VisGenLayout, 724, 484)
 	ITEM(Upp::Switch, type, SetLabel(t_("Dialog class\nDialog struct\nModal classless dialog\nCtrl list\nCtrl list pairs\nAssign lambdas\nEvent methods\nAssign methods")).LeftPosZ(4, 160).TopPosZ(8, 136))
 	ITEM(Upp::Label, name_lbl, SetLabel(t_("Name")).LeftPosZ(4, 32).TopPosZ(148, 19))
 	ITEM(Upp::EditString, name, LeftPosZ(44, 120).TopPosZ(148, 19))
