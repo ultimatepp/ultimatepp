@@ -174,9 +174,6 @@ void Gdb::Autos()
 					if(p.Char('.') && p.IsId())
 						exp << '.';
 					else
-					if(p.Char2('-', '>') && p.IsId())
-						exp << "->";
-					else
 						break;
 					exp << p.ReadId();
 					TryAuto(tested, exp);
