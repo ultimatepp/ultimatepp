@@ -94,7 +94,7 @@ String NoCr(const char *s)
 	return out;
 }
 
-void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale)
+void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	{
@@ -116,6 +116,8 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 			env.GetAdd("UPP_DARKMODE__") = "1";
 		if(scale)
 			env.GetAdd("UPP_SCALE__") = AsString(scale);
+		if(exit_pause)
+			env.GetAdd("UPP_EXIT_PAUSE__") = "1";
 		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
 #ifdef PLATFORM_POSIX
 		if(target != "")
@@ -147,10 +149,10 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	}
 }
 
-void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd, int scale)
+void MakeBuild::CreateHost(Host& host, bool darkmode, bool disable_uhd, int scale, bool exit_pause)
 {
 	SetupDefaultMethod();
-	CreateHost(host, method, darkmode, disable_uhd, scale);
+	CreateHost(host, method, darkmode, disable_uhd, scale, exit_pause);
 }
 
 One<Builder> MakeBuild::CreateBuilder(Host *host)

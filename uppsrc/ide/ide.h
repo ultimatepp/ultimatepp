@@ -965,7 +965,7 @@ public:
 		void  FileCompile();
 		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
-		void  CreateHostRunDir(Host& h);
+		void  CreateHostRunDir(Host& h, bool exit_pause = false);
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();

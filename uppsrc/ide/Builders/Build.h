@@ -68,8 +68,8 @@ public:
 
 	bool         makefile_svn_revision = true;
 
-	void CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale);
-	void CreateHost(Host& host, bool darkmode = false, bool disable_uhd = false, int scale = 0);
+	void CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause);
+	void CreateHost(Host& host, bool darkmode = false, bool disable_uhd = false, int scale = 0, bool exit_pause = false);
 
 	const TargetMode& GetTargetMode();
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,

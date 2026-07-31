@@ -621,6 +621,13 @@ void AppExit__()
 #ifdef PLATFORM_POSIX
 	MemoryIgnoreLeaksBegin(); // Qt leaks on app exit...
 #endif
+
+#ifndef flagGUI
+	if(GetEnv("UPP_EXIT_PAUSE__") == "1") { // this is an ugly way to prevent close of console on F5 (debug)
+		Cout() << "<--- Finished, press [ENTER] to close the window --->\n";
+		ReadStdIn();
+	}
+#endif
 }
 
 #ifdef flagTURTLE // Turtle web backend
