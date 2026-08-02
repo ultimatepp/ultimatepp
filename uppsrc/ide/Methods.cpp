@@ -884,7 +884,7 @@ void Ide::IncludeAddPkgConfig(String& include_path, const String& clang_method)
 	const Workspace& wspc = GetIdeWorkspace();
 	Host host;
 	if(clang_method.GetCount())
-		CreateHost(host, clang_method, false, false, 0);
+		CreateHost(host, clang_method, false, false, 0, false);
 	else
 		CreateHost(host, false, false);
 	One<Builder> b = CreateBuilder(&host);
