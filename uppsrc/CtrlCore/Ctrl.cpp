@@ -932,9 +932,23 @@ void Modality::End()
 }
 
 extern void (*whenSetStdFont)();
+extern void (*adjustDefaultFont)(Font& font);
 
 INITBLOCK {
 	whenSetStdFont = &Ctrl::ReSkin;
+
+	adjustDefaultFont = [](Font& font) {
+		Size wsz = Ctrl::GetPrimaryWorkArea().GetSize();
+		wsz.cy = max(wsz.cy - DPI(24), 0);
+		while(font.GetHeight() >= 0) {
+			Size csz = GetTextSize(sZoomText, font);
+			Size dsz = Size(99, 13 + 4);
+			Size sz = csz * Size(1000, 700) / dsz;
+			if(sz.cx <= wsz.cx && sz.cy <= wsz.cy)
+				break;
+			font.Height(font.GetHeight() - 1);
+		}
+	};
 }
 
 void (**Ctrl::skin)();

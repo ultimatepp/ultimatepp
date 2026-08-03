@@ -161,9 +161,13 @@ void Font::SetStdFont0(Font font)
 
 bool Font::std_font_override;
 
+void (*adjustDefaultFont)(Font& font);
+
 void Font::SetDefaultFont(Font font)
 {
 	LLOG("SetDefaultFont " << font);
+	if(adjustDefaultFont)
+		adjustDefaultFont(font);
 	int override_scale = Atoi(GetEnv("UPP_SCALE__"));
 	if(override_scale) {
 		int cy = decode(override_scale, 3, 18, 4, 24, 6, 36, 12);
