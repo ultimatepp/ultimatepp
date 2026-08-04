@@ -976,7 +976,11 @@ String Ide::GetCurrentIncludePath()
 		if(IsExternalMode()) // just add everything..
 			MergeWith(include_path, ";", PackageDirectory(wspc[i]));
 	}
-
+	
+	// add all include paths of real current build method (because there can be additional
+	// includes..)
+	MergeWith(include_path, ";", GetIncludePath());
+	
 	return include_path;
 }
 
