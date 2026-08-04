@@ -351,7 +351,7 @@ void  LayDes::SaveState()
 
 void  LayDes::SetStatus(bool down)
 {
-	String s;
+	String s = "\1[g \1";
 	if(!IsNull(currentlayout)) {
 		Size sz = CurrentLayout().size;
 		s << sz;
@@ -359,6 +359,8 @@ void  LayDes::SetStatus(bool down)
 			Rect r = CtrlRect(CurrentItem().pos, sz);
 			s << ": " << r << " - {" << sz.cx - r.right << ", " << sz.cy - r.bottom << '}';
 		}
+		if(sz.cx > 1000 || sz.cy > 700)
+			s << "\1  [@r$Y* OVERSIZED][1  (might not fit small displays)";
 	}
 	status.SetLabel(s);
 	Refresh();
