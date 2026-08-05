@@ -202,6 +202,8 @@ void AssistEditor::DCopy()
 						}
 						else
 							cret = ret;
+						if(TrimLeft(cret).GetCount() == 0) // only spaces, e.g. destructor
+							cret.Clear();
 						result << cret << cls << m.name << params << "\n{\n}\n\n";
 					}
 				}
