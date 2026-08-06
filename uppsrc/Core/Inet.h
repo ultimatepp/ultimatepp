@@ -177,9 +177,9 @@ class Socket : NoCopy {
 	static int              GetErrorCode();
 	static void             Init();
 
-    // Unix domain socket support
-    bool                    NixConnect(const String& path, bool abstract);
-    bool                    NixListen(const String& path, int n, bool reuse, bool abstract);
+	// Unix domain socket support
+	bool                    NixConnect(const String& path, bool abstract);
+	bool                    NixListen(const String& path, int n, bool reuse, bool abstract);
 
 	Socket(const Socket&);
 
