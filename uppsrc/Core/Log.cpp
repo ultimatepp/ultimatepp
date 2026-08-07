@@ -1,5 +1,9 @@
 #include "Core.h"
 
+#ifdef PLATFORM_POSIX
+#include <pwd.h>
+#endif
+
 namespace Upp {
 
 StaticMutex log_mutex;
@@ -95,25 +99,34 @@ void LogOut::Create(bool append)
 		filesize = (int)lseek(hfile, 0, SEEK_END);
 #endif
 	Time t = GetSysTime();
-#ifdef PLATFORM_WINCE
-	wchar exe[512];
-#else
-	char exe[512];
-#endif
-	char user[500];
-	*user = 0;
+	char exe[1024];
+	char user[1024];
+	*exe = *user = 0;
 
 #ifdef PLATFORM_WIN32
-	GetModuleFileName(AppGetHandle(), exe, 512);
-#ifndef PLATFORM_WINCE
-	dword w = 2048;
-	::GetUserNameA(user, &w);
-#endif
+	if(GetModuleFileName(AppGetHandle(), exe, 1024) < 0)
+		strcpy(exe, "unknown");
+	dword w = 1024;
+	if(!::GetUserNameA(user, &w))
+		strcpy(user, "unknown");
 #else //#
 	const char *procexepath_(void);
-	strcpy(exe, procexepath_());
-	const char *uenv = getenv("USER");
-	strcpy(user, uenv ? uenv : "boot");
+	const char *epath = procexepath_();
+	if(strlen(epath) < 1024)
+		strcpy(exe, epath);
+	else
+		strcpy(exe, "unknown");
+
+	char buf[1024];
+	struct passwd pwd;
+	struct passwd *result = NULL;
+	size_t bsz = 1024;
+	if(getpwuid_r(getuid(), &pwd, buf, bsz, &result) == 0 && result)
+		strcpy(user, pwd.pw_name);
+	else {
+		const char *uenv = getenv("USER");
+		strcpy(user, uenv && strlen(uenv) < 1024 ? uenv : "unknown");
+	}
 #endif
 
 	char h[1200];
@@ -354,12 +367,16 @@ void SyncLogPath__() {}
 
 #ifdef PLATFORM_POSIX
 
-static char sLogPath[1024];
+static char sLogPath[_MAX_PATH];
 
 void SyncLogPath__()
 {
 	Mutex::Lock __(log_mutex);
-	strcpy(sLogPath, GetFileFolder(GetUserConfigDir()) + "/.local/state/" + GetConfigGroup() + "/log/" + GetAppName());
+	String s = GetFileFolder(GetUserConfigDir()) + "/.local/state/" + GetConfigGroup() + "/log/" + GetAppName();
+	if(s.GetCount() < _MAX_PATH)
+		strcpy(sLogPath, s);
+	else
+		strcpy(sLogPath, GetHomeDirectory());
 	RealizePath(sLogPath);
 }
 
