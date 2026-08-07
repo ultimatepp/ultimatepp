@@ -587,7 +587,16 @@ bool HttpHeader::ParseSCGI(const String& scgi_hdr)
 				key = ToLower(h);
 		}
 	}
-	f2 = uri + qs;
+
+    // If the web server provided a full request_uri that already contains
+    // the query string, use it exactly as provided. Otherwise, if we have
+    // a query_string, append it with the '?' separator.
+    
+    if(uri.Find('?') >= 0 || qs.IsEmpty())
+        f2 = uri;
+    else
+        f2 = uri + '?' + qs;
+   
 	first_line = f1 + ' ' + f2 + ' ' + f3;
 	if(!IsNull(content_length) && content_length && fields.Find("content-length") < 0)
 		fields.Add("content-length", AsString(content_length));
