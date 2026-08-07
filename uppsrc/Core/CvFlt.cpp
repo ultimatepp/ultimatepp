@@ -84,6 +84,7 @@ void sF128::MulPow10(int powi)
 {
 	LTIMING("MulPow10");
 	ASSERT(l == 0); // we can only do F64xF128 multiplication
+	ASSERT(powi >= -350 && powi <= 350);
 	const auto& pow10 = ipow10table[powi + 350];
 	uint64 hh, midh;
 	l = mul64(h, pow10.h, hh);
@@ -482,6 +483,7 @@ char *FormatF(char *t, double x, int precision, dword flags)
 		else { // we need to add zeroes to the left of decimal point
 			int e10 = FormatDoubleDigits(w, digits, 18);
 			if(e10 < 0) {
+				ASSERT(18 + e10 >= 0);
 				tCat(t, digits, 18 + e10);
 				if(precision) {
 					do_point(t, flags);
@@ -546,7 +548,8 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp, bool E = true)
 				}
 				while(*s >= '0' && *s <= '9') { // there are excessive digits over 19 digits
 					s++;
-					ignored++;
+					if(ignored < 400)
+						ignored++;
 				}
 				return;
 			}
@@ -582,7 +585,7 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp, bool E = true)
 		s++;
 		const CHAR *s0 = s;
 		ReadNumber();
-		exp += int(s0 - s) + ignored;
+		exp += (int)clamp(s0 - s, (ptrdiff_t)-1000, (ptrdiff_t)0) + ignored;
 	}
 	if(E && (*s == 'e' || *s == 'E')) {
 		dword e = 0;
@@ -590,21 +593,25 @@ const CHAR *ScanDbl(double& result, const CHAR *s, int alt_dp, bool E = true)
 		s++;
 		int es = ScanSgn__<CHAR, BYTE>(s);
 		s = ScanUint<CHAR, BYTE, dword, 10>(e, s, overflow);
-		if(overflow || e > 340) {
-			result = es > 0 ? sign * std::numeric_limits<double>::infinity()
-			                : sign * 0.0;
-			return s;
-		}
+		if(overflow || e > 1000)
+			e = 1000;
 		exp += es * (int)e;
 	}
 	if(!digits)
 		result = sign * 0.0;
 	else
 	if(exp) {
-		sF128 w;
-		w.SetUint64(digits);
-		w.MulPow10(exp);
-		result = sign * w.MakeDouble();
+		if(exp > 350)
+			result = sign * std::numeric_limits<double>::infinity();
+		else
+		if(exp < -350)
+			result = sign * 0.0;
+		else {
+			sF128 w;
+			w.SetUint64(digits);
+			w.MulPow10(exp);
+			result = sign * w.MakeDouble();
+		}
 	}
 	else
 		result = sign * digits;

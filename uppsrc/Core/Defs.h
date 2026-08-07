@@ -21,9 +21,8 @@
 
 bool    IsPanicMode();
 
-void    Panic(const char *msg);
-
-void    AssertFailed(const char *file, int line, const char *cond);
+[[noreturn]] void Panic(const char *msg);
+[[noreturn]] void AssertFailed(const char *file, int line, const char *cond);
 
 void    InstallPanicMessageBox(void (*mb)(const char *title, const char *text));
 void    PanicMessageBox(const char *title, const char *text);
@@ -32,8 +31,14 @@ void    PanicMessageBox(const char *title, const char *text);
 
 #ifdef _DEBUG
 
-#define ASSERT_(x, msg)  ((x) ? (void)0 : ::Upp	::AssertFailed(__FILE__, __LINE__, msg))
+#ifdef COMPILER_GCC
+#define ASSERT_(x, msg)  ((x) ? (void)0 : (::Upp::AssertFailed(__FILE__, __LINE__, msg), __builtin_unreachable()))
+#else
+#define ASSERT_(x, msg)  ((x) ? (void)0 : (::Upp::AssertFailed(__FILE__, __LINE__, msg)))
+#endif
+
 #define ASSERT(x)        ASSERT_(x, #x)
+
 
 #else
 

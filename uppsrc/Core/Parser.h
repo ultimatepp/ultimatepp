@@ -28,8 +28,8 @@ protected:
 public:
 	struct Error : public Exc                 { Error(const char *s) : Exc(s) {} };
 
-	void   ThrowError(const char *s);
-	void   ThrowError()                       { ThrowError(""); }
+	[[noreturn]] void ThrowError(const char *s);
+	[[noreturn]] void ThrowError()            { ThrowError(""); }
 
 	bool   Spaces()                           { wspc = term; return ((byte)*term <= ' ' || *term == '/') && Spaces0(); }
 	char   PeekChar() const                   { return *term; }
