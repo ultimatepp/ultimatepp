@@ -94,35 +94,35 @@ void    Panic(const char *msg)
 	signal(SIGBUS, SIG_DFL);
 	signal(SIGFPE, SIG_DFL);
 #endif
-	if(PanicMode)
-		return;
-	PanicMode = true;
-	RLOG("****************** PANIC: " << msg << "\n");
-	PanicMessageBox("Fatal error", msg);
-
-#ifdef PLATFORM_WIN32
-#	ifdef __NOASSEMBLY__
-#		if defined(PLATFORM_WINCE) || defined(WIN64)
-			DebugBreak();
-#		endif
-#	else
-#		if defined(_DEBUG) && defined(CPU_X86)
-#			ifdef COMPILER_MSC
-				_asm int 3
-#			endif
-#			ifdef COMPILER_GCC
-				asm("int $3");
-#			endif
-#		endif
-#	endif
-#else
-#endif
-#ifdef PLATFORM_POSIX
-	raise(SIGTRAP);
-#endif
-#ifdef _DEBUG
-	__BREAK__;
-#endif
+	if(!PanicMode) {
+		PanicMode = true;
+		RLOG("****************** PANIC: " << msg << "\n");
+		PanicMessageBox("Fatal error", msg);
+	
+	#ifdef PLATFORM_WIN32
+	#	ifdef __NOASSEMBLY__
+	#		if defined(PLATFORM_WINCE) || defined(WIN64)
+				DebugBreak();
+	#		endif
+	#	else
+	#		if defined(_DEBUG) && defined(CPU_X86)
+	#			ifdef COMPILER_MSC
+					_asm int 3
+	#			endif
+	#			ifdef COMPILER_GCC
+					asm("int $3");
+	#			endif
+	#		endif
+	#	endif
+	#else
+	#endif
+	#ifdef PLATFORM_POSIX
+		raise(SIGTRAP);
+	#endif
+	#ifdef _DEBUG
+		__BREAK__;
+	#endif
+	}
 	abort();
 }
 
@@ -135,49 +135,49 @@ void    SetAssertFailedHook(void (*h)(const char *))
 
 void    AssertFailed(const char *file, int line, const char *cond)
 {
-	if(PanicMode)
-		return;
-	PanicMode = true;
-	char s[2048];
-	snprintf(s, 2048, "Assertion failed in %s, line %d\n%s\n", file, line, cond);
-#if defined(PLATFORM_LINUX) && defined(COMPILER_GCC) && defined(flagSTACKTRACE)
-	AddStackTrace(s, sizeof(s));
-#endif
-
-	if(s_assert_hook)
-		(*s_assert_hook)(s);
-	RLOG("****************** ASSERT FAILED: " << s << "\n");
-#ifdef PLATFORM_POSIX
-	RLOG("LastErrorMessage: " << strerror(errno)); // do not translate
-#else
-	RLOG("LastErrorMessage: " << GetLastErrorMessage());
-#endif
-
-	PanicMessageBox("Fatal error", s);
-
-#ifdef PLATFORM_WIN32
-#	ifdef __NOASSEMBLY__
-#		if defined(PLATFORM_WINCE) || defined(WIN64)
-			DebugBreak();
-#		endif
-#	else
-#		if defined(_DEBUG) && defined(CPU_X86)
-#			ifdef COMPILER_MSC
-				_asm int 3
-#			endif
-#			ifdef COMPILER_GCC
-				asm("int $3");
-#			endif
-#		endif
-#	endif
-#else
-#endif
-#ifdef PLATFORM_POSIX
-	raise(SIGTRAP);
-#endif
-#ifdef _DEBUG
-	__BREAK__;
-#endif
+	if(!PanicMode) {
+		PanicMode = true;
+		char s[2048];
+		snprintf(s, 2048, "Assertion failed in %s, line %d\n%s\n", file, line, cond);
+	#if defined(PLATFORM_LINUX) && defined(COMPILER_GCC) && defined(flagSTACKTRACE)
+		AddStackTrace(s, sizeof(s));
+	#endif
+	
+		if(s_assert_hook)
+			(*s_assert_hook)(s);
+		RLOG("****************** ASSERT FAILED: " << s << "\n");
+	#ifdef PLATFORM_POSIX
+		RLOG("LastErrorMessage: " << strerror(errno)); // do not translate
+	#else
+		RLOG("LastErrorMessage: " << GetLastErrorMessage());
+	#endif
+	
+		PanicMessageBox("Fatal error", s);
+	
+	#ifdef PLATFORM_WIN32
+	#	ifdef __NOASSEMBLY__
+	#		if defined(PLATFORM_WINCE) || defined(WIN64)
+				DebugBreak();
+	#		endif
+	#	else
+	#		if defined(_DEBUG) && defined(CPU_X86)
+	#			ifdef COMPILER_MSC
+					_asm int 3
+	#			endif
+	#			ifdef COMPILER_GCC
+					asm("int $3");
+	#			endif
+	#		endif
+	#	endif
+	#else
+	#endif
+	#ifdef PLATFORM_POSIX
+		raise(SIGTRAP);
+	#endif
+	#ifdef _DEBUG
+		__BREAK__;
+	#endif
+	}
 	abort();
 }
 

@@ -5,7 +5,7 @@
 // win32 installation is supposed to be in ~/upp.win32 (for umk.exe and clang binaries)
 // current upp source in ~/upp.src
 // wine must map home directory to u:/
-// not that build method is defined in this package (and referenced as
+// note that build method is defined in this package (and referenced as
 // u:/upp.src/uppbox/MakeInstall7/CLANGx64.bm)
 
 using namespace Upp;
