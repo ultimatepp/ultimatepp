@@ -658,6 +658,7 @@ PackageEditor::PackageEditor()
 	Add("Compiler options", actual.option);
 	Add("Internal includes", actual.include);
 	Add("pkg-config", actual.pkg_config);
+	Add("External dependency", actual.external_dependency);
 
 	Init(option);
 	option.WhenCursor = THISBACK(AdjustPackageOptionCursor);

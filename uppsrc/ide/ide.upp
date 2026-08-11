@@ -92,6 +92,7 @@ file
 	SetupGIT.cpp,
 	Upgrade.cpp,
 	UppHub.cpp,
+	vcpkg.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,

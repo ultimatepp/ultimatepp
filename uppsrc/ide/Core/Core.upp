@@ -21,6 +21,7 @@ file
 	usc.cpp,
 	BinObj.cpp,
 	Signature.cpp,
+	Vcpkg.cpp,
 	Host readonly separator,
 	Host.h,
 	Host.cpp,

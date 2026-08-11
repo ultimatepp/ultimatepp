@@ -226,6 +226,7 @@ bool Package::Load(const char *path)
 		uses.Clear();
 		include.Clear();
 		pkg_config.Clear();
+		external_dependency.Clear();
 		accepts.Clear();
 		file.Clear();
 		config.Clear();
@@ -248,7 +249,8 @@ bool Package::Load(const char *path)
 				   !LoadOpt(p, "target", target) &&
 				   !LoadOpt(p, "uses", uses) &&
 				   !LoadOpt(p, "include", include) &&
-				   !LoadOpt(p, "pkg_config", pkg_config)) {
+				   !LoadOpt(p, "pkg_config", pkg_config) &&
+				   !LoadOpt(p, "external_dependency", external_dependency)) {
 					if(p.Id("charset"))
 						charset = CharsetByNameX(p.ReadString());
 					else
@@ -482,6 +484,8 @@ bool Package::Save(const char *path) const {
 	putopt(out, "link", link);
 	putopt(out, "include", include);
 	putopt(out, "pkg_config", pkg_config);
+	putopt(out, "external_dependency", external_dependency);
+
 	if(file.GetCount()) {
 		out << "file\n";
 		int i;

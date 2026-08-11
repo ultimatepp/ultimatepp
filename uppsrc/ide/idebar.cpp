@@ -474,6 +474,10 @@ void Ide::Setup(Bar& menu)
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
 #endif
 
+#ifdef PLATFORM_WIN32
+	menu.Add("Vcpkg..", [=] { Vcpkg(); });
+#endif
+
 	if(menu.IsMenuBar())
 		SetupMobilePlatforms(menu);
 }

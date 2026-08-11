@@ -9,7 +9,7 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 	int  hide_password_to = 0;
 
 public:
-	int  System(const char *s);
+	int  System(const char *s, const char *chdir = nullptr);
 	int  CheckSystem(const char *s);
 	int  Git(const char *dir, const char *command, bool pwd = false);
 	void HidePassword(int from, int to)         { hide_password_from = from; hide_password_to = to; }

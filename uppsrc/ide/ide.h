@@ -1004,6 +1004,7 @@ public:
 		void  DoMacroManager();
 		void  UpgradeTheIDE();
 		void  InstallDesktop();
+		void  Vcpkg();
 
 	void      SetupMobilePlatforms(Bar& bar);
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);

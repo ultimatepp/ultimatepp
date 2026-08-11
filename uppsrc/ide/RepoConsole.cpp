@@ -49,7 +49,7 @@ void UrepoConsole::Log(const Value& s, Color ink)
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 }
 
-int UrepoConsole::System(const char *cmd)
+int UrepoConsole::System(const char *cmd, const char *chdir)
 {
 	if(!IsOpen())
 		Open();
@@ -67,6 +67,8 @@ int UrepoConsole::System(const char *cmd)
 		return -1;
 	Host host;
 	ide->CreateHost(host, false, false);
+	if(chdir)
+		host.ChDir(chdir);
 	LocalProcess p;
 	if(!host.StartProcess(p, cmd)) {
 		list.Add(AttrText("Failed to start the executable").SetFont(font().Bold()).Ink(SLtRed()));

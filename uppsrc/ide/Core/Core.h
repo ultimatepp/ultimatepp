@@ -459,6 +459,7 @@ public:
 	Array<OptItem>           option;
 	Array<OptItem>           include;
 	Array<OptItem>           pkg_config;
+	Array<OptItem>           external_dependency;
 	Array<File>              file;
 	Array<Config>            config;
 	Array<CustomStep>        custom;
@@ -706,5 +707,20 @@ String CleanupId(const char *s);
 String CleanupPretty(const String& signature);
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info = NULL);
+
+struct VcpkgInstalled : Moveable<VcpkgInstalled> {
+	String        name;
+	Index<String> triplets;
+	String        version;
+	String        desc;
+};
+
+bool                   IsVcpkgInstalled();
+bool                   InstallVcpkg(Function<int(const String&, const String& chdir)> sys);
+String                 VcpkgExe();
+Vector<VcpkgInstalled> VcpkgList();
+Vector<String>         RequiredExternalDependencies(const String& manager);
+Vector<String>         VcpkgTriplets();
+bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
 
 #endif
