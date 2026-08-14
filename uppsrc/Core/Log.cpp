@@ -399,7 +399,7 @@ LogStream& StdLogStream()
 {
 	static LogStream *s;
 	ONCELOCK {
-		static byte lb[sizeof(LogStream)];
+		alignas(LogStream) static byte lb[sizeof(LogStream)];
 		LogStream *strm = new(lb) LogStream;
 		if(*sLog.filepath == '\0')
 			sLogFile(sLog.filepath);

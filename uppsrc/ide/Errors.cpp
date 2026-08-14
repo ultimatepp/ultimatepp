@@ -624,8 +624,16 @@ void Ide::RemoveError()
 	String err = ~error.Get(2);
 	int c = error.GetCursor();
 	for(int i = error.GetCount() - 1; i >= 0; i--)
-		if(~error.Get(i, 2) == err)
+		if(~error.Get(i, 2) == err) {
+			Value v = error.Get(i, "INFO");
+			if(v.Is<ListLineInfo>()) {
+				if(v.To<ListLineInfo>().kind == 1)
+					error_count--;
+				else
+					warning_count--;
+			}
 			error.Remove(i);
+		}
 	error.SetCursor(min(error.GetCount() - 1, c));
 	SelError();
 	SyncErrorsMessage();

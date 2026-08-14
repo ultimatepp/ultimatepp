@@ -39,10 +39,29 @@ Vector<String> RequiredExternalDependencies(const String& manager)
 {
 	Vector<String> required;
 	const Workspace& wspc = GetIdeWorkspace();
+
+	Vector<String> keys;
+	keys << manager;
+#ifdef PLATFORM_WIN32
+	keys << "WIN32";
+#endif
+#ifdef PLATFORM_POSIX
+	keys << "POSIX";
+#endif
+#ifdef PLATFORM_LINUX
+	keys << "LINUX";
+#endif
+#ifdef PLATFORM_MACOS
+	keys << "MACOS";
+#endif
+#ifdef PLATFORM_BSD
+	keys << "BSD";
+#endif
+
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(const OptItem& m : pkg.external_dependency) {
-			if(IsNull(m.when) || m.when == manager)
+			if(MatchWhen(m.when, keys))
 				required.Add(m.text);
 		}
 	}
