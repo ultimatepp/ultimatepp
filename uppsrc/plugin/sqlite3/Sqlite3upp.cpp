@@ -274,9 +274,6 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 	}
 
 	ASSERT(got_row_data);
-	String coltype;
-	const char *s = sqlite3_column_decltype(current_stmt,i);
-	if(s) coltype = ToLower(s);
 	switch (sqlite3_column_type(current_stmt,i)) {
 		case SQLITE_INTEGER:
 			f = sqlite3_column_int64(current_stmt,i);
@@ -285,26 +282,31 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 			f = sqlite3_column_double(current_stmt,i);
 			break;
 		case SQLITE_TEXT:
-			if(coltype == "date" || f.GetType() == DATE_V){
-				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
-				if(strlen(s) >= 10)
-					f = Value(Date(atoi(s), atoi(s + 5), atoi(s + 8)));
+			{
+				String coltype;
+				const char *s = sqlite3_column_decltype(current_stmt,i);
+				if(s) coltype = ToLower(s);
+				if(coltype == "date" || f.GetType() == DATE_V){
+					const char *s = (const char *)sqlite3_column_text(current_stmt, i);
+					if(strlen(s) >= 10)
+						f = Value(Date(atoi(s), atoi(s + 5), atoi(s + 8)));
+					else
+						f = Null;
+				}
 				else
-					f = Null;
+				if(coltype == "datetime" || f.GetType() == TIME_V) {
+					const char *s = (const char *)sqlite3_column_text(current_stmt, i);
+					if(strlen(s) >= 19)
+						f = Value(Time(atoi(s), atoi(s + 5), atoi(s + 8), atoi(s + 11), atoi(s + 14), atoi(s + 17)));
+					else
+					if(strlen(s) >= 10)
+						f = Value(ToTime(Date(atoi(s), atoi(s + 5), atoi(s + 8))));
+					else
+						f = Null;
+				}
+				else
+					f = Value((const char *)sqlite3_column_text(current_stmt, i));
 			}
-			else
-			if(coltype == "datetime" || f.GetType() == TIME_V) {
-				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
-				if(strlen(s) >= 19)
-					f = Value(Time(atoi(s), atoi(s + 5), atoi(s + 8), atoi(s + 11), atoi(s + 14), atoi(s + 17)));
-				else
-				if(strlen(s) >= 10)
-					f = Value(ToTime(Date(atoi(s), atoi(s + 5), atoi(s + 8))));
-				else
-					f = Null;
-			}
-			else
-				f = Value((const char *)sqlite3_column_text(current_stmt, i));
 			break;
 		case SQLITE_NULL:
 			f = Null;
