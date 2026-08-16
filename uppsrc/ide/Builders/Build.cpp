@@ -94,6 +94,16 @@ String NoCr(const char *s)
 	return out;
 }
 
+#ifdef PLATFORM_WIN32
+
+String MakeBuild::GetVcpkgTriplet(const VectorMap<String, String>& bm) const
+{
+	return VcpkgTriplet(bm, FindIndex(Split(mainconfigparam, ' '), "SHARED") >= 0);
+}
+
+#endif
+
+
 void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -103,6 +113,12 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 #ifdef PLATFORM_WIN32
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
 		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
+		
+		if(IsVcpkgInstalled()) {
+			String triplet = GetVcpkgTriplet(bm);
+			host.exedirs << GetExeDirFile("vcpkg");
+			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + triplet + "/bin";
+		}
 		
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 #else
@@ -219,12 +235,15 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		if(IsExternalMode()) // just add everything..
 			for(int i = 0; i < wspc.GetCount(); i++)
 				b->include.Add(PackageDirectory(wspc[i]));
+
 		b->libpath = SplitDirs(bm.Get("LIB", ""));
 		b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
 		b->c_options = bm.Get("COMMON_C_OPTIONS", "");
 		b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
 		b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
 		b->common_link = bm.Get("COMMON_LINK", "");
+#ifdef PLATFORM_WIN32
+#endif
 		b->debug_link = bm.Get("DEBUG_LINK", "");
 		b->release_link = bm.Get("RELEASE_LINK", "");
 
@@ -234,6 +253,30 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->main_conf = !!main_conf.GetCount();
 		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
 		b->start_time = start_time;
+
+#ifdef PLATFORM_WIN32
+		String libs;
+		String vcpkg_triplet = GetVcpkgTriplet(bm);
+
+		PutConsole("Vcpkg triplet: " << vcpkg_triplet);
+		
+		auto sys = [&](const String& cmd, const String& chdir) {
+			if(chdir.GetCount())
+				b->ChDir(chdir);
+			return b->Execute(cmd);
+		};
+
+//		if(!DirectoryExists(GetExeDirFile("bin") + vcpkg_triplet))
+//			InstallVcpkg(sys);
+
+		if(IsVcpkgInstalled())
+			libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
+		else
+			libs = GetExeDirFile("bin") + "/x64-mingw-static-release";
+		
+		b->include << libs + "/include";
+		b->libpath << libs + "/lib";
+#endif
 	}
 	return b;
 }
@@ -503,11 +546,30 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	
 	BeginBuilding(clear_console);
 
+#ifdef PLATFORM_WIN32
+	if(IsVcpkgInstalled() && builder) {
+		String vcpkg_triplet = GetVcpkgTriplet(bm);
+		Vector<String> required = RequiredExternalDependencies("VCPKG");
+		Vector<VcpkgInstalled> installed = VcpkgList();
+
+		auto sys = [&](const String& cmd, const String& chdir) {
+			if(chdir.GetCount())
+				builder->ChDir(chdir);
+			return builder->Execute(cmd);
+		};
+	
+		for(String name : required)
+			if(!VcpkgHasInstalled(installed, name, vcpkg_triplet))
+				VcpkgInstall(sys, name, vcpkg_triplet);
+	}
+#endif
+
 	bool ok = true;
 	main_conf.Clear();
 	add_includes.Clear();
 	MainConf(wspc);
-	PutConsole("Saving " + add_includes);
+	if(add_includes.GetCount())
+		PutConsole("Saving " + add_includes);
 	PutVerbose(main_conf);
 	if(wspc.GetCount()) {
 		Vector<int> build_order;
@@ -577,14 +639,15 @@ void MakeBuild::BuildWorkspace(Workspace& wspc, Host& host, Builder& builder)
 
 bool MakeBuild::Build()
 {
-	if(GetMethodVars(method).GetCount() == 0) {
+	bm = GetMethodVars(method);
+	if(bm.GetCount() == 0) {
 		PutConsole(GetInvalidBuildMethodError(method));
 		ConsoleShow();
 		return false;
 	}
 	Host host;
 	CreateHost(host, false, false, 0);
-	One<Builder> builder = CreateBuilder(&host);
+	builder = CreateBuilder(&host);
 	if(!builder)
 		return false;
 	String dummy;

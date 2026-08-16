@@ -720,7 +720,10 @@ bool                   InstallVcpkg(Function<int(const String&, const String& ch
 String                 VcpkgExe();
 Vector<VcpkgInstalled> VcpkgList();
 Vector<String>         RequiredExternalDependencies(const String& manager);
+String                 VcpkgTriplet(const String& builder, const String& compiler, bool so);
+String                 VcpkgTriplet(const VectorMap<String, String>& vars, bool so);
 Vector<String>         VcpkgTriplets();
 bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
+bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
 
 #endif

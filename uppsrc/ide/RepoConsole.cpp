@@ -47,6 +47,7 @@ void UrepoConsole::AddResult(const String& out)
 void UrepoConsole::Log(const Value& s, Color ink)
 {
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
+	list.GoEnd();
 }
 
 int UrepoConsole::System(const char *cmd, const char *chdir)

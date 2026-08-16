@@ -1041,10 +1041,21 @@ END_LAYOUT
 
 LAYOUT(VcpkgLayout, 1000, 700)
 	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 992).TopPosZ(4, 468))
-	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::ArrayCtrl, required_list, LeftPosZ(4, 150).TopPosZ(476, 180))
+	ITEM(Upp::ArrayCtrl, triplets_list, LeftPosZ(160, 150).TopPosZ(476, 180))
+	ITEM(Upp::ArrayCtrl, missing_list, LeftPosZ(316, 368).TopPosZ(476, 180))
+	ITEM(Upp::Button, install, SetLabel(t_("Install..")).RightPosZ(932, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, remove, SetLabel(t_("Remove")).RightPosZ(864, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, update, SetLabel(t_("Update")).RightPosZ(796, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, install_missing, SetLabel(t_("Install missing")).RightPosZ(564, 120).BottomPosZ(8, 24))
-	ITEM(Upp::ArrayCtrl, required_list, LeftPosZ(4, 150).TopPosZ(476, 188))
-	ITEM(Upp::ArrayCtrl, triplets_list, LeftPosZ(160, 150).TopPosZ(476, 188))
-	ITEM(Upp::ArrayCtrl, missing_list, LeftPosZ(316, 368).TopPosZ(476, 188))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(VcpkgInstallLayout, 1124, 516)
+	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 900).TopPosZ(4, 468))
+	ITEM(Upp::ArrayCtrl, triplets, LeftPosZ(908, 206).TopPosZ(4, 468))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::EditString, search, LeftPosZ(4, 160).TopPosZ(484, 19))
 END_LAYOUT
 

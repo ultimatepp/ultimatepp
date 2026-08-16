@@ -351,7 +351,7 @@ private:
 	
 	bool       IsLineVisible0(int i) const { return i < 0 ? false : i < array.GetCount() ? array[i].visible : true; }
 
-public: // temporary (TRC 06/07/28) // will be removed!
+public: // do not use...
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl) { return SetCtrl(i, j, newctrl, true, true); }
 
 protected:

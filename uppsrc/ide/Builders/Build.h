@@ -66,6 +66,9 @@ public:
 	Index<String> cfg;
 	FileTime     start_time;
 
+	VectorMap<String, String> bm;
+	One<Builder> builder;
+
 	bool         makefile_svn_revision = true;
 
 	void CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause);
@@ -99,6 +102,10 @@ public:
 	Array<CompileCommand> GetCompileCommands();
 
 	void  SaveCCJ(const String& fn, bool exporting);
+	
+#ifdef PLATFORM_WIN32
+	String GetVcpkgTriplet(const VectorMap<String, String>& bm) const;
+#endif
 
 	MakeBuild();
 

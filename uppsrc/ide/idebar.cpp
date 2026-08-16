@@ -451,6 +451,9 @@ void Ide::Setup(Bar& menu)
 #endif
 	menu.MenuSeparator();
 	menu.Add(HasGit(), "UppHub..", IdeImg::UppHub(), [] { UppHub(); });
+#ifdef PLATFORM_WIN32
+	menu.Add("Vcpkg..", IdeImg::Vcpkg(), [=] { Vcpkg(); });
+#endif
 	menu.Add("Clone U++ GitHub sources..", [=] {
 		if(SetupGITMaster()) {
 			IdeAgain = true;
@@ -472,10 +475,6 @@ void Ide::Setup(Bar& menu)
 
 #if !defined(PLATFORM_COCOA) && !defined(PLATFORM_WIN32) && !defined(FLATPAK)
 	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
-#endif
-
-#ifdef PLATFORM_WIN32
-	menu.Add("Vcpkg..", [=] { Vcpkg(); });
 #endif
 
 	if(menu.IsMenuBar())

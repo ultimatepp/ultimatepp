@@ -1,5 +1,7 @@
 #include "Core.h"
 
+#ifdef PLATFORM_WIN32
+
 String VcpkgExe()
 {
 	return GetExeFolder() + "/vcpkg/vcpkg.exe";
@@ -58,15 +60,34 @@ Vector<String> RequiredExternalDependencies(const String& manager)
 	keys << "BSD";
 #endif
 
+	int maxlen = -1;
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
 		for(const OptItem& m : pkg.external_dependency) {
-			if(MatchWhen(m.when, keys))
+			if(MatchWhen(m.when, keys) && m.when.GetCount() > maxlen) {
+				maxlen = m.when.GetCount();
 				required.Add(m.text);
+			}
 		}
 	}
 	Sort(required);
 	return required;
+}
+
+String VcpkgTriplet(const String& builder, const String& compiler, bool so)
+{
+	if(builder == "CLANG")
+		return compiler.Find("i686") >= 0 ? so ? "x86-mingw-dynamic-release" : "x86-mingw-static-release"
+		                                  : so ? "x64-mingw-dynamic-release" : "x64-mingw-static-release";
+	if(builder.StartsWith("MSC"))
+		return builder.Find("64") >= 0 ? so ? "x64-windows" : "x64-windows-static"
+		                               : so ? "x86-windows" : "x86-windows-static";
+	return "x64-mingw-static-release";
+}
+
+String VcpkgTriplet(const VectorMap<String, String>& vars, bool so)
+{
+	return VcpkgTriplet(vars.Get("BUILDER", Null), vars.Get("COMPILER", Null), so);
 }
 
 Vector<String> VcpkgTriplets()
@@ -76,13 +97,8 @@ Vector<String> VcpkgTriplets()
 		VectorMap<String, String> vars;
 		String fn = ConfigFile(ff.GetName());
 		if(LoadVarFile(fn, vars)) {
-			String builder = vars.Get("BUILDER", Null);
-			String compiler = vars.Get("COMPILER", Null);
-			
-			if(builder == "CLANG")
-				ts.FindAdd(compiler.Find("i686") >= 0 ? "x86-mingw-static-release" : "x64-mingw-static-release");
-			if(builder.StartsWith("MSC"))
-				ts.FindAdd(builder.Find("64") >= 0 ? "x64-windows-static-md" : "x86-windows-static-md");
+			ts.FindAdd(VcpkgTriplet(vars, false));
+			ts.FindAdd(VcpkgTriplet(vars, true));
 		}
 	}
 	
@@ -98,3 +114,10 @@ bool VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const 
 			return true;
 	return false;
 }
+
+bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet)
+{
+	return sys(VcpkgExe() + " install " + name + ":" + triplet, Null) == 0;
+}
+
+#endif
