@@ -859,21 +859,31 @@ String Ide::GetExternalIncludePath()
 	}
 	return include_path;
 }
-	
+
+void Ide::InvalidateIncludes()
+{
+	include_path.Clear();
+}
+
 String Ide::GetIncludePath()
 {
  // this is 'real' include path defined by current build method, for Alt+J and #include assist
+ 	DUMP(method);
 	if(include_path.GetCount())
 		return include_path;
 
+	TIMESTOP("GetIncludePath");
 	SetupDefaultMethod();
-	VectorMap<String, String> bm = GetMethodVars(method);
 	include_path = Join(GetUppDirs(), ";");
 
 	MergeWith(include_path, ";", GetExternalIncludePath());
-
-	String include_path = GetExternalIncludePath();
+	
 	IncludeAddPkgConfig(include_path, Null);
+
+#ifdef PLATFORM_WIN32
+	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/include");
+	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/x64-mingw-static-release/include");
+#endif
 
 	return include_path;
 }
@@ -980,7 +990,7 @@ String Ide::GetCurrentIncludePath()
 	// add all include paths of real current build method (because there can be additional
 	// includes..)
 	MergeWith(include_path, ";", GetIncludePath());
-	
+
 	return include_path;
 }
 

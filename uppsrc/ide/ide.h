@@ -371,95 +371,97 @@ struct RepoDiff;
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
-	virtual   void   Paint(Draw& w);
-	virtual   bool   Key(dword key, int count);
-	virtual   bool   HotKey(dword key);
-	virtual   void   FileCursor();
-	virtual   void   PackageCursor();
-	virtual   void   SyncWorkspace();
-	virtual   void   BuildFileMenu(Bar& menu);
-	virtual   void   ProjectRepo(Bar& bar);
-	virtual   void   FilePropertiesMenu0(Bar& menu);
-	virtual   void   FilePropertiesMenu(Bar& menu);
-	virtual   String GetOutputDir();
-	virtual   String GetConfigDir();
-	virtual   void   FileSelected();
-	virtual   void   Serialize(Stream& s);
-	virtual   void   FileRename(const String& nm);
-	virtual   bool   FileRemove();
-	virtual   void   DragAndDrop(Point p, PasteClip& d);
-	virtual   void   DeactivateBy(Ctrl *new_focus);
-	virtual   void   Activate();
-	virtual   void   Layout();
-	virtual   void   Skin();
+	void   Paint(Draw& w) override;
+	bool   Key(dword key, int count) override;
+	bool   HotKey(dword key) override;
+	void   FileCursor() override;
+	void   PackageCursor() override;
+	void   SyncWorkspace() override;
+	void   BuildFileMenu(Bar& menu) override;
+	void   FilePropertiesMenu(Bar& menu) override;
+	String GetOutputDir() override;
+	String GetConfigDir() override;
+	void   FileSelected() override;
+	void   Serialize(Stream& s) override;
+	void   FileRename(const String& nm) override;
+	bool   FileRemove() override;
+	void   DragAndDrop(Point p, PasteClip& d) override;
+	void   DeactivateBy(Ctrl *new_focus) override;
+	void   Activate() override;
+	void   Layout() override;
+	void   Skin() override;
+	void   InvalidateIncludes() override;
 
-	virtual   bool   IsVerbose() const;
-	virtual   void   PutConsole(const char *s);
-	virtual   void   PutVerbose(const char *s);
-	virtual   void   PutLinking();
-	virtual   void   PutLinkingEnd(bool ok);
+	bool   IsVerbose() const override;
+	void   PutConsole(const char *s) override;
+	void   PutVerbose(const char *s) override;
+	void   PutLinking() override;
+	void   PutLinkingEnd(bool ok) override;
 
-	virtual   const Workspace& IdeWorkspace() const;
-	virtual   bool             IdeIsBuilding() const;
-	virtual   String           IdeGetOneFile() const;
-	virtual   int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool noconvert = false);
-	virtual   int              IdeConsoleExecute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false);
-	virtual   int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert);
-	virtual   int              IdeConsoleAllocSlot();
-	virtual   bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	virtual   bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1);
-	virtual   void             IdeConsoleFlush();
-	virtual   void             IdeConsoleBeginGroup(String group);
-	virtual   void             IdeConsoleEndGroup();
-	virtual   bool             IdeConsoleWait();
-	virtual   bool             IdeConsoleWait(int slot);
-	virtual   void             IdeConsoleOnFinish(Event<>  cb);
-	virtual   void             IdeProcessEvents();
+	const Workspace& IdeWorkspace() const override;
+	bool             IdeIsBuilding() const override;
+	String           IdeGetOneFile() const override;
+	int              IdeConsoleExecute(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, bool noconvert = false) override;
+	int              IdeConsoleExecute(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false) override;
+	int              IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char *envptr, bool quiet, bool noconvert) override;
+	int              IdeConsoleAllocSlot() override;
+	bool             IdeConsoleRun(const char *cmdline, Stream *out = NULL, const char *envptr = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1) override;
+	bool             IdeConsoleRun(One<AProcess> pick_ process, const char *cmdline, Stream *out = NULL, bool quiet = false, int slot = 0, String key = Null, int blitz_count = 1) override;
+	void             IdeConsoleFlush() override;
+	void             IdeConsoleBeginGroup(String group) override;
+	void             IdeConsoleEndGroup() override;
+	bool             IdeConsoleWait() override;
+	bool             IdeConsoleWait(int slot) override;
+	void             IdeConsoleOnFinish(Event<>  cb) override;
+	void             IdeProcessEvents() override;
 
-	virtual   bool      IdeIsDebug() const;
-	virtual   void      IdeEndDebug();
-	virtual   void      IdeSetBottom(Ctrl& ctrl);
-	virtual   void      IdeActivateBottom();
-	virtual   void      IdeRemoveBottom(Ctrl& ctrl);
-	virtual   void      IdeSetRight(Ctrl& ctrl);
-	virtual   void      IdeRemoveRight(Ctrl& ctrl);
+	bool      IdeIsDebug() const override;
+	void      IdeEndDebug() override;
+	void      IdeSetBottom(Ctrl& ctrl) override;
+	void      IdeActivateBottom() override;
+	void      IdeRemoveBottom(Ctrl& ctrl) override;
+	void      IdeSetRight(Ctrl& ctrl) override;
+	void      IdeRemoveRight(Ctrl& ctrl) override;
 
-	virtual   String    IdeGetFileName() const;
-	virtual   int       IdeGetFileLine();
-	virtual   String    IdeGetLine(int i) const;
+	String    IdeGetFileName() const override;
+	int       IdeGetFileLine() override;
+	String    IdeGetLine(int i) const override;
 
-	virtual   void      IdeSetDebugPos(const String& fn, int line, const Image& img, int i);
-	virtual   void      IdeHidePtr();
-	virtual   bool      IdeDebugLock();
-	virtual   bool      IdeDebugUnLock();
-	virtual   bool      IdeIsDebugLock() const;
+	void      IdeSetDebugPos(const String& fn, int line, const Image& img, int i) override;
+	void      IdeHidePtr() override;
+	bool      IdeDebugLock() override;
+	bool      IdeDebugUnLock() override;
+	bool      IdeIsDebugLock() const override;
 
-	virtual   void      IdeSetBar();
-	virtual   void      IdeOpenTopicFile(const String& file);
-	virtual   void      IdeFlushFile();
+	void      IdeSetBar() override;
+	void      IdeOpenTopicFile(const String& file) override;
+	void      IdeFlushFile() override;
 
-	virtual   String    IdeGetFileName();
-	virtual   String    IdeGetNestFolder();
+	String    IdeGetFileName() override;
+	String    IdeGetNestFolder() override;
 
-	virtual   String    IdeGetIncludePath();
+	String    IdeGetIncludePath() override;
 
-	virtual   bool      IsPersistentFindReplace();
+	bool      IsPersistentFindReplace() override;
 
-	virtual   int       IdeGetHydraThreads();
-	virtual   String    IdeGetCurrentBuildMethod();
-	virtual   String    IdeGetCurrentMainPackage();
-	virtual   void      IdePutErrorLine(const String& e);
+	int       IdeGetHydraThreads() override;
+	String    IdeGetCurrentBuildMethod() override;
+	String    IdeGetCurrentMainPackage() override;
+	void      IdePutErrorLine(const String& e) override;
 
-	virtual void   ConsoleShow();
-	virtual void   ConsoleSync();
-	virtual void   ConsoleClear();
-	virtual void   SetupDefaultMethod();
-	virtual Vector<String> PickErrors();
-	virtual void   BeginBuilding(bool clear_console);
-	virtual void   EndBuilding(bool ok);
-	virtual void   DoProcessEvents();
-	virtual void   SetErrorEditor();
-	virtual String GetMain();
+	void   ConsoleShow() override;
+	void   ConsoleSync() override;
+	void   ConsoleClear() override;
+	void   SetupDefaultMethod() override;
+	Vector<String> PickErrors() override;
+	void   BeginBuilding(bool clear_console) override;
+	void   EndBuilding(bool ok) override;
+	void   DoProcessEvents() override;
+	void   SetErrorEditor() override;
+	String GetMain() override;
+
+	virtual void   ProjectRepo(Bar& bar);
+	virtual void   FilePropertiesMenu0(Bar& menu);
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
@@ -953,7 +955,7 @@ public:
 		void  SyncRepo();
 
 	void      BuildMenu(Bar& menu);
-		void BuildPackageMenu(Bar& menu);
+		void  BuildPackageMenu(Bar& menu) override;
 
 		void  DoBuild();
 		void  PackageBuild();
@@ -1100,7 +1102,7 @@ public:
 
 	String    include_path; // cached value of include path, GetIncludePath
 
-	virtual void      LaunchTerminal(const char *dir);
+	void      LaunchTerminal(const char *dir) override;
 
 //	Console&  GetConsole();
 
@@ -1236,6 +1238,7 @@ public:
 
 	void      IncludeAddPkgConfig(String& include_path, const String& clang_method);
 	String    GetExternalIncludePath();
+	void      RefreshIncludePath();
 	String    GetIncludePath();
 	String    GetCurrentIncludePath();
 	String    GetCurrentDefines();

@@ -269,10 +269,12 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 //		if(!DirectoryExists(GetExeDirFile("bin") + vcpkg_triplet))
 //			InstallVcpkg(sys);
 
-		if(IsVcpkgInstalled())
-			libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
-		else
-			libs = GetExeDirFile("bin") + "/x64-mingw-static-release";
+//		if(IsVcpkgInstalled())
+//			libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
+//		else
+//			libs = GetExeDirFile("bin") + "/x64-mingw-static-release";
+
+		libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
 		
 		b->include << libs + "/include";
 		b->libpath << libs + "/lib";
