@@ -12,6 +12,7 @@ struct UppHubNest : Moveable<UppHubNest> {
 	String           list_name;
 	String           readme;
 	String           branch;
+	int              stars = -1;
 };
 
 static Color s_Make(Color c) {	return Blend(SColorPaper(), c, IsDarkTheme() ? 60 : 20); }
@@ -116,6 +117,7 @@ struct UppHubDlg : WithUppHubLayout<TopWindow> {
 	Value LoadJson(const String& url);
 	void  Load(int tier, const String& url);
 	void  Load();
+	void  LoadMetaData();
 	void  Install(bool noprompt = false);
 	void  Uninstall(bool noprompt = false);
 	void  Reinstall();
@@ -149,9 +151,10 @@ UppHubDlg::UppHubDlg()
 	list.AddKey();
 	list.AddColumn("Package").Sorting();
 	list.AddColumn("Category").Sorting();
+	list.AddColumn("Stars").Sorting();
 	list.AddColumn("Description");
 	
-	list.ColumnWidths("109 80 338");
+	list.ColumnWidths("109 80 38 300");
 	list.WhenSel = [=] {
 		UppHubNest *n = Current();
 		http.Abort();
@@ -350,7 +353,9 @@ void UppHubDlg::Sync()
 	qtf << "{{";
 	if(!IsDarkTheme())
 		qtf << "@(" << (int)c.GetR() << "." << (int)c.GetG() << "." << (int)c.GetB() << ")";
-	qtf << " Category: [* \1" << n->category << "\1], status: [* \1" << n->status << "\1], packages: [* \1" << Join(n->packages, " ") << "\1]";
+	qtf << " Category: [* \1" << n->category << "\1], status: [* \1" << n->status
+		<< "\1], stars: [* \1" << n->stars << "\1], packages: [* \1" << Join(n->packages, " ")
+		<< "\1]";
 	if(Installed())
 		qtf << "&Status: [* installed]";
 	if (!n->website.IsEmpty())
@@ -400,11 +405,12 @@ Value UppHubDlg::LoadJson(const String& url)
 		
 		r.Execute();
 		if (!r.IsSuccess()) {
-			String msg = "Failed to execute UppHub download nests request with error code " + IntStr(r.GetStatusCode()) + ".";
+			String msg = "Failed to execute UppHub download request with error code " +
+			             IntStr(r.GetStatusCode()) + " for url " + url + ".";
 			Loge() << METHOD_NAME << msg;
 			return ErrorValue(msg);
 		}
-		
+
 		if(loading_stopped) {
 			return ErrorValue();
 		}
@@ -487,14 +493,14 @@ void UppHubDlg::SyncList()
 	list.Clear();
 	for(const UppHubNest& n : upv) {
 		String pkgs = Join(n.packages, " ");
-		auto AT = [&](const String& s) {
+		auto AT = [&](const auto& s) {
 			return AttrText(s).Bold(DirectoryExists(GetHubDir() + "/" + n.name)).NormalPaper(StatusPaper(n.status));
 		};
 		if(ToUpperAscii(n.name + n.category + n.description + pkgs).Find(~~search) >= 0 &&
 		   (IsNull(category) || ~category == n.category) &&
 		   (experimental || n.status != "experimental") &&
 		   (broken || n.status != "broken"))
-			list.Add(n.name, AT(n.name), AT(n.category), AT(n.description), n.name);
+			list.Add(n.name, AT(n.name), AT(n.category), AT(n.stars), AT(n.description), n.name);
 	}
 	
 	list.HeaderTab(0).SetText("Package (" + AsString(list.GetCount()) + ")");
@@ -524,13 +530,50 @@ void UppHubDlg::Load()
 		cat.FindAdd(n.category);
 	SortIndex(cat);
 	category.Add(Null, AttrText("All categories").Italic());
-	for(String s : cat)
+	for(const String& s : cat)
 		category.Add(s);
 	category.GoBegin();
+
+	LoadMetaData();
 
 	SyncList();
 
 	pi.Close();
+}
+
+void UppHubDlg::LoadMetaData()
+{
+	const String url = "https://raw.githubusercontent.com/ultimatepp/UppHub/main/meta.json";
+	try {
+		Value v = LoadJson(url);
+		if (v.IsError()) {
+			return;
+		}
+		
+		if(v["nests"].IsVoid()) {
+			Loge() << METHOD_NAME << "No nests in the Json file.";
+			return;
+		}
+		
+		for(const Value& ns : v["nests"]) {
+			if(ns.GetCount() < 2 || ns["name"].IsVoid() || ns["stars"].IsVoid()) {
+				Loge() << METHOD_NAME << "Insufficient information to process nest (" << ns << ").";
+				continue;
+			}
+			
+			String name = ns["name"];
+			int stars = ns["stars"];
+			
+			auto i = upv.Find(name);
+			if(i == -1) {
+				String msg = "Failed to find associated nest with name " << name;
+				Loge() << METHOD_NAME << msg;
+				continue;
+			}
+			upv[i].stars = stars;
+		}
+	}
+	catch(ValueTypeError) {}
 }
 
 void UppHubDlg::Update()
