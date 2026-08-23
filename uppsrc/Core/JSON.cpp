@@ -89,7 +89,7 @@ JsonArray& JsonArray::CatRaw(const String& val)
 	return *this;
 }
 
-String AsJSON(const Value& v, const String& sep, bool pretty)
+String AsJSON0(const Value& v, const String& sep, bool pretty, int level)
 {
 	String r;
 	if(v.GetType() == VALUEMAP_V) {
@@ -97,7 +97,8 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		String sep1;
 		if(pretty) {
 			r << "\r\n";
-			sep1 = sep + '\t';
+			for(int i = 0; i < level + 1; i++)
+				sep1 += sep;
 		}
 		ValueMap m = v;
 		ValueArray va = m.GetValues();
@@ -110,10 +111,12 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 			if(pretty)
 				r << sep1;
 			r << AsJSON((String)m.GetKey(i)) << (pretty ? ": " : ":")
-			  << AsJSON(va[i], sep1, pretty);
+			  << AsJSON0(va[i], sep, pretty, level + 1);
 		}
-		if(pretty)
-			r << "\r\n" << sep;
+		if(pretty) {
+			sep1.Remove(0, sep.GetCount());
+			r << "\r\n" << sep1;
+		}
 		r << "}";
 		return r;
 	}
@@ -122,7 +125,8 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		String sep1;
 		if(pretty) {
 			r << "\r\n";
-			sep1 = sep + '\t';
+			for(int i = 0; i < level + 1; i++)
+				sep1 += sep;
 		}
 		ValueArray va = v;
 		for(int i = 0; i < va.GetCount(); i++) {
@@ -133,10 +137,12 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 			}
 			if(pretty)
 				r << sep1;
-			r << AsJSON(va[i], sep1, pretty);
+			r << AsJSON0(va[i], sep, pretty, level + 1);
 		}
-		if(pretty)
-			r << "\r\n" << sep;
+		if(pretty) {
+			sep1.Remove(0, sep.GetCount());
+			r << "\r\n" << sep1;
+		}
 		r << "]";
 		return r;
 	}
@@ -160,6 +166,11 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 	return "null";
 }
 
+String AsJSON(const Value& v, const String& sep, bool pretty)
+{
+	return AsJSON0(v, sep, pretty, 0);
+}
+
 void JsonIO::Set(const char *key, const Value& v)
 {
 	ASSERT(IsStoring());
@@ -170,7 +181,7 @@ void JsonIO::Set(const char *key, const Value& v)
 
 String AsJSON(const Value& v, bool pretty)
 {
-	return AsJSON(v, String(), pretty);
+	return AsJSON(v, "\t", pretty);
 }
 
 template<> void Jsonize(JsonIO& io, double& var)
