@@ -89,7 +89,7 @@ JsonArray& JsonArray::CatRaw(const String& val)
 	return *this;
 }
 
-String AsJSON(const Value& v, const String& sep, bool pretty)
+String AsJSON(const Value& v, const String& indent, bool pretty)
 {
 	String r;
 	if(v.GetType() == VALUEMAP_V) {
@@ -97,7 +97,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		String sep1;
 		if(pretty) {
 			r << "\r\n";
-			sep1 = sep + '\t';
+			sep1 = indent + '\t';
 		}
 		ValueMap m = v;
 		ValueArray va = m.GetValues();
@@ -113,7 +113,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 			  << AsJSON(va[i], sep1, pretty);
 		}
 		if(pretty)
-			r << "\r\n" << sep;
+			r << "\r\n" << indent;
 		r << "}";
 		return r;
 	}
@@ -122,7 +122,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 		String sep1;
 		if(pretty) {
 			r << "\r\n";
-			sep1 = sep + '\t';
+			sep1 = indent + '\t';
 		}
 		ValueArray va = v;
 		for(int i = 0; i < va.GetCount(); i++) {
@@ -136,7 +136,7 @@ String AsJSON(const Value& v, const String& sep, bool pretty)
 			r << AsJSON(va[i], sep1, pretty);
 		}
 		if(pretty)
-			r << "\r\n" << sep;
+			r << "\r\n" << indent;
 		r << "]";
 		return r;
 	}
