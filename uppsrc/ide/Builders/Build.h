@@ -74,7 +74,7 @@ public:
 	void CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause);
 	void CreateHost(Host& host, bool darkmode = false, bool disable_uhd = false, int scale = 0, bool exit_pause = false);
 
-	const TargetMode& GetTargetMode();
+	const TargetMode& GetTargetMode() const;
 	Index<String> PackageConfig(const Workspace& wspc, int package, const VectorMap<String, String>& bm,
 	                            String mainparam, Host& host, Builder& b, String *target = NULL);
 	One<Builder> CreateBuilder(Host *host);

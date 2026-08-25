@@ -14,7 +14,7 @@ MakeBuild::MakeBuild()
 	use_target = false;
 }
 
-const TargetMode& MakeBuild::GetTargetMode()
+const TargetMode& MakeBuild::GetTargetMode() const
 {
 	return (targetmode == 0 ? debug : release);
 }
@@ -98,7 +98,7 @@ String NoCr(const char *s)
 
 String MakeBuild::GetVcpkgTriplet(const VectorMap<String, String>& bm) const
 {
-	return VcpkgTriplet(bm, FindIndex(Split(mainconfigparam, ' '), "SHARED") >= 0);
+	return VcpkgTriplet(bm, GetTargetMode().linkmode);
 }
 
 #endif
@@ -255,26 +255,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->start_time = start_time;
 
 #ifdef PLATFORM_WIN32
-		String libs;
-		String vcpkg_triplet = GetVcpkgTriplet(bm);
-
-		PutConsole("Vcpkg triplet: " << vcpkg_triplet);
-		
-		auto sys = [&](const String& cmd, const String& chdir) {
-			if(chdir.GetCount())
-				b->ChDir(chdir);
-			return b->Execute(cmd);
-		};
-
-//		if(!DirectoryExists(GetExeDirFile("bin") + vcpkg_triplet))
-//			InstallVcpkg(sys);
-
-//		if(IsVcpkgInstalled())
-//			libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
-//		else
-//			libs = GetExeDirFile("bin") + "/x64-mingw-static-release";
-
-		libs = GetExeDirFile("vcpkg") + "/installed/" + vcpkg_triplet;
+		String libs = GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm);
 		
 		b->include << libs + "/include";
 		b->libpath << libs + "/lib";
@@ -553,6 +534,8 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		String vcpkg_triplet = GetVcpkgTriplet(bm);
 		Vector<String> required = RequiredExternalDependencies("VCPKG");
 		Vector<VcpkgInstalled> installed = VcpkgList();
+
+		PutConsole("Vcpkg triplet: " << vcpkg_triplet);
 
 		auto sys = [&](const String& cmd, const String& chdir) {
 			if(chdir.GetCount())
