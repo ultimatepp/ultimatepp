@@ -77,7 +77,7 @@ Image Mandelbrot::DrawScalar(int itermax)
 		ProcessEvents();
 	}
 
-	return ib;
+	return Image(ib);
 }
 
 Image Mandelbrot::DrawSIMD(int itermax)
@@ -121,7 +121,7 @@ Image Mandelbrot::DrawSIMD(int itermax)
 		ProcessEvents();
 	}
 
-	return ib;
+	return Image(ib);
 #else
 	return DrawScalar(itermax);
 #endif

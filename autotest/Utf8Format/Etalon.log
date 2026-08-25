@@ -1,0 +1,56 @@
+* /home/cxl/out/autotest/CLANG.Debug.Debug_Full.Shared/Utf8Format 25.08.2026 10:11:47, user: cxl
+
+String("lubäck").GetCharCount() = 6
+------------------
+Sprntf("|%s|", "luback") = |luback|
+Format("|%s|", "lubäck") = |lubäck|
+Sprntf("|%40s|", "luback") = |                                  luback|
+Format("|%40s|", "lubäck") = |                                  lubäck|
+Sprntf("|%40s|", "luback") = |                                  luback|
+Format("|%40s|", "lubäck") = |                                  lubäck|
+Sprntf("|%40.40s|", "luback") = |                                  luback|
+Format("|%40.40s|", "lubäck") = |                                  lubäck|
+Sprntf("|%-40.40s|", "luback") = |luback                                  |
+Format("|%-40.40s|", "lubäck") = |lubäck                                  |
+Sprntf("|%40.5s|", "luback") = |                                   lubac|
+Format("|%40.5s|", "lubäck") = |                                   lubäc|
+Sprntf("|%-40.5s|", "luback") = |lubac                                   |
+Format("|%-40.5s|", "lubäck") = |lubäc                                   |
+------------------
+Sprntf("|%5s|", "luback") = |luback|
+Format("|%5s|", "lubäck") = |lubäck|
+Sprntf("|%5s|", "luback") = |luback|
+Format("|%5s|", "lubäck") = |lubäck|
+Sprntf("|%5.5s|", "luback") = |lubac|
+Format("|%5.5s|", "lubäck") = |lubäc|
+Sprntf("|%-5.5s|", "luback") = |lubac|
+Format("|%-5.5s|", "lubäck") = |lubäc|
+Sprntf("|%.5s|", "luback") = |lubac|
+Format("|%.5s|", "lubäck") = | lubäc|
+Sprntf("|%-.5s|", "luback") = |lubac|
+Format("|%-.5s|", "lubäck") = |lubäc |
+------------------
+Format("|%-40.40s|", "luback") = |luback                                  |
+Format("|%-40.40s|", "lubäck") = |lubäck                                  |
+Format("|%-40.40s|", "luback") = |luback                                  |
+Format("|%20<s|", "lubäck") = |lubäck              |
+Format("|%20<s|", "luback") = |luback              |
+Format("|%20=s|", "lubäck") = |       lubäck       |
+Format("|%20=s|", "luback") = |       luback       |
+Format("|%20>s|", "lubäck") = |              lubäck|
+Format("|%20>s|", "luback") = |              luback|
+------------------
+Format("|%-4.4s|", "luback") = |luba|
+Format("|%-4.4s|", "lubäck") = |lubä|
+Format("|%-4.4s|", "luback") = |luba|
+Format("|%5<s|", "lubäck") = |lubäc|
+Format("|%5<s|", "luback") = |lubac|
+Format("|%5=s|", "lubäck") = |lubäc|
+Format("|%5=s|", "luback") = |lubac|
+Format("|%5>s|", "lubäck") = |lubäc|
+Format("|%5>s|", "luback") = |lubac|
+------------------
+Sprintf("%d", 123) = 123
+Format("%d", 123) = 123
+------------------
+String("lubäck").GetCharCount() = 7
