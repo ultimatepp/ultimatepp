@@ -725,5 +725,6 @@ String                 VcpkgTriplet(const VectorMap<String, String>& vars, bool 
 Vector<String>         VcpkgTriplets();
 bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
 bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
+void                   VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, const String& triplet);
 
 #endif

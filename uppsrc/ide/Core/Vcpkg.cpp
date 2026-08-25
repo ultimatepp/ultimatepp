@@ -120,4 +120,15 @@ bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const S
 	return sys(VcpkgExe() + " install " + name + ":" + triplet, Null) == 0;
 }
 
+void VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, const String& triplet)
+{
+	if(!IsVcpkgInstalled())
+		InstallVcpkg(sys);
+	Vector<String> required = RequiredExternalDependencies("VCPKG");
+	Vector<VcpkgInstalled> installed = VcpkgList();
+	for(String name : required)
+		if(!VcpkgHasInstalled(installed, name, triplet))
+			VcpkgInstall(sys, name, triplet);
+}
+
 #endif

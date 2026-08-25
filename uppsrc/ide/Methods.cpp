@@ -868,7 +868,6 @@ void Ide::InvalidateIncludes()
 String Ide::GetIncludePath()
 {
  // this is 'real' include path defined by current build method, for Alt+J and #include assist
- 	DUMP(method);
 	if(include_path.GetCount())
 		return include_path;
 
@@ -881,7 +880,7 @@ String Ide::GetIncludePath()
 	IncludeAddPkgConfig(include_path, Null);
 
 #ifdef PLATFORM_WIN32
-	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/include");
+	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet() + "/include");
 	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/x64-mingw-static-release/include");
 #endif
 

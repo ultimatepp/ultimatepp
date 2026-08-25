@@ -164,19 +164,20 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 			Check0(allOf[i], data, depth + 1);
 		}
 	}
-	logics++;
 	auto countOf = [&](Value m, int max, int def) {
 		if(m.IsVoid())
 			return def;
 		if(!m.Is<ValueArray>())
 			InvalidSchema();
 		int count = 0;
+		logics++;
 		for(int i = 0; i < m.GetCount() && count < max; i++)
 			try {
 				Check0(m[i], data, depth + 1);
 				count++;
 			}
 			catch(FailedBranch) {}
+		logics--;
 		return count;
 	};
 	if(countOf(schema["anyOf"], 1, 1) == 0) {
@@ -193,16 +194,17 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		if(!Not.Is<ValueMap>())
 			InvalidSchema();
 		bool ok = true;
+		logics++;
 		try {
 			Path __(this, "not");
 			Check(Not, data, depth + 1);
 			ok = false;
 		}
 		catch(FailedBranch) {}
+		logics--;
 		if(!ok)
 			Error("'not' failed");
 	}
-	logics--;
 	
 	String ref = schema["$ref"];
 	if(ref.GetCount()) {

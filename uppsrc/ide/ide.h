@@ -1311,6 +1311,9 @@ public:
 	void TriggerIndexer0();
 	void TriggerIndexer();
 
+	String GetVcpkgTriplet();
+	void   VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys);
+
 	typedef   Ide CLASSNAME;
 
 	enum {

@@ -8,6 +8,7 @@ void Finish(UrepoConsole& console, int errors)
 		console.Log(String() << "There were errors (" << errors << ")", SLtRed());
 	else
 		console.Log("OK", SGreen());
+	console.Perform();
 }
 
 struct VcpkgDlg : WithVcpkgLayout<TopWindow> {
@@ -22,6 +23,16 @@ struct VcpkgDlg : WithVcpkgLayout<TopWindow> {
 	VcpkgDlg();
 };
 
+String Ide::GetVcpkgTriplet()
+{
+	return MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
+}
+
+void Ide::VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys)
+{
+	::VcpkgInstallMissing(sys, GetVcpkgTriplet());
+}
+
 VcpkgDlg::VcpkgDlg()
 {
 	CtrlLayoutExit(*this, "vcpkg");
@@ -32,16 +43,13 @@ VcpkgDlg::VcpkgDlg()
 	list.AddColumn("Description");
 	list.ColumnWidths("140 396 79 281");
 	
-	required_list.AddColumn("Required");
-
-	triplets_list.AddColumn("Triplets");
-
-	missing_list.AddColumn("Missing");
-	missing_list.AddColumn("Triplet");
-	
 	install_missing << [=] {
 		UrepoConsole console;
 		int errors = 0;
+		
+		TheIde()->VcpkgInstallMissing([&](const String& cmd, const String& chdir)
+		                             { return console.System(cmd, chdir); });
+/*		
 		for(int i = 0; i < missing_list.GetCount(); i++) {
 			String name = missing_list.Get(i, 0);
 			String triplet = missing_list.Get(i, 1);
@@ -53,6 +61,7 @@ VcpkgDlg::VcpkgDlg()
 		
 		Finish(console, errors);
 		console.Perform();
+*/
 		SyncList();
 		SyncIde();
 	};
@@ -96,24 +105,6 @@ void VcpkgDlg::Sync()
 
 void VcpkgDlg::SyncIde()
 {
-	Vector<String> triplets = VcpkgTriplets();
-
-	triplets_list.Clear();
-	for(String s : triplets)
-		triplets_list.Add(s);
-
-	Vector<String> required = RequiredExternalDependencies("VCPKG");
-	
-	required_list.Clear();
-	for(String s : required)
-		required_list.Add(s);
-	
-	missing_list.Clear();
-	for(String r : required)
-		for(String t : triplets)
-			if(!VcpkgHasInstalled(items, r, t))
-				missing_list.Add(r, t);
-	install_missing.Enable(missing_list.GetCount());
 	Sync();
 }
 
@@ -166,13 +157,6 @@ struct VcpkgInstallDlg : WithVcpkgInstallLayout<TopWindow> {
 void VcpkgDlg::Install()
 {
 	VcpkgInstallDlg dlg;
-	for(const String& s : VcpkgTriplets())
-		dlg.ts.FindAdd(s);
-	for(const VcpkgInstalled& m : items) {
-		for(const String& s : m.triplets)
-			dlg.ts.FindAdd(s);
-	}
-	SortIndex(dlg.ts);
 	dlg.Perform();
 	SyncIde();
 }
@@ -229,18 +213,25 @@ void VcpkgInstallDlg::Perform()
 		if(l["description"].GetCount())
 			m.desc = l["description"][0];
 	}
-	
+
+	Index<String> ts;
+	if(TheIde())
+		ts.FindAdd(TheIde()->GetVcpkgTriplet());
+	for(const String& s : VcpkgTriplets())
+		ts.FindAdd(s);
+	int ni = ts.GetCount();
 	for(String s : Split(Sys(VcpkgExe() + " help triplets"), '\n')) {
 		s.TrimEnd("\r");
 		if(s.TrimStart("  "))
 			ts.FindAdd(s);
 	}
 	
-	for(String s : ts) {
-		int ii = triplets.GetCount();
+	for(int i = 0; i < ts.GetCount(); i++) {
 		triplets.Add();
-		auto& o = triplets.CreateCtrl<Option>(ii, 0);
-		o.SetLabel(s);
+		auto& o = triplets.CreateCtrl<Option>(i, 0);
+		String s = ts[i];
+		o.SetLabel(i == 0 ? "\1[g* \1" + s
+		                  : i >= ni ? "\1[g@K \1" + s : s);
 	}
 	
 	Sync();

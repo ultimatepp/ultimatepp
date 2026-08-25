@@ -532,8 +532,6 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 #ifdef PLATFORM_WIN32
 	if(IsVcpkgInstalled() && builder) {
 		String vcpkg_triplet = GetVcpkgTriplet(bm);
-		Vector<String> required = RequiredExternalDependencies("VCPKG");
-		Vector<VcpkgInstalled> installed = VcpkgList();
 
 		PutConsole("Vcpkg triplet: " << vcpkg_triplet);
 
@@ -542,10 +540,8 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				builder->ChDir(chdir);
 			return builder->Execute(cmd);
 		};
-	
-		for(String name : required)
-			if(!VcpkgHasInstalled(installed, name, vcpkg_triplet))
-				VcpkgInstall(sys, name, vcpkg_triplet);
+		
+		VcpkgInstallMissing(sys, vcpkg_triplet);
 	}
 #endif
 
