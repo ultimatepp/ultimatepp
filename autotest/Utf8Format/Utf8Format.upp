@@ -4,6 +4,7 @@ uses
 	Core;
 
 file
+	Etalon.log,
 	Utf8Format.cpp;
 
 mainconfig

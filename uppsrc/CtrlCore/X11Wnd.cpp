@@ -258,6 +258,7 @@ void Ctrl::ProcessEvent(XEvent *event)
 	               && event->type != MotionNotify)
 		for(XEventMap *m = sXevent; m->ID; m++)
 			if(m->ID == event->type) {
+				static int s_starttime;
 				if(!s_starttime)
 					s_starttime = msecs();
 				int t = msecs() - s_starttime;
