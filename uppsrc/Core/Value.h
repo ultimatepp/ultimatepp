@@ -313,6 +313,7 @@ struct ValueTypeError : Exc {
 	int   target;
 
 	ValueTypeError(const String& text, const Value& src, int target);
+	ValueTypeError() {}
 };
 
 template <class T> bool  FitsSvoValue()                    { return sizeof(T) <= 8; }

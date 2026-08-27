@@ -144,7 +144,7 @@ void JsonViewDes::Validate(const String& path)
 	};
 	chk.Validate(ParseJSON(schema), ParseJSON(json));
 	if(errors.GetCount() == 0)
-		errors.Add(AttrText("OK").NormalInk(SGreen()));
+		errors.Add(AttrText("Everything OK").Bold().Italic().NormalInk(SGreen()));
 }
 
 void JsonViewDes::EditMenu(Bar& bar)

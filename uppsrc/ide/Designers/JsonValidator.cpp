@@ -4,7 +4,7 @@
 
 void JsonSchemaChecker::InvalidSchema()
 {
-	Error("invalid schema");
+	throw ValueTypeError();
 }
 
 void JsonSchemaChecker::Error(const String& error)
@@ -88,7 +88,7 @@ void JsonSchemaChecker::ObjectFilters(Value schema, Value data, int depth)
 			
 			if(!found) {
 				if(noAdditionalProperties)
-					Error("unknown property " + id);
+					Error("unknown property: " + id);
 				if(additionalProperties.Is<ValueMap>()) {
 					Path __(this, "additionalProperties");
 					data_path << id;
@@ -100,7 +100,7 @@ void JsonSchemaChecker::ObjectFilters(Value schema, Value data, int depth)
 		for(Value v : schema["required"]) {
 			String id = ~v;
 			if(ids.Find(id) < 0)
-				Error("required property " + id);
+				Error("required property: " + id);
 		}
 		ValueMap m = schema["dependentRequired"];
 		for(int i = 0; i < m.GetCount(); i++) {
@@ -108,7 +108,7 @@ void JsonSchemaChecker::ObjectFilters(Value schema, Value data, int depth)
 			if(ids.Find(id) >= 0) {
 				for(Value v : m.GetValue(i))
 					if(ids.Find(~v) < 0)
-						Error(String() << "required dependent property " << v << ", depends on " << id);
+						Error(String() << "required dependent property: " << v << ", depends on: " << id);
 						
 			}
 		}
@@ -154,6 +154,11 @@ void JsonSchemaChecker::StringFilters(Value schema, Value data)
 
 void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 {
+	if(depth++ > 500) {
+		Error("invalid schema - depth is too high");
+		return;
+	}
+
 	Value allOf = schema["allOf"];
 	if(!allOf.IsVoid()) {
 		if(!allOf.Is<ValueArray>())
@@ -161,7 +166,7 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		for(int i = 0; i < allOf.GetCount(); i++) {
 			Path __(this, "allOf");
 			schema_path << i;
-			Check0(allOf[i], data, depth + 1);
+			Check(allOf[i], data, depth + 1);
 		}
 	}
 	auto countOf = [&](Value m, int max, int def) {
@@ -173,7 +178,7 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		logics++;
 		for(int i = 0; i < m.GetCount() && count < max; i++)
 			try {
-				Check0(m[i], data, depth + 1);
+				Check(m[i], data, depth + 1);
 				count++;
 			}
 			catch(FailedBranch) {}
@@ -222,17 +227,37 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		if(ptr.GetCount())
 			ref_schema = DereferenceJSONPointer(ref_schema, ptr);
 		Path __(this, "$ref:" + ref);
-		Check0(ref_schema, data, depth);
+		Check(ref_schema, data, depth);
 	}
-	Check0(schema, data, depth);
-}
 
-void JsonSchemaChecker::Check0(Value schema, Value data, int depth)
-{
-	if(depth++ > 200) {
-		Error("invalid schema - depth is too high");
-		return;
+	Value If = schema["if"];
+	if(!If.IsVoid()) {
+		bool ok = false;
+		logics++;
+		try {
+			Path __(this, "if");
+			Check(If, data, depth + 1);
+			ok = true;
+		}
+		catch(FailedBranch) {}
+		logics--;
+		
+		if(ok) {
+			Value Then = schema["then"];
+			if(!Then.IsVoid()) {
+				Path __(this, "then");
+				Check(Then, data, depth + 1);
+			}
+		}
+		else {
+			Value Else = schema["else"];
+			if(!Else.IsVoid()) {
+				Path __(this, "else");
+				Check(Else, data, depth + 1);
+			}
+		}
 	}
+
 	Value m = schema["enum"];
 	if(m.Is<ValueArray>()) {
 		bool ok = false;
@@ -313,8 +338,9 @@ void JsonSchemaChecker::Validate(Value schema, Value data)
 	data_path.Clear();
 	logics = 0;
 	refs.GetAdd(Null) = schema;
+	
 	try {
 		Check(schema, data, 0);
 	}
-	catch(ValueTypeError e) { InvalidSchema(); }
+	catch(ValueTypeError e) { Error("invalid schema"); }
 }

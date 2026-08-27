@@ -12,7 +12,6 @@ class JsonSchemaChecker {
 	void ObjectFilters(Value schema, Value data, int depth);
 
 	void Check(Value schema, Value data, int depth);
-	void Check0(Value schema, Value data, int depth);
 	
 	void InvalidSchema();
 	void Error(const String& error);
