@@ -45,7 +45,6 @@ bool ClangTidy::HasClangTidy()
 		}
 #endif
 	}
-exit:
 	return path.GetCount() && options.GetCount();
 }
 
