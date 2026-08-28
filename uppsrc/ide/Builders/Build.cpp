@@ -114,7 +114,11 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
 		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
 		
-		if(IsVcpkgInstalled()) {
+		if(IsVcpkgAvailable([&](const String& cmd, const String& chdir) {
+			if(chdir.GetCount())
+				host.ChDir(chdir);
+			return host.Execute(cmd);
+		})) {
 			String triplet = GetVcpkgTriplet(bm);
 			host.exedirs << GetExeDirFile("vcpkg");
 			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + triplet + "/bin";
@@ -530,18 +534,20 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	BeginBuilding(clear_console);
 
 #ifdef PLATFORM_WIN32
-	if(IsVcpkgInstalled() && builder) {
-		String vcpkg_triplet = GetVcpkgTriplet(bm);
-
-		PutConsole("Vcpkg triplet: " << vcpkg_triplet);
-
+	if(builder) {
 		auto sys = [&](const String& cmd, const String& chdir) {
 			if(chdir.GetCount())
 				builder->ChDir(chdir);
 			return builder->Execute(cmd);
 		};
-		
-		VcpkgInstallMissing(sys, vcpkg_triplet);
+		if(IsVcpkgAvailable(sys) && builder) {
+			String vcpkg_triplet = GetVcpkgTriplet(bm);
+	
+			PutConsole("Vcpkg triplet: " << vcpkg_triplet);
+	
+			
+			VcpkgInstallMissing(sys, vcpkg_triplet);
+		}
 	}
 #endif
 

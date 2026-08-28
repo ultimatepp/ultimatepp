@@ -19,6 +19,15 @@ bool InstallVcpkg(Function<int(const String&, const String& chdir)> sys)
 	       sys("cmd /c \"" + exedir + "/vcpkg/bootstrap-vcpkg.bat\"", Null) == 0;
 }
 
+bool no_vcpkg_install;
+
+bool IsVcpkgAvailable(Function<int(const String&, const String& chdir)> sys)
+{
+	if(!IsVcpkgInstalled() && !no_vcpkg_install)
+		InstallVcpkg(sys);
+	return IsVcpkgInstalled();
+}
+
 Vector<VcpkgInstalled> VcpkgList()
 {
 	VectorMap<String, VcpkgInstalled> ms;

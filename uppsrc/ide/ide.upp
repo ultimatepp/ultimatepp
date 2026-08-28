@@ -93,6 +93,7 @@ file
 	Upgrade.cpp,
 	UppHub.cpp,
 	vcpkg.cpp,
+	SBOM.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,

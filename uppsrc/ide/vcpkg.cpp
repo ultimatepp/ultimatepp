@@ -2,6 +2,27 @@
 
 #ifdef PLATFORM_WIN32
 
+bool Ide::IsVcpkgAvailable(UrepoConsole& console)
+{
+	return ::IsVcpkgAvailable([&](const String& cmd, const String& chdir) { return console.System(cmd, chdir); });
+}
+
+bool Ide::IsVcpkgAvailable()
+{
+	UrepoConsole console;
+	return IsVcpkgAvailable(console);
+}
+
+String Ide::GetVcpkgTriplet()
+{
+	return MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
+}
+
+void Ide::VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys)
+{
+	::VcpkgInstallMissing(sys, GetVcpkgTriplet());
+}
+
 void Finish(UrepoConsole& console, int errors)
 {
 	if(errors)
@@ -22,16 +43,6 @@ struct VcpkgDlg : WithVcpkgLayout<TopWindow> {
 
 	VcpkgDlg();
 };
-
-String Ide::GetVcpkgTriplet()
-{
-	return MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
-}
-
-void Ide::VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys)
-{
-	::VcpkgInstallMissing(sys, GetVcpkgTriplet());
-}
 
 VcpkgDlg::VcpkgDlg()
 {
@@ -120,17 +131,10 @@ void VcpkgDlg::SyncList()
 
 void VcpkgDlg::Perform()
 {
-	if(!IsVcpkgInstalled()) {
-		if(!PromptYesNo("Install vcpkg?"))
-			return;
-		UrepoConsole console;
-		if(!InstallVcpkg([&](const String& cmd, const String& chdir) { return console.System(cmd, chdir); })) {
-			Exclamation("Installation failed");
-			return;
-		}
-		console.Log("Installation completed.", SGreen());
-		console.Perform();
-	}
+	extern bool no_vcpkg_install;
+	no_vcpkg_install = false;
+	if(!TheIde()->IsVcpkgAvailable())
+		return;
 	SyncList();
 	SyncIde();
 	Execute();

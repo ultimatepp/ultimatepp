@@ -323,6 +323,7 @@ struct WorkspaceWork {
 	virtual void   PackageCursor();
 	virtual void   FileCursor();
 	virtual void   BuildPackageMenu(Bar& bar)         {}
+	virtual void   ClangTidyPackage(Bar& bar)         {}
 	virtual void   BuildFileMenu(Bar& bar)            {}
 	virtual void   FilePropertiesMenu(Bar& bar)       {}
 	virtual String GetOutputDir()                     { return Null; }

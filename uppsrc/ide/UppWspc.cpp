@@ -1208,6 +1208,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 				menu.Add(cando && !main, "Delete package", THISBACK(DeletePackage));
 				menu.Separator();
 				BuildPackageMenu(menu);
+				ClangTidyPackage(menu);
 			}
 			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));
 			menu.Add("Terminal at Package Directory", IdeImg::Terminal(), [=] { LaunchTerminal(GetActivePackageDir()); });
