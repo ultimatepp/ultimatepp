@@ -45,6 +45,15 @@ public:
 	Function<Value(String)>  Ref;
 	Vector<Value>            schema_path;
 	Vector<Value>            data_path;
+	
+	struct SubError { // this is for cases like oneOf (logics / FailedBranch)
+		int                      sublevel = 0;
+		String                   error;
+		Vector<Value>            schema_path;
+		Vector<Value>            data_path;
+	};
+	
+	Array<SubError>          sub_errors;
 
 	struct JsonSchemaError : Exc {
 		JsonSchemaError(const char *e) : Exc(e) {}

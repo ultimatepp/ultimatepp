@@ -128,19 +128,28 @@ void JsonViewDes::Validate(const String& path)
 	JsonSchemaChecker chk;
 	errors_frame.Show();
 	chk.WhenError = [&](const String& error) {
-		String path;
-		ValueArray va;
-		for(Value v : chk.data_path) {
-			MergeWith(path, "/", ~v);
-			va << v;
+		auto AddError = [&](const String& error, const Vector<Value>& data_path, const Vector<Value>& schema_path) {
+			String path;
+			ValueArray va;
+			for(Value v : data_path) {
+				MergeWith(path, "/", ~v);
+				va << v;
+			}
+			ValueArray sch_va;
+			String sch_path;
+			for(Value v : schema_path) {
+				MergeWith(sch_path, "/", ~v);
+				sch_va << v;
+			}
+			errors.Add(error, path, sch_path, va, sch_va);
+		};
+		AddError(error, chk.data_path, chk.schema_path);
+		for(const auto& se : chk.sub_errors) {
+			String indent;
+			for(int i = 0; i < se.sublevel; i++)
+				indent << "    ";
+			AddError(indent + se.error, se.data_path, se.schema_path);
 		}
-		ValueArray sch_va;
-		String schema_path;
-		for(Value v : chk.schema_path) {
-			MergeWith(schema_path, "/", ~v);
-			sch_va << v;
-		}
-		errors.Add(error, path, schema_path, va, sch_va);
 	};
 	chk.Validate(ParseJSON(schema), ParseJSON(json));
 	if(errors.GetCount() == 0)

@@ -9,8 +9,14 @@ void JsonSchemaChecker::InvalidSchema()
 
 void JsonSchemaChecker::Error(const String& error)
 {
-	if(logics)
+	if(logics) {
+		SubError& err = sub_errors.Add();
+		err.sublevel = logics;
+		err.error = error;
+		err.data_path = clone(data_path);
+		err.schema_path = clone(schema_path);
 		throw FailedBranch();
+	}
 	else
 		WhenError(error);
 }
@@ -42,6 +48,14 @@ void JsonSchemaChecker::ArrayFilters(Value schema, Value data, int depth)
 				}
 		}
 	}
+	
+	int m = schema["maxItems"];
+	if(!IsNull(m) && data.GetCount() > m)
+		Error("maximum number of items is " + AsString(m));
+
+	m = schema["minItems"];
+	if(!IsNull(m) && data.GetCount() < m)
+		Error("minimum number of items is " + AsString(m));
 }
 
 void JsonSchemaChecker::ObjectFilters(Value schema, Value data, int depth)
@@ -158,7 +172,12 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		Error("invalid schema - depth is too high");
 		return;
 	}
-
+	
+	auto ClearSubErrors = [&] {
+		if(logics == 0)
+			sub_errors.Clear();
+	};
+	
 	Value allOf = schema["allOf"];
 	if(!allOf.IsVoid()) {
 		if(!allOf.Is<ValueArray>())
@@ -189,10 +208,14 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		Path __(this, "anyOf");
 		Error("anyOf failed");
 	}
+	else
+		ClearSubErrors();
 	if(countOf(schema["oneOf"], 2, 1) != 1) {
 		Path __(this, "oneOf");
 		Error("oneOf failed");
 	}
+	else
+		ClearSubErrors();
 	
 	Value Not = schema["not"];
 	if(!Not.IsVoid()) {
@@ -207,6 +230,7 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		}
 		catch(FailedBranch) {}
 		logics--;
+		ClearSubErrors();
 		if(!ok)
 			Error("'not' failed");
 	}
@@ -241,6 +265,7 @@ void JsonSchemaChecker::Check(Value schema, Value data, int depth)
 		}
 		catch(FailedBranch) {}
 		logics--;
+		ClearSubErrors();
 		
 		if(ok) {
 			Value Then = schema["then"];
