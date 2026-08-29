@@ -1,6 +1,5 @@
 #include <Esc/Esc.h>
 
-
 namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
@@ -149,13 +148,12 @@ struct ESC_FileOut : public EscHandle {
 	void PutLine(EscEscape& e)     { if(file) file.PutLine(String(e[0])); }
 	void Close(EscEscape& e)       { if(file) file.Close(); }
 
-	typedef ESC_FileOut CLASSNAME;
-
-	ESC_FileOut(EscEscape& e, EscValue& v, int style) {
+	ESC_FileOut(EscEscape& e, EscValue& v, int style)
+	{
 		file.Open(String(e[0]), style);
-		v.Escape("Put(a)", this, THISBACK(Put));
-		v.Escape("PutLine(a)", this, THISBACK(PutLine));
-		v.Escape("Close()", this, THISBACK(Close));
+		v.Escape("Put(a)", this, [this](EscEscape& e) { Put(e); });
+		v.Escape("PutLine(a)", this, [this](EscEscape& e) { PutLine(e); });
+		v.Escape("Close()", this, [this](EscEscape& e) { Close(e); });
 	}
 };
 
@@ -182,14 +180,13 @@ struct ESC_FileIn : public EscHandle {
 	void GetLine(EscEscape& e)     { e = file.GetLine(); }
 	void Close(EscEscape& e)       { if(file) file.Close(); }
 
-	typedef ESC_FileIn CLASSNAME;
-
-	ESC_FileIn(EscEscape& e, EscValue& v) {
+	ESC_FileIn(EscEscape& e, EscValue& v)
+	{
 		file.Open(String(e[0]));
-		v.Escape("IsEof()", this, THISBACK(IsEof));
-		v.Escape("Get()", this, THISBACK(Get));
-		v.Escape("GetLine()", this, THISBACK(GetLine));
-		v.Escape("Close()", this, THISBACK(Close));
+		v.Escape("IsEof()", this, [this](EscEscape& e) { IsEof(e); });
+		v.Escape("Get()", this, [this](EscEscape& e) { Get(e); });
+		v.Escape("GetLine()", this, [this](EscEscape& e) { GetLine(e); });
+		v.Escape("Close()", this, [this](EscEscape& e) { Close(e); });
 	}
 };
 
@@ -286,7 +283,7 @@ void StdLib(ArrayMap<String, EscValue>& global)
 	Escape(global, "exists(map, key)", ESC_exists);
 
 	Escape(global, "OpenFileOut(x)", ESC_OpenFileOut);
-	Escape(global, "OpenFileAppend(x)", ESC_OpenFileOut);
+	Escape(global, "OpenFileAppend(x)", ESC_OpenFileAppend);
 	Escape(global, "OpenFileIn(x)", ESC_OpenFileIn);
 
 	Escape(global, "GetSysTime()", SIC_GetSysTime);
