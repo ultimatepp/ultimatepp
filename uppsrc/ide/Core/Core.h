@@ -708,6 +708,10 @@ String CleanupPretty(const String& signature);
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info = NULL);
 
+Vector<String>         RequiredExternalDependencies(const String& manager);
+
+#ifdef PLATFORM_WIN32
+
 struct VcpkgInstalled : Moveable<VcpkgInstalled> {
 	String        name;
 	Index<String> triplets;
@@ -718,12 +722,14 @@ struct VcpkgInstalled : Moveable<VcpkgInstalled> {
 bool                   IsVcpkgAvailable(Function<int(const String&, const String& chdir)> sys);
 String                 VcpkgExe();
 Vector<VcpkgInstalled> VcpkgList();
-Vector<String>         RequiredExternalDependencies(const String& manager);
 String                 VcpkgTriplet(const String& builder, const String& compiler, bool so);
 String                 VcpkgTriplet(const VectorMap<String, String>& vars, bool so);
 Vector<String>         VcpkgTriplets();
 bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
 bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
 void                   VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, const String& triplet);
+
+#endif
+
 
 #endif

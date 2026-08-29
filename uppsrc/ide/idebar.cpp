@@ -835,6 +835,7 @@ void Ide::BuildMenu(Bar& menu)
 	menu.Add(!IsNull(target), AK_COPYOUTDIR, [=] { WriteClipboardText(GetFileFolder(target)); });
 	menu.Add(!IsNull(target), AK_COPYTARGET, [=] { WriteClipboardText(target); });
 	menu.Add(!IsNull(target), AK_OUTDIRTERMINAL, [=] { LaunchTerminal(GetFileFolder(target)); });
+	menu.Add("Create SBOM..", [this] { CreateSBOM(); });
 }
 
 void Ide::DebugMenu(Bar& menu)

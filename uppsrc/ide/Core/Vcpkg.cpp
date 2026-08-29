@@ -46,43 +46,6 @@ Vector<VcpkgInstalled> VcpkgList()
 	return ms.PickValues();
 }
 
-Vector<String> RequiredExternalDependencies(const String& manager)
-{
-	Vector<String> required;
-	const Workspace& wspc = GetIdeWorkspace();
-
-	Vector<String> keys;
-	keys << manager;
-#ifdef PLATFORM_WIN32
-	keys << "WIN32";
-#endif
-#ifdef PLATFORM_POSIX
-	keys << "POSIX";
-#endif
-#ifdef PLATFORM_LINUX
-	keys << "LINUX";
-#endif
-#ifdef PLATFORM_MACOS
-	keys << "MACOS";
-#endif
-#ifdef PLATFORM_BSD
-	keys << "BSD";
-#endif
-
-	int maxlen = -1;
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pkg = wspc.GetPackage(i);
-		for(const OptItem& m : pkg.external_dependency) {
-			if(MatchWhen(m.when, keys) && m.when.GetCount() > maxlen) {
-				maxlen = m.when.GetCount();
-				required.Add(m.text);
-			}
-		}
-	}
-	Sort(required);
-	return required;
-}
-
 String VcpkgTriplet(const String& builder, const String& compiler, bool so)
 {
 	if(builder == "CLANG")

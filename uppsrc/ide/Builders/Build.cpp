@@ -119,9 +119,8 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 				host.ChDir(chdir);
 			return host.Execute(cmd);
 		})) {
-			String triplet = GetVcpkgTriplet(bm);
 			host.exedirs << GetExeDirFile("vcpkg");
-			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + triplet + "/bin";
+			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
 		}
 		
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
