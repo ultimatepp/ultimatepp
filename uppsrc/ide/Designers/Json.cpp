@@ -101,6 +101,8 @@ String LoadJson(TreeCtrl& tree, const String& json)
 
 void JsonTreeMenu(Bar& bar, TreeCtrl& tree)
 {
+	bar.Add(tree.IsCursor(), "Open all", [&tree] { tree.OpenDeep(tree.GetCursor()); });
+	bar.Separator();
 	bar.Add(CtrlImg::copy(), "Copy", [=, &tree] { CopyJsonNode(tree); }).Key(K_CTRL_C);
 	bar.Add("Copy path\t[double-click]", [=, &tree] { CopyJsonPath(tree); });
 }
