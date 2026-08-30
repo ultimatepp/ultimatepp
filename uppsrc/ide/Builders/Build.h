@@ -107,6 +107,8 @@ public:
 	String GetVcpkgTriplet(const VectorMap<String, String>& bm) const;
 #endif
 
+	String CreateSBOM(const String& triplet);
+
 	MakeBuild();
 
 private:

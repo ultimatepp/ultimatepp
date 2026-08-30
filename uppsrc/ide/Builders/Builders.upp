@@ -42,6 +42,7 @@ file
 	Build.cpp,
 	CCJ.cpp,
 	Install.cpp,
+	SBOM.cpp,
 	Clant-Tidy readonly separator,
 	ClangTidy.h,
 	ClangTidy.cpp,
