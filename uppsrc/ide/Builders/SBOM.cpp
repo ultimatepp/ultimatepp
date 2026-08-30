@@ -2,15 +2,16 @@
 
 struct Component {
     String name;
+    String bom_ref;
     String supplier;
 
-    String version;                // For shipped components (regardless of linking)
-	String purl;                    // PURL from package manager, if available
+    String version;                      // For shipped components (regardless of linking)
+	String purl;                         // PURL from package manager, if available
 	Vector<String> sourceDistributions;  // Upstream source archive URLs, if available
 
-    bool isExternal = false;            // true for external dynamically linked platform/distro dependencies (not shipped)
+    bool isExternal = false;             // true for external dynamically linked platform/distro dependencies (not shipped)
 
-    Vector<String> licenses;    // SPDX license IDs or expressions
+    Vector<String> licenses;             // SPDX license IDs or expressions
 
     String homepage;
     String originUrl;
@@ -24,8 +25,9 @@ String Format8601(Time t)
 
 String MakeBuild::CreateSBOM(const String& triplet)
 {
-	Vector<String> required = RequiredExternalDependencies("VCPKG");
 #ifdef PLATFORM_WIN32
+	Vector<String> required = RequiredExternalDependencies("VCPKG");
+	DUMP(required);
 	Array<Component> cs;
 	auto ReadComponent = [&](Value p) {
 		Component& m = cs.Add();
@@ -35,20 +37,35 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		m.homepage = p["homepage"];
 		m.originUrl = p["downloadLocation"];
 	
-		for(Value r : p["externalRefs"]) {
+		for(Value r : p["externalRefs"])
 			if(r["referenceType"] == "purl")
 				m.purl = r["referenceLocator"];
-		}
 	};
-	for(String x : required) {
+
+	JsonArray dependencies;
+
+	for(int i = 0; i < required.GetCount(); i++) {
+		String name = required[i];
 		Value spdx = ParseJSON(LoadFile(
-			GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + x + "/vcpkg.spdx.json"
+			GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + name + "/vcpkg.spdx.json"
 		));
 	
 		for(Value p : spdx["packages"]) {
 			if(p["SPDXID"] == "SPDXRef-port") {
 				ReadComponent(p);
 				Component& component = cs.Top();
+				JsonArray deps;
+				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
+				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
+					depends = TrimBoth(depends);
+					if(!depends.StartsWith("vcpkg-")) {
+						if(FindIndex(required, depends) < 0)
+							required << depends;
+						deps << depends;
+					}
+				}
+				if(deps)
+					dependencies << Json("ref", name)("dependsOn", deps);
 				for(Value p : spdx["packages"]) {
 					String id = p["SPDXID"];
 					if(id.StartsWith("SPDXRef-resource-")) {
@@ -79,7 +96,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			}
 		}
 	}
-	
+#endif
 
 	Json sbom;
 	sbom("bomFormat", "CycloneDX")
@@ -113,6 +130,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		Json component;
 		component("type", "library")
 		         ("name", c.name)
+		         ("bom-ref", c.bom_ref)
 		         ("version", c.version);
 
 		if(!IsNull(c.purl))
@@ -128,7 +146,9 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	
 	if(components)
 		sbom("components", components);
-	
+
+	if(dependencies)
+		sbom("dependencies", dependencies);
+
 	return sbom;
-#endif
 }

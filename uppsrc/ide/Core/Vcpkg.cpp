@@ -89,7 +89,6 @@ bool VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const 
 
 bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet)
 {
-	DLOG("Install " << name << " " << triplet);
 	return sys(VcpkgExe() + " install " + name + ":" + triplet, Null) == 0;
 }
 
@@ -99,8 +98,6 @@ void VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, 
 		InstallVcpkg(sys);
 	Vector<String> required = RequiredExternalDependencies("VCPKG");
 	Vector<VcpkgInstalled> installed = VcpkgList();
-	DDUMP(required);
-	for(auto& m : installed) DDUMP(m.name);
 	for(String name : required)
 		if(!VcpkgHasInstalled(installed, name, triplet))
 			VcpkgInstall(sys, name, triplet);

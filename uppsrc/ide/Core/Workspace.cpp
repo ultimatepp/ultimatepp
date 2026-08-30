@@ -270,7 +270,6 @@ Vector<String> RequiredExternalDependencies(const String& manager)
 #ifdef PLATFORM_BSD
 	keys << "BSD";
 #endif
-	DDUMP(keys);
 
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
