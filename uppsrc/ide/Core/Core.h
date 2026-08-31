@@ -719,6 +719,7 @@ struct VcpkgInstalled : Moveable<VcpkgInstalled> {
 	String        desc;
 };
 
+bool                   IsVcpkgInstalled();
 bool                   IsVcpkgAvailable(Function<int(const String&, const String& chdir)> sys);
 String                 VcpkgExe();
 Vector<VcpkgInstalled> VcpkgList();

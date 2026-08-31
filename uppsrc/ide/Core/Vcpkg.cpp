@@ -94,9 +94,11 @@ bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const S
 
 void VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, const String& triplet)
 {
+	Vector<String> required = RequiredExternalDependencies("VCPKG");
+	if(required.GetCount() == 0)
+		return;
 	if(!IsVcpkgInstalled())
 		InstallVcpkg(sys);
-	Vector<String> required = RequiredExternalDependencies("VCPKG");
 	Vector<VcpkgInstalled> installed = VcpkgList();
 	for(String name : required)
 		if(!VcpkgHasInstalled(installed, name, triplet))
