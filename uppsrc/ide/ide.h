@@ -1314,10 +1314,12 @@ public:
 	void TriggerIndexer0();
 	void TriggerIndexer();
 
+#ifdef PLATFORM_WIN32
 	String GetVcpkgTriplet();
 	void   VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys);
 	bool   IsVcpkgAvailable(UrepoConsole& console);
 	bool   IsVcpkgAvailable();
+#endif
 
 	void   CreateSBOM();
 

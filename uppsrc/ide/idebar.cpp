@@ -749,8 +749,6 @@ void Ide::BuildFileMenu(Bar& menu)
 
 void Ide::ClangTidyPackage(Bar& menu)
 {
-	int pi = GetPackageIndex();
-	bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();
 	if(HasClangTidy()) {
 		int pi = GetPackageIndex();
 		bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();

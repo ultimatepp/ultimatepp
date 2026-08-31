@@ -25,10 +25,12 @@ String Format8601(Time t)
 
 String MakeBuild::CreateSBOM(const String& triplet)
 {
+	Array<Component> cs;
+	JsonArray dependencies;
+
 #ifdef PLATFORM_WIN32
 	Vector<String> required = RequiredExternalDependencies("VCPKG");
 	DUMP(required);
-	Array<Component> cs;
 	auto ReadComponent = [&](Value p) {
 		Component& m = cs.Add();
 		m.name = p["name"];
@@ -41,8 +43,6 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			if(r["referenceType"] == "purl")
 				m.purl = r["referenceLocator"];
 	};
-
-	JsonArray dependencies;
 
 	for(int i = 0; i < required.GetCount(); i++) {
 		String name = required[i];

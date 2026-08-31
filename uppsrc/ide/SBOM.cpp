@@ -2,6 +2,7 @@
 
 void Ide::CreateSBOM()
 {
+#ifdef PLATFORM_WIN32
 	{
 		UrepoConsole console;
 		int errors = 0;
@@ -10,9 +11,9 @@ void Ide::CreateSBOM()
 		                             { return console.System(cmd, chdir); });
 	}
 
-#ifdef PLATFORM_WIN32
 	if(!IsVcpkgAvailable())
 		return;
+
 	SelectSaveFile("*.json\t*.*", MakeBuild::CreateSBOM(GetVcpkgTriplet()));
 #endif
 }
