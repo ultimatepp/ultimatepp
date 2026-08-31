@@ -469,6 +469,14 @@ void Ide::SetupFormat() {
 		(ide.valgrind, valgrind_options)
 		(ide.update_icon, macos_update_icon)
 	;
+	
+#ifdef PLATFORM_WIN32
+	extern bool no_vcpkg_install;
+	rtvr(ide.no_vcpkg_install, no_vcpkg_install);
+#else
+	ide.no_vcpkg_install.Hide();
+#endif
+	
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);
 	hlt.hlstyle.AddColumn("Bold").Ctrls<Option>();

@@ -189,7 +189,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 37;
+	int version = 38;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -280,6 +280,14 @@ void Ide::Serialize(Stream& s)
 	s % insert_include;
 	if(version >= 37)
 		s % experimental;
+	if(version >= 38) {
+	#ifdef PLATFORM_WIN32
+		extern bool no_vcpkg_install;
+	#else
+		bool no_vcpkg_install = false;
+	#endif
+		s % no_vcpkg_install;
+	}
 	if(version >= 23)
 		s % libclang_options;
 	if(version >= 24)
