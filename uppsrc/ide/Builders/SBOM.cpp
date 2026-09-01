@@ -48,7 +48,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pk = wspc.GetPackage(i);
-		String n = Filter(wspc[i], [](int c) { return c == '\\' ? '/' : c; });
+		String n = wspc[i];
 		for(String fn : pk.file) {
 			String file = SourcePath(n, fn);
 			if(ToLower(GetFileName(file)) == "sbom.json") {
@@ -65,25 +65,32 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		Component& m = cs.Add();
 		if(i == 0)
 			m.type = "application";
-		m.bom_ref = m.name = "u++pkg:" + n;
+		auto PkgName = [=](const String& s) {
+			 return "u++pkg:" + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+		};
+		m.bom_ref = m.name = PkgName(n);
 	
-		DDUMP(GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " log -1 --format=\"%h %cd\"");
-		String vi = TrimBoth(Sys(GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " log -1 --format=\"%h %cI\""));
-		DDUMP(vi);
 		String ts, hash;
-		if(SplitTo(vi, " ", hash, ts))
+		String git = GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " ";
+		if(SplitTo(TrimBoth(Sys(git + "log -1 --format=\"%h %cI\"")), " ", hash, ts))
 			m.version = ts + ":" + hash;
 		m.licenses << "BSD-2-clause"; // todo
-		m.homepage = "www.ultimatepp.org"; // todo
-		m.originUrl = "www.ultimatepp.org"; // todo
+		String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
+		if(origin.GetCount()) {
+			m.originUrl = "git+" + origin;
+			origin.TrimEnd(".git");
+			m.homepage = origin;
+		}
 		
+		JsonArray deps;
 		for(const OptItem& u : pk.uses)
-			dependencies << Json("ref", m.name)("dependsOn", u.text);
+			deps << PkgName(u.text);
 
 		for(String s : RequiredExternalDependencies(pk, "VCPKG")) {
-			dependencies << Json("ref", m.name)("dependsOn", s);
+			deps << s;
 			required.FindAdd(s);
 		}
+		dependencies << Json("ref", m.name)("dependsOn", deps);
 	}
 	
 	for(int i = 0; i < required.GetCount(); i++) {
@@ -121,16 +128,8 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	}
 #endif
 
-	Json sbom;
-	sbom("bomFormat", "CycloneDX")
-	    ("specVersion", "1.4")
-	    ("version", 1)
-	    ("serialNumber", "urn:uuid:" + Uuid::Create().ToString())
-	    ("metadata", Upp::Json("timestamp", Format8601(GetSysTime()))
-	                          ("tools", JsonArray() << Json("vendor", "Ultimate++")
-	                                                       ("name", "TheIDE"))); // todo: umk when run from umk?
-
 	JsonArray components;
+	Json main_component;
 	for(const Component& c : cs) {
 		JsonArray licenses;
 		for(const String& s : c.licenses)
@@ -163,9 +162,22 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			component("licenses", licenses);
 		if(extRefs)
 			component("externalReferences", extRefs);
-
-		components << component;
+		
+		if(!main_component)
+			main_component = component;
+		else
+			components << component;
 	}
+
+	Json sbom;
+	sbom("bomFormat", "CycloneDX")
+	    ("specVersion", "1.4")
+	    ("version", 1)
+	    ("serialNumber", "urn:uuid:" + Uuid::Create().ToString())
+	    ("metadata", Upp::Json("timestamp", Format8601(GetSysTime()))
+	                          ("tools", JsonArray() << Json("vendor", "Ultimate++")
+	                                                       ("name", "TheIDE")) // todo: umk when run from umk?
+	                          ("component", main_component));
 	
 	if(components)
 		sbom("components", components);
