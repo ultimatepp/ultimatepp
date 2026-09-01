@@ -2,6 +2,7 @@
 
 struct Component {
     String name;
+    String type = "library";
     String bom_ref;
     String supplier;
 
@@ -29,8 +30,6 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	JsonArray dependencies;
 
 #ifdef PLATFORM_WIN32
-	Vector<String> required = RequiredExternalDependencies("VCPKG");
-	DUMP(required);
 	auto ReadComponent = [&](Value p) {
 		Component& m = cs.Add();
 		m.name = p["name"];
@@ -44,6 +43,49 @@ String MakeBuild::CreateSBOM(const String& triplet)
 				m.purl = r["referenceLocator"];
 	};
 
+	Index<String> required;
+
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String n = Filter(wspc[i], [](int c) { return c == '\\' ? '/' : c; });
+		for(String fn : pk.file) {
+			String file = SourcePath(n, fn);
+			if(ToLower(GetFileName(file)) == "sbom.json") {
+				Value sbom = ParseJSON(LoadFile(file));
+				if(sbom.Is<ValueArray>()) {
+					for(Value p : sbom)
+						ReadComponent(p);
+				}
+				else
+					ReadComponent(sbom);
+			}
+		}
+
+		Component& m = cs.Add();
+		if(i == 0)
+			m.type = "application";
+		m.bom_ref = m.name = "u++pkg:" + n;
+	
+		DDUMP(GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " log -1 --format=\"%h %cd\"");
+		String vi = TrimBoth(Sys(GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " log -1 --format=\"%h %cI\""));
+		DDUMP(vi);
+		String ts, hash;
+		if(SplitTo(vi, " ", hash, ts))
+			m.version = ts + ":" + hash;
+		m.licenses << "BSD-2-clause"; // todo
+		m.homepage = "www.ultimatepp.org"; // todo
+		m.originUrl = "www.ultimatepp.org"; // todo
+		
+		for(const OptItem& u : pk.uses)
+			dependencies << Json("ref", m.name)("dependsOn", u.text);
+
+		for(String s : RequiredExternalDependencies(pk, "VCPKG")) {
+			dependencies << Json("ref", m.name)("dependsOn", s);
+			required.FindAdd(s);
+		}
+	}
+	
 	for(int i = 0; i < required.GetCount(); i++) {
 		String name = required[i];
 		Value spdx = ParseJSON(LoadFile(
@@ -59,8 +101,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
 					depends = TrimBoth(depends);
 					if(!depends.StartsWith("vcpkg-")) {
-						if(FindIndex(required, depends) < 0)
-							required << depends;
+						required.FindAdd(depends);
 						deps << depends;
 					}
 				}
@@ -75,24 +116,6 @@ String MakeBuild::CreateSBOM(const String& triplet)
 					}
 				}
 				break;
-			}
-		}
-	}
-	
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pk = wspc.GetPackage(i);
-		String n = wspc[i];
-		for(int i = 0; i < pk.file.GetCount(); i++) {
-			String file = SourcePath(n, pk.file[i]);
-			if(ToLower(GetFileName(file)) == "sbom.json") {
-				Value sbom = ParseJSON(LoadFile(file));
-				if(sbom.Is<ValueArray>()) {
-					for(Value p : sbom)
-						ReadComponent(p);
-				}
-				else
-					ReadComponent(sbom);
 			}
 		}
 	}
@@ -128,7 +151,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 				               ("url", url);
 
 		Json component;
-		component("type", "library")
+		component("type", c.type)
 		         ("name", c.name)
 		         ("bom-ref", c.bom_ref)
 		         ("version", c.version);

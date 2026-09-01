@@ -248,11 +248,8 @@ Vector<String> Workspace::GetAllAccepts(int pk) const
 	return accepts.PickKeys();
 }
 
-Vector<String> RequiredExternalDependencies(const String& manager)
+Vector<String> RequiredExternalDependencies(const Package& pkg, const String& manager)
 {
-	Vector<String> required;
-	const Workspace& wspc = GetIdeWorkspace();
-
 	Vector<String> keys;
 	keys << manager;
 #ifdef PLATFORM_WIN32
@@ -270,18 +267,24 @@ Vector<String> RequiredExternalDependencies(const String& manager)
 #ifdef PLATFORM_BSD
 	keys << "BSD";
 #endif
+	int maxlen = -1; // find the most complex when condition
+	String ed;
+	for(const OptItem& m : pkg.external_dependency) {
+		if(MatchWhen(m.when, keys) && m.when.GetCount() > maxlen) {
+			ed = m.text;
+			maxlen = m.when.GetCount();
+		}
+	}
+	return Split(ed, ' ');
+}
 
+Vector<String> RequiredExternalDependencies(const String& manager)
+{
+	Vector<String> required;
+	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		int maxlen = -1; // find the most complicated entry
-		String ed;
-		for(const OptItem& m : pkg.external_dependency) {
-			if(MatchWhen(m.when, keys) && m.when.GetCount() > maxlen) {
-				ed = m.text;
-				maxlen = m.when.GetCount();
-			}
-		}
-		required.Append(Split(ed, ' '));
+		required.Append(RequiredExternalDependencies(pkg, manager));
 	}
 	Sort(required);
 	return required;
