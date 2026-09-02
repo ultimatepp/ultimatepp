@@ -11,8 +11,8 @@ struct Heap;
 struct BlkPrefix { // this part is at the start of Blk allocated block, client must not touch it
 	word        prev_size;
 	word        size;
-	bool        free;
-	bool        last;
+	byte        free;
+	byte        last;
 	Heap       *heap; // we need this for 4KB pages and large blocks, NULL for Huge blocks
 #ifdef CPU_32
 	dword       filler;
