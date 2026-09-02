@@ -1203,7 +1203,7 @@ class GridCtrl : public Ctrl
 		
 		GridCtrl& SearchOffset(int offset)          { find_offset     = offset;  return *this; }
 		GridCtrl& SearchMoveCursor(bool b = true)   { search_move_cursor   = b;  return *this; }
-		GridCtrl& SearchImmediate(bool b = true)    { search_immediate     = b;  return *this; }
+		GridCtrl& SearchImmediate(bool b = true)    { search_immediate     = !b;  SetFindOpts(0); return *this; }
 		GridCtrl& SearchHideRows(bool b = true)     { search_hide          = b;  return *this; }
 		GridCtrl& SearchDisplay(bool b = true)      { search_display       = b;  return *this; }
 		static void IndexAsColumn(bool b = true)	{ index_as_column      = b;                }
@@ -1873,6 +1873,8 @@ class GridCtrl : public Ctrl
 		Event<> WhenSort;
 		Event<> WhenSorted;
 		
+		Event<> WhenSelectAction;
+
 		Event<Value&> ProcessSummaryValue;
 
 		Event<int, int, Value&> WhenPasteCell;
