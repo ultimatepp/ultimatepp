@@ -868,6 +868,9 @@ void Ide::DebugMenu(Bar& menu)
 					.Help("Build application & run in valgring");
 		#endif
 			menu.Separator();
+			#ifdef flagLINTER // Experimental static analyzer tools support.
+				Linter::StdMenu(menu);
+			#endif
 		}
 	}
 	if(menu.IsMenuBar()) {
