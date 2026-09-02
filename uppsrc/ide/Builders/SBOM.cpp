@@ -18,9 +18,9 @@ struct Component {
     String originUrl;
 };
 
-String Format8601(Time t)
+String Format8601Z(Time t)
 {
-	return Format("%04.4d%02.2d%02.2d`T%02.2d`:%02.2d`:%02.2d",
+	return Format("%04.4d%02.2d%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
 		          t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
@@ -70,17 +70,22 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		};
 		m.bom_ref = m.name = PkgName(n);
 	
-		String ts, hash;
 		String git = GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " ";
-		if(SplitTo(TrimBoth(Sys(git + "log -1 --format=\"%h %cI\"")), " ", hash, ts))
-			m.version = ts + ":" + hash;
-		m.licenses << "BSD-2-clause"; // todo
+		
 		String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
 		if(origin.GetCount()) {
 			m.originUrl = "git+" + origin;
 			origin.TrimEnd(".git");
 			m.homepage = origin;
 		}
+
+		String ts, hash;
+		if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %cd\"")), " ", hash, ts)) {
+			m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
+			if(m.originUrl.GetCount())
+				m.sourceDistributions << m.originUrl + "@" + hash;
+		}
+		m.licenses << "BSD-2-Clause"; // todo
 		
 		JsonArray deps;
 		for(const OptItem& u : pk.uses)
@@ -103,6 +108,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			if(p["SPDXID"] == "SPDXRef-port") {
 				ReadComponent(p);
 				Component& component = cs.Top();
+				component.bom_ref = component.name;
 				JsonArray deps;
 				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
 				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
@@ -174,8 +180,8 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	    ("specVersion", "1.4")
 	    ("version", 1)
 	    ("serialNumber", "urn:uuid:" + Uuid::Create().ToString())
-	    ("metadata", Upp::Json("timestamp", Format8601(GetSysTime()))
-	                          ("tools", JsonArray() << Json("vendor", "Ultimate++")
+	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
+	                          ("tools", JsonArray() << Json("vendor", "U++")
 	                                                       ("name", "TheIDE")) // todo: umk when run from umk?
 	                          ("component", main_component));
 	
