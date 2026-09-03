@@ -1,5 +1,8 @@
 struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
-	uint64 v[2];
+	union {
+		uint64 v[2];
+		byte   b[16];
+	};
 
 	void Serialize(Stream& s);
 	void Xmlize(XmlIO& xio);
@@ -17,8 +20,10 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 	String   ToStringWithDashes() const;
 	
 	void     New();
+	void     NewV4();
 
 	static Uuid Create()          { Uuid uuid; uuid.New(); return uuid; }
+	static Uuid CreateV4()        { Uuid uuid; uuid.NewV4(); return uuid; }
 };
 
 String Format(const Uuid& id);

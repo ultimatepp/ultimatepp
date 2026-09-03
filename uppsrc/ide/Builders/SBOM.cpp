@@ -179,7 +179,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	sbom("bomFormat", "CycloneDX")
 	    ("specVersion", "1.4")
 	    ("version", 1)
-	    ("serialNumber", "urn:uuid:" + Uuid::Create().ToString())
+	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToString())
 	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
 	                          ("tools", JsonArray() << Json("vendor", "U++")
 	                                                       ("name", "TheIDE")) // todo: umk when run from umk?
