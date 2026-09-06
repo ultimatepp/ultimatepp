@@ -29,7 +29,6 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	Array<Component> cs;
 	JsonArray dependencies;
 
-#ifdef PLATFORM_WIN32
 	auto ReadComponent = [&](Value p) {
 		Component& m = cs.Add();
 		m.name = p["name"];
@@ -69,8 +68,14 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			 return "u++pkg:" + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
 		};
 		m.bom_ref = m.name = PkgName(n);
-	
-		String git = GetExeDirFile("bin/mingit/cmd/git") + " -C " + PackageDirectory(n) + " ";
+
+#ifdef PLATFORM_WIN32
+		String git = GetExeDirFile("bin/mingit/cmd/git");
+#else
+		String git = "git";
+#endif
+
+		git << " -C " << PackageDirectory(n) << " ";
 		
 		String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
 		if(origin.GetCount()) {
@@ -90,14 +95,61 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		JsonArray deps;
 		for(const OptItem& u : pk.uses)
 			deps << PkgName(u.text);
-
-		for(String s : RequiredExternalDependencies(pk, "VCPKG")) {
+	
+	#ifdef PLATFORM_WIN32
+		String pm = "VCPKG";
+	#else
+		String pm = "DPKG"; // add more!
+	#endif
+		for(String s : RequiredExternalDependencies(pk, pm)) {
 			deps << s;
 			required.FindAdd(s);
 		}
 		dependencies << Json("ref", m.name)("dependsOn", deps);
 	}
-	
+
+				JsonArray deps;
+#ifdef PLATFORM_POSIX
+/*	VectorMap<String, String> pver;
+	for(String m : Split(Sys("dpkg-query -W"), '\n')) {
+		String name, version;
+		if(SplitTo(m, '\t', name, version)) {
+			int q = name.ReverseFind(':');
+			if(q >= 0)
+				name.Trim(q);
+			pver.GetAdd(name) = version;
+		}
+	}
+*/
+	for(int i = 0; i < required.GetCount(); i++) {
+		String name = required[i];
+		Component& m = cs.Add();
+		m.bom_ref = m.name = name;
+		String depends;
+		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}' " + name), '\n',
+		        depends, m.version, m.homepage);
+		JsonArray deps;
+		for(String dep : Split(depends, ',')) {
+			int q = dep.Find('(');
+			if(q >= 0)
+				dep.Trim(q);
+			required.FindAdd(dep);
+			deps << dep;
+			if(deps)
+				dependencies << Json("ref", name)("dependsOn", deps);
+		}
+		FileIn in("/usr/share/doc/" + name + "/copyright");
+		while(!in.IsEof()) {
+			String l = in.GetLine();
+			if(l.TrimStart("License: ")) {
+				m.licenses << l;
+				break;
+			}
+		}
+	}
+#endif
+
+#ifdef PLATFORM_WIN32
 	for(int i = 0; i < required.GetCount(); i++) {
 		String name = required[i];
 		Value spdx = ParseJSON(LoadFile(

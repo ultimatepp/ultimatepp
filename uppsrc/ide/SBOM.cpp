@@ -2,6 +2,7 @@
 
 void Ide::CreateSBOM()
 {
+	String triplet;
 #ifdef PLATFORM_WIN32
 	{
 		UrepoConsole console;
@@ -13,7 +14,9 @@ void Ide::CreateSBOM()
 
 	if(!IsVcpkgAvailable())
 		return;
-
-	SelectSaveFile("*.json\t*.*", MakeBuild::CreateSBOM(GetVcpkgTriplet()));
+	
+	triplet = GetVcpkgTriplet();
 #endif
+
+	SelectSaveFile("*.json\t*.*", MakeBuild::CreateSBOM(triplet));
 }
