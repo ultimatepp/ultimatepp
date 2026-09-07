@@ -71,7 +71,7 @@ void Ctrl::RefreshFrame(int x, int y, int cx, int cy) {
 }
 
 void Ctrl::RefreshFrame() {
-	LLOG("RefreshFrame " << Name());
+	LLOG("RefreshFrame " << Name() << ", rect: " << GetRect());
 	RefreshFrame(Rect(GetRect().Size()).Inflated(overpaint));
 }
 

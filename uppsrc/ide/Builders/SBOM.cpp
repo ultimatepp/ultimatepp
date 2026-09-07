@@ -108,7 +108,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		dependencies << Json("ref", m.name)("dependsOn", deps);
 	}
 
-				JsonArray deps;
+	JsonArray deps;
 #ifdef PLATFORM_POSIX
 /*	VectorMap<String, String> pver;
 	for(String m : Split(Sys("dpkg-query -W"), '\n')) {

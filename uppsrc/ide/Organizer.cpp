@@ -310,6 +310,12 @@ void PackageEditor::AddOption(int type)
 			SetOpt(option, USES, actual.uses.Add(), ~dlg.when, ~dlg.text);
 		return;
 	}
+	if(type == EXTERNAL_DEPENDENCY) {
+		UsesDlg dlg;
+		if(dlg.Run() == IDOK)
+			SetOpt(option, EXTERNAL_DEPENDENCY, actual.uses.Add(), ~dlg.when, ~dlg.text);
+		return;
+	}
 	WithUppOptDlg<TopWindow> dlg;
 	Prepare(dlg, type);
 	if(dlg.Run() != IDOK)
@@ -323,6 +329,20 @@ void PackageEditor::EditOption(bool duplicate)
 		return;
 	int type = option.Get(0);
 	if(type == USES) {
+		Array<OptItem>& m = *opt[type];
+		int i = option.Get(1);
+		if(i >= 0 && i < m.GetCount()) {
+			UsesDlg dlg;
+			if(duplicate)
+				dlg.Title(GetTitle().ToString() + " - duplicate");
+			dlg.when <<= m[i].when;
+			dlg.text <<= m[i].text;
+			if(dlg.Run() == IDOK)
+				SetOpt(option, USES, duplicate ? actual.uses.Add() : m[i], ~dlg.when, ~dlg.text);
+		}
+		return;
+	}
+	if(type == EXTERNAL_DEPENDENCY) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount()) {

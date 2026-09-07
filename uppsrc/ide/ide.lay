@@ -733,6 +733,15 @@ LAYOUT(UppOptPushDlg, 340, 92)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
+LAYOUT(UppExtDepDlg, 340, 92)
+	ITEM(Upp::Label, dv___0, SetLabel(t_("When")).LeftPosZ(4, 36).TopPosZ(8, 19))
+	ITEM(Upp::EditString, when, LeftPosZ(40, 292).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_(":")).LeftPosZ(40, 8).TopPosZ(32, 19))
+	ITEM(Upp::DataPusher, text, HSizePosZ(48, 8).TopPosZ(32, 20))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
 LAYOUT(EventsLayout, 712, 496)
 	ITEM(Upp::ArrayCtrl, list, HSizePosZ(8, 8).VSizePosZ(8, 40))
 	ITEM(Upp::Button, ok, SetLabel(t_("Insert methods")).RightPosZ(76, 108).BottomPosZ(8, 24))

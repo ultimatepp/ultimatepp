@@ -223,21 +223,25 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 			Top *top = GetTopRect(from, true)->GetTop();
 			if(top) {
 				LTIMING("SetPos0 MoveCtrl");
+				RefreshFrame();
 				pos = p;
 				inframe = _inframe;
 				Rect to = GetRect().Size();
 				UpdateRect0();
-				GetTopRect(to, true);
 				StateH(POSITION);
+				RefreshFrame();
 				return;
 			}
 		}
-		RefreshFrame();
 	}
+	if(parent)
+		RefreshFrame();
 	pos = p;
 	inframe = _inframe;
 	UpdateRect();
 	StateH(POSITION);
+	if(parent)
+		RefreshFrame();
 }
 
 void Ctrl::UpdateRect0(bool sync)
