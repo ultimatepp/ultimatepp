@@ -189,8 +189,6 @@ void PackageEditor::SaveOptions() {
 			f.noblitz = noblitz_file;
 		}
 		actual.license_id = ~license_id;
-		actual.manufacturer = ~manufacturer;
-		actual.supplier = ~supplier;
 		SavePackage();
 	}
 }
@@ -273,8 +271,6 @@ void PackageEditor::PackageCursor()
 		noblitz = actual.noblitz;
 		nowarnings = actual.nowarnings;
 		license_id <<= actual.license_id;
-		manufacturer <<= actual.manufacturer;
-		supplier <<= actual.supplier;
 		String s;
 		for(int i = 0; i < actual.accepts.GetCount(); i++) {
 			if(i) s << ' ';
@@ -715,7 +711,7 @@ PackageEditor::PackageEditor()
 	
 	license_id.NullText("BSD-2-Clause");
 	
-	license_id ^= manufacturer ^= supplier ^= [this] { SaveOptions(); };
+	license_id << [this] { SaveOptions(); };
 
 	spellcheck_comments.Add(Null, "Default");
 	DlSpellerLangs(spellcheck_comments);

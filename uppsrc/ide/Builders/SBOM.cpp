@@ -20,7 +20,7 @@ struct Component {
 
 String Format8601Z(Time t)
 {
-	return Format("%04.4d%02.2d%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
+	return Format("%04.4d-%02.2d-%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
 		          t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
@@ -238,9 +238,9 @@ String MakeBuild::CreateSBOM(const String& triplet)
 
 	Json sbom;
 	sbom("bomFormat", "CycloneDX")
-	    ("specVersion", "1.4")
+	    ("specVersion", "1.6")
 	    ("version", 1)
-	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToString())
+	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToStringWithDashes())
 	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
 	                          ("tools", JsonArray() << Json("vendor", "U++")
 	                                                       ("name", "TheIDE")) // todo: umk when run from umk?

@@ -232,8 +232,6 @@ bool Package::Load(const char *path)
 		config.Clear();
 		custom.Clear();
 		description.Clear();
-		manufacturer.Clear();
-		supplier.Clear();
 		license_id.Clear();
 		String f = LoadFile(path);
 		cr = f.Find('\r') >= 0;
@@ -286,12 +284,6 @@ bool Package::Load(const char *path)
 					else
 					if(p.Id("license_id"))
 						license_id = p.ReadString();
-					else
-					if(p.Id("manufacturer"))
-						manufacturer = p.ReadString();
-					else
-					if(p.Id("supplier"))
-						supplier = p.ReadString();
 					else
 					if(p.Id("acceptflags")) {
 						do
@@ -480,10 +472,6 @@ bool Package::Save(const char *path) const {
 	}
 	if(license_id.GetCount())
 		out << "license_id " << AsCString(license_id) << ";\r\n";
-	if(manufacturer.GetCount())
-		out << "manufacturer " << AsCString(manufacturer) << ";\r\n";
-	if(supplier.GetCount())
-		out << "supplier " << AsCString(supplier) << ";\r\n";
 	if(charset > 0)
 		out << "charset " << AsCString(IdeCharsetName(charset)) << ";\n\n";
 	if(!IsNull(tabsize))
