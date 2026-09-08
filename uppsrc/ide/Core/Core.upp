@@ -18,6 +18,7 @@ file
 	Assembly.cpp,
 	Package.cpp,
 	Workspace.cpp,
+	ExtDep.cpp,
 	usc.cpp,
 	BinObj.cpp,
 	Signature.cpp,

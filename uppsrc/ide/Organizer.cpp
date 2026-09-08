@@ -126,6 +126,8 @@ struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
 	void   SetText(String);
 };
 
+const Vector<String>& SPDXLicenses();
+
 ExtDepDlg::ExtDepDlg()
 {
 	CtrlLayoutOKCancel(*this, "External dependency");
@@ -142,9 +144,9 @@ ExtDepDlg::ExtDepDlg()
 	
 	text.SetFilter([](int c) { return c == ' ' ? 0 : c; });
 	
-	for(const char *id : { "BSD", "FSF" }) // TODO
+	for(String id : SPDXLicenses()) // TODO
 		license.AddList(id);
-	license.NullText("read from the package");
+	license.NullText("resolve automatically");
 }
 
 String ExtDepDlg::GetText() const
@@ -186,6 +188,9 @@ void PackageEditor::SaveOptions() {
 			f.nopch = nopch_file;
 			f.noblitz = noblitz_file;
 		}
+		actual.license_id = ~license_id;
+		actual.manufacturer = ~manufacturer;
+		actual.supplier = ~supplier;
 		SavePackage();
 	}
 }
@@ -267,6 +272,9 @@ void PackageEditor::PackageCursor()
 		spellcheck_comments <<= actual.spellcheck_comments;
 		noblitz = actual.noblitz;
 		nowarnings = actual.nowarnings;
+		license_id <<= actual.license_id;
+		manufacturer <<= actual.manufacturer;
+		supplier <<= actual.supplier;
 		String s;
 		for(int i = 0; i < actual.accepts.GetCount(); i++) {
 			if(i) s << ' ';
@@ -701,7 +709,14 @@ PackageEditor::PackageEditor()
 	CtrlLayoutOKCancel(*this, "Package organizer");
 	description.Disable();
 	description <<= THISBACK(Description);
+
+	for(String s : SPDXLicenses())
+		license_id.AddList(s);
 	
+	license_id.NullText("BSD-2-Clause");
+	
+	license_id ^= manufacturer ^= supplier ^= [this] { SaveOptions(); };
+
 	spellcheck_comments.Add(Null, "Default");
 	DlSpellerLangs(spellcheck_comments);
 	DlCharsetD(charset);

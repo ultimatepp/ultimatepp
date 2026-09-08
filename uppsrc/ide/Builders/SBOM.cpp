@@ -91,7 +91,8 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			if(m.originUrl.GetCount())
 				m.sourceDistributions << m.originUrl + "@" + hash;
 		}
-		m.licenses << "BSD-2-Clause"; // todo
+
+		m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 		
 		JsonArray deps;
 		for(const OptItem& u : pk.uses)

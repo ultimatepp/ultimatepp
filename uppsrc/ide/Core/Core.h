@@ -449,6 +449,9 @@ public:
 	bool                     noblitz;
 	bool                     nowarnings;
 	String                   description;
+	String                   license_id;
+	String                   manufacturer;
+	String                   supplier;
 	Vector<String>           accepts;
 	Array<OptItem>           flag;
 	Array<OptItem>           uses;
