@@ -32,7 +32,6 @@ file
 	SelectPkg.cpp,
 	UppWspc.cpp,
 	NewPackageFile.cpp,
-	SPDXLicense.cpp,
 	Organizer.cpp,
 	Template.cpp,
 	Console.cpp,

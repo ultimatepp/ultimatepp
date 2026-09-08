@@ -116,4 +116,6 @@ private:
 	bool IsAndroidMethod(const String& method) const;
 };
 
+const Index<String>& SPDXLicenses();
+
 extern bool output_per_assembly;

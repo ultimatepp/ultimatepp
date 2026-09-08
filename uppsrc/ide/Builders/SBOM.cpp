@@ -4,7 +4,6 @@ struct Component {
     String name;
     String type = "library";
     String bom_ref;
-    String supplier;
 
     String version;                      // For shipped components (regardless of linking)
 	String purl;                         // PURL from package manager, if available
@@ -29,11 +28,29 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	Array<Component> cs;
 	JsonArray dependencies;
 
+	Index<String> deps_done;
+	auto AddDependency = [&](const String& from, const String& to) {
+		for(String h : { from + "\v" + to, to + "\v" + from }) {
+			if(deps_done.Find(h) < 0)
+				return;
+			deps_done.Add(h);
+		}
+		dependencies << Json("ref", from)("dependsOn", to);
+	};
+
 	auto ReadComponent = [&](Value p) {
 		Component& m = cs.Add();
 		m.name = p["name"];
 		m.version = p["versionInfo"];
-		m.licenses << p["licenseConcluded"];
+		for(String l : Split(~p["licenseConcluded"], ' ')) {
+			l = TrimBoth(l);
+			l.TrimStart("(");
+			l.TrimEnd(")");
+			l = TrimBoth(l);
+			if(SPDXLicenses().Find(l) >= 0)
+				m.licenses << l;
+		}
+		
 		m.homepage = p["homepage"];
 		m.originUrl = p["downloadLocation"];
 	
@@ -109,7 +126,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			if(s.license.GetCount())
 				override_licenses.GetAdd(s.name) = s.license;
 		}
-		dependencies << Json("ref", m.name)("dependsOn", deps);
+		AddDependency(m.name, deps);
 	}
 
 	JsonArray deps;
@@ -175,7 +192,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 					}
 				}
 				if(deps)
-					dependencies << Json("ref", name)("dependsOn", deps);
+					AddDependency(name, deps);
 				for(Value p : spdx["packages"]) {
 					String id = p["SPDXID"];
 					if(id.StartsWith("SPDXRef-resource-")) {
@@ -202,6 +219,9 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			for(const String& s : c.licenses)
 				if(!IsNull(s))
 					licenses << Json("license", Json("id", s));
+
+		if(!licenses)
+			licenses << Json("license", Json("id", "NOASSERTION"));
 	
 		JsonArray extRefs;
 		if(!IsNull(c.homepage))

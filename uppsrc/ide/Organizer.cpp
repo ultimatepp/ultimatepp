@@ -126,8 +126,6 @@ struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
 	void   SetText(String);
 };
 
-const Vector<String>& SPDXLicenses();
-
 ExtDepDlg::ExtDepDlg()
 {
 	CtrlLayoutOKCancel(*this, "External dependency");
