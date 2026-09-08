@@ -708,6 +708,16 @@ String CleanupPretty(const String& signature);
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info = NULL);
 
+struct ExternalDependencyInfo : Moveable<ExternalDependencyInfo> {
+	String name;
+	String license;
+};
+
+ExternalDependencyInfo GetExternalDependencyInfo(const String& txt);
+
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const String& manager);
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const String& manager);
+
 Vector<String>         RequiredExternalDependencies(const Package& pkg, const String& manager);
 Vector<String>         RequiredExternalDependencies(const String& manager);
 

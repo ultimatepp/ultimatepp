@@ -43,6 +43,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	};
 
 	Index<String> required;
+	VectorMap<String, String> override_licenses;
 
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
@@ -101,9 +102,11 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	#else
 		String pm = "DPKG"; // add more!
 	#endif
-		for(String s : RequiredExternalDependencies(pk, pm)) {
-			deps << s;
-			required.FindAdd(s);
+		for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
+			deps << s.name;
+			required.FindAdd(s.name);
+			if(s.license.GetCount())
+				override_licenses.GetAdd(s.name) = s.license;
 		}
 		dependencies << Json("ref", m.name)("dependsOn", deps);
 	}
@@ -190,9 +193,14 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	Json main_component;
 	for(const Component& c : cs) {
 		JsonArray licenses;
-		for(const String& s : c.licenses)
-			if(!IsNull(s))
-				licenses << Json("license", Json("id", s));
+
+		String ol = override_licenses.Get(c.name, Null);
+		if(ol.GetCount())
+			licenses << Json("license", Json("id", ol));
+		else
+			for(const String& s : c.licenses)
+				if(!IsNull(s))
+					licenses << Json("license", Json("id", s));
 	
 		JsonArray extRefs;
 		if(!IsNull(c.homepage))

@@ -119,6 +119,55 @@ UsesDlg::UsesDlg()
 	text.WhenPush = [=] { New(); };
 }
 
+struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
+	ExtDepDlg();
+	
+	String GetText() const;
+	void   SetText(String);
+};
+
+ExtDepDlg::ExtDepDlg()
+{
+	CtrlLayoutOKCancel(*this, "External dependency");
+	when.AddList("VCPKG");
+	when.AddList("DPKG");
+	when.AddList("POSIX");
+	when.Appending(" ");
+
+#ifdef PLATFORM_WIN32
+	when <<= "VCPKG";
+#else
+	when <<= "DPKG";
+#endif
+	
+	text.SetFilter([](int c) { return c == ' ' ? 0 : c; });
+	
+	for(const char *id : { "BSD", "FSF" }) // TODO
+		license.AddList(id);
+	license.NullText("read from the package");
+}
+
+String ExtDepDlg::GetText() const
+{
+	String r = ~text;
+	if(!IsNull(license))
+		r << " license(" << AsCString(~license) << ")";
+	return r;
+}
+
+void ExtDepDlg::SetText(String txt)
+{
+	int q = txt.Find(' ');
+	if(q >= 0) {
+		text <<= txt.Mid(0, q);
+		ExternalDependencyInfo f = GetExternalDependencyInfo(txt);
+		text <<= f.name;
+		license <<= f.license;
+	}
+	else
+		text <<= txt;
+}
+
 void PackageEditor::SaveOptions() {
 	if(!actualpackage.IsEmpty()) {
 		actual.description = ~description;
@@ -311,9 +360,9 @@ void PackageEditor::AddOption(int type)
 		return;
 	}
 	if(type == EXTERNAL_DEPENDENCY) {
-		UsesDlg dlg;
+		ExtDepDlg dlg;
 		if(dlg.Run() == IDOK)
-			SetOpt(option, EXTERNAL_DEPENDENCY, actual.uses.Add(), ~dlg.when, ~dlg.text);
+			SetOpt(option, EXTERNAL_DEPENDENCY, opt[type]->Add(), ~dlg.when, ~dlg.GetText());
 		return;
 	}
 	WithUppOptDlg<TopWindow> dlg;
@@ -346,13 +395,13 @@ void PackageEditor::EditOption(bool duplicate)
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount()) {
-			UsesDlg dlg;
+			ExtDepDlg dlg;
 			if(duplicate)
 				dlg.Title(GetTitle().ToString() + " - duplicate");
 			dlg.when <<= m[i].when;
-			dlg.text <<= m[i].text;
+			dlg.SetText(m[i].text);
 			if(dlg.Run() == IDOK)
-				SetOpt(option, USES, duplicate ? actual.uses.Add() : m[i], ~dlg.when, ~dlg.text);
+				SetOpt(option, EXTERNAL_DEPENDENCY, duplicate ? opt[type]->Add() : m[i], ~dlg.when, ~dlg.GetText());
 		}
 		return;
 	}
