@@ -113,17 +113,15 @@ String MakeBuild::CreateSBOM(const String& triplet)
 
 		m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 		
-		Vector<String> deps;
 		for(const OptItem& u : pk.uses)
-			deps << PkgName(u.text);
-	
+            AddDependency(m, PkgName(u.text));
+
 	#ifdef PLATFORM_WIN32
 		String pm = "VCPKG";
 	#else
 		String pm = "DPKG"; // add more!
 	#endif
-	for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
-			deps << s.name;
+		for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
 			AddDependency(m, s.name);
 			required.FindAdd(s.name);
 			if(s.license.GetCount())
