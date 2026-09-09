@@ -12,6 +12,7 @@ struct Component {
     bool isExternal = false;             // true for external dynamically linked platform/distro dependencies (not shipped)
 
     Vector<String> licenses;             // SPDX license IDs or expressions
+    Vector<String> depends;
 
     String homepage;
     String originUrl;
@@ -29,13 +30,14 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	JsonArray dependencies;
 
 	Index<String> deps_done;
-	auto AddDependency = [&](const String& from, const String& to) {
-		for(String h : { from + "\v" + to, to + "\v" + from }) {
-			if(deps_done.Find(h) < 0)
+
+	auto AddDependency = [&](Component& m, const String& name) {
+		for(String h : { m.bom_ref + "\v" + name, name + "\v" + m.bom_ref }) {
+			if(deps_done.Find(h) >= 0)
 				return;
 			deps_done.Add(h);
 		}
-		dependencies << Json("ref", from)("dependsOn", to);
+		m.depends << name;
 	};
 
 	auto ReadComponent = [&](Value p) {
@@ -111,7 +113,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 
 		m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 		
-		JsonArray deps;
+		Vector<String> deps;
 		for(const OptItem& u : pk.uses)
 			deps << PkgName(u.text);
 	
@@ -120,45 +122,47 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	#else
 		String pm = "DPKG"; // add more!
 	#endif
-		for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
+	for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
 			deps << s.name;
+			AddDependency(m, s.name);
 			required.FindAdd(s.name);
 			if(s.license.GetCount())
 				override_licenses.GetAdd(s.name) = s.license;
 		}
-		AddDependency(m.name, deps);
 	}
 
-	JsonArray deps;
 #ifdef PLATFORM_POSIX
-/*	VectorMap<String, String> pver;
-	for(String m : Split(Sys("dpkg-query -W"), '\n')) {
-		String name, version;
-		if(SplitTo(m, '\t', name, version)) {
-			int q = name.ReverseFind(':');
-			if(q >= 0)
-				name.Trim(q);
-			pver.GetAdd(name) = version;
-		}
-	}
-*/
 	for(int i = 0; i < required.GetCount(); i++) {
 		String name = required[i];
 		Component& m = cs.Add();
 		m.bom_ref = m.name = name;
-		String depends;
-		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}' " + name), '\n',
-		        depends, m.version, m.homepage);
-		JsonArray deps;
+		String depends, archAndSource;
+		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture} ${Source}' " + name), '\n', false,
+		        depends, m.version, m.homepage, archAndSource);
+		
+		int sp = archAndSource.Find(' ');
+		String arch    = archAndSource.Left(sp);                    // sp<0 → whole string is arch
+		String source  = sp >= 0 ? archAndSource.Mid(sp + 1) : "";
+		
+		String distro = "debian";
+		String osr = LoadFile("/etc/os-release");
+		for(String l : Split(osr, '\n'))
+			if(l.TrimStart("ID="))
+				distro = TrimBoth(l);
+		
+		m.purl = "pkg:deb/" + distro + "/" + name + "@" + m.version + "?arch=" + arch;
+		if(source.GetCount() && source != name)
+			m.purl << "&source=" + source;
+		
 		for(String dep : Split(depends, ',')) {
 			int q = dep.Find('(');
 			if(q >= 0)
 				dep.Trim(q);
+			dep = TrimBoth(dep);
 			required.FindAdd(dep);
-			deps << dep;
-			if(deps)
-				dependencies << Json("ref", name)("dependsOn", deps);
+			AddDependency(m, dep);
 		}
+
 		FileIn in("/usr/share/doc/" + name + "/copyright");
 		while(!in.IsEof()) {
 			String l = in.GetLine();
@@ -182,17 +186,14 @@ String MakeBuild::CreateSBOM(const String& triplet)
 				ReadComponent(p);
 				Component& component = cs.Top();
 				component.bom_ref = component.name;
-				JsonArray deps;
 				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
 				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
 					depends = TrimBoth(depends);
 					if(!depends.StartsWith("vcpkg-")) {
 						required.FindAdd(depends);
-						deps << depends;
+						AddDependency(component, depends);
 					}
 				}
-				if(deps)
-					AddDependency(name, deps);
 				for(Value p : spdx["packages"]) {
 					String id = p["SPDXID"];
 					if(id.StartsWith("SPDXRef-resource-")) {
@@ -254,6 +255,12 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			main_component = component;
 		else
 			components << component;
+
+		JsonArray deps;
+		for(String dep : c.depends)
+			deps << dep;
+		if(deps)
+			dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
 	}
 
 	Json sbom;
