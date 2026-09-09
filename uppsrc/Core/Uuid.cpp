@@ -100,7 +100,6 @@ Uuid ScanUuid(const char *s)
 	};
 	
 	Uuid id;
-	int i = 0;
 	while(*s == '-')
 		s++;
 	for(int i = 0; i < 16; i++) {

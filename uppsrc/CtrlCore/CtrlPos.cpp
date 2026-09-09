@@ -226,7 +226,6 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 				RefreshFrame();
 				pos = p;
 				inframe = _inframe;
-				Rect to = GetRect().Size();
 				UpdateRect0();
 				StateH(POSITION);
 				RefreshFrame();
