@@ -223,6 +223,7 @@ bool Ide::OpenMainPackage()
 	if(IsExternalMode())
 		SyncEmptyPackage(p);
 	SetMain(p);
+	SyncExternalDependencies();
 	return true;
 }
 
@@ -259,6 +260,7 @@ void Ide::EditWorkspace()
 	ScanWorkspace();
 	SyncWorkspace();
 	InvalidateIncludes();
+	SyncExternalDependencies();
 }
 
 String Ide::WorkspaceFile()

@@ -92,17 +92,33 @@ bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const S
 	return sys(VcpkgExe() + " install " + name + ":" + triplet, Null) == 0;
 }
 
-void VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys, const String& triplet)
+Index<String> InstalledExternalDependencies(const String& triplet)
 {
-	Vector<String> required = RequiredExternalDependencies("VCPKG");
-	if(required.GetCount() == 0)
-		return;
-	if(!IsVcpkgInstalled())
-		InstallVcpkg(sys);
+	Index<String> r;
 	Vector<VcpkgInstalled> installed = VcpkgList();
-	for(String name : required)
-		if(!VcpkgHasInstalled(installed, name, triplet))
-			VcpkgInstall(sys, name, triplet);
+	for(const VcpkgInstalled& m : installed)
+		if(m.triplets.Find(triplet))
+			r.FindAdd(m.name);
+	return r;
+}
+
+bool InstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet)
+{
+	bool ok = true;
+	Vector<String> missing = MissingExternalDependencies(triplet);
+	if(missing.GetCount()) {
+		if(!IsVcpkgInstalled())
+			InstallVcpkg(sys);
+		for(String name : missing)
+			if(!VcpkgInstall(sys, name, triplet))\
+				ok = false;
+	}
+	return ok;
+}
+
+String ExternalDependenciesManagerId()
+{
+	return "VCPKG";
 }
 
 #endif

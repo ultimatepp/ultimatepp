@@ -535,7 +535,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 	
 			PutConsole("Vcpkg triplet: " << vcpkg_triplet);
 			
-			VcpkgInstallMissing(
+			InstallMissingExternalDependencies(
 				[&](const String& cmd, const String& chdir) {
 					if(chdir.GetCount())
 						builder->ChDir(chdir);

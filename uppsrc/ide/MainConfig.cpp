@@ -337,6 +337,7 @@ void Ide::MainConfig() {
 	MakeTitle();
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
+	SyncExternalDependencies();
 }
 
 void Ide::SyncMainConfigList()
@@ -365,4 +366,5 @@ void Ide::OnMainConfigList()
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
 	editor.SetFocus();
+	SyncExternalDependencies();
 }

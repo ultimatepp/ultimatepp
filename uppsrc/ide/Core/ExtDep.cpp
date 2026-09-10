@@ -19,10 +19,10 @@ ExternalDependencyInfo GetExternalDependencyInfo(const String& txt)
 	return f;
 }
 
-Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const String& manager)
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg)
 {
 	Vector<String> keys;
-	keys << manager;
+	keys << ExternalDependenciesManagerId();
 #ifdef PLATFORM_WIN32
 	keys << "WIN32";
 #endif
@@ -51,30 +51,41 @@ Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& p
 	return required;
 }
 
-Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const String& manager)
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo()
 {
 	Vector<ExternalDependencyInfo> required;
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);
-		required.Append(RequiredExternalDependenciesInfo(pkg, manager));
+		required.Append(RequiredExternalDependenciesInfo(pkg));
 	}
 	Sort(required, [](const ExternalDependencyInfo& a, const ExternalDependencyInfo& b) { return a.name < b.name; });
 	return required;
 }
 
-Vector<String> RequiredExternalDependencies(const Package& pkg, const String& manager)
+Vector<String> RequiredExternalDependencies(const Package& pkg)
 {
 	Vector<String> required;
-	for(const auto& h :  RequiredExternalDependenciesInfo(pkg, manager))
+	for(const auto& h :  RequiredExternalDependenciesInfo(pkg))
 		required << h.name;
 	return required;
 }
 
-Vector<String> RequiredExternalDependencies(const String& manager)
+Vector<String> RequiredExternalDependencies()
 {
 	Vector<String> required;
-	for(const auto& h :  RequiredExternalDependenciesInfo(manager))
+	for(const auto& h :  RequiredExternalDependenciesInfo())
 		required << h.name;
 	return required;
+}
+
+Vector<String> MissingExternalDependencies(const String& triplet)
+{
+	Vector<String> missing;
+	Index<String> installed = InstalledExternalDependencies(triplet);
+	for(String s : RequiredExternalDependencies())
+		if(installed.Find(s) < 0)
+			missing << s;
+	Sort(missing);
+	return missing;
 }

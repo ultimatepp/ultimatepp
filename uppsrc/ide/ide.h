@@ -1311,12 +1311,13 @@ public:
 
 	String GetAndroidSdkPath();
 
-	void TriggerIndexer0();
-	void TriggerIndexer();
+	void   TriggerIndexer0();
+	void   TriggerIndexer();
+
+	String GetTargetTriplet();
+	void   SyncExternalDependencies(bool force = false);
 
 #ifdef PLATFORM_WIN32
-	String GetVcpkgTriplet();
-	void   VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys);
 	bool   IsVcpkgAvailable(UrepoConsole& console);
 	bool   IsVcpkgAvailable();
 #endif

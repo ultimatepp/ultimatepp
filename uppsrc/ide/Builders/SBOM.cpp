@@ -60,7 +60,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			if(r["referenceType"] == "purl")
 				m.purl = r["referenceLocator"];
 	};
-
+	
 	Index<String> required;
 	VectorMap<String, String> override_licenses;
 
@@ -116,12 +116,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		for(const OptItem& u : pk.uses)
             AddDependency(m, PkgName(u.text));
 
-	#ifdef PLATFORM_WIN32
-		String pm = "VCPKG";
-	#else
-		String pm = "DPKG"; // add more!
-	#endif
-		for(auto s : RequiredExternalDependenciesInfo(pk, pm)) {
+		for(auto s : RequiredExternalDependenciesInfo(pk)) {
 			AddDependency(m, s.name);
 			required.FindAdd(s.name);
 			if(s.license.GetCount())
@@ -206,21 +201,72 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	}
 #endif
 
+	auto EmitLicense = [&](JsonArray& arr, const String& s) {
+		if(s.IsEmpty() || s == "NOASSERTION")
+			return;                                        // unknown -> omit, don't assert
+		
+		static Index<String> ops;
+		static Index<String> lcspdx;
+		static Vector<String> canon;                       // parallel: lowercase → canonical
+		
+		if(canon.IsEmpty()){
+			for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
+				canon << SPDXLicenses()[i];
+				lcspdx.Add(ToLower(SPDXLicenses()[i]));
+			}
+			ops.Add("(");
+			ops.Add(")");
+			ops.Add("or");
+			ops.Add("and");
+			ops.Add("with");
+		}
+
+		String low = ToLower(s);
+		low.TrimStart("(");
+		low.TrimEnd(")");
+		Vector<String> vec = Split(low,' ');
+		if(vec.GetCount()>=3){
+			for(int i = 0; i < vec.GetCount() ; i++){
+				if(lcspdx.Find(vec[i])<0 && ops.Find(vec[i])<0) break; // Not valid expression
+				if(i == (vec.GetCount() - 1)){
+					String lic;
+					for(int i = 0; i < vec.GetCount() ; i++){
+						int o = ops.Find(vec[i]);
+						if(o>=0) lic << ToUpper(ops[o]) << " ";
+						else{
+							int l = lcspdx.Find(vec[i]);
+							if(l>=0) lic << canon[l] << " ";
+						}
+					}
+					arr << Json("expression", TrimRight(lic)); // Case-corrected validated SPDX expression
+					return;
+				}
+			}
+		}
+		
+		int f = lcspdx.Find(low);
+		if(f >= 0) {
+			arr << Json("license", Json("id", canon[f]));   // Case-corrected validated SPDX ID
+			return;
+		}
+		
+		arr << Json("license", Json("name", s));            // everything else: free text
+	};
+
 	JsonArray components;
 	Json main_component;
+
 	for(const Component& c : cs) {
+
 		JsonArray licenses;
 
 		String ol = override_licenses.Get(c.name, Null);
 		if(ol.GetCount())
-			licenses << Json("license", Json("id", ol));
+			EmitLicense(licenses, ol);
 		else
 			for(const String& s : c.licenses)
 				if(!IsNull(s))
-					licenses << Json("license", Json("id", s));
-
-		if(!licenses)
-			licenses << Json("license", Json("id", "NOASSERTION"));
+					EmitLicense(licenses, s);
 	
 		JsonArray extRefs;
 		if(!IsNull(c.homepage))
@@ -246,6 +292,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 
 		if(licenses)
 			component("licenses", licenses);
+		
 		if(extRefs)
 			component("externalReferences", extRefs);
 		
@@ -279,3 +326,4 @@ String MakeBuild::CreateSBOM(const String& triplet)
 
 	return sbom;
 }
+

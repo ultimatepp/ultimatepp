@@ -539,6 +539,8 @@ void Ide::Project(Bar& menu)
 			menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	}
 	menu.MenuSeparator();
+	menu.Add("Install missing external dependencies..", [this] { SyncExternalDependencies(true); });
+	menu.MenuSeparator();
 	FilePropertiesMenu0(menu);
 	if(!IsEditorMode()) {
 		if(repo_dirs) {

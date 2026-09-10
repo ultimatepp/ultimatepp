@@ -785,6 +785,7 @@ void Ide::SetupBuildMethods()
 	SetBar();
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
+	SyncExternalDependencies();
 }
 
 void ExtractIncludes(Index<String>& r, String h)
@@ -880,7 +881,7 @@ String Ide::GetIncludePath()
 	IncludeAddPkgConfig(include_path, Null);
 
 #ifdef PLATFORM_WIN32
-	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet() + "/include");
+	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/" + GetTargetTriplet() + "/include");
 	MergeWith(include_path, ";", GetExeDirFile("vcpkg") + "/installed/x64-mingw-static-release/include");
 #endif
 

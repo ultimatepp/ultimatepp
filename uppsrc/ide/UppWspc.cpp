@@ -1063,6 +1063,7 @@ void WorkspaceWork::AddNormalUses()
 	actual.uses.Add().text = p;
 	SaveLoadPackage();
 	InvalidateIncludes();
+	TheIde()->SyncExternalDependencies();
 }
 
 void WorkspaceWork::AddFolderUses()

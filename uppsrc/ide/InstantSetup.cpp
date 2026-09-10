@@ -536,6 +536,7 @@ void InstantSetup()
 		ide->SyncBuildMode();
 		ide->SetBar();
 		ide->TriggerIndexer();
+		ide->SyncExternalDependencies();
 	}
 }
 

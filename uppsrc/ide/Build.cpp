@@ -45,6 +45,7 @@ void Ide::BeginBuilding(bool clear_console)
 	build_time = msecs();
 	cmdout.Clear();
 	InvalidateIncludes();
+	SyncExternalDependencies();
 }
 
 void Ide::EndBuilding(bool ok)

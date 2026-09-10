@@ -435,6 +435,7 @@ void Ide::SyncBuildMode()
 	buildmode <<= h;
 	TriggerIndexer();
 	editor.TriggerSyncFile(0);
+	SyncExternalDependencies();
 }
 
 void Ide::DropMethodList()
@@ -461,6 +462,7 @@ void Ide::SelectMethod()
 	}
 	SyncBuildMode();
 	SetHdependDirs();
+	SyncExternalDependencies();
 }
 
 void Ide::DropModeList()

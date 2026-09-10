@@ -13,14 +13,9 @@ bool Ide::IsVcpkgAvailable()
 	return IsVcpkgAvailable(console);
 }
 
-String Ide::GetVcpkgTriplet()
+String Ide::GetTargetTriplet()
 {
 	return MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
-}
-
-void Ide::VcpkgInstallMissing(Function<int(const String&, const String& chdir)> sys)
-{
-	::VcpkgInstallMissing(sys, GetVcpkgTriplet());
 }
 
 void Finish(UrepoConsole& console, int errors)
@@ -56,23 +51,10 @@ VcpkgDlg::VcpkgDlg()
 	
 	install_missing << [=] {
 		UrepoConsole console;
-		int errors = 0;
 		
-		TheIde()->VcpkgInstallMissing([&](const String& cmd, const String& chdir)
-		                             { return console.System(cmd, chdir); });
-/*		
-		for(int i = 0; i < missing_list.GetCount(); i++) {
-			String name = missing_list.Get(i, 0);
-			String triplet = missing_list.Get(i, 1);
-			if(!VcpkgInstall([&](const String& cmd, const String& chdir) { return console.System(cmd, chdir); }, name, triplet)) {
-				console.Log("Failed", SLtRed());
-				errors++;
-			}
-		}
-		
-		Finish(console, errors);
-		console.Perform();
-*/
+		InstallMissingExternalDependencies([&](const String& cmd, const String& chdir)
+		                                   { return console.System(cmd, chdir); },
+		                                   TheIde()->GetTargetTriplet());
 		SyncList();
 		SyncIde();
 	};
@@ -220,7 +202,7 @@ void VcpkgInstallDlg::Perform()
 
 	Index<String> ts;
 	if(TheIde())
-		ts.FindAdd(TheIde()->GetVcpkgTriplet());
+		ts.FindAdd(TheIde()->GetTargetTriplet());
 	for(const String& s : VcpkgTriplets())
 		ts.FindAdd(s);
 	int ni = ts.GetCount();
