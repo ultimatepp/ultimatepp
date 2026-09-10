@@ -91,6 +91,8 @@ String GenerateVersionNumber()
 
 CONSOLE_APP_MAIN
 {
+	UMK = true;
+
 	SetConfigName("theide");
 
 #ifdef PLATFORM_POSIX

@@ -528,6 +528,7 @@ void Ide::Project(Bar& menu)
 			.Help("Building intermediate files using custom commands / applications");
 		menu.AddMenu(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
 			.Help("Configuring compiler, operating system, output application parameters, custom flags");
+		menu.Add("Install missing external dependencies..", [this] { SyncExternalDependencies(true); });
 		menu.MenuSeparator();
 		menu.AddMenu(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");
@@ -537,10 +538,8 @@ void Ide::Project(Bar& menu)
 		    .Help("Export runtime translation file");
 		if(OldLang())
 			menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
+		menu.MenuSeparator();
 	}
-	menu.MenuSeparator();
-	menu.Add("Install missing external dependencies..", [this] { SyncExternalDependencies(true); });
-	menu.MenuSeparator();
 	FilePropertiesMenu0(menu);
 	if(!IsEditorMode()) {
 		if(repo_dirs) {

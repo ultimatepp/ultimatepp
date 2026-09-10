@@ -1,5 +1,14 @@
 #include "ide.h"
 
+#ifndef PLATFORM_WIN32
+
+String Ide::GetTargetTriplet()
+{
+	return Null;
+}
+
+#endif
+
 void Ide::SyncExternalDependencies(bool force)
 {
 	String triplet = GetTargetTriplet();
@@ -27,16 +36,29 @@ void Ide::SyncExternalDependencies(bool force)
 	if(h.GetCount())
 		txt << " for the target [* \1" << h << "\1]";
 	
-	if(PromptYesNo(txt + ":&&[* \1" + Join(m, " ") +
-	               "\1]&&Install? [/ (it can be done later from the Project menu)")) {
+	String cmd = InstallMissingExternalDependenciesCommand(triplet);
+	if(cmd.GetCount()) {
+		WriteClipboardText(cmd);
+		txt << " installable by command:&&[* \1" << cmd
+		    << "\1]&[/ (the command was placed on clipboard)]&&"
+		    << "Execute?";
+	}
+	else
+		txt << ":&&[* \1" + Join(m, " ") <<
+		       "\1]&&Install?";
+	txt << " [/ (this can be invoked again later from the Project menu)";
+	
+	if(PromptYesNo(txt)) {
 		UrepoConsole console;
 		
-		if(!InstallMissingExternalDependencies([&](const String& cmd, const String& chdir)
+		if(InstallMissingExternalDependencies([&](const String& cmd, const String& chdir)
 		                                       { return console.System(cmd, chdir); },
-		                                       TheIde()->GetTargetTriplet())) {
+		                                       TheIde()->GetTargetTriplet()))
+			console.Log("OK", SGreen());
+		else
 			console.Log("There were errors.", SRed());
-			console.Perform();
-		}
+
+		console.Perform();
 
 		::SaveFile(xd_path, Join(MissingExternalDependencies(triplet), "\n"));
 	}

@@ -11,6 +11,8 @@
 
 using namespace Upp;
 
+extern bool UMK; // this is umk (not theide)
+
 int CharFilterCid(int c);
 
 int    ReadLNG(CParser& p);
@@ -728,6 +730,7 @@ Vector<String>         MissingExternalDependencies(const String& triplet);
 
 String         ExternalDependenciesManagerId();
 Index<String>  InstalledExternalDependencies(const String& triplet);
+String         InstallMissingExternalDependenciesCommand(const String& triplet);
 bool           InstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys,
                                                   const String& triplet);
 

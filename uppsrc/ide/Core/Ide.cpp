@@ -1,5 +1,7 @@
 #include "Core.h"
 
+bool UMK;
+
 static IdeContext *the_ide;
 
 IdeContext *TheIdeContext()                    { return the_ide; }

@@ -315,7 +315,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToStringWithDashes())
 	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
 	                          ("tools", JsonArray() << Json("vendor", "U++")
-	                                                       ("name", "TheIDE")) // todo: umk when run from umk?
+	                                                       ("name", UMK ? "umk" : "TheIDE"))
 	                          ("component", main_component));
 	
 	if(components)

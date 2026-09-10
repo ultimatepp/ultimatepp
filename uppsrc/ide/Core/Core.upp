@@ -22,6 +22,7 @@ file
 	usc.cpp,
 	BinObj.cpp,
 	Signature.cpp,
+	Linux.cpp,
 	Vcpkg.cpp,
 	Host readonly separator,
 	Host.h,
