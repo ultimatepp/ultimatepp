@@ -121,6 +121,11 @@ String ExternalDependenciesManagerId()
 	return "VCPKG";
 }
 
+bool CanInstallMissingExternalDependencies()
+{
+	return true;
+}
+
 String InstallMissingExternalDependenciesCommand(const String&)
 {
 	return Null;

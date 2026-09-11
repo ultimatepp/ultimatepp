@@ -733,6 +733,7 @@ Index<String>  InstalledExternalDependencies(const String& triplet);
 String         InstallMissingExternalDependenciesCommand(const String& triplet);
 bool           InstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys,
                                                   const String& triplet);
+bool           CanInstallMissingExternalDependencies();
 
 
 #ifdef PLATFORM_WIN32

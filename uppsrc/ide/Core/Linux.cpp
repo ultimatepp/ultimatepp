@@ -34,4 +34,11 @@ bool InstallMissingExternalDependencies(Function<int(const String&, const String
 	return sys(String(UMK ? "" : "pkexec ") + cmd, Null) == 0;
 }
 
+bool CanInstallMissingExternalDependencies()
+{
+	static bool is = Sys("which pkexec").GetCount();
+	return is;
+}
+
+
 #endif
