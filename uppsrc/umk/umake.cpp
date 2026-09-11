@@ -124,6 +124,8 @@ CONSOLE_APP_MAIN
 	bool auto_hub = false;
 	bool update_hub = false;
 	bool only_hub = false;
+	bool sbom = false;
+	bool install_ed = false;
 	String hub_dir;
 	String out_dir;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
@@ -180,6 +182,8 @@ CONSOLE_APP_MAIN
 				case 'l': SilentMode = true; break;
 				case 'x': exporting = 1; break;
 				case 'X': exporting = 2; break;
+				case 'B': sbom = true; break;
+				case 'E': install_ed = true; break;
 				case 'k': deletedir = false; break;
 				case 'u': ide.use_target = true; break;
 				case 'j': ccfile = true; break;
@@ -339,9 +343,10 @@ CONSOLE_APP_MAIN
 			return;
 		}
 
+		String sbom_target = Nvl(out_dir, GetHomeDirectory()) + "/" + ide.main + "-sbom.json";
 		if(3 < param.GetCount()) {
 			ide.debug.target_override = ide.release.target_override = true;
-			ide.debug.target = ide.release.target = NormalizePath(param[3]);
+			sbom_target = ide.debug.target = ide.release.target = NormalizePath(param[3]);
 			PutVerbose("Target override: " << ide.debug.target);
 		}
 
@@ -353,8 +358,22 @@ CONSOLE_APP_MAIN
 			return;
 		}
 
+		String triplet;
+	#ifdef PLATFORM_WIN32
+		triplet = ide.MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
+	#endif
+
 		if(clean)
 			ide.Clean();
+
+		if(sbom) {
+			SaveFile(sbom_target, ide.CreateSBOM(triplet));
+		}
+		else
+		if(install_ed) {
+			system(InstallMissingExternalDependenciesCommand(triplet));
+		}
+		else
 		if(exporting) {
 			mkf = GetFullPath(mkf);
 			Cout() << mkf << '\n';
@@ -431,6 +450,8 @@ CONSOLE_APP_MAIN
 		     "        j - generate compile_commands.json\n"
 		     "        x - export projects sources and documentation\n"
 		     "        X - export entire project\n"
+		     "        B - export CycloneDX Software Bill Of Materials\n"
+		     "        E - install external dependencies (distro packages) - needs sudo in Linux\n"
 		     "        k - delete target directory before project export\n\n"
 		     "        If none of the above options are provided, a debug build with symbols will be executed\n"
 		     "        by default.\n"

@@ -33,7 +33,7 @@ thod][*C3 `] `[][*C@(0.0.255)3 `-`-hub`-dir dir][*C3 `] `[][*C@(0.0.255)3 `-`-hu
 ][*C3 `]`[][*C@4;3 u][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]
 `[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]`[][*C@4;3 M`=][*/C@3;3 makefile][*C3 `]
 `[][*C@4;3 l][*C3 `]`[][*C@4;3 k][*C3 `]`[][*C@4;3 j][*C3 `]`[][*C@4;3 h][*C3 `]`[][*C@4;3 U][*C3 `]`[
-][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`]..][*C@4;3  
+][*C@4;3 x][*C3 `]`[][*C@4;3 X][*C3 `]`[][%-*C@4;3 H][%-*/C@3;3 n][*C3 `]`[][*C@4;3 B][*C3 `]`]..][*C@4;3  
 ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]..`]][*C@4;3  
 ][*C3 `[][*C@(0.0.255)3 out][*C3 `] `[][*C@(0.0.255)3 !][*C3  `[][*C@(0.0.255)3 runarg][*C3 `].
 .`]]&]
@@ -120,6 +120,10 @@ mpile`_commands.json]]
 ::= [s0; [3 Export projects sources and documentation]]
 ::^ [s0;%- [*C@4;3 X]]
 ::= [s0; [3 Export entire project]]
+::^ [s0;%- [*C@4;3 B]]
+::= [s0; [3 Export CycloneDX Software Bill Of Materials]]
+::^ [s0;%- [*C@4;3 E]]
+::= [s0; [3 Install external dependencies (needs sudo in Linux)]]
 ::^ [s0;%- [*C@4;3 k]]
 ::= [s0; [3 Delete target directory before project export]]}}&]
 [s11;l128;i150;O0; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compila
@@ -153,6 +157,19 @@ with various command handlers, such as makefiles.&]
 [s11;l128; [*C@5+92 umk ./,3p/uppsrc UppTerm 3p/umk/CLANG.bm `-`-hub`-dir 
 3p/hub `-`-hub`-only `-U]&]
 [s0; &]
+[s0; This will install any required external dependencies (distro 
+libraries in Linux, VCPKG packages in windows):&]
+[s0; &]
+[s0;l128; [*C@5+92 sudo umk examples Bombs GCC `-E `+GUI,SHARED]&]
+[s0;*C@5+92 &]
+[s0; This will export CycloneDX .json file with Software Bill Of 
+Materials:&]
+[s0; &]
+[s0;l128; [*C@5+92 umk examples Bombs GCC `-B `+GUI,SHARED `~/sbom.json]&]
+[s0; &]
+[s0; &]
+[s0;*C@5+92 &]
+[s0;*C@5+92 &]
 [s12;:4: 4. Related topics&]
 [s11; Below is a list of related topics worth reading to further expand 
 your knowledge of UMK:&]
