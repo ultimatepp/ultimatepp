@@ -1315,7 +1315,7 @@ public:
 	void   TriggerIndexer();
 
 	String GetTargetTriplet();
-	void   SyncExternalDependencies(bool force = false);
+	void   SyncExternalDependencies(bool force = false, bool report_ok = false);
 
 #ifdef PLATFORM_WIN32
 	bool   IsVcpkgAvailable(UrepoConsole& console);

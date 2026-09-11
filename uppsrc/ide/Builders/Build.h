@@ -125,7 +125,8 @@ public:
 	String GetVcpkgTriplet(const VectorMap<String, String>& bm) const;
 #endif
 
-	Array<SBOMComponent> CreateSBOMComponents(const String& triplet);
+	Array<SBOMComponent> CreateSBOMComponents(const String& triplet, Gate<int, int> progress = Null);
+	String               CreateSBOM(const Array<SBOMComponent>& cs);
 	String               CreateSBOM(const String& triplet);
 
 	MakeBuild();

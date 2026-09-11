@@ -9,14 +9,14 @@ String Ide::GetTargetTriplet()
 
 #endif
 
-void Ide::SyncExternalDependencies(bool force)
+void Ide::SyncExternalDependencies(bool force, bool report_ok)
 {
 	String triplet = GetTargetTriplet();
 	
 	Vector<String> m = MissingExternalDependencies(triplet);
 	
 	if(m.GetCount() == 0) {
-		if(force)
+		if(report_ok)
 			PromptOK("No missing external dependencies.");
 		return;
 	}
@@ -25,11 +25,13 @@ void Ide::SyncExternalDependencies(bool force)
 	String xd = Join(m, "\n");
 	
 	String xd_path = ConfigFile(triplet + ".missing");
-
-	if(!force && LoadFile(xd_path) == xd) {
+	
+	bool changed = LoadFile(xd_path) == xd;
+	if(changed)
 		::SaveFile(xd_path, xd);
+
+	if(!force && !changed)
 		return;
-	}
 	
 	String txt = "There are missing external dependencies";
 	String h = GetTargetTriplet();
@@ -50,7 +52,6 @@ void Ide::SyncExternalDependencies(bool force)
 		txt << "&&Please use the terminal to execute above command."
 		    << "&[/ (this can be invoked again later from the Project menu)";
 		PromptOK(txt);
-		::SaveFile(xd_path, Join(MissingExternalDependencies(triplet), "\n"));
 		return;
 	}
 	
@@ -67,13 +68,5 @@ void Ide::SyncExternalDependencies(bool force)
 			console.Log("There were errors.", SRed());
 
 		console.Perform();
-
-		::SaveFile(xd_path, Join(MissingExternalDependencies(triplet), "\n"));
 	}
-}
-
-void Ide::CreateSBOM()
-{
-	SyncExternalDependencies(true);
-	SelectSaveFile("*.json\t*.*", MakeBuild::CreateSBOM(GetTargetTriplet()));
 }

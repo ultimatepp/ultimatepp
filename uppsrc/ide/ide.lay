@@ -1070,3 +1070,9 @@ LAYOUT(VcpkgInstallLayout, 1124, 516)
 	ITEM(Upp::EditString, search, LeftPosZ(4, 160).TopPosZ(484, 19))
 END_LAYOUT
 
+LAYOUT(SBOMLayout, 992, 580)
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Upp::Button, save, SetLabel(t_("Save..")).LeftPosZ(4, 56).TopPosZ(552, 24))
+END_LAYOUT
+

@@ -223,7 +223,6 @@ bool Ide::OpenMainPackage()
 	if(IsExternalMode())
 		SyncEmptyPackage(p);
 	SetMain(p);
-	SyncExternalDependencies();
 	return true;
 }
 

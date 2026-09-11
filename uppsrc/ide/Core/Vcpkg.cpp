@@ -97,7 +97,7 @@ Index<String> InstalledExternalDependencies(const String& triplet)
 	Index<String> r;
 	Vector<VcpkgInstalled> installed = VcpkgList();
 	for(const VcpkgInstalled& m : installed)
-		if(m.triplets.Find(triplet))
+		if(m.triplets.Find(triplet) >= 0)
 			r.FindAdd(m.name);
 	return r;
 }

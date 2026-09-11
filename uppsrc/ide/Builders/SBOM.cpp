@@ -6,7 +6,7 @@ String Format8601Z(Time t)
 		          t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
-Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
+Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate<int, int> progress)
 {
 	Array<SBOMComponent> cs;
 
@@ -40,6 +40,10 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
 
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
+		if(progress(i, wspc.GetCount())) {
+			cs.Clear();
+			return cs;
+		}
 		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
 		for(String fn : pk.file) {
@@ -100,8 +104,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
 
 #ifdef PLATFORM_POSIX
 	for(int i = 0; i < required.GetCount(); i++) {
+		if(progress(i, required.GetCount())) {
+			cs.Clear();
+			return cs;
+		}
 		String name = required[i];
-		Component& m = cs.Add();
+		SBOMComponent& m = cs.Add();
 		m.bom_ref = m.name = name;
 		String depends, archAndSource;
 		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture} ${Source}' " + name), '\n', false,
@@ -143,6 +151,11 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
 
 #ifdef PLATFORM_WIN32
 	for(int i = 0; i < required.GetCount(); i++) {
+		if(progress(i, required.GetCount())) {
+			cs.Clear();
+			return cs;
+		}
+
 		String name = required[i];
 		Value spdx = ParseJSON(LoadFile(
 			GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + name + "/vcpkg.spdx.json"
@@ -188,8 +201,11 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
 
 String MakeBuild::CreateSBOM(const String& triplet)
 {
-	Array<SBOMComponent> cs = CreateSBOMComponents(triplet);
+	return CreateSBOM(CreateSBOMComponents(triplet));
+}
 
+String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
+{
 	auto EmitLicense = [&](JsonArray& arr, const String& s) {
 		if(s.IsEmpty() || s == "NOASSERTION")
 			return;                                        // unknown -> omit, don't assert
