@@ -30,6 +30,24 @@ VectorMap<String, String> GetMethodVars(const String& method);
 String MainConf(const Workspace& wspc, String& add_includes);
 String SaveMainConf(const String& main_conf);
 
+struct SBOMComponent {
+    String name;
+    String type = "library";
+    String bom_ref;
+
+    String version;                      // For shipped components (regardless of linking)
+	String purl;                         // PURL from package manager, if available
+	Vector<String> sourceDistributions;  // Upstream source archive URLs, if available
+
+    bool isExternal = false;             // true for external dynamically linked platform/distro dependencies (not shipped)
+
+    Vector<String> licenses;             // SPDX license IDs or expressions
+    Vector<String> depends;
+
+    String homepage;
+    String originUrl;
+};
+
 class MakeBuild {
 public:
 	virtual void ConsoleShow() = 0;
@@ -107,7 +125,8 @@ public:
 	String GetVcpkgTriplet(const VectorMap<String, String>& bm) const;
 #endif
 
-	String CreateSBOM(const String& triplet);
+	Array<SBOMComponent> CreateSBOMComponents(const String& triplet);
+	String               CreateSBOM(const String& triplet);
 
 	MakeBuild();
 

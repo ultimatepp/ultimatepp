@@ -1,37 +1,18 @@
 #include "Builders.h"
 
-struct Component {
-    String name;
-    String type = "library";
-    String bom_ref;
-
-    String version;                      // For shipped components (regardless of linking)
-	String purl;                         // PURL from package manager, if available
-	Vector<String> sourceDistributions;  // Upstream source archive URLs, if available
-
-    bool isExternal = false;             // true for external dynamically linked platform/distro dependencies (not shipped)
-
-    Vector<String> licenses;             // SPDX license IDs or expressions
-    Vector<String> depends;
-
-    String homepage;
-    String originUrl;
-};
-
 String Format8601Z(Time t)
 {
 	return Format("%04.4d-%02.2d-%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
 		          t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
-String MakeBuild::CreateSBOM(const String& triplet)
+Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet)
 {
-	Array<Component> cs;
-	JsonArray dependencies;
+	Array<SBOMComponent> cs;
 
 	Index<String> deps_done;
 
-	auto AddDependency = [&](Component& m, const String& name) {
+	auto AddDependency = [&](SBOMComponent& m, const String& name) {
 		for(String h : { m.bom_ref + "\v" + name, name + "\v" + m.bom_ref }) {
 			if(deps_done.Find(h) >= 0)
 				return;
@@ -41,17 +22,10 @@ String MakeBuild::CreateSBOM(const String& triplet)
 	};
 
 	auto ReadComponent = [&](Value p) {
-		Component& m = cs.Add();
+		SBOMComponent& m = cs.Add();
 		m.name = p["name"];
 		m.version = p["versionInfo"];
-		for(String l : Split(~p["licenseConcluded"], ' ')) {
-			l = TrimBoth(l);
-			l.TrimStart("(");
-			l.TrimEnd(")");
-			l = TrimBoth(l);
-			if(SPDXLicenses().Find(l) >= 0)
-				m.licenses << l;
-		}
+		m.licenses << ~p["licenseConcluded"];
 		
 		m.homepage = p["homepage"];
 		m.originUrl = p["downloadLocation"];
@@ -81,7 +55,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 			}
 		}
 
-		Component& m = cs.Add();
+		SBOMComponent& m = cs.Add();
 		if(i == 0)
 			m.type = "application";
 		auto PkgName = [=](const String& s) {
@@ -177,7 +151,7 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		for(Value p : spdx["packages"]) {
 			if(p["SPDXID"] == "SPDXRef-port") {
 				ReadComponent(p);
-				Component& component = cs.Top();
+				SBOMComponent& component = cs.Top();
 				component.bom_ref = component.name;
 				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
 				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
@@ -200,6 +174,21 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		}
 	}
 #endif
+
+	for(SBOMComponent& c : cs) {
+		String ol = override_licenses.Get(c.name, Null);
+		if(ol.GetCount()) {
+			c.licenses.Clear();
+			c.licenses << ol;
+		}
+	}
+
+	return cs;
+}
+
+String MakeBuild::CreateSBOM(const String& triplet)
+{
+	Array<SBOMComponent> cs = CreateSBOMComponents(triplet);
 
 	auto EmitLicense = [&](JsonArray& arr, const String& s) {
 		if(s.IsEmpty() || s == "NOASSERTION")
@@ -253,20 +242,17 @@ String MakeBuild::CreateSBOM(const String& triplet)
 		arr << Json("license", Json("name", s));            // everything else: free text
 	};
 
+	JsonArray dependencies;
 	JsonArray components;
-	Json main_component;
+	Json      main_component;
 
-	for(const Component& c : cs) {
+	for(const SBOMComponent& c : cs) {
 
 		JsonArray licenses;
 
-		String ol = override_licenses.Get(c.name, Null);
-		if(ol.GetCount())
-			EmitLicense(licenses, ol);
-		else
-			for(const String& s : c.licenses)
-				if(!IsNull(s))
-					EmitLicense(licenses, s);
+		for(const String& s : c.licenses)
+			if(!IsNull(s))
+				EmitLicense(licenses, s);
 	
 		JsonArray extRefs;
 		if(!IsNull(c.homepage))
