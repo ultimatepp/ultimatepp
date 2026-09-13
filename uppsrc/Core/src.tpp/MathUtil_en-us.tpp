@@ -125,10 +125,27 @@ Random after seeding it with fixed value.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Lerp`(T`,T`,double`): [@(0.0.255) template] <[@(0.0.255) typename] 
-T> T [* Lerp](T [*@3 a], T [*@3 b], [@(0.0.255) double] [*@3 t])&]
+T>&]
+[s5;:Upp`:`:Lerp`(T`,T`,double`): [@(0.0.255) constexpr] T [* Lerp](T 
+[*@3 a], T [*@3 b], [@(0.0.255) double] [*@3 t])&]
 [s2; Computes the linear interpolation between [*@3 a] and [*@3 b], if 
 the parameter [*@3 t] is inside `[0,1`] (the linear extrapolation 
 otherwise).&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Lerp`(const T`&`,const T`&`,double`,const F`&`): [@(0.0.255) template] 
+<[@(0.0.255) typename] T, [@(0.0.255) typename] F>&]
+[s5;:Upp`:`:Lerp`(const T`&`,const T`&`,double`,const F`&`): [@(0.0.255) constexpr] 
+T [* Lerp]([@(0.0.255) const] T[@(0.0.255) `&] [*@3 a], [@(0.0.255) const] 
+T[@(0.0.255) `&] [*@3 b], [@(0.0.255) double] [*@3 t], [@(0.0.255) const] 
+F[@(0.0.255) `&] [*@3 easefn])&]
+[s2; Computes the linear interpolation between [*@3 a] and [*@3 b], if 
+the parameter [*@3 t] is inside `[0,1`] (the linear extrapolation 
+otherwise).[@N  Easing function ][*@3 easefn][@N can be used to achieve 
+different effects (bounce, ease`-in, ease`-out, etc.). Easing 
+function must take and return a ][@(0.0.255) double][@N . This overload 
+can also be used with large types (such as vectors and matrices 
+with defined operators).]&]
 [s3; &]
 [s4; &]
 [s5;:ZeroArray`(x`): [* ZeroArray]([*@3 x])&]
