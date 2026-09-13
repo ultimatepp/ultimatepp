@@ -39,7 +39,7 @@ struct SBOMComponent {
 	String purl;                         // PURL from package manager, if available
 	Vector<String> sourceDistributions;  // Upstream source archive URLs, if available
 
-    bool isExternal = false;             // true for external dynamically linked platform/distro dependencies (not shipped)
+	int    external = 0;                 // 0 - not external, 1 - direct, 2 - indirect
 
     Vector<String> licenses;             // SPDX license IDs or expressions
     Vector<String> depends;
@@ -126,14 +126,22 @@ public:
 #endif
 
 	Array<SBOMComponent> CreateSBOMComponents(const String& triplet, Gate<int, int> progress = Null);
-	String               CreateSBOM(const Array<SBOMComponent>& cs);
-	String               CreateSBOM(const String& triplet);
+	String               CreateSBOM(const Array<SBOMComponent>& cs, int mode);
+	String               CreateSBOM(const String& triplet, int mode);
 
 	MakeBuild();
 
 private:
 	static String GetInvalidBuildMethodError(const String& method);
 	bool IsAndroidMethod(const String& method) const;
+};
+
+enum {
+	SBOM_BASE,              // 0
+	SBOM_FULL,              // 1 - default for Win32, use for docker / VM / flatpack in linux
+	SBOM_EXTERNAL_FULL,     // 2 - default for Linux
+	SBOM_DIRECT,            // 3
+	SBOM_EXTERNAL_DIRECT,   // 4
 };
 
 const Index<String>& SPDXLicenses();

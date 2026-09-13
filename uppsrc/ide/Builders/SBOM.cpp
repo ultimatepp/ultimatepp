@@ -101,7 +101,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				override_licenses.GetAdd(s.name) = s.license;
 		}
 	}
-
+	
+	int direct_n = required.GetCount();
+	
 #ifdef PLATFORM_POSIX
 	for(int i = 0; i < required.GetCount(); i++) {
 		if(progress(i, required.GetCount())) {
@@ -110,6 +112,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		String name = required[i];
 		SBOMComponent& m = cs.Add();
+		m.external = i < direct_n ? 1 : 2;
 		m.bom_ref = m.name = name;
 		String depends, archAndSource;
 		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture} ${Source}' " + name), '\n', false,
@@ -165,6 +168,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			if(p["SPDXID"] == "SPDXRef-port") {
 				ReadComponent(p);
 				SBOMComponent& component = cs.Top();
+				component.external = i < direct_n ? 1 : 2;
 				component.bom_ref = component.name;
 				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
 				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
@@ -199,12 +203,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	return cs;
 }
 
-String MakeBuild::CreateSBOM(const String& triplet)
+String MakeBuild::CreateSBOM(const String& triplet, int mode)
 {
-	return CreateSBOM(CreateSBOMComponents(triplet));
+	return CreateSBOM(CreateSBOMComponents(triplet), mode);
 }
 
-String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
+String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 {
 	auto EmitLicense = [&](JsonArray& arr, const String& s) {
 		if(s.IsEmpty() || s == "NOASSERTION")
@@ -255,7 +259,8 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
 			return;
 		}
 		
-		arr << Json("license", Json("name", s));            // everything else: free text
+		arr << Json("license", Json("name", "NOASSERTION"));
+//		arr << Json("license", Json("name", s));            // everything else: free text
 	};
 
 	JsonArray dependencies;
@@ -263,6 +268,21 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
 	Json      main_component;
 
 	for(const SBOMComponent& c : cs) {
+		Json component;
+
+		component("type", c.type)
+		         ("name", c.name)
+		         ("bom-ref", c.bom_ref)
+		         ("version", c.version);
+
+		if(c.external) {
+			if(mode == SBOM_BASE ||
+			   findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 && c.external > 1)
+				continue;
+			if(findarg(mode, SBOM_EXTERNAL_FULL, SBOM_EXTERNAL_DIRECT) >= 0)
+				component("scope", "excluded")
+				         ("isExternal", true);
+		}
 
 		JsonArray licenses;
 
@@ -282,12 +302,6 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
 			if(!IsNull(url))
 				extRefs << Json("type", "source-distribution")
 				               ("url", url);
-
-		Json component;
-		component("type", c.type)
-		         ("name", c.name)
-		         ("bom-ref", c.bom_ref)
-		         ("version", c.version);
 
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
@@ -312,7 +326,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs)
 
 	Json sbom;
 	sbom("bomFormat", "CycloneDX")
-	    ("specVersion", "1.6")
+	    ("specVersion", "1.7")
 	    ("version", 1)
 	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToStringWithDashes())
 	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
