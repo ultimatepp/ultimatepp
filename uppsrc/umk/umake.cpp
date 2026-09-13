@@ -125,11 +125,16 @@ CONSOLE_APP_MAIN
 	bool update_hub = false;
 	bool only_hub = false;
 	bool sbom = false;
+	int  sbom_mode = 1;
 	bool install_ed = false;
 	String hub_dir;
 	String out_dir;
 	bool flatpak_build = !GetEnv("FLATPAK_ID").IsEmpty();
 	String mkf;
+
+#ifdef PLATFORM_LINUX
+	sbom_mode = 2;
+#endif
 
 	Vector<String> param, runargs;
 
@@ -214,6 +219,10 @@ CONSOLE_APP_MAIN
 					break;
 				}
 				default:
+					if(IsDigit(*s)) {
+						sbom_mode = *s - '0';
+						break;
+					}
 					SilentMode = false;
 					Puts("Invalid build option(s)");
 					SetExitCode(3);
@@ -360,15 +369,16 @@ CONSOLE_APP_MAIN
 
 		String triplet;
 	#ifdef PLATFORM_WIN32
-		triplet = ide.MakeBuild::GetVcpkgTriplet(GetMethodVars(method));
+		VectorMap<String, String> method_vars;
+		LoadVarFile(bp, method_vars);
+		triplet = ide.MakeBuild::GetVcpkgTriplet(method_vars);
 	#endif
 
 		if(clean)
 			ide.Clean();
 
-		if(sbom) {
-			SaveFile(sbom_target, ide.CreateSBOM(triplet));
-		}
+		if(sbom)
+			SaveFile(sbom_target, ide.CreateSBOM(triplet, sbom_mode));
 		else
 		if(install_ed) {
 			system(InstallMissingExternalDependenciesCommand(triplet));
@@ -451,6 +461,11 @@ CONSOLE_APP_MAIN
 		     "        x - export projects sources and documentation\n"
 		     "        X - export entire project\n"
 		     "        B - export CycloneDX Software Bill Of Materials\n"
+		     "        0 - CycloneDX SBOM mode: Do not include external dependecies\n"
+		     "        1 - CycloneDX SBOM mode: Include everything (win32-vcpkg / docker / flatpak) [win32-vcpkg default]\n"
+		     "        2 - CycloneDX SBOM mode: Include everything, exclude external dependencies from CVE scanning (linux binary) [linux default]\n"
+		     "        3 - CycloneDX SBOM mode: Include only direct external dependencies\n"
+		     "        4 - CycloneDX SBOM mode: Include only direct external dependencies, exclude external dependencies from CVE scanning\n"
 		     "        E - install external dependencies (distro packages) - needs sudo in Linux\n"
 		     "        k - delete target directory before project export\n\n"
 		     "        If none of the above options are provided, a debug build with symbols will be executed\n"
