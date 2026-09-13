@@ -259,8 +259,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 			return;
 		}
 		
-		arr << Json("license", Json("name", "NOASSERTION"));
-//		arr << Json("license", Json("name", s));            // everything else: free text
+		arr << Json("license", Json("name", s));            // everything else: free text
 	};
 
 	JsonArray dependencies;
