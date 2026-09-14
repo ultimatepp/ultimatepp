@@ -254,12 +254,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		}
 		
 		int f = lcspdx.Find(low);
-		if(f >= 0) {
-			arr << Json("license", Json("id", canon[f]));   // Case-corrected validated SPDX ID
-			return;
-		}
-		
-		arr << Json("license", Json("name", s));            // everything else: free text
+		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));   // Case-corrected validated SPDX ID
 	};
 
 	JsonArray dependencies;

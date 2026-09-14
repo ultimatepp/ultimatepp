@@ -151,7 +151,7 @@ void AssistEditor::DCopy()
 					params = params2;
 				}
 				
-				if(!(ret.Find(' ') >= 0 && findarg(*ret.Last(), '*', '&') >= 0)) // int *foo() vs int* foo()
+				if(!ret.EndsWith(" *") && !ret.EndsWith(" &")) // int *foo() vs int* foo()
 					ret << ' ';
 
 				if(ret.GetCount() && name.GetCount() && params.GetCount()) { // prefer original text
