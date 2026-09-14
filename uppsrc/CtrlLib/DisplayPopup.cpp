@@ -25,21 +25,23 @@ DisplayPopup::DisplayPopup()
 
 void DisplayPopup::PaintHook(Ctrl *tw, Draw& w, const Rect& clip)
 {
-	if(ctrl && tw && !IsNull(screen_rect) && ctrl->HasMouseDeep() &&
-	   (tw == ctrl->GetTopCtrl() || tw == ctrl->GetTopCtrl()->GetOwner())) {
-		Rect r = screen_rect - tw->GetScreenRect().TopLeft();
-		DrawFrame(w, r, SBlack());
-		r.Deflate(1, 1);
-		w.Clip(r);
-		w.DrawRect(r, SColorPaper);
-		if(display) {
-			display->PaintBackground(w, r, value, ink, paper, style);
-			r.left += margin;
-			if(usedisplaystdsize_s)
-				r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
-			display->Paint(w, r, value, ink, paper, style);
+	if(ctrl && tw && !IsNull(screen_rect) && ctrl->HasMouseDeep()) {
+		Ctrl *top = ctrl->GetTopCtrl();
+		if(tw ==  top || top && top->IsPopUp() && tw == top->GetOwner()) {
+			Rect r = screen_rect - tw->GetScreenRect().TopLeft();
+			DrawFrame(w, r, SBlack());
+			r.Deflate(1, 1);
+			w.Clip(r);
+			w.DrawRect(r, SColorPaper);
+			if(display) {
+				display->PaintBackground(w, r, value, ink, paper, style);
+				r.left += margin;
+				if(usedisplaystdsize_s)
+					r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
+				display->Paint(w, r, value, ink, paper, style);
+			}
+			w.End();
 		}
-		w.End();
 	}
 }
 
@@ -66,7 +68,7 @@ void DisplayPopup::RefreshRect()
 		Ctrl *top = ctrl->GetTopCtrl();
 		top->RefreshFrame(screen_rect - top->GetScreenRect().TopLeft());
 		Ctrl *owner = top->GetOwner();
-		if(owner)
+		if(top->IsPopUp() && owner)
 			owner->RefreshFrame(screen_rect - owner->GetScreenRect().TopLeft());
 	}
 }
@@ -86,7 +88,7 @@ void DisplayPopup::Sync()
 			return;
 		r.bottom = max(r.bottom, r.top + sz.cy);
 		Ctrl *owner = top->GetOwner();
-		if(owner) {
+		if(top->IsPopUp() && owner) {
 			Rect owa = owner->GetScreenRect();
 			if(owa.bottom >= r.bottom)
 				r.right = min(max(wa.right, owa.right), r.left + sz.cx + 2 * margin);
