@@ -45,6 +45,21 @@ struct Foo {
 
 };
 
+const Vector<String>* XXX() {
+}
+
+const Vector<String>* XXX();
+
+const Vector<String>& YYY() {
+}
+
+const Vector<String>& YYY();
+
+const Vector<String> *ZZZ() {
+}
+
+const Vector<String> *ZZZ();
+
 CONSOLE_APP_MAIN
 {
 }
