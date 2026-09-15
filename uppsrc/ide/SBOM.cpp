@@ -5,6 +5,7 @@ struct SBOMDlg : WithSBOMLayout<TopWindow> {
 	
 	SBOMDlg();
 
+	void Sync();
 	void Perform();
 };
 
@@ -15,6 +16,8 @@ SBOMDlg::SBOMDlg()
 	list.AddColumn("Name", 200);
 	list.AddColumn("Type", 80);
 	list.AddColumn("Version", 120);
+	list.AddColumn("External", 50);
+	list.AddColumn("Scanned", 50);
 	list.AddColumn("License", 300);
 	list.AddColumn("Depends", 300);
 	list.AddColumn("PURL", 300);
@@ -25,19 +28,35 @@ SBOMDlg::SBOMDlg()
 	list.NoCursor();
 }
 
+void SBOMDlg::Sync()
+{
+	int mod = ~mode;
+	String s = ~search;
+	int sc = list.GetScroll();
+	list.Clear();
+	for(SBOMComponent& m : cs) {
+		String lic = Join(m.licenses, ", ");
+		String dep = Join(m.depends, ", ");
+		if(ToUpper(m.name + m.version + lic + dep + m.homepage + m.originUrl).Find(s) >= 0 &&
+		   get_i(mod, !m.external, true, true, m.external <= 1, m.external <= 1))
+			list.Add(m.name,
+			         m.type,
+			         m.version,
+			         m.external ? "Y" : "",
+			         get_i(mod, true, true, !m.external, true, !m.external) ? "Y" : "",
+			         lic,
+			         dep,
+			         m.purl,
+			         m.homepage,
+			         m.originUrl,
+			         Join(m.sourceDistributions, ", "));
+	}
+	list.ScrollTo(sc);
+}
+
+
 void SBOMDlg::Perform()
 {
-	for(SBOMComponent& m : cs)
-		list.Add(m.name,
-		         m.type,
-		         m.version,
-		         Join(m.licenses, ", "),
-		         Join(m.depends, ", "),
-		         m.purl,
-		         m.homepage,
-		         m.originUrl,
-		         Join(m.sourceDistributions, ", "));
-	
 	mode.Add(SBOM_BASE, "0 Do not include external dependecies");
 	mode.Add(SBOM_FULL, "1 Include everything (win32-vcpkg / docker / flatpak)");
 	mode.Add(SBOM_EXTERNAL_FULL, "2 Include everything, exclude external dependencies from CVE scanning (linux binary)");
@@ -48,6 +67,14 @@ void SBOMDlg::Perform()
 #ifdef PLATFORM_LINUX
 	mode <<= 2;
 #endif
+
+	mode << [this] { Sync(); };
+	
+	search.NullText("Search");
+	search.SetFilter([](int c) { return ToUpper(c); });
+	search << [this] { Sync(); };
+	
+	Sync();
 	
 	Execute();
 }
