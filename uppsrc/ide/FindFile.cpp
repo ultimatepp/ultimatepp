@@ -86,8 +86,8 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	mask.NullText("Search");
 	mask.SelectAll();
 	mask.SetFilter(CharFilterFindFileMask);
-	mask << [=] { Find(); };
-	searchInCurrentPackage << [=] { Find(); };
+	mask << [this] { Find(); };
+	searchInCurrentPackage << [this] { Find(); };
 	IdeHelpButton(help, "FindFile");;
 }
 

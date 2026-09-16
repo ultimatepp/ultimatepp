@@ -429,7 +429,7 @@ ReformatDlg::ReformatDlg()
 		base.Add(Null, ".clang-format file, current: " + p);
 	for(String id : { "LLVM", "Google", "Chromium", "Mozilla", "WebKit", "Microsoft", "GNU" })
 		base.Add("BasedOnStyle: " + id, "Based on style " + id);
-	base << [=] { Sync(); };
+	base << [this] { Sync(); };
 	base.SetIndex(0);
 	
 	prefer_clang_format <<= TheIde()->prefer_clang_format;
@@ -452,7 +452,7 @@ ReformatDlg::ReformatDlg()
 			o.ThreeState();
 			o.SetLabel(id);
 			o <<= Null;
-			o << [=] { Sync(); };
+			o << [this] { Sync(); };
 			soptions << o.HSizePos(x, DPI(2)).TopPos(y, cy);
 		}
 		else {
@@ -466,7 +466,7 @@ ReformatDlg::ReformatDlg()
 					for(int q = *f.type == '@' ? -8 : 0; q <= 8; q++)
 						e.AddList(q);
 					e.NullText("default");
-					e << [=] { Sync(); };
+					e << [this] { Sync(); };
 					soptions << e.HSizePos(lw, DPI(2)).TopPos(y, cy);
 				}
 				else
@@ -475,7 +475,7 @@ ReformatDlg::ReformatDlg()
 					dl.Add(Null, AttrText("default").Italic().NormalInk(SColorDisabled()));
 					for(const String& s : Split(f.type, ':'))
 						dl.Add(s);
-					dl << [=] { Sync(); };
+					dl << [this] { Sync(); };
 					soptions << dl.HSizePos(lw, DPI(2)).TopPos(y, cy);
 				}
 			}
@@ -488,20 +488,20 @@ ReformatDlg::ReformatDlg()
 	options.AddFrame(sb);
 	options << soptions.HSizePos().TopPos(0, sb.GetTotal());
 	
-	sb << [=] {
+	sb << [this] {
 		soptions.TopPos(-sb, sb.GetTotal());
 	};
 	
-	save << [=] {
+	save << [this] {
 		SelectSaveFile("All files\t*.*", Get());
 	};
 	
-	load << [=] {
+	load << [this] {
 		SelectFileIn in("All files\t*.*");
 		Set(in);
 	};
 	
-	clear << [=] {
+	clear << [this] {
 		if(PromptYesNo("Set all options to default?")) {
 			for(Ctrl& q : option)
 				q <<= Null;

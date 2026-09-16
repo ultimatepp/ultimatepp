@@ -299,7 +299,9 @@ void Ide::InsertMenu(Bar& bar)
 			if(ext == ".iml") {
 				String c = GetFileTitle(fn);
 				c.Set(0, ToUpper(c[0]));
-				bar.Add(fn + " include", [=] { InsertIml(IdeWorkspace().GetPackage(pi), pp, c.EndsWith("Img") ? c : c + "Img"); });
+				bar.Add(fn + " include", [this, pi, pp, c] {
+					InsertIml(IdeWorkspace().GetPackage(pi), pp, c.EndsWith("Img") ? c : c + "Img");
+				});
 				n++;
 			}
 			if(ext == ".tpp") {
@@ -314,33 +316,33 @@ void Ide::InsertMenu(Bar& bar)
 			bar.Separator();
 	}
 	bar.Add("Insert color..", THISBACK(InsertColor));
-	bar.Add("Insert symbol..", [=] {
+	bar.Add("Insert symbol..", [this] {
 		int c = SelectSpecialSymbol();
 		if(IsNull(c))
 			return;
 		editor.InsertChar(c);
 	});
-	bar.Add("Insert .iml Image..", [=] { InsertImage(); });
+	bar.Add("Insert .iml Image..", [this] { InsertImage(); });
 	bar.Add("Insert sequence..", THISBACK(InsertSequence));
-	bar.Add("Insert function parameters..", [=] { InsertParameters(); });
+	bar.Add("Insert function parameters..", [this] { InsertParameters(); });
 	bar.Add("Insert file path..", THISBACK1(InsertFilePath, false));
 	bar.Add("Insert file path as C string..", THISBACK1(InsertFilePath, true));
-	bar.Add("Insert clipboard as..", [=] { InsertAs(); });
+	bar.Add("Insert clipboard as..", [this] { InsertAs(); });
 	bar.Add("Insert file as..", THISBACK(InsertFileContent));
-	bar.Add(IdeKeys::AK_INSERTDATE, [=] {
+	bar.Add(IdeKeys::AK_INSERTDATE, [this] {
 		Date d = GetSysDate();
 		InsertText(Format("%d-%02d-%02d", d.year, d.month, d.day));
 	});
-	bar.Add(IdeKeys::AK_INSERTTIME, [=] {
+	bar.Add(IdeKeys::AK_INSERTTIME, [this] {
 		Time d = GetSysTime();
 		InsertText(Format("%d-%02d-%02d %02d:%02d:%02d", d.year, d.month, d.day, d.hour, d.minute, d.second));
 	});
-	bar.Add(IdeKeys::AK_INSERTGUID, [=] {
+	bar.Add(IdeKeys::AK_INSERTGUID, [this] {
 		Uuid uuid;
 		uuid.New();
 		InsertText(Format(uuid));
 	});
-	bar.Add(IdeKeys::AK_INSERTGUID2, [=] {
+	bar.Add(IdeKeys::AK_INSERTGUID2, [this] {
 		Uuid uuid;
 		uuid.New();
 		InsertText(FormatWithDashes(uuid));

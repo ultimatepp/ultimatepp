@@ -25,7 +25,7 @@ PatchDiff::PatchDiff()
 	
 	copyleft.SetLabel("Patch");
 	
-	files.WhenSel = [=] { File(); };
+	files.WhenSel = [this] { File(); };
 	
 	dir1.Ctrl::Remove();
 	dir2.Ctrl::Remove();
@@ -43,14 +43,14 @@ PatchDiff::PatchDiff()
 	selfile.Title("Patch file");
 	selfile.Types("Patch files (*.diff *.patch)\t*.diff *.patch\nAll files\t*.*");
 	
-	seldir.WhenSelected = selfile.WhenSelected = [=] {
+	seldir.WhenSelected = selfile.WhenSelected = [this] {
 		Open(~~patch_file, Vector<String>() << ~seldir);
 	};
 	
 	files_pane.Add(failed.TopPos(2 * cy + 2 * div, cy).HSizePos());
 	
 	compare.SetLabel("Patch All");
-	compare ^= [=] {
+	compare ^= [this] {
 		String msg = "Patch everything?";
 		if(failed_count)
 			msg << "&[/ (" << failed_count << " files cannot be patched)";
@@ -72,13 +72,13 @@ PatchDiff::PatchDiff()
 		Break(IDOK);
 	};
 
-	removeleft ^= [=] {
+	removeleft ^= [this] {
 		Backup(file_path);
 		SaveFile(file_path, diff.left.RemoveSelected(HasCrs(file_path)));
 		Refresh();
 	};
 
-	copyleft ^= [=] {
+	copyleft ^= [this] {
 		int ii = GetFileIndex();
 		if(ii < 0 || patched_file.IsVoid())
 			return;
@@ -100,7 +100,7 @@ PatchDiff::PatchDiff()
 		}
 	};
 
-	revertleft ^= [=] {
+	revertleft ^= [this] {
 		int q = backup.Find(file_path);
 		if(q >= 0 && PromptYesNo("Revert changes?")) {
 			SaveFile(file_path, ZDecompress(backup[q]));

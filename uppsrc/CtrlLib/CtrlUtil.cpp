@@ -364,7 +364,7 @@ FileSelButton::FileSelButton(MODE mode, const char *title)
 {
 	button.NoWantFocus();
 	button.SetImage(mode == MODE_DIR ? CtrlImg::DirSmall() : CtrlImg::FileSmall());
-	button << [=] { OnAction(); };
+	button << [this] { OnAction(); };
 }
 
 void FileSelButton::Attach(Ctrl& parent)

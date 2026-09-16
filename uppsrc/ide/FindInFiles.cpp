@@ -412,8 +412,8 @@ void Ide::FindStdDir()
 		pd.Add(PackageDirectory(wspc[i]));
 	for(String d : GetUppDirs())
 		if(!IsHubDir(d) || FindMatch(pd, [&](const String& q) { return q.StartsWith(d); }) >= 0)
-			menu.Add(d, [=] { FindSetStdDir(d); });
-	menu.Add(GetHubDir(), [=] { FindSetStdDir(GetHubDir()); });
+			menu.Add(d, [this, d] { FindSetStdDir(d); });
+	menu.Add(GetHubDir(), [this] { FindSetStdDir(GetHubDir()); });
 	menu.Execute(&ff.folder, ff.folder.GetPushScreenRect().BottomLeft());
 }
 
@@ -435,7 +435,7 @@ void Ide::ConstructFindInFiles() {
 	editor.PutI(ff.find);
 	editor.PutI(ff.replace);
 	CtrlLayoutOKCancel(ff, "Find In Files");
-	ff.ignorecase << [=] { ff.Sync(); };
+	ff.ignorecase << [this] { ff.Sync(); };
 	ff.samecase <<= true;
 	ff.Sync();
 }
@@ -508,17 +508,17 @@ Ide::FoundList::FoundList()
 	ColumnWidths("207 41 834");
 	ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ColumnAt(2).SetDisplay(Single<FoundDisplay>());
-	WhenBar = [=](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
-	WhenLeftClick = WhenSel = [=] { TheIde()->ShowFound(*this); };
+	WhenBar = [this](Bar& bar) { TheIde()->FFoundMenu(*this, bar); };
+	WhenLeftClick = WhenSel = [this] { TheIde()->ShowFound(*this); };
 	HeaderObject() << freplace.RightPosZ(0, 80).VSizePos();
 	freplace.Hide();
 	freplace.SetLabel("Replace");
-	freplace << [=] { TheIde()->ReplaceFound(*this); };
+	freplace << [this] { TheIde()->ReplaceFound(*this); };
 	freplace.SetImage(IdeImg::textfield_rename());
 	HeaderObject() << fdelete.RightPosZ(82, 100).VSizePos();
 	fdelete.Hide();
 	fdelete.SetLabel("Delete lines");
-	fdelete << [=] { TheIde()->DeleteFound(*this); };
+	fdelete << [this] { TheIde()->DeleteFound(*this); };
 	fdelete.SetImage(IdeImg::delete_lines());
 }
 
@@ -555,8 +555,8 @@ void Ide::CopyFound(ArrayCtrl& list, bool all)
 void Ide::FFoundMenu(ArrayCtrl& list, Bar& bar)
 {
 	ArrayCtrl *l = &list;
-	bar.Add("Copy text", [=] { CopyFound(*l, false); });
-	bar.Add("Copy all", [=] { CopyFound(*l, true); });
+	bar.Add("Copy text", [this, l] { CopyFound(*l, false); });
+	bar.Add("Copy all", [this, l] { CopyFound(*l, true); });
 }
 
 INITBLOCK {

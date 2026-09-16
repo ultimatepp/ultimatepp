@@ -35,7 +35,7 @@ TreeViewDes::TreeViewDes()
 
 	Add(tree.SizePos());
 
-	tree.WhenLeftDouble = [=] { CopyPath(); };
+	tree.WhenLeftDouble = [this] { CopyPath(); };
 }
 
 ArrayMap<String, TreeDesPos> TreeViewDes::pos;
@@ -70,7 +70,7 @@ bool TreeViewDes::Load(const String& fn)
 
 void TreeViewDes::EditMenu(Bar& menu)
 {
-	menu.Add(tree.IsCursor(), "Copy current path to clipboard", [=] { CopyPath(); });
+	menu.Add(tree.IsCursor(), "Copy current path to clipboard", [this] { CopyPath(); });
 }
 
 void TreeViewDes::RestoreEditPos()

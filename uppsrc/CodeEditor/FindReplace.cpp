@@ -21,7 +21,7 @@ void CodeEditor::InitFindReplace()
 	                 <<= findreplace.incremental <<= findreplace.regexp
 	                 <<= findreplace.ignorecase <<= THISBACK(IncrementalFind);
 	ff_start_pos = -1;
-	findreplace.find_all << [=] { FindAll(); };
+	findreplace.find_all << [this] { FindAll(); };
 }
 
 FindReplaceDlg::FindReplaceDlg()

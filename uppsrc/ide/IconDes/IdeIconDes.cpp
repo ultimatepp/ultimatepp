@@ -64,7 +64,7 @@ void IconDes::ToolEx(Bar& bar)
 {
 	bar.Separator();
 	if(!IsSingleMode()) {
-		bar.Add("Usage..", IdeCommonImg::Cpp(), [=] {
+		bar.Add("Usage..", IdeCommonImg::Cpp(), [this] {
 			String name = GetCurrentName();
 			TheIde()->FindDesignerItemReferences(name + "()", name);
 		});

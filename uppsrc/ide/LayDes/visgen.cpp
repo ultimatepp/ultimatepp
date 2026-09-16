@@ -23,20 +23,19 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	type <<= THISBACK(Type);
 
 	// needs to be before Refresh to maintain the proper order of action
-	toupper1 << [=] { tolower1 <<= false; initcaps1 <<= false; };
-	tolower1 << [=] { toupper1 <<= false; initcaps1 <<= false; };
-	initcaps1 << [=] { toupper1 <<= false; tolower1 <<= false; };
+	toupper1 << [this] { tolower1 <<= false; initcaps1 <<= false; };
+	tolower1 << [this] { toupper1 <<= false; initcaps1 <<= false; };
+	initcaps1 << [this] { toupper1 <<= false; tolower1 <<= false; };
 
-	toupper2 << [=] { tolower2 <<= false; initcaps2 <<= false; };
-	tolower2 << [=] { toupper2 <<= false; initcaps2 <<= false; };
-	initcaps2 << [=] { toupper2 <<= false; tolower2 <<= false; };
+	toupper2 << [this] { tolower2 <<= false; initcaps2 <<= false; };
+	tolower2 << [this] { toupper2 <<= false; initcaps2 <<= false; };
+	initcaps2 << [this] { toupper2 <<= false; tolower2 <<= false; };
 
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 		if(dynamic_cast<Option *>(q))
-			*q << [=] { Refresh(); };
+			*q << [this] { Refresh(); };
 			
-	name << [=] { Refresh(); };
-	
+	name << [this] { Refresh(); };
 
 	Refresh();
 	view.Highlight("cpp");

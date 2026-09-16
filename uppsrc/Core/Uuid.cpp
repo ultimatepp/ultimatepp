@@ -51,7 +51,7 @@ String Format(const Uuid& id) {
 	for(int i = 0; i < 16; i++)
 		FormatHexByte(~h + 2 * i, id.b[i]);
 	
-	return h;
+	return String(h);
 }
 
 String FormatWithDashes(const Uuid& id) {
@@ -75,7 +75,7 @@ String FormatWithDashes(const Uuid& id) {
 	*t++ = '-';
 	Do(6);
 
-	return h;
+	return String(h);
 }
 
 Uuid ScanUuid(const char *s)

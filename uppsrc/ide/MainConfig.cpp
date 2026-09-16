@@ -97,8 +97,8 @@ FlagsDlg::FlagsDlg()
 	Sizeable().MaximizeBox();
 
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
-	accepts.AddColumn("Set").With([=](One<Ctrl>& ctrl) {
-		ctrl.Create<Option>().NoWantFocus() ^= [=] { Options(); };
+	accepts.AddColumn("Set").With([this](One<Ctrl>& ctrl) {
+		ctrl.Create<Option>().NoWantFocus() ^= [this] { Options(); };
 	});
 	accepts.AddColumn("Flag");
 	accepts.AddColumn("Comment");
@@ -109,18 +109,18 @@ FlagsDlg::FlagsDlg()
 	accepts.NoCursor();
 
 	flags.SetFilter(FlagFilterM);
-	flags << [=] { Flags(); };
+	flags << [this] { Flags(); };
 	gui <<= false;
 	debugcode <<= false;
-	gui << [=] { Options(); };
-	debugcode << [=] { Options(); };
+	gui << [this] { Options(); };
+	debugcode << [this] { Options(); };
 	recognized_flags.FindAdd("GUI");
 	recognized_flags.FindAdd("DEBUGCODE");
 	standard_flags = recognized_flags.GetCount();
 
 	search.NullText("Search");
 	search.SetFilter([](int c) { return ToUpper(c); });
-	search << [=] { Reload(); };
+	search << [this] { Reload(); };
 
 	Reload();
 }
@@ -199,22 +199,22 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 
 	search.NullText("Search");
 	search.SetFilter(CharFilterToUpper);
-	search << [=] {
+	search << [this] {
 		LoadList(list.GetKey(), false);
 	};
 
 	list.AddKey(); // index in config
 	list.AddColumn("Flags", 3);
 	list.AddColumn("Optional name", 2);
-	list.WhenSel = [=] {
+	list.WhenSel = [this] {
 		Sync();
 	};
-	list.WhenDrag = [=] {
+	list.WhenDrag = [this] {
 		if(CanMove())
 			list.DoDragAndDrop(InternalClip(list, "main_config-item"), list.GetDragSample(), DND_MOVE);
 	};
 
-	list.WhenDropInsert = [=](int q, PasteClip& d) {
+	list.WhenDropInsert = [this](int q, PasteClip& d) {
 		if(GetInternalPtr<ArrayCtrl>(d, "main_config-item") == &list && list.IsCursor() && d.Accept()) {
 			if(q >= 0 && q <= list.GetCount() && CanMove()) {
 				int from = list.GetKey();
@@ -230,7 +230,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
-	append.SetImage(IdeImg::add()) << [=] {
+	append.SetImage(IdeImg::add()) << [this] {
 		FlagsDlg cfg;
 		if(cfg.Run() == IDOK) {
 			cfg.Set(config.Add());
@@ -238,7 +238,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
-	insert.SetImage(IdeImg::insert()) << [=] {
+	insert.SetImage(IdeImg::insert()) << [this] {
 		int q = list.GetKey();
 		if(q >= 0 && q < config.GetCount()) {
 			FlagsDlg cfg;
@@ -249,7 +249,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
-	duplicate.SetImage(IdeImg::duplicate()) << [=] {
+	duplicate.SetImage(IdeImg::duplicate()) << [this] {
 		int q = list.GetKey();
 		if(q >= 0 && q < config.GetCount()) {
 			FlagsDlg cfg;
@@ -262,7 +262,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
-	list.WhenLeftDouble = edit.SetImage(IdeImg::pencil()) ^= [=] {
+	list.WhenLeftDouble = edit.SetImage(IdeImg::pencil()) ^= [this] {
 		int q = list.GetKey();
 		if(q >= 0 && q < config.GetCount()) {
 			FlagsDlg cfg;
@@ -274,7 +274,7 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 
-	remove.SetImage(IdeImg::remove()) << [=] {
+	remove.SetImage(IdeImg::remove()) << [this] {
 		int q = list.GetKey();
 		if(q >= 0 && q < config.GetCount() && PromptYesNo("Remove configuration?")) {
 			config.Remove(q);
@@ -284,29 +284,29 @@ MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 		}
 	};
 	
-	up.SetImage(IdeImg::arrow_up()) << [=] {
+	up.SetImage(IdeImg::arrow_up()) << [this] {
 		int q = list.GetKey();
 		if(q > 0 && q < config.GetCount())
 			config.Swap(q - 1, q);
 		LoadList(q - 1);
 	};
 
-	down.SetImage(IdeImg::arrow_down()) << [=] {
+	down.SetImage(IdeImg::arrow_down()) << [this] {
 		int q = list.GetKey();
 		if(q >= 0 && q + 1 < config.GetCount())
 			config.Swap(q + 1, q);
 		LoadList(q + 1);
 	};
 
-	list.WhenBar = [=](Bar& bar) {
-		bar.Add("Append", IdeImg::add(), [=] { append.WhenAction(); });
-		bar.Add("Insert", IdeImg::insert(), [=] { insert.WhenAction(); });
-		bar.Add("Duplicate", IdeImg::duplicate(), [=] { duplicate.WhenAction(); });
-		bar.Add("Edit", IdeImg::pencil(), [=] { edit.WhenAction(); });
-		bar.Add("Remove", IdeImg::remove(), [=] { remove.WhenAction(); });
+	list.WhenBar = [this](Bar& bar) {
+		bar.Add("Append", IdeImg::add(), [this] { append.WhenAction(); });
+		bar.Add("Insert", IdeImg::insert(), [this] { insert.WhenAction(); });
+		bar.Add("Duplicate", IdeImg::duplicate(), [this] { duplicate.WhenAction(); });
+		bar.Add("Edit", IdeImg::pencil(), [this] { edit.WhenAction(); });
+		bar.Add("Remove", IdeImg::remove(), [this] { remove.WhenAction(); });
 		bool canmove = list.GetCount() == config.GetCount();
-		bar.Add(canmove, "Move up", IdeImg::arrow_up(), [=] { up.WhenAction(); });
-		bar.Add(canmove, "Move down", IdeImg::arrow_down(), [=] { down.WhenAction(); });
+		bar.Add(canmove, "Move up", IdeImg::arrow_up(), [this] { up.WhenAction(); });
+		bar.Add(canmove, "Move down", IdeImg::arrow_down(), [this] { down.WhenAction(); });
 	};
 }
 

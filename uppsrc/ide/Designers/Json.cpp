@@ -162,7 +162,7 @@ void JsonViewDes::EditMenu(Bar& bar)
 {
 	JsonTreeMenu(bar, tree);
 	bar.Separator();
-	bar.Add("Validate with schema..", [=] {
+	bar.Add("Validate with schema..", [this] {
 		String p = SelectFileOpen("*.json\t*.schema.json\t*.*");
 		if(IsNull(p))
 			return;
@@ -207,7 +207,7 @@ JsonViewDes::JsonViewDes()
 	errors.AddColumn("Path");
 	errors.AddColumn("Schema Path");
 	errors_frame.Hide();
-	errors.WhenSel = [=] {
+	errors.WhenSel = [this] {
 		if(errors.IsCursor()) {
 			ValueArray va = errors.Get(3);
 			GoTo(tree, va.Get());
@@ -224,7 +224,7 @@ JsonViewDes::JsonViewDes()
 	schema_tree.NoRoot();
 	SetupJsonTree(schema_tree);
 	
-	close_errors << [=] {
+	close_errors << [this] {
 		errors_frame.Hide();
 		schema_frame.Hide();
 		schema_path.GetAdd(filename) = Null;

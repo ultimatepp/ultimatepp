@@ -218,7 +218,7 @@ RGBACtrl::RGBACtrl()
 	text.AddFrame(setcolor);
 	setcolor.Width(CtrlImg::color_edit().GetSize().cx + DPI(8));
 	setcolor.SetImage(CtrlImg::color_edit());
-	setcolor << [=] {
+	setcolor << [this] {
 		String text;
 		if(!IsNull(color) && color != VoidColor())
 			text = ColorToHtml(color);

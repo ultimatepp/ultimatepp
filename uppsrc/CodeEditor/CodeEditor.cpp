@@ -947,7 +947,7 @@ void CodeEditor::MouseMove(Point p, dword flags) {
 	SyncTip();
 	delayed_tip = false;
 	delayed_pos = Upp::GetMousePos();
-	delayed.KillSet(1000, [=] {
+	delayed.KillSet(1000, [this] {
 		delayed_tip = true;
 		SyncTip();
 	});
@@ -1455,7 +1455,7 @@ CodeEditor::CodeEditor()
 	withfindreplace = true;
 	wordwrap = false;
 	blk0_header = false;
-	closetip.Set(-200, [=] { SyncCloseTip(); });
+	closetip.Set(-200, [this] { SyncCloseTip(); });
 }
 
 CodeEditor::~CodeEditor() {}

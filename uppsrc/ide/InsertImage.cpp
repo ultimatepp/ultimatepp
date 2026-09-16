@@ -139,13 +139,13 @@ InsertImageDlg::InsertImageDlg()
 	search.NullText("Search");
 	search.SetFilter([](int c) { return iscid(c) ? ToUpper(c) : 0; });
 	
-	search ^= noupp ^= index ^= nest.WhenSel = [=] { Sync(); };
+	search ^= noupp ^= index ^= nest.WhenSel = [this] { Sync(); };
 	
-	list.WhenLeftDouble = [=] {
+	list.WhenLeftDouble = [this] {
 		Break(IDOK);
 	};
 	
-	list.WhenSel = [=] { ok.Enable(list.IsCursor()); };
+	list.WhenSel = [this] { ok.Enable(list.IsCursor()); };
 	ok.Disable();
 
 	list.RowMode();
@@ -157,7 +157,7 @@ InsertImageDlg::InsertImageDlg()
 	
 	Load();
 	
-	auto SyncWarning = [=] {
+	auto SyncWarning = [this] {
 		bool b = Indexer::IsRunning() && Indexer::Progress();
 		if(b != warning) {
 			warning = b;
@@ -170,7 +170,7 @@ InsertImageDlg::InsertImageDlg()
 	warning_lbl.Hide();
 	SyncWarning();
 	
-	tm.Set(-250, [=] { SyncWarning(); });
+	tm.Set(-250, [this, SyncWarning] { SyncWarning(); });
 }
 
 void Ide::InsertImage()

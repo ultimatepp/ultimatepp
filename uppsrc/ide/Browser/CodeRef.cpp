@@ -19,7 +19,7 @@ void IdeGotoCodeRef(const String& ref_id);
 
 void TopicEditor::JumpToDefinition()
 {
-	PostCallback([=] { IdeGotoCodeRef(editor.GetFormatInfo().label); });
+	PostCallback([this] { IdeGotoCodeRef(editor.GetFormatInfo().label); });
 }
 
 void TopicEditor::Label(String& label)
@@ -107,7 +107,7 @@ void TopicEditor::Tools(Bar& bar)
 	   .Key(K_ALT_U).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
-	bar.Add("Generate Table of Contents", TopicImg::TOC(), [=] { InsertTableOfContents(); });
+	bar.Add("Generate Table of Contents", TopicImg::TOC(), [this] { InsertTableOfContents(); });
 }
 
 void TopicEditor::MainTool(Bar& bar)

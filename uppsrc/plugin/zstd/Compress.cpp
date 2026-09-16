@@ -46,7 +46,7 @@ void ZstdCompressStream::FlushOut()
 	for(byte *s = ~buffer; s < ptr; s += BLOCK_BYTES) {
 		int origsize = min((int)BLOCK_BYTES, int(ptr - s));
 		if(concurrent)
-			co & [=] {
+			co & [this, t, ii, osz, s, origsize] {
 				outsz[ii] = (int)ZSTD_compress(t, osz, s, origsize, level);
 			};
 		else

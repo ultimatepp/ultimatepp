@@ -5,7 +5,7 @@
 void Ide::DoMacroManager()
 {
 	MacroManagerWindow manager(IdeWorkspace(), editor.StoreHlStyles());
-	manager.WhenEdit = [=](String fileName, int line) {
+	manager.WhenEdit = [this](String fileName, int line) {
 		EditFile(fileName);
 		editor.SetCursor(editor.GetPos64(line));
 		editor.CenterCursor();

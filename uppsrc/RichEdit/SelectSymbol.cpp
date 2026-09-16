@@ -54,15 +54,15 @@ SelectSymbolDlg::SelectSymbolDlg(bool show_variants)
 	search.NullText(t_("Search"));
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	group <<= 0;
-	search ^= group ^= [=] { Sync(); };
+	search ^= group ^= [this] { Sync(); };
 
 	symbols.NoHyperlinkDecoration();
 
 	if(show_variants) {
-		symbols.WhenLink << [=](const String& s) { Variants(Atoi(s)); };
+		symbols.WhenLink << [this](const String& s) { Variants(Atoi(s)); };
 		result = -1;
 		variants.NoHyperlinkDecoration();
-		variants.WhenLink << [=](const String& s) { result = Atoi(s); Break(IDOK); };
+		variants.WhenLink << [this](const String& s) { result = Atoi(s); Break(IDOK); };
 	}
 	else {
 		variants.Hide();
@@ -70,7 +70,7 @@ SelectSymbolDlg::SelectSymbolDlg(bool show_variants)
 		Logc y = symbols.GetPos().y;
 		y.SetB(vy.GetA() + vy.GetB() - y.GetA());
 		symbols.SetPosY(y);
-		symbols.WhenLink << [=](const String& s) { result = Atoi(s); Break(IDOK); };
+		symbols.WhenLink << [this](const String& s) { result = Atoi(s); Break(IDOK); };
 	}
 }
 

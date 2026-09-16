@@ -83,17 +83,17 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 {
 	CtrlLayout(*this);
 	
-	sdk_path << [=] { OnSdkPathChange(); };
-	sdk_path_download << [=] { LaunchWebBrowser(AndroidSDK::GetDownloadUrl()); };
+	sdk_path << [this] { OnSdkPathChange(); };
+	sdk_path_download << [this] { LaunchWebBrowser(AndroidSDK::GetDownloadUrl()); };
 	sdk_path_download.SetImage(IdeImg::arrow_down());
 	DirSelect(sdk_path, sdk_path_select);
 	
-	ndk_path << [=] { OnNdkPathChange(); };
-	ndk_path_download << [=] { LaunchWebBrowser(AndroidNDK::GetDownloadUrl()); };
+	ndk_path << [this] { OnNdkPathChange(); };
+	ndk_path_download << [this] { LaunchWebBrowser(AndroidNDK::GetDownloadUrl()); };
 	ndk_path_download.SetImage(IdeImg::arrow_down());
 	DirSelect(ndk_path, ndk_path_select);
 	
-	jdk_path_download << [=] { LaunchWebBrowser(Jdk::GetDownloadUrl()); };
+	jdk_path_download << [this] { LaunchWebBrowser(Jdk::GetDownloadUrl()); };
 	jdk_path_download.SetImage(IdeImg::arrow_down());
 	DirSelect(jdk_path, jdk_path_select);
 }

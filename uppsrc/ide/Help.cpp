@@ -558,7 +558,7 @@ void Ide::OpenHelp(const char *link, bool editable)
 	help.SetRect(0, 0, clamp(DPI(1300), 400, GetWorkArea().GetWidth() - DPI(20)),
 	             clamp(DPI(768), 400, GetWorkArea().GetHeight() - DPI(20)));
 	if(editable)
-		help.WhenTopic = [=](const String& topic) { OpenATopic(topic); };
+		help.WhenTopic = [this](const String& topic) { OpenATopic(topic); };
 	help.Icon(CtrlImg::help());
 	topic_serial++;
 	GetRefLinks("");

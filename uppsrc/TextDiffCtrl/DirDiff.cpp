@@ -66,17 +66,17 @@ DirDiffDlg::DirDiffDlg()
 	seldir1.Title("First directory to compare");
 	seldir2.Title("Second directory to compare");
 
-	compare << [=] { Compare(); };
-	dir1 << [=] { ClearFiles(); };
-	dir2 << [=] { ClearFiles(); };
+	compare << [this] { Compare(); };
+	dir1 << [this] { ClearFiles(); };
+	dir2 << [this] { ClearFiles(); };
 
-	modified	<< [=] { ShowResult(); };
-	removed		<< [=] { ShowResult(); };
-	added		<< [=] { ShowResult(); };
-	find		<< [=] { ShowResult(); };
-	extension   << [=] { ShowResult(); };
-	recent      << [=] { ShowResult(); };
-	clearFind	<< [=] { find.Clear(); ShowResult();};
+	modified	<< [this] { ShowResult(); };
+	removed		<< [this] { ShowResult(); };
+	added		<< [this] { ShowResult(); };
+	find		<< [this] { ShowResult(); };
+	extension   << [this] { ShowResult(); };
+	recent      << [this] { ShowResult(); };
+	clearFind	<< [this] { find.Clear(); ShowResult();};
 
 	files.WhenSel = THISBACK(File);
 
@@ -97,22 +97,22 @@ DirDiffDlg::DirDiffDlg()
 	right.Add(removeright.VSizePos().LeftPosZ(74, 70));
 	right.Add(revertright.VSizePos().LeftPosZ(148, 70));
 
-	auto SetupCopy = [=](Button& copy, bool left) {
+	auto SetupCopy = [this](Button& copy, bool left) {
 		copy.SetImage(left ? DiffImg::CopyLeft() : DiffImg::CopyRight());
 		copy.SetLabel("Copy");
 		copy.Tip("F5");
 		copy.Disable();
-		copy << [=] { Copy(left); };
+		copy << [this, left] { Copy(left); };
 	};
 
 	SetupCopy(copyleft, true);
 	SetupCopy(copyright, false);
 
-	auto SetupRevert = [=](Button& revert, EditString *dir) {
+	auto SetupRevert = [this](Button& revert, EditString *dir) {
 		revert.Disable();
 		revert.SetLabel("Revert");
 		revert.SetImage(CtrlImg::undo());
-		revert << [=] {
+		revert << [this, dir] {
 			String path = AppendFileName(~*dir, files.GetCurrentName());
 			int q = backup.Find(path);
 			if(q >= 0 && PromptYesNo("Revert changes?")) {
@@ -126,21 +126,21 @@ DirDiffDlg::DirDiffDlg()
 	SetupRevert(revertleft, &dir1);
 	SetupRevert(revertright, &dir2);
 
-	auto SetupRemove = [=](Button& remove, TextCompareCtrl *text, EditString *dir)
+	auto SetupRemove = [this](Button& remove, TextCompareCtrl *text, EditString *dir)
 	{
 		remove.SetLabel("Remove");
 		remove.Tip("F8");
 		remove.SetImage(CtrlImg::remove());
 		remove.Disable();
 
-		remove << [=] {
+		remove << [this, text, dir] {
 			String path = AppendFileName(~*dir, files.GetCurrentName());
 			Backup(path);
 			SaveFile(path, text->RemoveSelected(HasCrs(path)));
 			Refresh();
 		};
 
-		text->WhenSel << [=, &remove] {
+		text->WhenSel << [this, text, &remove] {
 			remove.Enable(text->IsSelection());
 		};
 	};
@@ -148,8 +148,8 @@ DirDiffDlg::DirDiffDlg()
 	SetupRemove(removeleft, &diff.left, &dir1);
 	SetupRemove(removeright, &diff.right, &dir2);
 
-	split_lines << [=] { File(); };
-	diff.indent << [=] { File(); };
+	split_lines << [this] { File(); };
+	diff.indent << [this] { File(); };
 
 	Icon(DiffImg::DirDiff());
 
@@ -337,7 +337,7 @@ void DirDiffDlg::File()
 	String p1 = AppendFileName(~dir1, fn);
 	String p2 = AppendFileName(~dir2, fn);
 
-	diff.right.WhenHighlight = diff.left.WhenHighlight = [=](Vector<LineEdit::Highlight>& hl, const WString& ln) {
+	diff.right.WhenHighlight = diff.left.WhenHighlight = [this, p1](Vector<LineEdit::Highlight>& hl, const WString& ln) {
 		DiffDlg::WhenHighlight(AppendFileName(p1, files.GetCurrentName()), hl, ln);
 	};
 

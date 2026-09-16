@@ -92,19 +92,19 @@ void RepoDiff::Set(const String& f)
 
 		copy_hash.SetLabel("Copy Hash");
 
-		auto GetHash = [=] {
+		auto GetHash = [this] {
 			String h = ~~r;
 			String commit, path;
 			SplitTo(h, ':', commit, path);
 			return commit;
 		};
 		
-		copy_hash << [=] {
+		copy_hash << [this, GetHash] {
 			WriteClipboardText(GetHash());
 		};
 		
 		copy_log.SetLabel("Copy Log");
-		copy_log << [=] {
+		copy_log << [this] {
 			CopyGitRevisions(r);
 		};
 		
@@ -115,7 +115,7 @@ void RepoDiff::Set(const String& f)
 			origin.TrimEnd("\n");
 			origin.TrimEnd("\r");
 			origin.TrimEnd(".git");
-			github << [=] {
+			github << [this, origin, GetHash] {
 				LaunchWebBrowser(origin + "/commit/" + GetHash());
 			};
 		}
@@ -289,7 +289,7 @@ void RepoDiff::Load()
 	diff.Set(backup = LoadFile(editfile), extfile);
 	if(bl.GetCount()) {
 		diff.SetPos(4700);
-		diff.right.WhenBlame = [=](const String& hash) {
+		diff.right.WhenBlame = [this](const String& hash) {
 			auto FindHash = [&](RepoDiff& d) {
 				for(int i = 0; i < d.r.GetCount(); i++) {
 					String h = d.r.GetKey(i);
@@ -322,8 +322,8 @@ RepoDiff::RepoDiff()
 	branch.SetDropLines(32);
 	Icon(IdeImg::SvnDiff());
 	diff.InsertFrameRight(pane);
-	r << [=] { Load(); };
-	branch << [=] { LoadGit(); };
+	r << [this] { Load(); };
+	branch << [this] { LoadGit(); };
 	Sizeable().Zoomable();
 	serialize_placement = false;
 	Rect r = TheIde()->GetWorkArea();
@@ -353,7 +353,7 @@ RepoDiff *Ide::RunRepoDiff(const String& filepath, int line)
 	if(line >= 0)
 		dlg.diff.left.SetCursor(line + 1);
 	dlg.diff.WhenRightLine =
-	dlg.diff.WhenLeftLine = [=](int line) {
+	dlg.diff.WhenLeftLine = [this, filepath](int line) {
 		EditFile(filepath);
 		editor.SetCursor(editor.GetPos64(line));
 		editor.SetFocus();

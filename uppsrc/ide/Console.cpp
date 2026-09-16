@@ -81,7 +81,7 @@ void Console::Append(const String& s) {
 	}
 
 	text_buffer << s;
-	flush.KillPost([=] {
+	flush.KillPost([this] {
 		int l, h;
 		GetSelection32(l, h);
 		if(GetCursor32() == GetLength32()) l = -1;

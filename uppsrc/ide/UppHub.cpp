@@ -66,7 +66,7 @@ UppHubSettingsDlg::UppHubSettingsDlg()
 {
 	CtrlLayoutOKCancel(*this, "Settings");
 	FileSelectOpen(url, selfile);
-	seturl.WhenAction = [=] {
+	seturl.WhenAction = [this] {
 		RefreshCtrls();
 	};
 }
@@ -155,7 +155,7 @@ UppHubDlg::UppHubDlg()
 	list.AddColumn("Description");
 	
 	list.ColumnWidths("109 80 38 300");
-	list.WhenSel = [=] {
+	list.WhenSel = [this] {
 		UppHubNest *n = Current();
 		http.Abort();
 		http.Timeout(0);
@@ -164,11 +164,11 @@ UppHubDlg::UppHubDlg()
 			readme_url = n->readme;
 			http.Url(readme_url);
 			loading = true;
-			delay.KillPost([=] { UrlLoading(); });
+			delay.KillPost([this] { UrlLoading(); });
 		}
 		Sync();
 	};
-	list.WhenLeftDouble = [=] {
+	list.WhenLeftDouble = [this] {
 		if(list.IsCursor()) {
 			if(Installed())
 				Reinstall();
@@ -176,38 +176,38 @@ UppHubDlg::UppHubDlg()
 				Install();
 		}
 	};
-	list.WhenBar = [=](Bar& bar) {
+	list.WhenBar = [this](Bar& bar) {
 		if(list.IsCursor()) {
 			if(Installed()) {
-				bar.Add("Uninstall", [=] { Uninstall(); });
-				bar.Add("Reinstall", [=] { Reinstall(); });
+				bar.Add("Uninstall", [this] { Uninstall(); });
+				bar.Add("Reinstall", [this] { Reinstall(); });
 			}
 			else
-				bar.Add("Install", [=] { Install(); });
+				bar.Add("Install", [this] { Install(); });
 			bar.Separator();
 		}
 		Menu(bar);
 	};
-	reinstall << [=] { Reinstall(); };
+	reinstall << [this] { Reinstall(); };
 	
-	more << [=] {
+	more << [this] {
 		MenuBar bar;
 		Menu(bar);
 		bar.Execute();
 	};
 	
-	update << [=] { Update(); };
+	update << [this] { Update(); };
 	
 	IdeHelpButton(help, "UppHub");
 	
 	search.NullText("Search (Ctrl+K)");
 	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
-	search << [=] { SyncList(); };
+	search << [this] { SyncList(); };
 	
 	experimental <<= true;
 	broken <<= false;
 	
-	category ^= experimental ^= broken ^= [=] { SyncList(); };
+	category ^= experimental ^= broken ^= [this] { SyncList(); };
 	
 	settings.LoadGlobalSettings();
 }
@@ -229,27 +229,29 @@ void UppHubDlg::Menu(Bar& bar)
 	UppHubNest *n = Current();
 	if(Installed()) {
 		String p = hubdir + "/" + n->name;
-		bar.Add("Open " + n->name + " Directory", [=] { ShellOpenFolder(p); });
-		bar.Add("Copy " + n->name + " Directory Path", [=] { WriteClipboardText(p); });
+		bar.Add("Open " + n->name + " Directory", [this, p] { ShellOpenFolder(p); });
+		bar.Add("Copy " + n->name + " Directory Path", [this, p] { WriteClipboardText(p); });
 		if(ide)
-			bar.Add("Terminal at " + n->name + " Directory", IdeImg::Terminal(), [=] { ide->LaunchTerminal(p); });
+			bar.Add("Terminal at " + n->name + " Directory", IdeImg::Terminal(), [this, p, ide] {
+				ide->LaunchTerminal(p);
+			});
 		sep = true;
 	}
 
 	if(n && !n->website.IsEmpty()) {
-		bar.Add("Open " + n->name + " in Browser..", [=] { LaunchWebBrowser(n->website); });
+		bar.Add("Open " + n->name + " in Browser..", [this, n] { LaunchWebBrowser(n->website); });
 		sep = true;
 	}
 
 	if(sep)
 		bar.Separator();
 	
-	bar.Add("Open UppHub Directory", [=] { ShellOpenFolder(hubdir); });
-	bar.Add("Copy UppHub Directory Path", [=] { WriteClipboardText(hubdir); });
+	bar.Add("Open UppHub Directory", [this, hubdir] { ShellOpenFolder(hubdir); });
+	bar.Add("Copy UppHub Directory Path", [this, hubdir] { WriteClipboardText(hubdir); });
 	if(ide)
-		bar.Add("Terminal at UppHub Directory", IdeImg::Terminal(), [=] { ide->LaunchTerminal(hubdir); });
+		bar.Add("Terminal at UppHub Directory", IdeImg::Terminal(), [this, hubdir, ide] { ide->LaunchTerminal(hubdir); });
 	bar.Separator();
-	bar.Add("Install everything..", [=] {
+	bar.Add("Install everything..", [this, hubdir] {
 		if(!PromptYesNo("Installing everything will take some time and will need a lot of storage space.&[/ Are you sure?"))
 			return;
 		Index<String> names;
@@ -262,7 +264,7 @@ void UppHubDlg::Menu(Bar& bar)
 		}
 		Install(names);
 	});
-	bar.Add("Reinstall all..", [=] {
+	bar.Add("Reinstall all..", [this, hubdir] {
 		Index<String> names;
 		for(const UppHubNest& n : upv)
 			if(DirectoryExists(hubdir + "/" + n.name))
@@ -278,7 +280,7 @@ void UppHubDlg::Menu(Bar& bar)
 				Exclamation("Failed to delete \1" + n);
 		Install(names);
 	});
-	bar.Add("Uninstall everything..", [=] {
+	bar.Add("Uninstall everything..", [this, hubdir] {
 		if(!PromptYesNo("This will completely delete the local UppHub content.&Continue?"))
 			return;
 		for(FindFile ff(hubdir + "/*"); ff; ff++) {
@@ -294,7 +296,7 @@ void UppHubDlg::Menu(Bar& bar)
 		SyncList();
 	});
 	bar.Separator();
-	bar.Add("Synchronize repos..", [=] {
+	bar.Add("Synchronize repos..", [this, hubdir] {
 		Vector<String> dirs;
 		for(FindFile ff(hubdir + "/*"); ff; ff++) {
 			if(ff.IsFolder() && DirectoryExists(ff.GetPath() + "/.git"))
@@ -308,7 +310,7 @@ void UppHubDlg::Menu(Bar& bar)
 		SyncList();
 	});
 	bar.Separator();
-	bar.Add("Set UppHub URL..", [=] { Settings(); });
+	bar.Add("Set UppHub URL..", [this] { Settings(); });
 }
 
 bool UppHubDlg::Installed()
@@ -320,7 +322,7 @@ bool UppHubDlg::Installed()
 void UppHubDlg::UrlLoading()
 {
 	if(http.Do())
-		delay.KillPost([=] { UrlLoading(); });
+		delay.KillPost([this] { UrlLoading(); });
 	else {
 		loading = false;
 		if(http.IsSuccess())
@@ -338,11 +340,11 @@ void UppHubDlg::Sync()
 		if(Installed()) {
 			action.SetLabel("Uninstall");
 			reinstall.Enable();
-			action ^= [=] { Uninstall(); };
+			action ^= [this] { Uninstall(); };
 		}
 		else {
 			action.SetLabel("Install");
-			action ^= [=] { Install(); };
+			action ^= [this] { Install(); };
 		}
 	}
 	UppHubNest *n = Current();

@@ -52,16 +52,16 @@ SlideShowSettingsDlg::SlideShowSettingsDlg()
 	vcenter <<= true;
 	title <<= false;
 	
-	vcenter << [=] { slideshow->SetPage(); };
-	title << [=] { slideshow->SetPage(); };
+	vcenter << [this] { slideshow->SetPage(); };
+	title << [this] { slideshow->SetPage(); };
 	
-	zoom_plus.WhenRepeat = zoom_plus ^= [=] { slideshow->Key(K_CTRL|K_ADD, 1); };
-	zoom_minus.WhenRepeat = zoom_minus ^= [=] { slideshow->Key(K_CTRL|K_SUBTRACT, 1); };
-	margin_plus.WhenRepeat = margin_plus ^= [=] { slideshow->Key(K_ALT|K_ADD, 1); };
-	margin_minus.WhenRepeat = margin_minus ^= [=] { slideshow->Key(K_ALT|K_SUBTRACT, 1); };
-	title_plus.WhenRepeat = title_plus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_ADD, 1); };
-	title_minus.WhenRepeat = title_minus ^= [=] { slideshow->Key(K_CTRL|K_ALT|K_SUBTRACT, 1); };
-	pointer ^= [=] { slideshow->SetPage(); };
+	zoom_plus.WhenRepeat = zoom_plus ^= [this] { slideshow->Key(K_CTRL|K_ADD, 1); };
+	zoom_minus.WhenRepeat = zoom_minus ^= [this] { slideshow->Key(K_CTRL|K_SUBTRACT, 1); };
+	margin_plus.WhenRepeat = margin_plus ^= [this] { slideshow->Key(K_ALT|K_ADD, 1); };
+	margin_minus.WhenRepeat = margin_minus ^= [this] { slideshow->Key(K_ALT|K_SUBTRACT, 1); };
+	title_plus.WhenRepeat = title_plus ^= [this] { slideshow->Key(K_CTRL|K_ALT|K_ADD, 1); };
+	title_minus.WhenRepeat = title_minus ^= [this] { slideshow->Key(K_CTRL|K_ALT|K_SUBTRACT, 1); };
+	pointer ^= [this] { slideshow->SetPage(); };
 }
 
 void SlideShow::Serialize(Stream& s)
@@ -95,7 +95,7 @@ SlideShow::SlideShow()
 	Add(title);
 	title.SetFrame(NullFrame());
 	title.SizePos();
-	settings.report << [=] { Export(); };
+	settings.report << [this] { Export(); };
 	LoadFromGlobal(*this, "SlideShow");
 }
 

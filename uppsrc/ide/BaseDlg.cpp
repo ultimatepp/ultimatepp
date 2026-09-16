@@ -95,7 +95,7 @@ NestEditorDlg::NestEditorDlg()
 	CtrlLayoutOKCancel(*this, "Nests editor");
 	Sizeable().Zoomable();
 
-	add.SetImage(IdeImg::add()) << [=] {
+	add.SetImage(IdeImg::add()) << [this] {
 		if(dir.ExecuteSelectDir("Insert nest directory")) {
 			int q = max(nests.GetCursor(), 0);
 			nests.Insert(q);
@@ -105,7 +105,7 @@ NestEditorDlg::NestEditorDlg()
 		}
 	};
 
-	nests.WhenLeftDouble = edit.SetImage(IdeImg::pencil()) ^= [=] {
+	nests.WhenLeftDouble = edit.SetImage(IdeImg::pencil()) ^= [this] {
 		if(nests.IsCursor()) {
 			String h = nests.Get(0);
 			if(EditText(h, "Nest directory", "Directory"))
@@ -113,28 +113,28 @@ NestEditorDlg::NestEditorDlg()
 		}
 	};
 
-	remove.SetImage(IdeImg::remove()) << [=] {
+	remove.SetImage(IdeImg::remove()) << [this] {
 		nests.DoRemove();
 		Sync();
 	};
 	
-	up.SetImage(IdeImg::arrow_up()) << [=] {
+	up.SetImage(IdeImg::arrow_up()) << [this] {
 		nests.SwapUp();
 	};
 
-	down.SetImage(IdeImg::arrow_down()) << [=] {
+	down.SetImage(IdeImg::arrow_down()) << [this] {
 		nests.SwapDown();
 	};
 
 	nests.AutoHideSb().Moving()
 		 .NoGrid().EvenRowColor().SetLineCy(nests.GetLineCy() + DPI(2))
 		 .NoHeader().AddColumn();
-	nests.WhenSel = nests.WhenStartEdit = [=] { Sync(); };
+	nests.WhenSel = nests.WhenStartEdit = [this] { Sync(); };
 
-	nests.WhenDrag = [=] {
+	nests.WhenDrag = [this] {
 		nests.DoDragAndDrop(InternalClip(nests, "nest-item"), nests.GetDragSample(), DND_MOVE);
 	};
-	nests.WhenDropInsert = [=](int line, PasteClip& d) {
+	nests.WhenDropInsert = [this](int line, PasteClip& d) {
 		if(GetInternalPtr<ArrayCtrl>(d, "nest-item") == &nests && nests.IsCursor() && d.Accept()) {
 			int q = nests.GetCursor();
 			if(q == line)
@@ -188,7 +188,7 @@ BaseSetupDlg::BaseSetupDlg()
 	CtrlLayoutOKCancel(*this, "Assembly setup");
 
 	setup_nest.Tip("Open nest editor..");
-	setup_nest << [=] {
+	setup_nest << [this] {
 		NestEditorDlg ndlg;
 		ndlg.Set(~upp);
 		if(!ndlg.ExecuteOK())
@@ -197,9 +197,9 @@ BaseSetupDlg::BaseSetupDlg()
 		OnUpp();
 	};
 
-	upp << [=] { OnUpp(); };
+	upp << [this] { OnUpp(); };
 	
-	setup_includes << [=] {
+	setup_includes << [this] {
 		NestEditorDlg ndlg;
 		ndlg.firstbold = false;
 		ndlg.Title("Includes");

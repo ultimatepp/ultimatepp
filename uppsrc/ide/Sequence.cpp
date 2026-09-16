@@ -169,12 +169,12 @@ InsertSequenceDlg::InsertSequenceDlg()
 	separator <<= ", ";
 	
 	for(Ctrl& q : *this)
-		q << [=] { Sync(); };
+		q << [this] { Sync(); };
 		
 	copy.SetImage(CtrlImg::copy());
-	copy << [=] { WriteClipboardText(~list); };
+	copy << [this] { WriteClipboardText(~list); };
 	
-	clear << [=] {
+	clear << [this] {
 		first <<= Null;
 		next <<= Null;
 		count <<= Null;

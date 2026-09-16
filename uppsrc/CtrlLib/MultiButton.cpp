@@ -118,7 +118,7 @@ void MultiButton::MultiButtons()
 	if(droppush) {
 		SubButton& b = buttons.Add();
 		b.owner = this;
-		b.WhenPush = [=] { DropPush(); };
+		b.WhenPush = [this] { DropPush(); };
 		b.main = true;
 		droppush = false;
 	}

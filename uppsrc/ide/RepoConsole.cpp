@@ -8,7 +8,7 @@ UrepoConsole::UrepoConsole()
 	list.SetLineCy(max(font.GetCy(), font().Bold().GetCy(), font().Bold().Italic().GetCy()));
 	exit.Hide();
 	cancel.Hide();
-	cancel << [=] { canceled = true; };
+	cancel << [this] { canceled = true; };
 }
 
 void UrepoConsole::AddResult(const String& out)

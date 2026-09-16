@@ -50,7 +50,7 @@ void LZ4CompressStream::FlushOut()
 	for(byte *s = ~buffer; s < ptr; s += BLOCK_BYTES) {
 		int origsize = min((int)BLOCK_BYTES, int(ptr - s));
 		if(concurrent)
-			co & [=] {
+			co & [this, ii, s, t, origsize, osz] {
 				outsz[ii] = LZ4_compress_default((char *)s, (char *)t, origsize, osz);
 			};
 		else

@@ -25,13 +25,13 @@ ExportMD::ExportMD()
 {
 	CtrlLayoutExit(*this, "Export as GitHub Markdown");
 	sel.SetImage(Upp::CtrlImg::Dir());
-	sel << [=] {
+	sel << [this] {
 		dir <<= Nvl(SelectDirectory(), ~~dir);
 	};
 	
 	list.NoWantFocus();
 	
-	doexport << [=] {
+	doexport << [this] {
 		exporting = true;
 		Export(ParseQTF(qtf));
 		String d = ~dir;
@@ -212,7 +212,7 @@ void ExportMD::Do(const char *qtf_, const char *name_)
 			b.NoWantFocus();
 			b.SetImage(CtrlImg::copy());
 			b.SetLabel("Copy IMAGE:" + AsString(ii) + (half ? " 50%" : ""));
-			b << [=] {
+			b << [this, ii, half] {
 				if(ii >= 0 && ii < img.GetCount()) {
 					RichObjectPaintInfo pi;
 					pi.ink = SBlack();

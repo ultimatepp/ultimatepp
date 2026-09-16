@@ -19,15 +19,15 @@ TextDiffCtrl::TextDiffCtrl()
 	left.scroll.y.AddFrame(indent);
 	left.scroll.y.AddFrame(prev);
 	left.scroll.y.AddFrame(next);
-	next << [=] { FindDiff(true); };
-	prev << [=] { FindDiff(false); };
+	next << [this] { FindDiff(true); };
+	prev << [this] { FindDiff(false); };
 	Horz(left, right);
 	left.WhenScroll = right.ScrollWhen(left);
 	right.WhenScroll = left.ScrollWhen(right);
 	right.HideSb();
 	left.WhenLeftDouble = THISBACK(GetLeftLine);
 	right.WhenLeftDouble = THISBACK(GetRightLine);
-	left.WhenCursor = [=] {
+	left.WhenCursor = [this] {
 		if(!cl) {
 			cl++;
 			right.SetLine(left.GetLine());
@@ -35,7 +35,7 @@ TextDiffCtrl::TextDiffCtrl()
 		}
 	};
 	
-	right.WhenCursor =  [=] {
+	right.WhenCursor = [this] {
 		if(!cl) {
 			cl++;
 			left.SetLine(right.GetLine());
@@ -277,7 +277,7 @@ DiffDlg::DiffDlg()
 	p.Add(remove.VSizePos().RightPosZ(74, 70));
 	p.Add(revert.VSizePos().RightPosZ(148, 70));
 
-	write << [=] { Write(); };
+	write << [this] { Write(); };
 	write.SetLabel("Copy");
 	write.SetImage(DiffImg::CopyLeft());
 	write.Tip("F5");
@@ -285,7 +285,7 @@ DiffDlg::DiffDlg()
 	revert.Disable();
 	revert.SetLabel("Revert");
 	revert.SetImage(CtrlImg::undo());
-	revert << [=] {
+	revert << [this] {
 		if(PromptYesNo("Revert changes?")) {
 			SaveFile(editfile, backup);
 			Refresh();
@@ -295,19 +295,19 @@ DiffDlg::DiffDlg()
 	remove.SetLabel("Remove");
 	remove.SetImage(CtrlImg::remove());
 	remove.Tip("F8");
-	remove << [=] {
+	remove << [this] {
 		SaveFile(editfile, diff.left.RemoveSelected(HasCrs(editfile)));
 		Refresh();
 		revert.Enable();
 	};
 	
-	diff.left.WhenSel << [=] {
+	diff.left.WhenSel << [this] {
 		remove.Enable(diff.left.IsSelection());
 	};
 	
 	l.SetReadOnly();
 
-	diff.right.WhenHighlight = diff.left.WhenHighlight = [=](Vector<LineEdit::Highlight>& hl, const WString& ln) {
+	diff.right.WhenHighlight = diff.left.WhenHighlight = [this](Vector<LineEdit::Highlight>& hl, const WString& ln) {
 		DiffDlg::WhenHighlight(editfile, hl, ln);
 	};
 }
@@ -337,7 +337,7 @@ FileDiff::FileDiff(FileSel& fs_)
 	Icon(DiffImg::Diff());
 	diff.InsertFrameRight(r);
 	r <<= THISBACK(Open);
-	diff.indent << [=] { Finish(); };
+	diff.indent << [this] { Finish(); };
 }
 
 void FileDiff::Set(const String& f)

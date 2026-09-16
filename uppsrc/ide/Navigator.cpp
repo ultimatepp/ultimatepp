@@ -76,7 +76,7 @@ Navigator::Navigator()
 	list.SetLineCy(max(DPI(16), GetStdFontCy()));
 	list.NoWantFocus();
 	list.WhenLeftClick = THISBACK(NavigatorClick);
-	list.WhenBar = [=](Bar& bar) {
+	list.WhenBar = [this](Bar& bar) {
 		if(!theide)
 			return;
 		int kind = KIND_NEST;
@@ -87,9 +87,9 @@ Navigator::Navigator()
 			kind = m.kind;
 			name = m.name;
 		}
-		bar.Add(kind != KIND_NEST, "Go to", [=] { Navigate(false); })
+		bar.Add(kind != KIND_NEST, "Go to", [this] { Navigate(false); })
 		   .Key(IK_CLICK);
-		bar.Add(kind >= 0, "Usage", [=] { Navigate(true); })
+		bar.Add(kind >= 0, "Usage", [this] { Navigate(true); })
 		   .Key(K_ALT|IK_CLICK);
 		theide->OnlineSearchMenu(bar, name, false);
 	};
@@ -98,7 +98,7 @@ Navigator::Navigator()
 	scope.AddColumn().AddIndex().SetDisplay(Single<ScopeDisplay>());
 	scope.SetLineCy(max(16, GetStdFontCy()));
 	scope.NoWantFocus();
-	scope.WhenSel = [=] { SetList(); };
+	scope.WhenSel = [this] { SetList(); };
 	
 	search <<= THISBACK(TriggerSearch);
 	search.SetFilter(CharFilterNavigator);
@@ -188,7 +188,7 @@ void Navigator::Navigate(bool usage)
 				search <<= h;
 				search.AddHistory();
 				Search();
-				PostCallback([=] {
+				PostCallback([this, id] {
 					for(int i = 0; i < litem.GetCount(); i++)
 						if(IsStruct(litem[i]->kind) && litem[i]->id == id) {
 							list.SetCursor(i);
@@ -545,7 +545,7 @@ void Navigator::SetList()
 	}
 	
 	if(sorting)
-		StableSort(litem, [=](const NavItem *a, const NavItem *b) {
+		StableSort(litem, [this](const NavItem *a, const NavItem *b) {
 			return a->uname < b->uname;
 		});
 	

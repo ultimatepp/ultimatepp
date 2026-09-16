@@ -63,12 +63,12 @@ void MacroManagerWindow::InitButtons()
 {
 	close.Close();
 	
-	close              << [=] { Break(); };
-	editLabel          << [=] { OnEditFile(); };
-	exportLabel        << [=] { OnExport(globalTree.GetCursor()); };
-	newGlobalLabel     << [=] { OnNewMacroFile(); };
-	importGlobalsLabel << [=] { OnImport(); };
-	exportGlobalsLabel << [=] { OnExport(0); };
+	close              << [this] { Break(); };
+	editLabel          << [this] { OnEditFile(); };
+	exportLabel        << [this] { OnExport(globalTree.GetCursor()); };
+	newGlobalLabel     << [this] { OnNewMacroFile(); };
+	importGlobalsLabel << [this] { OnImport(); };
+	exportGlobalsLabel << [this] { OnExport(0); };
 	
 	IdeHelpButton(help, "MacroManager");
 	
@@ -81,13 +81,13 @@ void MacroManagerWindow::InitButtons()
 
 void MacroManagerWindow::InitEvents()
 {
-	globalTree.WhenSel = [=]           { OnTreeSel(); };
-	localTree.WhenSel  = [=]           { OnTreeSel(); };
+	globalTree.WhenSel = [this]           { OnTreeSel(); };
+	localTree.WhenSel  = [this]           { OnTreeSel(); };
 	
-	globalTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
-	localTree.WhenBar  = [=](Bar& bar) { OnMacroBar(bar); };
+	globalTree.WhenBar = [this](Bar& bar) { OnMacroBar(bar); };
+	localTree.WhenBar  = [this](Bar& bar) { OnMacroBar(bar); };
 	
-	tab.WhenSet        = [=]           { OnTabSet(); };
+	tab.WhenSet        = [this]           { OnTabSet(); };
 }
 
 void MacroManagerWindow::OnMacroBar(Bar& bar)
@@ -95,15 +95,15 @@ void MacroManagerWindow::OnMacroBar(Bar& bar)
 	if(IsGlobalTab()) {
 		bool partOfFile = IsGlobalFile();
 		
-		bar.Add(t_("New.."),    [=] { OnNewMacroFile(); });
-		bar.Add(t_("Import.."), [=] { OnImport(); });
-		bar.Add(t_("Delete"),   [=] { OnDeleteMacroFile(); })
+		bar.Add(t_("New.."),    [this] { OnNewMacroFile(); });
+		bar.Add(t_("Import.."), [this] { OnImport(); });
+		bar.Add(t_("Delete"),   [this] { OnDeleteMacroFile(); })
 		    .Enable(partOfFile);
-		bar.Add(t_("Export.."), [=] { OnExport(globalTree.GetCursor()); })
+		bar.Add(t_("Export.."), [this] { OnExport(globalTree.GetCursor()); })
 		    .Enable(partOfFile);
 		bar.Separator();
 	}
-	bar.Add(t_("Edit"), [=] { OnEditFile();})
+	bar.Add(t_("Edit"), [this] { OnEditFile();})
 	    .Enable(IsEditPossible());
 }
 

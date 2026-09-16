@@ -116,7 +116,7 @@ ModePane::ModePane()
 	debug.Add(0, "None")
 	     .Add(1, "Minimal")
 	     .Add(2, "Full");
-	FileSelectSaveAs(target, targetb, [=] { target_override <<= true; });
+	FileSelectSaveAs(target, targetb, [this] { target_override <<= true; });
 }
 
 struct OutMode : WithOutputModeLayout<TopWindow> {

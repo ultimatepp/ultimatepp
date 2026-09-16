@@ -68,7 +68,7 @@ AssistEditor::AssistEditor()
 
 	NoFindReplace();
 
-	WhenUpdate << [=] {
+	WhenUpdate << [this] {
 		TriggerSyncFile(500);
 	};
 }
@@ -101,7 +101,7 @@ void AssistEditor::TriggerSyncFile(int delay_ms)
 		return;
 	if(IsSourceFile(theide->editfile) || master_source.GetCount() || IsHeaderFile(theide->editfile)) {
 		annotating = true;
-		annotate_trigger.KillSet(delay_ms, [=] { SyncCurrentFile(); });
+		annotate_trigger.KillSet(delay_ms, [this] { SyncCurrentFile(); });
 		ClearErrors();
 	}
 }
@@ -509,7 +509,7 @@ void AssistEditor::SyncCurrentFile(const CurrentFileContext& cfx)
 	if(!theide)
 		return;
 	if(cfx.content.GetCount() && HasLibClang())
-		SetCurrentFile(cfx, [=](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
+		SetCurrentFile(cfx, [this](const CppFileInfo& f, const Vector<Diagnostic>& ds) {
 			SetAnnotations(f);
 
 			ClearErrors();
@@ -785,7 +785,7 @@ void AssistEditor::Assist(bool macros)
 	CurrentFileContext cfx = CurrentContext(pos);
 	int line = GetLinePos(pos);
 	if(cfx.content.GetCount() && HasLibClang())
-		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [=](const Vector<AutoCompleteItem>& items) {
+		StartAutoComplete(cfx, line + cfx.line_delta + 1, ToUtf8x(line, pos) + 1, macros, [this](const Vector<AutoCompleteItem>& items) {
 			bool has_globals = false;
 			bool has_macros = false;
 			for(const AutoCompleteItem& m : items) {
@@ -836,7 +836,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		m.kind = KIND_ERROR;
 		m.pretty = "No relevant autocomplete info found";
 	}
-	Upp::Sort(assist_item, [=](const AssistItem& a, const AssistItem& b) {
+	Upp::Sort(assist_item, [this](const AssistItem& a, const AssistItem& b) {
 		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
 	});
 	int lcy = max(16, BrowserFont().Info().GetHeight());

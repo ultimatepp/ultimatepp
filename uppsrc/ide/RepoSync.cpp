@@ -72,7 +72,7 @@ RepoSync::RepoSync()
 	Sizeable().Zoomable();
 	BackPaint();
 	credentials.Show(TheIde() && TheIde()->experimental);
-	credentials << [=] {
+	credentials << [this] {
 		Index<String> hint;
 		for(const auto& w : ~work) {
 			String path = w.key;
@@ -194,7 +194,7 @@ bool RepoSync::ListSvn(const String& path)
 							list.SetCtrl(ii, 0, revert.Add().SetLabel(an + (action == ADD ? "\nSkip" : "\nRevert")).NoWantFocus());
 							revert.Top() <<= 0;
 							Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
-							b << [=] { DoDiff(ii); };
+							b << [this, ii] { DoDiff(ii); };
 							list.SetCtrl(ii, 2, b);
 						}
 					}
@@ -309,7 +309,7 @@ void RepoSync::SyncList()
 			auto& o = list.CreateCtrl<SvnOptions>(hi, 0, false);
 			o.SizePos();
 			o.commit = Default("commit");
-			o.commit << [=] { SyncCommits(); };
+			o.commit << [this] { SyncCommits(); };
 			o.update = Default("update");
 			actions = ListSvn(path);
 			if(!actions) {
@@ -322,7 +322,7 @@ void RepoSync::SyncList()
 			auto& o = list.CreateCtrl<GitOptions>(hi, 0, false);
 			o.SizePos();
 			o.commit = Default("commit");
-			o.commit << [=] { SyncCommits(); };
+			o.commit << [this] { SyncCommits(); };
 			o.push = Default("push");
 			o.pull = Default("pull");
 			actions = ListGit(path);
