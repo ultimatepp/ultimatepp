@@ -5,7 +5,7 @@ PropertyPane::PropertyPane()
 	Clear();
 	SetFrame(sb);
 	sb.AutoHide();
-	sb.WhenScroll  << [=] { Scroll(); };
+	sb.WhenScroll  << [this] { Scroll(); };
 	sb.SetLine(GetStdFontCy());
 	Color(SColorFace);
 }

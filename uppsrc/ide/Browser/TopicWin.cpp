@@ -215,7 +215,7 @@ void TopicEditor::TopicMenu(Bar& bar)
 	bar.Add(topics_list.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
 	bar.Separator();
-	bar.Add(topics_list.IsCursor(), "Copy topic ID", [=] {
+	bar.Add(topics_list.IsCursor(), "Copy topic ID", [this] {
 		String p = topicpath;
 		String nest = GetPathNest(p);
 		p.Remove(0, nest.GetCount());
@@ -241,11 +241,11 @@ void TopicEditor::FileBar(Bar& bar)
 	}
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
-	bar.Add("Export to PDF..", IdeCommonImg::pdf(), [=] { ExportPdf(editor); });
+	bar.Add("Export to PDF..", IdeCommonImg::pdf(), [this] { ExportPdf(editor); });
 	bar.Add("Export group to PDF..", IdeCommonImg::pdf(), THISBACK(ExportGroupPdf));
 	bar.Add("Export to HTML..", IdeCommonImg::html(), THISBACK(ExportHTML));
 	bar.Add("Export group to HTML..", IdeCommonImg::html(), THISBACK(ExportGroupHTML));
-	bar.Add("Export as GitHub Markdown..", IdeCommonImg::MD(), [=] {
+	bar.Add("Export as GitHub Markdown..", IdeCommonImg::MD(), [this] {
 		ExportMarkdown(editor.IsSelection() ? AsQTF(editor.GetSelection()) : editor.GetQTF(), GetFileTitle(topicpath));
 	});
 }

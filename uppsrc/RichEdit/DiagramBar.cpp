@@ -6,54 +6,54 @@ void DiagramEditor::TheBar(Bar& bar)
 {
 	bool b = IsCursor();
 
-	bar.Add(undoredo.IsUndo(), CtrlImg::undo(), [=] { SetCurrent(undoredo.Undo(GetCurrent())); })
+	bar.Add(undoredo.IsUndo(), CtrlImg::undo(), [this] { SetCurrent(undoredo.Undo(GetCurrent())); })
 	   .Key(K_ALT_BACKSPACE)
 	   .Key(K_CTRL_Z);
-	bar.Add(undoredo.IsRedo(), CtrlImg::redo(), [=] { SetCurrent(undoredo.Redo(GetCurrent())); })
+	bar.Add(undoredo.IsRedo(), CtrlImg::redo(), [this] { SetCurrent(undoredo.Redo(GetCurrent())); })
 	   .Key(K_SHIFT|K_ALT_BACKSPACE)
 	   .Key(K_CTRL_Y)
 	   .Key(K_SHIFT|K_CTRL_Z);
 	bar.Separator();
-	bar.Add(b, "Cut", CtrlImg::cut(), [=] { Cut(); })
+	bar.Add(b, "Cut", CtrlImg::cut(), [this] { Cut(); })
 	   .Key(K_SHIFT_DELETE)
 	   .Key(K_CTRL_X);
-	bar.Add(b, "Copy", CtrlImg::copy(), [=] { Copy(); })
+	bar.Add(b, "Copy", CtrlImg::copy(), [this] { Copy(); })
 	   .Key(K_CTRL_INSERT)
 	   .Key(K_CTRL_C);
-	bar.Add(IsClipboardAvailableText() || IsClipboardAvailableImage(), "Paste", CtrlImg::paste(), [=] { Paste(); })
+	bar.Add(IsClipboardAvailableText() || IsClipboardAvailableImage(), "Paste", CtrlImg::paste(), [this] { Paste(); })
 	   .Key(K_SHIFT_INSERT)
 	   .Key(K_CTRL_V);
-	bar.Add(b, "Delete", CtrlImg::remove(), [=] { Delete(); })
+	bar.Add(b, "Delete", CtrlImg::remove(), [this] { Delete(); })
 	   .Key(K_DELETE);
-	bar.Add(b, "Duplicate", DiagramImg::Duplicate(), [=] { Duplicate(); })
+	bar.Add(b, "Duplicate", DiagramImg::Duplicate(), [this] { Duplicate(); })
 	   .Key(K_CTRL_D);
-	bar.Add("Select all", CtrlImg::select_all(), [=] { SelectAll(); })
+	bar.Add("Select all", CtrlImg::select_all(), [this] { SelectAll(); })
 	   .Key(K_CTRL_A);
 	bar.Separator();
-	bar.Add(b, "Move back", DiagramImg::MoveBack(), [=] { MoveFrontBack(true); });
-	bar.Add(b, "Move front", DiagramImg::MoveFront(), [=] { MoveFrontBack(false); });
+	bar.Add(b, "Move back", DiagramImg::MoveBack(), [this] { MoveFrontBack(true); });
+	bar.Add(b, "Move front", DiagramImg::MoveFront(), [this] { MoveFrontBack(false); });
 	bar.Separator();
-	bar.Add(b, "Horizontal center", DiagramImg::HorzCenter(), [=] { Align(true, ALIGN_NULL); });
-	bar.Add(b, "Vertical center", DiagramImg::VertCenter(), [=] { Align(false, ALIGN_NULL); });
+	bar.Add(b, "Horizontal center", DiagramImg::HorzCenter(), [this] { Align(true, ALIGN_NULL); });
+	bar.Add(b, "Vertical center", DiagramImg::VertCenter(), [this] { Align(false, ALIGN_NULL); });
 	bar.Separator();
 	bool multi = sel.GetCount() > 1;
-	bar.Add(multi, "Align left", DiagramImg::AlignLeft(), [=] { Align(true, ALIGN_LEFT); });
-	bar.Add(multi, "Horizontal center", DiagramImg::AlignHCenter(), [=] { Align(true, ALIGN_CENTER); });
-	bar.Add(multi, "Align right", DiagramImg::AlignRight(), [=] { Align(true, ALIGN_RIGHT); });
+	bar.Add(multi, "Align left", DiagramImg::AlignLeft(), [this] { Align(true, ALIGN_LEFT); });
+	bar.Add(multi, "Horizontal center", DiagramImg::AlignHCenter(), [this] { Align(true, ALIGN_CENTER); });
+	bar.Add(multi, "Align right", DiagramImg::AlignRight(), [this] { Align(true, ALIGN_RIGHT); });
 	bar.Separator();
-	bar.Add(multi, "Align top", DiagramImg::AlignTop(), [=] { Align(false, ALIGN_TOP); });
-	bar.Add(multi, "Vertical center", DiagramImg::AlignVCenter(), [=] { Align(false, ALIGN_CENTER); });
-	bar.Add(multi, "Align bottom", DiagramImg::AlignBottom(), [=] { Align(false, ALIGN_BOTTOM); });
+	bar.Add(multi, "Align top", DiagramImg::AlignTop(), [this] { Align(false, ALIGN_TOP); });
+	bar.Add(multi, "Vertical center", DiagramImg::AlignVCenter(), [this] { Align(false, ALIGN_CENTER); });
+	bar.Add(multi, "Align bottom", DiagramImg::AlignBottom(), [this] { Align(false, ALIGN_BOTTOM); });
 	bar.Separator();
-	bar.Add(multi, "Same width", DiagramImg::SameWidth(), [=] { Align(true, ALIGN_JUSTIFY); });
-	bar.Add(multi, "Same height", DiagramImg::SameHeight(), [=] { Align(false, ALIGN_JUSTIFY); });
-	bar.Add(multi, "Same size", DiagramImg::SameSize(), [=] { Align(true, ALIGN_JUSTIFY);  Align(false, ALIGN_JUSTIFY); });
+	bar.Add(multi, "Same width", DiagramImg::SameWidth(), [this] { Align(true, ALIGN_JUSTIFY); });
+	bar.Add(multi, "Same height", DiagramImg::SameHeight(), [this] { Align(false, ALIGN_JUSTIFY); });
+	bar.Add(multi, "Same size", DiagramImg::SameSize(), [this] { Align(true, ALIGN_JUSTIFY);  Align(false, ALIGN_JUSTIFY); });
 	bar.Separator();
-	bar.Add("Zoom", MakeZoomIcon(0.01 * zoom_percent), [=]{ Zoom(); });
-	bar.Add("Snap to grid", DiagramImg::Grid(), [=] { grid = !grid; SetBar(); }).Check(grid);
-	bar.Add("Display grid and connections", DiagramImg::DisplayGrid(), [=] { display_grid = !display_grid; SetBar(); Refresh(); }).Check(display_grid);
+	bar.Add("Zoom", MakeZoomIcon(0.01 * zoom_percent), [this]{ Zoom(); });
+	bar.Add("Snap to grid", DiagramImg::Grid(), [this] { grid = !grid; SetBar(); }).Check(grid);
+	bar.Add("Display grid and connections", DiagramImg::DisplayGrid(), [this] { display_grid = !display_grid; SetBar(); Refresh(); }).Check(display_grid);
 	bar.Separator();
-	bar.Add("Diagram size", DiagramImg::Size(), [=] { ChangeSize(); });
+	bar.Add("Diagram size", DiagramImg::Size(), [this] { ChangeSize(); });
 	bar.Separator();
 	int icx = IconDlCx();
 	bar.Add(shape, icx);
@@ -74,15 +74,15 @@ void DiagramEditor::TheBar(Bar& bar)
 		fv = fv && m.flip_vert;
 		ar = ar && m.aspect_ratio;
 	});
-	bar.Add(b, "Flip Horizontal", DiagramImg::FlipHorz(), [=] {
+	bar.Add(b, "Flip Horizontal", DiagramImg::FlipHorz(), [this] {
 		ForEach([&](DiagramItem& m) { m.flip_horz = !m.flip_horz; });
 	})
 	.Check(fh);
-	bar.Add(b, "Flip Vertical", DiagramImg::FlipVert(), [=] {
+	bar.Add(b, "Flip Vertical", DiagramImg::FlipVert(), [this] {
 		ForEach([&](DiagramItem& m) { m.flip_vert = !m.flip_vert; });
 	})
 	.Check(fv);
-	bar.Add(b, "Aspect Ratio", DiagramImg::Aspect(), [=] {
+	bar.Add(b, "Aspect Ratio", DiagramImg::Aspect(), [this] {
 		ForEach([&](DiagramItem& m) {
 			m.aspect_ratio = !m.aspect_ratio;
 			if(m.aspect_ratio && !m.IsLine()) {
@@ -106,7 +106,7 @@ void DiagramEditor::TheBar(Bar& bar)
 			m.size = m.pos - 2.0;
 		}
 		m.width = log(m.width + 1);
-		bar.Add(MakeIcon(m, isz), [=] {
+		bar.Add(MakeIcon(m, isz), [this, i] {
 			CancelSelection();
 			if(tool == i)
 				tool = -1;
@@ -127,7 +127,7 @@ void DiagramEditor::TheBar(Bar& bar)
 			editor_bar.SetEditable();
 			editor_bar.ShowFormat();
 			editor_bar.diagram_bar_hack = true;
-			editor_bar.WhenSel = [=] {
+			editor_bar.WhenSel = [this] {
 				for(int i : sel) {
 					String& qtf = data.item[i].qtf;
 					RichText txt = ParseQTF(qtf);
@@ -149,7 +149,7 @@ void DiagramEditor::TheBar(Bar& bar)
 
 void DiagramEditor::SetBar()
 {
-	toolbar.Set([=](Bar& bar) { TheBar(bar); });
+	toolbar.Set([this](Bar& bar) { TheBar(bar); });
 }
 
 }

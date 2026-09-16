@@ -88,19 +88,19 @@ WebSearchTab::WebSearchTab()
 	if(GetDPIScale() < DPI_200)
 		list.AddIndex();
 	list.Moving().RowName("search engine").Removing();
-	list.WhenLeftDouble = [=] { Edit(); };
+	list.WhenLeftDouble = [this] { Edit(); };
 	list.SetLineCy(max(GetStdFontSize().cy, DPI(18)));
-	list.WhenSel << [=] { Sync(); };
-	list.WhenBar = [=](Bar& bar) {
+	list.WhenSel << [this] { Sync(); };
+	list.WhenBar = [this](Bar& bar) {
 		bool b = list.IsCursor();
-		bar.Add("Add search engine", IdeImg::add(), [=] { Add(); }).Key(K_INSERT);
-		bar.Add(b, "Edit search engine", IdeImg::pencil(), [=] { Edit(); }).Key(K_ENTER);
-		bar.Add(b, "Remove search engine", IdeImg::remove(), [=] { list.DoRemove(); Sync(); }).Key(K_DELETE);
-		bar.Add(b, "Set as default engine", IdeImg::star(), [=] { Default(); Sync(); });
-		bar.Add(b, "Move up", IdeImg::arrow_up(), [=] { list.SwapUp(); Sync(); }).Key(K_CTRL_UP);
-		bar.Add(b, "Move down", IdeImg::arrow_down(), [=] { list.SwapDown(); Sync(); }).Key(K_CTRL_DOWN);
+		bar.Add("Add search engine", IdeImg::add(), [this] { Add(); }).Key(K_INSERT);
+		bar.Add(b, "Edit search engine", IdeImg::pencil(), [this] { Edit(); }).Key(K_ENTER);
+		bar.Add(b, "Remove search engine", IdeImg::remove(), [this] { list.DoRemove(); Sync(); }).Key(K_DELETE);
+		bar.Add(b, "Set as default engine", IdeImg::star(), [this] { Default(); Sync(); });
+		bar.Add(b, "Move up", IdeImg::arrow_up(), [this] { list.SwapUp(); Sync(); }).Key(K_CTRL_UP);
+		bar.Add(b, "Move down", IdeImg::arrow_down(), [this] { list.SwapDown(); Sync(); }).Key(K_CTRL_DOWN);
 		bar.Separator();
-		bar.Add("Restore the default list", [=] {
+		bar.Add("Restore the default list", [this] {
 			if(PromptYesNo("Delete the current list and restore defaults?")) {
 				SearchEnginesDefaultSetup();
 				Load();
@@ -111,12 +111,12 @@ WebSearchTab::WebSearchTab()
 	list.ColumnWidths("104 382 30");
 	list.AutoHideSb();
 	
-	add.SetImage(IdeImg::add()) << [=] { Add(); };
-	edit.SetImage(IdeImg::pencil()) ^= [=] { Edit(); };
-	remove.SetImage(IdeImg::remove()) << [=] { list.DoRemove(); Sync(); };
-	setdef.SetImage(IdeImg::star()) << [=] { Default(); };
-	up.SetImage(IdeImg::arrow_up()) << [=] { list.SwapUp(); Sync(); };
-	down.SetImage(IdeImg::arrow_down()) << [=] { list.SwapDown(); Sync(); };
+	add.SetImage(IdeImg::add()) << [this] { Add(); };
+	edit.SetImage(IdeImg::pencil()) ^= [this] { Edit(); };
+	remove.SetImage(IdeImg::remove()) << [this] { list.DoRemove(); Sync(); };
+	setdef.SetImage(IdeImg::star()) << [this] { Default(); };
+	up.SetImage(IdeImg::arrow_up()) << [this] { list.SwapUp(); Sync(); };
+	down.SetImage(IdeImg::arrow_down()) << [this] { list.SwapDown(); Sync(); };
 }
 
 bool WebSearchTab::EditDlg(String& name, String& uri, String& ico16, String& ico32)
@@ -232,7 +232,7 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 	
 	bool b = what.GetCount(); // editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
 
-	auto OnlineSearch = [=](const String& url) {
+	auto OnlineSearch = [this, what](const String& url) {
 		String h = url;
 		h.Replace("%s", UrlEncode(what));
 		LaunchWebBrowser(h);
@@ -264,12 +264,13 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 	using namespace IdeKeys;
 
 	{
-		auto& x = menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()), [=] { OnlineSearch(uri); });
+		auto& x = menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()),
+		                  [this, uri, OnlineSearch] { OnlineSearch(uri); });
 		if(accel)
 			x.Key(AK_GOOGLE);
 	}
 	{
-		auto& x = menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [=] {
+		auto& x = menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [this, OnlineSearch] {
 			OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
 		});
 		if(accel)
@@ -279,11 +280,12 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)
 		return;
 
-	menu.Sub(b, "Search on...", [=](Bar& menu) {
+	menu.Sub(b, "Search on...", [this, OnlineSearch, Icon, b](Bar& menu) {
 		for(int i = 1; i < search_engines.GetCount(); i++) {
-			const String& name = search_engines[i]["Name"];
-			const String& uri  = search_engines[i]["URI"];
-			menu.Add(b, name, Nvl(Icon(i), CtrlImg::Network()), [=] { OnlineSearch(uri); });
+			String name = search_engines[i]["Name"];
+			String uri  = search_engines[i]["URI"];
+			menu.Add(b, name, Nvl(Icon(i), CtrlImg::Network()),
+			         [this, uri, OnlineSearch] { OnlineSearch(uri); });
 		}
 	});
 }

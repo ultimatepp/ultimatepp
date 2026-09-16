@@ -21,7 +21,7 @@ IconDes::TextDlg::TextDlg()
 		height.AddList(i);
 	
 	symbol.SetImage(RichEditImg::InsertSymbol());
-	symbol << [=] {
+	symbol << [this] {
 		Font fnt;
 		int c = SelectFontSymbol(fnt);
 		if(IsNull(c))

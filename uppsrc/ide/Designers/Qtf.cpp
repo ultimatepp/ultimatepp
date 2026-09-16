@@ -50,8 +50,8 @@ void IdeQtfDes::EditMenu(Bar& menu)
 {
 	EditTools(menu);
 	menu.Separator();
-	menu.Add("Export to PDF..", IdeCommonImg::pdf(), [=] { ExportPdf(*this); });
-	menu.Add("Export as GitHub Markdown..", IdeCommonImg::MD(), [=] {
+	menu.Add("Export to PDF..", IdeCommonImg::pdf(), [this] { ExportPdf(*this); });
+	menu.Add("Export as GitHub Markdown..", IdeCommonImg::MD(), [this] {
 		ExportMarkdown(GetQTF(), GetFileTitle(filename));
 	});
 }

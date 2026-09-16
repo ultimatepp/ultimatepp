@@ -92,10 +92,10 @@ void IconDes::EditBar(Bar& bar)
 	bar.Add(c, AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
 	bar.Separator();
 	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
-	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
+	        [this] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
 	   .Check(paste_mode == PASTE_OPAQUE);
 	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
-	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
+	        [this] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
 	   .Check(paste_mode == PASTE_BACK);
 	bar.Separator();
 	bar.Add(c && c->undo.GetCount(), "Undo", CtrlImg::undo(), THISBACK(Undo))
@@ -114,7 +114,7 @@ void IconDes::SettingBar(Bar& bar)
 	using namespace IconDesKeys;
 	Slot *c = IsCurrent() ? &Current() : NULL;
 	bar.Add("Show secondary grid", IconDesImg::grid2(),
-	        [=] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
+	        [this] { show_grid2 = !show_grid2; Refresh(); SetBar(); })
 	   .Check(show_grid2);
 	bar.Add(c, AK_ZOOM_IN, IconDesImg::ZoomMinus(), THISBACK(ZoomOut))
 		.Enable(magnify > 1);
@@ -145,10 +145,10 @@ void IconDes::ImageBar(Bar& bar)
 	bar.Add(c, AK_INTERPOLATE, IconDesImg::Interpolate(), THISBACK(Interpolate));
 	bar.Add(c, AK_HMIRROR, IconDesImg::MirrorX(), THISBACK(MirrorX));
 	bar.Add(c, AK_VMIRROR, IconDesImg::MirrorY(), THISBACK(MirrorY));
-	bar.Add(c, AK_DMIRROR, IconDesImg::MirrorD(), [=] { MirrorD(false); });
+	bar.Add(c, AK_DMIRROR, IconDesImg::MirrorD(), [this] { MirrorD(false); });
 	bar.Add(c, AK_HSYM, IconDesImg::SymmX(), THISBACK(SymmX));
 	bar.Add(c, AK_VSYM, IconDesImg::SymmY(), THISBACK(SymmY));
-	bar.Add(c, AK_DSYM, IconDesImg::SymmD(), [=] { MirrorD(true); });
+	bar.Add(c, AK_DSYM, IconDesImg::SymmD(), [this] { MirrorD(true); });
 	bar.Add(c, AK_ROTATE, IconDesImg::Rotate(), THISBACK(Rotate));
 	bar.Add(c, AK_FREE_ROTATE, IconDesImg::FreeRotate(), THISBACK(FreeRotate));
 	bar.Add(c, AK_RESCALE, IconDesImg::Rescale(), THISBACK(SmoothRescale));
@@ -191,12 +191,12 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(textdlg.IsOpen());
 	bar.Separator();
 	bar.Add("Antialiased", IconDesImg::aa(),
-	        [=] { antialiased = !antialiased; Refresh(); SetBar(); })
+	        [this] { antialiased = !antialiased; Refresh(); SetBar(); })
 	   .Check(antialiased && !doselection)
 	   .Enable(!doselection);
 	bar.Separator();
 	auto Fill = [&](const char *name, const Image& img, int type) {
-		bar.Add(name, img, [=] { fill_type = type; Refresh(); SetBar(); })
+		bar.Add(name, img, [this, type] { fill_type = type; Refresh(); SetBar(); })
 		   .Check(fill_type == type);
 	};
 	Fill("Exact Fill (Shift+Click)", fill_cursor, 0);

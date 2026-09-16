@@ -282,7 +282,7 @@ void SizeDlg::Set(Size sz, Size asz)
 SizeDlg::SizeDlg()
 {
 	CtrlLayoutOKCancel(*this, "Canvas size");
-	size << [=] { Sync(); };
+	size << [this] { Sync(); };
 }
 
 void DiagramEditor::ChangeSize()

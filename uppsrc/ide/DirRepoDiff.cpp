@@ -26,14 +26,14 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 
 	for(int i = 0; i < 2; i++) {
 		DropList& l = mode[i];
-		l << [=] { Mode(i); };
+		l << [this, i] { Mode(i); };
 
 		l.Add(Null, AttrText("Directory").NormalInk(LtBlue()).Italic());
 		for(String s : git)
 			l.Add(s, "git " + s);
 		AddSelectGit(l);
 
-		branch[i] << [=] { Revs(i); };
+		branch[i] << [this, i] { Revs(i); };
 	};
 
 	for(int i = 0; i < 2; i++) {
@@ -44,9 +44,9 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 		files_pane << log[i].RightPos(Zx(80), Zx(80) - DPI(2)).TopPos(y, cy);
 		files_pane << hash[i].RightPos(0, Zx(80) - DPI(2)).TopPos(y, cy);
 		hash[i].SetLabel("Copy Hash");
-		hash[i] << [=] { WriteClipboardText(~~r[i]); };
+		hash[i] << [this, i] { WriteClipboardText(~~r[i]); };
 		log[i].SetLabel("Copy Log");
-		log[i] << [=] { CopyGitRevisions(r[i]); };
+		log[i] << [this, i] { CopyGitRevisions(r[i]); };
 		y += lcy;
 		files_pane << r[i].HSizePos().TopPos(y, cy);
 		y += lcy + lcy / 2;
@@ -85,10 +85,10 @@ DirRepoDiffDlg::DirRepoDiffDlg()
 	Mode(0);
 	Mode(1);
 
-	compare ^= [=] { Compare(); };
+	compare ^= [this] { Compare(); };
 
-	dir1 << [=] { SyncCompare(); };
-	dir2 << [=] { SyncCompare(); };
+	dir1 << [this] { SyncCompare(); };
+	dir2 << [this] { SyncCompare(); };
 
 	session_id = String() << Random() << Random() << Random() << Random();
 

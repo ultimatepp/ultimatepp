@@ -427,7 +427,7 @@ void HexView::CharsetMenu(Bar& bar)
 
 void HexView::StdMenu(Bar& bar)
 {
-	bar.Add("Go to..", [=] { WhenGotoDlg(); })
+	bar.Add("Go to..", [this] { WhenGotoDlg(); })
 	   .Key(K_CTRL_G);
 	bar.Add("Columns", THISBACK(ColumnsMenu));
 	bar.Add("Charset", THISBACK(CharsetMenu));

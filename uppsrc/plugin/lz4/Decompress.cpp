@@ -119,7 +119,7 @@ void LZ4DecompressStream::Fetch()
 				return;
 			}
 			if(concurrent)
-				co & [=, &error] {
+				co & [this, &error, i] {
 					Workblock& t = wb[i];
 					t.dlen = LZ4_decompress_safe(~t.c, ~t.d, t.clen, maxblock);
 					CoWork::FinLock();

@@ -129,8 +129,8 @@ void LogOut::Create(bool append)
 	}
 #endif
 
-	char h[1200];
-	snprintf(h, 1200, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
+	char h[2200];
+	snprintf(h, 2200, "* %s %02d.%02d.%04d %02d:%02d:%02d, user: %s\n",
 	         exe, t.day, t.month, t.year, t.hour, t.minute, t.second, user);
 #ifdef PLATFORM_WIN32
 	dword n;

@@ -228,9 +228,7 @@ struct TextProperty : public SmartTextEditProperty<EditString>
 		p.Add(context.TopPos(0, c).RightPos(2 * w, w));
 		p.Add(qtf.TopPos(0, c).RightPos(0, w));
 		
-		qtf << [=] {
-			Qtf();
-		};
+		qtf << [this] { Qtf(); };
 	}
 
 	static ItemProperty *Create() { return new TextProperty; }
@@ -256,7 +254,7 @@ struct DocProperty : public SmartTextEditProperty<DocEdit>
 		large.SetLabel("...");
 		Add(qtf.RightPosZ(26, 24).TopPos(2, DPI(16)));
 		qtf.SetLabel("Qtf");
-		qtf << [=] { Qtf(); };
+		qtf << [this] { Qtf(); };
 		large <<= THISBACK(LargeEdit);
 	}
 

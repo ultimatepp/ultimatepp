@@ -65,8 +65,8 @@ Image DiagramEditor::CapIcon(int start, int end)
 Image DiagramEditor::DashIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
-		[=](Value& v) {
+		[this, i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
+		[this, i](Value& v) {
 			Size isz = icon_sz;
 			ImagePainter p(isz);
 			p.Clear();
@@ -88,8 +88,8 @@ Image DiagramEditor::DashIcon(int i)
 Image DiagramEditor::WidthIcon(int i)
 {
 	return MakeValue(
-		[=] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
-		[=](Value& v) {
+		[this, i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
+		[this, i](Value& v) {
 			Size isz = icon_sz;
 			ImagePainter p(isz);
 			p.Clear();
@@ -108,7 +108,7 @@ void DiagramEditor::Dashes(ColumnPopUp& m)
 	m.count = DiagramItem::DASH_COUNT;
 	m.columns = 4;
 	m.isz = icon_sz + Size(DPI(4), DPI(4));
-	m.WhenPaintItem = [=](Draw& w, const Rect& r, int ii, bool sel) {
+	m.WhenPaintItem = [this](Draw& w, const Rect& r, int ii, bool sel) {
 		PopPaint(w, r, DashIcon(ii), sel);
 	};
 }
@@ -127,7 +127,7 @@ void DiagramEditor::Shapes(ColumnPopUp& shape)
 	shape.count = DiagramItem::SHAPE_COUNT;
 	shape.columns = 5;
 	shape.isz = icon_sz + Size(DPI(4), DPI(4));
-	shape.WhenPaintItem = [=](Draw& w, const Rect& r, int ii, bool sel) {
+	shape.WhenPaintItem = [this](Draw& w, const Rect& r, int ii, bool sel) {
 		PopPaint(w, r, ii == DiagramItem::SHAPE_SVGPATH ? DiagramImg::FontSvg() :
 		               ii == DiagramItem::SHAPE_IMAGE   ? CtrlImg::open()
 		                                                : ShapeIcon(ii),
@@ -140,7 +140,7 @@ void DiagramEditor::Caps(ColumnPopUp& m, bool left)
 	m.count = DiagramItem::CAP_COUNT;
 	m.columns = 3;
 	m.isz = icon_sz + Size(DPI(4), DPI(4));
-	m.WhenPaintItem = [=](Draw& w, const Rect& r, int ii, bool sel) {
+	m.WhenPaintItem = [this, left](Draw& w, const Rect& r, int ii, bool sel) {
 		PopPaint(w, r, left ? CapIcon(ii, 0) : CapIcon(0, ii), sel);
 	};
 }
@@ -150,7 +150,7 @@ void DiagramEditor::Widths(ColumnPopUp& m)
 	m.count = 15;
 	m.columns = 5;
 	m.isz = icon_sz + Size(DPI(4), DPI(4));
-	m.WhenPaintItem = [=](Draw& w, const Rect& r, int ii, bool sel) {
+	m.WhenPaintItem = [this](Draw& w, const Rect& r, int ii, bool sel) {
 		PopPaint(w, r, WidthIcon(ii), sel);
 	};
 }
@@ -162,7 +162,7 @@ void Upp::DiagramEditor::DropColumns::Paint(Draw& w, const Rect& r, const Value&
 
 DiagramEditor::DropColumns::DropColumns()
 {
-	AddButton().Main().WhenPush << [=] {
+	AddButton().Main().WhenPush << [this] {
 		int c = popup.Execute(GetScreenRect(), this);
 		if(IsNull(c))
 			return;

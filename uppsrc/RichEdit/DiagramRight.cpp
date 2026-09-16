@@ -31,7 +31,7 @@ void DiagramEditor::RightDown(Point p, dword keyflags)
 				Dashes(menu);
 				menu.count = DiagramItem::DASH_COUNT + 15;
 				menu.columns = 5;
-				menu.WhenPaintItem = [=](Draw& w, const Rect& r, int ii, bool sel) {
+				menu.WhenPaintItem = [this](Draw& w, const Rect& r, int ii, bool sel) {
 					PopPaint(w, r, ii < DiagramItem::DASH_COUNT ? DashIcon(ii) : WidthIcon(ii - DiagramItem::DASH_COUNT), sel);
 				};
 

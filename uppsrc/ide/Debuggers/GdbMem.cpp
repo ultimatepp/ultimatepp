@@ -60,6 +60,6 @@ void Gdb::Memory()
 
 void Gdb::MemoryMenu(Bar& bar, const String& s)
 {
-	bar.Add("Memory at &&" + s, [=] { tab.Set(memory); MemoryLoad('&' + s, 2048, true); });
-	bar.Add("Memory at " + s, [=] { tab.Set(memory); MemoryLoad(s, 2048, true); });
+	bar.Add("Memory at &&" + s, [this, s] { tab.Set(memory); MemoryLoad('&' + s, 2048, true); });
+	bar.Add("Memory at " + s, [this, s] { tab.Set(memory); MemoryLoad(s, 2048, true); });
 }

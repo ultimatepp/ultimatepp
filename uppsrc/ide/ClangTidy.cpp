@@ -26,7 +26,7 @@ ClangTidyDlg::ClangTidyDlg()
 	for(String s : groups)
 		group.Add(s, s);
 
-	group.WhenSel = [=] {
+	group.WhenSel = [this] {
 		Group();
 	};
 
@@ -37,7 +37,7 @@ ClangTidyDlg::ClangTidyDlg()
 	
 	SetOptions();
 	
-	auto Set = [=](bool b) {
+	auto Set = [this](bool b) {
 		for(int i = 0; i < option.GetCount(); i++) {
 			auto *o = dynamic_cast<Option *>(option.GetCtrl(i, 0));
 			if(o)
@@ -46,17 +46,17 @@ ClangTidyDlg::ClangTidyDlg()
 		SyncGroupCounts();
 	};
 	
-	set << [=] { Set(true); };
-	reset << [=] { Set(false); };
+	set << [this, Set] { Set(true); };
+	reset << [this, Set] { Set(false); };
 	
-	save << [=] {
+	save << [this] {
 		ReadOptions();
 		String p = SelectFileSaveAs("*.json\n*.*");
 		if(!IsNull(p))
 			Save(p);
 	};
 
-	load << [=] {
+	load << [this] {
 		String p = SelectFileOpen("*.json\n*.*");
 		Load(p);
 		SetOptions();
@@ -101,7 +101,7 @@ void ClangTidyDlg::SetOptions()
 		OptionWithLink& opt = checks.Add(s);
 		opt.NoWantFocus();
 		opt << opt.text.NoSb().VCenter().HSizePos(DPI(18), 0).VSizePos();
-		opt << [=] { SyncGroupCounts(); };
+		opt << [this] { SyncGroupCounts(); };
 		String txt = "[g";
 		String cs;
 		if(cs.TrimStart("clang-analyzer-")) // TODO: Improve

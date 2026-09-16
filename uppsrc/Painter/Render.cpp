@@ -369,7 +369,7 @@ void BufferPainter::FinishPathJob()
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
 	
-	fill_job & [=] {
+	fill_job & [this] {
 		PAINTER_TIMING("CO FILL JOB");
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;

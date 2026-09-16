@@ -200,16 +200,16 @@ void RichEdit::OpenFindReplace()
 void RichEdit::SetupFindReplace0()
 {
 	findreplace.Title(t_("Find / Replace"));
-	findreplace.cancel ^= [=] { findreplace.Close(); };
-	findreplace.ok ^= [=] { Find(false); };
+	findreplace.cancel ^= [this] { findreplace.Close(); };
+	findreplace.ok ^= [this] { Find(false); };
 }
 
 void RichEdit::SetupFindReplace()
 {
 	CtrlLayoutOKCancel(findreplace, "");
 	SetupFindReplace0();
-	findreplace.amend ^= [=] { Replace(); };
-	findreplace.prev ^= [=] { Find(true); };
+	findreplace.amend ^= [this] { Replace(); };
+	findreplace.prev ^= [this] { Find(true); };
 	notfoundfw = found = false;
 	findreplace.NoCenter();
 }

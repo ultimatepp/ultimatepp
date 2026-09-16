@@ -252,7 +252,7 @@ void RichEdit::StdBar(Bar& menu)
 			menu.Add(b, "100 %", THISBACK1(SetObjectPercent, 100)).Check(IsObjectPercent(percent, 100));
 			menu.Break();
 			int delta = bar_object.GetYDelta();
-			auto pma = [=](String s) {
+			auto pma = [this](String s) {
 				if(pixel_mode)
 					s.Replace(" pt", "");
 				return s;
@@ -287,7 +287,7 @@ void RichEdit::StdBar(Bar& menu)
 					if(true) {
 						Vector<String> h = SpellerFindCloseWords(fixedlang ? fixedlang : formatinfo.language, w.ToString(), 10);
 						for(String s : h)
-							menu.Add(s, [=] {
+							menu.Add(s, [this, s] {
 								int pos, count;
 								GetWordAtCursorPos(pos, count);
 								if(count) {

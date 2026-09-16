@@ -56,7 +56,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("clang-format", "ClangFormat configuration file");
 	Type("", "Other");
 	
-	name << [=] {
+	name << [this] {
 		String ext = GetFileExt(~~name);
 		if(ext.GetCount()) {
 			ext = ext.Mid(1);
@@ -67,7 +67,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	name <<= ".cpp";
 	type <<= "cpp";
 	
-	type << [=] {
+	type << [this] {
 		String ext = ~type;
 		if(ext.GetCount()) {
 			String h = ~name;

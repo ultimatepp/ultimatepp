@@ -459,7 +459,7 @@ void TabBar::ContextMenu(Bar& bar)
 {
 	int ii = GetHighlight(); // Need copy to freeze it, [=] copies 'this' and thus reference to highlight
 	if (GetCursor() >= 0 && ii >= 0 && !IsCancelClose(ii))
-		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), [=] {
+		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), [this, ii] {
 			if (!CancelClose(tabs[ii].key)) {
 				WhenClose(tabs[ii].key);
 				TabClosed(tabs[ii].key);
@@ -470,16 +470,16 @@ void TabBar::ContextMenu(Bar& bar)
 			}
 		});
 	if (ii >= 0 && !IsCancelCloseAll(ii))
-		bar.Add(t_("Close others"), [=] { CloseAll(ii); });
+		bar.Add(t_("Close others"), [this, ii] { CloseAll(ii); });
     if (ii >= 0 && ii < GetCount() - 1 && !IsCancelCloseAll(-1, ii + 1))
-		bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
+		bar.Add(t_("Close right tabs"), [this, ii] { CloseAll(-1, ii + 1); });
 	if (mintabcount <= 0 && !IsCancelCloseAll(-1))
-		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
-	bar.Add(false, t_("Dock"), [=] {});
+		bar.Add(t_("Close all"), [this] { CloseAll(-1); });
+	bar.Add(false, t_("Dock"), [this] {});
 	if(ii >= 1)
-		bar.Sub(t_("Move left before"), [=](Bar& bar) {
+		bar.Sub(t_("Move left before"), [this, ii](Bar& bar) {
 			for(int i = 0; i < ii; i++)
-			   bar.Add(tabs[i].value.ToString(), [=] {
+			   bar.Add(tabs[i].value.ToString(), [this, ii, i] {
 				tabs.Move(ii,i);
 				SetCursor0(i);
 				Repos();
@@ -487,9 +487,9 @@ void TabBar::ContextMenu(Bar& bar)
 			});;
 		});
 	if(tabs.GetCount() - 2 >= ii && ii >= 0)
-		bar.Sub(t_("Move right after"),  [=](Bar& bar)  {
+		bar.Sub(t_("Move right after"), [this, ii](Bar& bar)  {
 			for(int i = ii+1; i < tabs.GetCount(); i++)
-				bar.Add(tabs[i].value.ToString(),[=] {
+				bar.Add(tabs[i].value.ToString(), [this, ii, i] {
 				tabs.Move(ii,i+1);
 				SetCursor0(i);
 				Repos();

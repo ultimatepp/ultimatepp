@@ -49,7 +49,7 @@ PasskeyDlg::PasskeyDlg()
 {
 	CtrlLayoutOK(*this, "Passkey");
 	
-	show_passkey << [=] { Sync(); };
+	show_passkey << [this] { Sync(); };
 	
 	Sync();
 }
@@ -96,7 +96,7 @@ GetPasskeyDlg::GetPasskeyDlg()
 {
 	CtrlLayoutOK(*this, "Passkey");
 	
-	show_passkey << [=] { Sync(); };
+	show_passkey << [this] { Sync(); };
 	
 	Sync();
 }
@@ -155,7 +155,7 @@ CredentialDlg::CredentialDlg()
 {
 	CtrlLayoutOKCancel(*this, "Credentials");
 	Sync();
-	show_password << [=] { Sync(); };
+	show_password << [this] { Sync(); };
 }
 
 struct CredentialsDlg : WithCredentialsLayout<TopWindow> {
@@ -185,19 +185,19 @@ CredentialsDlg::CredentialsDlg(const Vector<String>& url_hints)
 	list.ColumnWidths("500 200 200");
 	list.EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
-	list.WhenSel = [=] { Sync(); };
-	list.WhenLeftDouble = [=] { Edit(); };
+	list.WhenSel = [this] { Sync(); };
+	list.WhenLeftDouble = [this] { Edit(); };
 	
-	show_passwords << [=] { Sync(); };
-	add << [=] { Add(); };
-	edit << [=] { Edit(); };
-	remove << [=] { Remove(); };
-	clear << [=] {
+	show_passwords << [this] { Sync(); };
+	add << [this] { Add(); };
+	edit << [this] { Edit(); };
+	remove << [this] { Remove(); };
+	clear << [this] {
 		if(PromptYesNo("Remove all?"))
 			list.Clear();
 	};
 	
-	passkey << [=] { Passkey(); };
+	passkey << [this] { Passkey(); };
 }
 
 void CredentialsDlg::Passkey()

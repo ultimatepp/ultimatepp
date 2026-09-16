@@ -116,7 +116,7 @@ UsesDlg::UsesDlg()
 	CtrlLayoutOKCancel(*this, "Uses");
 	when.SetFilter(CondFilter);
 	text.SetDisplay(Single<UsesDisplay>());
-	text.WhenPush = [=] { New(); };
+	text.WhenPush = [this] { New(); };
 }
 
 struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
@@ -463,9 +463,9 @@ void PackageEditor::OptionMenu(Bar& bar)
 			bar.Add(b, "New " + opt_name[j] + "..", THISBACK1(AddOption, j));
 	bar.Separator();
 	b = option.IsCursor() && (int)option.Get(0) >= 0;
-	bar.Add(b, "Edit..", [=] { EditOption(false); })
+	bar.Add(b, "Edit..", [this] { EditOption(false); })
 		.Key(K_CTRL_ENTER);
-	bar.Add(b, "Duplicate..", [=] { EditOption(true); })
+	bar.Add(b, "Duplicate..", [this] { EditOption(true); })
 	   .Key(K_CTRL_D);
 	bar.Add(b, "Remove", THISBACK(RemoveOption))
 	   .Key(K_DELETE);
@@ -741,7 +741,7 @@ PackageEditor::PackageEditor()
 	Init(option);
 	option.WhenCursor = THISBACK(AdjustPackageOptionCursor);
 	option.WhenBar = THISBACK(OptionMenu);
-	option.WhenLeftDouble << [=] { EditOption(false); };
+	option.WhenLeftDouble << [this] { EditOption(false); };
 
 	Init(fileoption);
 	fileoption.WhenCursor = THISBACK(AdjustFileOptionCursor);
@@ -753,7 +753,7 @@ PackageEditor::PackageEditor()
 	bold <<=
 	italic <<= THISBACK(SaveOptionsLoad);
 	
-	merge << [=] { MergeNests(); };
+	merge << [this] { MergeNests(); };
 
 	FileCursor();
 }
@@ -766,7 +766,7 @@ MergeNestsDlg::MergeNestsDlg()
 {
 	CtrlLayoutOKCancel(*this, "Merge nests");
 	list.NoHeader().NoGrid().AddColumn();
-	mode << [=] { dir.Enable(~mode == 1); };
+	mode << [this] { dir.Enable(~mode == 1); };
 	dir.SetFilter(CharFilterFileName);
 	dir <<= "imported";
 	mode <<= 1;

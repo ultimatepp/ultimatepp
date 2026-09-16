@@ -20,10 +20,10 @@ DiagramEditor::DiagramEditor()
 
 	Add(text_editor);
 	text_editor.NoRuler().ViewBorder(0);
-	text_editor.WhenRefreshBar = [=] { SetBar(); };
-	text_editor.WhenEnter << [=] { FinishText(); };
-	text_editor.WhenEsc << [=] { edit_text = false; Sync(); };
-	text_editor.WhenAction << [=] {
+	text_editor.WhenRefreshBar = [this] { SetBar(); };
+	text_editor.WhenEnter << [this] { FinishText(); };
+	text_editor.WhenEsc << [this] { edit_text = false; Sync(); };
+	text_editor.WhenAction << [this] {
 		SyncEditorRect();
 	};
 
@@ -31,29 +31,29 @@ DiagramEditor::DiagramEditor()
 	   .NullImage(DiagramImg::InkNull())
 	   .StaticImage(DiagramImg::InkA());
 	ink.Tip(t_("Line color"));
-	ink << [=] { SetAttrs(ATTR_INK); };
+	ink << [this] { SetAttrs(ATTR_INK); };
 
 	paper.ColorImage(DiagramImg::Paper())
 	   .NullImage(DiagramImg::PaperNull())
 	   .StaticImage(DiagramImg::PaperA());
 	paper.Tip(t_("Background color"));
 
-	paper << [=] { SetAttrs(ATTR_PAPER); };
-	shape << [=] { SetAttrs(ATTR_SHAPE); SetFocus();};
+	paper << [this] { SetAttrs(ATTR_PAPER); };
+	shape << [this] { SetAttrs(ATTR_SHAPE); SetFocus();};
 	Shapes(shape.popup);
 	shape.popup.count = DiagramItem::SHAPE_SVGPATH;
 	
 	Caps(line_start.popup, true);
 	Caps(line_end.popup, false);
-	line_start << [=] { SetAttrs(ATTR_CAP0); SetFocus(); };
-	line_end << [=] { SetAttrs(ATTR_CAP1); SetFocus(); };
+	line_start << [this] { SetAttrs(ATTR_CAP0); SetFocus(); };
+	line_end << [this] { SetAttrs(ATTR_CAP1); SetFocus(); };
 
 
 	Widths(line_width.popup);
-	line_width << [=] { SetAttrs(ATTR_WIDTH); SetFocus(); };
+	line_width << [this] { SetAttrs(ATTR_WIDTH); SetFocus(); };
 
 	Dashes(line_dash.popup);
-	line_dash << [=] { SetAttrs(ATTR_DASH); SetFocus(); };
+	line_dash << [this] { SetAttrs(ATTR_DASH); SetFocus(); };
 
 	tl[0].shape = DiagramItem::SHAPE_LINE;
 	tl[1].shape = DiagramItem::SHAPE_ROUNDRECT;
@@ -64,7 +64,7 @@ DiagramEditor::DiagramEditor()
 	sb.AutoHide();
 	sb.WithSizeGrip();
 	AddFrame(sb);
-	sb.WhenScroll << [=] { Sync(); };
+	sb.WhenScroll << [this] { Sync(); };
 
 	editor = true;
 

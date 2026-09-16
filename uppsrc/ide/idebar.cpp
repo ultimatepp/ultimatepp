@@ -58,7 +58,7 @@ void Ide::File(Bar& menu)
 	if(findarg(ToLower(fn), ".cpp", ".c", ".cxx", ".h", ".cc", ".hpp") >= 0)
 		fn = ".cpp";
 	fn = "scratchpad" + fn;
-	menu.AddMenu(AK_SCRATCHPAD, CtrlImg::open(), [=] {
+	menu.AddMenu(AK_SCRATCHPAD, CtrlImg::open(), [this, fn] {
 			String path = ConfigFile(fn);
 			if(editfile == path && scratch_back.GetCount())
 				path = scratch_back;
@@ -115,8 +115,8 @@ void Ide::File(Bar& menu)
 	menu.MenuSeparator();
 
 	menu.Add(AK_OPENFILEDIR, THISBACK(OpenFileFolder));
-	menu.Add("Copy File Path", [=] { WriteClipboardText(GetActiveFilePath()); });
-	menu.Sub("Properties", [=](Bar& bar) { FilePropertiesMenu(bar); });
+	menu.Add("Copy File Path", [this] { WriteClipboardText(GetActiveFilePath()); });
+	menu.Sub("Properties", [this](Bar& bar) { FilePropertiesMenu(bar); });
 	menu.MenuSeparator();
 
 	menu.Add(AK_STATISTICS, THISBACK(Statistics))
@@ -147,7 +147,7 @@ void Ide::InsertAdvanced(Bar& bar)
 void Ide::Reformat(Bar& bar)
 {
 	LTIMESTOP("Reformat");
-	bar.Sub(!designer, "Reformat", [=] (Bar& menu) { ReformatMenu(menu); });
+	bar.Sub(!designer, "Reformat", [this] (Bar& menu) { ReformatMenu(menu); });
 }
 
 void Ide::EditSpecial(Bar& menu)
@@ -165,7 +165,7 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Convert all tabs to spaces");
 	menu.Add(b, AK_LINEENDINGS, THISBACK(EditMakeLineEnds))
 		.Help("Remove tabs and spaces at line endings");
-	menu.Add(b && editor.IsSelection(), AK_CONVERTOOVERRIDE, [=] { editor.ConvertToOverrides(); })
+	menu.Add(b && editor.IsSelection(), AK_CONVERTOOVERRIDE, [this] { editor.ConvertToOverrides(); })
 		.Help("Convert virtual function declarations to override (removes virtual, adds override)");
 	menu.Add(b, AK_TRANSLATESTRING, THISBACK(TranslateString))
 		.Help("Mark the current selection as translated string");
@@ -173,7 +173,7 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
-	menu.Add(AK_COPYRICH, [=] { CopyRich(); })
+	menu.Add(AK_COPYRICH, [this] { CopyRich(); })
 	    .Help("Copy selection as syntax highlithed richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
@@ -196,8 +196,8 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(b && editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
 	menu.MenuSeparator();
-	menu.Add(AK_COPY_POSITION, [=] { CopyPosition(); });
-	menu.Add(AK_GOTO_POSITION, [=] { GotoPosition(); });
+	menu.Add(AK_COPY_POSITION, [this] { CopyPosition(); });
+	menu.Add(AK_GOTO_POSITION, [this] { GotoPosition(); });
 }
 
 void Ide::SearchMenu(Bar& menu)
@@ -230,24 +230,24 @@ void Ide::SearchMenu(Bar& menu)
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");
-	menu.Sub("Find U++ debugging logs (DDUMP, DLOG...)", [=](Bar& bar) {
-		bar.Add("In workspace", [=] { FindDs(3); });
-		bar.Add("In current file", [=] { FindDs(0); });
-		bar.Add("In current file package", [=] { FindDs(1); });
-		bar.Add("In workspace files in current file nest", [=] { FindDs(2); });
+	menu.Sub("Find U++ debugging logs (DDUMP, DLOG...)", [this](Bar& bar) {
+		bar.Add("In workspace", [this] { FindDs(3); });
+		bar.Add("In current file", [this] { FindDs(0); });
+		bar.Add("In current file package", [this] { FindDs(1); });
+		bar.Add("In workspace files in current file nest", [this] { FindDs(2); });
 	});
-	menu.Sub("Find all U++ logs (RLOG, DLOG, LOG...)", [=](Bar& bar) {
-		bar.Add("In workspace", [=] { FindDs(3, true); });
-		bar.Add("In current file", [=] { FindDs(0, true); });
-		bar.Add("In current file package", [=] { FindDs(1, true); });
-		bar.Add("In workspace files in current file nest", [=] { FindDs(2, true); });
+	menu.Sub("Find all U++ logs (RLOG, DLOG, LOG...)", [this](Bar& bar) {
+		bar.Add("In workspace", [this] { FindDs(3, true); });
+		bar.Add("In current file", [this] { FindDs(0, true); });
+		bar.Add("In current file package", [this] { FindDs(1, true); });
+		bar.Add("In workspace files in current file nest", [this] { FindDs(2, true); });
 	});
-	menu.Add("Find GIT conflicts", [=] { FindGitConflicts(); });
+	menu.Add("Find GIT conflicts", [this] { FindGitConflicts(); });
 	if(experimental)
-		menu.Sub("Find uninitialized member variables", [=](Bar& bar) {
-			bar.Add("In current file package", [=] { FindUnitializedMemberVariables(0); });
-			bar.Add("In workspace files in current file nest", [=] { FindUnitializedMemberVariables(1); });
-			bar.Add("In workspace", [=] { FindUnitializedMemberVariables(2); });
+		menu.Sub("Find uninitialized member variables", [this](Bar& bar) {
+			bar.Add("In current file package", [this] { FindUnitializedMemberVariables(0); });
+			bar.Add("In workspace files in current file nest", [this] { FindUnitializedMemberVariables(1); });
+			bar.Add("In workspace", [this] { FindUnitializedMemberVariables(2); });
 		});
 }
 
@@ -333,16 +333,16 @@ void Ide::ReformatMenu(Bar& menu)
 	LTIMESTOP("Reformat");
 	bool b = !editor.IsReadOnly();
 	
-	menu.Add(b, AK_REFORMAT_CODE, [=] { ReformatCode(); })
+	menu.Add(b, AK_REFORMAT_CODE, [this] { ReformatCode(); })
 		.Help("Reformat current file with clang-format");
-	menu.Add(b, AK_REFORMAT_CODE2, [=] { ReformatCodeDlg(); });
+	menu.Add(b, AK_REFORMAT_CODE2, [this] { ReformatCodeDlg(); });
 	menu.Separator();
-	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_JSON, [=] { FormatJSON(); })
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_JSON, [this] { FormatJSON(); })
 	    .Help("Reformat JSON");
-	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_XML, [=] { FormatXML(); })
+	menu.Add(b || !editor.IsSelection(), AK_REFORMAT_XML, [this] { FormatXML(); })
 	    .Help("Reformat XML");
 	menu.Separator();
-	menu.Add(b, AK_REFORMAT_COMMENT, [=] { ReformatComment(); })
+	menu.Add(b, AK_REFORMAT_COMMENT, [this] { ReformatComment(); })
 	    .Help("Reformat multiline comment into paragraph");
 }
 
@@ -452,9 +452,9 @@ void Ide::Setup(Bar& menu)
 	menu.MenuSeparator();
 	menu.Add(HasGit(), "UppHub..", IdeImg::UppHub(), [] { UppHub(); });
 #ifdef PLATFORM_WIN32
-	menu.Add("Vcpkg..", IdeImg::Vcpkg(), [=] { Vcpkg(); });
+	menu.Add("Vcpkg..", IdeImg::Vcpkg(), [this] { Vcpkg(); });
 #endif
-	menu.Add("Clone U++ GitHub sources..", [=] {
+	menu.Add("Clone U++ GitHub sources..", [this] {
 		if(SetupGITMaster()) {
 			IdeAgain = true;
 			Break();
@@ -466,7 +466,7 @@ void Ide::Setup(Bar& menu)
 	if(wspc[0] == "ide") {
 		for(int i = 0; i < wspc.GetCount(); i++) {
 			if(wspc[i] == "ide/Core") {
-				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
+				menu.Add("Upgrade TheIDE..", [this] { UpgradeTheIDE(); });
 				break;
 			}
 		}
@@ -474,7 +474,7 @@ void Ide::Setup(Bar& menu)
 #endif
 
 #if !defined(PLATFORM_COCOA) && !defined(PLATFORM_WIN32) && !defined(FLATPAK)
-	menu.Add("Install theide.desktop", [=] { InstallDesktop(); });
+	menu.Add("Install theide.desktop", [this] { InstallDesktop(); });
 #endif
 
 	if(menu.IsMenuBar())
@@ -494,8 +494,8 @@ void Ide::SetupMobilePlatforms(Bar& menu)
 
 void Ide::SetupAndroidMobilePlatform(Bar& menu, const AndroidSDK& androidSDK)
 {
-	menu.Add("SDK Manager", [=] { LaunchAndroidSDKManager(androidSDK); });
-	menu.Add("AVD Manager", [=] { LaunchAndroidAVDManager(androidSDK); });
+	menu.Add("SDK Manager", [this, androidSDK] { LaunchAndroidSDKManager(androidSDK); });
+	menu.Add("AVD Manager", [this, androidSDK] { LaunchAndroidAVDManager(androidSDK); });
 }
 
 void Ide::ProjectRepo(Bar& menu)
@@ -547,11 +547,11 @@ void Ide::Project(Bar& menu)
 			String pp = GetActivePackageDir();
 			menu.AddMenu(FileExists(pp) && editfile_repo,
 			             (editfile_repo == SVN_DIR ? "Show svn history of " : "Show git history of ") + GetFileName(pp),
-			             IdeImg::SvnDiff(), [=] {
+			             IdeImg::SvnDiff(), [this, pp] {
 				if(FileExists(pp))
 					RunRepoDiff(pp);
 			});
-			menu.Add("Invoke gitk at " + pp, [=] {
+			menu.Add("Invoke gitk at " + pp, [this, pp] {
 				Host h;
 				CreateHost(h, false, false);
 				h.ChDir(pp);
@@ -569,7 +569,7 @@ void Ide::Project(Bar& menu)
 		if(HasClangTidy()) {
 			menu.MenuSeparator();
 			menu.AddMenu("Check project with Clang-Tidy", IdeImg::ClangTidy(),
-			         [=] { ClangTidy([](const String&) { return true; }); });
+			         [this] { ClangTidy([](const String&) { return true; }); });
 		}
 	}
 }
@@ -594,15 +594,15 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	int i = filelist.GetCursor() + 1;
 	if(i >= 0 && i < fileindex.GetCount() && fileindex[i] < actual.file.GetCount())
 		path = SourcePath(actualpackage, actual.file[fileindex[i]]);
-	menu.Sub(candiff, "Compare with", [=](Bar& bar) {
-		bar.AddMenu(candiff, AK_DIFF, IdeImg::Diff(), [=] { Diff(); })
+	menu.Sub(candiff, "Compare with", [this, candiff, path](Bar& bar) {
+		bar.AddMenu(candiff, AK_DIFF, IdeImg::Diff(), [this] { Diff(); })
 		    .Help("Show differences between the current and selected file");
 		bar.AddMenu(candiff && FileExists(GetTargetLogPath()),
-		            AK_DIFFLOG, IdeImg::DiffLog(), [=] { DiffWith(GetTargetLogPath(), IdeImg::DiffLog()); })
+		            AK_DIFFLOG, IdeImg::DiffLog(), [this] { DiffWith(GetTargetLogPath(), IdeImg::DiffLog()); })
 		    .Help("Show differences between the current file and the log");
 		if(FileExists(path))
 			bar.AddMenu(candiff && FileExists(path), path,
-			            IdeImg::DiffNext(), [=] { DiffWith(path, IdeImg::DiffNext()); })
+			            IdeImg::DiffNext(), [this, path] { DiffWith(path, IdeImg::DiffNext()); })
 			    .Help("Show differences between the current and the next file");
 		Vector<String> file;
 		if(bar.IsMenuBar()) {
@@ -621,7 +621,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 					sep = false;
 					if(++ii > 80) // sanity..
 						return;
-					bar.AddMenu(p, IdeImg::DiffNext(), [=] { DiffWith(p, IdeImg::DiffNext()); })
+					bar.AddMenu(p, IdeImg::DiffNext(), [this, p] { DiffWith(p, IdeImg::DiffNext()); })
 					    .Help("Show differences between the current and that file");
 				}
 		}
@@ -638,12 +638,12 @@ void Ide::FilePropertiesMenu(Bar& menu)
 				GetRepo(rp);
 				String p = editfile.Mid(rp.GetCount());
 				p.Replace("\\", "/");
-				menu.AddMenu("Show file on github", IdeImg::GitHub(), [=] {
+				menu.AddMenu("Show file on github", IdeImg::GitHub(), [this, origin, rp, p] {
 					LaunchWebBrowser(origin + "/blob/" + GetGitBranchRaw(rp) + p);
 				});
 			}
 		}
-		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [=] {
+		menu.AddMenu(candiff, AK_SVNDIFF, IdeImg::SvnDiff(), [this] {
 			if(!IsNull(editfile))
 				RunRepoDiff(editfile, editor.GetCursorLine());
 		}).Text(txt + "file..");
@@ -701,27 +701,39 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			}
 
 			if(mine.GetCount() || theirs.GetCount() || original.GetCount()) {
-				menu.Sub(editfile_repo == GIT_DIR ? "GIT Conflict" : "SVN Conflict", [=] (Bar& bar) {
+				menu.Sub(editfile_repo == GIT_DIR ? "GIT Conflict" : "SVN Conflict", [this, mine, theirs, original] (Bar& bar) {
 					if(mine.GetCount() && theirs.GetCount())
-						bar.Add("Compare mine <-> theirs", [=] { DiffFiles("mine", mine, "theirs", theirs); });
+						bar.Add("Compare mine <-> theirs", [this, mine, theirs, original] {
+							DiffFiles("mine", mine, "theirs", theirs);
+						});
 					if(mine.GetCount() && original.GetCount())
-						bar.Add("Compare mine <-> original", [=] { DiffFiles("mine", mine, "original", original); });
+						bar.Add("Compare mine <-> original", [this, mine, theirs, original] {
+							DiffFiles("mine", mine, "original", original);
+						});
 					if(theirs.GetCount() && original.GetCount())
-						bar.Add("Compare theirs <-> original", [=] { DiffFiles("theirs", theirs, "original", original); });
+						bar.Add("Compare theirs <-> original", [this, mine, theirs, original] {
+							DiffFiles("theirs", theirs, "original", original);
+						});
 					if(mine.GetCount())
-						bar.Add("Compare current <-> mine", [=] { DiffFiles("current", editfile, "mine", mine); });
+						bar.Add("Compare current <-> mine", [this, mine, theirs, original] {
+							DiffFiles("current", editfile, "mine", mine);
+						});
 					if(theirs.GetCount())
-						bar.Add("Compare current <-> theirs", [=] { DiffFiles("current", editfile, "theirs", theirs); });
+						bar.Add("Compare current <-> theirs", [this, mine, theirs, original] {
+							DiffFiles("current", editfile, "theirs", theirs);
+						});
 					if(original.GetCount())
-						bar.Add("Compare current <-> original", [=] { DiffFiles("current", editfile, "original", original); });
+						bar.Add("Compare current <-> original", [this, mine, theirs, original] {
+							DiffFiles("current", editfile, "original", original);
+						});
 					bar.Separator();
-					bar.Add("Use mine", [=] {
+					bar.Add("Use mine", [this, mine, theirs, original] {
 						if(PromptYesNo("Do you want to overwrite current with [* mine]?")) {
 							SaveFile();
 							Upp::SaveFile(editfile, LoadConflictFile(mine));
 						}
 					});
-					bar.Add("Use theirs", [=] {
+					bar.Add("Use theirs", [this, mine, theirs, original] {
 						if(PromptYesNo("Do you want to overwrite current with [* theirs]?")) {
 							SaveFile();
 							Upp::SaveFile(editfile, LoadConflictFile(theirs));
@@ -753,7 +765,7 @@ void Ide::ClangTidyPackage(Bar& menu)
 	if(HasClangTidy()) {
 		int pi = GetPackageIndex();
 		bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();
-		menu.Add(b, "Check package with Clang-Tidy", IdeImg::ClangTidy(), [=] {
+		menu.Add(b, "Check package with Clang-Tidy", IdeImg::ClangTidy(), [this, pi] {
 			const Package& p = IdeWorkspace().GetPackage(pi);
 			String pp = PackageDirectory(IdeWorkspace()[pi]);
 			Index<String> pf;
@@ -794,7 +806,7 @@ void Ide::BuildMenu(Bar& menu)
 	b = b && idestate == EDITING;
 	menu.Add(b, AK_CLEAN, THISBACK(Clean))
 		.Help("Remove all intermediate files");
-//	menu.Add("Reset BLITZ", [=] { ResetBlitz(); })
+//	menu.Add("Reset BLITZ", [this] { ResetBlitz(); })
 //	    .Help("All files will be considered for BLITZ, regardless of time");
 	menu.Add(b, AK_REBUILDALL, IdeImg::build_rebuild_all(), THISBACK(RebuildAll))
 		.Help("Remove all intermediate files & build");
@@ -830,10 +842,10 @@ void Ide::BuildMenu(Bar& menu)
 	menu.Add(ffb, AK_FINDPREVERROR, THISBACK(FindPrevError))
 		.Help("Find previous " + hh + "according to console pane");
 	menu.MenuSeparator();
-	menu.Add(!IsNull(target), AK_OPENOUTDIR, [=] { ShellOpenFolder(GetFileFolder(target)); });
-	menu.Add(!IsNull(target), AK_COPYOUTDIR, [=] { WriteClipboardText(GetFileFolder(target)); });
-	menu.Add(!IsNull(target), AK_COPYTARGET, [=] { WriteClipboardText(target); });
-	menu.Add(!IsNull(target), AK_OUTDIRTERMINAL, [=] { LaunchTerminal(GetFileFolder(target)); });
+	menu.Add(!IsNull(target), AK_OPENOUTDIR, [this] { ShellOpenFolder(GetFileFolder(target)); });
+	menu.Add(!IsNull(target), AK_COPYOUTDIR, [this] { WriteClipboardText(GetFileFolder(target)); });
+	menu.Add(!IsNull(target), AK_COPYTARGET, [this] { WriteClipboardText(target); });
+	menu.Add(!IsNull(target), AK_OUTDIRTERMINAL, [this] { LaunchTerminal(GetFileFolder(target)); });
 	menu.Add("SBOM..", [this] { CreateSBOM(); });
 }
 
@@ -888,14 +900,14 @@ void Ide::DebugMenu(Bar& menu)
 void Ide::AssistMenu(Bar& menu)
 {
 	LTIMESTOP("AssistMenu");
-	menu.Add(!designer, AK_ASSIST, [=] { editor.Assist(true); });
-	auto& m = menu.Add(!designer, AK_JUMPS, [=] { ContextGoto(); });
+	menu.Add(!designer, AK_ASSIST, [this] { editor.Assist(true); });
+	auto& m = menu.Add(!designer, AK_JUMPS, [this] { ContextGoto(); });
 	if(IsInLogFile())
 		m.Text("Try to find the source of log line");
 	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
 	menu.Add(!designer, AK_IDUSAGE, THISBACK(IdUsage));
-	menu.Add(!designer, AK_USAGE, [=] { Usage(); });
+	menu.Add(!designer, AK_USAGE, [this] { Usage(); });
 	menu.Add(!designer, AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Events));
@@ -936,7 +948,7 @@ void Ide::BrowseMenu(Bar& menu)
 
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
-			menu.Add("Reindex all source files", [=] {
+			menu.Add("Reindex all source files", [this] {
 				editor.ms_cache.Clear();
 				PPInfo::RescanAll();
 				for(FileAnnotation& m : CodeIndex())
@@ -964,24 +976,24 @@ void Ide::BrowseMenu(Bar& menu)
 
 	if(AssistDiagnostics) {
 		menu.MenuSeparator();
-		menu.Add("Dump and show whole current index", [=] {
+		menu.Add("Dump and show whole current index", [this] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path);
 			EditFile(path);
 		});
-		menu.Add("Dump and show current file index", [=] {
+		menu.Add("Dump and show current file index", [this] {
 			String path = CacheFile("index_" + AsString(Random()) + AsString(Random()));
 			DumpIndex(path, editfile);
 			EditFile(path);
 		});
-		menu.Add("Current file parse errors", [=] { EditFile(CacheFile("parse_errors")); });
-		menu.Add("Current file autocomplete errors", [=] { EditFile(CacheFile("autocomplete_errors")); });
-		menu.Add("Current parsed file content", [=] {
+		menu.Add("Current file parse errors", [this] { EditFile(CacheFile("parse_errors")); });
+		menu.Add("Current file autocomplete errors", [this] { EditFile(CacheFile("autocomplete_errors")); });
+		menu.Add("Current parsed file content", [this] {
 			String p = CacheFile("CurrentContext" + AsString(Random()) + AsString(Random()) + ".txt");
 			Upp::SaveFile(p, editor.CurrentContext().content);
 			EditFile(p);
 		});
-		menu.Add("Current include path", [=] {
+		menu.Add("Current include path", [this] {
 			PromptOK("\1" + Join(Split(GetCurrentIncludePath(),';'), "\n"));
 		});
 	}
@@ -1022,7 +1034,7 @@ void Ide::MainMenu(Bar& menu)
 		.Help("Package & file functions, exports, bookmarks");
 	menu.Add("Edit", THISBACK(Edit))
 		.Help("Clipboard, find & replace, spaces / tabs conversion, scope highlighting");
-	menu.Sub("Search", [=](Bar& bar) { SearchMenu(bar); });
+	menu.Sub("Search", [this](Bar& bar) { SearchMenu(bar); });
 	if(HasMacros())
 		menu.Add("Macro", THISBACK(MacroMenu))
 			.Help("Editor & IDE macros");
@@ -1095,7 +1107,7 @@ void Ide::ConsoleMenu(Bar& menu)
 		.Key(K_CTRL_V)
 		.Help("Append selection to system console");
 	menu.Separator();
-	menu.Add(AK_FIND, [=] {
+	menu.Add(AK_FIND, [this] {
 		console.FindReplace(false, true, false);
 	});
 	menu.Separator();
@@ -1127,14 +1139,14 @@ void Ide::SetToolBar()
 
 void Ide::EditorMenu(Bar& bar)
 {
-	bar.Sub("Assist", [=](Bar& bar) { AssistMenu(bar); });
+	bar.Sub("Assist", [this](Bar& bar) { AssistMenu(bar); });
 	Reformat(bar);
 	InsertAdvanced(bar);
 //	bar.Add("Find and Replace", THISBACK(SearchMenu));
 	bar.MenuSeparator();
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
-            "Compare with clipboard..", IdeImg::DiffClip(), [=]() {
+            "Compare with clipboard..", IdeImg::DiffClip(), [this]() {
         DiffDlg& dlg = CreateNewWindow<DiffDlg>();
         dlg.diff.left.RemoveFrame(dlg.p);
         String left = ReadClipboardText();

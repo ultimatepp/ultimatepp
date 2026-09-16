@@ -949,7 +949,7 @@ int Ide::GetPackageIndex()
 
 void Ide::DoDiff(FileDiff *df)
 {
-	auto Do = [=](const String& file, int line) {
+	auto Do = [this](const String& file, int line) {
 		EditFile(file);
 		editor.SetCursor(editor.GetPos64(line));
 		editor.SetFocus();

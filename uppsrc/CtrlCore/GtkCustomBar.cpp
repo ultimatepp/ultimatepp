@@ -169,15 +169,15 @@ Ctrl *TopWindow::MakeCustomTitleBar__(Color bk, int mincy)
 		custom_bar_frame->AddFrame(*custom_bar_icons);
 		custom_bar.Create();
 		
-		minicon << [=] {
+		minicon << [this] {
 			GtkWindow *w = gtk();
 			if(w)
 				gtk_window_iconify(w);
 		};
-		maxicon << [=] {
+		maxicon << [this] {
 			DoZoom();
 		};
-		closeicon << [=] {
+		closeicon << [this] {
 			if(IsEnabled()) {
 				IgnoreMouseUp();
 				WhenClose();

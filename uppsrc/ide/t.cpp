@@ -311,11 +311,11 @@ void LangDlg::RemoveLangAll()
 
 void LangDlg::LangMenu(Bar& bar)
 {
-	bar.Add(file.IsCursor(), "Add..", [=] { AddLang(); });
-	bar.Add(lang.IsCursor(), "Remove", [=] { RemoveLang(); });
+	bar.Add(file.IsCursor(), "Add..", [this] { AddLang(); });
+	bar.Add(lang.IsCursor(), "Remove", [this] { RemoveLang(); });
 	bar.Separator();
-	bar.Add(file.IsCursor(), "Add to all..", [=] { AddLangAll(); });
-	bar.Add(lang.IsCursor(), "Remove from all..", [=] { RemoveLangAll(); });
+	bar.Add(file.IsCursor(), "Add to all..", [this] { AddLangAll(); });
+	bar.Add(lang.IsCursor(), "Remove from all..", [this] { RemoveLangAll(); });
 }
 
 struct FontAndColorDisplay : Display {
@@ -400,16 +400,16 @@ LangDlg::LangDlg(Vector<TFile>& tfile)
 	file.AddColumn("File");
 	HeaderCtrl::Column& m = file.AddColumn().Ctrls<Option>().HeaderTab();
 	m.SetImage(IdeImg::work());
-	m.WhenAction = [=] { ToggleWork(); };
-	file.WhenEnterRow = [=] { EnterFile(); };
+	m.WhenAction = [this] { ToggleWork(); };
+	file.WhenEnterRow = [this] { EnterFile(); };
 	file.ColumnWidths("144 27");
 
 	lang.AddIndex();
 	lang.AddColumn("Versions");
-	lang.WhenBar = [=] (Bar& bar) { LangMenu(bar); };
+	lang.WhenBar = [this] (Bar& bar) { LangMenu(bar); };
 
 	text.AddColumn("Text");
-	text.WhenEnterRow = [=] { EnterText(); };
+	text.WhenEnterRow = [this] { EnterText(); };
 	
 	IdeHelpButton(help, "topic://Core/srcdoc/i18n_en-us");
 	

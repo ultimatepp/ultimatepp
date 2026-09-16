@@ -9,10 +9,10 @@
 void SelectPackageDlg::PackageMenu(Bar& menu)
 {
 	bool b = GetCurrentName().GetCount();
-	menu.Add("New package..", [=] { OnNew(); });
+	menu.Add("New package..", [this] { OnNew(); });
 	menu.Separator();
 	if(IsExternalMode()) {
-		menu.Add(b, "Delete package..", [=] {
+		menu.Add(b, "Delete package..", [this] {
 			String p = PackageFile(GetCurrentName());
 			if(FileExists(p) && PromptYesNo("Delete package?")) {
 				DeleteFile(p);
@@ -21,18 +21,18 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 		});
 	}
 	else {
-		menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
-		menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
-		menu.Add(b, "Copy package to..", [=] { MovePackage(true); });
-		menu.Add(b, "Move package to..", [=] { MovePackage(false); });
-		menu.Add(b, "Delete package..", [=] { DeletePackage(); });
+		menu.Add(b, "Duplicate package..", [this] { RenamePackage(true); });
+		menu.Add(b, "Rename package..", [this] { RenamePackage(false); });
+		menu.Add(b, "Copy package to..", [this] { MovePackage(true); });
+		menu.Add(b, "Move package to..", [this] { MovePackage(false); });
+		menu.Add(b, "Delete package..", [this] { DeletePackage(); });
 	}
-	menu.Add(b, "Change description..", [=] { ChangeDescription(); });
+	menu.Add(b, "Change description..", [this] { ChangeDescription(); });
 	if(b) {
 		menu.Separator();
 		String dir = PackageDirectory(GetCurrentName());
-		menu.Add(b, "Open package directory", [=] { ShellOpenFolder(dir); });
-		menu.Add(b, "Terminal at package directory", IdeImg::Terminal(), [=] { TheIde()->LaunchTerminal(dir); });
+		menu.Add(b, "Open package directory", [this, dir] { ShellOpenFolder(dir); });
+		menu.Add(b, "Terminal at package directory", IdeImg::Terminal(), [this, dir] { TheIde()->LaunchTerminal(dir); });
 	}
 }
 
@@ -239,7 +239,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 		}
 		r.bottom = r.top + cy;
 		recent.SetRect(r);
-		recent.WhenLink = [=](const String& s) {
+		recent.WhenLink = [this](const String& s) {
 			if(*s == 'A') {
 				int i = Atoi(~s + 1);
 				if(i >= 0 && lru.GetCount())
@@ -268,18 +268,18 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	if (!selectvars)
 		splitter.Hide();
 
-	newu << [=] { OnNew(); };
+	newu << [this] { OnNew(); };
 	kind.Add(MAIN, "Main packages");
 	kind.Add(NONMAIN, "Non-main packages");
 	kind.Add(ALL, "All packages");
-	kind << [=] { OnFilter(); };
+	kind << [this] { OnFilter(); };
 	kind <<= main ? MAIN : NONMAIN;
-	nest << [=] { OnFilter(); };
+	nest << [this] { OnFilter(); };
 	OnFilter();
 	nest <<= main ? 0 : ALL;
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
-	search << [=] { SyncList(Null); };
+	search << [this] { SyncList(Null); };
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
 	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
@@ -291,7 +291,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	clist.WhenBar = alist.WhenBar = THISBACK(PackageMenu);
 
 	upphub.SetImage(IdeImg::UppHub());
-	upphub << [=] {
+	upphub << [this] {
 		String p = UppHub();
 		OnBase();
 		if(p.GetCount()) {
@@ -602,17 +602,17 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 	if(!IsExternalMode()) {
 		bar.Add(base.IsCursor(), "Remove assembly..", THISBACK(OnBaseRemove))
 			.Key(K_CTRL_DELETE);
-		bar.Add("Purge assemblies..", [=] { RemoveInvalid(); });
+		bar.Add("Purge assemblies..", [this] { RemoveInvalid(); });
 		Vector<String> dirs = SplitDirs(GetVar("UPP"));
 		if(dirs.GetCount()) {
 			bar.Separator();
 			for(String s : dirs)
-				bar.Add("Terminal at " + s, IdeImg::Terminal(), [=] { TheIde()->LaunchTerminal(s); });
+				bar.Add("Terminal at " + s, IdeImg::Terminal(), [this, s] { TheIde()->LaunchTerminal(s); });
 		}
 		Vector<String> d = GetRepoDirs();
 		if(HasGit()) {
 			bar.Separator();
-			bar.Add("Clone U++ GitHub sources..", [=] {
+			bar.Add("Clone U++ GitHub sources..", [this] {
 				String vars = base.Get(0);
 				SetupGITMaster();
 				SyncBase(vars);

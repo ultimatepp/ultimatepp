@@ -108,7 +108,7 @@ void ZstdDecompressStream::Fetch()
 			w.irregular_d = false;
 		}
 
-		auto decompress = [=] {
+		auto decompress = [this, i] {
 			Workblock& w = wb[i];
 			if(ZSTD_isError(ZSTD_decompress(~w.decompressed_data, w.decompressed_sz, w.FramePtr(), w.frame_sz))) {
 				SetError();
