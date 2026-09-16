@@ -1,5 +1,5 @@
 topic "Esc scripting language";
-[b133;a83;*+117 $$1,0#31310162474203024125188417583966:subtitle]
+[b83;*+117 $$1,0#31310162474203024125188417583966:subtitle]
 [H4;b83;*+150 $$2,0#07864147445237544204411237157677:title]
 [l321;C@5;1 $$3,3#20902679421464641399138805415013:code]
 [b42;a42;ph2 $$4,4#45413000475342174754091244180557:text]
@@ -20,10 +20,19 @@ topic "Esc scripting language";
 [s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#4^ 4. Expressions]&]
 [s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#5^ 5. Statements]&]
 [s0; [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6^ 6. Standard library]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6`_1^ 6.1 General Functions]&]
+[s0;     [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6`_2^ 6.2 OS Functions 
+and Objects]&]
+[s0;         [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6`_2`_1^ 6.2.1 
+Functions]&]
+[s0;         [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6`_2`_2^ 6.2.2 
+FileOut]&]
+[s0;         [^topic`:`/`/Esc`/srcdoc`/Esc`_en`-us`#6`_2`_3^ 6.2.3 
+FileIn]&]
 [s0; &]
 [s2;:1: 1. Introduction&]
 [s4; Esc is a simple scripting language intended for embedding in 
-Ultimate`+`+ applications.&]
+U`+`+ applications.&]
 [s4; It is typeless, value oriented language with simple interfacing 
 with C`+`+/U`+`+ code. It is very simple yet quite complete language.&]
 [s2;:2: 2. Value types&]
@@ -437,7 +446,7 @@ case and default exists, does nothing.]
 :: [s0; Same as [C :][/C name][C  `= `@(][/C args][C ) `{ ... `};]]}}&]
 [s0; &]
 [s2;:6: 6. Standard library&]
-[s0;3 &]
+[s1;:6`_1: 6.1 General Functions&]
 [ {{2479:7521h1;@(216) [s0; Function]
 :: [s0; Comments]
 ::^@2 [s0; [*C is`_number(][/C x][*C )]]
@@ -474,15 +483,6 @@ function, otherwise is unspecified).]
 :: [s0; Returns sorted [/ array].]
 :: [s0; [*C order(][/C array][*C )]]
 :: [s0; Returns sort order of elements in the [/ array].]
-:: [s0; [*C IsDate(][/C map][*C )]]
-:: [s0; Returns 1 if map contains `"day`", `"month`" and `"year`" keys, 
-0 otherwise.]
-:: [s0; [*C IsTime(][/C map][*C )]]
-:: [s0; Returns 1 if map contains `"second`", `"minute`", `"hour`", 
-`"day`", `"month`" and `"year`" members, 0 otherwise.]
-:: [s0; [*C GetSysTime()]]
-:: [s0; Returns current time as map with `"second`", `"minute`", `"hour`", 
-`"day`", `"month`" and `"year`" members.]
 :: [s0; [*C sin(][/C x][*C )]&]
 [s0; [*C cos(][/C x][*C )]&]
 [s0; [*C tan(][/C x][*C )]&]
@@ -505,4 +505,62 @@ function, otherwise is unspecified).]
 [s0; [*C cbrt(][/C x][*C )]&]
 [s0; [*C pow(][/C base][*C , ][/C exp][*C )]]
 :: [s0; Well know mathematical functions.]}}&]
+[s0; &]
+[s1;:6`_2: 6.2 OS Functions and Objects&]
+[s1;:6`_2`_1: 6.2.1 Functions&]
+[s0; &]
+[ {{2905:7095h1;@(216) [s0; Function]
+:: [s0; Comments]
+::^@2 [s0; [*C OpenFileOut(][C array][*C )]]
+:: [s0; Opens the file at the specified string path represented by array 
+argument in write mode. Overwrites existing contents if the file 
+already exists, or creates a new file if it does not. Returns 
+a [* FileOut] object on success.]
+:: [s0; [*C OpenFileAppend(][C array][*C )]]
+:: [s0; Opens the file at the specified string path represented by array 
+argument in append mode. Preserves existing content and appends 
+new data to the end of the file. Creates a new file if it does 
+not exist. Returns a [* FileOut] object on success.]
+:: [s0; [*C OpenFileIn(][C array][*C )]]
+:: [s0; Opens the file at the specified string path represented by array 
+argument in read mode to allow reading contents. Returns null 
+if the file does not exist, or a [* FileIn ]object on success.]
+:: [s0; [*C IsDate(][/C map][*C )]]
+:: [s0; Returns 1 if map contains `"day`", `"month`" and `"year`" keys, 
+0 otherwise.]
+:: [s0; [*C IsTime(][/C map][*C )]]
+:: [s0; Returns 1 if map contains `"second`", `"minute`", `"hour`", 
+`"day`", `"month`" and `"year`" members, 0 otherwise.]
+:: [s0; [*C GetSysTime()]]
+:: [s0; Returns current time as map with `"second`", `"minute`", `"hour`", 
+`"day`", `"month`" and `"year`" members.]}}&]
+[s0; &]
+[s1;:6`_2`_2: 6.2.2 FileOut&]
+[s0;%- &]
+[ {{2905:7095h1;@(216) [s0; Method]
+:: [s0; Comments]
+::^@2 [s0; [*C Put(array)]]
+:: [s0; Writes the string specified by the array parameter directly 
+into the file.]
+:: [s0; [*C PutLine(array)]]
+:: [s0; Writes the string specified by the array parameter into the 
+file, followed by a newline character.]
+:: [s0; [*C Close()]]
+:: [s0; Closes the open file stream and releases associated system resources.]}}&]
+[s0; &]
+[s1;:6`_2`_3: 6.2.3 FileIn&]
+[s0;%- &]
+[ {{2905:7095h1;@(216) [s0; Method]
+:: [s0; Comments]
+::^@2 [s0; [*C IsEof()]]
+:: [s0; Checks whether the read stream has reached the end of the file. 
+Returns 1 if at the end of the file, otherwise 0.]
+:: [s0; [*C Get()]]
+:: [s0; Reads a single byte from the input file stream and advances 
+the read pointer.]
+:: [s0; [*C GetLine()]]
+:: [s0; Reads a single line of text from the file stream, omitting the 
+trailing newline character.]
+:: [s0; [*C Close()]]
+:: [s0; Closes the open file stream and releases associated system resources.]}}&]
 [s0; ]]
