@@ -15,7 +15,7 @@ external_dependency(DPKG) libtiff-dev;
 
 external_dependency(DPKG) liblzma-dev;
 
-external_dependency(DPKG) libjpeg62-turbo-dev;
+external_dependency(DPKG) libjpeg-turbo8-dev;
 
 file
 	tif.h,
