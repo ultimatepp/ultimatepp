@@ -139,6 +139,8 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:view];
 	[window makeKeyAndOrderFront:window];
+	[window setOpaque:YES];
+	[window setBackgroundColor:[NSColor windowBackgroundColor]];
 	
 	ONCELOCK {
 		[NSApp activateIgnoringOtherApps:YES];
