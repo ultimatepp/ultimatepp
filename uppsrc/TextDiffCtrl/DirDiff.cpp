@@ -140,7 +140,7 @@ DirDiffDlg::DirDiffDlg()
 			Refresh();
 		};
 
-		text->WhenSel << [this, text, &remove] {
+		text->WhenSel << [text, &remove] {
 			remove.Enable(text->IsSelection());
 		};
 	};

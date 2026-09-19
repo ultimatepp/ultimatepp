@@ -65,7 +65,7 @@ Image DiagramEditor::CapIcon(int start, int end)
 Image DiagramEditor::DashIcon(int i)
 {
 	return MakeValue(
-		[this, i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
+		[i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[this, i](Value& v) {
 			Size isz = icon_sz;
 			ImagePainter p(isz);
@@ -88,7 +88,7 @@ Image DiagramEditor::DashIcon(int i)
 Image DiagramEditor::WidthIcon(int i)
 {
 	return MakeValue(
-		[this, i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
+		[i] { return String((char *)&i, sizeof(i)) + String("D", (int)IsDarkTheme()); },
 		[this, i](Value& v) {
 			Size isz = icon_sz;
 			ImagePainter p(isz);
