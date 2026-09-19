@@ -638,7 +638,7 @@ void Ide::FilePropertiesMenu(Bar& menu)
 				GetRepo(rp);
 				String p = editfile.Mid(rp.GetCount());
 				p.Replace("\\", "/");
-				menu.AddMenu("Show file on github", IdeImg::GitHub(), [this, origin, rp, p] {
+				menu.AddMenu("Show file on github", IdeImg::GitHub(), [origin, rp, p] {
 					LaunchWebBrowser(origin + "/blob/" + GetGitBranchRaw(rp) + p);
 				});
 			}

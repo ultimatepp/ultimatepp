@@ -106,8 +106,8 @@ Uuid ScanUuid(const char *s)
 		if(*s == '\0')
 			return Null;
 		
-		byte h = InvXDigit[s[0]];
-		byte l = InvXDigit[s[1]];
+		byte h = InvXDigit[(unsigned char)s[0]];
+		byte l = InvXDigit[(unsigned char)s[1]];
 		
 		if((h | l) == 0xff)
 			return Null;

@@ -836,7 +836,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		m.kind = KIND_ERROR;
 		m.pretty = "No relevant autocomplete info found";
 	}
-	Upp::Sort(assist_item, [this](const AssistItem& a, const AssistItem& b) {
+	Upp::Sort(assist_item, [](const AssistItem& a, const AssistItem& b) {
 		return CombineCompare(a.priority, b.priority)(a.uname, b.uname) < 0;
 	});
 	int lcy = max(16, BrowserFont().Info().GetHeight());

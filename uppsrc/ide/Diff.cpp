@@ -99,7 +99,7 @@ void RepoDiff::Set(const String& f)
 			return commit;
 		};
 		
-		copy_hash << [this, GetHash] {
+		copy_hash << [GetHash] {
 			WriteClipboardText(GetHash());
 		};
 		
@@ -115,7 +115,7 @@ void RepoDiff::Set(const String& f)
 			origin.TrimEnd("\n");
 			origin.TrimEnd("\r");
 			origin.TrimEnd(".git");
-			github << [this, origin, GetHash] {
+			github << [origin, GetHash] {
 				LaunchWebBrowser(origin + "/commit/" + GetHash());
 			};
 		}

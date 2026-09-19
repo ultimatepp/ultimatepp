@@ -46,8 +46,8 @@ ClangTidyDlg::ClangTidyDlg()
 		SyncGroupCounts();
 	};
 	
-	set << [this, Set] { Set(true); };
-	reset << [this, Set] { Set(false); };
+	set << [Set] { Set(true); };
+	reset << [Set] { Set(false); };
 	
 	save << [this] {
 		ReadOptions();

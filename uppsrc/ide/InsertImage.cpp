@@ -170,7 +170,7 @@ InsertImageDlg::InsertImageDlg()
 	warning_lbl.Hide();
 	SyncWarning();
 	
-	tm.Set(-250, [this, SyncWarning] { SyncWarning(); });
+	tm.Set(-250, [SyncWarning] { SyncWarning(); });
 }
 
 void Ide::InsertImage()
