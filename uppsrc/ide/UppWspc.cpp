@@ -980,8 +980,8 @@ void WorkspaceWork::FileMenu(Bar& menu)
 				
 				String path = NormalizePath(GetActiveFilePath());
 				
-				menu.Add(IsCSourceFile(path), "Check file with Clang-Tidy", IdeImg::ClangTidy(), [this, ide, path] {
-					ide->ClangTidy([this, path](const String& p) {
+				menu.Add(IsCSourceFile(path), "Check file with Clang-Tidy", IdeImg::ClangTidy(), [ide, path] {
+					ide->ClangTidy([path](const String& p) {
 						return NormalizePath(p) == path;
 					});
 				});

@@ -229,27 +229,27 @@ void UppHubDlg::Menu(Bar& bar)
 	UppHubNest *n = Current();
 	if(Installed()) {
 		String p = hubdir + "/" + n->name;
-		bar.Add("Open " + n->name + " Directory", [this, p] { ShellOpenFolder(p); });
-		bar.Add("Copy " + n->name + " Directory Path", [this, p] { WriteClipboardText(p); });
+		bar.Add("Open " + n->name + " Directory", [p] { ShellOpenFolder(p); });
+		bar.Add("Copy " + n->name + " Directory Path", [p] { WriteClipboardText(p); });
 		if(ide)
-			bar.Add("Terminal at " + n->name + " Directory", IdeImg::Terminal(), [this, p, ide] {
+			bar.Add("Terminal at " + n->name + " Directory", IdeImg::Terminal(), [p, ide] {
 				ide->LaunchTerminal(p);
 			});
 		sep = true;
 	}
 
 	if(n && !n->website.IsEmpty()) {
-		bar.Add("Open " + n->name + " in Browser..", [this, n] { LaunchWebBrowser(n->website); });
+		bar.Add("Open " + n->name + " in Browser..", [n] { LaunchWebBrowser(n->website); });
 		sep = true;
 	}
 
 	if(sep)
 		bar.Separator();
 	
-	bar.Add("Open UppHub Directory", [this, hubdir] { ShellOpenFolder(hubdir); });
-	bar.Add("Copy UppHub Directory Path", [this, hubdir] { WriteClipboardText(hubdir); });
+	bar.Add("Open UppHub Directory", [hubdir] { ShellOpenFolder(hubdir); });
+	bar.Add("Copy UppHub Directory Path", [hubdir] { WriteClipboardText(hubdir); });
 	if(ide)
-		bar.Add("Terminal at UppHub Directory", IdeImg::Terminal(), [this, hubdir, ide] { ide->LaunchTerminal(hubdir); });
+		bar.Add("Terminal at UppHub Directory", IdeImg::Terminal(), [hubdir, ide] { ide->LaunchTerminal(hubdir); });
 	bar.Separator();
 	bar.Add("Install everything..", [this, hubdir] {
 		if(!PromptYesNo("Installing everything will take some time and will need a lot of storage space.&[/ Are you sure?"))
