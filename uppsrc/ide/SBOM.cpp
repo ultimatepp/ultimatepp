@@ -16,8 +16,10 @@ SBOMDlg::SBOMDlg()
 	list.AddColumn("Name", 200);
 	list.AddColumn("Type", 80);
 	list.AddColumn("Version", 120);
-	list.AddColumn("External", 50);
-	list.AddColumn("Scanned", 50);
+//	list.AddColumn("External", 50);
+	list.AddColumn("3rd party", 50);
+//	list.AddColumn("Scanned", 50);
+	list.AddColumn("Shipped", 50);
 	list.AddColumn("License", 300);
 	list.AddColumn("Depends", 300);
 	list.AddColumn("PURL", 300);
@@ -34,9 +36,21 @@ void SBOMDlg::Sync()
 	String s = ~search;
 	int sc = list.GetScroll();
 	list.Clear();
+	auto GetSourceDistributions = [](const Vector<Tuple<String, String, String>>& sd) -> String {
+		Index<String> seen;
+		String out;
+		for(const auto& t : sd)
+			if(seen.Find(t.a) < 0) {
+				seen.Add(t.a);
+				if(!out.IsEmpty()) out << ", ";
+				out << t.a;
+			}
+		return out;
+	};
 	for(SBOMComponent& m : cs) {
 		String lic = Join(m.licenses, ", ");
 		String dep = Join(m.depends, ", ");
+		
 		if(ToUpper(m.name + m.version + lic + dep + m.homepage + m.originUrl).Find(s) >= 0 &&
 		   get_i(mod, !m.external, true, true, m.external <= 1, m.external <= 1))
 			list.Add(m.name,
@@ -49,7 +63,7 @@ void SBOMDlg::Sync()
 			         m.purl,
 			         m.homepage,
 			         m.originUrl,
-			         Join(m.sourceDistributions, ", "));
+			         GetSourceDistributions(m.sourceDistributions));
 	}
 	list.ScrollTo(sc);
 }
@@ -57,12 +71,18 @@ void SBOMDlg::Sync()
 
 void SBOMDlg::Perform()
 {
-	mode.Add(SBOM_BASE, "0 Do not include external dependecies");
+	mode.Add(SBOM_BASE, "0 - Ignore dependencies");
+	mode.Add(SBOM_FULL, "1 - All dependencies as shipped");
+	mode.Add(SBOM_EXTERNAL_FULL, "2 - All dependencies as external");
+	mode.Add(SBOM_DIRECT, "3 - Direct dependencies as shipped");
+	mode.Add(SBOM_EXTERNAL_DIRECT, "4 - Direct dependencies as external");
+
+/*	mode.Add(SBOM_BASE, "0 Do not include external dependecies");
 	mode.Add(SBOM_FULL, "1 Include everything (win32-vcpkg / docker / flatpak)");
 	mode.Add(SBOM_EXTERNAL_FULL, "2 Include everything, exclude external dependencies from CVE scanning (linux binary)");
 	mode.Add(SBOM_DIRECT, "3 Include only direct external dependencies");
 	mode.Add(SBOM_EXTERNAL_DIRECT, "4 Include only direct external dependencies, exclude external dependencies from CVE scanning");  // 4
-
+*/
 	mode <<= 1;
 #ifdef PLATFORM_LINUX
 	mode <<= 2;

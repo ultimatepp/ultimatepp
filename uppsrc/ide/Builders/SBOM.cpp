@@ -82,11 +82,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			m.homepage = origin;
 		}
 
-		String ts, hash;
-		if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %cd\"")), " ", hash, ts)) {
+		String ts, hash, sha1;
+		if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
 			m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
 			if(m.originUrl.GetCount())
-				m.sourceDistributions << m.originUrl + "@" + hash;
+				//m.sourceDistributions << m.originUrl + "@" + hash;
+				m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
 		}
 
 		m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
@@ -183,7 +184,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					if(id.StartsWith("SPDXRef-resource-")) {
 						String url = p["downloadLocation"];
 						if(!IsNull(url) && url != "NONE")
-							component.sourceDistributions << url;
+							for(Value ch : p["checksums"])
+								component.sourceDistributions << MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
 					}
 				}
 				break;
@@ -291,12 +293,21 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(!IsNull(c.originUrl))
 			extRefs << Json("type", "distribution")
 			               ("url", c.originUrl);
-		
-		for(const String& url : c.sourceDistributions)
-			if(!IsNull(url))
-				extRefs << Json("type", "source-distribution")
-				               ("url", url);
 
+		auto SourceRef = [](const auto& s) {
+			Json r;
+			r("type", "source-distribution")("url", s.a);
+			String alg = ToUpper(s.b); // Fix found SPDX algos to CycloneDX (Uppercase + dash)
+			alg = alg.GetCount()>3 && alg[3]!='-' && alg.StartsWith("SHA") ? "SHA-" + alg.Mid(3) : alg;
+			if(alg.GetCount() && s.c.GetCount()) r("hashes", JsonArray() << Json("alg", alg)("content", s.c));
+			return r;
+		};
+		
+		for(const auto& s : c.sourceDistributions)
+		    if(!IsNull(s.a))
+		        extRefs << SourceRef(s);
+    
+    
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
 
