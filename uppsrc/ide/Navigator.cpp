@@ -545,7 +545,7 @@ void Navigator::SetList()
 	}
 	
 	if(sorting)
-		StableSort(litem, [this](const NavItem *a, const NavItem *b) {
+		StableSort(litem, [](const NavItem *a, const NavItem *b) {
 			return a->uname < b->uname;
 		});
 	

@@ -232,7 +232,7 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 	
 	bool b = what.GetCount(); // editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
 
-	auto OnlineSearch = [this, what](const String& url) {
+	auto OnlineSearch = [what](const String& url) {
 		String h = url;
 		h.Replace("%s", UrlEncode(what));
 		LaunchWebBrowser(h);
@@ -265,12 +265,12 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 
 	{
 		auto& x = menu.Add(b, "Search on " + name, Nvl(m, CtrlImg::Network()),
-		                  [this, uri, OnlineSearch] { OnlineSearch(uri); });
+		                  [uri, OnlineSearch] { OnlineSearch(uri); });
 		if(accel)
 			x.Key(AK_GOOGLE);
 	}
 	{
-		auto& x = menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [this, OnlineSearch] {
+		auto& x = menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), [OnlineSearch] {
 			OnlineSearch("https://www.google.com/search?q=%s&sitesearch=ultimatepp.org");
 		});
 		if(accel)
@@ -280,12 +280,12 @@ void Ide::OnlineSearchMenu(Bar& menu, const String& what, bool accel)
 	if(!menu.IsMenuBar() || search_engines.GetCount() < 2)
 		return;
 
-	menu.Sub(b, "Search on...", [this, OnlineSearch, Icon, b](Bar& menu) {
+	menu.Sub(b, "Search on...", [OnlineSearch, Icon, b](Bar& menu) {
 		for(int i = 1; i < search_engines.GetCount(); i++) {
 			String name = search_engines[i]["Name"];
 			String uri  = search_engines[i]["URI"];
 			menu.Add(b, name, Nvl(Icon(i), CtrlImg::Network()),
-			         [this, uri, OnlineSearch] { OnlineSearch(uri); });
+			         [uri, OnlineSearch] { OnlineSearch(uri); });
 		}
 	});
 }

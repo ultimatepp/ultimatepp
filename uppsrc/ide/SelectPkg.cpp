@@ -31,8 +31,8 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	if(b) {
 		menu.Separator();
 		String dir = PackageDirectory(GetCurrentName());
-		menu.Add(b, "Open package directory", [this, dir] { ShellOpenFolder(dir); });
-		menu.Add(b, "Terminal at package directory", IdeImg::Terminal(), [this, dir] { TheIde()->LaunchTerminal(dir); });
+		menu.Add(b, "Open package directory", [dir] { ShellOpenFolder(dir); });
+		menu.Add(b, "Terminal at package directory", IdeImg::Terminal(), [dir] { TheIde()->LaunchTerminal(dir); });
 	}
 }
 
@@ -607,7 +607,7 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 		if(dirs.GetCount()) {
 			bar.Separator();
 			for(String s : dirs)
-				bar.Add("Terminal at " + s, IdeImg::Terminal(), [this, s] { TheIde()->LaunchTerminal(s); });
+				bar.Add("Terminal at " + s, IdeImg::Terminal(), [s] { TheIde()->LaunchTerminal(s); });
 		}
 		Vector<String> d = GetRepoDirs();
 		if(HasGit()) {

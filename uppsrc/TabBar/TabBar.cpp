@@ -475,7 +475,7 @@ void TabBar::ContextMenu(Bar& bar)
 		bar.Add(t_("Close right tabs"), [this, ii] { CloseAll(-1, ii + 1); });
 	if (mintabcount <= 0 && !IsCancelCloseAll(-1))
 		bar.Add(t_("Close all"), [this] { CloseAll(-1); });
-	bar.Add(false, t_("Dock"), [this] {});
+	bar.Add(false, t_("Dock"), [] {});
 	if(ii >= 1)
 		bar.Sub(t_("Move left before"), [this, ii](Bar& bar) {
 			for(int i = 0; i < ii; i++)

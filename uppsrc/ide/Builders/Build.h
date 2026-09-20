@@ -37,7 +37,7 @@ struct SBOMComponent {
 
     String version;                      // For shipped components (regardless of linking)
 	String purl;                         // PURL from package manager, if available
-	Vector<String> sourceDistributions;  // Upstream source archive URLs, if available
+	Vector<Tuple<String, String, String>> sourceDistributions; // Upstream source archive URLs, hash algorithm, hash value
 
 	int    external = 0;                 // 0 - not external, 1 - direct, 2 - indirect
 
