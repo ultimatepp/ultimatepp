@@ -115,25 +115,28 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		SBOMComponent& m = cs.Add();
 		m.external = i < direct_n ? 1 : 2;
 		m.bom_ref = m.name = name;
-		String depends, archAndSource;
-		SplitTo(Sys("dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture} ${Source}' " + name), '\n', false,
-		        depends, m.version, m.homepage, archAndSource);
-		
-		int sp = archAndSource.Find(' ');
-		String arch    = archAndSource.Left(sp);                    // sp<0 → whole string is arch
-		String source  = sp >= 0 ? archAndSource.Mid(sp + 1) : "";
+		String depends, arch, source;
+		SplitTo(Sys((HasRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}' "
+		                      : "dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture}\n${Source}' ") + name),
+		                     '\n', false,
+		        depends, m.version, m.homepage, arch, source);
 		
 		String distro = "debian";
-		String osr = LoadFile("/etc/os-release");
+		static String osr = LoadFile("/etc/os-release");
+
 		for(String l : Split(osr, '\n'))
 			if(l.TrimStart("ID="))
 				distro = TrimBoth(l);
-		
-		m.purl = "pkg:deb/" + distro + "/" + name + "@" + m.version + "?arch=" + arch;
+		distro.TrimStart("\"");
+		distro.TrimEnd("\"");
+		m.purl << "pkg:" << (HasRPM() ? "rpm/" : "deb/")
+		       << distro << "/" << name << "@" << m.version << "?arch=" << arch;
 		if(source.GetCount() && source != name)
 			m.purl << "&source=" + source;
 		
 		for(String dep : Split(depends, ',')) {
+			if(*dep == '/')
+				continue;
 			int q = dep.Find('(');
 			if(q >= 0)
 				dep.Trim(q);
