@@ -9,15 +9,19 @@ flags(LIBSSH2DEBUG) LIBSSH2DEBUG;
 uses
 	Core;
 
-uses(WIN32 | NOSO) plugin/z;
+library(POSIX) "crypto ssl";
 
-library(POSIX) "crypto ssl z";
+library(WIN32 MSC) "libssl libcrypto";
 
-library(WIN32) "ssl crypto crypt32";
+library(WIN32) "usp10 gdi32 crypt32 ws2_32";
 
-library(WIN32) "usp10 gdi32 ws2_32";
+library(WIN32 !MSC) "ssl crypto";
 
 link(WIN32 MSC SO) /nodefaultlib:libc;
+
+external_dependency(WIN32) openssl;
+
+external_dependency(DPKG) libssl-dev;
 
 file
 	SSH.h,

@@ -4,10 +4,13 @@
 #include <Draw/Draw.h>
 
 struct tiff;
+#define TIFF_DISABLE_DEPRECATED
+#include <tiff.h>
+#include <tiffio.h>
+//#include <tiffiop.h>
 
-#include <plugin/tif/lib/tiff.h>
-#include <plugin/tif/lib/tiffio.h>
-#include <plugin/tif/lib/tiffiop.h>
+#include <tiffvers.h>
+#include <tiffconf.h>
 
 #undef int8
 #undef uint8

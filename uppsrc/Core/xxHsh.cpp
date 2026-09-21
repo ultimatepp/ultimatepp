@@ -1,6 +1,9 @@
 #include "Core.h"
 
-#include "lib/xxhash.h"
+#ifndef flagSHARED
+#define XXH_STATIC_LINKING_ONLY
+#endif
+#include <xxhash.h>
 
 namespace Upp {
 

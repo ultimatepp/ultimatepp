@@ -390,7 +390,7 @@ VectorMap<WString, WString>& EnvMap()
 
 const VectorMap<String, String>& Environment()
 {
-	VectorMap<String, String> *ptr;
+	VectorMap<String, String> *ptr = 0;
 	INTERLOCKED {
 		static ArrayMap< byte, VectorMap<String, String> > charset_env;
 		byte cs = GetDefaultCharset();

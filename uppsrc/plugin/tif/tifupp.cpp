@@ -2,6 +2,9 @@
 #include "tif.h"
 #include <Painter/Painter.h>
 
+
+#include <fcntl.h> // 2026-08-17 - Added for O_RDWR, O_CREAT, ...
+
 #define	tif_int32 int32_t
 #define	tif_uint32 uint32_t
 
@@ -58,7 +61,7 @@ void TiffAllocStat()
 			<< ", alloc = " << size_alloc_calls[i] << ", frees = " << size_free_calls[i]);
 }
 #endif
-
+/*
 extern "C" tdata_t _TIFFmalloc(tsize_t s)
 {
 	byte *p = new byte[s + 16];
@@ -113,6 +116,7 @@ extern "C" tdata_t _TIFFrealloc(tdata_t p, tsize_t s)
 extern "C" void _TIFFmemset(void* p, int v, tmsize_t c)           { memset(p, v, c); }
 extern "C" void _TIFFmemcpy(void* d, const void *s, tmsize_t c) { memcpy(d, s, c); }
 extern "C" int  _TIFFmemcmp(const void *p1, const void *p2, tmsize_t c) { return memcmp(p1, p2, c); }
+*/
 
 /*
 static void Blt2to4(byte *dest, const byte *src, unsigned count)
@@ -497,6 +501,36 @@ static void UnmapStream(thandle_t fd, tdata_t base, toff_t size)
 {
 }
 
+// 2026-08-17 - Pulled in from now unavailable tiffiop.h:
+// extern "C" int _TIFFgetMode(TIFFOpenOptions *opts, thandle_t clientdata, const char *mode, const char *module);
+
+// 2026-08-20 - Pulled in from tif_open.c (dynamic linking does not reach this anymore):
+static int _TIFFgetMode(TIFFOpenOptions *opts, thandle_t clientdata, const char *mode,
+                 const char *module)
+{
+    int m = -1;
+
+    switch (mode[0])
+    {
+        case 'r':
+            m = O_RDONLY;
+            if (mode[1] == '+')
+                m = O_RDWR;
+            break;
+        case 'w':
+        case 'a':
+            m = O_RDWR | O_CREAT;
+            if (mode[0] == 'w')
+                m |= O_TRUNC;
+            break;
+        default:
+            //_TIFFErrorEarly(opts, clientdata, module, "\"%s\": Bad mode", mode);
+            break;
+    }
+    return (m);
+}
+
+
 struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
 {
 	One<FileStream> fs = new FileStream;
@@ -612,9 +646,10 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 
 extern "C" {
 
+/*
 TIFFErrorHandler _TIFFwarningHandler = TIFRaster::Data::Warning;
 TIFFErrorHandler _TIFFerrorHandler   = TIFRaster::Data::Error;
-
+*/
 };
 
 static void packTileRGB(TIFRaster::Data *helper, uint32 x, uint32 y, uint32 w, uint32 h)

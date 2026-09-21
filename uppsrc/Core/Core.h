@@ -238,12 +238,7 @@ enum
 typedef int SOCKET;
 #endif
 
-#ifdef PLATFORM_WIN32
-#include <plugin/z/lib/zlib.h>
-#else
 #include <zlib.h>
-#endif
-
 #include <functional>
 #include <algorithm>
 #include <string>

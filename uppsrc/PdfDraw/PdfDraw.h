@@ -2,7 +2,6 @@
 #define _PDF_pdf_h_
 
 #include <Draw/Draw.h>
-#include <plugin/z/z.h>
 #include <Painter/Painter.h>
 
 namespace Upp {

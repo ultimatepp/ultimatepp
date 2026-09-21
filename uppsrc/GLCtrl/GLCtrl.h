@@ -11,12 +11,14 @@
 #define Status  int
 #endif
 
-#define GLEW_STATIC
+//#define GLEW_STATIC
 
-#include <plugin/glew/glew.h>
+//#include <plugin/glew/glew.h>
+#include <GL/glew.h>
 
 #ifdef PLATFORM_WIN32
-#include <plugin/glew/wglew.h>
+//#include <plugin/glew/wglew.h>
+#include <GL/wglew.h>
 #endif
 
 #include <GL/gl.h>

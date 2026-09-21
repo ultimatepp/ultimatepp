@@ -259,7 +259,7 @@ void StringBuffer::Realloc(dword n, const char *cat, int l)
 	if(n > INT_MAX)
 		n = INT_MAX;
 	bool realloced = false;
-	char *p;
+	char *p = 0;
 	if((int)(limit - pbegin) > 800) {
 		size_t sz = sizeof(Rc) + n + 1;
 		Rc *rc = (Rc *)pbegin - 1;

@@ -1,6 +1,7 @@
 #include <MySql/MySql.h>
 
 // debian: sudo apt-get install libmysqlclient-dev
+// debian: sudo apt-get install libmariadb-dev
 
 using namespace Upp;
 

@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-#include "MD4C/md4c.h"
+#include <md4c.h>
 
 namespace Upp {
 

@@ -3,37 +3,18 @@ description "zstd compressor (good ratio, very good speed)\3770,128,128";
 uses
 	Core;
 
+library
+	zstd;
+
+external_dependency(VCPKG) zstd;
+
+external_dependency(DPKG) libzstd-dev;
+
 file
 	zstd.h,
 	Compress.cpp,
-	Decompress.cpp,
 	Util.cpp,
-	src.tpp,
+	Decompress.cpp,
 	Copying,
-	lib readonly separator,
-	lib\huf_decompress.c,
-	lib\zstd_ddict.c,
-	lib\zstd_decompress.c,
-	lib\zstd_decompress_block.c,
-	lib\entropy_common.c,
-	lib\fse_compress.c,
-	lib\fse_decompress.c,
-	lib\huf_compress.c,
-	lib\zstd_common.c,
-	lib\zstd_compress.c,
-	lib\zstd_opt.c,
-	lib\zstdmt_compress.c,
-	lib\zstd_lazy.c,
-	lib\zstd_ldm.c,
-	lib\zstd_fast.c,
-	lib\error_private.c,
-	lib\hist.c,
-	lib\pool.c,
-	lib\zstd_double_fast.c,
-	lib\zstd_compress_superblock.c,
-	lib\zstd_compress_sequences.c,
-	lib\zstd_compress_literals.c,
-	lib\zstd_compress_superblock.h,
-	lib\xxhash.c,
-	lib\zstd.h;
+	Info readonly separator;
 

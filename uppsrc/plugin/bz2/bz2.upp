@@ -7,11 +7,15 @@ uses
 
 library(POSIX & !NOSO) bz2;
 
+library(WIN32) bz2;
+
+external_dependency(VCPKG) bzip2;
+
+external_dependency(DPKG) libbz2-dev;
+
 file
 	bz2.h,
 	bz2upp.cpp,
-	bzlib.c,
-	lib\LICENSE,
 	src.tpp,
 	Copying;
 

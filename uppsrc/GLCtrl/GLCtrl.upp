@@ -1,12 +1,17 @@
 description "OpenGL widget base class\377";
 
 uses
-	CtrlCore,
-	plugin/glew;
+	CtrlCore;
 
-library(WIN32 (GCC | CLANG)) "glu32 opengl32";
+library(WIN32 (GCC | CLANG)) "glu32 opengl32 glew32";
 
-pkg_config(LINUX | BSD) "gl glu";
+library(WIN32 MSC SHARED) glew32;
+
+library(WIN32 MSC !SHARED) libglew32;
+
+pkg_config(LINUX | BSD) "gl glu glew";
+
+external_dependency(WIN32) glew;
 
 file
 	GLCtrl.h,

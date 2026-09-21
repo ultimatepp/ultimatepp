@@ -85,6 +85,7 @@ VcpkgDlg::VcpkgDlg()
 		UrepoConsole console;
 		console.System("git pull --no-rebase", GetFileFolder(VcpkgExe()));
 		console.System(VcpkgExe() + " update");
+		console.System(VcpkgExe() + " upgrade --no-dry-run");
 		console.Perform();
 	};
 	
@@ -231,7 +232,7 @@ void VcpkgInstallDlg::Perform()
 		UrepoConsole console;
 		for(int i = 0; i < triplets.GetCount(); i++) {
 			if((bool)~*triplets.GetCtrl(i, 0)) {
-				if(console.System(VcpkgExe() + " install " + name + ":" + ts[i])) {
+				if(console.System(VcpkgExe() + " install " + name + ":" + ts[i] + " --recurse")) {
 					console.Log("Failed", SLtRed());
 					errors++;
 				}

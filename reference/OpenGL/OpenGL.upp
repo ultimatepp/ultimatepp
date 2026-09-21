@@ -9,5 +9,6 @@ file
 
 mainconfig
 	"" = "GUI",
+	"" = "GUI SHARED",
 	"" = "GUI X11";
 
