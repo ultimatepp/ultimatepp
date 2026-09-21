@@ -736,12 +736,12 @@ LAYOUT(UppOptPushDlg, 340, 92)
 END_LAYOUT
 
 LAYOUT(UppExtDepLayout, 340, 116)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("When")).LeftPosZ(4, 36).TopPosZ(8, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, when, LeftPosZ(48, 284).TopPosZ(8, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("Package")).LeftPosZ(4, 40).TopPosZ(32, 19))
-	ITEM(Upp::EditString, text, HSizePosZ(48, 8).TopPosZ(32, 20))
-	ITEM(Upp::Label, dv___4, SetLabel(t_("License")).LeftPosZ(4, 40).TopPosZ(56, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, license, LeftPosZ(48, 284).TopPosZ(56, 19))
+	ITEM(Upp::Label, dv___0, SetLabel(t_("When")).LeftPosZ(4, 48).TopPosZ(8, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, when, LeftPosZ(56, 276).TopPosZ(8, 19))
+	ITEM(Upp::Label, dv___2, SetLabel(t_("Package")).LeftPosZ(4, 52).TopPosZ(32, 20))
+	ITEM(Upp::EditString, text, HSizePosZ(56, 8).TopPosZ(32, 20))
+	ITEM(Upp::Label, dv___4, SetLabel(t_("License")).LeftPosZ(4, 52).TopPosZ(56, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, license, LeftPosZ(56, 276).TopPosZ(56, 19))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT

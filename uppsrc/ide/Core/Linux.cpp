@@ -2,22 +2,29 @@
 
 #ifdef PLATFORM_POSIX
 
+bool HasRPM()
+{
+	static bool has = Sys("which rpm").GetCount();
+	return has;
+}
+
 String ExternalDependenciesManagerId()
 {
-	return "DPKG"; // TODO add rpm mode...
+	return HasRPM() ? "RPM" : "DPKG"; // TODO add rpm mode...
 }
 
 Index<String> InstalledExternalDependencies(const String&)
 {
 	Index<String> r;
-	for(String l : Split(Sys("dpkg-query -W -f='${Package}\n'"), '\n'))
+	for(String l : Split(Sys(HasRPM() ? "rpm -qa --qf '%{NAME}\n'"
+	                                  : "dpkg-query -W -f='${Package}\n'"), '\n'))
 		r.FindAdd(TrimBoth(l));
 	return r;
 }
 
 String InstallMissingExternalDependenciesCommand0(const String& triplet)
 {
-	String cmd = "apt-get install -y";
+	String cmd = HasRPM() ? "dnf install -y" : "apt-get install -y";
 	for(String name : MissingExternalDependencies(triplet))
 		cmd << " " << name;
 	return cmd;

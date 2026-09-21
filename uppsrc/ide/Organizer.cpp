@@ -131,14 +131,11 @@ ExtDepDlg::ExtDepDlg()
 	CtrlLayoutOKCancel(*this, "External dependency");
 	when.AddList("VCPKG");
 	when.AddList("DPKG");
+	when.AddList("RPM");
 	when.AddList("POSIX");
 	when.Appending(" ");
 
-#ifdef PLATFORM_WIN32
-	when <<= "VCPKG";
-#else
-	when <<= "DPKG";
-#endif
+	when <<= ExternalDependenciesManagerId();
 	
 	text.SetFilter([](int c) { return c == ' ' ? 0 : c; });
 	
