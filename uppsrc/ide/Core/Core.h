@@ -735,6 +735,11 @@ bool           InstallMissingExternalDependencies(Function<int(const String&, co
                                                   const String& triplet);
 bool           CanInstallMissingExternalDependencies();
 
+#ifdef PLATFORM_POSIX
+
+bool HasRPM();
+
+#endif
 
 #ifdef PLATFORM_WIN32
 

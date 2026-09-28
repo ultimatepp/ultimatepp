@@ -25,8 +25,9 @@ void Ide::SyncExternalDependencies(bool force, bool report_ok)
 	String xd = Join(m, "\n");
 	
 	String xd_path = ConfigFile(triplet + ".missing");
-	
-	bool changed = LoadFile(xd_path) == xd;
+	RealizePath(xd_path);
+
+	bool changed = LoadFile(xd_path) != xd;
 	if(changed)
 		::SaveFile(xd_path, xd);
 

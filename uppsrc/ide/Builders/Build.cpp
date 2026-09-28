@@ -254,10 +254,12 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->start_time = start_time;
 
 #ifdef PLATFORM_WIN32
-		String libs = GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm);
-		
-		b->include << libs + "/include";
-		b->libpath << libs + "/lib";
+		if(RequiredExternalDependenciesInfo().GetCount()) {
+			String libs = GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm);
+			
+			b->include << libs + "/include";
+			b->libpath << libs + "/lib";
+		}
 #endif
 	}
 	return b;

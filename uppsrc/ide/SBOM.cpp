@@ -13,6 +13,7 @@ SBOMDlg::SBOMDlg()
 {
 	CtrlLayoutExit(*this, "Software Bill Of Materials");
 	
+	list.HeaderObject().Absolute();
 	list.AddColumn("Name", 200);
 	list.AddColumn("Type", 80);
 	list.AddColumn("Version", 120);
@@ -26,7 +27,6 @@ SBOMDlg::SBOMDlg()
 	list.AddColumn("Homepage", 300);
 	list.AddColumn("Origin", 300);
 	list.AddColumn("Source distributions", 300);
-	list.HeaderObject().Absolute();
 	list.NoCursor();
 }
 
@@ -77,12 +77,6 @@ void SBOMDlg::Perform()
 	mode.Add(SBOM_DIRECT, "3 - Direct dependencies as shipped");
 	mode.Add(SBOM_EXTERNAL_DIRECT, "4 - Direct dependencies as external");
 
-/*	mode.Add(SBOM_BASE, "0 Do not include external dependecies");
-	mode.Add(SBOM_FULL, "1 Include everything (win32-vcpkg / docker / flatpak)");
-	mode.Add(SBOM_EXTERNAL_FULL, "2 Include everything, exclude external dependencies from CVE scanning (linux binary)");
-	mode.Add(SBOM_DIRECT, "3 Include only direct external dependencies");
-	mode.Add(SBOM_EXTERNAL_DIRECT, "4 Include only direct external dependencies, exclude external dependencies from CVE scanning");  // 4
-*/
 	mode <<= 1;
 #ifdef PLATFORM_LINUX
 	mode <<= 2;

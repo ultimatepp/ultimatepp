@@ -1,6 +1,10 @@
 #ifndef CORE_H
 #define CORE_H
 
+#ifdef flagPORTABLE_HYBRID // In Linux, activates static linking except glibc, which links as 2.27 .so. This creates universal binaries
+#include "force_link_glibc/force_link_glibc_2.27.h"
+#endif
+
 #define UPP_VERSION 0x20250200
 
 #define _MULTITHREADED
