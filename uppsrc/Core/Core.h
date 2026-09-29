@@ -255,6 +255,9 @@ typedef int SOCKET;
 #include <stdexcept>
 #include <tuple>
 
+#define PCRE2_CODE_UNIT_WIDTH 0
+#include <pcre2.h>
+
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
 #ifndef PLATFORM_WINCE
@@ -409,6 +412,8 @@ class JsonIO;
 #include "Huge.h"
 
 #include "ValueCache.h"
+
+#include "Regex.h"
 
 #ifdef CPU_SIMD
 String AsString(const f32x4& x);

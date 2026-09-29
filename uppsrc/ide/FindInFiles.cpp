@@ -132,7 +132,7 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	FFound().Add(fn, ln, f.message, RawToValue(f));
 }
 
-bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase, RegExp *regexp) {
+bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase, Regex *regex) {
 	FileIn in(fn);
 	if(!in) return true;
 	int ln = 1;
@@ -140,16 +140,17 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	bool we = wholeword ? iscid(*pattern.Last()) : false;
 	int infile = 0;
 	bool sync = false;
+	RegexMatch match;
 	while(!in.IsEof()) {
 		String line = in.GetLine();
 		bool bw = true;
 		int  count;
-		if(regexp) {
+		if(regex) {
 			const char *s = line;
-			while(regexp->Match(s)) {
-				AddFoundFile(fn, ln, line, regexp->GetOffset() + int(s - line), regexp->GetLength());
+			while(regex->Match(s, match)) {
+				AddFoundFile(fn, ln, line, match.GetOffset() + int(s - line), match.GetLength());
 				sync = true;
-				s += regexp->GetLength();
+				s += match.GetLength();
 			}
 		}
 		else
@@ -270,9 +271,9 @@ void Ide::FindInFiles(bool replace) {
 
 		if(!pi.Canceled()) {
 			String pattern;
-			RegExp rx, *regexp = NULL;
+			Regex rx, *regexp = NULL;
 			if(ff.regexp) {
-				rx.SetPattern(~ff.find);
+				rx.Set(~ff.find);
 				regexp = &rx;
 				pattern = "dummy";
 			}

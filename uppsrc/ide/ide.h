@@ -1186,7 +1186,7 @@ public:
 	void      InsertWildcard(const char *s);
 	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
-		                   bool wholeword, bool ignorecase, RegExp *regexp);
+		                   bool wholeword, bool ignorecase, Regex *regex);
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
 

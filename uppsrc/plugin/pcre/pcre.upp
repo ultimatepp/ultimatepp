@@ -1,4 +1,4 @@
-description "PCRE regular expressions library\3770,128,128";
+description "Deprecated. Use Core Regex instead\3770,128,128";
 
 noblitz;
 

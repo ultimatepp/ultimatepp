@@ -1,7 +1,5 @@
 #include "JsonValidator.h"
 
-#include <plugin/pcre/Pcre.h>
-
 void JsonSchemaChecker::InvalidSchema()
 {
 	throw ValueTypeError();
@@ -72,7 +70,7 @@ void JsonSchemaChecker::ObjectFilters(Value schema, Value data, int depth)
 			InvalidSchema();
 
 		bool noAdditionalProperties = additionalProperties.Is<bool>() ? !(bool)additionalProperties : false;
-		Array<RegExp> regexp;
+		Array<Regex> regexp;
 		for(int i = 0; i < patterns.GetCount(); i++)
 			regexp.Create(~patterns.GetKey(i));
 		for(int i = 0; i < object.GetCount(); i++) {
@@ -160,7 +158,7 @@ void JsonSchemaChecker::StringFilters(Value schema, Value data)
 		Error("string must have at most " + AsString(m) + " characters");
 	String p = schema["pattern"];
 	if(!IsNull(p)) {
-		RegExp exp(p);
+		Regex exp(p);
 		if(!exp.Match(~data))
 			Error("failed regexp pattern " + p);
 	}

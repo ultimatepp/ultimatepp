@@ -1,0 +1,65 @@
+* C:\upp\out\autotest\CLANGx64.Debug.Debug_Full\Regex.exe 29.09.2026 09:55:50, user: mirek
+
+Regex("He([l]+)o").GetLastErrorText() = no error
+Regex("He([l]+)o").Match(text) = true
+Regex("He([l]+)o").Match(text, matches) = true
+matches.GetCount() = 2
+text.Mid(matches.GetOffset(i), matches.GetLength(i)) = Helllo
+text.Mid(matches.GetOffset(i), matches.GetLength(i)) = lll
+=================
+fname = foo.txt
+Regex("[a-z]+\\.txt").Match(fname) = true
+Regex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   foo.txt
+   foo
+   txt
+=================
+fname = bar.txt
+Regex("[a-z]+\\.txt").Match(fname) = true
+Regex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   bar.txt
+   bar
+   txt
+=================
+fname = baz.dat
+Regex("[a-z]+\\.txt").Match(fname) = false
+Regex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   baz.dat
+   baz
+   dat
+=================
+fname = zoidberg
+Regex("[a-z]+\\.txt").Match(fname) = false
+Regex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = false
+========= 32
+WRegex("He([l]+)o").GetLastErrorText() = no error
+WRegex("He([l]+)o").Match(text) = true
+WRegex("He([l]+)o").Match(text, matches) = true
+matches.GetCount() = 2
+text.Mid(matches.GetOffset(i), matches.GetLength(i)) = Helllo
+text.Mid(matches.GetOffset(i), matches.GetLength(i)) = lll
+=================
+fname = foo.txt
+WRegex("[a-z]+\\.txt").Match(fname) = true
+WRegex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   foo.txt
+   foo
+   txt
+=================
+fname = bar.txt
+WRegex("[a-z]+\\.txt").Match(fname) = true
+WRegex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   bar.txt
+   bar
+   txt
+=================
+fname = baz.dat
+WRegex("[a-z]+\\.txt").Match(fname) = false
+WRegex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = true
+   baz.dat
+   baz
+   dat
+=================
+fname = zoidberg
+WRegex("[a-z]+\\.txt").Match(fname) = false
+WRegex("([a-z]+)\\.([a-z]+)").Match(fname, matches) = false

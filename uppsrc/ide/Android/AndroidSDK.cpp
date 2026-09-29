@@ -1,7 +1,5 @@
 #include "Android.h"
 
-#include <plugin/pcre/Pcre.h>
-
 namespace Upp {
 
 String AndroidSDK::GetDownloadUrl()
@@ -178,7 +176,7 @@ String AndroidSDK::FindDefaultPlatform() const
 		
 		int idx = 0;
 		for(int i = 0; i < platforms.GetCount(); i++) {
-			if(RegExp("^android-[0-9]*$").Match(platforms[i])) {
+			if(Regex("^android-[0-9]*$").Match(platforms[i])) {
 				idx = i;
 				break;
 			}
@@ -195,7 +193,7 @@ String AndroidSDK::FindDefaultBuildToolsRelease() const
 		Sort(releases, StdGreater<String>());
 		int idx = 0;
 		for(int i = 0; i < releases.GetCount(); i++) {
-			if(RegExp("^[1-9][0-9.]*$").Match(releases[i])) {
+			if(Regex("^[1-9][0-9.]*$").Match(releases[i])) {
 				idx = i;
 				break;
 			}

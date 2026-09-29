@@ -209,16 +209,17 @@ bool CodeEditor::Find(bool back, bool block)
 
 bool CodeEditor::RegExpFind(int64 pos, bool block)
 {
-	RegExp regex((String)~findreplace.find);
+	Regex regex((String)~findreplace.find);
+	RegexMatch match;
 	
 	int line = GetLinePos64(pos);
 	String ln = ToUtf8(GetWLine(line).Mid(LimitSize(pos)));
 	for(;;) {
-		if(regex.Match(ln)) {
-			for(int i = 0; i < regex.GetCount(); i++)
-				SetFound(i, WILDANY, regex.GetString(i).ToWString());
-			int off = regex.GetOffset();
-			int len = Utf32Len(~ln + off, regex.GetLength());
+		if(regex.Match(ln, match)) {
+			for(int i = 1; i < match.GetCount(); i++)
+				SetFound(i - 1, WILDANY, match.GetString(ln, i).ToWString());
+			int off = match.GetOffset();
+			int len = Utf32Len(~ln + off, match.GetLength());
 			pos = GetPos64(line, Utf32Len(~ln, off) + (int)pos);
 			foundtext = GetW(pos, len);
 			if(!block) {
@@ -410,7 +411,7 @@ WString CodeEditor::GetWild(int type, int& i)
 		if(f.type == type) return f.text;
 	}
 	for(int j = 0; j < foundwild.GetCount(); j++) {
-		Found& f = foundwild[j++];
+		Found& f = foundwild[j];
 		if(f.type == type) return f.text;
 	}
 	return WString();
@@ -420,6 +421,7 @@ WString CodeEditor::GetReplaceText()
 {
 	WString rs = ~findreplace.replace;
 	bool wildcards = findreplace.wildcards;
+	bool regex = findreplace.regexp;
 	bool samecase = findreplace.ignorecase && findreplace.samecase;
 
 	int anyi = 0, onei = 0, spacei = 0, numberi = 0, idi = 0;
@@ -441,6 +443,23 @@ WString CodeEditor::GetReplaceText()
 		}
 		else
 		if(c >= ' ') {
+			if(regex) {
+				if(c == '@') {
+					c = *s++;
+					if(c == '\0') break;
+					int i = c - '1';
+					if(i >= 0 && i < foundwild.GetCount())
+						rt.Cat(foundwild[i].text);
+					else {
+						rt.Cat('@');
+						if(c >= ' ') rt.Cat(c);
+						continue;
+					}
+				}
+				else
+					rt.Cat(c);
+			}
+			else
 			if(wildcards) {
 				WString w;
 				if(c == '*')
@@ -475,7 +494,7 @@ WString CodeEditor::GetReplaceText()
 					}
 					else {
 						rt.Cat('@');
-						if(c >= ' ' && c < 255) rt.Cat(c);
+						if(c >= ' ') rt.Cat(c);
 						continue;
 					}
 				}

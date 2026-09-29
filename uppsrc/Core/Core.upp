@@ -4,7 +4,7 @@ acceptflags
 	USEMALLOC;
 
 library
-	"lz4 xxhash";
+	"lz4 xxhash pcre2-8 pcre2-32";
 
 library(LINUX !ANDROID) "pthread dl rt";
 
@@ -35,6 +35,8 @@ external_dependency(VCPKG) zlib;
 external_dependency(VCPKG) lz4;
 
 external_dependency(VCPKG) xxhash;
+
+external_dependency(VCPKG) pcre2;
 
 external_dependency(DPKG) zlib1g-dev;
 
@@ -81,6 +83,8 @@ file
 	UnicodeInfo.cpp,
 	CharSet.cpp,
 	Bom.cpp,
+	Regex.h,
+	Regex.cpp,
 	Path.h,
 	Path.cpp,
 	NetNode.cpp,
