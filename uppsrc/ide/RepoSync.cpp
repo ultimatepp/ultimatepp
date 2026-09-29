@@ -532,7 +532,7 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
-	sys.Git(repo_dir, "add \"" + file + "\"");
+	sys.Git(repo_dir, action == REMOVE ? "rm \"" : "add \"" + file + "\"");
 	return true;
 }
 
