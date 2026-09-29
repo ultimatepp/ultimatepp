@@ -217,6 +217,7 @@ bool RepoSync::ListGit(const String& path)
 {
 	Vector<String> ln = Split(GitCmd(path, "status --porcelain ."), CharFilterCrLf);
 	bool actions = false;
+	Index<String> remove_dirs;
 	for(int i = 0; i < ln.GetCount(); i++) {
 		String h = ln[i];
 		if(h.GetCount() > 3) {
@@ -244,6 +245,19 @@ bool RepoSync::ListGit(const String& path)
 				an = as[action];
 				color = AColor(c[action]);
 			}
+
+			if(action == REMOVE) {
+				while(file.GetCount() > 3) {
+					String dir = GetFileFolder(file);
+					if(DirectoryExists(dir))
+						break;
+					file = dir;
+				}
+				if(remove_dirs.Find(file) >= 0)
+					continue;
+				remove_dirs.Add(file);
+			}
+				
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
 			if(action >= 0) {
@@ -532,7 +546,7 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
-	sys.Git(repo_dir, (action == REMOVE ? "rm \"" : "add \"") + file + "\"");
+	sys.Git(repo_dir, (action == REMOVE ? "rm -r \"" : "add \"") + file + "\"");
 	return true;
 }
 
