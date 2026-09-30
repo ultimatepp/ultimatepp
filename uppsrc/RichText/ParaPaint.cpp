@@ -140,6 +140,8 @@ String EllipseImageMaker::Key() const
 
 Image EllipseImageMaker::Make() const
 {
+	if(min(sz.cx, sz.cy) <= 0)
+		return Null;
 	ImagePainter p(sz);
 	p.Clear(RGBAZero());
 	p.DrawEllipse(0, 0, sz.cx, sz.cy, Black());
