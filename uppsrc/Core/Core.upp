@@ -204,6 +204,7 @@ file
 	SHA1.cpp,
 	SHA256.cpp,
 	xxHsh.cpp,
+	xxHash_chk.cpp,
 	Web readonly separator,
 	Inet.h,
 	HttpStatusCode.i,
