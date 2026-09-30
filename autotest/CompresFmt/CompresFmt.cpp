@@ -4,7 +4,6 @@
 #include <plugin/lz4/lz4.h>
 #include <plugin/zstd/zstd.h>
 #include <plugin/zstd_legacy/zstd.h>
-#include <plugin/z/z.h>
 #include <plugin/bz2/bz2.h>
 
 using namespace Upp;
