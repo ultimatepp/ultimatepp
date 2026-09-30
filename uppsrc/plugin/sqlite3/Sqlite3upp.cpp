@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 #include <Sql/Sql.h>
-#include "lib/sqlite3mc_amalgamation.h"
+#include <sqlite3.h>
 #include "Sqlite3.h"
 
 namespace Upp {
@@ -328,6 +328,7 @@ String Sqlite3Connection::ToString() const {
 }
 
 //////////////////////////////////////////////////////////////////////
+#if 0
 int Sqlite3Session::SetDBEncryption(int cipher) {
 	// "default:cipher" => use SQLCipher during the entire lifetime of database instance
 	// CIPHER_CHAHA2020_SQLEET settings are backward compatible with the previous sqleet implementation in the U++
@@ -421,6 +422,26 @@ bool Sqlite3Session::Open(const char* filename, const String& password, int ciph
 	}
 	if(SQLITE_OK == retcode)
 		retcode = CheckDBAccess();
+	if(SQLITE_OK == retcode)
+		return true;
+	if(db) {
+		SetError(sqlite3_errstr(retcode), "", retcode, sqlite3_errstr(retcode));
+		sqlite3_close(db);
+		db = NULL;
+	}
+	return false;
+}
+#endif
+
+bool Sqlite3Session::Open(const char* filename) {
+	// Only open db once.
+	ASSERT(NULL == db);
+	current_filename = filename;
+	// By default, sqlite3 associates the opened db with "main.*"
+	// However, using the ATTACH sql command, it can connect to more databases.
+	// I don't know how to get the list of attached databases from the API
+	current_dbname = "main";
+	int retcode = sqlite3_open(filename, &db);
 	if(SQLITE_OK == retcode)
 		return true;
 	if(db) {
