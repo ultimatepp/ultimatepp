@@ -77,7 +77,7 @@ public:
 	void   Reset();
 	void   New()                         { Reset(); }
 	
-	Sha256Stream(); 
+	Sha256Stream();
 	~Sha256Stream();
 };
 
