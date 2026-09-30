@@ -89,7 +89,7 @@ String  SHA256StringS(const void *data, dword size);
 String  SHA256StringS(const String& data);
 
 class xxHashStream : public OutStream {
-	byte context[8 * 8];
+	alignas(32) byte context[256];
 	
 	virtual  void  Out(const void *data, dword size);
 
@@ -105,7 +105,7 @@ int xxHash(const void *data, size_t len);
 int xxHash(const String& s);
 
 class xxHash64Stream : public OutStream {
-	byte context[12 * 8];
+	alignas(32) byte context[256];
 	
 	virtual  void  Out(const void *data, dword size);
 
