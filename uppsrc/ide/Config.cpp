@@ -281,11 +281,7 @@ void Ide::Serialize(Stream& s)
 	if(version >= 37)
 		s % experimental;
 	if(version >= 38) {
-	#ifdef PLATFORM_WIN32
 		extern bool no_vcpkg_install;
-	#else
-		bool no_vcpkg_install = false;
-	#endif
 		s % no_vcpkg_install;
 	}
 	if(version >= 23)

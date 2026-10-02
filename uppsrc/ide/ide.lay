@@ -884,9 +884,10 @@ LAYOUT(BaseSetupLayout, 664, 176)
 	ITEM(Upp::Label, dv___11, SetLabel(t_("UppHub directory")).LeftPosZ(4, 96).BottomPosZ(57, 19))
 	ITEM(Upp::EditString, upv, HSizePosZ(104, 32).BottomPosZ(57, 19))
 	ITEM(Upp::Button, upv_sel, RightPosZ(8, 20).BottomPosZ(57, 19))
-	ITEM(Upp::Option, all, SetLabel(t_("Preselect All instead of the first nest")).HSizePosZ(4, 144).BottomPosZ(36, 16))
+	ITEM(Upp::Option, all, SetLabel(t_("Preselect All instead of the first nest")).HSizePosZ(4, 144).BottomPosZ(8, 16))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Option, vcpkg, SetLabel(t_("Use VCPKG to manage external dependecies")).LeftPosZ(256, 260).TopPosZ(52, 20))
 END_LAYOUT
 
 LAYOUT(ExtSetupLayout, 660, 64)

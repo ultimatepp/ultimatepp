@@ -116,7 +116,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		m.external = i < direct_n ? 1 : 2;
 		m.bom_ref = m.name = name;
 		String depends, arch, source;
-		SplitTo(Sys((HasRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}' "
+		SplitTo(Sys((IsRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}' "
 		                      : "dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture}\n${Source}' ") + name),
 		                     '\n', false,
 		        depends, m.version, m.homepage, arch, source);
@@ -129,7 +129,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				distro = TrimBoth(l);
 		distro.TrimStart("\"");
 		distro.TrimEnd("\"");
-		m.purl << "pkg:" << (HasRPM() ? "rpm/" : "deb/")
+		m.purl << "pkg:" << (IsRPM() ? "rpm/" : "deb/")
 		       << distro << "/" << name << "@" << m.version << "?arch=" << arch;
 		if(source.GetCount() && source != name)
 			m.purl << "&source=" + source;

@@ -1,14 +1,5 @@
 #include "ide.h"
 
-#ifndef PLATFORM_WIN32
-
-String Ide::GetTargetTriplet()
-{
-	return Null;
-}
-
-#endif
-
 void Ide::SyncExternalDependencies(bool force, bool report_ok)
 {
 	String triplet = GetTargetTriplet();

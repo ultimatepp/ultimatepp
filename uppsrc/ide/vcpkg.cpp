@@ -1,9 +1,9 @@
 #include "ide.h"
 
-#ifdef PLATFORM_WIN32
-
 bool Ide::IsVcpkgAvailable(UrepoConsole& console)
 {
+	if(GetVar("VCPKG") != "1")
+		return false;
 	return ::IsVcpkgAvailable([&](const String& cmd, const String& chdir) { return console.System(cmd, chdir); });
 }
 
@@ -249,5 +249,3 @@ void Ide::Vcpkg()
 	VcpkgDlg dlg;
 	dlg.Perform();
 }
-
-#endif

@@ -43,6 +43,10 @@ bool SetupGITMaster()
 	RealizeDirectory(GetUppOut());
 	
 	String uppsrc = AppendFileName(dir, "uppsrc");
+	
+	String vcpkg = "VCPKG=1;\r\n";
+	if(HasRPM() || HasDPKG())
+		vcpkg.Clear();
 
 	auto MakeAssembly = [&](String b) {
 		String name = GetFileTitle(b);
@@ -51,7 +55,7 @@ bool SetupGITMaster()
 			b << ';' << uppsrc;
 		console.Log("Creating assembly " + a);
 		SaveFile(a,
-			"UPP = " + AsCString(b) + ";\r\n"
+			"UPP = " + AsCString(b) + ";\r\n" + vcpkg
 		);
 	};
 

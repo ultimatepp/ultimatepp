@@ -451,9 +451,8 @@ void Ide::Setup(Bar& menu)
 #endif
 	menu.MenuSeparator();
 	menu.Add(HasGit(), "UppHub..", IdeImg::UppHub(), [] { UppHub(); });
-#ifdef PLATFORM_WIN32
-	menu.Add("Vcpkg..", IdeImg::Vcpkg(), [this] { Vcpkg(); });
-#endif
+	if(IsVCPKG())
+		menu.Add("Vcpkg..", IdeImg::Vcpkg(), [this] { Vcpkg(); });
 	menu.Add("Clone U++ GitHub sources..", [this] {
 		if(SetupGITMaster()) {
 			IdeAgain = true;

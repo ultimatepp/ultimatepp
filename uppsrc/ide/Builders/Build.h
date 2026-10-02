@@ -121,9 +121,7 @@ public:
 
 	void  SaveCCJ(const String& fn, bool exporting);
 	
-#ifdef PLATFORM_WIN32
 	String GetVcpkgTriplet(const VectorMap<String, String>& bm) const;
-#endif
 
 	Array<SBOMComponent> CreateSBOMComponents(const String& triplet, Gate<int, int> progress = Null);
 	String               CreateSBOM(const Array<SBOMComponent>& cs, int mode);

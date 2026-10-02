@@ -89,3 +89,86 @@ Vector<String> MissingExternalDependencies(const String& triplet)
 	Sort(missing);
 	return missing;
 }
+
+bool HasDPKG()
+{
+	static bool dpkg
+#ifdef PLATFORM_LINUX
+		 = Sys("which dpkg").GetCount()
+#endif
+	;
+	return dpkg;
+}
+
+bool HasRPM()
+{
+	static bool rpm
+#ifdef PLATFORM_LINUX
+		 = Sys("which rpm").GetCount()
+#endif
+	;
+	return rpm;
+}
+
+String ExternalDependenciesManagerId()
+{
+	if(GetVar("VCPKG") == "1")
+		return "VCPKG";
+	if(HasDPKG())
+		return "DPKG";
+	if(HasRPM())
+		return "RPM";
+	return Null;
+}
+
+Index<String> InstalledExternalDependencies(const String& triplet)
+{
+	if(IsVCPKG())
+		return VcpkgInstalledExternalDependencies(triplet);
+	Index<String> r;
+#ifdef PLATFORM_LINUX
+	if(IsDPKG())
+		for(String l : Split(Sys("dpkg-query -W -f='${Package}\n'"), '\n'))
+			r.FindAdd(TrimBoth(l));
+	if(IsRPM())
+		for(String l : Split(Sys("rpm -qa --qf '%{NAME}\n'"), '\n'))
+			r.FindAdd(TrimBoth(l));
+#endif
+	return r;
+}
+
+String InstallMissingExternalDependenciesCommand0(const String& triplet)
+{
+	String cmd;
+#ifdef PLATFORM_LINUX
+	if(IsRPM() || IsDPKG()) {
+		String cmd = IsRPM() ? "dnf install -y" : "apt-get install -y";
+		for(String name : MissingExternalDependencies(triplet))
+			cmd << " " << name;
+	}
+#endif
+	return cmd;
+}
+
+String InstallMissingExternalDependenciesCommand(const String& triplet)
+{
+	if(IsVCPKG())
+		return Null;
+	return "sudo " + InstallMissingExternalDependenciesCommand0(triplet);
+}
+
+bool InstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet)
+{
+	if(IsVCPKG())
+		return VcpkInstallMissingExternalDependencies(sys, triplet);
+	String cmd = InstallMissingExternalDependenciesCommand0(triplet);
+	return cmd.GetCount() ? sys(String(UMK ? "" : "pkexec ") + cmd, Null) == 0 : false;
+}
+
+bool CanInstallMissingExternalDependencies()
+{
+	if(IsVCPKG())
+		return true;
+	static bool is = Sys("which pkexec").GetCount();
+	return is;
+}
