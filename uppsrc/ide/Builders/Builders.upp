@@ -36,7 +36,6 @@ file
 	AndroidBuilderUtils.cpp,
 	AndroidModuleMakeFileBuilder.cpp,
 	Components readonly separator,
-	BuilderComponents.h,
 	Blitz.cpp,
 	Build.h,
 	Build.cpp,
