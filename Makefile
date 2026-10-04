@@ -585,7 +585,6 @@ $(OutDir_ide)BaseDlg.o: $(UPPDIR1)ide/BaseDlg.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -821,7 +820,6 @@ $(OutDir_ide)SelectPkg.o: $(UPPDIR1)ide/SelectPkg.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -1058,7 +1056,6 @@ $(OutDir_ide)UppWspc.o: $(UPPDIR1)ide/UppWspc.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -1295,7 +1292,6 @@ $(OutDir_ide)NewPackageFile.o: $(UPPDIR1)ide/NewPackageFile.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -1532,7 +1528,6 @@ $(OutDir_ide)Organizer.o: $(UPPDIR1)ide/Organizer.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -1769,7 +1764,6 @@ $(OutDir_ide)Template.o: $(UPPDIR1)ide/Template.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -2006,7 +2000,6 @@ $(OutDir_ide)Console.o: $(UPPDIR1)ide/Console.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -2243,7 +2236,6 @@ $(OutDir_ide)FindFile.o: $(UPPDIR1)ide/FindFile.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -2480,7 +2472,6 @@ $(OutDir_ide)FindInFiles.o: $(UPPDIR1)ide/FindInFiles.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -2717,7 +2708,6 @@ $(OutDir_ide)Config.o: $(UPPDIR1)ide/Config.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -2954,7 +2944,6 @@ $(OutDir_ide)ide.o: $(UPPDIR1)ide/ide.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -3191,7 +3180,6 @@ $(OutDir_ide)idefile.o: $(UPPDIR1)ide/idefile.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -3428,7 +3416,6 @@ $(OutDir_ide)EditorTabBar.o: $(UPPDIR1)ide/EditorTabBar.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -3666,7 +3653,6 @@ $(OutDir_ide)Bottom.o: $(UPPDIR1)ide/Bottom.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -3902,7 +3888,6 @@ $(OutDir_ide)t.o: $(UPPDIR1)ide/t.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -4140,7 +4125,6 @@ $(OutDir_ide)AssistDisplay.o: $(UPPDIR1)ide/AssistDisplay.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -4376,7 +4360,6 @@ $(OutDir_ide)IncludeTrick.o: $(UPPDIR1)ide/IncludeTrick.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -4614,7 +4597,6 @@ $(OutDir_ide)Assist.o: $(UPPDIR1)ide/Assist.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -4850,7 +4832,6 @@ $(OutDir_ide)DCopy.o: $(UPPDIR1)ide/DCopy.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -5087,7 +5068,6 @@ $(OutDir_ide)ContextGoto.o: $(UPPDIR1)ide/ContextGoto.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -5324,7 +5304,6 @@ $(OutDir_ide)GoToLine.o: $(UPPDIR1)ide/GoToLine.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -5561,7 +5540,6 @@ $(OutDir_ide)Swaps.o: $(UPPDIR1)ide/Swaps.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -5798,7 +5776,6 @@ $(OutDir_ide)Usage.o: $(UPPDIR1)ide/Usage.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -6035,7 +6012,6 @@ $(OutDir_ide)ParamInfo.o: $(UPPDIR1)ide/ParamInfo.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -6272,7 +6248,6 @@ $(OutDir_ide)Navigator.o: $(UPPDIR1)ide/Navigator.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -6510,7 +6485,6 @@ $(OutDir_ide)Annotations.o: $(UPPDIR1)ide/Annotations.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -6746,7 +6720,6 @@ $(OutDir_ide)Virtuals.o: $(UPPDIR1)ide/Virtuals.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -6983,7 +6956,6 @@ $(OutDir_ide)Events.o: $(UPPDIR1)ide/Events.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -7220,7 +7192,6 @@ $(OutDir_ide)NavDlg.o: $(UPPDIR1)ide/NavDlg.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -7457,7 +7428,6 @@ $(OutDir_ide)Log.o: $(UPPDIR1)ide/Log.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -7694,7 +7664,6 @@ $(OutDir_ide)MainConfig.o: $(UPPDIR1)ide/MainConfig.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -7931,7 +7900,6 @@ $(OutDir_ide)Setup.o: $(UPPDIR1)ide/Setup.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -8168,7 +8136,6 @@ $(OutDir_ide)Custom.o: $(UPPDIR1)ide/Custom.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -8405,7 +8372,6 @@ $(OutDir_ide)Print.o: $(UPPDIR1)ide/Print.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -8642,7 +8608,6 @@ $(OutDir_ide)InsertImage.o: $(UPPDIR1)ide/InsertImage.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -8879,7 +8844,6 @@ $(OutDir_ide)Insert.o: $(UPPDIR1)ide/Insert.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -9116,7 +9080,6 @@ $(OutDir_ide)Sequence.o: $(UPPDIR1)ide/Sequence.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -9353,7 +9316,6 @@ $(OutDir_ide)idetool.o: $(UPPDIR1)ide/idetool.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -9590,7 +9552,6 @@ $(OutDir_ide)UnInitMembers.o: $(UPPDIR1)ide/UnInitMembers.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -9827,7 +9788,6 @@ $(OutDir_ide)Install.o: $(UPPDIR1)ide/Install.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -10065,7 +10025,6 @@ $(OutDir_ide)Android.o: $(UPPDIR1)ide/Android.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -10302,7 +10261,6 @@ $(OutDir_ide)idebar.o: $(UPPDIR1)ide/idebar.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -10540,7 +10498,6 @@ $(OutDir_ide)background.o: $(UPPDIR1)ide/background.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -10777,7 +10734,6 @@ $(OutDir_ide)idewin.o: $(UPPDIR1)ide/idewin.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -11014,7 +10970,6 @@ $(OutDir_ide)main.o: $(UPPDIR1)ide/main.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -11257,7 +11212,6 @@ $(OutDir_ide)About.o: $(UPPDIR1)ide/About.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -11493,7 +11447,6 @@ $(OutDir_ide)Macro.o: $(UPPDIR1)ide/Macro.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -11730,7 +11683,6 @@ $(OutDir_ide)Help.o: $(UPPDIR1)ide/Help.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -11967,7 +11919,6 @@ $(OutDir_ide)SlideShow.o: $(UPPDIR1)ide/SlideShow.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -12204,7 +12155,6 @@ $(OutDir_ide)OnlineSearch.o: $(UPPDIR1)ide/OnlineSearch.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -12441,7 +12391,6 @@ $(OutDir_ide)Errors.o: $(UPPDIR1)ide/Errors.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -12678,7 +12627,6 @@ $(OutDir_ide)Calc.o: $(UPPDIR1)ide/Calc.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Calc.cpp \
@@ -12915,7 +12863,6 @@ $(OutDir_ide)FormatCode.o: $(UPPDIR1)ide/FormatCode.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -13153,7 +13100,6 @@ $(OutDir_ide)Abbr.o: $(UPPDIR1)ide/Abbr.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -13389,7 +13335,6 @@ $(OutDir_ide)Qtf.o: $(UPPDIR1)ide/Qtf.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -13626,7 +13571,6 @@ $(OutDir_ide)Xml.o: $(UPPDIR1)ide/Xml.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -13863,7 +13807,6 @@ $(OutDir_ide)Json.o: $(UPPDIR1)ide/Json.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -14100,7 +14043,6 @@ $(OutDir_ide)MacroManager.o: $(UPPDIR1)ide/MacroManager.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -14340,7 +14282,6 @@ $(OutDir_ide)SetupGIT.o: $(UPPDIR1)ide/SetupGIT.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -14577,7 +14518,6 @@ $(OutDir_ide)Upgrade.o: $(UPPDIR1)ide/Upgrade.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -14814,7 +14754,6 @@ $(OutDir_ide)UppHub.o: $(UPPDIR1)ide/UppHub.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -15051,7 +14990,6 @@ $(OutDir_ide)ExtDep.o: $(UPPDIR1)ide/ExtDep.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -15288,7 +15226,6 @@ $(OutDir_ide)SBOM.o: $(UPPDIR1)ide/SBOM.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -15525,7 +15462,6 @@ $(OutDir_ide)vcpkg.o: $(UPPDIR1)ide/vcpkg.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -15762,7 +15698,6 @@ $(OutDir_ide)MethodsCtrls.o: $(UPPDIR1)ide/MethodsCtrls.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -16000,7 +15935,6 @@ $(OutDir_ide)Methods.o: $(UPPDIR1)ide/Methods.cpp \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/AndroidBuilder.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -16239,7 +16173,6 @@ $(OutDir_ide)AutoSetup.o: $(UPPDIR1)ide/AutoSetup.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -16475,7 +16408,6 @@ $(OutDir_ide)InstantSetup.o: $(UPPDIR1)ide/InstantSetup.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -16712,7 +16644,6 @@ $(OutDir_ide)OutputMode.o: $(UPPDIR1)ide/OutputMode.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -16950,7 +16881,6 @@ $(OutDir_ide)Build.o: $(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)ide/Build.cpp \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -17186,7 +17116,6 @@ $(OutDir_ide)Debug.o: $(UPPDIR1)ide/Debug.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -17423,7 +17352,6 @@ $(OutDir_ide)Valgrind.o: $(UPPDIR1)ide/Valgrind.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -17660,7 +17588,6 @@ $(OutDir_ide)ClangTidy.o: $(UPPDIR1)ide/ClangTidy.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -17897,7 +17824,6 @@ $(OutDir_ide)Export.o: $(UPPDIR1)ide/Export.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -18134,7 +18060,6 @@ $(OutDir_ide)RepoConsole.o: $(UPPDIR1)ide/RepoConsole.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -18371,7 +18296,6 @@ $(OutDir_ide)RepoSync.o: $(UPPDIR1)ide/RepoSync.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -18608,7 +18532,6 @@ $(OutDir_ide)Credentials.o: $(UPPDIR1)ide/Credentials.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -18845,7 +18768,6 @@ $(OutDir_ide)Diff.o: $(UPPDIR1)ide/Diff.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -19082,7 +19004,6 @@ $(OutDir_ide)DirRepoDiff.o: $(UPPDIR1)ide/DirRepoDiff.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -24023,7 +23944,6 @@ $(OutDir_ide_LayDes)laywin.o: $(UPPDIR1)ide/LayDes/laywin.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -24217,7 +24137,6 @@ $(OutDir_ide_Builders)CppBuilder.o: $(UPPDIR1)ide/Builders/CppBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/CppBuilder.cpp \
@@ -24321,7 +24240,6 @@ $(OutDir_ide_Builders)MakeFile.o: $(UPPDIR1)ide/Builders/MakeFile.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/MakeFile.cpp \
@@ -24425,7 +24343,6 @@ $(OutDir_ide_Builders)GccBuilder.o: $(UPPDIR1)ide/Builders/GccBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/BuilderUtils.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -24530,7 +24447,6 @@ $(OutDir_ide_Builders)MscBuilder.o: $(UPPDIR1)ide/Builders/MscBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/coff.h \
@@ -24635,7 +24551,6 @@ $(OutDir_ide_Builders)JavaBuilder.o: $(UPPDIR1)ide/Builders/JavaBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/JavaBuilder.cpp \
@@ -24739,7 +24654,6 @@ $(OutDir_ide_Builders)ScriptBuilder.o: $(UPPDIR1)ide/Builders/ScriptBuilder.cpp 
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/ScriptBuilder.cpp \
@@ -24843,7 +24757,6 @@ $(OutDir_ide_Builders)Cocoa.o: $(UPPDIR1)ide/Builders/Cocoa.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/Cocoa.cpp \
@@ -25312,7 +25225,6 @@ $(OutDir_ide_Builders)AndroidBuilder.o: $(UPPDIR1)ide/Builders/AndroidBuilder.cp
 	$(UPPDIR1)ide/Builders/AndroidBuilder.cpp \
 	$(UPPDIR1)ide/Builders/AndroidBuilder.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/BuilderUtils.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -25733,7 +25645,6 @@ $(OutDir_ide_Builders)Blitz.o: $(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -25841,7 +25752,6 @@ $(OutDir_ide_Builders)Build.o: $(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)ide/Builders/AndroidBuilder.h \
 	$(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -25945,7 +25855,6 @@ $(OutDir_ide_Builders)CCJ.o: $(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -26049,7 +25958,6 @@ $(OutDir_ide_Builders)Install.o: $(UPPDIR1)ide/Builders/Install.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/Install.cpp \
@@ -26153,7 +26061,6 @@ $(OutDir_ide_Builders)SPDXLicenses.o: $(UPPDIR1)ide/Builders/SPDXLicenses.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/SPDXLicenses.cpp \
@@ -26257,7 +26164,6 @@ $(OutDir_ide_Builders)SBOM.o: $(UPPDIR1)ide/Builders/SBOM.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/SBOM.cpp \
@@ -26361,7 +26267,6 @@ $(OutDir_ide_Builders)ClangTidy.o: $(UPPDIR1)ide/Builders/ClangTidy.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.cpp \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -32334,7 +32239,6 @@ $(OutDir_ide_Browser)Move.o: $(UPPDIR1)ide/Browser/Move.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -32764,7 +32668,6 @@ $(OutDir_ide_Browser)TopicI.o: $(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)ide/Browser/TopicI.cpp \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -47551,7 +47454,6 @@ $(OutDir_ide_Designers)Png.o: $(UPPDIR1)ide/Designers/Png.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -47788,7 +47690,6 @@ $(OutDir_ide_Designers)Img.o: $(UPPDIR1)ide/Designers/Img.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -48025,7 +47926,6 @@ $(OutDir_ide_Designers)Qtf.o: $(UPPDIR1)ide/Designers/Qtf.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -48262,7 +48162,6 @@ $(OutDir_ide_Designers)HexView.o: $(UPPDIR1)ide/Designers/HexView.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -48499,7 +48398,6 @@ $(OutDir_ide_Designers)TreeDes.o: $(UPPDIR1)ide/Designers/TreeDes.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -48736,7 +48634,6 @@ $(OutDir_ide_Designers)Xml.o: $(UPPDIR1)ide/Designers/Xml.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -48973,7 +48870,6 @@ $(OutDir_ide_Designers)Json.o: $(UPPDIR1)ide/Designers/Json.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -49304,7 +49200,6 @@ $(OutDir_ide_Designers)md.o: $(UPPDIR1)ide/Designers/md.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -49541,7 +49436,6 @@ $(OutDir_ide_Designers)export_md.o: $(UPPDIR1)ide/Designers/export_md.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -53540,7 +53434,6 @@ $(OutDir_ide_clang)Indexer.o: $(UPPDIR1)ide/clang/Indexer.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \
@@ -88873,7 +88766,6 @@ $(OutDir_ide_IconDes)IdeIconDes.o: $(UPPDIR1)ide/IconDes/IdeIconDes.cpp \
 	$(UPPDIR1)ide/Browser/Topic.lay \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/clang/clang.h \

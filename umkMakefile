@@ -222,7 +222,6 @@ $(OutDir_umk)Console.o: $(UPPDIR1)umk/Console.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -327,7 +326,6 @@ $(OutDir_umk)IdeContext.o: $(UPPDIR1)umk/IdeContext.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -432,7 +430,6 @@ $(OutDir_umk)MakeBuild.o: $(UPPDIR1)umk/MakeBuild.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -537,7 +534,6 @@ $(OutDir_umk)Export.o: $(UPPDIR1)umk/Export.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -642,7 +638,6 @@ $(OutDir_umk)UppHub.o: $(UPPDIR1)umk/UppHub.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -747,7 +742,6 @@ $(OutDir_umk)umake.o: $(UPPDIR1)umk/umake.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -855,7 +849,6 @@ $(OutDir_ide_Builders)CppBuilder.o: $(UPPDIR1)ide/Builders/CppBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/CppBuilder.cpp \
@@ -959,7 +952,6 @@ $(OutDir_ide_Builders)MakeFile.o: $(UPPDIR1)ide/Builders/MakeFile.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/MakeFile.cpp \
@@ -1063,7 +1055,6 @@ $(OutDir_ide_Builders)GccBuilder.o: $(UPPDIR1)ide/Builders/GccBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/BuilderUtils.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -1168,7 +1159,6 @@ $(OutDir_ide_Builders)MscBuilder.o: $(UPPDIR1)ide/Builders/MscBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/coff.h \
@@ -1273,7 +1263,6 @@ $(OutDir_ide_Builders)JavaBuilder.o: $(UPPDIR1)ide/Builders/JavaBuilder.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/JavaBuilder.cpp \
@@ -1377,7 +1366,6 @@ $(OutDir_ide_Builders)ScriptBuilder.o: $(UPPDIR1)ide/Builders/ScriptBuilder.cpp 
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/ScriptBuilder.cpp \
@@ -1481,7 +1469,6 @@ $(OutDir_ide_Builders)Cocoa.o: $(UPPDIR1)ide/Builders/Cocoa.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/Cocoa.cpp \
@@ -1950,7 +1937,6 @@ $(OutDir_ide_Builders)AndroidBuilder.o: $(UPPDIR1)ide/Builders/AndroidBuilder.cp
 	$(UPPDIR1)ide/Builders/AndroidBuilder.cpp \
 	$(UPPDIR1)ide/Builders/AndroidBuilder.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/BuilderUtils.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -2371,7 +2357,6 @@ $(OutDir_ide_Builders)Blitz.o: $(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Blitz.cpp \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -2479,7 +2464,6 @@ $(OutDir_ide_Builders)Build.o: $(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)ide/Builders/AndroidBuilder.h \
 	$(UPPDIR1)ide/Builders/Build.cpp \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Core/Core.h \
@@ -2583,7 +2567,6 @@ $(OutDir_ide_Builders)CCJ.o: $(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/CCJ.cpp \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
@@ -2687,7 +2670,6 @@ $(OutDir_ide_Builders)Install.o: $(UPPDIR1)ide/Builders/Install.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/Install.cpp \
@@ -2791,7 +2773,6 @@ $(OutDir_ide_Builders)SPDXLicenses.o: $(UPPDIR1)ide/Builders/SPDXLicenses.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/SPDXLicenses.cpp \
@@ -2895,7 +2876,6 @@ $(OutDir_ide_Builders)SBOM.o: $(UPPDIR1)ide/Builders/SBOM.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
 	$(UPPDIR1)ide/Builders/SBOM.cpp \
@@ -2999,7 +2979,6 @@ $(OutDir_ide_Builders)ClangTidy.o: $(UPPDIR1)ide/Builders/ClangTidy.cpp \
 	$(UPPDIR1)Esc/Esc.h \
 	$(UPPDIR1)ide/Builders/Android.h \
 	$(UPPDIR1)ide/Builders/Build.h \
-	$(UPPDIR1)ide/Builders/BuilderComponents.h \
 	$(UPPDIR1)ide/Builders/Builders.h \
 	$(UPPDIR1)ide/Builders/ClangTidy.cpp \
 	$(UPPDIR1)ide/Builders/ClangTidy.h \
