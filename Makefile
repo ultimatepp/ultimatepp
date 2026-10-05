@@ -67356,7 +67356,7 @@ $(OutDir_Draw)FontFc.o: $(UPPDIR1)Draw/FontFc.cpp \
 	$(UPPDIR1)uppconfig.h
 	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Draw)  $(UPPDIR1)Draw/FontFc.cpp -o $(OutDir_Draw)FontFc.o
 
-$(OutDir_Draw)FontCocoNOMM.o: $(UPPDIR1)Draw/FontCocoNOMM.cpp \
+$(OutDir_Draw)NoFont.o: $(UPPDIR1)Draw/NoFont.cpp \
 	$(UPPDIR1)Core/Algo.h \
 	$(UPPDIR1)Core/App.h \
 	$(UPPDIR1)Core/AString.hpp \
@@ -67446,16 +67446,16 @@ $(OutDir_Draw)FontCocoNOMM.o: $(UPPDIR1)Draw/FontCocoNOMM.cpp \
 	$(UPPDIR1)Draw/Display.h \
 	$(UPPDIR1)Draw/Draw.h \
 	$(UPPDIR1)Draw/DrawImg.iml \
-	$(UPPDIR1)Draw/FontCocoNOMM.cpp \
 	$(UPPDIR1)Draw/FontInt.h \
 	$(UPPDIR1)Draw/Image.h \
 	$(UPPDIR1)Draw/ImageOp.h \
 	$(UPPDIR1)Draw/iml_header.h \
+	$(UPPDIR1)Draw/NoFont.cpp \
 	$(UPPDIR1)Draw/Raster.h \
 	$(UPPDIR1)Draw/SDraw.h \
 	$(UPPDIR1)Draw/SIMD.h \
 	$(UPPDIR1)uppconfig.h
-	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Draw)  $(UPPDIR1)Draw/FontCocoNOMM.cpp -o $(OutDir_Draw)FontCocoNOMM.o
+	$(CXX) -c -x c++ $(CXXFLAGS) $(CINC) $(Macro_Draw)  $(UPPDIR1)Draw/NoFont.cpp -o $(OutDir_Draw)NoFont.o
 
 $(OutDir_Draw)Draw.o: $(UPPDIR1)Draw/Draw.cpp \
 	$(UPPDIR1)Core/Algo.h \
@@ -70695,7 +70695,7 @@ $(OutDir_Draw)Draw.a: \
 	$(OutDir_Draw)FontCR.o \
 	$(OutDir_Draw)FontWin32.o \
 	$(OutDir_Draw)FontFc.o \
-	$(OutDir_Draw)FontCocoNOMM.o \
+	$(OutDir_Draw)NoFont.o \
 	$(OutDir_Draw)Draw.o \
 	$(OutDir_Draw)DrawText.o \
 	$(OutDir_Draw)DrawData.o \
@@ -70733,7 +70733,7 @@ $(OutDir_Draw)Draw.a: \
 		$(OutDir_Draw)FontCR.o \
 		$(OutDir_Draw)FontWin32.o \
 		$(OutDir_Draw)FontFc.o \
-		$(OutDir_Draw)FontCocoNOMM.o \
+		$(OutDir_Draw)NoFont.o \
 		$(OutDir_Draw)Draw.o \
 		$(OutDir_Draw)DrawText.o \
 		$(OutDir_Draw)DrawData.o \
