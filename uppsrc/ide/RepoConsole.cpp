@@ -52,8 +52,6 @@ void UrepoConsole::Log(const Value& s, Color ink)
 
 int UrepoConsole::System(const char *cmd, const char *chdir)
 {
-	DDUMP(cmd);
-	DDUMP(chdir);
 	if(!IsOpen())
 		Open();
 	if(hide_password_to > hide_password_from) {

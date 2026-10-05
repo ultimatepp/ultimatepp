@@ -106,7 +106,7 @@ bool VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const 
 
 bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet)
 {
-	return sys(VcpkgExe() + " install " + name + ":" + triplet, Null) == 0;
+	return sys(VcpkgExe() + " install --recurse " + name + ":" + triplet, Null) == 0;
 }
 
 Index<String> VcpkgInstalledExternalDependencies(const String& triplet)

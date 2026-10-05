@@ -112,8 +112,10 @@ bool HasRPM()
 
 String ExternalDependenciesManagerId()
 {
-	if(GetVar("VCPKG") == "1")
+#ifdef PLATFORM_WIN32
+//	if(GetVar("VCPKG") == "1")
 		return "VCPKG";
+#endif
 	if(HasDPKG())
 		return "DPKG";
 	if(HasRPM())
