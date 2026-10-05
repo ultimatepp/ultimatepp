@@ -574,11 +574,8 @@ String CppBuilder::GetBuildInfoPath() const
 	return AppendFileName(outdir, "build_info.h");
 }
 
-void CppBuilder::SaveBuildInfo(const String& package)
+void MkBuildInfo(Stream& info)
 {
-	String path = GetBuildInfoPath();
-	RealizePath(path);
-	FileOut info(path);
 	Time t = GetSysTime();
 	info << "#define bmYEAR   " << (int)t.year << "\r\n";
 	info << "#define bmMONTH  " << (int)t.month << "\r\n";
@@ -590,7 +587,14 @@ void CppBuilder::SaveBuildInfo(const String& package)
 	        (int)t.year, (int)t.month, (int)t.day, (int)t.hour, (int)t.minute, (int)t.second);
 	info << "#define bmMACHINE " << AsCString(GetComputerName()) << "\r\n";
 	info << "#define bmUSER    " << AsCString(GetUserName()) << "\r\n";
+}
 
+void CppBuilder::SaveBuildInfo(const String& package)
+{
+	String path = GetBuildInfoPath();
+	RealizePath(path);
+	FileOut info(path);
+	MkBuildInfo(info);
 	if(package == mainpackage)
 		info << Join(RepoInfo(package), "\r\n");
 }

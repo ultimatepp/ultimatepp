@@ -26,7 +26,7 @@ file
 	FontWin32.cpp,
 	FontFc.cpp,
 	FontCoco.mm,
-	FontCocoNOMM.cpp,
+	NoFont.cpp,
 	Draw.cpp,
 	DrawText.cpp,
 	DrawData.cpp,

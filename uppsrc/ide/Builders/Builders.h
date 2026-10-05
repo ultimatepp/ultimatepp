@@ -92,6 +92,8 @@ struct CppBuilder : Builder {
 	CppBuilder() : wspc(GetIdeWorkspace()) {}
 };
 
+void MkBuildInfo(Stream& info);
+
 String SourceToObjName(const String& package, const String& srcfile_);
 
 struct GccBuilder : CppBuilder {

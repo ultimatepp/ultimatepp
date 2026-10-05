@@ -1,0 +1,14 @@
+description "Commandline U++ package/assembly builder\377";
+
+uses
+	ide\Builders;
+
+uses(!POSIX) Core/SSL;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "",
+	"" = "NOMM";
+
