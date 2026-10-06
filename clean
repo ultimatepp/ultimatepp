@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+rm -rf .config/*
+rm -rf .cache/*
+rm -f theide
+rm -f umk
+	
