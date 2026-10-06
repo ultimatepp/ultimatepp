@@ -24,11 +24,12 @@ method.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:CtrlRetriever`:`:Put`(Upp`:`:Ctrl`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) void]_[* Put]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], 
-[*@4 T][@(0.0.255) `&]_[*@3 val])&]
+lass]_[*@4 T]>_[@(0.0.255) void]_[* Put]([%%_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl][@(0.0.255) `&]_[*@3 ctrl], [*@4 T][@(0.0.255) `&]_[*@3 val])&]
 [s5;:Upp`:`:CtrlRetriever`:`:operator`(`)`(Upp`:`:Ctrl`&`,T`&`): [@(0.0.255) template]_
-<[@(0.0.255) class]_[*@4 T]>_[_^Upp`:`:CtrlRetriever^ CtrlRetriever][@(0.0.255) `&]_[* oper
-ator()]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], [*@4 T][@(0.0.255) `&]_[*@3 val])&]
+<[@(0.0.255) class]_[*@4 T]>_[_^topic`:`/`/CtrlLib`/src`/CtrlRetriever`_en`-us^ CtrlRet
+riever][@(0.0.255) `&]_[* operator()]([%%_^topic`:`/`/CtrlCore`/src`/Ctrl`_en`-us`#Ctrl`:`:class^ C
+trl][@(0.0.255) `&]_[*@3 ctrl], [*@4 T][@(0.0.255) `&]_[*@3 val])&]
 [s2;%% Assigns [%-*@3 val] to [%-*@3 ctrl] and adds this to widget `- 
 data mappings (to be used by Retrieve).&]
 [s3;%% &]
@@ -41,13 +42,15 @@ data mappings (to be used by Retrieve).&]
 [s2;%% Moves data mapped using Put from widgets back to variables.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:CtrlRetriever`:`:operator`<`<`(Upp`:`:Event`<`>`): [_^Upp`:`:Event^ Event]<
->_[* operator<<]([_^Upp`:`:Event^ Event]<>_[*@3 cb])&]
+[s5;:Upp`:`:CtrlRetriever`:`:operator`<`<`(Upp`:`:Event`<`>`): [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<>_[* operator<<]([_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ Event
+]<>_[*@3 cb])&]
 [s2;%% Adds [%-*@3 cb] event to WhenAction events of all mapped widgets.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CtrlRetriever`:`:operator`^`=`(Upp`:`:Event`<`>`): [_^Upp`:`:Event^ Event]<
->_[* operator`^`=]([_^Upp`:`:Event^ Event]<>_[*@3 cb])&]
+[s5;:Upp`:`:CtrlRetriever`:`:operator`^`=`(Upp`:`:Event`<`>`): [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<>_[* operator`^`=]([_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ Eve
+nt]<>_[*@3 cb])&]
 [s2;%% Sets WhenAction of all mapped widgets to [%-*@3 cb].&]
 [s3;%% &]
 [s4; &]
