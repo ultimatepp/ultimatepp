@@ -458,6 +458,7 @@ public:
 	Array<OptItem>           target;
 	Array<OptItem>           library;
 	Array<OptItem>           static_library;
+	Array<OptItem>           dynamic_library;
 	Array<OptItem>           link;
 	Array<OptItem>           option;
 	Array<OptItem>           include;
@@ -572,6 +573,9 @@ struct Builder {
 	FileTime         start_time;
 
 	Index<String>    pkg_config; // names of packages for pkg-config
+	Index<String>    libs;
+	Index<String>    static_libs; // libraries to be linked statically
+	Index<String>    dynamic_libs; // libraries to be linked dynamically
 	Vector<String>   CINC;
 	Vector<String>   Macro;
 
@@ -582,6 +586,7 @@ struct Builder {
 
 	static VectorMap<String, String> cmdx_cache; // caching e.g. pkg-config
 
+	String                 EvalCmdX(const String& cmd);
 	String                 CmdX(const char *s);
 
 	Time                   HdependFileTime(const String& path);

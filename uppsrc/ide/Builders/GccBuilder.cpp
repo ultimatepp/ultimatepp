@@ -331,8 +331,12 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	bool making_lib = HasFlag("MAKE_LIB") || HasFlag("MAKE_MLIB");
 
 	if(!making_lib) {
-		Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
-		linkfile.Append(libs);
+		for(String s : Split(Gather(pkg.library, config.GetKeys()), ' '))
+			libs.FindAdd(s);
+		for(String s : Split(Gather(pkg.static_library, config.GetKeys()), ' '))
+			static_libs.FindAdd(s);
+		for(String s : Split(Gather(pkg.dynamic_library, config.GetKeys()), ' '))
+			dynamic_libs.FindAdd(s);
 	}
 
 	if(pch_file.GetCount())
@@ -496,6 +500,7 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 
 bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
+	DDUMPC(linkfile);
 	if(!Wait())
 		return false;
 	PutLinking();
@@ -510,7 +515,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 #endif
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
-			Vector<String> lib;
 			String lnk = CompilerName();
 //			if(IsVerbose())
 //				lnk << " -v";
@@ -575,31 +579,31 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					if(ToLower(GetFileExt(linkfile[i])) == ".o")
 						lnk  << ' ' << GetPathQ(linkfile[i]);
 					else
-						lib.Add(linkfile[i]);
+						libs.FindAdd(linkfile[i]);
 				}
-			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
+			bool group = !HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC");
+			if(group)
 				lnk << " -Wl,--start-group ";
 			for(String s : pkg_config)
-				if(portable) {
-					Vector<String> libs = Split(HostSys("pkg-config --libs " + s), CharFilterWhitespace);
-					libs.RemoveIf([&](int i) { return findarg(libs[i], "-ldl", "-lpthread", "-lrt", "-lm") >= 0; });
-					if(libs.GetCount())
-						lnk << ' ' << Join(libs, " ");
-				}
-				else
-					lnk << " `" << Host::CMDLINE_PREFIX << "pkg-config --libs " << s << "`";
+				for(String s : Split(EvalCmdX("pkg-config --libs " + s), CharFilterWhitespace))
+					if(s.TrimStart("-l"))
+						libs.FindAdd(s);
+					else
+						lnk << ' ' << s;
+			
+			DDUMP(libs);
+			DDUMP(dynamic_libs);
+			DDUMP(static_libs);
 			for(int pass = 0; pass < 2; pass++) {
-				for(i = 0; i < lib.GetCount(); i++) {
-					String ln = lib[i];
-					if(portable && (ln == "dl" || ln == "pthread" || ln == "rt" || ln == "m"))
+				for(String ln : libs) {
+					if(static_libs.Find(ln) >= 0 || dynamic_libs.Find(ln) >= 0)
 						continue;
-
+					
 					String ext = ToLower(GetFileExt(ln));
 
-					// unix shared libs shall have version number AFTER .so (sic)
+					// unix shared libs might have version number AFTER .so
 					// so we shall find the true extension....
-					if(HasFlag("POSIX") && ext != ".so")
-					{
+					if(HasFlag("POSIX") && ext != ".so") {
 						const char *c = ln.Last();
 						while(--c >= ~ln)
 							if(!IsDigit(*c) && *c != '.')
@@ -609,23 +613,34 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							ext = ".so";
 					}
 
-					if(pass == 0) {
+					if(pass == 0) { //
 						if(ext == ".a")
-							lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
+							lnk << ' ' << GetPathQ(FindInDirs(libpath, ln));
 					}
 					else
 						if(ext != ".a") {
 							if(ext == ".so" || ext == ".dll" || ext == ".lib")
-								lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
+								lnk << ' ' << GetPathQ(FindInDirs(libpath, ln));
 							else
 								lnk << " -l" << ln;
 						}
 				}
-				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX"))
-					lnk << " -Wl,--end-group";
 			}
-			if(portable)
-				lnk << " -Wl,-Bdynamic -lpthread -ldl -lrt -lm";
+			
+			if(static_libs.GetCount()) {
+				lnk << " -Wl,-Bstatic";
+				for(String ln : static_libs)
+					lnk << " -l" << ln;
+			}
+
+			if(dynamic_libs.GetCount()) {
+				lnk << " -Wl,-Bdynamic";
+				for(String ln : dynamic_libs)
+					lnk << " -l" << ln;
+			}
+
+			if(group)
+				lnk << " -Wl,--end-group";
     
 			PutConsole("Linking...");
 			bool error = false;
