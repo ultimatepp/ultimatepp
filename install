@@ -1,5 +1,4 @@
-const char *install_script =
-R"--(#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 AskContinue()
 {
@@ -86,30 +85,20 @@ else
   fi
 fi
 
-if ./umks32 >/dev/null; then
-  echo
-  read -p "Use prebuilt binary umks32 to accelerate the build (Y/n)?" answer
-  if [ "$answer" == "${answer//[nN]/x}" ]; then
-    echo Using umks32 to build
-    UMK="./umks32"
-  fi
-fi
+mkdir .config
 
-if [ -z "$UMK" ]; then
-  echo umks32 cannot be used, building umk using make
-  ./configure
-  make -f umkMakefile -j 4
-  UMK="./umk"
-fi
-
+echo Building umk
 if clang++ --version >/dev/null; then
-	echo $UMK ./uppsrc ide CLANG -brs ./theide
-	$UMK ./uppsrc ide CLANG -brsH ./theide
-	$UMK ./uppsrc umk CLANG -brsH ./umk
+	bash mkumk_clang.sh
 else
-	echo $UMK ./uppsrc ide GCC -brs ./theide
-	$UMK ./uppsrc ide GCC -brsH ./theide
-	$UMK ./uppsrc umk GCC -brsH ./umk
+	bash mkumk_gcc.sh
+fi
+
+echo Building TheIDE
+if clang++ --version >/dev/null; then
+	./umk ./uppsrc ide CLANG -brsH ./theide
+else
+	./umk ./uppsrc ide GCC -brsH ./theide
 fi
 
 theide=./theide
@@ -132,13 +121,3 @@ else
   echo Something went wrong.
   echo Please notify developers.
 fi
-)--";
-
-const char *clean_script =
-R"--(#!/usr/bin/env bash
-
-rm -rf .config/*
-rm -rf .cache/*
-rm -f theide
-rm -f umk
-)--";
