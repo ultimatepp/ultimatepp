@@ -332,11 +332,11 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	if(!making_lib) {
 		for(String s : Split(Gather(pkg.library, config.GetKeys()), ' '))
-			libs.FindAdd(s);
+			linkfile << s + ">L";
 		for(String s : Split(Gather(pkg.static_library, config.GetKeys()), ' '))
-			static_libs.FindAdd(s);
+			linkfile << s + ">S";
 		for(String s : Split(Gather(pkg.dynamic_library, config.GetKeys()), ' '))
-			dynamic_libs.FindAdd(s);
+			linkfile << s + ">D";
 	}
 
 	if(pch_file.GetCount())
@@ -403,8 +403,9 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	lib << GetPathQ(product);
 
 	String llib;
-	for(int i = 0; i < obj.GetCount(); i++)
-		llib << ' ' << GetPathQ(obj[i]);
+	for(String o : obj)
+		if(o.Find('>') < 0)
+			llib << ' ' << GetPathQ(o);
 	PutConsole("Creating library...");
 	DeleteFile(hproduct);
 	if(is_shared) {
@@ -498,15 +499,32 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	return true;
 }
 
-bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
+bool GccBuilder::Link(const Vector<String>& linkfile0, const String& linkoptions, bool createmap)
 {
-	DDUMPC(linkfile);
 	if(!Wait())
 		return false;
 	PutLinking();
 
+	Vector<String> linkfile = clone(linkfile0);
+
 	if(HasFlag("MAKE_MLIB") || HasFlag("MAKE_LIB"))
 		return CreateLib(ForceExt(target, ".a"), linkfile, Vector<String>(), Vector<String>(), linkoptions);
+
+	Index<String>    libs;
+	Index<String>    static_libs; // libraries to be linked statically
+	Index<String>    dynamic_libs; // libraries to be linked dynamically
+	
+	for(String s : linkfile)
+		if(s.TrimEnd(">L"))
+			libs << s;
+		else
+		if(s.TrimEnd(">S"))
+			static_libs << s;
+		else
+		if(s.TrimEnd(">D"))
+			dynamic_libs << s;
+	
+	linkfile.RemoveIf([&](int i) { return linkfile[i].Find('>') >= 0; });
 
 	int time = msecs();
 	bool portable = HasFlag("PORTABLE_HYBRID");
@@ -590,10 +608,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 						libs.FindAdd(s);
 					else
 						lnk << ' ' << s;
-			
-			DDUMP(libs);
-			DDUMP(dynamic_libs);
-			DDUMP(static_libs);
+
 			for(int pass = 0; pass < 2; pass++) {
 				for(String ln : libs) {
 					if(static_libs.Find(ln) >= 0 || dynamic_libs.Find(ln) >= 0)

@@ -573,9 +573,6 @@ struct Builder {
 	FileTime         start_time;
 
 	Index<String>    pkg_config; // names of packages for pkg-config
-	Index<String>    libs;
-	Index<String>    static_libs; // libraries to be linked statically
-	Index<String>    dynamic_libs; // libraries to be linked dynamically
 	Vector<String>   CINC;
 	Vector<String>   Macro;
 
