@@ -217,6 +217,7 @@ bool RepoSync::ListGit(const String& path)
 {
 	Vector<String> ln = Split(GitCmd(path, "status --porcelain ."), CharFilterCrLf);
 	bool actions = false;
+	Index<String> remove_dirs;
 	for(int i = 0; i < ln.GetCount(); i++) {
 		String h = ln[i];
 		if(h.GetCount() > 3) {
@@ -244,6 +245,19 @@ bool RepoSync::ListGit(const String& path)
 				an = as[action];
 				color = AColor(c[action]);
 			}
+
+			if(action == REMOVE) {
+				while(file.GetCount() > 3) {
+					String dir = GetFileFolder(file);
+					if(DirectoryExists(dir))
+						break;
+					file = dir;
+				}
+				if(remove_dirs.Find(file) >= 0)
+					continue;
+				remove_dirs.Add(file);
+			}
+				
 			int ii = list.GetCount();
 			list.Add(action, file, Null, AttrText(action < 0 ? h : file).Ink(color));
 			if(action >= 0) {
@@ -464,6 +478,15 @@ again:
 		String message;
 		String filelist;   // <-- list of files to update
 		bool commit = false;
+		has_skips = false;
+		for(int i = l; i < list.GetCount(); i++) {
+			int action = list.Get(i, 0);
+			if(findarg(action, REPOSITORY, MESSAGE) >= 0)
+				break;
+			Value sw = list.Get(i, 2);
+			if(sw == 1)
+				has_skips = true;
+		}
 		while(l < list.GetCount()) {
 			int action = list.Get(l, 0);
 			if(action == REPOSITORY)
@@ -478,7 +501,7 @@ again:
 				String msg = list.Get(l, 3);
 				if(commit) {
 					if(svn_commit && sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\"") == 0 ||
-				       git_commit && sys.Git(repo_dir, "commit -m \"" << msg << "\"") == 0)
+				       git_commit && sys.Git(repo_dir, (has_skips ? "commit -m \"" : "commit -a -m \"") << msg << "\"") == 0)
 						msg.Clear();
 				}
 				msgmap.GetAdd(repo_dir) = msg;
@@ -532,7 +555,11 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
-	sys.Git(repo_dir, "add \"" + file + "\"");
+	if(has_skips)
+		sys.Git(repo_dir, (action == REMOVE ? "rm -r \"" : "add \"") + file + "\"");
+	else
+	if(action == ADD)
+		sys.Git(repo_dir, "add \"" + file + "\"");
 	return true;
 }
 
