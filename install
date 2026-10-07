@@ -85,6 +85,8 @@ else
   fi
 fi
 
+mkdir .config
+
 echo Building umk
 if clang++ --version >/dev/null; then
 	bash mkumk_clang.sh

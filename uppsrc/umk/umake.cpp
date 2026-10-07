@@ -1,9 +1,5 @@
 #include "umake.h"
 
-#ifndef bmYEAR
-#include <build_info.h>
-#endif
-
 bool SilentMode;
 
 String GetUmkFile(const char *fn)
@@ -80,14 +76,6 @@ String GetAndroidSDKPath()
 }
 
 #ifdef flagMAIN
-
-String GenerateVersionNumber()
-{
-#ifdef bmGIT_REVCOUNT
-	return AsString(atoi(bmGIT_REVCOUNT) + 2270);
-#endif
-	return "";
-}
 
 CONSOLE_APP_MAIN
 {
@@ -421,8 +409,7 @@ CONSOLE_APP_MAIN
 			SetExitCode(1);
 	}
 	else {
-		String version = GenerateVersionNumber();
-		Puts("umk (U++MaKe) " + version + "\n\n"
+		Puts("umk (U++MaKe) 2026.10.06\n\n"
 		     "Usage:\n"
 		     "    umk assembly package [build_method] [--hub-dir dir] [--hub-only] [-options] [+flags] [out]\n"
 		     "    [! [runarg]..]\n\n"

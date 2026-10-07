@@ -35,10 +35,7 @@ CONSOLE_APP_MAIN {
 		}
 	}
 	
-	SaveFile(GetFileFolder(uppsrc) + "/mkumk_blitz.cpp", blitz);
-	
-	FileOut info(GetFileFolder(uppsrc) + "/build_info.h");
-	MkBuildInfo(info);
+	SaveChangedFile2(GetFileFolder(uppsrc) + "/mkumk_blitz.cpp", blitz);
 	
 	String cmdline = "-O2 -pthread -Iuppsrc -I. -DflagMAIN -DNO_FONTSYS -DCUSTOM_FONTSYS mkumk_blitz.cpp " + ifile + " -lstdc++ -lm -lz -lbz2 "
 	                 "`pkg-config --libs libpng` -o umk";
