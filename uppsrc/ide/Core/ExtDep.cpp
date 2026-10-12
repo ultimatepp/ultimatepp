@@ -81,11 +81,12 @@ Vector<String> RequiredExternalDependencies()
 
 Vector<String> MissingExternalDependencies(const String& triplet)
 {
-	Vector<String> missing;
+	Index<String> missi;
 	Index<String> installed = InstalledExternalDependencies(triplet);
 	for(String s : RequiredExternalDependencies())
 		if(installed.Find(s) < 0)
-			missing << s;
+			missi.FindAdd(s);
+	Vector<String> missing = missi.PickKeys();
 	Sort(missing);
 	return missing;
 }
