@@ -458,6 +458,7 @@ public:
 	Array<OptItem>           target;
 	Array<OptItem>           library;
 	Array<OptItem>           static_library;
+	Array<OptItem>           dynamic_library;
 	Array<OptItem>           link;
 	Array<OptItem>           option;
 	Array<OptItem>           include;
@@ -582,6 +583,7 @@ struct Builder {
 
 	static VectorMap<String, String> cmdx_cache; // caching e.g. pkg-config
 
+	String                 EvalCmdX(const String& cmd);
 	String                 CmdX(const char *s);
 
 	Time                   HdependFileTime(const String& path);

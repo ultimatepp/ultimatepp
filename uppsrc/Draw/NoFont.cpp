@@ -3,9 +3,7 @@
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-#if !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA) && defined(flagNOMM)
-
-// NOMM serves mostly to build umk (or other console app) without Objective-C++
+#if defined(NO_FONTSYS) || !defined(CUSTOM_FONTSYS) && defined(PLATFORM_COCOA) && defined(flagNOMM)
 
 namespace Upp {
 

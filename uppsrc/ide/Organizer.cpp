@@ -729,6 +729,7 @@ PackageEditor::PackageEditor()
 	Add("Targets", actual.target);
 	Add("Libraries", actual.library);
 	Add("Static libraries", actual.static_library);
+	Add("Dynamic libraries", actual.dynamic_library);
 	Add("Link options", actual.link);
 	Add("Compiler options", actual.option);
 	Add("Internal includes", actual.include);

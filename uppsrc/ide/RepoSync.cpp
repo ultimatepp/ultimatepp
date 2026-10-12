@@ -478,6 +478,15 @@ again:
 		String message;
 		String filelist;   // <-- list of files to update
 		bool commit = false;
+		has_skips = false;
+		for(int i = l; i < list.GetCount(); i++) {
+			int action = list.Get(i, 0);
+			if(findarg(action, REPOSITORY, MESSAGE) >= 0)
+				break;
+			Value sw = list.Get(i, 2);
+			if(sw == 1)
+				has_skips = true;
+		}
 		while(l < list.GetCount()) {
 			int action = list.Get(l, 0);
 			if(action == REPOSITORY)
@@ -492,7 +501,7 @@ again:
 				String msg = list.Get(l, 3);
 				if(commit) {
 					if(svn_commit && sys.CheckSystem(SvnCmd(sys, "commit", repo_dir) << filelist << " -m \"" << msg << "\"") == 0 ||
-				       git_commit && sys.Git(repo_dir, "commit -m \"" << msg << "\"") == 0)
+				       git_commit && sys.Git(repo_dir, (has_skips ? "commit -m \"" : "commit -a -m \"") << msg << "\"") == 0)
 						msg.Clear();
 				}
 				msgmap.GetAdd(repo_dir) = msg;
@@ -546,7 +555,11 @@ bool RepoSync::GitFile(UrepoConsole& sys, int action, const String& path, bool r
 			sys.Git(repo_dir, "restore \"" + file + "\"");
 		return false;
 	}
-	sys.Git(repo_dir, (action == REMOVE ? "rm -r \"" : "add \"") + file + "\"");
+	if(has_skips)
+		sys.Git(repo_dir, (action == REMOVE ? "rm -r \"" : "add \"") + file + "\"");
+	else
+	if(action == ADD)
+		sys.Git(repo_dir, "add \"" + file + "\"");
 	return true;
 }
 

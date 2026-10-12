@@ -161,14 +161,12 @@ bool AndroidBuilder::BuildPackage(
 	if(isBlitz) {
 		Logd() << METHOD_NAME << "Creating blitz step for package " << package << ".";
 		
-		BlitzBuilderComponent bc(this);
-		bc.SetWorkingDir(project->GetJniDir() + DIR_SEPS + package);
-		bc.SetBlitzFileName("blitz");
-		
-		Blitz blitz = bc.MakeBlitzStep(*this,
+		outdir = project->GetJniDir() + DIR_SEPS + package;
+		Blitz blitz = MakeBlitzStep(*this,
 			nativeSources, nativeSourcesOptions,
 		    nativeObjects, immfile, ".o",
-		    noBlitzNativeSourceFiles);
+		    noBlitzNativeSourceFiles,
+		    Null, "blitz");
 		
 		if(!FileExists(blitz.path)) {
 			Loge() << METHOD_NAME << "Blitz was enable, but no blitz file generated.";

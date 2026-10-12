@@ -41,6 +41,17 @@ Time Builder::HdependFileTime(const String& path)
 	                          : HdependGetFileTime(path, &dependencies);
 }
 
+String Builder::EvalCmdX(const String& cmd)
+{
+	int q = cmdx_cache.Find(cmd);
+	if(q >= 0)
+		return cmdx_cache[q];
+	String h = Sys(cmd);
+	cmdx_cache.Add(cmd, h);
+	IdeProcessEvents();
+	return h;
+}
+
 String Builder::CmdX(const char *s)
 { // expand ` character delimited sections by executing them as commands
 	String r, cmd;
@@ -48,6 +59,7 @@ String Builder::CmdX(const char *s)
 	for(; *s; s++)
 		if(*s == '`') {
 			if(cmdf) {
+				r << EvalCmdX(cmd);
 				int q = cmdx_cache.Find(cmd);
 				if(q >= 0)
 					r << cmdx_cache[q];
