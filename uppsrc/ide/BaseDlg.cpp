@@ -223,8 +223,6 @@ bool BaseSetupDlg::Run(String& vars)
 	output   <<= GetUppOut();
 	include  <<= GetVar("INCLUDE");
 	upv      <<= GetVar("UPPHUB");
-	vcpkg.Hide(); // deactivate for now
-//	vcpkg    <<= GetVar("VCPKG") == "1";
 	all      <<= GetVar("_all") == "1";
 	base     <<= vars;
 	new_base = IsNull(vars);

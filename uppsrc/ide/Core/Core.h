@@ -572,6 +572,8 @@ struct Builder {
 	bool             allow_pch;
 	FileTime         start_time;
 
+	VectorMap<String, String> bm;
+
 	Index<String>    pkg_config; // names of packages for pkg-config
 	Vector<String>   CINC;
 	Vector<String>   Macro;
@@ -619,6 +621,7 @@ struct Builder {
 	int                    Execute(const char *cmdline);
 	int                    Execute(const char *cl, Stream& out);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
+	void                   AddVCPKGPaths();
 };
 
 String TrimSlash(String s);

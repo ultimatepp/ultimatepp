@@ -99,7 +99,6 @@ String MakeBuild::GetVcpkgTriplet(const VectorMap<String, String>& bm) const
 	return VcpkgTriplet(bm, GetTargetMode().linkmode);
 }
 
-
 void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -179,6 +178,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	Builder* b = (*BuilderMap().Get(builder))();
 	b->host = host;
 	b->script = bm.Get("SCRIPT", "");
+	b->bm = clone(bm);
 	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
 		AndroidBuilder* pAb = dynamic_cast<AndroidBuilder*>(b);
 		if (!pAb) {
@@ -245,13 +245,6 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->main_conf = !!main_conf.GetCount();
 		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
 		b->start_time = start_time;
-
-		if(IsVCPKG() && RequiredExternalDependenciesInfo().GetCount()) {
-			String libs = GetFileFolder(VcpkgExe()) + "/installed/" + GetVcpkgTriplet(bm);
-			
-			b->include << libs + "/include";
-			b->libpath << libs + "/lib";
-		}
 	}
 	return b;
 }

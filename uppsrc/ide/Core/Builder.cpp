@@ -101,3 +101,13 @@ int Builder::Execute(const char *cl, Stream& out)
 {
 	return host->Execute(CmdX(cl), out);
 }
+
+void Builder::AddVCPKGPaths()
+{
+	if(IsVCPKG() && RequiredExternalDependenciesInfo().GetCount()) {
+		String libs = GetFileFolder(VcpkgExe()) + "/installed/" + VcpkgTriplet(bm, config.Find("SHARED") >= 0 || config.Find("SO") >= 0);
+		
+		include << libs + "/include";
+		libpath << libs + "/lib";
+	}
+}
