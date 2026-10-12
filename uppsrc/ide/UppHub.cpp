@@ -582,7 +582,7 @@ void UppHubDlg::Update()
 {
 	if(!PromptYesNo("Pull updates for all modules?"))
 		return;
-	UrepoConsole console;
+	SysConsole console;
 
 	int errors = 0;
 	for(const UppHubNest& n : upv) {
@@ -605,7 +605,7 @@ void UppHubDlg::Update()
 void UppHubDlg::Install(const Index<String>& ii_)
 {
 	Index<String> ii = clone(ii_);
-	UrepoConsole console;
+	SysConsole console;
 	if(ii.GetCount()) {
 		int i = 0;
 		while(i < ii.GetCount()) {
