@@ -32,20 +32,13 @@ Value UppHubDlg::LoadJson(const String& url)
 
 #ifdef PLATFORM_POSIX
 		s = Sys("curl --silent " + url);
+#else
+		s = Sys("curl.exe --silent " + url);
+#endif
 		if (IsNull(s)) {
 			String msg = "Failed to execute UppHub download nests request.";
 			return ErrorValue(msg);
 		}
-#else
-		HttpRequest r(url);
-		r.Execute();
-		if (!r.IsSuccess()) {
-			String msg = "Failed to execute UppHub download nests request with error code " + IntStr(r.GetStatusCode()) + ".";
-			return ErrorValue(msg);
-		}
-
-		s = r.GetContent();
-#endif
 	}
 	
 	Value v = ParseJSON(s);
