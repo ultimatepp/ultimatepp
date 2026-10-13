@@ -38,6 +38,16 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	case 1:
 		cfg.FindAdd("SHARED");
 	}
+	
+	if(RequiredExternalDependenciesInfo().GetCount()) {
+		if(IsRPM())
+			cfg.FindAdd("RPM");
+		if(IsDPKG())
+			cfg.FindAdd("DPKG");
+		if(IsVCPKG())
+			cfg.FindAdd("VCPKG");
+	}
+
 	int q = m.package.Find(wspc[package]);
 	if(q >= 0) {
 		const PackageMode& p = m.package[q];
