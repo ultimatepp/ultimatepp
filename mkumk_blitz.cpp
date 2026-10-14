@@ -110,15 +110,18 @@
 #ifdef LDUMP
 #undef LDUMP
 #endif
-<<<<<<< HEAD
 #ifdef METHOD_NAME
 #undef METHOD_NAME
 #endif
 #ifdef LDUMP
 #undef LDUMP
 #endif
-=======
->>>>>>> 7ea5362bd8b7484868b4e981479afd1ecff879d6
+#ifdef METHOD_NAME
+#undef METHOD_NAME
+#endif
+#ifdef LDUMP
+#undef LDUMP
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F24
@@ -282,12 +285,12 @@
 #ifdef LLOG
 #undef LLOG
 #endif
-<<<<<<< HEAD
 #ifdef LLOG
 #undef LLOG
 #endif
-=======
->>>>>>> 7ea5362bd8b7484868b4e981479afd1ecff879d6
+#ifdef LLOG
+#undef LLOG
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F58
@@ -755,7 +758,6 @@
 #ifdef MY_DEFINE_KNOWN_FOLDER
 #undef MY_DEFINE_KNOWN_FOLDER
 #endif
-<<<<<<< HEAD
 #ifdef Ptr
 #undef Ptr
 #endif
@@ -768,8 +770,18 @@
 #ifdef MY_DEFINE_KNOWN_FOLDER
 #undef MY_DEFINE_KNOWN_FOLDER
 #endif
-=======
->>>>>>> 7ea5362bd8b7484868b4e981479afd1ecff879d6
+#ifdef Ptr
+#undef Ptr
+#endif
+#ifdef byte
+#undef byte
+#endif
+#ifdef CY
+#undef CY
+#endif
+#ifdef MY_DEFINE_KNOWN_FOLDER
+#undef MY_DEFINE_KNOWN_FOLDER
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F123
@@ -849,12 +861,12 @@
 #ifdef LLOG
 #undef LLOG
 #endif
-<<<<<<< HEAD
 #ifdef LLOG
 #undef LLOG
 #endif
-=======
->>>>>>> 7ea5362bd8b7484868b4e981479afd1ecff879d6
+#ifdef LLOG
+#undef LLOG
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F136
@@ -982,6 +994,30 @@
 
 #define BLITZ_INDEX__ F157
 #include "uppsrc/Core/z.cpp"
+#ifdef LDUMP
+#undef LDUMP
+#endif
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef DEF_MEM_LEVEL
+#undef DEF_MEM_LEVEL
+#endif
+#ifdef OS_CODE
+#undef OS_CODE
+#endif
+#ifdef LDUMP
+#undef LDUMP
+#endif
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef DEF_MEM_LEVEL
+#undef DEF_MEM_LEVEL
+#endif
+#ifdef OS_CODE
+#undef OS_CODE
+#endif
 #ifdef LDUMP
 #undef LDUMP
 #endif
@@ -1182,18 +1218,11 @@
 #endif
 #undef BLITZ_INDEX__
 
-<<<<<<< HEAD
-#define BLITZ_INDEX__ F163
+#define BLITZ_INDEX__ F164
 #include "uppsrc/Core/xxHsh.cpp"
 #ifdef XXH_STATIC_LINKING_ONLY
 #undef XXH_STATIC_LINKING_ONLY
 #endif
-#undef BLITZ_INDEX__
-
-=======
->>>>>>> 7ea5362bd8b7484868b4e981479afd1ecff879d6
-#define BLITZ_INDEX__ F164
-#include "uppsrc/Core/xxHsh.cpp"
 #ifdef XXH_STATIC_LINKING_ONLY
 #undef XXH_STATIC_LINKING_ONLY
 #endif
