@@ -63,5 +63,6 @@ file
 	2019.2.txt;
 
 mainconfig
+	"" = "",
 	"" = "STATIC_PNG X11 NOSO";
 

@@ -72,6 +72,9 @@
 #ifdef METHOD_NAME
 #undef METHOD_NAME
 #endif
+#ifdef METHOD_NAME
+#undef METHOD_NAME
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F19
@@ -95,6 +98,18 @@
 
 #define BLITZ_INDEX__ F23
 #include "uppsrc/ide/Builders/Build.cpp"
+#ifdef METHOD_NAME
+#undef METHOD_NAME
+#endif
+#ifdef LDUMP
+#undef LDUMP
+#endif
+#ifdef METHOD_NAME
+#undef METHOD_NAME
+#endif
+#ifdef LDUMP
+#undef LDUMP
+#endif
 #ifdef METHOD_NAME
 #undef METHOD_NAME
 #endif
@@ -265,6 +280,12 @@
 #ifdef LLOG
 #undef LLOG
 #endif
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef LLOG
+#undef LLOG
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F59
@@ -317,6 +338,12 @@
 
 #define BLITZ_INDEX__ F62
 #include "uppsrc/Draw/NoFont.cpp"
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef LTIMING
+#undef LTIMING
+#endif
 #ifdef LLOG
 #undef LLOG
 #endif
@@ -586,6 +613,15 @@
 #ifdef OUT_BUF_SIZE
 #undef OUT_BUF_SIZE
 #endif
+#ifdef _7ZIP_ST
+#undef _7ZIP_ST
+#endif
+#ifdef IN_BUF_SIZE
+#undef IN_BUF_SIZE
+#endif
+#ifdef OUT_BUF_SIZE
+#undef OUT_BUF_SIZE
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F104
@@ -701,6 +737,30 @@
 #ifdef MY_DEFINE_KNOWN_FOLDER
 #undef MY_DEFINE_KNOWN_FOLDER
 #endif
+#ifdef Ptr
+#undef Ptr
+#endif
+#ifdef byte
+#undef byte
+#endif
+#ifdef CY
+#undef CY
+#endif
+#ifdef MY_DEFINE_KNOWN_FOLDER
+#undef MY_DEFINE_KNOWN_FOLDER
+#endif
+#ifdef Ptr
+#undef Ptr
+#endif
+#ifdef byte
+#undef byte
+#endif
+#ifdef CY
+#undef CY
+#endif
+#ifdef MY_DEFINE_KNOWN_FOLDER
+#undef MY_DEFINE_KNOWN_FOLDER
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F123
@@ -774,6 +834,12 @@
 
 #define BLITZ_INDEX__ F135
 #include "uppsrc/Core/Speller.cpp"
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef LLOG
+#undef LLOG
+#endif
 #ifdef LLOG
 #undef LLOG
 #endif
@@ -1078,6 +1144,9 @@
 
 #define BLITZ_INDEX__ F163
 #include "uppsrc/Core/xxHsh.cpp"
+#ifdef XXH_STATIC_LINKING_ONLY
+#undef XXH_STATIC_LINKING_ONLY
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F164
