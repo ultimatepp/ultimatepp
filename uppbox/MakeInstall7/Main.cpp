@@ -117,8 +117,8 @@ The archive contains CLANG based Win32 toolchain and also SDL 2, OpenSSL, MySql
 and PostgreSQL client libraries. TheIDE will also setup Microsoft C++ compiler
 if it finds one.
 	
-U++ minimum requirement is Windows 10 64 with latest patches for theide to run
-and Windows 10 64 or 32 with latest patches for compiled applications.)--");
+U++ minimum requirement is Windows 11 for theide to run and Windows 10 64 or 32
+with latest patches for compiled applications.)--");
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
