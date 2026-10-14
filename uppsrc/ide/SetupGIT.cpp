@@ -13,7 +13,7 @@ bool SetupGITMaster()
 #endif
 	static MapConvert revcv;
 
-	UrepoConsole console;
+	SysConsole console;
 	String dir;
 	for(;;) {
 		if(dlg.Run() != IDOK)

@@ -1,17 +1,22 @@
 #include "ide.h"
 
-UrepoConsole::UrepoConsole()
+SysConsole::SysConsole()
 {
 	CtrlLayoutExit(*this, "System Console");
-	list.NoHeader().NoGrid().NoCursor().AddColumn();
+	list.NoHeader().NoGrid().NoCursor().NoFocusSetCursor().AddColumn();
 	font = Courier(Ctrl::VertLayoutZoom(12));
 	list.SetLineCy(max(font.GetCy(), font().Bold().GetCy(), font().Bold().Italic().GetCy()));
 	exit.Hide();
 	cancel.Hide();
 	cancel << [this] { canceled = true; };
+	list.WhenBar << [this](Bar& bar) {
+		bar.Add("Copy all", CtrlImg::copy(), [this] {
+			list.SetClipboard(false, false);
+		});
+	};
 }
 
-void UrepoConsole::AddResult(const String& out)
+void SysConsole::AddResult(const String& out)
 {
 	const char *s = out;
 	const char *b = s;
@@ -44,13 +49,13 @@ void UrepoConsole::AddResult(const String& out)
 	list.GoEnd();
 }
 
-void UrepoConsole::Log(const Value& s, Color ink)
+void SysConsole::Log(const Value& s, Color ink)
 {
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 	list.GoEnd();
 }
 
-int UrepoConsole::System(const char *cmd, const char *chdir)
+int SysConsole::System(const char *cmd, const char *chdir)
 {
 	if(!IsOpen())
 		Open();
@@ -109,7 +114,7 @@ int UrepoConsole::System(const char *cmd, const char *chdir)
 	return code;
 }
 
-int UrepoConsole::CheckSystem(const char *s)
+int SysConsole::CheckSystem(const char *s)
 {
 	int exitcode = System(s);
 	if(exitcode) {

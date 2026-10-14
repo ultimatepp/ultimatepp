@@ -144,6 +144,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		}
 	}
 
+	AddVCPKGPaths();
+
 	String cc = CmdLine(package, pkg);
 
 //	if(IsVerbose())
