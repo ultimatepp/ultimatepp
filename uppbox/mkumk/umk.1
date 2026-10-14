@@ -1,0 +1,143 @@
+.\" Process this file with command
+.\" groff -man -Tascii umk.1
+.\"
+.TH UMK 1 Umk " " Umk 
+.SH NAME
+umk \(hy Command line builder for Ultimate++ projects
+.SH SYNOPSIS
+.BI "umk "
+.I assembly package build_method
+[-[a] [b] [r] [s] [S] [v] [1] [2] [m] [d] [M] [l] [x] [X] [Hn]]
+[+FLAG[,FLAG]...] [ out ]
+
+.SH DESCRIPTION
+.RB "Umk builds " package " from " assembly " using settings from " build_method
+.RB " and " FLAG "s. The resulting binary is created in " out "."
+.SH OPTIONS
+
+.IP assembly
+Selects in which assembly to look for package. It can be a predefined assembly 
+(in .var file) which is in Win32 in directory where is located umk.exe 
+or in POSIX systems in directories ~, ~/.upp/umk, ~/.upp/theide 
+or ~/.upp/theide. Alternatively, it is a direct set of directories 
+that represent U++ assembly separated by ','.
+.
+.IP package
+Selects which package to use. The package must exist in selected assembly.
+.IP build_method
+Selects build method to be used to build the resulting executable, specified 
+either as name of build method (which is then searched for in ~, ~/.upp/umk, 
+~/.upp/theide ~/.upp/theide directories) or it is a direct path to the .bm file.
+.
+.LP
+.IP FLAGs
+Specify witch flags should be set up. This works the same way as inside 
+TheIDE. The FLAGs must be separated by commas and prepended with "+" or ">"
+character. Please note, that ">" has special meaning in most shells and
+therefore you must either escape it or enclose in quotation marks. If flags
+are not specified, the first main configuration entry in .upp file is used.
+.LP
+Parameter
+.B options
+must always form single string, e.g. "\-arvs". 
+Please note, that some options are mutually exclusive. Don't use them 
+together unless you want to be surprised by the results.
+.SS General options:
+.RS
+.IP a
+Rebuild all. Cleans caches before doing anything.
+.IP b
+Use BLITZ.
+.IP l
+Be silent.
+.IP v
+Be verbose.
+.IP m
+Create a map file.
+.IP Hn
+Number of threads used for building (single digit). Default is number of logical cores available.
+.RE
+.SS Output mode:
+.RS
+.IP r
+Release mode.
+.IP 1
+Release mode \(hy optimize for size.
+.IP 2
+Release mode \(hy optimize for speed.
+.LP
+These options are mutually exclusive. If more of them is used then last 
+one is used. If none is used, Debug mode is assumed.
+.RE
+.SS Linking mode:
+.RS
+.IP s
+Use shared libraries.
+.IP S
+Use shared libraries and build as shared libraries.
+.LP
+These options are mutually exclusive. If more of them is used then last 
+one is used. If none is specified, static linking is used.
+.RE
+.SS Exporting:
+.RS
+.IP x
+Export files necessary to build project to the directory 
+.I out
+.IP X
+Export all files in project to directory 
+.I out
+.IP M
+Create makefile in file 
+.I out
+.IP xM,XM
+If you mix M with x or X, Makefile is exported to directory 
+.I out
+.IP k
+Do not delete target directory out when exporting.
+.LP
+Options x and X are mutually exclusive. The last specified is used. 
+.RE
+.SH FILES
+.I ~/.upp/theide/*.var
+.RS
+The assembly specifications.
+.RE
+.I ~/.upp/theide/*.bm
+.RS
+The build methods configurations.
+.RE
+.LP
+.SH EXAMPLES
+.B "umk examples UWord"
+.RS
+Opens UWord (an example implementation of text proccesor) in TheIDE. 
+.RE
+.LP
+.B umk examples AddressBook GCC \-vasb "+GUI,MT" /tmp/ab
+.RS
+Builds application AddressBook with verbose output, using 
+.BR gcc (1)
+in debug mode, with GUI and multithreading support, links it using
+shared libraries and places it in /tmp/ab.
+.RE
+.LP
+.B umk uppsrc ide \-2sx "+GUI,MT" /tmp/ide
+.RS
+Exports Makefile and all the files needed to build TheIDE itself
+(with speed optimizations) into the directory /tmp/ide/.
+.RE
+
+.SH BUGS
+If you find any bugs, please contact the developpers on our forums (
+.I http://www.ultimatepp.org/forum
+) or file a bug on projects SourceForge page (
+.I http://sourceforge.net/projects/upp
+).
+.SH AUTHORS
+Mirek Fidler, Koldo Ramirez, Tomas Rylek, Daniel Kos
+.SH DOCUMENTATION
+Full documentation is accesible from within TheIDE
+and also online on 
+.I http://ultimatepp.org
+.

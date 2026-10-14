@@ -1,0 +1,12 @@
+description "Commandline U++ package/assembly builder\377";
+
+uses
+	ide\Builders;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "",
+	"" = "NOMM";
+

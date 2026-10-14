@@ -136,7 +136,6 @@ fi
 
 const char *clean_script =
 R"--(#!/usr/bin/env bash
-#!/usr/bin/env bash
 
 rm -rf .config/*
 rm -rf .cache/*

@@ -194,8 +194,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	int recompile = 0;
 	Blitz b;
 	if(blitz) {
-		BlitzBuilderComponent bc(this);
-		b = bc.MakeBlitzStep(*this, sfile, soptions, obj, immfile, ".o", noblitz, package);
+		b = MakeBlitzStep(*this, sfile, soptions, obj, immfile, ".o", noblitz, package);
 		recompile = b.build;
 	}
 
@@ -332,8 +331,12 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	bool making_lib = HasFlag("MAKE_LIB") || HasFlag("MAKE_MLIB");
 
 	if(!making_lib) {
-		Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
-		linkfile.Append(libs);
+		for(String s : Split(Gather(pkg.library, config.GetKeys()), ' '))
+			linkfile << s + ">L";
+		for(String s : Split(Gather(pkg.static_library, config.GetKeys()), ' '))
+			linkfile << s + ">S";
+		for(String s : Split(Gather(pkg.dynamic_library, config.GetKeys()), ' '))
+			linkfile << s + ">D";
 	}
 
 	if(pch_file.GetCount())
@@ -400,8 +403,9 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	lib << GetPathQ(product);
 
 	String llib;
-	for(int i = 0; i < obj.GetCount(); i++)
-		llib << ' ' << GetPathQ(obj[i]);
+	for(String o : obj)
+		if(o.Find('>') < 0)
+			llib << ' ' << GetPathQ(o);
 	PutConsole("Creating library...");
 	DeleteFile(hproduct);
 	if(is_shared) {
@@ -495,14 +499,32 @@ bool GccBuilder::CreateLib(const String& product, const Vector<String>& obj,
 	return true;
 }
 
-bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
+bool GccBuilder::Link(const Vector<String>& linkfile0, const String& linkoptions, bool createmap)
 {
 	if(!Wait())
 		return false;
 	PutLinking();
 
+	Vector<String> linkfile = clone(linkfile0);
+
 	if(HasFlag("MAKE_MLIB") || HasFlag("MAKE_LIB"))
 		return CreateLib(ForceExt(target, ".a"), linkfile, Vector<String>(), Vector<String>(), linkoptions);
+
+	Index<String>    libs;
+	Index<String>    static_libs; // libraries to be linked statically
+	Index<String>    dynamic_libs; // libraries to be linked dynamically
+	
+	for(String s : linkfile)
+		if(s.TrimEnd(">L"))
+			libs << s;
+		else
+		if(s.TrimEnd(">S"))
+			static_libs << s;
+		else
+		if(s.TrimEnd(">D"))
+			dynamic_libs << s;
+	
+	linkfile.RemoveIf([&](int i) { return linkfile[i].Find('>') >= 0; });
 
 	int time = msecs();
 	bool portable = HasFlag("PORTABLE_HYBRID");
@@ -511,7 +533,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 #endif
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
-			Vector<String> lib;
 			String lnk = CompilerName();
 //			if(IsVerbose())
 //				lnk << " -v";
@@ -576,31 +597,28 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					if(ToLower(GetFileExt(linkfile[i])) == ".o")
 						lnk  << ' ' << GetPathQ(linkfile[i]);
 					else
-						lib.Add(linkfile[i]);
+						libs.FindAdd(linkfile[i]);
 				}
-			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
+			bool group = !HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC");
+			if(group)
 				lnk << " -Wl,--start-group ";
 			for(String s : pkg_config)
-				if(portable) {
-					Vector<String> libs = Split(HostSys("pkg-config --libs " + s), CharFilterWhitespace);
-					libs.RemoveIf([&](int i) { return findarg(libs[i], "-ldl", "-lpthread", "-lrt", "-lm") >= 0; });
-					if(libs.GetCount())
-						lnk << ' ' << Join(libs, " ");
-				}
-				else
-					lnk << " `" << Host::CMDLINE_PREFIX << "pkg-config --libs " << s << "`";
-			for(int pass = 0; pass < 2; pass++) {
-				for(i = 0; i < lib.GetCount(); i++) {
-					String ln = lib[i];
-					if(portable && (ln == "dl" || ln == "pthread" || ln == "rt" || ln == "m"))
-						continue;
+				for(String s : Split(EvalCmdX("pkg-config --libs " + s), CharFilterWhitespace))
+					if(s.TrimStart("-l"))
+						libs.FindAdd(s);
+					else
+						lnk << ' ' << s;
 
+			for(int pass = 0; pass < 2; pass++) {
+				for(String ln : libs) {
+					if(static_libs.Find(ln) >= 0 || dynamic_libs.Find(ln) >= 0)
+						continue;
+					
 					String ext = ToLower(GetFileExt(ln));
 
-					// unix shared libs shall have version number AFTER .so (sic)
+					// unix shared libs might have version number AFTER .so
 					// so we shall find the true extension....
-					if(HasFlag("POSIX") && ext != ".so")
-					{
+					if(HasFlag("POSIX") && ext != ".so") {
 						const char *c = ln.Last();
 						while(--c >= ~ln)
 							if(!IsDigit(*c) && *c != '.')
@@ -610,23 +628,34 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							ext = ".so";
 					}
 
-					if(pass == 0) {
+					if(pass == 0) { //
 						if(ext == ".a")
-							lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
+							lnk << ' ' << GetPathQ(FindInDirs(libpath, ln));
 					}
 					else
 						if(ext != ".a") {
 							if(ext == ".so" || ext == ".dll" || ext == ".lib")
-								lnk << ' ' << GetPathQ(FindInDirs(libpath, lib[i]));
+								lnk << ' ' << GetPathQ(FindInDirs(libpath, ln));
 							else
 								lnk << " -l" << ln;
 						}
 				}
-				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX"))
-					lnk << " -Wl,--end-group";
 			}
-			if(portable)
-				lnk << " -Wl,-Bdynamic -lpthread -ldl -lrt -lm";
+			
+			if(static_libs.GetCount()) {
+				lnk << " -Wl,-Bstatic";
+				for(String ln : static_libs)
+					lnk << " -l" << ln;
+			}
+
+			if(dynamic_libs.GetCount()) {
+				lnk << " -Wl,-Bdynamic";
+				for(String ln : dynamic_libs)
+					lnk << " -l" << ln;
+			}
+
+			if(group)
+				lnk << " -Wl,--end-group";
     
 			PutConsole("Linking...");
 			bool error = false;
