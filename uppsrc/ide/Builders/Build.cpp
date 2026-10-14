@@ -38,6 +38,16 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	case 1:
 		cfg.FindAdd("SHARED");
 	}
+	
+	if(RequiredExternalDependenciesInfo().GetCount()) {
+		if(IsRPM())
+			cfg.FindAdd("RPM");
+		if(IsDPKG())
+			cfg.FindAdd("DPKG");
+		if(IsVCPKG())
+			cfg.FindAdd("VCPKG");
+	}
+
 	int q = m.package.Find(wspc[package]);
 	if(q >= 0) {
 		const PackageMode& p = m.package[q];
@@ -94,15 +104,10 @@ String NoCr(const char *s)
 	return out;
 }
 
-#ifdef PLATFORM_WIN32
-
 String MakeBuild::GetVcpkgTriplet(const VectorMap<String, String>& bm) const
 {
 	return VcpkgTriplet(bm, GetTargetMode().linkmode);
 }
-
-#endif
-
 
 void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause)
 {
@@ -110,14 +115,13 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	{
 		VectorMap<String, String> env = clone(Environment());
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
-#ifdef PLATFORM_WIN32
-		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
-		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
-		
-		if(IsVcpkgInstalled()) {
+		if(IsVCPKG() && IsVcpkgInstalled()) {
 			host.exedirs << GetExeDirFile("vcpkg");
 			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
 		}
+#ifdef PLATFORM_WIN32
+		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
+		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
 		
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 #else
@@ -184,6 +188,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	Builder* b = (*BuilderMap().Get(builder))();
 	b->host = host;
 	b->script = bm.Get("SCRIPT", "");
+	b->bm = clone(bm);
 	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
 		AndroidBuilder* pAb = dynamic_cast<AndroidBuilder*>(b);
 		if (!pAb) {
@@ -241,8 +246,6 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
 		b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
 		b->common_link = bm.Get("COMMON_LINK", "");
-#ifdef PLATFORM_WIN32
-#endif
 		b->debug_link = bm.Get("DEBUG_LINK", "");
 		b->release_link = bm.Get("RELEASE_LINK", "");
 
@@ -252,15 +255,6 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->main_conf = !!main_conf.GetCount();
 		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
 		b->start_time = start_time;
-
-#ifdef PLATFORM_WIN32
-		if(RequiredExternalDependenciesInfo().GetCount()) {
-			String libs = GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm);
-			
-			b->include << libs + "/include";
-			b->libpath << libs + "/lib";
-		}
-#endif
 	}
 	return b;
 }

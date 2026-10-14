@@ -572,6 +572,8 @@ struct Builder {
 	bool             allow_pch;
 	FileTime         start_time;
 
+	VectorMap<String, String> bm;
+
 	Index<String>    pkg_config; // names of packages for pkg-config
 	Vector<String>   CINC;
 	Vector<String>   Macro;
@@ -619,6 +621,7 @@ struct Builder {
 	int                    Execute(const char *cmdline);
 	int                    Execute(const char *cl, Stream& out);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
+	void                   AddVCPKGPaths();
 };
 
 String TrimSlash(String s);
@@ -730,6 +733,9 @@ Vector<String>         MissingExternalDependencies(const String& triplet);
 
 // provided by platform:
 
+bool HasDPKG();
+bool HasRPM();
+
 String         ExternalDependenciesManagerId();
 Index<String>  InstalledExternalDependencies(const String& triplet);
 String         InstallMissingExternalDependenciesCommand(const String& triplet);
@@ -737,13 +743,9 @@ bool           InstallMissingExternalDependencies(Function<int(const String&, co
                                                   const String& triplet);
 bool           CanInstallMissingExternalDependencies();
 
-#ifdef PLATFORM_POSIX
-
-bool HasRPM();
-
-#endif
-
-#ifdef PLATFORM_WIN32
+inline bool IsRPM()    { return ExternalDependenciesManagerId() == "RPM"; }
+inline bool IsDPKG()   { return ExternalDependenciesManagerId() == "DPKG"; }
+inline bool IsVCPKG()  { return ExternalDependenciesManagerId() == "VCPKG"; }
 
 struct VcpkgInstalled : Moveable<VcpkgInstalled> {
 	String        name;
@@ -761,8 +763,7 @@ String                 VcpkgTriplet(const VectorMap<String, String>& vars, bool 
 Vector<String>         VcpkgTriplets();
 bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
 bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
-
-#endif
-
+Index<String>          VcpkgInstalledExternalDependencies(const String& triplet);
+bool                   VcpkInstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet);
 
 #endif

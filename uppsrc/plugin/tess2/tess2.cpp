@@ -1,5 +1,5 @@
 #include "tess2.h"
-#include "tesselator.h"
+#include <tesselator.h>
 
 namespace Upp {
 
@@ -55,7 +55,7 @@ void Tesselate(const Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex,
 	tessTesselate(tess, evenodd ? TESS_WINDING_ODD : TESS_WINDING_POSITIVE, TESS_POLYGONS, 3, 2, 0);
 
 	if (tess) {
-		const double* verts = tessGetVertices(tess);
+		const TESSreal* verts = tessGetVertices(tess);
 		const int nverts = tessGetVertexCount(tess);
 		for(int i = 0; i < nverts; i++)
 			vertex.Add(Pointf(verts[2 * i], verts[2 * i + 1]));

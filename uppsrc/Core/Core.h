@@ -1,10 +1,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-#ifdef flagPORTABLE_HYBRID // In Linux, activates static linking except glibc, which links as 2.27 .so. This creates universal binaries
-#include "force_link_glibc/force_link_glibc_2.27.h"
-#endif
-
 #define UPP_VERSION 0x20250200
 
 #define _MULTITHREADED
@@ -242,12 +238,7 @@ enum
 typedef int SOCKET;
 #endif
 
-#ifdef PLATFORM_WIN32
-#include <plugin/z/lib/zlib.h>
-#else
 #include <zlib.h>
-#endif
-
 #include <functional>
 #include <algorithm>
 #include <string>
@@ -259,6 +250,9 @@ typedef int SOCKET;
 #include <exception>
 #include <stdexcept>
 #include <tuple>
+
+#define PCRE2_CODE_UNIT_WIDTH 0
+#include <pcre2.h>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
@@ -414,6 +408,8 @@ class JsonIO;
 #include "Huge.h"
 
 #include "ValueCache.h"
+
+#include "Regex.h"
 
 #ifdef CPU_SIMD
 String AsString(const f32x4& x);

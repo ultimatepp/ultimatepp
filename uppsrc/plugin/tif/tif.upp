@@ -6,80 +6,19 @@ uses
 	plugin\jpg,
 	Painter;
 
-options
-	-DSTDC,
-	-DCHECK_JPEG_YCBCR_SUBSAMPLING,
-	-DDEFAULT_EXTRASAMPLE_AS_ALPHA,
-	-DSTRIPCHOP_DEFAULT=TIFF_STRIPCHOP,
-	-DPIXARLOG_SUPPORT,
-	-DZIP_SUPPORT,
-	-DOJPEG_SUPPORT,
-	-DJPEG_SUPPORT,
-	-DLOGLUV_SUPPORT,
-	-DNEXT_SUPPORT,
-	-DTHUNDER_SUPPORT,
-	-DLZW_SUPPORT,
-	-DPACKBITS_SUPPORT,
-	-DCCITT_SUPPORT;
+library
+	"tiff lzma jpeg";
+
+external_dependency(WIN32) tiff;
+
+external_dependency(DPKG) libtiff-dev;
+
+external_dependency(DPKG) liblzma-dev;
+
+external_dependency(DPKG) libjpeg-turbo8-dev;
 
 file
 	tif.h,
 	tifupp.cpp,
-	tifreg.icpp,
-	lib readonly separator,
-	lib\tiffconf.h,
-	lib\tif_config.h,
-	lib\zlib.h,
-	lib\jerror.h,
-	lib\jpeglib.h,
-	lib\t4.h,
-	lib\tif_aux.c,
-	lib\tif_close.c,
-	lib\tif_codec.c,
-	lib\tif_color.c,
-	lib\tif_compress.c,
-	lib\tif_dir.c,
-	lib\tif_dir.h,
-	lib\tif_dirinfo.c,
-	lib\tif_dirread.c,
-	lib\tif_dirwrite.c,
-	lib\tif_dumpmode.c,
-	lib\tif_error.c,
-	lib\tif_extension.c,
-	lib\tif_fax3.c,
-	lib\tif_fax3.h,
-	lib\tif_fax3sm.c,
-	lib\tif_flush.c,
-	lib\tif_getimage.c,
-	lib\tif_hash_set.c,
-	lib\tif_jpeg.c,
-	lib\tif_lerc.c,
-	lib\tif_luv.c,
-	lib\tif_lzw.c,
-	lib\tif_next.c,
-	lib\tif_ojpeg.c,
-	lib\tif_open.c,
-	lib\tif_packbits.c,
-	lib\tif_pixarlog.c,
-	lib\tif_predict.c,
-	lib\tif_predict.h,
-	lib\tif_print.c,
-	lib\tif_read.c,
-	lib\tif_strip.c,
-	lib\tif_swab.c,
-	lib\tif_thunder.c,
-	lib\tif_tile.c,
-	lib\tif_version.c,
-	lib\tif_warning.c,
-	lib\tif_write.c,
-	lib\tif_zip.c,
-	lib\tiff.h,
-	lib\tiffcomp.h,
-	lib\tiffio.h,
-	lib\tiffio.hxx,
-	lib\tiffiop.h,
-	lib\tiffvers.h,
-	lib\uvcode.h,
-	end readonly separator,
 	Copying;
 

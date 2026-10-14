@@ -156,13 +156,13 @@ Speller *sGetSpeller(int lang)
 		pp << "/usr/local/share/upp/speller;/usr/local/share/upp;/usr/share/upp/speller;/usr/share/upp";
 #endif
 		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
-		if(IsNull(path))
-			return NULL;
-		FileIn in(path);
-		if(!in)
-			return NULL;
 		q = speller.GetCount();
 		Speller& f = speller.Add(lang);
+		if(IsNull(path))
+			return nullptr;
+		FileIn in(path);
+		if(!in)
+			return nullptr;
 		FileIn user(sUserFile(lang));
 		while(!user.IsEof()) {
 			String s = user.GetLine();
@@ -195,7 +195,7 @@ Speller *sGetSpeller(int lang)
 			}
 		}
 	}
-	return &speller[q];
+	return speller[q] ? &speller[q] : nullptr;
 }
 
 bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia)

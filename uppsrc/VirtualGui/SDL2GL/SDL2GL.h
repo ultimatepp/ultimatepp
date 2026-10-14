@@ -4,11 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <GLDraw/GLDraw.h>
 
-#ifdef PLATFORM_POSIX
 #include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
 
 namespace Upp {
 	

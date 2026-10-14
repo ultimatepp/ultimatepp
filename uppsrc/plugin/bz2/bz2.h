@@ -1,11 +1,7 @@
 #ifndef __Plugin_BZ2__
 #define __Plugin_BZ2__
 
-#ifdef flagWIN32
-	#include "lib/bzlib.h"
-#else
-	#include <bzlib.h>
-#endif
+#include <bzlib.h>
 
 namespace Upp {
 	
@@ -101,4 +97,4 @@ String        BZ2Decompress(const String& data, Gate<int, int> progress = Null);
 
 }
 
-#endif//__Plugin_Z__
+#endif

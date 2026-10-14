@@ -251,6 +251,8 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			}
 		}
 	}
+
+	AddVCPKGPaths();
 	
 	String nvcc = "nvcc -c " + IncludesDefinesTargetTime(package, pkg) + " ";
 

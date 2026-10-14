@@ -1,10 +1,6 @@
 #include "Synth.h"
 
-#ifdef PLATFORM_POSIX
 #include <SDL2/SDL.h>
-#else
-#include <SDL.h>
-#endif
 
 SoundGen app_sch[NUM_CHANNELS]; // to avoid lengthy locking, keep copy under different mutex
 SoundGen gen_sch[NUM_CHANNELS]; // this is copied to generator and used to actually generate the sound

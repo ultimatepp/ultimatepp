@@ -57,7 +57,7 @@
 #include <stdio.h>       /* debug only : printf */
 #include "mem.h"         /* low level memory routines */
 #define XXH_STATIC_LINKING_ONLY   /* XXH64_state_t */
-#include <Core/lib/xxhash.h>         /* XXH_reset, update, digest */
+#include <xxhash.h>         /* XXH_reset, update, digest */
 #define FSE_STATIC_LINKING_ONLY
 #include "fse.h"
 #define HUF_STATIC_LINKING_ONLY

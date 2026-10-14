@@ -1,8 +1,7 @@
 description "The source files edit, derived from CtrlLib's LineEdit\377";
 
 uses
-	CtrlLib,
-	plugin/pcre;
+	CtrlLib;
 
 file
 	CodeEditor.h options(BUILDER_OPTION) PCH,

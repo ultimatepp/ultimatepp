@@ -1,12 +1,17 @@
 #include "Core.h"
 
-#include "lib/xxhash.h"
+#ifndef flagSHARED
+#define XXH_STATIC_LINKING_ONLY
+#endif
+#include <xxhash.h>
 
 namespace Upp {
 
 xxHashStream::xxHashStream(dword seed)
 {
+#ifdef XXH_STATIC_LINKING_ONLY
 	STATIC_ASSERT(sizeof(context) >= sizeof(XXH32_state_t));
+#endif
 	Reset(seed);
 }
 
@@ -40,7 +45,9 @@ int xxHash(const String& s)
 
 xxHash64Stream::xxHash64Stream(dword seed)
 {
+#ifdef XXH_STATIC_LINKING_ONLY
 	STATIC_ASSERT(sizeof(context) >= sizeof(XXH64_state_t));
+#endif
 	Reset(seed);
 }
 

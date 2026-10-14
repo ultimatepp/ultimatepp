@@ -478,7 +478,7 @@ Gate<int64, int64> AsGate64(Gate<int, int> gate)
 	return h;
 }
 
-#include "lib/lz4.h"
+#include <lz4.h>
 
 String FastCompress(const void *s, int sz)
 {
