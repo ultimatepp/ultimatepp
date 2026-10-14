@@ -4,24 +4,14 @@ uses
 	CtrlLib,
 	Painter;
 
+library
+	libtess2;
+
+external_dependency(VCPKG) libtess2;
+
 file
 	tess2.h,
 	tess2.cpp,
 	Source readonly separator,
-	tesselator.h,
-	bucketalloc.c,
-	bucketalloc.h,
-	dict.c,
-	dict.h,
-	geom.c,
-	geom.h,
-	mesh.c,
-	mesh.h,
-	priorityq.c,
-	priorityq.h,
-	sweep.c,
-	sweep.h,
-	tess.c,
-	tess.h,
 	Copying;
 

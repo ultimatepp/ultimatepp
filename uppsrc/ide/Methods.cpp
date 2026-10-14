@@ -872,7 +872,6 @@ String Ide::GetIncludePath()
 	if(include_path.GetCount())
 		return include_path;
 
-	TIMESTOP("GetIncludePath");
 	SetupDefaultMethod();
 	include_path = Join(GetUppDirs(), ";");
 

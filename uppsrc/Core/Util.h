@@ -536,6 +536,7 @@ String  Replace(const String& s, const VectorMap<String, String>& fr);
 WString Replace(const WString& s, const Vector<WString>& find, const Vector<WString>& replace);
 WString Replace(const WString& s, const VectorMap<WString, WString>& fr);
 
+void SetSpellPath(const String& p);
 bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia = NULL);
 bool SpellWord(const WString& ws, int lang);
 bool SpellWord(const wchar *ws, int len, int lang);

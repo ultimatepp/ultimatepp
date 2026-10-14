@@ -1,25 +1,6 @@
 #define LAYOUTFILE <ide/urepo.lay>
 #include <CtrlCore/lay.h>
 
-class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
-	Font font;
-	void AddResult(const String& out);
-	bool canceled = false;
-	int  hide_password_from = 0;
-	int  hide_password_to = 0;
-
-public:
-	int  System(const char *s, const char *chdir = nullptr);
-	int  CheckSystem(const char *s);
-	int  Git(const char *dir, const char *command, bool pwd = false);
-	void HidePassword(int from, int to)         { hide_password_from = from; hide_password_to = to; }
-	void Log(const Value& s, Color ink = SColorText());
-	void Perform()	                            { exit.Show(); Execute(); }
-	void Clear()                                { list.Clear(); }
-
-	UrepoConsole();
-};
-
 String SvnCmd(const char *cmd);
 
 String GetSvnDir(const String& p);
@@ -63,11 +44,11 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 
 	VectorMap<String, int> work;
 
-	String SvnCmd(UrepoConsole& sys, const char *svncmd, const String& dir);
+	String SvnCmd(SysConsole& sys, const char *svncmd, const String& dir);
 	bool ListGit(const String& path);
 	bool ListSvn(const String& path);
-	bool GitFile(UrepoConsole& sys, int action, const String& path, bool revert);
-	bool SvnFile(UrepoConsole& sys, String& filelist, int action, const String& path, bool revert);
+	bool GitFile(SysConsole& sys, int action, const String& path, bool revert);
+	bool SvnFile(SysConsole& sys, String& filelist, int action, const String& path, bool revert);
 	void SyncCommits();
 	void SyncList();
 	void DoDiff(int ii);

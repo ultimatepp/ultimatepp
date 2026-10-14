@@ -362,13 +362,32 @@ struct CursorInfoCtrl : Ctrl {
 	CursorInfoCtrl();
 };
 
+class SysConsole : public WithSysConsoleLayout<TopWindow> {
+	Font font;
+	void AddResult(const String& out);
+	bool canceled = false;
+	int  hide_password_from = 0;
+	int  hide_password_to = 0;
+
+public:
+	int  System(const char *s, const char *chdir = nullptr);
+	int  CheckSystem(const char *s);
+	int  Git(const char *dir, const char *command, bool pwd = false);
+	void HidePassword(int from, int to)         { hide_password_from = from; hide_password_to = to; }
+	void Log(const Value& s, Color ink = SColorText());
+	void Perform()	                            { exit.Show(); Execute(); }
+	void Clear()                                { list.Clear(); }
+
+	SysConsole();
+};
+
 void SearchEnginesDefaultSetup();
 String SearchEnginesFile();
 
 int ApplyChanges(LineEdit& editor, const String& new_content);
 
 struct RepoDiff;
-class  UrepoConsole;
+class  SysConsole;
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
@@ -1186,7 +1205,7 @@ public:
 	void      InsertWildcard(const char *s);
 	void      AddFoundFile(const String& fn, int ln, const String& line, int pos, int count);
 	bool      SearchInFile(const String& fn, const String& pattern,
-		                   bool wholeword, bool ignorecase, RegExp *regexp);
+		                   bool wholeword, bool ignorecase, Regex *regex);
 	void      ConstructFindInFiles();
 	void      SerializeFindInFiles(Stream& s);
 
@@ -1317,10 +1336,8 @@ public:
 	String GetTargetTriplet();
 	void   SyncExternalDependencies(bool force = false, bool report_ok = false);
 
-#ifdef PLATFORM_WIN32
-	bool   IsVcpkgAvailable(UrepoConsole& console);
+	bool   IsVcpkgAvailable(SysConsole& console);
 	bool   IsVcpkgAvailable();
-#endif
 
 	void   CreateSBOM();
 

@@ -188,6 +188,17 @@ void Ide::SetMain(const String& package)
 	if(IsNull(e))
 		e = GetFirstFile();
 	EditFile(e);
+	
+	String sp;
+	for(String s : GetUppDirs()) {
+		MergeWith(sp, ";", s);
+		MergeWith(sp, ";", GetFileFolder(s) + "/udc");
+	}
+	MergeWith(sp, ";", GetExeDirFile("udc"));
+	MergeWith(sp, ";", GetExeDirFile("upp.src/udc"));
+	MergeWith(sp, ";", GetHomeDirFile("udc"));
+	MergeWith(sp, ";", GetHomeDirFile("upp.src/udc"));
+	SetSpellPath(sp);
 }
 
 void Ide::Exit()

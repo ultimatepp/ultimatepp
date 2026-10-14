@@ -14,5 +14,6 @@ file
 	Postgres.lay;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI SHARED";
 

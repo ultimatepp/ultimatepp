@@ -1,24 +1,18 @@
 description "Sqlite3 database engine and U++ interface\3770,128,128";
 
-acceptflags
-	SQLITE_HAS_CODEC;
-
 flags(NOTMFC) "!GUI !CONSOLE";
 
 uses
 	Sql;
 
-options
-	"-DSQLITE_CORE -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS3_PARENTHESIS";
+library
+	sqlite3;
 
-options(SQLITE_HAS_CODEC) -DSQLITE_HAS_CODEC;
-
-link(OSX) "-framework Security";
+external_dependency(VCPKG) sqlite3;
 
 file
 	Sqlite3.h,
 	Sqlite3Schema.h,
 	Sqlite3upp.cpp,
-	lib.c,
 	Copying;
 

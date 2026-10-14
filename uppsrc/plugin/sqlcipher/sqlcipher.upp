@@ -1,0 +1,15 @@
+description "SQLCipher database engine (sqlite3 replacement) and U++ interface\3770,128,128";
+
+uses
+	Sql;
+
+library
+	sqlcipher;
+
+external_dependency(VCPKG) sqlcipher;
+
+file
+	SQLCipher.h,
+	SQLCipherSchema.h,
+	SQLCipherupp.cpp;
+

@@ -17,6 +17,16 @@ pkg_config(POSIX !OSX) "freetype2 fontconfig";
 
 pkg_config(POSIX !OSX !VIRTUALGUI) "x11 xcb expat";
 
+external_dependency(DPKG) libfreetype-dev;
+
+external_dependency(DPKG) libfontconfig1-dev;
+
+external_dependency(DPKG !VIRTUALGUI) libx11-dev;
+
+external_dependency(DPKG !VIRTUALGUI) libxcb1-dev;
+
+external_dependency(DPKG !VIRTUALGUI) libexpat1-dev;
+
 file
 	Draw.h options(BUILDER_OPTION) PCH,
 	FontInt.h,

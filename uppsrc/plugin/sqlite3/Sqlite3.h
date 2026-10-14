@@ -56,11 +56,19 @@ private:
 	int SetDBEncryption(int cipher);
 
 public:
+#if 0 // encryption support temorarily removed
+	enum Ciphers {
+		CIPHER_CHAHA2020_SQLEET,
+		CIPHER_CHAHA2020_DEFAULT
+	};
+
 	bool IsSee()                                        { return see; };
 	bool IsEncrypted()                                  { return NULL != db && encrypted; };
 	int  ChangePassword(const String& password, int cipher = CIPHER_CHAHA2020_SQLEET);
 	int  CheckDBAccess();
 	bool Open(const char *filename, const String& password = Null, int cipher = CIPHER_CHAHA2020_SQLEET);
+#endif
+	bool Open(const char *filename);
 	void Close();
 
 	operator sqlite3 *()                                { return db; }
@@ -73,11 +81,6 @@ public:
 
 	Sqlite3Session();
 	~Sqlite3Session();
-
-	enum Ciphers {
-		CIPHER_CHAHA2020_SQLEET,
-		CIPHER_CHAHA2020_DEFAULT
-	};
 };
 
 }

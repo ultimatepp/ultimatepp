@@ -247,6 +247,7 @@ bool BaseSetupDlg::Run(String& vars)
 		SetVar("OUTPUT", ~output);
 		SetVar("INCLUDE", ~include);
 		SetVar("UPPHUB", ~upv);
+//		SetVar("VCPKG", vcpkg ? "1" : "0");
 		SetVar("_all", all ? "1" : "0");
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)

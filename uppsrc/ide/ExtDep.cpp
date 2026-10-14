@@ -1,14 +1,5 @@
 #include "ide.h"
 
-#ifndef PLATFORM_WIN32
-
-String Ide::GetTargetTriplet()
-{
-	return Null;
-}
-
-#endif
-
 void Ide::SyncExternalDependencies(bool force, bool report_ok)
 {
 	String triplet = GetTargetTriplet();
@@ -59,8 +50,8 @@ void Ide::SyncExternalDependencies(bool force, bool report_ok)
 	txt << "&&Proceed?&[/ (this can be invoked again later from the Project menu)";
 	
 	if(PromptYesNo(txt)) {
-		UrepoConsole console;
-		
+		SysConsole console;
+		console.Title("Installing missing external dependencies");
 		if(InstallMissingExternalDependencies([&](const String& cmd, const String& chdir)
 		                                       { return console.System(cmd, chdir); },
 		                                       TheIde()->GetTargetTriplet()))

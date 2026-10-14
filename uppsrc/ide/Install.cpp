@@ -38,6 +38,10 @@ bool Install(bool& hasvars)
 	
 	int pass = 0;
 
+	String vcpkg = "VCPKG=1;\r\n";
+	if(HasRPM() || HasDPKG())
+		vcpkg.Clear();
+
 	auto MakeAssembly = [&](String b) {
 		String name = GetFileTitle(b);
 		String a = ass + '/' + name + ".var";
@@ -50,8 +54,7 @@ bool Install(bool& hasvars)
 				b << ';' << uppsrc;
 			if(!FileExists(a))
 				SaveFile(a,
-					"UPP = " + AsCString(b) + ";\r\n"
-					"OUTPUT = " + AsCString(out) + ";\r\n"
+					"UPP = " + AsCString(b) + ";\r\n" + vcpkg
 				);
 		}
 	};

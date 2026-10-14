@@ -5,6 +5,8 @@ library(POSIX) SDL2;
 pkg_config
 	sdl2;
 
+external_dependency(VCPKG) sdl2;
+
 file
 	Synth.h,
 	Core.cpp,

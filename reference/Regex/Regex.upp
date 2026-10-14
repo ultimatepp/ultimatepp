@@ -1,0 +1,11 @@
+description "Regular expressions (pcre2 encapsulation)\377";
+
+uses
+	Core;
+
+file
+	Regex.cpp;
+
+mainconfig
+	"" = "";
+
