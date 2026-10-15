@@ -123,6 +123,8 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
 		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
 		
+		env.GetAdd("VCPKG_DEFAULT_TRIPLET") = "x64-mingw-static";
+		env.GetAdd("VCPKG_DEFAULT_HOST_TRIPLET") = "x64-mingw-static";
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 #else
 		env.GetAdd("PATH") = Join(host.exedirs, ":");
