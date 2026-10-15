@@ -322,7 +322,7 @@ uint64 mul64(uint64 a, uint64 b, uint64& hi)
 	return prod;
 }
 
-#elif defined(COMPILER_MSC) && defined(CPU_64)
+#elif defined(COMPILER_MSC) && defined(CPU_AMD64)
 
 force_inline
 uint64 mul64(uint64 a, uint64 b, uint64& hi)

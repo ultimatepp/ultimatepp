@@ -137,8 +137,9 @@ void InstantSetup()
 	String bin = GetExeDirFile("bin");
 
 	if(DirectoryExists(bin + "/clang"))
-		for(int x64 = 0; x64 < 2; x64++) {
-			String method = x64 ? "CLANGx64" : "CLANG";
+		for(int x64 = 0; x64 < 3; x64++) {
+			String method = decode(x64, 0, "CLANG", 1, "CLANGx64", 2, "CLANGarm64", "");
+
 		#ifdef INSTANT_TESTING
 			method << "Test";
 		#endif
@@ -156,8 +157,8 @@ void InstantSetup()
 		#endif
 	
 			bmSet(bm, "BUILDER", "CLANG");
-			bmSet(bm, "COMPILER", x64 ? "" : "i686-w64-mingw32-c++");
-			bmSet(bm, "COMMON_OPTIONS", "-mpopcnt");
+			bmSet(bm, "COMPILER", decode(x64, 0, "i686-w64-mingw32-c++", 1, "x86_64-w64-mingw32-c++", 2, "aarch64-w64-mingw32-c++", ""));
+			bmSet(bm, "COMMON_OPTIONS", x64 == 2 ? "" : "-mpopcnt");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++17");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_LINK", "");
@@ -182,7 +183,7 @@ void InstantSetup()
 			String clang = bin + "/clang";
 
 			bins.At(0) = clang + "/bin";
-			bins.At(1) = clang + (x64 ? "/x86_64-w64-mingw32/bin" : "/i686-w64-mingw32/bin");
+			bins.At(1) = clang + decode(x64, 0, "/i686-w64-mingw32/bin", 1, "/x86_64-w64-mingw32/bin", 2, "/aarch64-w64-mingw32/bin", "");
 			bins.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
 			bins.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
 			bins.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
@@ -198,7 +199,7 @@ void InstantSetup()
 
 			if(x64) {
 				incs.At(3) = GetExeDirFile("bin/llvm");
-				libs.At(3) = GetExeDirFile("bin/llvm");
+				libs.At(3) = GetExeDirFile(decode(x64, 0, "bin/llvm/x86", 1, "bin/llvm/x64", 2, "bin/llvm/arm64", ""));
 			}
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
@@ -222,14 +223,15 @@ void InstantSetup()
 	DirFinder df;
 
 	for(int version = VS_2019; version <= BT_2026; version++)
-		for(int x64 = 0; x64 < 2; x64++) {
+		for(int x64 = 0; x64 < 3; x64++) {
+			if(version < VS_2026 && x64 >=2) break; // ARM64 only on MSVS26++
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVSP19", BT_2019, "MSBT19",
 			                                   VS_2022, "MSVS22", VSP_2022, "MSVSP22", BT_2022, "MSBT22",
 			                                   VS_2026, "MSVS26", VSP_2026, "MSVSP26", BT_2026, "MSBT26",
 			                                   "MSBT");
-			String x64s = x64 ? "x64" : "";
+			String x64s = decode(x64, 0, "", 1, "x64", 2, "arm64", "");
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
@@ -273,8 +275,10 @@ void InstantSetup()
 				                            VS_2026, "/microsoft visual studio/18/community/vc/tools/msvc",
 				                            VSP_2026, "/microsoft visual studio/18/professional/vc/tools/msvc",
 				                            ""),
-				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
-				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
+							decode(x64, 0, "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll",
+										1, "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll",
+										2, "bin/hostarm64/arm64/cl.exe;bin/hostarm64/arm64/mspdb140.dll",
+				                ""));
 
 			bin = df.Get("/windows kits/10/bin", "x86/makecat.exe;x86/accevent.exe");
 			inc = df.Get("/windows kits/10", "um/adhoc.h");
@@ -294,8 +298,8 @@ void InstantSetup()
 			DUMP(lib);
 	
 			if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
-				bins.At(0) = vc + (ver17 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
-				bins.At(1) = bin + (x64 ? "/x64" : "/x86");
+				bins.At(0) = vc + (ver17 ? decode(x64, 0, "/bin/hostx86/x86", 1, "/bin/hostx64/x64", 2, "/bin/hostarm64/arm64", "") : (x64 ? "/bin/amd64" : "/bin"));
+				bins.At(1) = bin + decode(x64, 0, "/x86", 1, "/x64", 2, "/arm64", "");
 
 				int ii = 2;
 
@@ -344,18 +348,18 @@ void InstantSetup()
 				if(IsNull(llvminc) || ToLower(llvminc).Find("llvm") >= 0)
 					llvminc = GetExeDirFile("bin/llvm");
 				
-				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
+				libs.At(0) = vc + (ver17 ? decode(x64, 0, "/lib/x86", 1, "/lib/x64", 2, "/lib/arm64", "") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
-					libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
-					libs.At(ii++) = lib + (x64 ? "/um/x64" : "/um/x86");
+					libs.At(ii++) = lib + decode(x64, 0, "/ucrt/x86", 1, "/ucrt/x64", 2, "/ucrt/arm64", "");
+					libs.At(ii++) = lib + decode(x64, 0, "/um/x86", 1, "/um/x64", 2, "/um/arm64", "");
 				}
 				if(kit81.GetCount()) {
 					libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
 				}
 				String& ssllib = libs.At(ii++);
 				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-					ssllib = GetExeDirFile(x64 ? "bin/openssl/lib64" : "bin/openssl/lib32");
+					ssllib = GetExeDirFile(decode(x64, 0, "bin/openssl/x86", 1, "bin/openssl/x64", 2, "bin/openssl/arm64", ""));
 				
 				String& sdllib = libs.At(ii++);
 				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
@@ -371,7 +375,7 @@ void InstantSetup()
 				
 				String& llvmlib = libs.At(ii++);
 				if(IsNull(llvmlib) || ToLower(llvmlib).Find("llvm") >= 0)
-					llvmlib = GetExeDirFile("bin/llvm");
+					llvmlib = GetExeDirFile(decode(x64, 0, "bin/llvm/x86", 1, "bin/llvm/x64", 2, "bin/llvm/arm64", ""));
 
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");

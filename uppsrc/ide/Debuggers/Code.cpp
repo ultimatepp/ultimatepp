@@ -48,10 +48,19 @@ bool Pdb::IsValidFrame(adr_t eip)
 adr_t Pdb::GetIP()
 {
 #ifdef CPU_64
-	if(win64)
-		return context.context64.Rip;
+#ifdef CPU_ARM
+    if(win64)
+        return context.context64.Pc;   // ARM64 Program Counter
+#else
+    if(win64)
+        return context.context64.Rip;  // AMD64 Instruction Pointer
 #endif
-	return context.context32.Eip;
+#endif
+#ifndef CPU_ARM
+    return context.context32.Eip;      // x86 Instruction Pointer
+#else
+	return 0;
+#endif
 }
 
 void Pdb::Sync()
@@ -256,12 +265,16 @@ void Pdb::SetIp()
 	adr_t a = CursorAdr();
 	if(!a)
 		return;
+#ifdef CPU_ARM
+	context.context64.Pc = a;
+#else
 #ifdef CPU_64
 	if(win64)
 		context.context64.Rip = a;
 	else
 #endif
 		context.context32.Eip = (DWORD)a;
+#endif
 	WriteContext();
 	frame[0].pc = a;
 	framelist <<= 0;

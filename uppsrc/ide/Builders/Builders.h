@@ -131,6 +131,7 @@ struct MscBuilder : CppBuilder {
 	bool   IsMsc89() const;
 	bool   IsMsc86() const;
 	bool   IsMscArm() const;
+	bool   IsMscArm64() const;
 	bool   IsMsc64() const;
 	bool   CreateLib(const String& product, const Vector<String>& obj,
 	                 const Vector<String>& all_uses, const Vector<String>& all_libraries,

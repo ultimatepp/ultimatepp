@@ -26,6 +26,7 @@ file
 	Pdb.h,
 	cvconst.h,
 	i386.cpu,
+	arm64.cpu,
 	amd64.cpu,
 	Cpu.cpp,
 	Debug.cpp,
