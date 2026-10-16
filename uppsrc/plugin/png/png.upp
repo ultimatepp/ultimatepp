@@ -16,6 +16,8 @@ external_dependency(VCPKG) libpng;
 
 external_dependency(DPKG) libpng-dev;
 
+external_dependency(RPM) libpng-devel;
+
 file
 	png.h,
 	pngupp.cpp,

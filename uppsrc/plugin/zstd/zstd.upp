@@ -10,6 +10,8 @@ external_dependency(VCPKG) zstd;
 
 external_dependency(DPKG) libzstd-dev;
 
+external_dependency(RPM) libzstd-devel;
+
 file
 	zstd.h,
 	Compress.cpp,

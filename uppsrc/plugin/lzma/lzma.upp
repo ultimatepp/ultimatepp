@@ -10,6 +10,8 @@ external_dependency(VCPKG) liblzma;
 
 external_dependency(DPKG) liblzma-dev;
 
+external_dependency(RPM) xz-devel;
+
 file
 	lzma.h,
 	lzma.cpp,
