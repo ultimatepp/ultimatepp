@@ -258,6 +258,7 @@ void Ide::Vcpkg()
 String VCPKGSelectExternalDependency()
 {
 	VcpkgInstallDlg dlg;
+	dlg.Title("Select external dependency");
 	dlg.selector = true;
 	dlg.triplets.Hide();
 	Ctrl::Logc lp = dlg.list.Ctrl::GetPos().x;

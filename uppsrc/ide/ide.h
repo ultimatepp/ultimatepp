@@ -1378,6 +1378,7 @@ Index<String> GetAllNests(bool sleep = false);
 bool MapFlag(const VectorMap<class String, class String>& map, const char *key);
 
 String VCPKGSelectExternalDependency();
+String SelectExternalDependency();
 
 #include "urepo.h"
 

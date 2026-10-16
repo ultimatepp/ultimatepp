@@ -144,11 +144,17 @@ ExtDepDlg::ExtDepDlg()
 	license.NullText("resolve automatically");
 	
 	sel_package << [this] {
+		String p;
 #ifdef PLATFORM_WIN32
-		text <<= VCPKGSelectExternalDependency();
+		p = VCPKGSelectExternalDependency();
 #else
-		Exclamation("Not implemented on this host.");
+		if(IsDPKG() || IsRPM())
+			p = SelectExternalDependency();
+		else
+			Exclamation("Not implemented on this host.");
 #endif
+		if(p.GetCount())
+			text <<= p;
 	};
 }
 
