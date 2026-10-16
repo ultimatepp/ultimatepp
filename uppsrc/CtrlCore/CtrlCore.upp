@@ -32,9 +32,31 @@ external_dependency(DPKG) libxcb1-dev;
 
 external_dependency(DPKG) libxext-dev;
 
-external_dependency(DPKG) libgtk-3-dev;
+external_dependency(DPKG !X11) libgtk-3-dev;
 
-external_dependency(DPKG) libnotify-dev;
+external_dependency(DPKG !X11) libnotify-dev;
+
+external_dependency(RPM) freetype-devel;
+
+external_dependency(RPM) libX11-devel;
+
+external_dependency(RPM) libXinerama-devel;
+
+external_dependency(RPM) libXrender-devel;
+
+external_dependency(RPM) libXft-devel;
+
+external_dependency(RPM) libXdmcp-devel;
+
+external_dependency(RPM) fontconfig-devel;
+
+external_dependency(RPM) libxcb-devel;
+
+external_dependency(RPM) libXext-devel;
+
+external_dependency(RPM !X11) gtk3-devel;
+
+external_dependency(RPM !X11) libnotify-devel;
 
 file
 	Core readonly separator,
