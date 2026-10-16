@@ -144,7 +144,7 @@ String InstallMissingExternalDependenciesCommand0(const String& triplet)
 	String cmd;
 #ifdef PLATFORM_LINUX
 	if(IsRPM() || IsDPKG()) {
-		String cmd = IsRPM() ? "dnf install -y" : "apt-get install -y";
+		cmd = IsRPM() ? "dnf install -y" : "apt-get install -y";
 		for(String name : MissingExternalDependencies(triplet))
 			cmd << " " << name;
 	}
