@@ -62,3 +62,38 @@ void Ide::SyncExternalDependencies(bool force, bool report_ok)
 		console.Perform();
 	}
 }
+
+struct SelectExtDepDlg : WithSelectExtDepLayout<TopWindow> {
+	SelectExtDepDlg();
+};
+
+SelectExtDepDlg::SelectExtDepDlg()
+{
+	CtrlLayoutOKCancel(*this, "Select external dependency");
+
+	list.AddColumn("Name");
+	list.AddColumn("Description");
+	list.ColumnWidths("176 551");
+	
+	search.NullText("Search (Ctrl+K)");
+	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
+	search << [this] { Sync(); };
+}
+
+String DPKGSelectPackage()
+{
+	SelectExtDepDlg dlg;
+	for(String l : Split(Sys("dpkg-cache search ."), '\n')) {
+		String desc;
+		int q = l.Find(" - ");
+		if(q >= 0) {
+			desc = l.Mid(q + 3);
+			l.Trim(q);
+		}
+		dlg.list.Add(l, desc);
+	}
+	
+	if(dlg.ExecuteOK())
+		return ~dlg.list.GetKey();
+	return Null;
+}

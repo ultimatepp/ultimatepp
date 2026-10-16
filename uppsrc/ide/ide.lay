@@ -1062,9 +1062,16 @@ LAYOUT(VcpkgLayout, 1000, 700)
 	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(VcpkgInstallLayout, 1124, 516)
+LAYOUT(VcpkgInstallLayout, 1000, 512)
+	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 780).TopPosZ(4, 468))
+	ITEM(Upp::ArrayCtrl, triplets, LeftPosZ(788, 206).TopPosZ(4, 468))
+	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Upp::EditString, search, LeftPosZ(4, 160).TopPosZ(484, 19))
+END_LAYOUT
+
+LAYOUT(SelectExtDepLayout, 912, 516)
 	ITEM(Upp::ArrayCtrl, list, LeftPosZ(4, 900).TopPosZ(4, 468))
-	ITEM(Upp::ArrayCtrl, triplets, LeftPosZ(908, 206).TopPosZ(4, 468))
 	ITEM(Upp::Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 	ITEM(Upp::EditString, search, LeftPosZ(4, 160).TopPosZ(484, 19))
@@ -1083,3 +1090,4 @@ LAYOUT(SysConsoleLayout, 680, 660)
 	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Abort")).RightPosZ(612, 64).BottomPosZ(8, 24))
 END_LAYOUT
+
