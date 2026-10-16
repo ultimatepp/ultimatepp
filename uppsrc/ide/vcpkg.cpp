@@ -135,9 +135,10 @@ struct VcpkgInstallDlg : WithVcpkgInstallLayout<TopWindow> {
 	
 	Vector<Item>  items;
 	Index<String> ts;
+	bool          selector = false;
 	
-	void Perform();
-	void Sync();
+	String Perform();
+	void   Sync();
 };
 
 void VcpkgDlg::Install()
@@ -186,7 +187,7 @@ void VcpkgInstallDlg::Sync()
 		list.FindSetCursor(key);
 }
 
-void VcpkgInstallDlg::Perform()
+String VcpkgInstallDlg::Perform()
 {
 	for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json"))) {
 		Item& m = items.Add();
@@ -224,28 +225,45 @@ void VcpkgInstallDlg::Perform()
 	
 	if(ExecuteOK()) {
 		String name = ~list.GetKey();
-		if(name.GetCount() == 0)
-			return;
+		
+		if(selector)
+			return name;
 
-		int errors = 0;
-		SysConsole console;
-		console.Title("VCPKG Installing " + name);
-		for(int i = 0; i < triplets.GetCount(); i++) {
-			if((bool)~*triplets.GetCtrl(i, 0)) {
-				if(console.System(VcpkgExe() + " install " + name + ":" + ts[i] + " --recurse")) {
-					console.Log("Failed", SLtRed());
-					errors++;
+		if(name.GetCount()) {
+			int errors = 0;
+			SysConsole console;
+			console.Title("VCPKG Installing " + name);
+			for(int i = 0; i < triplets.GetCount(); i++) {
+				if((bool)~*triplets.GetCtrl(i, 0)) {
+					if(console.System(VcpkgExe() + " install " + name + ":" + ts[i] + " --recurse")) {
+						console.Log("Failed", SLtRed());
+						errors++;
+					}
 				}
 			}
+			
+			Finish(console, errors);
+			console.Perform();
 		}
-		
-		Finish(console, errors);
-		console.Perform();
 	}
+	return Null;
 }
 
 void Ide::Vcpkg()
 {
 	VcpkgDlg dlg;
 	dlg.Perform();
+}
+
+String VCPKGSelectExternalDependency()
+{
+	VcpkgInstallDlg dlg;
+	dlg.selector = true;
+	dlg.triplets.Hide();
+	Ctrl::Logc lp = dlg.list.Ctrl::GetPos().x;
+	Ctrl::Logc rp = dlg.triplets.Ctrl::GetPos().x;
+	lp.SetB(rp.GetA() - lp.GetA() + rp.GetB());
+	dlg.list.SetPosX(lp);
+	dlg.list.WhenLeftDouble = dlg.Acceptor(IDOK);
+	return dlg.Perform();
 }
