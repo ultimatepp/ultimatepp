@@ -10,6 +10,8 @@ library
 
 external_dependency(VCPKG) sqlite3;
 
+external_dependency(DPKG) libsqlite3-dev;
+
 file
 	Sqlite3.h,
 	Sqlite3Schema.h,

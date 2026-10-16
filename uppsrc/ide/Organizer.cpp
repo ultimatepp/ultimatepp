@@ -142,6 +142,20 @@ ExtDepDlg::ExtDepDlg()
 	for(String id : SPDXLicenses()) // TODO
 		license.AddList(id);
 	license.NullText("resolve automatically");
+	
+	sel_package << [this] {
+		String p;
+#ifdef PLATFORM_WIN32
+		p = VCPKGSelectExternalDependency();
+#else
+		if(IsDPKG() || IsRPM())
+			p = SelectExternalDependency();
+		else
+			Exclamation("Not implemented on this host.");
+#endif
+		if(p.GetCount())
+			text <<= p;
+	};
 }
 
 String ExtDepDlg::GetText() const

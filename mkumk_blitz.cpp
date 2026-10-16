@@ -122,6 +122,12 @@
 #ifdef LDUMP
 #undef LDUMP
 #endif
+#ifdef METHOD_NAME
+#undef METHOD_NAME
+#endif
+#ifdef LDUMP
+#undef LDUMP
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F24
