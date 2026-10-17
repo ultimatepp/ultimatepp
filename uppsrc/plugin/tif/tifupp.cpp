@@ -501,12 +501,8 @@ static void UnmapStream(thandle_t fd, tdata_t base, toff_t size)
 {
 }
 
-// 2026-08-17 - Pulled in from now unavailable tiffiop.h:
-// extern "C" int _TIFFgetMode(TIFFOpenOptions *opts, thandle_t clientdata, const char *mode, const char *module);
-
-// 2026-08-20 - Pulled in from tif_open.c (dynamic linking does not reach this anymore):
-static int _TIFFgetMode(TIFFOpenOptions *opts, thandle_t clientdata, const char *mode,
-                 const char *module)
+// 2026-10-17 - Simplified the currently unavailable _TIFFgetMode() to local getMode_() here:
+static int getMode_(const char *mode)
 {
     int m = -1;
 
@@ -523,18 +519,14 @@ static int _TIFFgetMode(TIFFOpenOptions *opts, thandle_t clientdata, const char 
             if (mode[0] == 'w')
                 m |= O_TRUNC;
             break;
-        default:
-            //_TIFFErrorEarly(opts, clientdata, module, "\"%s\": Bad mode", mode);
-            break;
     }
     return (m);
 }
 
-
 struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
 {
 	One<FileStream> fs = new FileStream;
-	int m = _TIFFgetMode(NULL, NULL, mode, "TIFFOpen");
+	int m = getMode_(mode);
 	dword fmode = FileStream::READ;
 
 	switch(m) {
