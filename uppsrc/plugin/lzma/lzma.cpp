@@ -2,6 +2,26 @@
 
 #include <lzma.h>
 
+/*
+	HAVE_LZMAEXT: use the LZMA1EXT raw-filter API
+	(lzma_options_lzma::ext_size_low / ext_size_high / ext_flags,
+	LZMA_FILTER_LZMA1EXT, LZMA_LZMA1EXT_ALLOW_EOPM,
+	lzma_filters_free()). Requires liblzma >= 5.4.0
+	(same release introduced all of them).
+
+	On older liblzma (e.g. RHEL / Rocky Linux 9, xz 5.2.x) we fall
+	back to plain LZMA1 / lzma_alone_decoder(). The only behavioral
+	difference on those systems is that the encoder emits the
+	LZMA end-of-payload marker (still a fully valid .lzma stream).
+*/
+#if defined(LZMA_VERSION_MAJOR) && defined(LZMA_VERSION_MINOR) && \
+    (LZMA_VERSION_MAJOR > 5 ||                                  \
+    (LZMA_VERSION_MAJOR == 5 && LZMA_VERSION_MINOR >= 4))
+	#define HAVE_LZMAEXT 1
+#else
+	#define HAVE_LZMAEXT 0
+#endif
+
 namespace Upp {
 
 static constexpr size_t LZMA_PROPS_SIZE = 5;
@@ -31,11 +51,15 @@ static bool ReportProgress(Gate2<int64, int64>& progress,
 }
 
 
+#if HAVE_LZMAEXT
+
 static void SetExtSize(lzma_options_lzma& options, uint64 size)
 {
 	options.ext_size_low  = (uint32_t)size;
 	options.ext_size_high = (uint32_t)(size >> 32);
 }
+
+#endif
 
 
 static bool Encode(Stream& out, Stream& in, int64 fileSize,
@@ -50,6 +74,7 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 	if(lzma_lzma_preset(&options, (uint32_t)level))
 		return false;
 
+#if HAVE_LZMAEXT
 	/*
 		LZMA1EXT is important here.
 
@@ -60,12 +85,25 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 		This matches the old U++ LZMA SDK output semantics.
 	*/
 	options.ext_flags = 0;
-	SetExtSize(options, (uint64)fileSize);
+	SetExtSize(options, (uint64_t)fileSize);
 
 	lzma_filter filters[] = {
 		{ LZMA_FILTER_LZMA1EXT, &options },
 		{ LZMA_VLI_UNKNOWN, nullptr }
 	};
+#else
+	/*
+		liblzma < 5.4: plain LZMA1. The raw LZMA1 encoder always
+		emits the end-of-payload marker on LZMA_FINISH; this
+		cannot be avoided on old liblzma. The stream is still a
+		valid legacy .lzma (known size + EOPM) and is decodable
+		by everything that decodes the LZMA1EXT variant above.
+	*/
+	lzma_filter filters[] = {
+		{ LZMA_FILTER_LZMA1, &options },
+		{ LZMA_VLI_UNKNOWN, nullptr }
+	};
+#endif
 
 	/*
 		The legacy .lzma properties field is exactly 5 bytes.
@@ -87,7 +125,7 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 		    5 bytes  LZMA properties
 		    8 bytes  uint64 uncompressed size, little endian
 	*/
-	uint64 size = (uint64)fileSize;
+	uint64 size = (uint64_t)fileSize;
 
 	for(int i = 0; i < 8; i++)
 		header[LZMA_PROPS_SIZE + i] = (byte)(size >> (8 * i));
@@ -145,7 +183,7 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 			break;
 		}
 
-		if(ReportProgress(progress, strm.total_in, (uint64)fileSize)) {
+		if(ReportProgress(progress, strm.total_in, (uint64_t)fileSize)) {
 			ok = false;
 			break;
 		}
@@ -180,6 +218,7 @@ static bool Decode(Stream& out, Stream& in,
 		unpackSize |=
 			(uint64)header[LZMA_PROPS_SIZE + i] << (8 * i);
 
+#if HAVE_LZMAEXT
 	/*
 		IMPORTANT:
 
@@ -229,6 +268,39 @@ static bool Decode(Stream& out, Stream& in,
 		lzma_filters_free(filters, nullptr);
 		return false;
 	}
+#else
+	/*
+		liblzma < 5.4: no LZMA1EXT. lzma_alone_decoder()
+		consumes the complete 13-byte .lzma header itself
+		(properties + uncompressed size) and terminates at the
+		known uncompressed size, with or without the
+		end-of-payload marker. So feed it our header first,
+		then the compressed data.
+	*/
+	lzma_stream strm = LZMA_STREAM_INIT;
+
+	lzma_ret ret = lzma_alone_decoder(&strm, UINT64_MAX);
+
+	if(ret != LZMA_OK)
+		return false;
+
+	byte sink[64];
+
+	strm.next_in  = header;
+	strm.avail_in = sizeof(header);
+
+	while(strm.avail_in > 0) {
+		strm.next_out  = sink;
+		strm.avail_out = sizeof(sink);
+
+		ret = lzma_code(&strm, LZMA_RUN);
+
+		if(ret != LZMA_OK) {
+			lzma_end(&strm);
+			return false;
+		}
+	}
+#endif
 
 	byte inbuf[LZMA_IO_BUFFER_SIZE];
 	byte outbuf[LZMA_IO_BUFFER_SIZE];
@@ -284,7 +356,9 @@ static bool Decode(Stream& out, Stream& in,
 	}
 
 	lzma_end(&strm);
+#if HAVE_LZMAEXT
 	lzma_filters_free(filters, nullptr);
+#endif
 
 	/*
 		The size in the .lzma header is authoritative.
@@ -294,7 +368,6 @@ static bool Decode(Stream& out, Stream& in,
 
 	return ok && !in.IsError() && !out.IsError();
 }
-
 
 int64 LZMACompress(Stream& out, Stream& in, int64 size,
                    Gate2<int64, int64> progress, int lvl)
