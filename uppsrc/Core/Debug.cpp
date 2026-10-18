@@ -301,7 +301,7 @@ void InstallCrashDump(const char *info) {
 	}
 	if(!sPrev) {
 		sPrev = SetUnhandledExceptionFilter(sDumpHandler);
-#ifdef CPU_X86
+#if defined(CPU_X86) && !defined(CPU_AMD64)
 #ifdef COMPILER_MSC
 		__asm mov sESP, esp
 #else
