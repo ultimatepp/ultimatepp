@@ -44,6 +44,16 @@ external_dependency(DPKG) liblz4-dev;
 
 external_dependency(DPKG) libxxhash-dev;
 
+external_dependency(DPKG) libpcre2-dev;
+
+external_dependency(RPM) zlib-devel;
+
+external_dependency(RPM) lz4-devel;
+
+external_dependency(RPM) xxhash-devel;
+
+external_dependency(RPM) pcre2-devel;
+
 file
 	Core.h options(BUILDER_OPTION) PCH,
 	config.h,
