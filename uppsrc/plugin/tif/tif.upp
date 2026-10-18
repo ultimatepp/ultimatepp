@@ -17,6 +17,12 @@ external_dependency(DPKG) liblzma-dev;
 
 external_dependency(DPKG) libjpeg-turbo8-dev;
 
+external_dependency(RPM) libtiff-devel;
+
+external_dependency(RPM) xz-devel;
+
+external_dependency(RPM) libjpeg-turbo-devel;
+
 file
 	tif.h,
 	tifupp.cpp,
