@@ -132,7 +132,7 @@ ExtDepDlg::ExtDepDlg()
 	when.AddList("VCPKG");
 	when.AddList("DPKG");
 	when.AddList("RPM");
-	when.AddList("POSIX");
+	when.AddList("BREW");
 	when.Appending(" ");
 
 	when <<= ExternalDependenciesManagerId();
@@ -148,10 +148,7 @@ ExtDepDlg::ExtDepDlg()
 #ifdef PLATFORM_WIN32
 		p = VCPKGSelectExternalDependency();
 #else
-		if(IsDPKG() || IsRPM())
-			p = SelectExternalDependency();
-		else
-			Exclamation("Not implemented on this host.");
+		p = SelectExternalDependency();
 #endif
 		if(p.GetCount())
 			text <<= p;

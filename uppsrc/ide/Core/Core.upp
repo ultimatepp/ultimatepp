@@ -23,6 +23,7 @@ file
 	Signature.cpp,
 	ExtDep.cpp,
 	Vcpkg.cpp,
+	Brew.cpp,
 	Host readonly separator,
 	Host.h,
 	Host.cpp,

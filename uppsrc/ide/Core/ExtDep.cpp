@@ -116,6 +116,9 @@ String ExternalDependenciesManagerId()
 #ifdef PLATFORM_WIN32
 	return "VCPKG";
 #endif
+#ifdef PLATFORM_OSX
+	return "BREW";
+#endif
 	if(HasDPKG())
 		return "DPKG";
 	if(HasRPM())
@@ -128,6 +131,11 @@ Index<String> InstalledExternalDependencies(const String& triplet)
 	if(IsVCPKG())
 		return VcpkgInstalledExternalDependencies(triplet);
 	Index<String> r;
+#ifdef PLATFORM_OSX
+	if(IsBREW())
+		for(String l : Split(Sys("/opt/homebrew/bin/brew list"), '\n'))
+			r.FindAdd(TrimBoth(l));
+#endif
 #ifdef PLATFORM_LINUX
 	if(IsDPKG())
 		for(String l : Split(Sys("dpkg-query -W -f='${Package}\n'"), '\n'))
@@ -142,6 +150,13 @@ Index<String> InstalledExternalDependencies(const String& triplet)
 String InstallMissingExternalDependenciesCommand0(const String& triplet)
 {
 	String cmd;
+#ifdef PLATFORM_OSX
+	if(IsBREW()) {
+		cmd = "/opt/homebrew/bin/brew install -y ";
+		for(String name : MissingExternalDependencies(triplet))
+			cmd << " " << name;
+	}
+#endif
 #ifdef PLATFORM_LINUX
 	if(IsRPM() || IsDPKG()) {
 		cmd = IsRPM() ? "dnf install -y" : "apt-get install -y";
@@ -156,6 +171,8 @@ String InstallMissingExternalDependenciesCommand(const String& triplet)
 {
 	if(IsVCPKG())
 		return Null;
+	if(IsBREW())
+		return InstallMissingExternalDependenciesCommand0(triplet);
 	return "sudo " + InstallMissingExternalDependenciesCommand0(triplet);
 }
 
@@ -164,13 +181,14 @@ bool InstallMissingExternalDependencies(Function<int(const String&, const String
 	if(IsVCPKG())
 		return VcpkInstallMissingExternalDependencies(sys, triplet);
 	String cmd = InstallMissingExternalDependenciesCommand0(triplet);
-	return cmd.GetCount() ? sys(String(UMK ? "" : "pkexec ") + cmd, Null) == 0 : false;
+	return cmd.GetCount() ? sys(String(UMK || IsBREW() ? "" : "pkexec ") + cmd, Null) == 0 : false;
 }
 
 bool CanInstallMissingExternalDependencies()
 {
-	if(IsVCPKG())
+	if(IsVCPKG() || IsBREW())
 		return true;
+
 	static bool is = Sys("which pkexec").GetCount();
 	return is;
 }

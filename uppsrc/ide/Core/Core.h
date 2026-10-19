@@ -746,6 +746,7 @@ bool           CanInstallMissingExternalDependencies();
 inline bool IsRPM()    { return ExternalDependenciesManagerId() == "RPM"; }
 inline bool IsDPKG()   { return ExternalDependenciesManagerId() == "DPKG"; }
 inline bool IsVCPKG()  { return ExternalDependenciesManagerId() == "VCPKG"; }
+inline bool IsBREW()   { return ExternalDependenciesManagerId() == "BREW"; }
 
 struct VcpkgInstalled : Moveable<VcpkgInstalled> {
 	String        name;
@@ -765,5 +766,7 @@ bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const St
 bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
 Index<String>          VcpkgInstalledExternalDependencies(const String& triplet);
 bool                   VcpkInstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet);
+
+Value                  GetBrewJson(Gate<int, int> progress);
 
 #endif

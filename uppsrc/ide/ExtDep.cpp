@@ -83,9 +83,15 @@ SelectExtDepDlg::SelectExtDepDlg()
 	search.SetFilter([](int c) { return (int)ToUpper(ToAscii(c)); });
 	search << [this] { Sync(); };
 	
-	src = Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
-	                        : "apt-cache search ."),
-	            '\n');
+	if(IsBREW()) {
+		Progress pi("Updating database");
+		for(Value p : GetBrewJson([&](int pos, int total) { return pi.SetCanceled(pos, total); }))
+			src << ~p["name"] + " - " + ~p["desc"];
+	}
+	else
+		src = Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
+		                        : "apt-cache search ."),
+		            '\n');
 
 	for(String l : src) {
 		l.Replace(" - ", "\n");

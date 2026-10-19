@@ -10,11 +10,9 @@ library(WIN32 !MSC) png16;
 
 library(WIN32 MSC) libpng16;
 
+library(OSX) png;
+
 pkg_config(POSIX !OSX !STATIC_PNG) libpng;
-
-external_dependency(VCPKG) libpng;
-
-external_dependency(DPKG) libpng-dev;
 
 file
 	png.h,
