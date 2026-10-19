@@ -32,7 +32,6 @@ struct f32x4 {
 	f32x4(float f)               { data = vsetq_lane_f32((float)f, vdupq_n_f32(0), 0); }
 	f32x4(int f)                 { data = vsetq_lane_f32((float)f, vdupq_n_f32(0), 0); }
 	f32x4(double a, double b, double c, double d) {
-//		float __attribute__((aligned(16))) w[4] = { (float)d, (float)c, (float)b, (float)a };
 		alignas(16) float w[4] = { (float)d, (float)c, (float)b, (float)a };
 		data = vld1q_f32(w);
 	}
@@ -100,8 +99,7 @@ struct i16x8 { // 8xint16
 	i16x8(int32x4_t d)           { data = vreinterpretq_s16_s32(d); }
 	i16x8(int v)                 { data = vsetq_lane_s16(v, vdupq_n_s16(0), 0); }
 	i16x8(int a, int b, int c, int d, int e, int f, int g, int h) {
-//		int16_t __attribute__((aligned(16))) val[8] = { (int16_t)h, (int16_t)g, (int16_t)f, (int16_t)e, (int16_t)d, (int16_t)c, (int16_t)b, (int16_t)a };
-		alignas(16) int16_t val[8] = { (int16_t)h, (int16_t)g, (int16_t)f, (int16_t)e, (int16_t)d, (int16_t)c, (int16_t)b, (int16_t)a};		data = vld1q_s16(val);
+		alignas(16) int16_t val[8] = { (int16_t)h, (int16_t)g, (int16_t)f, (int16_t)e, (int16_t)d, (int16_t)c, (int16_t)b, (int16_t)a};
 		data = vld1q_s16(val);
 	}
 
