@@ -7,6 +7,10 @@ library(WIN32) gif;
 
 external_dependency(VCPKG) giflib;
 
+external_dependency(DPKG) libgif-dev;
+
+external_dependency(RPM) giflib-devel;
+
 file
 	gif.h,
 	gifupp.cpp,

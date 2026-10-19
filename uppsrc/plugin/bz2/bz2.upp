@@ -13,6 +13,8 @@ external_dependency(VCPKG) bzip2;
 
 external_dependency(DPKG) libbz2-dev;
 
+external_dependency(RPM) bzip2-devel;
+
 file
 	bz2.h,
 	bz2upp.cpp,

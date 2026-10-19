@@ -633,6 +633,12 @@
 #ifdef OUT_BUF_SIZE
 #undef OUT_BUF_SIZE
 #endif
+#ifdef HAVE_LZMAEXT
+#undef HAVE_LZMAEXT
+#endif
+#ifdef HAVE_LZMAEXT
+#undef HAVE_LZMAEXT
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F103

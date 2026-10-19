@@ -2,6 +2,28 @@
 
 #include <lzma.h>
 
+/*
+	HAVE_LZMAEXT: Use the LZMA1EXT API (added in liblzma 5.4.0).
+	
+	This provides:
+	- LZMA_FILTER_LZMA1EXT filter ID
+	- lzma_options_lzma::ext_size_low, ext_size_high, ext_flags
+	- LZMA_LZMA1EXT_ALLOW_EOPM constant
+	- lzma_filters_free() function
+	
+	Older liblzma (like Rocky 9's 5.2.5) falls back to LZMA1 +
+	lzma_alone_decoder(). The only behavioral difference: the
+	fallback encoder always writes the end-of-payload marker,
+	which is still valid .lzma format.
+*/
+#if defined(LZMA_VERSION_MAJOR) && defined(LZMA_VERSION_MINOR) && \
+    (LZMA_VERSION_MAJOR > 5 || \
+     (LZMA_VERSION_MAJOR == 5 && LZMA_VERSION_MINOR >= 4))
+	#define HAVE_LZMAEXT 1
+#else
+	#define HAVE_LZMAEXT 0
+#endif
+
 namespace Upp {
 
 static constexpr size_t LZMA_PROPS_SIZE = 5;
@@ -31,11 +53,15 @@ static bool ReportProgress(Gate2<int64, int64>& progress,
 }
 
 
+#if HAVE_LZMAEXT
+
 static void SetExtSize(lzma_options_lzma& options, uint64 size)
 {
 	options.ext_size_low  = (uint32_t)size;
 	options.ext_size_high = (uint32_t)(size >> 32);
 }
+
+#endif
 
 
 static bool Encode(Stream& out, Stream& in, int64 fileSize,
@@ -50,6 +76,7 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 	if(lzma_lzma_preset(&options, (uint32_t)level))
 		return false;
 
+#if HAVE_LZMAEXT
 	/*
 		LZMA1EXT is important here.
 
@@ -66,6 +93,27 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 		{ LZMA_FILTER_LZMA1EXT, &options },
 		{ LZMA_VLI_UNKNOWN, nullptr }
 	};
+#else
+	/*
+		liblzma < 5.4: no LZMA1EXT. The raw LZMA1 encoder
+		ALWAYS writes the end-of-payload marker on LZMA_FINISH;
+		there is no API to suppress it. And .lzma decoders of
+		this era (e.g. lzma_alone_decoder on 5.2.x) reject a
+		stream that has BOTH a known uncompressed size in the
+		header AND an end-of-payload marker.
+
+		So we cannot honestly declare the size here. Instead we
+		write the "streamed" .lzma variant: size unknown
+		(0xFFFFFFFFFFFFFFFF), terminated by the EOPM. This is
+		exactly what "xz -F lzma" produces for piped input and
+		it is decodable by every liblzma generation, including
+		5.2.x and our own decoder on all platforms.
+	*/
+	lzma_filter filters[] = {
+		{ LZMA_FILTER_LZMA1, &options },
+		{ LZMA_VLI_UNKNOWN, nullptr }
+	};
+#endif
 
 	/*
 		The legacy .lzma properties field is exactly 5 bytes.
@@ -86,8 +134,15 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 
 		    5 bytes  LZMA properties
 		    8 bytes  uint64 uncompressed size, little endian
+
+		On liblzma < 5.4 the size is declared unknown because
+		the EOPM is unavoidable in the stream (see above).
 	*/
 	uint64 size = (uint64)fileSize;
+
+#if !HAVE_LZMAEXT
+	size = UINT64_MAX;
+#endif
 
 	for(int i = 0; i < 8; i++)
 		header[LZMA_PROPS_SIZE + i] = (byte)(size >> (8 * i));
@@ -164,7 +219,6 @@ static bool Encode(Stream& out, Stream& in, int64 fileSize,
 	return ok && !in.IsError() && !out.IsError();
 }
 
-
 static bool Decode(Stream& out, Stream& in,
                    Gate2<int64, int64> progress,
                    int64& written)
@@ -180,6 +234,7 @@ static bool Decode(Stream& out, Stream& in,
 		unpackSize |=
 			(uint64)header[LZMA_PROPS_SIZE + i] << (8 * i);
 
+#if HAVE_LZMAEXT
 	/*
 		IMPORTANT:
 
@@ -214,6 +269,10 @@ static bool Decode(Stream& out, Stream& in,
 
 		    ordinary LZMA-Alone:
 		        known size + EOPM
+
+		    streamed LZMA-Alone (written by the encoder above
+		    on liblzma < 5.4):
+		        unknown size + EOPM
 	*/
 	SetExtSize(*options, unpackSize);
 	options->ext_flags = LZMA_LZMA1EXT_ALLOW_EOPM;
@@ -229,6 +288,43 @@ static bool Decode(Stream& out, Stream& in,
 		lzma_filters_free(filters, nullptr);
 		return false;
 	}
+#else
+	/*
+		liblzma < 5.4: no LZMA1EXT. lzma_alone_decoder()
+		consumes the complete 13-byte .lzma header itself
+		(properties + uncompressed size). Both variants decode
+		natively here:
+
+		    known size (old U++ format, no EOPM):
+		        the decoder stops exactly at the size
+
+		    unknown size (streamed, EOPM present):
+		        the decoder stops at the EOPM
+	*/
+	lzma_stream strm = LZMA_STREAM_INIT;
+
+	lzma_ret ret = lzma_alone_decoder(&strm, UINT64_MAX);
+
+	if(ret != LZMA_OK)
+		return false;
+
+	byte sink[64];
+
+	strm.next_in  = header;
+	strm.avail_in = sizeof(header);
+
+	while(strm.avail_in > 0) {
+		strm.next_out  = sink;
+		strm.avail_out = sizeof(sink);
+
+		ret = lzma_code(&strm, LZMA_RUN);
+
+		if(ret != LZMA_OK) {
+			lzma_end(&strm);
+			return false;
+		}
+	}
+#endif
 
 	byte inbuf[LZMA_IO_BUFFER_SIZE];
 	byte outbuf[LZMA_IO_BUFFER_SIZE];
@@ -284,17 +380,22 @@ static bool Decode(Stream& out, Stream& in,
 	}
 
 	lzma_end(&strm);
+#if HAVE_LZMAEXT
 	lzma_filters_free(filters, nullptr);
+#endif
 
 	/*
 		The size in the .lzma header is authoritative.
+		A declared size of unknown (UINT64_MAX, the streamed
+		variant written by the encoder on liblzma < 5.4)
+		cannot be checked this way - the EOPM already
+		terminated the stream successfully.
 	*/
-	if(ok && (uint64)written != unpackSize)
+	if(ok && unpackSize != UINT64_MAX && (uint64)written != unpackSize)
 		ok = false;
 
 	return ok && !in.IsError() && !out.IsError();
 }
-
 
 int64 LZMACompress(Stream& out, Stream& in, int64 size,
                    Gate2<int64, int64> progress, int lvl)

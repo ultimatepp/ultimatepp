@@ -10,6 +10,8 @@ external_dependency(VCPKG) lz4;
 
 external_dependency(DPKG) liblz4-dev;
 
+external_dependency(RPM) lz4-devel;
+
 file
 	lz4.h,
 	Compress.cpp,
