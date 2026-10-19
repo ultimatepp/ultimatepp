@@ -39,13 +39,13 @@ int RegexMatch::GetCount() const
 int RegexMatch::GetOffset(int i) const
 {
 	ASSERT(i >= 0 && i < GetCount());
-	return ovector[2 * i];
+	return (int)ovector[2 * i];
 }
 
 int RegexMatch::GetLength(int i) const
 {
 	ASSERT(i >= 0 && i < GetCount());
-	return ovector[2 * i + 1] - ovector[2 * i];
+	return (int)(ovector[2 * i + 1] - ovector[2 * i]);
 }
 
 void RegexMatch::Clear()
