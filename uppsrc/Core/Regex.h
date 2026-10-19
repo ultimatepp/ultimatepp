@@ -34,28 +34,28 @@ public:
 	String GetLastErrorText() const;
 	
 	bool Set(dword options, const char *pattern, int len);
-	bool Set(dword options, const char *pattern)                    { return Set(options, pattern, strlen(pattern)); }
+	bool Set(dword options, const char *pattern)                    { return Set(options, pattern, (int)strlen(pattern)); }
 	bool Set(dword options, const String& pattern)                  { return Set(options, pattern, pattern.GetCount()); }
 	
 	bool Set(const char *pattern, int len)                          { return Set(PCRE2_UTF, pattern, len); }
-	bool Set(const char *pattern)                                   { return Set(pattern, strlen(pattern)); }
+	bool Set(const char *pattern)                                   { return Set(pattern, (int)strlen(pattern)); }
 	bool Set(const String& pattern)                                 { return Set(pattern, pattern.GetCount()); }
 	
 	bool Match(const char *text, int len, RegexMatch& match) const  { return Match(text, len, &match); }
-	bool Match(const char *text, RegexMatch& match) const           { return Match(text, strlen(text), match); }
+	bool Match(const char *text, RegexMatch& match) const           { return Match(text, (int)strlen(text), match); }
 	bool Match(const String& text, RegexMatch& match) const         { return Match(text, text.GetCount(), match); }
 
 	bool Match(const char *text, int len) const                     { return Match(text, len, nullptr); }
-	bool Match(const char *text) const                              { return Match(text, strlen(text)); }
+	bool Match(const char *text) const                              { return Match(text, (int)strlen(text)); }
 	bool Match(const String& text) const                            { return Match(text, text.GetCount()); }
 
 	Regex() {}
 	Regex(dword options, const char *pattern, int len)              { Set(pattern, len); }
-	Regex(dword options, const char *pattern)                       { Set(options, pattern, strlen(pattern)); }
+	Regex(dword options, const char *pattern)                       { Set(options, pattern, (int)strlen(pattern)); }
 	Regex(dword options, const String& pattern)                     { Set(options, pattern, pattern.GetCount()); }
 
 	Regex(const char *pattern, int len)                             { Set(PCRE2_UTF, pattern, len); }
-	Regex(const char *pattern)                                      { Set(pattern, strlen(pattern)); }
+	Regex(const char *pattern)                                      { Set(pattern, (int)strlen(pattern)); }
 	Regex(const String& pattern)                                    { Set(pattern, pattern.GetCount()); }
 	~Regex()                                                        { Clear(); }
 };
