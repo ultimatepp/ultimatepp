@@ -9,6 +9,8 @@ uses
 library
 	"tiff lzma jpeg";
 
+library(PORTABLE_HYBRID) "jbig Lerc webp sharpyuv";
+
 external_dependency(WIN32) tiff;
 
 external_dependency(DPKG) libtiff-dev;
@@ -16,6 +18,12 @@ external_dependency(DPKG) libtiff-dev;
 external_dependency(DPKG) liblzma-dev;
 
 external_dependency(DPKG) libjpeg-turbo8-dev;
+
+external_dependency(RPM) libtiff-devel;
+
+external_dependency(RPM) xz-devel;
+
+external_dependency(RPM) libjpeg-turbo-devel;
 
 file
 	tif.h,
