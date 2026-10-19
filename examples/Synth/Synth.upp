@@ -1,4 +1,10 @@
-library(WIN32) SDL2.lib;
+library(WIN32) "setupapi version cfgmgr32";
+
+library(WIN32 !MSC) SDL2;
+
+library(WIN32 MSC !SHARED) SDL2-static;
+
+library(WIN32 MSC SHARED) SDL2;
 
 library(POSIX) SDL2;
 

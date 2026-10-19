@@ -75,10 +75,14 @@ struct Pdb : Debugger, ParentCtrl {
 
 	struct Context {
 	#ifdef CPU_64
+	#ifdef CPU_ARM
+		ARM64_NT_CONTEXT context64;
+	#else
 		union {
 			CONTEXT context64;
 			WOW64_CONTEXT context32;
 		};
+	#endif
 	#else
 		CONTEXT context32;
 	#endif

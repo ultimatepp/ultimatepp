@@ -135,10 +135,34 @@ void InstantSetup()
 	String default_method;
 	
 	String bin = GetExeDirFile("bin");
+	enum {
+		ARCH_X86 = 0,
+		ARCH_AMD64,
+		ARCH_ARM64
+	};
+
+#ifndef CPU_64
+#ifdef CPU_X86
+	int host = ARCH_X86;
+#else
+#error Unsupported CPU
+#endif
+
+#else
+#ifdef CPU_AMD64
+	int host = ARCH_AMD64;
+#elif defined(CPU_ARM)
+	int host = ARCH_ARM64;
+#else
+#error Unsupported CPU
+
+#endif
+#endif
 
 	if(DirectoryExists(bin + "/clang"))
-		for(int x64 = 0; x64 < 2; x64++) {
-			String method = x64 ? "CLANGx64" : "CLANG";
+		for(int target = ARCH_X86; target <= ARCH_ARM64; target++) {
+			String method = decode(target, ARCH_X86, "CLANG", ARCH_AMD64, "CLANGx64", ARCH_ARM64, "CLANGarm64", "");
+
 		#ifdef INSTANT_TESTING
 			method << "Test";
 		#endif
@@ -149,19 +173,19 @@ void InstantSetup()
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
 		#ifdef INSTANT_TESTING
 			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
-				if(!x64)
+				if(!target)
 					default_method = Nvl(default_method, method);
 				continue;
 			}
 		#endif
 	
 			bmSet(bm, "BUILDER", "CLANG");
-			bmSet(bm, "COMPILER", x64 ? "" : "i686-w64-mingw32-c++");
-			bmSet(bm, "COMMON_OPTIONS", "-mpopcnt");
+			bmSet(bm, "COMPILER", decode(target, ARCH_X86, "i686-w64-mingw32-c++", ARCH_AMD64, "x86_64-w64-mingw32-c++", ARCH_ARM64, "aarch64-w64-mingw32-c++", ""));
+			bmSet(bm, "COMMON_OPTIONS", target == ARCH_ARM64 ? "" : "-mpopcnt");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++17");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_LINK", "");
-			bmSet(bm, "COMMON_FLAGS", x64 ? "" : "CPU32");
+			bmSet(bm, "COMMON_FLAGS", target == ARCH_X86 ? "CPU32" : "");
 			bmSet(bm, "DEBUG_INFO", "2");
 			bmSet(bm, "DEBUG_BLITZ", "1");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
@@ -182,24 +206,9 @@ void InstantSetup()
 			String clang = bin + "/clang";
 
 			bins.At(0) = clang + "/bin";
-			bins.At(1) = clang + (x64 ? "/x86_64-w64-mingw32/bin" : "/i686-w64-mingw32/bin");
-			bins.At(2) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-			bins.At(3) = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
-			bins.At(4) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
-
-			incs.At(0) = GetExeDirFile("bin/SDL2/include");
-			libs.At(0) = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-
-			incs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
-			libs.At(1) = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
-
-			incs.At(2) = GetExeDirFile(x64 ? "bin/mysql/include" : "bin/mysql/include");
-			libs.At(2) = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
-
-			if(x64) {
-				incs.At(3) = GetExeDirFile("bin/llvm");
-				libs.At(3) = GetExeDirFile("bin/llvm");
-			}
+			bins.At(1) = clang + decode(target, ARCH_X86, "/i686-w64-mingw32/bin", ARCH_AMD64, "/x86_64-w64-mingw32/bin", ARCH_ARM64, "/aarch64-w64-mingw32/bin", "");
+			incs.At(0) = GetExeDirFile("bin/llvm");
+			libs.At(0) = GetExeDirFile(decode(target, ARCH_X86, "bin/llvm/x86", ARCH_AMD64, "bin/llvm/x64", ARCH_ARM64, "bin/llvm/arm64", ""));
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
@@ -208,7 +217,7 @@ void InstantSetup()
 			SaveVarFile(ConfigFile(method + ".bm"), bm);
 			dirty = true;
 	
-			if(x64)
+			if(target)
 				default_method = Nvl(default_method, method);
 		}
 
@@ -220,16 +229,17 @@ void InstantSetup()
 		VS_2026, VSP_2026, BT_2026
 	};
 	DirFinder df;
-
+	
 	for(int version = VS_2019; version <= BT_2026; version++)
-		for(int x64 = 0; x64 < 2; x64++) {
+		for(int target = ARCH_X86; target <= ARCH_ARM64; target++) {
+			if(version < VS_2026 && target == ARCH_ARM64) break; // ARM64 only starting with VS_2026...
 			String x86method = decode(version, VS_2015, "MSVS15",
 			                                   VS_2017, "MSVS17", BT_2017, "MSBT17",
 			                                   VS_2019, "MSVS19", VSP_2019, "MSVSP19", BT_2019, "MSBT19",
 			                                   VS_2022, "MSVS22", VSP_2022, "MSVSP22", BT_2022, "MSBT22",
 			                                   VS_2026, "MSVS26", VSP_2026, "MSVSP26", BT_2026, "MSBT26",
 			                                   "MSBT");
-			String x64s = x64 ? "x64" : "";
+			String x64s = decode(target, ARCH_X86, "", ARCH_AMD64, "x64", ARCH_ARM64, "arm64", "");
 			String method = x86method + x64s;
 			String builder = decode(version, VS_2015, "MSC15",
 			                                 VS_2017, "MSC17", BT_2017, "MSC17",
@@ -251,7 +261,7 @@ void InstantSetup()
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
 		#ifdef INSTANT_TESTING
 			if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
-				if(x64)
+				if(target)
 					default_method = Nvl(default_method, x86method);
 			
 				continue;
@@ -273,8 +283,10 @@ void InstantSetup()
 				                            VS_2026, "/microsoft visual studio/18/community/vc/tools/msvc",
 				                            VSP_2026, "/microsoft visual studio/18/professional/vc/tools/msvc",
 				                            ""),
-				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
-				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
+							decode(host, 0, "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll",
+										 1, "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll",
+										 2, "bin/hostarm64/arm64/cl.exe;bin/hostarm64/arm64/mspdb140.dll",
+				                ""));
 
 			bin = df.Get("/windows kits/10/bin", "x86/makecat.exe;x86/accevent.exe");
 			inc = df.Get("/windows kits/10", "um/adhoc.h");
@@ -294,25 +306,15 @@ void InstantSetup()
 			DUMP(lib);
 	
 			if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
-				bins.At(0) = vc + (ver17 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
-				bins.At(1) = bin + (x64 ? "/x64" : "/x86");
+				bins.At(0) = vc + (ver17 ?  (String(decode(host, ARCH_X86, "/bin/hostx86", ARCH_AMD64, "/bin/hostx64", ARCH_ARM64, "/bin/hostarm64", ""))
+											+ String(decode(target, ARCH_X86, "/x86", ARCH_AMD64, "/x64", ARCH_ARM64, "/arm64", "")))
+										 : String(target == ARCH_AMD64 ? "/bin/amd64" : "/bin"));
+				bins.At(1) = bin + decode(host, ARCH_X86, "/x86", ARCH_AMD64, "/x64", ARCH_ARM64, "/arm64", "");
 
-				int ii = 2;
-
-				String& sdlbin = bins.At(ii++);
-				if(IsNull(sdlbin) || ToLower(sdlbin).Find("sdl2") >= 0)
-					sdlbin = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-				
-				String& pgbin = bins.At(ii++);
-				if(IsNull(pgbin) || ToLower(pgbin).Find("pgsql") >= 0)
-					pgbin = GetExeDirFile(x64 ? "bin/pgsql/x64/bin" : "bin/pgsql/x86/bin");
-
-				String& mybin = bins.At(ii++);
-				if(IsNull(mybin) || ToLower(mybin).Find("pgsql") >= 0)
-					mybin = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
-				
 				incs.At(0) = vc + "/include";
-				ii = 1;
+
+				int ii = 1;
+				
 				if(inc.GetCount()) {
 					incs.At(ii++) = inc + "/um";
 					incs.At(ii++) = inc + "/ucrt";
@@ -324,73 +326,42 @@ void InstantSetup()
 					incs.At(ii++) = kit81 + "/include/shared";
 				}
 	
-				String& sslinc = incs.At(ii++);
-				if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
-					sslinc = GetExeDirFile("bin/openssl/include");
-
-				String& sdlinc = incs.At(ii++);
-				if(IsNull(sdlinc) || ToLower(sdlinc).Find("sdl2") >= 0)
-					sdlinc = GetExeDirFile("bin/SDL2/include");
-
-				String& pginc = incs.At(ii++);
-				if(IsNull(pginc) || ToLower(pginc).Find("pgsql") >= 0)
-					pginc = GetExeDirFile(x64 ? "bin/pgsql/x64/include" : "bin/pgsql/x86/include");
-
-				String& myinc = incs.At(ii++);
-				if(IsNull(myinc) || ToLower(myinc).Find("mysql") >= 0)
-					myinc = GetExeDirFile("bin/mysql/include");
-				
 				String& llvminc = incs.At(ii++);
 				if(IsNull(llvminc) || ToLower(llvminc).Find("llvm") >= 0)
 					llvminc = GetExeDirFile("bin/llvm");
 				
-				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
+				libs.At(0) = vc + (ver17 ? decode(target, ARCH_X86, "/lib/x86", ARCH_AMD64, "/lib/x64", ARCH_ARM64, "/lib/arm64", "") : (target ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
-					libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
-					libs.At(ii++) = lib + (x64 ? "/um/x64" : "/um/x86");
+					libs.At(ii++) = lib + decode(target, ARCH_X86, "/ucrt/x86", ARCH_AMD64, "/ucrt/x64", ARCH_ARM64, "/ucrt/arm64", "");
+					libs.At(ii++) = lib + decode(target, ARCH_X86, "/um/x86", ARCH_AMD64, "/um/x64", ARCH_ARM64, "/um/arm64", "");
 				}
 				if(kit81.GetCount()) {
-					libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
+					libs.At(ii++) = kit81 + (target ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
 				}
-				String& ssllib = libs.At(ii++);
-				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-					ssllib = GetExeDirFile(x64 ? "bin/openssl/lib64" : "bin/openssl/lib32");
-				
-				String& sdllib = libs.At(ii++);
-				if(IsNull(sdllib) || ToLower(sdllib).Find("sdl2") >= 0)
-					sdllib = GetExeDirFile(x64 ? "bin/SDL2/lib/x64" : "bin/SDL2/lib/x86");
-
-				String& pglib = libs.At(ii++);
-				if(IsNull(pglib) || ToLower(pglib).Find("pgsql") >= 0)
-					pglib = GetExeDirFile(x64 ? "bin/pgsql/x64/lib" : "bin/pgsql/x86/lib");
-
-				String& mylib = libs.At(ii++);
-				if(IsNull(mylib) || ToLower(mylib).Find("mysql") >= 0)
-					mylib = GetExeDirFile(x64 ? "bin/mysql/lib64" : "bin/mysql/lib32");
-				
+		
 				String& llvmlib = libs.At(ii++);
 				if(IsNull(llvmlib) || ToLower(llvmlib).Find("llvm") >= 0)
-					llvmlib = GetExeDirFile("bin/llvm");
+					llvmlib = GetExeDirFile(decode(target, ARCH_X86, "bin/llvm/x86", ARCH_AMD64, "bin/llvm/x64", ARCH_ARM64, "bin/llvm/arm64", ""));
 
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
-				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj -D_CRT_SECURE_NO_WARNINGS"
-				                                : "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS");
+				bmSet(bm, "COMMON_OPTIONS", target == ARCH_X86 ? "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS"
+				                                : "/bigobj -D_CRT_SECURE_NO_WARNINGS");
 				bmSet(bm, "COMMON_CPP_OPTIONS", "/std:c++17");
 				bmSet(bm, "COMMON_C_OPTIONS", "");
-				bmSet(bm, "COMMON_FLAGS", x64 ? "" : "CPU32");
+				bmSet(bm, "COMMON_FLAGS", target == ARCH_X86 ? "CPU32" : "");
 				bmSet(bm, "DEBUG_INFO", "2");
 				bmSet(bm, "DEBUG_BLITZ", "1");
 				bmSet(bm, "DEBUG_LINKMODE", "0");
 				bmSet(bm, "DEBUG_OPTIONS", "-Od");
 				bmSet(bm, "DEBUG_FLAGS", "");
-				bmSet(bm, "DEBUG_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
+				bmSet(bm, "DEBUG_LINK", target == ARCH_X86 ? "/STACK:10000000" : "/STACK:20000000");
 				bmSet(bm, "RELEASE_BLITZ", "0");
 				bmSet(bm, "RELEASE_LINKMODE", "0");
 				bmSet(bm, "RELEASE_OPTIONS", "-O2");
 				bmSet(bm, "RELEASE_FLAGS", "");
-				bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
+				bmSet(bm, "RELEASE_LINK", target == ARCH_X86 ? "/STACK:10000000" : "/STACK:20000000");
 				bmSet(bm, "DISABLE_BLITZ", "");
 				bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 				bmSet(bm, "DEBUGGER", findarg(version, BT_2017, BT_2019, BT_2022) >= 0 ? String()
@@ -403,7 +374,7 @@ void InstantSetup()
 				SaveVarFile(ConfigFile(method + ".bm"), bm);
 				dirty = true;
 	
-				if(!x64)
+				if(!target)
 					default_method = Nvl(default_method, x86method);
 	
 				DUMP(ConfigFile(method + ".bm"));

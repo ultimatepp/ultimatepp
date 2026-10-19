@@ -110,6 +110,7 @@ String MscBuilder::MachineName() const
 	if(HasFlag("MIPS"))    return "MIPS";
 	if(HasFlag("SH3"))     return "SH3";
 	if(HasFlag("SH4"))     return "SH4";
+	if(IsMscArm64())       return "arm64";
 	if(IsMscArm())         return "ARM";
 	if(IsMsc64())          return "x64";
 	if(HasFlag("WIN32"))   return "I386";
@@ -118,7 +119,7 @@ String MscBuilder::MachineName() const
 
 bool MscBuilder::IsMsc89() const
 {
-	return IsMsc86() || IsMsc64() || IsMscArm();
+	return IsMsc86() || IsMsc64() || IsMscArm() || IsMscArm64(); // Is arm64 really needed here?
 }
 
 bool MscBuilder::IsMsc86() const
@@ -131,6 +132,11 @@ bool MscBuilder::IsMsc86() const
 bool MscBuilder::IsMscArm() const
 {
 	return HasFlag("MSC8ARM") || HasFlag("MSC9ARM");
+}
+
+bool MscBuilder::IsMscArm64() const
+{
+	return HasFlag("MSC26ARM64");
 }
 
 bool MscBuilder::IsMsc64() const
@@ -498,6 +504,7 @@ bool MscBuilder::CreateLib(const String& product, const Vector<String>& obj,
 		|| HasFlag("MSC17") || HasFlag("MSC17X64")
 		|| HasFlag("MSC19") || HasFlag("MSC19X64")
 		|| HasFlag("MSC22") || HasFlag("MSC22X64")
+		|| HasFlag("MSC26") || HasFlag("MSC26X64") || HasFlag("MSC26ARM64")
 	;
 	bool is_shared = HasFlag("SO");
 	String linker, lib;
@@ -631,7 +638,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		|| HasFlag("MSC17") || HasFlag("MSC17X64")
 		|| HasFlag("MSC19") || HasFlag("MSC19X64")
 		|| HasFlag("MSC22") || HasFlag("MSC22X64")
-		|| HasFlag("MSC26") || HasFlag("MSC26X64")
+		|| HasFlag("MSC26") || HasFlag("MSC26X64") || HasFlag("MSC26ARM64")
 	;
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
@@ -656,7 +663,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				link << " -subsystem:windows";
 			else
 				link << " -subsystem:console";
-			if(!IsMsc64())
+			if(!IsMsc64() && !IsMscArm64())
 				link << ",5.01"; //,5.01 needed to support WindowsXP
 			if(createmap)
 				link << " -MAP";
@@ -768,6 +775,7 @@ INITIALIZER(MscBuilder)
 	RegisterBuilder("MSC22X64", CreateMscBuilder);
 	RegisterBuilder("MSC26", CreateMscBuilder);
 	RegisterBuilder("MSC26X64", CreateMscBuilder);
+	RegisterBuilder("MSC26ARM64", CreateMscBuilder);
 	RegisterBuilder("EVC_ARM", CreateMscBuilder);
 	RegisterBuilder("EVC_MIPS", CreateMscBuilder);
 	RegisterBuilder("EVC_SH3", CreateMscBuilder);

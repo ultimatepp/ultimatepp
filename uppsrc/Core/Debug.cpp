@@ -264,6 +264,7 @@ LONG __stdcall sDumpHandler(LPEXCEPTION_POINTERS ep) {
 	for(int i = 0; i < (int)er->NumberParameters; i++)
 		Put(file, er->ExceptionInformation[i]);
 
+#ifndef CPU_ARM
 #ifdef CPU_AMD64
 	qword esp = ep->ContextRecord->Rsp;
 #else
@@ -271,6 +272,7 @@ LONG __stdcall sDumpHandler(LPEXCEPTION_POINTERS ep) {
 #endif
 
 	WriteFile(file, (void *) esp, (dword)(sESP - esp), &v, NULL);
+#endif
 	/*	dword base = ep->ContextRecord->Ebp;
 	for(;;) {
 		dword new_base = *(dword *)base;
@@ -299,7 +301,7 @@ void InstallCrashDump(const char *info) {
 	}
 	if(!sPrev) {
 		sPrev = SetUnhandledExceptionFilter(sDumpHandler);
-#ifndef CPU_AMD64
+#if defined(CPU_X86) && !defined(CPU_AMD64)
 #ifdef COMPILER_MSC
 		__asm mov sESP, esp
 #else

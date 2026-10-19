@@ -59,10 +59,12 @@ String VcpkgTriplet(const String& builder, const String& compiler, bool so)
 #ifdef PLATFORM_WIN32
 	if(builder == "CLANG")
 		return compiler.Find("i686") >= 0 ? so ? "x86-mingw-dynamic-release" : "x86-mingw-static-release"
+											: compiler.Find("aarch64") >= 0 ? so ? "arm64-mingw-dynamic" : "arm64-mingw-static"
 		                                  : so ? "x64-mingw-dynamic-release" : "x64-mingw-static-release";
 	if(builder.StartsWith("MSC"))
-		return builder.Find("64") >= 0 ? so ? "x64-windows" : "x64-windows-static"
-		                               : so ? "x86-windows" : "x86-windows-static";
+		return builder.Find("ARM64") >= 0 ? so ? "arm64-windows" : "arm64-windows-static-release"
+				: builder.Find("64") >= 0 ? so ? "x64-windows-release" : "x64-windows-static-release" // 2026-10-19 - Switched to -release (=> skip debug builds)
+				: so ? "x86-windows" : "x86-windows-static";
 	return "x64-mingw-static-release";
 #else
 #ifdef CPU_ARM

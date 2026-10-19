@@ -143,6 +143,19 @@
 	
 	#define PLATFORM_WIN32 1
 
+	#ifdef _M_ARM64
+		#define CPU_ARM 1
+		#define _ARM64_
+//		#define CPU_NEON 1
+
+	#ifdef _WIN64
+		#define PLATFORM_WIN64 1
+	#else
+		#define CPU_32 1
+	#endif
+
+	#else
+
 	#define CPU_X86 1
 
 	#ifdef _WIN64
@@ -152,6 +165,7 @@
 	#else
 		#define CPU_32 1
 		#define CPU_SSE2 1
+	#endif
 	#endif
 #endif
 

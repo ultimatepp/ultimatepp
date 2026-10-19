@@ -6,7 +6,9 @@ uint32 Pdb::GetRegister32(const Context& ctx, int sym)
 {
 	switch(sym) {
 #define CPU_REG(sym, context_var, kind, name, flags) case sym: return ctx.context32.context_var;
+#ifdef CPU_X86
 		#include "i386.cpu"
+#endif
 #undef CPU_REG
 	}
 	return 0;
@@ -17,7 +19,11 @@ uint64 Pdb::GetRegister64(const Context& ctx, int sym)
 {
 	switch(sym) {
 #define CPU_REG(sym, context_var, kind, name, flags) case sym: return ctx.context64.context_var;
+#ifdef CPU_AMD64
 		#include "amd64.cpu"
+#else
+		#include "arm64.cpu"
+#endif
 #undef CPU_REG
 	}
 	return 0;
