@@ -26,6 +26,8 @@ library(WIN32 !SHARED) zs;
 
 library(WIN32 SHARED) z;
 
+library(PORTABLE_HYBRID) deflate;
+
 static_library(ANDROID) cpufeatures;
 
 link(GCC POSIX STACKTRACE) -rdynamic;
