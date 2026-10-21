@@ -1,18 +1,101 @@
-#include <Draw/Draw.h>
 #include "tif.h"
+
 #include <Painter/Painter.h>
+
+struct tiff;
+
+#define TIFF_DISABLE_DEPRECATED
+
+#include <tiff.h>
+#include <tiffio.h>
+#include <tiffvers.h>
+#include <tiffconf.h>
+
+#undef int8
+#undef uint8
+#undef int16
+#undef uint16
+#undef int32
+#undef uint32
+#undef int64
+#undef uint64
+
+#undef HAVE_INT8
+#undef HAVE_INT16
+#undef HAVE_INT32
+#undef HAVE_UINT8
+#undef HAVE_UINT16
+#undef HAVE_UINT32
 
 
 #include <fcntl.h> // 2026-08-17 - Added for O_RDWR, O_CREAT, ...
-
-#define	tif_int32 int32_t
-#define	tif_uint32 uint32_t
 
 #define LLOG(x)  // LOG(x)
 
 // #define DBGALLOC 1
 
 namespace Upp {
+
+struct tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct = false);
+struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
+
+// Register GeoTIFF and GDAL specifig tags
+#ifdef TIFFTAG_GDAL_METADATA
+#undef TIFFTAG_GDAL_METADATA
+#endif
+#ifdef TIFFTAG_GDAL_NODATA
+#undef TIFFTAG_GDAL_NODATA
+#endif
+#ifdef TIFFTAG_RPCCOEFFICIENT
+#undef TIFFTAG_RPCCOEFFICIENT
+#endif
+
+static const word	TIFFTAG_GEOPIXELSCALE = 33550,
+					TIFFTAG_INTERGRAPH_MATRIX = 33920,
+					TIFFTAG_GEOTIEPOINTS = 33922,
+					TIFFTAG_GEOTRANSMATRIX = 34264,
+					TIFFTAG_GEOKEYDIRECTORY = 34735,
+					TIFFTAG_GEODOUBLEPARAMS = 34736,
+					TIFFTAG_GEOASCIIPARAMS = 34737,
+					TIFFTAG_GDAL_METADATA = 42112,
+					TIFFTAG_GDAL_NODATA = 42113,
+					TIFFTAG_RPCCOEFFICIENT = 50844;
+
+static const TIFFFieldInfo tifftag_fields[] = {
+    /* ---- libgeotiff's GeoTIFF block: identical to xtiff.c ---- */
+    { TIFFTAG_GEOPIXELSCALE,     -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoPixelScale" },
+    { TIFFTAG_INTERGRAPH_MATRIX, -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "Intergraph TransformationMatrix" },
+    { TIFFTAG_GEOTRANSMATRIX,    -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoTransformationMatrix" },
+    { TIFFTAG_GEOTIEPOINTS,      -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoTiePoints" },
+    { TIFFTAG_GEOKEYDIRECTORY,   -1, -1, TIFF_SHORT,  FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoKeyDirectory" },
+    { TIFFTAG_GEODOUBLEPARAMS,   -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoDoubleParams" },
+    { TIFFTAG_GEOASCIIPARAMS,    -1, -1, TIFF_ASCII,  FIELD_CUSTOM, TRUE, FALSE, (char*) "GeoASCIIParams" },
+    /* ---- GDAL's block: identical to geotiff.cpp GTiffTagExtender ---- */
+    { TIFFTAG_GDAL_METADATA,    -1, -1, TIFF_ASCII,  FIELD_CUSTOM, TRUE, FALSE, (char*) "GDALMetadata" },
+    { TIFFTAG_GDAL_NODATA,       -1, -1, TIFF_ASCII,  FIELD_CUSTOM, TRUE, FALSE, (char*) "GDALNoDataValue" },
+    { TIFFTAG_RPCCOEFFICIENT,   -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "RPCCoefficient" }
+};
+
+static TIFFExtendProc parent_extender = nullptr;
+
+static void GeoTiffTagExtender(TIFF* tiff)
+{
+	/* chain first, like GDAL does: if libgeotiff/GDAL already merged
+	   the same tags into this handle, the identical duplicates below
+	   are silently dropped by _TIFFMergeFields ("first wins"), which
+	   is exactly what we want */
+	if(parent_extender)
+		parent_extender(tiff);
+
+	TIFFMergeFieldInfo(tiff, tifftag_fields, __countof(tifftag_fields));
+}
+
+static void EnsureGeoTiffTagsS() // Call EnsureGeoTiffTagsS() from both reader and writer before opening any tiff file
+{
+	static struct Init {
+		Init() { parent_extender = TIFFSetTagExtender(GeoTiffTagExtender); }
+	} init;
+}
 
 #if DBGALLOC
 double total_allocated = 0, total_freed = 0;
@@ -675,9 +758,9 @@ static void packTileRGB(TIFRaster::Data *helper, uint32 x, uint32 y, uint32 w, u
 	}
 }
 
-static void putContig1(TIFFRGBAImage *img, tif_uint32 *cp,
-	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+static void putContig1(TIFFRGBAImage *img, uint32_t *cp,
+	uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+	int32_t fromskew, int32_t toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size;
@@ -695,9 +778,8 @@ static void putContig1(TIFFRGBAImage *img, tif_uint32 *cp,
 		BltPack11(helper->MapUp(x8, y, w8), src, (byte)(x & 7), w);
 }
 
-static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
-	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+static void putContig2(TIFFRGBAImage *img, uint32_t *cp,
+	uint32_t x, uint32_t y, uint32_t w, uint32_t h,	int32_t fromskew, int32_t toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size;
@@ -715,9 +797,9 @@ static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
 		BltPack22(helper->MapUp(x4, y, w4), src, (byte)(x & 3), w);
 }
 
-static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
-	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+static void putContig4(TIFFRGBAImage *img, uint32_t *cp,
+	uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+	int32_t fromskew, int32_t toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size; //dest.GetSize();
@@ -736,9 +818,9 @@ static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
 		BltPack44(helper->MapUp(x2, y, w2), src, shift, w);
 }
 
-static void putContig8(TIFFRGBAImage *img, tif_uint32 *cp,
-	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+static void putContig8(TIFFRGBAImage *img, uint32_t *cp,
+	uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+	int32_t fromskew, int32_t toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size;
@@ -753,8 +835,8 @@ static void putContig8(TIFFRGBAImage *img, tif_uint32 *cp,
 		memcpy(helper->MapUp(x, y, w), src, w);
 }
 
-static void putContigRGB(TIFFRGBAImage *img, tif_uint32 *cp, tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+static void putContigRGB(TIFFRGBAImage *img, uint32_t *cp, uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+	int32_t fromskew, int32_t toskew, byte *pp)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size;
@@ -763,14 +845,14 @@ static void putContigRGB(TIFFRGBAImage *img, tif_uint32 *cp, tif_uint32 x, tif_u
 	if(wh > helper->buffer.GetCount())
 		helper->buffer.SetCount(wh);
 	bool keep_y = (iw >= 0);
-	helper->contig(img, (tif_uint32 *)(keep_y ? &helper->buffer[0] : &helper->buffer[0] + w * (h - 1)),
+	helper->contig(img, (uint32_t *)(keep_y ? &helper->buffer[0] : &helper->buffer[0] + w * (h - 1)),
 		0, 0, w, h, fromskew, keep_y ? 0 : -2 * (int)w, pp);
 	packTileRGB(helper, x, keep_y ? y : y - h + 1, w, h);
 }
 
-static void putSeparate(TIFFRGBAImage *img, tif_uint32 *cp,
-	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
-	tif_int32 fromskew, tif_int32 toskew, byte *r, byte *g, byte *b, byte *a)
+static void putSeparate(TIFFRGBAImage *img, uint32_t *cp,
+	uint32_t x, uint32_t y, uint32_t w, uint32_t h,
+	int32_t fromskew, int32_t toskew, byte *r, byte *g, byte *b, byte *a)
 {
 	TIFRaster::Data *helper = (TIFRaster::Data *)img;
 //	Size size = helper->size;
@@ -779,7 +861,7 @@ static void putSeparate(TIFFRGBAImage *img, tif_uint32 *cp,
 		helper->buffer.SetCount(wh);
 	int iw = toskew + w;
 	bool keep_y = (iw >= 0);
-	helper->separate(img, (tif_uint32 *)(keep_y ? &helper->buffer[0] : &helper->buffer[0] + w * (h - 1)),
+	helper->separate(img, (uint32_t *)(keep_y ? &helper->buffer[0] : &helper->buffer[0] + w * (h - 1)),
 		0, 0, w, h, fromskew, keep_y ? 0 : -2 * (int)w, r, g, b, a);
 	packTileRGB(helper, x, keep_y ? y : y - h + 1, w, h);
 }
@@ -857,19 +939,24 @@ bool TIFRaster::Data::Create()
 		TIFFSetDirectory(tiff, i);
 		TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &page.width);
 		TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &page.height);
-		float xres, yres;
-		TIFFGetFieldDefaulted(tiff, TIFFTAG_XRESOLUTION, &xres);
-		TIFFGetFieldDefaulted(tiff, TIFFTAG_YRESOLUTION, &yres);
-		uint16 resunit;
-		TIFFGetFieldDefaulted(tiff, TIFFTAG_RESOLUTIONUNIT, &resunit);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &page.bits_per_sample);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_SAMPLESPERPIXEL, &page.samples_per_pixel);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_PHOTOMETRIC, &page.photometric);
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_ORIENTATION, &page.orientation);
-		double dots_per_unit = (resunit == RESUNIT_INCH ? 600.0 : resunit == RESUNIT_CENTIMETER
-			? 600.0 / 2.54 : 0);
-		page.dot_size.cx = (xres ? fround(page.width * dots_per_unit / xres) : 0);
-		page.dot_size.cy = (yres ? fround(page.height * dots_per_unit / yres) : 0);
+		float xres, yres;
+		uint16 resunit;
+		if(TIFFGetFieldDefaulted(tiff, TIFFTAG_XRESOLUTION, &xres) &&
+		   TIFFGetFieldDefaulted(tiff, TIFFTAG_YRESOLUTION, &yres) &&
+		   TIFFGetFieldDefaulted(tiff, TIFFTAG_RESOLUTIONUNIT, &resunit)) {
+			double dots_per_unit = (resunit == RESUNIT_INCH ? 600.0 : resunit == RESUNIT_CENTIMETER
+				? 600.0 / 2.54 : 0);
+			page.dot_size.cx = (xres ? fround(page.width * dots_per_unit / xres) : 0);
+			page.dot_size.cy = (yres ? fround(page.height * dots_per_unit / yres) : 0);
+		}
+		else {
+			page.dot_size.cx = page.width;
+			page.dot_size.cy = page.height;
+		}
 		page.alpha = false;
 		uint16 extrasamples, *sampletypes;
 		TIFFGetFieldDefaulted(tiff, TIFFTAG_EXTRASAMPLES, &extrasamples, &sampletypes);
@@ -878,14 +965,8 @@ bool TIFRaster::Data::Create()
 				page.alpha = true;
 				break;
 			}
-		
+
 		if(i == 0) {
-			const word TIFFTAG_GEOPIXELSCALE = 33550,
-			           TIFFTAG_GEOTIEPOINTS = 33922,
-			           TIFFTAG_GEOTRANSMATRIX = 34264,
-			           TIFFTAG_GEOKEYDIRECTORY = 34735,
-			           TIFFTAG_GEODOUBLEPARAMS = 34736,
-			           TIFFTAG_GEOASCIIPARAMS = 34737;
 
 			word count = 0;
 			word *geokeys = nullptr;
@@ -894,13 +975,11 @@ bool TIFRaster::Data::Create()
 			int dpc = 0;
 			double *doubleparams = 0;
 
-			int apc = 0;
 			char *asciiparams = 0;
 
-			TIFFGetField(tiff, TIFFTAG_GEODOUBLEPARAMS, &dpc, &doubleparams);
-			TIFFGetField(tiff, TIFFTAG_GEOASCIIPARAMS, &apc, &asciiparams);
-
 			if(TIFFGetField(tiff, TIFFTAG_GEOKEYDIRECTORY, &count, &geokeys) &&
+			   TIFFGetField(tiff, TIFFTAG_GEODOUBLEPARAMS, &dpc, &doubleparams) &&
+			   TIFFGetField(tiff, TIFFTAG_GEOASCIIPARAMS, &asciiparams) &&
 				count >= 4 && (count % 4) == 0 && geokeys[0] == 1)
 				for(int i = 4; i + 3 < count; i += 4) {
 					const word GTRasterTypeGeoKey = 1025,
@@ -922,7 +1001,7 @@ bool TIFRaster::Data::Create()
 
 					switch(geokeys[i+1]){ // by type
 						case TIFFTAG_GEOASCIIPARAMS:
-							if(geokeys[i+3]<=apc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(String(&asciiparams[geokeys[i+3]],geokeys[i+2]));
+							if(asciiparams) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(String(&asciiparams[geokeys[i+3]],geokeys[i+2]));
 							break;
 						case TIFFTAG_GEODOUBLEPARAMS:
 							if(geokeys[i+3]<=dpc) attr.GetAdd(Format("GK%d",geokeys[i])) = Value(doubleparams[geokeys[i+3]]);
@@ -1085,11 +1164,9 @@ bool TIFRaster::Data::Create()
 				}
 			}
 
-			if(TIFFGetField(tiff, 42113, &count, &data) && // TIFFTAG_GDAL_NODATA = 42113
-				count >= 1){
-					attr.GetAdd("nodata") = String((const char*)data, count);
-				}
-
+			char *ndstring = nullptr;
+			if(TIFFGetField(tiff, TIFFTAG_GDAL_NODATA, &ndstring) && ndstring)
+				attr.GetAdd("nodata") = String((const char*)ndstring, count);
 		}
 	}
 	return SeekPage(0);
@@ -1126,7 +1203,7 @@ bool TIFRaster::Data::SeekPage(int pgx)
 		separate = put.separate;
 		put.separate = putSeparate;
 	}
-	
+
 	attr.GetAdd("BITSPERSAMPLE") = page.bits_per_sample;
 	attr.GetAdd("SAMPLESPERPIXEL") = page.samples_per_pixel;
 	attr.GetAdd("PHOTOMETRIC") = page.photometric;
@@ -1146,7 +1223,7 @@ bool TIFRaster::Data::SeekPage(int pgx)
 	|| photometric == PHOTOMETRIC_MINISWHITE || photometric == PHOTOMETRIC_MINISBLACK)
 	&& (bitspersample == 1 || bitspersample == 2 || bitspersample == 4 || bitspersample == 8)) {
 		bpp = 8;
-		tif_uint32 **ppal = (photometric == PHOTOMETRIC_PALETTE ? PALmap : BWmap);
+		uint32_t **ppal = (photometric == PHOTOMETRIC_PALETTE ? PALmap : BWmap);
 		ASSERT(ppal);
 //		byte rshift = 8 - img.bitspersample;
 		palette_count = 1 << min<int>(bitspersample, 8);
@@ -1230,6 +1307,7 @@ Raster::Line TIFRaster::Data::GetLine(int line, Raster *raster)
 
 TIFRaster::TIFRaster()
 {
+	EnsureGeoTiffTagsS();
 }
 
 TIFRaster::~TIFRaster()
@@ -1464,6 +1542,7 @@ void TIFEncoder::Data::WriteLineRaw(const byte *s)
 TIFEncoder::TIFEncoder(int bpp)
 : bpp(bpp)
 {
+	EnsureGeoTiffTagsS();
 }
 
 TIFEncoder::~TIFEncoder()
@@ -1490,5 +1569,6 @@ void TIFEncoder::WriteLineRaw(const byte *s)
 INITIALIZER(TIFRaster) {
 	StreamRaster::Register<TIFRaster>();
 }
+
 
 }
