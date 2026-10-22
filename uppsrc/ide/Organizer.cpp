@@ -137,8 +137,7 @@ ExtDepDlg::ExtDepDlg()
 
 	when <<= ExternalDependenciesManagerId();
 	
-	text.SetFilter([](int c) { return c == ' ' ? 0 : c; });
-	
+	license.SetFilter([](int c) { return c == ' ' ? 0 : c; });
 	for(String id : SPDXLicenses()) // TODO
 		license.AddList(id);
 	license.NullText("resolve automatically");
@@ -150,8 +149,11 @@ ExtDepDlg::ExtDepDlg()
 #else
 		p = SelectExternalDependency();
 #endif
-		if(p.GetCount())
-			text <<= p;
+		if(p.GetCount()) {
+			String s = ~text;
+			MergeWith(s, " ", p);
+			text <<= s;
+		}
 	};
 }
 
@@ -159,21 +161,20 @@ String ExtDepDlg::GetText() const
 {
 	String r = ~text;
 	if(!IsNull(license))
-		r << " license(" << AsCString(~license) << ")";
+		r << " license(" << ~license << ")";
 	return r;
 }
 
 void ExtDepDlg::SetText(String txt)
 {
-	int q = txt.Find(' ');
-	if(q >= 0) {
-		text <<= txt.Mid(0, q);
-		ExternalDependencyInfo f = GetExternalDependencyInfo(txt);
-		text <<= f.name;
+	Vector<ExternalDependencyInfo> r;
+	ParseExternalDependencyInfo(r, txt);
+	String s;
+	for(const auto& f : r) {
+		MergeWith(s, " ", f.name);
 		license <<= f.license;
 	}
-	else
-		text <<= txt;
+	text <<= s;
 }
 
 void PackageEditor::SaveOptions() {

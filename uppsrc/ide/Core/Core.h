@@ -721,7 +721,7 @@ struct ExternalDependencyInfo : Moveable<ExternalDependencyInfo> {
 	String license;
 };
 
-ExternalDependencyInfo GetExternalDependencyInfo(const String& txt);
+void ParseExternalDependencyInfo(Vector<ExternalDependencyInfo>& r, const String& txt);
 
 Vector<String>                 GetExternalDependenciesKeys();
 Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const Vector<String>& keys);

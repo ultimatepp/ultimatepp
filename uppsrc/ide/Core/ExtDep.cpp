@@ -1,22 +1,16 @@
 #include "Core.h"
 
-ExternalDependencyInfo GetExternalDependencyInfo(const String& txt)
+void ParseExternalDependencyInfo(Vector<ExternalDependencyInfo>& r, const String& txt)
 {
-	ExternalDependencyInfo f;
-	f.name = txt;
-	int q = txt.Find(' ');
-	if(q >= 0) {
-		f.name = txt.Mid(0, q);
-		String h = TrimBoth(txt.Mid(q));
-		if(h.TrimStart("license(")) {
-			try {
-				CParser p(h);
-				f.license = p.ReadString();
-			}
-			catch(CParser::Error) {}
-		}
-	}
-	return f;
+	int i0 = r.GetCount();
+	String license;
+	for(String s : Split(txt, ' '))
+		if(s.TrimStart("license(") && s.TrimEnd(")"))
+			license = s;
+		else
+			r.Add().name = s;
+	for(int i = i0; i < r.GetCount(); i++)
+		r[i].license = license;
 }
 
 Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const Vector<String>& keys)
@@ -24,9 +18,7 @@ Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& p
 	Vector<ExternalDependencyInfo> required;
 	for(const OptItem& m : pkg.external_dependency) {
 		if(MatchWhen(m.when, keys)) {
-			ExternalDependencyInfo f = GetExternalDependencyInfo(m.text);
-			if(f.name.GetCount())
-				required << f;
+			ParseExternalDependencyInfo(required, m.text);
 		}
 	}
 	Sort(required, [](const ExternalDependencyInfo& a, const ExternalDependencyInfo& b) { return a.name < b.name; });
