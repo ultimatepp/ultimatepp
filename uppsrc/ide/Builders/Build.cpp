@@ -115,18 +115,22 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	{
 		VectorMap<String, String> env = clone(Environment());
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
+#ifdef PLATFORM_WIN32
 		if(IsVCPKG() && IsVcpkgInstalled()) {
 			host.exedirs << GetExeDirFile("vcpkg");
 			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
 		}
-#ifdef PLATFORM_WIN32
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");
 		host.AddExecutable(GetExeDirFile("bin/clang/bin"), "clang-format.exe");
 		
-		env.GetAdd("VCPKG_DEFAULT_TRIPLET") = "x64-mingw-static";
-		env.GetAdd("VCPKG_DEFAULT_HOST_TRIPLET") = "x64-mingw-static";
+		env.GetAdd("VCPKG_DEFAULT_TRIPLET") = "x64-mingw-static-release";
+		env.GetAdd("VCPKG_DEFAULT_HOST_TRIPLET") = "x64-mingw-static-release";
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 #else
+		if(IsVcpkgInstalled()) {
+			host.exedirs << GetHomeDirFile("vcpkg");
+			host.exedirs << GetHomeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
+		}
 		env.GetAdd("PATH") = Join(host.exedirs, ":");
 #endif
 		env.GetAdd("UPP_MAIN__") = PackageDirectory(GetMain());
