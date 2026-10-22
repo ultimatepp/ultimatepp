@@ -61,6 +61,13 @@ static const word	TIFFTAG_GEOPIXELSCALE = 33550,
 					TIFFTAG_GDAL_NODATA = 42113,
 					TIFFTAG_RPCCOEFFICIENT = 50844;
 
+#ifndef FALSE			/* in case these macros already exist */
+#define FALSE	0		/* values of boolean */
+#endif
+#ifndef TRUE
+#define TRUE	1
+#endif
+
 static const TIFFFieldInfo tifftag_fields[] = {
     /* ---- libgeotiff's GeoTIFF block: identical to xtiff.c ---- */
     { TIFFTAG_GEOPIXELSCALE,     -1, -1, TIFF_DOUBLE, FIELD_CUSTOM, TRUE, TRUE,  (char*) "GeoPixelScale" },
