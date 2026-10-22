@@ -9,6 +9,14 @@
 #define CUSTOM_FONTSYS
 #endif
 
+#ifdef flagCUSTOM_FONTSYS // Activates custom font system in Draw (font routines in another package)
+#define CUSTOM_FONTSYS
+#endif
+
+#ifdef flagNO_FONTSYS // Deactivates font system (no texts available)
+#define NO_FONTSYS
+#endif
+
 namespace Upp {
 
 class Drawing;

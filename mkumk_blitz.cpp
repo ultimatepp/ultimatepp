@@ -349,6 +349,27 @@
 #ifdef ROUND
 #undef ROUND
 #endif
+#ifdef LLOG
+#undef LLOG
+#endif
+#ifdef LTIMING
+#undef LTIMING
+#endif
+#ifdef FONTCACHE
+#undef FONTCACHE
+#endif
+#ifdef FLOOR
+#undef FLOOR
+#endif
+#ifdef CEIL
+#undef CEIL
+#endif
+#ifdef TRUNC
+#undef TRUNC
+#endif
+#ifdef ROUND
+#undef ROUND
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F62

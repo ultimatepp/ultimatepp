@@ -37,8 +37,10 @@ CONSOLE_APP_MAIN {
 	
 	SaveChangedFile2(GetFileFolder(uppsrc) + "/mkumk_blitz.cpp", blitz);
 	
-	String cmdline = "-O2 -pthread -Iuppsrc -I. -DflagMAIN -DNO_FONTSYS -DCUSTOM_FONTSYS mkumk_blitz.cpp " + ifile + " -lstdc++ -lm -lz -lbz2 "
-	                 "`pkg-config --libs libpng` -o umk";
+	String cmdline = "-O2 -pthread -Iuppsrc -I. -DflagMAIN -DflagNO_FONTSYS mkumk_blitz.cpp " + ifile +
+	                 " -lstdc++ -llzma -lpcre2-8 -lpcre2-32 -llz4 -lzstd -lxxhash -lm -lz -lbz2 `pkg-config --libs libpng`"
+	                 " `pkg-config --libs libpng`"
+	                 " -o umk";
 
 	SaveChangedFile2(GetFileFolder(uppsrc) + "/mkumk_gcc.sh", "gcc " + cmdline);
 	SaveChangedFile2(GetFileFolder(uppsrc) + "/mkumk_clang.sh", "clang " + cmdline);

@@ -15,7 +15,7 @@ link(OSX !X11 !NOMM) "-framework Foundation -framework Cocoa -framework Carbon";
 
 pkg_config(POSIX !OSX) "freetype2 fontconfig";
 
-pkg_config(POSIX !OSX !VIRTUALGUI) "x11 xcb expat";
+pkg_config(POSIX !OSX !VIRTUALGUI !NO_FONTSYS) "x11 xcb expat";
 
 external_dependency(DPKG) libfreetype-dev;
 
