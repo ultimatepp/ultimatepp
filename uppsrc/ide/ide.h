@@ -1379,6 +1379,7 @@ bool MapFlag(const VectorMap<class String, class String>& map, const char *key);
 
 String VCPKGSelectExternalDependency();
 String SelectExternalDependency();
+void   ShowExternalDependencies();
 
 #include "urepo.h"
 

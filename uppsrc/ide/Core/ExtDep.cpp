@@ -19,7 +19,21 @@ ExternalDependencyInfo GetExternalDependencyInfo(const String& txt)
 	return f;
 }
 
-Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg)
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const Vector<String>& keys)
+{
+	Vector<ExternalDependencyInfo> required;
+	for(const OptItem& m : pkg.external_dependency) {
+		if(MatchWhen(m.when, keys)) {
+			ExternalDependencyInfo f = GetExternalDependencyInfo(m.text);
+			if(f.name.GetCount())
+				required << f;
+		}
+	}
+	Sort(required, [](const ExternalDependencyInfo& a, const ExternalDependencyInfo& b) { return a.name < b.name; });
+	return required;
+}
+
+Vector<String> GetExternalDependenciesKeys()
 {
 	Vector<String> keys;
 	keys << ExternalDependenciesManagerId();
@@ -38,14 +52,21 @@ Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& p
 #ifdef PLATFORM_BSD
 	keys << "BSD";
 #endif
-	String ed;
+	return keys;
+}
+
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg)
+{
+	return RequiredExternalDependenciesInfo(pkg, GetExternalDependenciesKeys());
+}
+
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Vector<String>& keys)
+{
 	Vector<ExternalDependencyInfo> required;
-	for(const OptItem& m : pkg.external_dependency) {
-		if(MatchWhen(m.when, keys)) {
-			ExternalDependencyInfo f = GetExternalDependencyInfo(m.text);
-			if(f.name.GetCount())
-				required << f;
-		}
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		required.Append(RequiredExternalDependenciesInfo(pkg, keys));
 	}
 	Sort(required, [](const ExternalDependencyInfo& a, const ExternalDependencyInfo& b) { return a.name < b.name; });
 	return required;
@@ -53,14 +74,7 @@ Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& p
 
 Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo()
 {
-	Vector<ExternalDependencyInfo> required;
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pkg = wspc.GetPackage(i);
-		required.Append(RequiredExternalDependenciesInfo(pkg));
-	}
-	Sort(required, [](const ExternalDependencyInfo& a, const ExternalDependencyInfo& b) { return a.name < b.name; });
-	return required;
+	return RequiredExternalDependenciesInfo(GetExternalDependenciesKeys());
 }
 
 Vector<String> RequiredExternalDependencies(const Package& pkg)

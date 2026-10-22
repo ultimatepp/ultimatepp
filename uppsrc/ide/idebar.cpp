@@ -528,6 +528,7 @@ void Ide::Project(Bar& menu)
 		menu.AddMenu(AK_MAINCONFIG, IdeImg::main_package(), THISBACK(MainConfig))
 			.Help("Configuring compiler, operating system, output application parameters, custom flags");
 		menu.Add("Install missing external dependencies..", [this] { SyncExternalDependencies(true, true); });
+		menu.Add("Show external dependencies..", [] { ShowExternalDependencies(); });
 		menu.MenuSeparator();
 		menu.AddMenu(AK_SYNCT, IdeImg::Language(), THISBACK1(SyncT, 0))
 		    .Help("Synchronize all language translation files of current workspace");

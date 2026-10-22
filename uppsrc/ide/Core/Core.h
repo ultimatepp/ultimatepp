@@ -723,7 +723,10 @@ struct ExternalDependencyInfo : Moveable<ExternalDependencyInfo> {
 
 ExternalDependencyInfo GetExternalDependencyInfo(const String& txt);
 
+Vector<String>                 GetExternalDependenciesKeys();
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg, const Vector<String>& keys);
 Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Package& pkg);
+Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo(const Vector<String>& keys);
 Vector<ExternalDependencyInfo> RequiredExternalDependenciesInfo();
 
 Vector<String>         RequiredExternalDependencies(const Package& pkg);

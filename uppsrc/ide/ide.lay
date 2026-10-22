@@ -1092,3 +1092,10 @@ LAYOUT(SysConsoleLayout, 680, 660)
 	ITEM(Upp::Button, cancel, SetLabel(t_("Abort")).RightPosZ(612, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
+LAYOUT(ShowExtDepLayout, 508, 184)
+	ITEM(Upp::WithDropChoice<Upp::EditString>, when, LeftPosZ(4, 496).TopPosZ(4, 19))
+	ITEM(Upp::RichTextCtrl, list, LeftPosZ(4, 496).TopPosZ(28, 116))
+	ITEM(Upp::Button, copy, SetLabel(t_("Copy")).LeftPosZ(4, 64).TopPosZ(152, 24))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).LeftPosZ(436, 64).TopPosZ(152, 24))
+END_LAYOUT
+
