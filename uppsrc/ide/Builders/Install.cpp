@@ -203,7 +203,7 @@ void CreateBuildMethods()
 			String r = clang_bm;
 			r.Replace("clang++", "/opt/llvm-mingw/bin/i686-w64-mingw32-clang++");
 			r.Replace("$COMMON$", "-mpopcnt -fms-extensions");
-			r.Replace("COMMON_FLAGS = \"\";", "COMMON_FLAGS = \"VCPKG WIN32\";");
+			r.Replace("COMMON_FLAGS = \"\";", "COMMON_FLAGS = \"CPU32 VCPKG WIN32\";");
 			r.Replace("DEBUG_LINKMODE = \"1\";", "DEBUG_LINKMODE = \"0\";");
 			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
 			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
