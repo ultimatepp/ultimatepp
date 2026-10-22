@@ -139,22 +139,26 @@ void CodeEditor::Paint(Draw& w)
 			line0 = i;
 			while(i < GetScrollPos().y + 1) {
 				String l = GetUtf8Line(i);
-				CParser p(l);
-				try {
-					while(!p.IsEof())
-						if(p.Id("public"))
-							access = 0;
-						else
-						if(p.Id("protected"))
-							access = 1;
-						else
-						if(p.Id("private"))
-							access = 2;
-						else
-							p.Skip();
+				if(l.Find("*/") >= 0)
+					line0 = ++i;
+				else {
+					CParser p(l);
+					try {
+						while(!p.IsEof())
+							if(p.Id("public"))
+								access = 0;
+							else
+							if(p.Id("protected"))
+								access = 1;
+							else
+							if(p.Id("private"))
+								access = 2;
+							else
+								p.Skip();
+					}
+					catch(CParser::Error) {}
+					i++;
 				}
-				catch(CParser::Error) {}
-				i++;
 			}
 			break;
 		}

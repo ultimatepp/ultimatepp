@@ -4,37 +4,8 @@
 #include <Draw/Draw.h>
 
 struct tiff;
-#define TIFF_DISABLE_DEPRECATED
-#include <tiff.h>
-#include <tiffio.h>
-//#include <tiffiop.h>
-
-#include <tiffvers.h>
-#include <tiffconf.h>
-
-#undef int8
-#undef uint8
-#undef int16
-#undef uint16
-#undef int32
-#undef uint32
-#undef int64
-#undef uint64
-
-#undef HAVE_INT8
-#undef HAVE_INT16
-#undef HAVE_INT32
-#undef HAVE_UINT8
-#undef HAVE_UINT16
-#undef HAVE_UINT32
 
 namespace Upp {
-
-struct tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct = false);
-struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
-
-//struct tiff* TIFFWrapOpen(const char*, const char*);
-//int TIFFWrapGetField(::tiff* tif_data, uint32 tag, ...);
 
 INITIALIZE(TIFRaster);
 
