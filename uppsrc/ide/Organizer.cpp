@@ -128,8 +128,6 @@ struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
 
 ExtDepDlg::ExtDepDlg()
 {
-	DDUMPC(AllHostPackagesList());
-
 	CtrlLayoutOKCancel(*this, "External dependency");
 	when.AddList("VCPKG");
 	when.AddList("DPKG");
