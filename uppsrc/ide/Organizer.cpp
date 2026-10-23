@@ -128,6 +128,8 @@ struct ExtDepDlg : WithUppExtDepLayout<TopWindow> {
 
 ExtDepDlg::ExtDepDlg()
 {
+	DDUMPC(AllHostPackagesList());
+
 	CtrlLayoutOKCancel(*this, "External dependency");
 	when.AddList("VCPKG");
 	when.AddList("DPKG");
@@ -492,6 +494,21 @@ void PackageEditor::OptionMenu(Bar& bar)
 	bar.Add(m && i >= 0 && max(i, i + 1) < m->GetCount(),
 	        "Move down", THISBACK1(MoveOption, 1))
 	   .Key(K_CTRL_DOWN);
+	if(IsVerbose()) {
+		bar.Separator();
+		bar.Add("Flatten dependencies", [this] {
+			VectorMap<String, String> map;
+			for(const OptItem& m : actual.external_dependency)
+				MergeWith(map.GetAdd(m.when), " ", m.text);
+			actual.external_dependency.Clear();
+			for(const auto& e : ~map) {
+				OptItem& m = actual.external_dependency.Add();
+				m.when = e.key;
+				m.text = e.value;
+			}
+			SaveLoadPackage();
+		});
+	}
 }
 
 void PackageEditor::FileCursor()

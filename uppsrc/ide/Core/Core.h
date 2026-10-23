@@ -716,6 +716,8 @@ String CleanupPretty(const String& signature);
 
 Vector<ItemTextPart> ParsePretty(const String& name, const String& signature, int *fn_info = NULL);
 
+Index<String> AllHostPackagesList();
+
 struct ExternalDependencyInfo : Moveable<ExternalDependencyInfo> {
 	String name;
 	String license;
@@ -770,6 +772,6 @@ bool                   VcpkgInstall(Function<int(const String&, const String& ch
 Index<String>          VcpkgInstalledExternalDependencies(const String& triplet);
 bool                   VcpkInstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet);
 
-Value                  GetBrewJson(Gate<int, int> progress);
+Value                  GetBrewJson(Gate<int, int> progress = Null);
 
 #endif

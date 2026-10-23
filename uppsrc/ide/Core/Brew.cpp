@@ -14,9 +14,10 @@ Value GetBrewJson(Gate<int, int> progress)
 				if(progress((int)http.GetContent().GetCount(), (int)http.GetContentLength()))
 					http.Abort();
 			};
-		    data = ParseJSON(http.Execute())["payload"];
 			if(http.IsError())
 				return ErrorValue();
+
+		    data = ~ParseJSON(http.Execute())["payload"];
 		    
 		    SaveFile(path, GZCompress(data));
 		}
