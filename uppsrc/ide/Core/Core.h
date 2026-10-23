@@ -772,6 +772,11 @@ bool                   VcpkgInstall(Function<int(const String&, const String& ch
 Index<String>          VcpkgInstalledExternalDependencies(const String& triplet);
 bool                   VcpkInstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet);
 
-Value                  GetBrewJson(Gate<int, int> progress = Null);
+struct BrewPackageInfo : Moveable<BrewPackageInfo> {
+	String name;
+	String description;
+};
+
+const Vector<BrewPackageInfo>& GetBrewPackages(Gate<int, int> progress = Null);
 
 #endif
