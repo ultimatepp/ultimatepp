@@ -12,7 +12,7 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run
+      - run:
           name: Install dependencies
           command: |
             sudo apt-get update
@@ -31,7 +31,7 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run
+      - run:
           name: Install dependencies and configure brew
           command: |
             eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -45,7 +45,7 @@ jobs:
             export C_INCLUDE_PATH="$BREW_PREFIX/include"
             export CPLUS_INCLUDE_PATH="$BREW_PREFIX/include"
             export LIBRARY_PATH="$BREW_PREFIX/lib"
-      - run
+      - run:
           name: Configure and build
           command: |
             ./configure
