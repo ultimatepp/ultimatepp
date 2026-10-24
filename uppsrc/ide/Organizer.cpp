@@ -136,7 +136,11 @@ ExtDepDlg::ExtDepDlg()
 	when.Appending(" ");
 
 	when <<= ExternalDependenciesManagerId();
-	
+
+#ifdef PLATFORM_MACOS // '|' looks ugly in standard font
+	text.SetFont(SansSerif(StdFont().GetHeight()));
+#endif
+
 	license.SetFilter([](int c) { return c == ' ' ? 0 : c; });
 	for(String id : SPDXLicenses()) // TODO
 		license.AddList(id);
