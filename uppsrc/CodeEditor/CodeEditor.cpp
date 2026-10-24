@@ -106,6 +106,17 @@ void CodeEditor::Paint(Draw& w)
 {
 	LineEdit::Paint(w);
 
+	Size sz = GetSize();
+
+	if(newfile && !IsDirty()) {
+		static String txt = "File does not exist yet";
+		Size tsz = GetTextSize(txt, ArialZ(20));
+		if(tsz.cx < sz.cx && tsz.cy < sz.cy) {
+			Point p = (sz - tsz) / 2;
+			w.DrawText(p.x, p.y, txt, ArialZ(20), Gray());
+		}
+	}
+
 	if(!blk0_header)
 		return;
 
@@ -165,7 +176,7 @@ void CodeEditor::Paint(Draw& w)
 		if(!empty && line0 < 0)
 			line0 = i;
 	}
-	
+
 	if(line0 < 0 || GetScrollPos().y <= line0)
 		return;
 
@@ -173,8 +184,6 @@ void CodeEditor::Paint(Draw& w)
 	int h = GetPos(start.y, start.x) - 1;
 	if(l < 0 || l >= h)
 		return;
-
-	Size sz = GetSize();
 
 	bool dark = IsDark(HighlightSetup::GetHlStyle(HighlightSetup::PAPER_NORMAL).color);
 	Color paper = GrayColor(dark ? 40 : 245);
@@ -288,6 +297,7 @@ void CodeEditor::PostInsert(int pos, const WString& text) {
 	}
 	WhenUpdate();
 	EditorBarLayout();
+	EndNewFile();
 }
 
 void CodeEditor::PreRemove(int pos, int size) {
@@ -314,6 +324,15 @@ void CodeEditor::PostRemove(int pos, int size) {
 	if(GetRefreshInfo(pos) != refresh_info)
 		Refresh();
 	sbi.Refresh();
+	EndNewFile();
+}
+
+void CodeEditor::EndNewFile()
+{
+	if(newfile) {
+		newfile = false;
+		Refresh();
+	}
 }
 
 void CodeEditor::ClearLines() {

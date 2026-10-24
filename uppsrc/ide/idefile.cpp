@@ -349,6 +349,8 @@ void Ide::SaveFile0(bool always)
 	if(editfile.IsEmpty())
 		return;
 
+	RealizePath(editfile);
+
 	FileData& fd = Filedata(editfile);
 	fd.lineinfo = editor.GetLineInfo();
 	fd.lineinforem = editor.GetLineInfoRem();
@@ -641,13 +643,8 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		editor.ClearDirty();
 	}
 	else {
-		RealizePath(editfile);
-		Index<String> extensions = {
-			".h",
-			".hpp"
-		};
 		String ext = GetFileExt(editfile);
-		if(extensions.Find(ext) >= 0) {
+		if(findarg(ext, ".h", ".hpp") >= 0) {
 			ext.Set(0, '_');
 			String n = '_' + Filter(String().Cat() << GetActivePackage() << '_' << GetFileTitle(editfile) << ext <<"_",
 			                        CharFilterMacro);
@@ -664,6 +661,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			editor.SetCursor(editor.GetPos64(1));
 		}
 		editor.SetCharset(tfile ? CHARSET_UTF8 : charset);
+		editor.SetNewFile();
 	}
 	static bool ShowBeginnerInfo = true;
 	editor.show_beginner_info = ShowBeginnerInfo;
