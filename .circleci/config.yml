@@ -42,6 +42,7 @@ jobs:
           command: |
             eval "$(/opt/homebrew/bin/brew shellenv)"
             BREW_PREFIX="$(brew --prefix)"
+            LIBPNG_PREFIX="$(brew --prefix libpng)"
             
             export CPPFLAGS="-I$BREW_PREFIX/include"
             export LDFLAGS="-L$BREW_PREFIX/lib"
