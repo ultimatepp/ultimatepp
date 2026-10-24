@@ -12,11 +12,17 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev liblz4-dev xdotool xxhash
-      - run: ./configure
-      - run: make -f Makefile -j ${NUMBER_OF_CPUS}
-      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
+      - run
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install g++ clang git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev liblz4-dev xdotool xxhash
+      - run:
+          name: Configure and build
+          command: |
+            ./configure
+            make -f Makefile -j ${NUMBER_OF_CPUS}
+            make -f umkMakefile -j ${NUMBER_OF_CPUS}
   build-mac:
     macos:
       xcode: 27.0
@@ -25,12 +31,26 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run: eval "$(/opt/homebrew/bin/brew shellenv)"
-      - run: export HOMEBREW_NO_AUTO_UPDATE=1
-      - run: brew install pcre2 xxhash
-      - run: ./configure
-      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
-      - run: ./umk ./uppsrc ide CLANG -brs ./theide
+      - run
+          name: Install dependencies and configure brew
+          command: |
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+            export HOMEBREW_NO_AUTO_UPDATE=1
+            brew install pcre2 xxhash
+            
+            BREW_PREFIX="$(brew --prefix)"
+            
+            export CPPFLAGS="-I$BREW_PREFIX/include"
+            export LDFLAGS="-L$BREW_PREFIX/lib"
+            export C_INCLUDE_PATH="$BREW_PREFIX/include"
+            export CPLUS_INCLUDE_PATH="$BREW_PREFIX/include"
+            export LIBRARY_PATH="$BREW_PREFIX/lib"
+      - run
+          name: Configure and build
+          command: |
+            ./configure
+            make -f umkMakefile -j ${NUMBER_OF_CPUS}
+            ./umk ./uppsrc ide CLANG -brs ./theide
   build-windows:
     executor: win/default
     steps:
