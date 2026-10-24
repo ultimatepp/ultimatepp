@@ -37,7 +37,10 @@ jobs:
             eval "$(/opt/homebrew/bin/brew shellenv)"
             export HOMEBREW_NO_AUTO_UPDATE=1
             brew install pcre2 xxhash
-            
+      - run:
+          name: Configure and build
+          command: |
+            eval "$(/opt/homebrew/bin/brew shellenv)"
             BREW_PREFIX="$(brew --prefix)"
             
             export CPPFLAGS="-I$BREW_PREFIX/include"
@@ -45,9 +48,7 @@ jobs:
             export C_INCLUDE_PATH="$BREW_PREFIX/include"
             export CPLUS_INCLUDE_PATH="$BREW_PREFIX/include"
             export LIBRARY_PATH="$BREW_PREFIX/lib"
-      - run:
-          name: Configure and build
-          command: |
+            
             ./configure
             make -f umkMakefile -j ${NUMBER_OF_CPUS}
             ./umk ./uppsrc ide CLANG -brs ./theide
