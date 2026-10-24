@@ -1,5 +1,26 @@
 #include "Core.h"
 
+Index<String> AllHostPackagesList()
+{
+	Index<String> list;
+	if(IsRPM() || IsDPKG())
+		for(String s : Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
+		                                 : "apt-cache search ."), '\n')) {
+			int q = s.Find(" - ");
+			if(q >= 0)
+				s.Trim(q);
+			list.FindAdd(s);
+		}
+	if(IsBREW())
+		for(const auto& m : GetBrewPackages())
+			list.FindAdd(m.name);
+	if(IsVCPKG())
+		for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json")))
+			list.FindAdd(~l["package_name"]);
+	return list;
+}
+
+
 void ParseExternalDependencyInfo(Vector<ExternalDependencyInfo>& r, const String& txt)
 {
 	int i0 = r.GetCount();
@@ -7,8 +28,12 @@ void ParseExternalDependencyInfo(Vector<ExternalDependencyInfo>& r, const String
 	for(String s : Split(txt, ' '))
 		if(s.TrimStart("license(") && s.TrimEnd(")"))
 			license = s;
-		else
-			r.Add().name = s;
+		else {
+			if(r.GetCount() && (*s == '|' || *r.Top().name.Last() == '|'))
+				r.Top().name << s;
+			else
+				r.Add().name = s;
+		}
 	for(int i = i0; i < r.GetCount(); i++)
 		r[i].license = license;
 }
@@ -88,10 +113,19 @@ Vector<String> RequiredExternalDependencies()
 Vector<String> MissingExternalDependencies(const String& triplet)
 {
 	Index<String> missi;
+	Index<String> available = AllHostPackagesList();
 	Index<String> installed = InstalledExternalDependencies(triplet);
-	for(String s : RequiredExternalDependencies())
+	for(String s : RequiredExternalDependencies()) {
+		Vector<String> ss = Split(s, '|');
+		if(ss.GetCount() > 1)
+			for(String h : ss)
+				if(available.Find(h) >= 0) {
+					s = h;
+					break;
+				}
 		if(installed.Find(s) < 0)
 			missi.FindAdd(s);
+	}
 	Vector<String> missing = missi.PickKeys();
 	Sort(missing);
 	return missing;

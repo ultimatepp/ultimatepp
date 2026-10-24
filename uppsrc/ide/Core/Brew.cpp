@@ -1,12 +1,27 @@
 #include "Core.h"
 
-Value GetBrewJson(Gate<int, int> progress)
+const Vector<BrewPackageInfo>& GetBrewPackages(Gate<int, int> progress)
 {
-	String path = ConfigFile("brew.json.gz");
-	static String data;
-	if(data.GetCount() == 0) {
-		if(FileExists(path) && FileGetTime(path) > GetSysTime() - 3600 * 24) // update daily
-			data = GZDecompress(LoadFile(path));
+	static Vector<BrewPackageInfo> pi;
+	ONCELOCK {
+		String ds = LoadFile(GetHomeDirFile(
+	#ifdef PLATFORM_MACOS
+			"Library/Caches"
+	#else
+			".cache"
+	#endif
+			"/Homebrew/descriptions.json"));
+		if(ds.GetCount()) {
+			Value v = ParseJSON(ds);
+			if(IsValueMap(v)) {
+				ValueMap m = v;
+				for(int i = 0; i < m.GetCount(); i++) {
+					BrewPackageInfo& r = pi.Add();
+					r.name = m.GetKey(i);
+					r.description = m.GetValue(i);
+				}
+			}
+		}
 		else {
 		    HttpRequest http("https://formulae.brew.sh/api/formula.jws.json");
 		    http.MaxContentSize(200000000);
@@ -14,13 +29,13 @@ Value GetBrewJson(Gate<int, int> progress)
 				if(progress((int)http.GetContent().GetCount(), (int)http.GetContentLength()))
 					http.Abort();
 			};
-		    data = ParseJSON(http.Execute())["payload"];
-			if(http.IsError())
-				return ErrorValue();
-		    
-		    SaveFile(path, GZCompress(data));
+			
+			for(Value m : ParseJSON(~ParseJSON(http.Execute())["payload"])) {
+				BrewPackageInfo& r = pi.Add();
+				r.name = m["name"];
+				r.description = m["desc"];
+			}
 		}
 	}
-
-	return ParseJSON(data);
+	return pi;
 }

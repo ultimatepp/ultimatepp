@@ -85,8 +85,8 @@ SelectExtDepDlg::SelectExtDepDlg()
 	
 	if(IsBREW()) {
 		Progress pi("Updating database");
-		for(Value p : GetBrewJson([&](int pos, int total) { return pi.SetCanceled(pos, total); }))
-			src << ~p["name"] + " - " + ~p["desc"];
+		for(const auto& m : GetBrewPackages([&](int pos, int total) { return pi.SetCanceled(pos, total); }))
+			src << m.name + " - " + m.description;
 	}
 	else
 		src = Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
