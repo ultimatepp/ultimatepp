@@ -25,9 +25,9 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - eval "$(/opt/homebrew/bin/brew shellenv)"
-      - export HOMEBREW_NO_AUTO_UPDATE=1
-      - brew install pcre2 xxhash
+      - run: eval "$(/opt/homebrew/bin/brew shellenv)"
+      - run: export HOMEBREW_NO_AUTO_UPDATE=1
+      - run: brew install pcre2 xxhash
       - run: ./configure
       - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
       - run: ./umk ./uppsrc ide CLANG -brs ./theide
