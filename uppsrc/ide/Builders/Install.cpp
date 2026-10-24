@@ -208,7 +208,6 @@ void CreateBuildMethods()
 			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
 			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
 			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/i686-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
-			//r.Replace("LINKMODE_LOCK = \"0\";", "LINKMODE_LOCK = \"1\";");
 			SaveFile(bm, r);
 		}
 	}
@@ -223,7 +222,6 @@ void CreateBuildMethods()
 			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
 			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
 			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/x86_64-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
-			//r.Replace("LINKMODE_LOCK = \"0\";", "LINKMODE_LOCK = \"1\";");
 			SaveFile(bm, r);
 		}
 	}
@@ -238,7 +236,6 @@ void CreateBuildMethods()
 			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
 			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
 			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/aarch64-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
-			//r.Replace("LINKMODE_LOCK = \"0\";", "LINKMODE_LOCK = \"1\";");
 			SaveFile(bm, r);
 		}
 	}
