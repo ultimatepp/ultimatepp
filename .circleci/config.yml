@@ -36,7 +36,7 @@ jobs:
           command: |
             eval "$(/opt/homebrew/bin/brew shellenv)"
             export HOMEBREW_NO_AUTO_UPDATE=1
-            brew install pcre2 xxhash
+            brew install lz4 pcre2 xxhash zstd
       - run:
           name: Configure and build
           command: |
