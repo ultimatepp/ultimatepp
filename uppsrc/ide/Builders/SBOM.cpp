@@ -3,8 +3,232 @@
 String Format8601Z(Time t)
 {
 	return Format("%04.4d-%02.2d-%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
-		          t.year, t.month, t.day, t.hour, t.minute, t.second);
+	              t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
+
+// --- Link-mode tree (Plan §3): replicate GccBuilder::Link() exactly --------
+
+enum { LINK_STATIC, LINK_DYNAMIC };
+
+static int LinkMode(const Index<String>& cfg)
+{
+	return cfg.Find("PORTABLE_HYBRID") >= 0
+	    || (cfg.Find("SHARED") < 0 && cfg.Find("SO") < 0) ? LINK_STATIC : LINK_DYNAMIC;
+}
+
+// --- Declaration kinds ------------------------------------------------------
+
+enum {
+	DECL_EXTERNAL_DEPENDENCY,
+	DECL_STATIC_LIBRARY,
+	DECL_DYNAMIC_LIBRARY,
+	DECL_LIBRARY,
+};
+
+struct Decl : Moveable<Decl> {
+	int decl = 0;
+	String name;
+	int pk = -1;
+	Decl(int d, const String& n, int p) : decl(d), name(n), pk(p) {}
+};
+
+// Per-declaration tier (Plan §3). dyn_tier = provider-rule outcome:
+// T3 if the platform offers the lib, T2 if we must ship it.
+static int DeclTier(int decl, const String& name, int link_mode, int dyn_tier)
+{
+	String ext = ToLower(GetFileExt(name));
+	if(ext == ".a" || ext == ".lib")
+		return 1;                      // explicit static file
+	if(ext == ".so" || ext == ".dll")
+		return dyn_tier;               // explicit dynamic file
+	switch(decl) {
+	case DECL_STATIC_LIBRARY:
+	case DECL_EXTERNAL_DEPENDENCY:
+		return 1;                      // T1 always
+	case DECL_DYNAMIC_LIBRARY:
+		return dyn_tier;               // forced dynamic: provider rule even in
+		                               // static builds, never T1
+	default:
+		return link_mode == LINK_STATIC ? 1 : dyn_tier;
+	}
+}
+
+// ============================================================================
+// Shell-free probe layer.
+//
+// HostSys (LocalProcess) does NOT spawn a shell: pipes, redirects and quotes
+// are passed literally and the command fails. Sys() DOES spawn a shell (the
+// quoted dpkg-query format strings rely on this). RULES: one command per
+// call, no pipes/redirects, quotes only via Sys; parsing happens in C++.
+// ============================================================================
+
+// --- ldconfig cache: one Sys() call, parsed once in C++ ---------------------
+// Entry format: "\tlibz.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libz.so.1"
+
+static Vector<Tuple<String, String>>& SoDB()
+{
+	static Vector<Tuple<String, String>> db;
+	static bool loaded = false;
+	if(!loaded) {
+		loaded = true;
+		for(String l : Split(Sys("ldconfig -p"), '\n')) {
+			int q = l.Find("=>");
+			if(q < 0)
+				continue;
+			String soname = TrimBoth(l.Left(q));
+			int sp = soname.Find(' ');              // strip "(libc6,...)" tag
+			if(sp >= 0)
+				soname.Trim(sp);
+			if(soname.GetCount())
+				db.Add(MakeTuple(soname, TrimBoth(l.Mid(q + 2))));
+		}
+	}
+	return db;
+}
+
+// Loader path for a BASENAME: entry whose soname starts with "lib<base>.so".
+// Prefer an exact "lib<base>.so" then "lib<base>.so.<digits>" match.
+static String FindSoPath(const String& base)
+{
+	String pref = "lib" + base + ".so";
+	String best;
+	for(const auto& e : SoDB()) {
+		if(!e.a.StartsWith(pref))
+			continue;
+		if(e.a.GetCount() == pref.GetCount())       // exact libX.so — strongest
+			return e.b;
+		bool tail_digits = true;                    // else libX.so.N
+		for(const char *c = ~e.a + pref.GetCount() + 1; *c; c++)
+			if(*c != '.' && !IsDigit(*c)) { tail_digits = false; break; }
+		if(tail_digits && best.IsEmpty())
+			best = e.b;
+	}
+	return best;
+}
+
+// Exact SONAME -> loader path. Used for NEEDED entries, which arrive as FULL
+// sonames ("libz.so.1") — never prefix them with "lib" like FindSoPath does.
+static String FindSonameFile(const String& soname)
+{
+	for(const auto& e : SoDB())
+		if(e.a == soname)
+			return e.b;
+	String pref = soname + ".";                    // tolerate minor drift
+	for(const auto& e : SoDB())
+		if(e.a.StartsWith(pref))
+			return e.b;
+	return String();
+}
+
+// --- Single-command ownership probes ----------------------------------------
+
+static String PkgNameOnly(String s)         // first line "pkg: path" -> "pkg"
+{
+	int nl = s.Find('\n');
+	if(nl >= 0)
+		s = s.Left(nl);
+	s = TrimBoth(s);
+	int q = s.Find(':');                            // "libz1:amd64: /path"
+	return q >= 0 ? TrimBoth(s.Mid(0, q)) : String();
+}
+
+static String RealFile(const String& path)         // readlink -f: single cmd, no quotes
+{
+	if(!path.GetCount())
+		return String();
+	String real = TrimBoth(Sys("readlink -f " + path));
+	return real.GetCount() ? real : path;
+}
+
+static String OwnerOfFile(const String& file)
+{
+	if(!file.GetCount())
+		return String();
+	if(IsRPM()) {
+		String r = TrimBoth(Sys("rpm -qf --qf %{NAME} " + file));
+		return r.Find("not owned") >= 0 || r.StartsWith("file ") ? String() : r;
+	}
+	if(IsDPKG())
+		return PkgNameOnly(Sys("dpkg -S " + file)); // multi-line -> first in C++
+	return String();                                // BREW: later drop-in
+}
+
+// Real versioned file of lib<base>.so* (never the -dev symlink).
+static String DynOwnerFile(const String& base)
+{
+	return RealFile(FindSoPath(base));
+}
+
+// Owner of lib<base>.a via the compiler's own resolution — single command.
+static String StaticOwner(const String& base, const String& cc)
+{
+	String want = "lib" + base + ".a";
+	String p = TrimBoth(HostSys(cc + " -print-file-name=" + want));
+	return p.GetCount() && p != want && GetFileName(p) == want ? OwnerOfFile(p) : String();
+}
+
+// --- OSV deb namespace resolver ---------------------------------------------
+
+#ifdef PLATFORM_POSIX
+
+// OSV ecosystem namespace for deb-based hosts.
+//
+// OSV publishes no "linuxmint" ecosystem, so a deb derivative must resolve to
+// its upstream: "ubuntu" or "debian".
+//
+// ORDER MATTERS: plain Ubuntu itself declares ID_LIKE="debian", so every
+// "ubuntu" test must run before any "debian" fallback.
+static String DebNamespace()
+{
+	static String cached;
+	static bool loaded = false;
+	if(loaded)
+		return cached;
+	loaded = true;
+
+	String id, id_like, ubuntu_codename;
+	for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
+		l = TrimBoth(l);
+		if(l.TrimStart("ID="))
+			id = TrimBoth(l);
+		else
+		if(l.TrimStart("ID_LIKE="))
+			id_like = TrimBoth(l);
+		else
+		if(l.TrimStart("UBUNTU_CODENAME="))
+			ubuntu_codename = TrimBoth(l);
+	}
+	id.TrimStart("\"");       id.TrimEnd("\"");
+	id_like.TrimStart("\"");  id_like.TrimEnd("\"");
+
+	if(id == "ubuntu" || id_like.Find("ubuntu") >= 0)
+		return cached = "ubuntu";
+
+	if((id == "linuxmint" || id == "mint") && ubuntu_codename.GetCount())
+		return cached = "ubuntu";
+
+	return cached = "debian";
+}
+
+#endif
+
+static int DynTierOf(const String& dyn_owner) { return dyn_owner.GetCount() ? 3 : 2; }
+
+static int VcpkgTier(int link_mode) { return link_mode == LINK_STATIC ? 1 : 2; }
+
+static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String& triplet)
+{
+	for(const VcpkgInstalled& it : VcpkgList())
+		if(it.name == name && it.triplets.Find(triplet) >= 0) {
+			m.version = it.version;
+			return true;
+		}
+	return false;
+}
+
+// ============================================================================
+// Collection (Plan §7 Steps 1–5)
+// ============================================================================
 
 Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate<int, int> progress)
 {
@@ -26,19 +250,39 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		m.name = p["name"];
 		m.version = p["versionInfo"];
 		m.licenses << ~p["licenseConcluded"];
-		
 		m.homepage = p["homepage"];
 		m.originUrl = p["downloadLocation"];
-	
 		for(Value r : p["externalRefs"])
 			if(r["referenceType"] == "purl")
 				m.purl = r["referenceLocator"];
 	};
-	
-	Index<String> required;
-	VectorMap<String, String> override_licenses;
+
+	// Step 1 — environment identical to a real build
+	Host host;
+	CreateHost(host);
+	One<Builder> b = CreateBuilder(&host);
+	if(!b)
+		return cs;
+	VectorMap<String, String> bm = GetMethodVars(method);
+	String cc = b->CompilerName();
 
 	const Workspace& wspc = GetIdeWorkspace();
+
+	// Tier tree — once, against package 0's config
+	Index<String> main_cfg = PackageConfig(wspc, 0, bm, mainconfigparam, host, *b);
+	int link_mode = LinkMode(main_cfg);
+
+	Index<String> all_host = AllHostPackagesList();
+	VectorMap<String, String> override_licenses;
+
+	Vector<Decl> decls;
+	Vector<int>  own_ci(wspc.GetCount(), -1);  // package idx -> first-party component idx
+
+	auto PkgName = [](const String& s) {
+		return "u++pkg:" + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+	};
+
+	// Step 2 — per-package gather
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		if(progress(i, wspc.GetCount())) {
 			cs.Clear();
@@ -46,106 +290,129 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
+
 		for(String fn : pk.file) {
 			String file = SourcePath(n, fn);
 			if(ToLower(GetFileName(file)) == "sbom.json") {
 				Value sbom = ParseJSON(LoadFile(file));
-				if(sbom.Is<ValueArray>()) {
+				if(sbom.Is<ValueArray>())
 					for(Value p : sbom)
 						ReadComponent(p);
-				}
 				else
 					ReadComponent(sbom);
 			}
 		}
 
-		SBOMComponent& m = cs.Add();
-		if(i == 0)
-			m.type = "application";
-		auto PkgName = [=](const String& s) {
-			 return "u++pkg:" + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
-		};
-		m.bom_ref = m.name = PkgName(n);
+		// FIRST-PARTY COMPONENT (T0) — create this BEFORE any external deps
+		{
+			SBOMComponent& m = cs.Add();
+			own_ci[i] = cs.GetCount() - 1;
+			m.bom_ref = m.name = PkgName(n);
+			if(i == 0)
+				m.type = "application";
 
 #ifdef PLATFORM_WIN32
-		String git = GetExeDirFile("bin/mingit/cmd/git");
+			String git = GetExeDirFile("bin/mingit/cmd/git");
 #else
-		String git = "git";
+			String git = "git";
 #endif
+			git << " -C " << PackageDirectory(n) << " ";
+			String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
+			if(origin.GetCount()) {
+				if(origin.StartsWith("git@github.com:"))
+					origin.Replace("git@github.com:", "https://github.com/");
+				m.originUrl = "git+" + origin;
+				origin.TrimEnd(".git");
+				m.homepage = origin;
+			}
+			String ts, hash, sha1;
+			if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
+				m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
+				if(m.originUrl.GetCount())
+					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
+			}
+			m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 
-		git << " -C " << PackageDirectory(n) << " ";
-		
-		String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
-		if(origin.GetCount()) {
-			m.originUrl = "git+" + origin;
-			origin.TrimEnd(".git");
-			m.homepage = origin;
+			for(const OptItem& u : pk.uses)
+				AddDependency(m, PkgName(u.text));
 		}
 
-		String ts, hash, sha1;
-		if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
-			m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
-			if(m.originUrl.GetCount())
-				//m.sourceDistributions << m.originUrl + "@" + hash;
-				m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
-		}
+		Index<String> cfg = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 
-		m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
-		
-		for(const OptItem& u : pk.uses)
-            AddDependency(m, PkgName(u.text));
+		auto GatherNames = [&](const Array<OptItem>& set, int decl) {
+			for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
+				if(s.GetCount())
+					decls.Add(Decl(decl, s, i));
+		};
+		GatherNames(pk.static_library, DECL_STATIC_LIBRARY);
+		GatherNames(pk.dynamic_library, DECL_DYNAMIC_LIBRARY);
+		GatherNames(pk.library, DECL_LIBRARY);
+
+		for(String mod : Split(Gather(pk.pkg_config, cfg.GetKeys()), ' '))
+			for(String s : Split(b->EvalCmdX("pkg-config --libs " + mod), CharFilterWhitespace))
+				if(s.TrimStart("-l") && s.GetCount())
+					decls.Add(Decl(DECL_LIBRARY, s, i));
 
 		for(auto s : RequiredExternalDependenciesInfo(pk)) {
-			AddDependency(m, s.name);
-			required.FindAdd(s.name);
+			String nm = s.name;
+			int q = nm.Find('|');
+			if(q >= 0) {
+				nm.Clear();
+				for(String a : Split(s.name, '|')) {
+					a = TrimBoth(a);
+					if(a.GetCount() && (nm.IsEmpty() || all_host.Find(a) >= 0))
+						nm = a;
+				}
+			}
+			if(!nm.GetCount())
+				continue;
+			AddDependency(cs[own_ci[i]], nm);
+			decls.Add(Decl(DECL_EXTERNAL_DEPENDENCY, nm, i));
 			if(s.license.GetCount())
-				override_licenses.GetAdd(s.name) = s.license;
+				override_licenses.GetAdd(nm) = s.license;
 		}
 	}
-	
-	int direct_n = required.GetCount();
-	
+
+	// Step 3 — resolution + tier assignment (two disjoint name streams)
+	Index<String> seen_ext;           // only for EXTERNAL components
+	VectorMap<String, int> ci_ext;    // external name -> component index
+
+	auto CompIdxExt = [&](const String& nm, bool& fresh) -> int {
+		if(seen_ext.Find(nm) >= 0) {
+			fresh = false;
+			return ci_ext.Get(nm, -1);
+		}
+		seen_ext.Add(nm);
+		ci_ext.Add(nm, cs.GetCount());
+		fresh = true;
+		return cs.GetCount();  // will be GetCount()-1 after Add()
+	};
+
 #ifdef PLATFORM_POSIX
-	for(int i = 0; i < required.GetCount(); i++) {
-		if(progress(i, required.GetCount())) {
-			cs.Clear();
-			return cs;
+	auto FillPkgMeta = [&](SBOMComponent& m) {
+		String arch, out = Sys((IsRPM()
+			? "rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n' "
+			: "dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n' ") + m.name);
+		SplitTo(out, '\n', false, m.version, m.homepage, arch);
+		if(!m.version.GetCount()) {     // not a PM package after all —
+			m.homepage = String();       // record keeps name only, no junk purl
+			return;
 		}
-		String name = required[i];
-		SBOMComponent& m = cs.Add();
-		m.external = i < direct_n ? 1 : 2;
-		m.bom_ref = m.name = name;
-		String depends, arch, source;
-		SplitTo(Sys((IsRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}' "
-		                      : "dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture}\n${Source}' ") + name),
-		                     '\n', false,
-		        depends, m.version, m.homepage, arch, source);
-		
-		String distro = "debian";
-		static String osr = LoadFile("/etc/os-release");
-
-		for(String l : Split(osr, '\n'))
-			if(l.TrimStart("ID="))
-				distro = TrimBoth(l);
-		distro.TrimStart("\"");
-		distro.TrimEnd("\"");
-		m.purl << "pkg:" << (IsRPM() ? "rpm/" : "deb/")
-		       << distro << "/" << name << "@" << m.version << "?arch=" << arch;
-		if(source.GetCount() && source != name)
-			m.purl << "&source=" + source;
-		
-		for(String dep : Split(depends, ',')) {
-			if(*dep == '/')
-				continue;
-			int q = dep.Find('(');
-			if(q >= 0)
-				dep.Trim(q);
-			dep = TrimBoth(dep);
-			required.FindAdd(dep);
-			AddDependency(m, dep);
+		String distro;
+		if(IsRPM()) {
+			static String osr = LoadFile("/etc/os-release");
+			for(String l : Split(osr, '\n'))
+				if(l.TrimStart("ID="))
+					distro = TrimBoth(l);
+			distro.TrimStart("\"");
+			distro.TrimEnd("\"");
 		}
+		else
+			distro = DebNamespace();
 
-		FileIn in("/usr/share/doc/" + name + "/copyright");
+		m.purl << "pkg:" << (IsRPM() ? "rpm/" : "deb/") << distro << '/' << m.name
+		       << '@' << m.version << "?arch=" + arch;
+		FileIn in("/usr/share/doc/" + m.name + "/copyright");
 		while(!in.IsEof()) {
 			String l = in.GetLine();
 			if(l.TrimStart("License: ")) {
@@ -153,47 +420,204 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				break;
 			}
 		}
-	}
+	};
 #endif
 
-#ifdef PLATFORM_WIN32
-	for(int i = 0; i < required.GetCount(); i++) {
-		if(progress(i, required.GetCount())) {
+	Vector<Tuple<String, String>> so_files;
+
+	int done = 0;
+	for(const Decl& d : decls) {
+		if(progress(wspc.GetCount() + done++, wspc.GetCount() + decls.GetCount())) {
 			cs.Clear();
 			return cs;
 		}
+		int tier;
+		String nm = d.name;
+		if(d.decl == DECL_EXTERNAL_DEPENDENCY) {
+#ifdef PLATFORM_WIN32
+			tier = IsVCPKG() ? VcpkgTier(link_mode) : 1;
+#else
+			tier = 1;
+#endif
+		}
+		else {
+			String ext = ToLower(GetFileExt(d.name));
+			bool dynq = ext == ".so" || ext == ".dll"
+			         || d.decl == DECL_DYNAMIC_LIBRARY
+			         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
+			String file, owner, sta;
+			if(dynq) {
+				file = DynOwnerFile(d.name);
+				owner = OwnerOfFile(file);
+			}
+			else
+				sta = StaticOwner(d.name, cc);
+			tier = DeclTier(d.decl, d.name, link_mode, DynTierOf(owner));
+			nm = tier == 3 ? owner
+			  : tier == 1 && sta.GetCount() ? sta
+			  : d.name;
+			if(dynq && file.GetCount() && (tier == 2 || tier == 3))
+				so_files.Add(MakeTuple(file, nm));
+		}
+		bool fresh;
+		int c = CompIdxExt(nm, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.bom_ref = m.name = nm;
+			m.external = tier;
+#ifdef PLATFORM_POSIX
+			if((IsRPM() || IsDPKG()) && (tier == 1 || tier == 3))
+				FillPkgMeta(m);
+#endif
+#ifdef PLATFORM_WIN32
+			if(tier == 2)
+				FillFromVcpkgList(m, nm, triplet);
+#endif
+		}
+		if(own_ci[d.pk] >= 0)
+			AddDependency(cs[own_ci[d.pk]], nm);
+	}
 
-		String name = required[i];
-		Value spdx = ParseJSON(LoadFile(
-			GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + name + "/vcpkg.spdx.json"
-		));
-	
-		for(Value p : spdx["packages"]) {
-			if(p["SPDXID"] == "SPDXRef-port") {
-				ReadComponent(p);
-				SBOMComponent& component = cs.Top();
-				component.external = i < direct_n ? 1 : 2;
-				component.bom_ref = component.name;
-				for(String depends : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + component.name),
-				                                       CharFilterCrLf).Top(), ':').Top(), ',')) {
-					depends = TrimBoth(depends);
-					if(!depends.StartsWith("vcpkg-")) {
-						required.FindAdd(depends);
-						AddDependency(component, depends);
+#ifdef PLATFORM_WIN32
+	if(IsVCPKG()) {
+		Index<String> vnames;
+		for(const Decl& d : decls)
+			if(d.decl == DECL_EXTERNAL_DEPENDENCY)
+				vnames.FindAdd(d.name);
+		for(int i = 0; i < vnames.GetCount(); i++) {
+			String name = vnames[i];
+			Value spdx = ParseJSON(LoadFile(
+				GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + name + "/vcpkg.spdx.json"));
+			for(Value p : spdx["packages"])
+				if(p["SPDXID"] == "SPDXRef-port") {
+					int q = ci_ext.Get(name, -1);
+					if(q < 0)
+						break;
+					SBOMComponent& m = cs[q];
+					m.version = p["versionInfo"];
+					String lic = p["licenseConcluded"];
+					if(!IsNull(lic)) {
+						m.licenses.Clear();
+						m.licenses << ~lic;
 					}
-				}
-				for(Value p : spdx["packages"]) {
-					String id = p["SPDXID"];
-					if(id.StartsWith("SPDXRef-resource-")) {
-						String url = p["downloadLocation"];
-						if(!IsNull(url) && url != "NONE")
-							for(Value ch : p["checksums"])
-								component.sourceDistributions << MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
+					m.homepage = p["homepage"];
+					m.originUrl = p["downloadLocation"];
+					for(Value r : p["externalRefs"])
+						if(r["referenceType"] == "purl")
+							m.purl = r["referenceLocator"];
+					for(String dep : Split(Split(Split(Sys(VcpkgExe() + " depend-info " + name),
+					                                   CharFilterCrLf).Top(), ':').Top(), ',')) {
+						dep = TrimBoth(dep);
+						if(dep.GetCount() && !dep.StartsWith("vcpkg-")) {
+							bool fresh;
+							int c = CompIdxExt(dep, fresh);
+							if(fresh) {
+								SBOMComponent& mc = cs.Add();
+								mc.bom_ref = mc.name = dep;
+								mc.external = m.external;
+								FillFromVcpkgList(mc, dep, triplet);
+							}
+							int fq = ci_ext.Get(name, -1);
+							if(fq >= 0)
+								AddDependency(cs[fq], dep);
+							vnames.FindAdd(dep);
+						}
 					}
+					for(Value p2 : spdx["packages"]) {
+						String id = p2["SPDXID"];
+						if(id.StartsWith("SPDXRef-resource-")) {
+							String url = p2["downloadLocation"];
+							if(!IsNull(url) && url != "NONE")
+								for(Value ch : p2["checksums"])
+									cs[q].sourceDistributions
+									  << MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
+						}
+					}
+					break;
 				}
-				break;
+		}
+	}
+#endif
+
+#ifdef PLATFORM_POSIX
+	// Step 4 — T4: NEEDED closure
+	Index<String> walked;
+	for(int i = 0; i < so_files.GetCount(); i++) {
+		String file = so_files[i].a, from = so_files[i].b;
+		if(!file.GetCount() || walked.Find(file) >= 0)
+			continue;
+		walked.Add(file);
+		for(String l : Split(Sys("readelf -d " + file), '\n')) {
+			if(l.Find("(NEEDED)") < 0)
+				continue;
+			int q1 = l.Find('['), q2 = l.Find(']', q1);
+			if(q1 < 0 || q2 <= q1)
+				continue;
+			String soname = l.Mid(q1 + 1, q2 - q1 - 1);
+			String nfile = RealFile(FindSonameFile(soname));
+			String owner = OwnerOfFile(nfile);
+			String nm = owner.GetCount() ? owner : soname;
+			bool fresh;
+			int c = CompIdxExt(nm, fresh);
+			if(fresh) {
+				SBOMComponent& m = cs.Add();
+				m.bom_ref = m.name = nm;
+				m.external = 4;
+				if(IsRPM() || IsDPKG())
+					FillPkgMeta(m);
+			}
+			int fq = ci_ext.Get(from, -1);
+			if(fq >= 0)
+				AddDependency(cs[fq], nm);
+			if(nfile.GetCount() && walked.Find(nfile) < 0)
+				so_files.Add(MakeTuple(nfile, nm));
+		}
+	}
+
+	// Step 5 — toolchain baseline
+	if(bm.Get("BUILDER", "GCC") != "MSC") {
+		if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
+			String nm = IsRPM() ? "glibc" : "libc6";
+			bool fresh;
+			int c = CompIdxExt(nm, fresh);
+			if(fresh) {
+				SBOMComponent& m = cs.Add();
+				m.bom_ref = m.name = nm;
+				m.external = 3;
+				if(IsRPM() || IsDPKG())
+					FillPkgMeta(m);
+			}
+			if(own_ci[0] >= 0)
+				AddDependency(cs[own_ci[0]], nm);
+		}
+		else
+		if(link_mode == LINK_DYNAMIC) {
+			for(const char *rt : {"c", "m", "stdc++", "gcc_s"}) {
+				String owner = OwnerOfFile(DynOwnerFile(rt));
+				String nm = owner.GetCount() ? owner : String("lib") + rt;
+				bool fresh;
+				int c = CompIdxExt(nm, fresh);
+				if(fresh) {
+					SBOMComponent& m = cs.Add();
+					m.bom_ref = m.name = nm;
+					m.external = 3;
+					if(IsRPM() || IsDPKG())
+						FillPkgMeta(m);
+				}
+				if(own_ci[0] >= 0)
+					AddDependency(cs[own_ci[0]], nm);
 			}
 		}
+		if(main_cfg.Find("WIN32") >= 0)
+			for(const char *imp : {"advapi32", "ws2_32"}) {
+				bool fresh;
+				int c = CompIdxExt(String(imp), fresh);
+				if(fresh) {
+					SBOMComponent& m = cs.Add();
+					m.bom_ref = m.name = imp;
+					m.external = 3;
+				}
+			}
 	}
 #endif
 
@@ -213,141 +637,155 @@ String MakeBuild::CreateSBOM(const String& triplet, int mode)
 	return CreateSBOM(CreateSBOMComponents(triplet), mode);
 }
 
+// ============================================================================
+// Emission (Plan §6)
+// ============================================================================
+
 String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 {
 	auto EmitLicense = [&](JsonArray& arr, const String& s) {
 		if(s.IsEmpty() || s == "NOASSERTION")
-			return;                                        // unknown -> omit, don't assert
-		
+			return;
+
 		static Index<String> ops;
 		static Index<String> lcspdx;
-		static Vector<String> canon;                       // parallel: lowercase → canonical
-		
-		if(canon.IsEmpty()){
+		static Vector<String> canon;
+		if(canon.IsEmpty()) {
 			for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
 				canon << SPDXLicenses()[i];
 				lcspdx.Add(ToLower(SPDXLicenses()[i]));
 			}
-			ops.Add("(");
-			ops.Add(")");
-			ops.Add("or");
-			ops.Add("and");
-			ops.Add("with");
+			ops.Add("("); ops.Add(")"); ops.Add("or"); ops.Add("and"); ops.Add("with");
 		}
 
 		String low = ToLower(s);
 		low.TrimStart("(");
 		low.TrimEnd(")");
-		Vector<String> vec = Split(low,' ');
-		if(vec.GetCount()>=3){
-			for(int i = 0; i < vec.GetCount() ; i++){
-				if(lcspdx.Find(vec[i])<0 && ops.Find(vec[i])<0) break; // Not valid expression
-				if(i == (vec.GetCount() - 1)){
+		Vector<String> vec = Split(low, ' ');
+		if(vec.GetCount() >= 3) {
+			for(int i = 0; i < vec.GetCount(); i++) {
+				if(lcspdx.Find(vec[i]) < 0 && ops.Find(vec[i]) < 0)
+					break;
+				if(i == vec.GetCount() - 1) {
 					String lic;
-					for(int i = 0; i < vec.GetCount() ; i++){
-						int o = ops.Find(vec[i]);
-						if(o>=0) lic << ToUpper(ops[o]) << " ";
-						else{
-							int l = lcspdx.Find(vec[i]);
-							if(l>=0) lic << canon[l] << " ";
+					for(int j = 0; j < vec.GetCount(); j++) {
+						int o = ops.Find(vec[j]);
+						if(o >= 0)
+							lic << ToUpper(ops[o]) << " ";
+						else {
+							int l = lcspdx.Find(vec[j]);
+							if(l >= 0)
+								lic << canon[l] << " ";
 						}
 					}
-					arr << Json("expression", TrimRight(lic)); // Case-corrected validated SPDX expression
+					arr << Json("expression", TrimRight(lic));
 					return;
 				}
 			}
 		}
-		
 		int f = lcspdx.Find(low);
-		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));   // Case-corrected validated SPDX ID
+		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));
 	};
 
-	JsonArray dependencies;
-	JsonArray components;
+	int depth = mode == SBOM_BASE ? 1
+	          : findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 ? 3 : 4;
+	bool external_mode = findarg(mode, SBOM_EXTERNAL_DIRECT, SBOM_EXTERNAL_FULL) >= 0;
+
+	Index<String> alive;
+	Vector<int>   emitted_i;
+
+	JsonArray components, dependencies;
 	Json      main_component;
 
-	for(const SBOMComponent& c : cs) {
-		Json component;
+	for(int i = 0; i < cs.GetCount(); i++) {
+		const SBOMComponent& c = cs[i];
+		if(c.external > depth)
+			continue;
+		if(c.name.IsEmpty())
+			continue;  // skip malformed components
 
+		Json component;
 		component("type", c.type)
 		         ("name", c.name)
-		         ("bom-ref", c.bom_ref)
-		         ("version", c.version);
+		         ("bom-ref", c.bom_ref);
+		if(c.version.GetCount())
+			component("version", c.version);
 
-		if(c.external) {
-			if(mode == SBOM_BASE ||
-			   findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 && c.external > 1)
-				continue;
-			if(findarg(mode, SBOM_EXTERNAL_FULL, SBOM_EXTERNAL_DIRECT) >= 0)
-				component("scope", "excluded")
-				         ("isExternal", true);
-		}
+		if(external_mode && c.external >= 3)
+			component("scope", "required")
+			         ("isExternal", true);
 
 		JsonArray licenses;
-
 		for(const String& s : c.licenses)
 			if(!IsNull(s))
 				EmitLicense(licenses, s);
-	
+		if(licenses)
+			component("licenses", licenses);
+
 		JsonArray extRefs;
 		if(!IsNull(c.homepage))
-			extRefs << Json("type", "website")
-			               ("url", c.homepage);
+			extRefs << Json("type", "website")("url", c.homepage);
 		if(!IsNull(c.originUrl))
-			extRefs << Json("type", "distribution")
-			               ("url", c.originUrl);
+			extRefs << Json("type", "distribution")("url", c.originUrl);
 
 		auto SourceRef = [](const auto& s) {
 			Json r;
 			r("type", "source-distribution")("url", s.a);
-			String alg = ToUpper(s.b); // Fix found SPDX algos to CycloneDX (Uppercase + dash)
-			alg = alg.GetCount()>3 && alg[3]!='-' && alg.StartsWith("SHA") ? "SHA-" + alg.Mid(3) : alg;
-			if(alg.GetCount() && s.c.GetCount()) r("hashes", JsonArray() << Json("alg", alg)("content", s.c));
+			String alg = ToUpper(s.b);
+			alg = alg.GetCount() > 3 && alg[3] != '-' && alg.StartsWith("SHA") ? "SHA-" + alg.Mid(3) : alg;
+			if(alg.GetCount() && s.c.GetCount())
+				r("hashes", JsonArray() << Json("alg", alg)("content", s.c));
 			return r;
 		};
-		
 		for(const auto& s : c.sourceDistributions)
-		    if(!IsNull(s.a))
-		        extRefs << SourceRef(s);
-    
-    
+			if(!IsNull(s.a))
+				extRefs << SourceRef(s);
+
+		if(extRefs)
+			component("externalReferences", extRefs);
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
 
-		if(licenses)
-			component("licenses", licenses);
-		
-		if(extRefs)
-			component("externalReferences", extRefs);
-		
+		if(c.external) {
+			component("properties", JsonArray()
+			          << Json("name", "upp:dependency-tier")("value", AsString(c.external)));
+		}
+
+		alive.Add(c.bom_ref);
+		emitted_i << i;
 		if(!main_component)
 			main_component = component;
 		else
 			components << component;
+	}
 
+	for(int i : emitted_i) {
+		const SBOMComponent& c = cs[i];
 		JsonArray deps;
 		for(String dep : c.depends)
-			deps << dep;
+			if(alive.Find(dep) >= 0)
+				deps << dep;
 		if(deps)
 			dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
 	}
+
+	Json metadata = Json("timestamp", Format8601Z(GetUtcTime()))
+	                      ("tools", JsonArray() << Json("vendor", "U++")
+	                                                   ("name", UMK ? "umk" : "TheIDE"));
+	metadata("lifecycles", JsonArray() << Json("phase", "build"));
+	metadata("component", main_component);
 
 	Json sbom;
 	sbom("bomFormat", "CycloneDX")
 	    ("specVersion", "1.7")
 	    ("version", 1)
 	    ("serialNumber", "urn:uuid:" + Uuid::CreateV4().ToStringWithDashes())
-	    ("metadata", Upp::Json("timestamp", Format8601Z(GetUtcTime()))
-	                          ("tools", JsonArray() << Json("vendor", "U++")
-	                                                       ("name", UMK ? "umk" : "TheIDE"))
-	                          ("component", main_component));
-	
+	    ("metadata", metadata);
+
 	if(components)
 		sbom("components", components);
-
 	if(dependencies)
 		sbom("dependencies", dependencies);
 
 	return sbom;
 }
-

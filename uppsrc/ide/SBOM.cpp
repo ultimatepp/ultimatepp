@@ -17,9 +17,7 @@ SBOMDlg::SBOMDlg()
 	list.AddColumn("Name", 200);
 	list.AddColumn("Type", 80);
 	list.AddColumn("Version", 120);
-//	list.AddColumn("External", 50);
 	list.AddColumn("3rd party", 50);
-//	list.AddColumn("Scanned", 50);
 	list.AddColumn("Shipped", 50);
 	list.AddColumn("License", 300);
 	list.AddColumn("Depends", 300);
@@ -57,7 +55,7 @@ void SBOMDlg::Sync()
 			         m.type,
 			         m.version,
 			         m.external ? "Y" : "",
-			         get_i(mod, true, true, !m.external, true, !m.external) ? "Y" : "",
+			         get_i(mod, true, true, m.external<=2, true, !m.external<=2) ? "Y" : "",
 			         lic,
 			         dep,
 			         m.purl,

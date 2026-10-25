@@ -35,13 +35,16 @@ struct SBOMComponent {
     String type = "library";
     String bom_ref;
 
-    String version;                      // For shipped components (regardless of linking)
-	String purl;                         // PURL from package manager, if available
-	Vector<Tuple<String, String, String>> sourceDistributions; // Upstream source archive URLs, hash algorithm, hash value
+    String version;
+    String purl;
+    Vector<Tuple<String, String, String>> sourceDistributions;
 
-	int    external = 0;                 // 0 - not external, 1 - direct, 2 - indirect
+    int    external = 0;    // tier T0–T4: 0 own code, 1 static integration,
+                            // 2 bundled dynamic (shipped by us), 3 platform
+                            // provided dynamic, 4 transitive dynamic (NEEDED).
+                            // (linkmode removed — tier derives from build flags)
 
-    Vector<String> licenses;             // SPDX license IDs or expressions
+    Vector<String> licenses;
     Vector<String> depends;
 
     String homepage;
