@@ -25,29 +25,35 @@ used to display a list of files.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Upp`:`:ColumnList`:`:WhenLeftClick: [_^Upp`:`:Event^ Event]<>_[* WhenLeftClick]&]
+[s5;:Upp`:`:ColumnList`:`:WhenLeftClick: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<>_[* WhenLeftClick]&]
 [s2;%% This event is dispatched when the user clicks the widget with 
 the left mouse button. Clicked item has the cursor.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:WhenLeftClickPos: [_^Upp`:`:Event^ Event]<[_^Upp`:`:Point^ Poin
-t]>_[* WhenLeftClickPos]&]
+[s5;:Upp`:`:ColumnList`:`:WhenLeftClickPos: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<[%%_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ Point]>_[* WhenLef
+tClickPos]&]
 [s2;%% Similar to WhenLeftClick but also provides the coordinates 
 within the clicked item.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:WhenLeftDouble: [_^Upp`:`:Event^ Event]<>_[* WhenLeftDouble]&]
+[s5;:Upp`:`:ColumnList`:`:WhenLeftDouble: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<>_[* WhenLeftDouble]&]
 [s2;%% This event is dispatched when the user double`-clicks the 
 widget with the left mouse button.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:WhenBar: [_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>_[* WhenBar]&]
+[s5;:Upp`:`:ColumnList`:`:WhenBar: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<[%%_^topic`:`/`/CtrlLib`/src`/Bar`_en`-us`#Bar`:`:class^ Bar][@(0.0.255) `&]>_[* W
+henBar]&]
 [s2;%% This event is dispatched when the user clicks the widget with 
 the right mouse button. Client code can use this event to set 
 a context menu.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:WhenSel: [_^Upp`:`:Event^ Event]<>_[* WhenSel]&]
+[s5;:Upp`:`:ColumnList`:`:WhenSel: [_^topic`:`/`/Core`/src`/Function`_en`-us`#Upp`:`:Event^ E
+vent]<>_[* WhenSel]&]
 [s2;%% This event is dispatched when the cursor, or selection status 
 of the widget is changed.&]
 [s3; &]
@@ -69,14 +75,14 @@ onst]&]
 size.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:GetItem`(Upp`:`:Point`): [@(0.0.255) int]_[* GetItem]([_^Upp`:`:Point^ P
+[s5;:Upp`:`:ColumnList`:`:GetItem`(Upp`:`:Point`): [@(0.0.255) int]_[* GetItem]([%%_^topic`:`/`/Core`/src`/Point`_en`-us`#Point`_`:`:struct^ P
 oint]_[*@3 p])&]
 [s2;%% Returns the item index for the given point of view area (accounts 
 for the scrollbar position too).&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:GetItemRect`(int`)const: [_^Upp`:`:Rect^ Rect]_[* GetItemRect](
-[@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:Upp`:`:ColumnList`:`:GetItemRect`(int`)const: [_^topic`:`/`/Core`/src`/Rect`_en`-us`#Rect`_`:`:struct^ R
+ect]_[* GetItemRect]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the view rectangle of the item at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
@@ -124,7 +130,8 @@ onst]&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:SetFrame`(Upp`:`:CtrlFrame`&`): [@(0.0.255) void]_[* SetFrame](
-[_^Upp`:`:CtrlFrame^ CtrlFrame][@(0.0.255) `&]_[*@3 frame])&]
+[_^topic`:`/`/CtrlCore`/src`/Frame`_en`-us`#CtrlFrame`:`:class^ CtrlFrame][@(0.0.255) `&
+]_[*@3 frame])&]
 [s2;%% Sets the decorative frame of ColumnList to [%-*@3 frame]. This 
 is required because ColumnList has special zero index (decorative) 
 frame to provide RoundSize option. Decorative frame set by this 
@@ -136,21 +143,23 @@ method is used by this special rounding frame.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:Add`(const Upp`:`:Value`&`,bool`): [@(0.0.255) void]_[* Add]([@(0.0.255) c
-onst]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=
-_[@(0.0.255) true])&]
+onst]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ Value][@(0.0.255) `&]_
+[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Add`(const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Add]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Add]([@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s5;:Upp`:`:ColumnList`:`:Add`(const Upp`:`:Value`&`,const Upp`:`:Value`&`,bool`): [@(0.0.255) v
-oid]_[* Add]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key], 
-[@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Add]([@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Add`(const Upp`:`:Value`&`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Add]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key], 
-[@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Add]([@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s2;%% Adds an item to the ColumnList. Optionally a [%-*@3 key ]can 
 be assigned to the item. If [%-*@3 canselect] is false, item cannot 
 be selected. If specified, [%-*@3 display] is used to display the 
@@ -163,36 +172,38 @@ nst]&]
 [s2;%% Returns the current number of items in the list.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:Get`(int`)const: [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[* Get]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
-[s5;:Upp`:`:ColumnList`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[_^Upp`:`:Value^ V
+[s5;:Upp`:`:ColumnList`:`:Get`(int`)const: [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[* Get]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:Upp`:`:ColumnList`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
 alue][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; [%% Returns the item with index ][*@3 i]. If the item is previously 
 assigned a key, then this method returns a reference to the key 
 itself. Otherwise it is the same as GetValue.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ColumnList`:`:GetValue`(int`)const: [@(0.0.255) const]_[_^Upp`:`:Value^ Value
-][@(0.0.255) `&]_[* GetValue]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:Upp`:`:ColumnList`:`:GetValue`(int`)const: [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[* GetValue]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the  value of item with index [%-*@3 i].&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Upp`:`:ColumnList`:`:Set`(int`,const Upp`:`:Value`&`,bool`): [@(0.0.255) void]_[* Se
-t]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 v
-al], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+t]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Set`(int`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 val], [@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s5;:Upp`:`:ColumnList`:`:Set`(int`,const Upp`:`:Value`&`,const Upp`:`:Value`&`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 key], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Set`(int`,const Upp`:`:Value`&`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 key], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s2;%% Sets the value of item at position [%-*@3 ii]. Optionally a 
 [%-*@3 key ]can be assigned to the item. If [%-*@3 canselect] is 
 false, item cannot be selected. If specified, [%-*@3 display] is 
@@ -201,14 +212,15 @@ SetDisplay method is used).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Upp`:`:ColumnList`:`:Set`(const Upp`:`:Value`&`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key], 
-[@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Set]([@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s5;:Upp`:`:ColumnList`:`:Set`(const Upp`:`:Value`&`,const Upp`:`:Value`&`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key], 
-[@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Set]([@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s2;%% Sets the value of item with the [%-*@3 key]. If [%-*@3 canselect] 
 is false, item cannot be selected. If specified, [%-*@3 display] 
 is used to display the item (otherwise common display as set 
@@ -216,21 +228,23 @@ by SetDisplay method is used).&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:Insert`(int`,const Upp`:`:Value`&`,bool`): [@(0.0.255) void]_
-[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Insert`(int`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 val], [@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s5;:Upp`:`:ColumnList`:`:Insert`(int`,const Upp`:`:Value`&`,const Upp`:`:Value`&`,bool`): [@(0.0.255) v
-oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 key], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:ColumnList`:`:Insert`(int`,const Upp`:`:Value`&`,const Upp`:`:Value`&`,const Upp`:`:Display`&`,bool`): [@(0.0.255) v
-oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&
-]_[*@3 key], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 val], 
-[@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&]_[*@3 display], 
-[@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true])&]
+oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ V
+alue][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 display], [@(0.0.255) bool]_[*@3 canselect]_`=_[@(0.0.255) true
+])&]
 [s2;%% Inserts an item at position [%-*@3 ii]. Optionally a [%-*@3 key 
 ]can be assigned to the item. If [%-*@3 canselect] is false, item 
 cannot be selected. If specified, [%-*@3 display] is used to display 
@@ -244,7 +258,7 @@ i])&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:Remove`(const Upp`:`:Value`&`): [@(0.0.255) void]_[* Remove]([@(0.0.255) c
-onst]_[_^Upp`:`:Value^ Value]_`&_[*@3 key])&]
+onst]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ Value]_`&_[*@3 key])&]
 [s2;%% Removes the item with [%-*@3 key].&]
 [s3;%% &]
 [s4; &]
@@ -283,7 +297,8 @@ is selected, otherwise returns true if cursor is at [%-*@3 i].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:Find`(const Upp`:`:Value`&`)const: [@(0.0.255) int]_[* Find]([@(0.0.255) c
-onst]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key])_[@(0.0.255) const]&]
+onst]_[%%_^topic`:`/`/Core`/src`/Value`_en`-us`#Value`:`:class^ Value][@(0.0.255) `&]_
+[*@3 key])_[@(0.0.255) const]&]
 [s2;%% Returns the position of item with [%-*@3 key] on success, and 
 a negative value on failure.&]
 [s3;%% &]
@@ -377,8 +392,8 @@ contain any items, cursor is canceled. Default is off. Returns
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:ColumnList`:`:SetDisplay`(const Upp`:`:Display`&`): [_^Upp`:`:ColumnList^ C
-olumnList][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[_^Upp`:`:Display^ Display][@(0.0.255) `&
-]_[*@3 d])&]
+olumnList][@(0.0.255) `&]_[* SetDisplay]([@(0.0.255) const]_[%%_^topic`:`/`/Draw`/src`/Display`_en`-us`#Display`:`:class^ D
+isplay][@(0.0.255) `&]_[*@3 d])&]
 [s2;%% Sets the display to be used for items to [%-*@3 d], unless an 
 item`-specific display is specified in Add or Insert methods. 
 Returns `*this for method chaining.&]
