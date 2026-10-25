@@ -389,29 +389,94 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	};
 
 #ifdef PLATFORM_POSIX
+	// RPM purl reference (OSV-proven, Rocky/xz-devel):
+	//   pkg:rpm/rocky/xz-devel@5.2.5-8.el9_0?arch=x86_64&source=xz-5.2.5-8.el9_0.src.rpm
+	// SUSE variant (also OSV-proven) additionally carries distro=sle15-sp5.
+	// DEB purl reference (OSV-proven, Ubuntu/zlib1g):
+	//   pkg:deb/ubuntu/zlib1g@1:1.3.dfsg-3.1ubuntu2.2?arch=amd64&source=zlib
 	auto FillPkgMeta = [&](SBOMComponent& m) {
-		String arch, out = Sys((IsRPM()
-			? "rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n' "
-			: "dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n' ") + m.name);
-		SplitTo(out, '\n', false, m.version, m.homepage, arch);
+		if(IsRPM()) {
+			// One rpm -q call: version, url, arch, license, source rpm.
+			// A failed lookup writes to stderr only, so empty version == not a
+			// PM package after all; the record keeps its name and no junk purl.
+			String url, arch, lic, srcrpm, out = Sys(
+				"rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
+				+ m.name);
+			SplitTo(out, '\n', false, m.version, url, arch, lic, srcrpm);
+			if(!m.version.GetCount()) {
+				m.homepage = String();
+				return;
+			}
+			m.homepage = TrimBoth(url);
+			if(lic.GetCount() && lic != "(none)")
+				m.licenses << TrimBoth(lic);
+
+			// purl namespace (and SUSE-only distro=), resolved once from os-release
+			static String ns, distro;
+			static bool loaded = false;
+			if(!loaded) {
+				loaded = true;
+				String id, vid;
+				for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
+					l = TrimBoth(l);
+					if(l.TrimStart("ID="))
+						id = TrimBoth(l);
+					else
+					if(l.TrimStart("VERSION_ID="))
+						vid = TrimBoth(l);
+				}
+				id.TrimStart("\"");  id.TrimEnd("\"");
+				vid.TrimStart("\""); vid.TrimEnd("\"");
+				Vector<String> v = Split(vid, '.');
+				if(id == "sles" || id == "sle" || id == "sled") {
+					ns = "suse";               // SUSE shares advisory streams across SPs
+					distro = v.GetCount() > 1 ? "sle" + v[0] + "-sp" + v[1]
+					       : v.GetCount()    ? "sle" + v[0]
+					                         : "sles";
+				}
+				else                           // rocky, almalinux, centos, fedora, ...
+					ns = id;                    // NO distro= — proven Rocky format
+			}
+
+			srcrpm = TrimBoth(srcrpm);
+			m.purl << "pkg:rpm/" << ns << '/' << m.name << '@' << m.version;
+			String quals;
+			if(arch.GetCount() && arch != "(none)")
+				quals << "arch=" << TrimBoth(arch);
+			if(distro.GetCount())
+				quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
+			if(srcrpm.GetCount() && srcrpm != "(none)")
+				quals << (quals.GetCount() ? '&' : '?') << "source=" << srcrpm;
+			if(quals.GetCount())
+				m.purl << quals;
+			return;
+		}
+
+		// DEB — OSV indexes deb advisories by SOURCE package; without a source=
+		// qualifier queries never match. Two dpkg quirks to absorb:
+		//  - Source is omitted when binary name == source name  -> use name
+		//  - older dpkg emits "src (epoch:ver)"                   -> trim "( ..."
+		String arch, src, out = Sys(
+			"dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + m.name);
+		SplitTo(out, '\n', false, m.version, m.homepage, arch, src);
 		if(!m.version.GetCount()) {     // not a PM package after all —
 			m.homepage = String();       // record keeps name only, no junk purl
 			return;
 		}
-		String distro;
-		if(IsRPM()) {
-			static String osr = LoadFile("/etc/os-release");
-			for(String l : Split(osr, '\n'))
-				if(l.TrimStart("ID="))
-					distro = TrimBoth(l);
-			distro.TrimStart("\"");
-			distro.TrimEnd("\"");
-		}
-		else
-			distro = DebNamespace();
+		String source = TrimBoth(src);
+		int pq = source.Find(" (");
+		if(pq >= 0)
+			source.Trim(pq);
+		if(!source.GetCount())
+			source = m.name;
 
-		m.purl << "pkg:" << (IsRPM() ? "rpm/" : "deb/") << distro << '/' << m.name
-		       << '@' << m.version << "?arch=" + arch;
+		m.purl << "pkg:deb/" << DebNamespace() << '/' << m.name << '@' << m.version;
+		String quals;
+		if(arch.GetCount())                              // never emit bare "?arch="
+			quals << "?arch=" << TrimBoth(arch);
+		quals << (quals.GetCount() ? '&' : '?') << "source=" << source;
+		m.purl << quals;
+
 		FileIn in("/usr/share/doc/" + m.name + "/copyright");
 		while(!in.IsEof()) {
 			String l = in.GetLine();
@@ -776,6 +841,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 	metadata("component", main_component);
 
 	Json sbom;
+
 	sbom("bomFormat", "CycloneDX")
 	    ("specVersion", "1.7")
 	    ("version", 1)

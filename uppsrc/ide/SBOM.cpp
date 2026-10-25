@@ -55,7 +55,7 @@ void SBOMDlg::Sync()
 			         m.type,
 			         m.version,
 			         m.external ? "Y" : "",
-			         get_i(mod, true, true, m.external<=2, true, !m.external<=2) ? "Y" : "",
+			         get_i(mod, true, true, m.external<=2, true, m.external<=2) ? "Y" : "",
 			         lic,
 			         dep,
 			         m.purl,
