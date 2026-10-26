@@ -23,9 +23,9 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run: ./configure
-      - run: make -f umkMakefile -j ${NUMBER_OF_CPUS}
-      - run: ./umk ./uppsrc ide CLANG -brs ./theide
+      - run: make deps RUN_ARGS="--non-interactive"
+      - run: make umk
+      - run: make theide
   build-windows:
     executor: win/default
     steps:
