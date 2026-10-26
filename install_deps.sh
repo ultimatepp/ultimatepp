@@ -24,7 +24,7 @@ if [ "$UNAME" = 'Darwin' ]; then
     exit 1
   fi
   echo "Homebrew is installed"
-  brew install openssl clang-format xxhash
+  brew install libpng lz4 pcre2 xxhash zstd
   if clang++ --version >/dev/null 2>&1; then
     echo "Commandline Development Tools already installed"
   else
