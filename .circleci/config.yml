@@ -12,7 +12,7 @@ jobs:
       NUMBER_OF_CPUS: 4
     steps:
       - checkout
-      - run: make deps --non-interactive
+      - run: make deps RUN_ARGS="--non-interactive"
       - run: make umk
       - run: make theide
   build-mac:
