@@ -86,30 +86,40 @@ if [ -z "$DEP" ]; then
   fi
   echo "Please make sure that build dependencies are satisfied."
   AskContinue
-else
-  echo "Following command should be used to install required packages:"
-  echo ""
-  echo "sudo $DEP"
-  echo ""
-  if [ "$NON_INTERACTIVE" = "true" ]; then
-    echo "Non-interactive mode: running installation automatically..."
-    if ! sudo $DEP; then
-       echo "Failed to install all required packages."
-       exit 1
-    fi
-  else
-    echo "Install script can run this command for you, but that will require"
-    echo "your sudo password."
-    read -p "Do you want the script to do that (Y/n)? " answer
-    if [[ ! "$answer" =~ ^[nN] ]]; then
-       if ! sudo $DEP; then
-          echo "Failed to install all required packages."
-          echo "You will have to install required packages manually."
-          AskContinue
-       fi
-    else
-       echo "Please make sure that build dependencies are satisfied."
-       AskContinue
-    fi
+  exit 0
+fi
+
+echo "Following command should be used to install required packages:"
+echo ""
+echo "sudo $DEP"
+echo ""
+
+if [ "$NON_INTERACTIVE" = "true" ]; then
+  echo "Non-interactive mode: updating apt package lists..."
+  if command -v apt-get >/dev/null; then
+    sudo apt-get update
   fi
+  
+  echo "Non-interactive mode: running installation automatically..."
+  if ! sudo $DEP; then
+     echo "Failed to install all required packages."
+     exit 1
+  fi
+  exit 0
+fi
+
+echo "Install script can run this command for you, but that will require"
+echo "your sudo password."
+read -p "Do you want the script to do that (Y/n)? " answer
+
+if [[ "$answer" =~ ^[nN] ]]; then
+   echo "Please make sure that build dependencies are satisfied."
+   AskContinue
+   exit 0
+fi
+
+if ! sudo $DEP; then
+   echo "Failed to install all required packages."
+   echo "You will have to install required packages manually."
+   AskContinue
 fi
