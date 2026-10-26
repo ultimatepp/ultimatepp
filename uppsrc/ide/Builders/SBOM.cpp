@@ -116,28 +116,11 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		m.external = i < direct_n ? 1 : 2;
 		m.bom_ref = m.name = name;
 		String depends, arch, source;
-		Vector<String> k = Split(Sys((IsRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}\n%{FILENAMES}' "
-		                                      : "dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture}\n${Source}\n${db-fsys:Files}' ")
-		                             + name), '\n');
-		if(k.GetCount() < 5)
-			continue;
-		depends = k[0];
-		m.version = k[1];
-		m.homepage = k[2];
-		arch = k[3];
-		source = k[4];
-		bool isdep = false;
-		for(int i = 5; i < k.GetCount(); i++) {
-			String s = ToLower(k[i]);
-			if(s.EndsWith(".a") || s.EndsWith(".so") || s.Find(".so.") >= 0 ||
-			   s.EndsWith(".h") || s.EndsWith(".hpp")) {
-				isdep = true;
-				break;
-			}
-		}
-		if(!isdep)
-			continue;
-
+		SplitTo(Sys((IsRPM() ? "rpm -q --qf '%{REQUIRES}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{SOURCERPM}' "
+		                      : "dpkg-query -W -f='${Depends}\n${Version}\n${Homepage}\n${Architecture}\n${Source}' ") + name),
+		                     '\n', false,
+		        depends, m.version, m.homepage, arch, source);
+		
 		String distro = "debian";
 		static String osr = LoadFile("/etc/os-release");
 
