@@ -122,12 +122,31 @@ UppHub conceptually is very similar to the package manager concept known from ot
 
 ## Repository
 
+### Building
+
+To get started with the U++ framework and this repository, you need to build umk (the U++ build CLI) and TheIDE using the included Makefile. Please run:
+```bash
+make
+```
+
+During the build process, you may be prompted to install system dependencies required by your operating system. Please accept the prompt to ensure all necessary tools and libraries are installed for a successful build.
+
+The make command automatically handles downloading dependencies and compiling both binaries. If you prefer to run these steps individually, execute:
+```bash
+make deps
+make umk
+make theide
+```
+
+Upon completion, both TheIDE and umk executables will be available in the repository root directory. Launch TheIDE to start exploring the U++ framework and ecosystem!
+
 ### Repository layout
 
 The U++ repository is divided into several directories. Some of them are:
 * **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
+* **scripts** - collection of scripts for building U++ from the repository source
 * **tutorial** - exemplary code from our tutorials
 * **uppsrc** - main sources of the framework
 * **benchmarks** - code for benchmarking purposes
