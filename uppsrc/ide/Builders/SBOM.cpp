@@ -6,6 +6,19 @@ String Format8601Z(Time t)
 	              t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
+
+// --- Tiers -----------------------------------------------------------------
+// {"static-in-repo", "static-third-party", "dynamic-bundled", "dynamic-platform", "dynamic-platform-transitive", "unknown"};
+/*
+static-in-repo               — compiled from sources in our repositories (own + vendored)
+static-third-party           — 3rd-party headers/objects from package managers (VCPKG, -dev, brew)
+dynamic-bundled              — .so/.dll/.dylib shipped with the product
+dynamic-platform             — library the target platform is assumed to provide
+dynamic-platform-transitive  — dependency of dynamic-platform only
+*/
+const static char* tier_name[] = {"static-in-repo", "static-vendored", "static-third-party", "dynamic-bundled", "dynamic-platform", "dynamic-platform-transitive", "unknown"};
+enum { T_STATIC_IN_REPO = 0, T_STATIC_VENDORED, T_STATIC_THIRD_PARTY, T_DYNAMIC_BUNDLED, T_DYNAMIC_PLATFORM, T_DYNAMIC_PLATFORM_TRANSITIVE, T_COUNT };
+
 // --- Link-mode tree (Plan §3): replicate GccBuilder::Link() exactly --------
 
 enum { LINK_STATIC, LINK_DYNAMIC };
@@ -38,18 +51,18 @@ static int DeclTier(int decl, const String& name, int link_mode, int dyn_tier)
 {
 	String ext = ToLower(GetFileExt(name));
 	if(ext == ".a" || ext == ".lib")
-		return 1;                      // explicit static file
+		return T_STATIC_THIRD_PARTY;	// explicit static file
 	if(ext == ".so" || ext == ".dll")
-		return dyn_tier;               // explicit dynamic file
+		return dyn_tier;				// explicit dynamic file
 	switch(decl) {
 	case DECL_STATIC_LIBRARY:
 	case DECL_EXTERNAL_DEPENDENCY:
-		return 1;                      // T1 always
+		return T_STATIC_THIRD_PARTY;	// always
 	case DECL_DYNAMIC_LIBRARY:
-		return dyn_tier;               // forced dynamic: provider rule even in
-		                               // static builds, never T1
+		return dyn_tier;				// forced dynamic: provider rule even in
+										// static builds, never T_STATIC_THIRD_PARTY
 	default:
-		return link_mode == LINK_STATIC ? 1 : dyn_tier;
+		return link_mode == LINK_STATIC ? T_STATIC_THIRD_PARTY : dyn_tier;
 	}
 }
 
@@ -212,9 +225,9 @@ static String DebNamespace()
 
 #endif
 
-static int DynTierOf(const String& dyn_owner) { return dyn_owner.GetCount() ? 3 : 2; }
+static int DynTierOf(const String& dyn_owner) { return dyn_owner.GetCount() ? T_DYNAMIC_PLATFORM : T_DYNAMIC_BUNDLED; }
 
-static int VcpkgTier(int link_mode) { return link_mode == LINK_STATIC ? 1 : 2; }
+static int VcpkgTier(int link_mode) { return link_mode == LINK_STATIC ? T_STATIC_THIRD_PARTY : T_DYNAMIC_BUNDLED; }
 
 static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String& triplet)
 {
@@ -500,9 +513,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		String nm = d.name;
 		if(d.decl == DECL_EXTERNAL_DEPENDENCY) {
 #ifdef PLATFORM_WIN32
-			tier = IsVCPKG() ? VcpkgTier(link_mode) : 1;
+			tier = IsVCPKG() ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
 #else
-			tier = 1;
+			tier = T_STATIC_THIRD_PARTY;
 #endif
 		}
 		else {
@@ -518,10 +531,10 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			else
 				sta = StaticOwner(d.name, cc);
 			tier = DeclTier(d.decl, d.name, link_mode, DynTierOf(owner));
-			nm = tier == 3 ? owner
-			  : tier == 1 && sta.GetCount() ? sta
+			nm = tier == T_DYNAMIC_PLATFORM ? owner
+			  : tier == T_STATIC_THIRD_PARTY && sta.GetCount() ? sta
 			  : d.name;
-			if(dynq && file.GetCount() && (tier == 2 || tier == 3))
+			if(dynq && file.GetCount() && (tier == T_DYNAMIC_BUNDLED || tier == T_DYNAMIC_PLATFORM))
 				so_files.Add(MakeTuple(file, nm));
 		}
 		bool fresh;
@@ -531,11 +544,11 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			m.bom_ref = m.name = nm;
 			m.external = tier;
 #ifdef PLATFORM_POSIX
-			if((IsRPM() || IsDPKG()) && (tier == 1 || tier == 3))
+			if((IsRPM() || IsDPKG()) && (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM))
 				FillPkgMeta(m);
 #endif
 #ifdef PLATFORM_WIN32
-			if(tier == 2)
+			if(tier == T_DYNAMIC_BUNDLED)
 				FillFromVcpkgList(m, nm, triplet);
 #endif
 		}
@@ -627,7 +640,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			if(fresh) {
 				SBOMComponent& m = cs.Add();
 				m.bom_ref = m.name = nm;
-				m.external = 4;
+				m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
 				if(IsRPM() || IsDPKG())
 					FillPkgMeta(m);
 			}
@@ -648,7 +661,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			if(fresh) {
 				SBOMComponent& m = cs.Add();
 				m.bom_ref = m.name = nm;
-				m.external = 3;
+				m.external = T_DYNAMIC_PLATFORM;
 				if(IsRPM() || IsDPKG())
 					FillPkgMeta(m);
 			}
@@ -665,7 +678,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				if(fresh) {
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
-					m.external = 3;
+					m.external = T_DYNAMIC_PLATFORM;
 					if(IsRPM() || IsDPKG())
 						FillPkgMeta(m);
 				}
@@ -680,7 +693,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				if(fresh) {
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = imp;
-					m.external = 3;
+					m.external = T_DYNAMIC_PLATFORM;
 				}
 			}
 	}
@@ -752,8 +765,8 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));
 	};
 
-	int depth = mode == SBOM_BASE ? 1
-	          : findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 ? 3 : 4;
+	int depth = mode == SBOM_BASE ? T_STATIC_THIRD_PARTY
+	          : findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 ? T_DYNAMIC_PLATFORM : T_DYNAMIC_PLATFORM_TRANSITIVE;
 	bool external_mode = findarg(mode, SBOM_EXTERNAL_DIRECT, SBOM_EXTERNAL_FULL) >= 0;
 
 	Index<String> alive;
@@ -776,7 +789,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(c.version.GetCount())
 			component("version", c.version);
 
-		if(external_mode && c.external >= 3)
+		if(external_mode && c.external >= T_DYNAMIC_PLATFORM)
 			component("scope", "required")
 			         ("isExternal", true);
 
@@ -811,10 +824,8 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
 
-		if(c.external) {
-			component("properties", JsonArray()
-			          << Json("name", "upp:dependency-tier")("value", AsString(c.external)));
-		}
+		component("properties", JsonArray()
+			<< Json("name", "upp:deployment-mode")("value", tier_name[clamp(c.external,(int)T_STATIC_IN_REPO,(int)T_COUNT)]));
 
 		alive.Add(c.bom_ref);
 		emitted_i << i;
