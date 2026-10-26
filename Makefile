@@ -16,8 +16,8 @@ all: deps config umk theide
 	fi
 
 deps:
-	@chmod +x scripts/install_deps.sh
-	@./scripts/install_deps.sh $(RUN_ARGS)
+	@chmod +x install_deps.sh
+	@./install_deps.sh $(RUN_ARGS)
 
 config:
 	mkdir -p .config

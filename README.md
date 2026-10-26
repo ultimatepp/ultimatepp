@@ -124,7 +124,7 @@ UppHub conceptually is very similar to the package manager concept known from ot
 
 ### Building
 
-To get started with the U++ framework and this repository, you need to build umk (the U++ build CLI) and TheIDE using the included Makefile. Please run:
+To get started with the U++ framework and this repository, you need to build umk (the U++ command-line build tool) and TheIDE using the included Makefile. Please run:
 ```bash
 make
 ```
@@ -146,7 +146,6 @@ The U++ repository is divided into several directories. Some of them are:
 * **autotest** - unit and integration tests for our framework
 * **examples** - exemplary codes of complex applications
 * **references** - reference examples demonstrating individual features of U++
-* **scripts** - collection of scripts for building U++ from the repository source
 * **tutorial** - exemplary code from our tutorials
 * **uppsrc** - main sources of the framework
 * **benchmarks** - code for benchmarking purposes
