@@ -142,7 +142,7 @@ private:
 
 String SslGetLastError(int& code);
 String SslGetLastError();
-String SslToString(X509_NAME *name);
+String SslToString(const X509_NAME *name);
 Date   Asn1ToDate(ASN1_STRING *time);
 String Asn1ToString(ASN1_STRING *s);
 

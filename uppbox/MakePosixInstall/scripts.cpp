@@ -20,7 +20,7 @@ if [[ "$uname" == 'Darwin' ]]; then
     exit
   fi
   echo "Homebrew is installed"
-  brew install openssl clang-format
+  brew install openssl clang-format xxhash
   if clang++ --version; then
     echo "Commandline Development Tools already installed"
   else
