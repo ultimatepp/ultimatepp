@@ -50,12 +50,12 @@ void SBOMDlg::Sync()
 		String dep = Join(m.depends, ", ");
 		
 		if(ToUpper(m.name + m.version + lic + dep + m.homepage + m.originUrl).Find(s) >= 0 &&
-		   get_i(mod, !m.external, true, true, m.external <= 1, m.external <= 1))
+		  (mod != SBOM_BASE || m.external <= T_DYNAMIC_BUNDLED))
 			list.Add(m.name,
 			         m.type,
 			         m.version,
-			         m.external ? "Y" : "",
-			         get_i(mod, true, true, m.external<=2, true, m.external<=2) ? "Y" : "",
+			         m.external ? "Y" : "", // 3rd party
+			         mod == SBOM_CONTAINER || m.external <= T_DYNAMIC_BUNDLED ? "Y" : "", // Shipped
 			         lic,
 			         dep,
 			         m.purl,
@@ -69,16 +69,11 @@ void SBOMDlg::Sync()
 
 void SBOMDlg::Perform()
 {
-	mode.Add(SBOM_BASE, "0 - Ignore dependencies");
-	mode.Add(SBOM_FULL, "1 - All dependencies as shipped");
-	mode.Add(SBOM_EXTERNAL_FULL, "2 - All dependencies as external");
-	mode.Add(SBOM_DIRECT, "3 - Direct dependencies as shipped");
-	mode.Add(SBOM_EXTERNAL_DIRECT, "4 - Direct dependencies as external");
+	mode.Add(SBOM_BASE, "Minimal SBOM (CRA/VEX)");
+	mode.Add(SBOM_FULL, "Full SBOM (using platform dependencies)");
+	mode.Add(SBOM_CONTAINER, "Full SBOM (shipping all dependencies)");
 
-	mode <<= 1;
-#ifdef PLATFORM_LINUX
-	mode <<= 2;
-#endif
+	mode <<= SBOM_FULL;
 
 	mode << [this] { Sync(); };
 	

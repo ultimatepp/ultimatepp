@@ -137,12 +137,36 @@ private:
 	bool IsAndroidMethod(const String& method) const;
 };
 
+// Tiers
 enum {
-	SBOM_BASE,              // 0
-	SBOM_FULL,              // 1 - default for Win32, use for docker / VM / flatpack in linux
-	SBOM_EXTERNAL_FULL,     // 2 - default for Linux
-	SBOM_DIRECT,            // 3
-	SBOM_EXTERNAL_DIRECT,   // 4
+	T_STATIC_IN_REPO = 0,
+	T_STATIC_VENDORED,
+	T_STATIC_THIRD_PARTY,
+	T_DYNAMIC_BUNDLED,
+	T_DYNAMIC_PLATFORM,
+	T_DYNAMIC_PLATFORM_TRANSITIVE,
+	T_COUNT
+};
+
+const static char* sbom_tier[] = {
+	"static-in-repo",					// compiled from our own sources in our repositories
+	"static-vendored",					// compiled from vendored sources in our repositories
+	"static-third-party",				// 3rd-party headers/objects from package managers (VCPKG, -dev, brew)
+	"dynamic-bundled",					// .so/.dll/.dylib shipped with the product
+	"dynamic-platform",					// library the target platform is assumed to provide
+	"dynamic-platform-transitive",		// dependency of dynamic-platform only
+	"unknown"
+};
+
+// Export modes
+enum {
+	SBOM_BASE,              // only up to T_DYNAMIC_BUNDLED (covering VEX + CRA minimal requirements)
+	SBOM_FULL,				// full dependency tree as is
+	SBOM_CONTAINER,			// full dependency tree with external deps shipped and flattened to T_DYNAMIC_BUNDLED
+//	SBOM_FULL,              // 1 - default for Win32, use for docker / VM / flatpack in linux
+//	SBOM_EXTERNAL_FULL,     // 2 - default for Linux
+//	SBOM_DIRECT,            // 3
+//	SBOM_EXTERNAL_DIRECT,   // 4
 };
 
 const Index<String>& SPDXLicenses();

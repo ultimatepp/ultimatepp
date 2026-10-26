@@ -6,19 +6,6 @@ String Format8601Z(Time t)
 	              t.year, t.month, t.day, t.hour, t.minute, t.second);
 }
 
-
-// --- Tiers -----------------------------------------------------------------
-// {"static-in-repo", "static-third-party", "dynamic-bundled", "dynamic-platform", "dynamic-platform-transitive", "unknown"};
-/*
-static-in-repo               — compiled from sources in our repositories (own + vendored)
-static-third-party           — 3rd-party headers/objects from package managers (VCPKG, -dev, brew)
-dynamic-bundled              — .so/.dll/.dylib shipped with the product
-dynamic-platform             — library the target platform is assumed to provide
-dynamic-platform-transitive  — dependency of dynamic-platform only
-*/
-const static char* tier_name[] = {"static-in-repo", "static-vendored", "static-third-party", "dynamic-bundled", "dynamic-platform", "dynamic-platform-transitive", "unknown"};
-enum { T_STATIC_IN_REPO = 0, T_STATIC_VENDORED, T_STATIC_THIRD_PARTY, T_DYNAMIC_BUNDLED, T_DYNAMIC_PLATFORM, T_DYNAMIC_PLATFORM_TRANSITIVE, T_COUNT };
-
 // --- Link-mode tree (Plan §3): replicate GccBuilder::Link() exactly --------
 
 enum { LINK_STATIC, LINK_DYNAMIC };
@@ -291,10 +278,51 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	Vector<Decl> decls;
 	Vector<int>  own_ci(wspc.GetCount(), -1);  // package idx -> first-party component idx
 
-	auto PkgName = [](const String& s) {
-		return "u++pkg:" + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+#ifdef PLATFORM_WIN32
+	String git = GetExeDirFile("bin/mingit/cmd/git");
+#else
+	String git = "git";
+#endif
+
+	// --- First-party repo prefixes --------------------------------------------
+	// bom_ref prefix = owning git repository's name ("ultimatepp/", "myrepo/"),
+	// from the package directory's origin URL; "./" when the directory is not
+	// under any git checkout (codebase-local ownership). Cached per package so
+	// 'uses' edges and component emission always agree on the same prefix.
+	VectorMap<String, String> repo_prefix;
+
+	auto OriginOf = [&](const String& dir) {
+		String origin = TrimBoth(Sys(git + " -C " + dir + " config --get remote.origin.url"));
+		if(origin.StartsWith("git@github.com:"))
+			origin.Replace("git@github.com:", "https://github.com/");
+		return origin;
 	};
 
+	auto PrefixOf = [&](String origin) {
+		if(!origin.GetCount())
+			return String("./");                    // local code, no git repo
+		while(origin.EndsWith(".git")) origin.TrimEnd(".git");
+		while(origin.EndsWith("/"))   origin.TrimEnd("/");
+		// last path element; also cut scp-style "git@host:repo" at the colon
+		int q = max(origin.ReverseFind('/'), origin.ReverseFind(':'));
+		return origin.Mid(q + 1) + "/";
+	};
+
+	// Resolve the repo prefix of ANY workspace package name, on demand.
+	// Unknown names (stray 'uses' targets) fall back to "./".
+	auto PkgName = [&](const String& s) {
+		int q = repo_prefix.Find(s);
+		if(q < 0) {
+			bool in_ws = false;
+			for(int wi = 0; wi < wspc.GetCount(); wi++)
+				if(wspc[wi] == s) { in_ws = true; break; }
+			String prefix = in_ws ? PrefixOf(OriginOf(PackageDirectory(s))) : String("./");
+			q = repo_prefix.GetCount();
+			repo_prefix.Add(s, prefix);
+		}
+		return repo_prefix[q] + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+	};
+	
 	// Step 2 — per-package gather
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		if(progress(i, wspc.GetCount())) {
@@ -320,26 +348,20 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		{
 			SBOMComponent& m = cs.Add();
 			own_ci[i] = cs.GetCount() - 1;
-			m.bom_ref = m.name = PkgName(n);
+
+			String origin = OriginOf(PackageDirectory(n));
+			repo_prefix.GetAdd(n, PrefixOf(origin));  // prime cache — one git call
+			m.bom_ref = m.name = PkgName(n);          // cache hit, no extra call
 			if(i == 0)
 				m.type = "application";
 
-#ifdef PLATFORM_WIN32
-			String git = GetExeDirFile("bin/mingit/cmd/git");
-#else
-			String git = "git";
-#endif
-			git << " -C " << PackageDirectory(n) << " ";
-			String origin = TrimBoth(Sys(git + "config --get remote.origin.url"));
 			if(origin.GetCount()) {
-				if(origin.StartsWith("git@github.com:"))
-					origin.Replace("git@github.com:", "https://github.com/");
 				m.originUrl = "git+" + origin;
 				origin.TrimEnd(".git");
 				m.homepage = origin;
 			}
 			String ts, hash, sha1;
-			if(SplitTo(TrimBoth(Sys(git + "log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
+			if(SplitTo(TrimBoth(Sys(git + " -C " + PackageDirectory(n) + " log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
 				m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
 				if(m.originUrl.GetCount())
 					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
@@ -349,7 +371,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			for(const OptItem& u : pk.uses)
 				AddDependency(m, PkgName(u.text));
 		}
-
+		
 		Index<String> cfg = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 
 		auto GatherNames = [&](const Array<OptItem>& set, int decl) {
@@ -765,10 +787,9 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));
 	};
 
-	int depth = mode == SBOM_BASE ? T_STATIC_THIRD_PARTY
-	          : findarg(mode, SBOM_DIRECT, SBOM_EXTERNAL_DIRECT) >= 0 ? T_DYNAMIC_PLATFORM : T_DYNAMIC_PLATFORM_TRANSITIVE;
-	bool external_mode = findarg(mode, SBOM_EXTERNAL_DIRECT, SBOM_EXTERNAL_FULL) >= 0;
-
+	int tier_clamp = mode == SBOM_CONTAINER ? T_DYNAMIC_BUNDLED : T_COUNT;
+	int depth = mode == SBOM_BASE ? T_DYNAMIC_BUNDLED : T_DYNAMIC_PLATFORM_TRANSITIVE;
+	
 	Index<String> alive;
 	Vector<int>   emitted_i;
 
@@ -789,7 +810,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(c.version.GetCount())
 			component("version", c.version);
 
-		if(external_mode && c.external >= T_DYNAMIC_PLATFORM)
+		if(mode != SBOM_CONTAINER && c.external >= T_DYNAMIC_PLATFORM)
 			component("scope", "required")
 			         ("isExternal", true);
 
@@ -825,7 +846,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 			component("purl", c.purl);
 
 		component("properties", JsonArray()
-			<< Json("name", "upp:deployment-mode")("value", tier_name[clamp(c.external,(int)T_STATIC_IN_REPO,(int)T_COUNT)]));
+			<< Json("name", "upp:deployment-mode")("value", sbom_tier[clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp)]));
 
 		alive.Add(c.bom_ref);
 		emitted_i << i;
@@ -865,4 +886,6 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		sbom("dependencies", dependencies);
 
 	return sbom;
+}
+
 }
