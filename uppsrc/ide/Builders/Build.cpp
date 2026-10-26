@@ -106,7 +106,7 @@ String NoCr(const char *s)
 
 String MakeBuild::GetVcpkgTriplet(const VectorMap<String, String>& bm) const
 {
-	return VcpkgTriplet(bm, GetTargetMode().linkmode);
+	return VcpkgTriplet(bm,  GetTargetMode().linkmode, mainconfigparam.Find("MD") >= 0);
 }
 
 void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool disable_uhd, int scale, bool exit_pause)

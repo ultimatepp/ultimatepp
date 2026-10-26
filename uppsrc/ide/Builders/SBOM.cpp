@@ -887,5 +887,3 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 
 	return sbom;
 }
-
-}

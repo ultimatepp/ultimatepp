@@ -163,10 +163,6 @@ enum {
 	SBOM_BASE,              // only up to T_DYNAMIC_BUNDLED (covering VEX + CRA minimal requirements)
 	SBOM_FULL,				// full dependency tree as is
 	SBOM_CONTAINER,			// full dependency tree with external deps shipped and flattened to T_DYNAMIC_BUNDLED
-//	SBOM_FULL,              // 1 - default for Win32, use for docker / VM / flatpack in linux
-//	SBOM_EXTERNAL_FULL,     // 2 - default for Linux
-//	SBOM_DIRECT,            // 3
-//	SBOM_EXTERNAL_DIRECT,   // 4
 };
 
 const Index<String>& SPDXLicenses();
