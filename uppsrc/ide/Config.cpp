@@ -37,6 +37,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	s % pk;
 	package.FindSetCursor(pk);
 	s % tablru;
+	if(s.IsLoading()) {
+		tablru.RemoveIf([&](int i) { return !FileExists(tablru[i]); });
+	}
 	s % mainconfigname;
 	s % mainconfigparam;
 	s % console.verbosebuild;
@@ -66,6 +69,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	if(version >= 23)
 		s % scale;
 	s % editfile;
+	if(s.IsLoading())
+		if(!FileExists(editfile))
+			editfile.Clear();
 	for(i = 0; i < 10; i++) {
 		s % bookmark[i];
 	}

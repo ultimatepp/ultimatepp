@@ -555,6 +555,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		tabs.SetSplitColor(editfile2, SYellow());
 	}
 	editor.Enable();
+	editor.SetNewFile(false);
 	editpane.Add(editorsplit);
 	editor.HiliteScope(hilite_scope);
 	editor.OverWriteMode(false);
