@@ -229,6 +229,7 @@ static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String
 #ifdef PLATFORM_POSIX
 
 // "ID=" line of /etc/os-release, quotes stripped; used for purl namespaces.
+
 static String SBOMDistroId()
 {
 	for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
@@ -265,25 +266,54 @@ static bool SBOMIsSpdxLike(const String& s)
 // package name (as resolved by OwnerOfFile()). Best effort: fields that
 // cannot be resolved are left as-is, and unknown packages leave the
 // component completely untouched.
-static void FillPkgMeta(SBOMComponent& m)
-{
+static void FillPkgMeta(SBOMComponent& m){
 	if(m.name.IsEmpty())
 		return;
 
+	if(!m.purl.IsEmpty() || !m.version.IsEmpty())
+		return;                 // already filled — never accumulate
+
 	if(IsDPKG()) {
 		// Package names are [a-z0-9.+-]+ — no shell quoting needed.
-		String version = TrimBoth(Sys("dpkg-query -W -f='${Version}' " + m.name));
-		if(version.Find("no packages found") >= 0 || version.Find("dpkg-query:") >= 0)
-			version.Clear();
-		String src = TrimBoth(Sys("dpkg-query -W -f='${source:Package}' " + m.name));
-		if(src.Find("no packages found") >= 0 || src.Find("dpkg-query:") >= 0)
-			src.Clear();
+		//
+		// DEB — OSV indexes deb advisories by SOURCE package; without a
+		// source= qualifier queries never match. Two dpkg quirks to absorb:
+		//  - Source is omitted when binary name == source name  -> use name
+		//  - older dpkg emits "src (epoch:ver)"                   -> trim "( ..."
+		//
+		// Multi-arch quirk (third): a Multi-Arch: same package installed for
+		// several arches produces ONE RECORD PER ARCH — keep only the first,
+		// otherwise fields from the second arch get glued onto the first.
+		String arch, src, out = Sys(
+			"dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + m.name);
 
-		if(version.GetCount()) {
-			m.version = version;
-			if(src.GetCount())
-				m.purl = "pkg:deb/" + SBOMDistroId() + "/" + src + "@" + version;
+		Vector<String> rec = Split(out, '\n', false);   // keep empty fields
+		if(rec.GetCount() > 4)                          // multi-arch duplicate records
+			rec.SetCount(4);                            // -> first record only
+		String version = rec.GetCount() > 0 ? TrimBoth(rec[0]) : String();
+		m.homepage      = rec.GetCount() > 1 ? TrimBoth(rec[1]) : String();
+		arch            = rec.GetCount() > 2 ? TrimBoth(rec[2]) : String();
+		src             = rec.GetCount() > 3 ? TrimBoth(rec[3]) : String();
+
+		if(!version.GetCount()) {      // not a PM package after all —
+			m.homepage = String();      // record keeps name only, no junk purl
+			return;
 		}
+
+		String source = TrimBoth(src);
+		int pq = source.Find(" (");
+		if(pq >= 0)
+			source.Trim(pq);
+		if(!source.GetCount())
+			source = m.name;
+
+		m.version = version;
+		m.purl << "pkg:deb/" << DebNamespace() << '/' << m.name << '@' << version;
+		String quals;
+		if(arch.GetCount())                              // never emit bare "?arch="
+			quals << "?arch=" << arch;
+		quals << (quals.GetCount() ? '&' : '?') << "source=" << source;
+		m.purl << quals;
 
 		// Debian ships license texts in /usr/share/doc/<pkg>/copyright.
 		// Take the first machine-readable, SPDX-shaped "License:" line.
@@ -292,7 +322,7 @@ static void FillPkgMeta(SBOMComponent& m)
 			l = TrimBoth(l);
 			if(!l.StartsWith("License:"))
 				continue;
-			String v = TrimBoth(l.Mid(7));
+			String v = TrimBoth(l.Mid(8));
 			if(SBOMIsSpdxLike(v)) {
 				m.licenses.Clear();
 				m.licenses << v;
@@ -302,19 +332,67 @@ static void FillPkgMeta(SBOMComponent& m)
 	}
 	else
 	if(IsRPM()) {
-		String out = TrimBoth(Sys("rpm -q --qf '%{VERSION}-%{RELEASE}|%{LICENSE}' " + m.name));
-		if(out.Find("not installed") >= 0 || out.Find("no package") >= 0)
+		// One rpm -q call: version, url, arch, license, source rpm.
+		// A failed lookup writes to stderr only, so an empty version means
+		// "not a PM package after all" — the record keeps its name and no
+		// junk purl.
+		String url, arch, lic, srcrpm, out = Sys(
+			"rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
+			+ m.name);
+		SplitTo(out, '\n', false, m.version, url, arch, lic, srcrpm);
+		if(!m.version.GetCount()) {
+			m.homepage = String();
 			return;
-		int q = out.Find('|');
-		if(q < 0)
-			return;
-		m.version = out.Mid(0, q);
-		String lic = TrimBoth(out.Mid(q + 1));
-		if(lic.GetCount()) {
+		}
+		m.homepage = TrimBoth(url);
+		lic = TrimBoth(lic);
+		if(lic.GetCount() && lic != "(none)") {
 			m.licenses.Clear();
 			m.licenses << lic;
 		}
-		m.purl = "pkg:rpm/" + SBOMDistroId() + "/" + m.name + "@" + m.version;
+
+		// purl namespace (plus SUSE-only distro=), resolved once from os-release
+		static String ns, distro;
+		static bool loaded = false;
+		if(!loaded) {
+			loaded = true;
+			String id, vid;
+			for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
+				l = TrimBoth(l);
+				if(l.TrimStart("ID="))
+					id = TrimBoth(l);
+				else
+				if(l.TrimStart("VERSION_ID="))
+					vid = TrimBoth(l);
+			}
+			id.TrimStart("\"");  id.TrimEnd("\"");
+			vid.TrimStart("\""); vid.TrimEnd("\"");
+			Vector<String> v = Split(vid, '.');
+			if(id == "sles" || id == "sle" || id == "sled") {
+				ns = "suse";               // SUSE shares advisory streams across SPs
+				distro = v.GetCount() > 1 ? "sle" + v[0] + "-sp" + v[1]
+				       : v.GetCount()    ? "sle" + v[0]
+				                         : "sles";
+			}
+			else                           // rocky, almalinux, centos, fedora, ...
+				ns = id;                    // NO distro= — proven Rocky format
+		}
+
+		m.purl << "pkg:rpm/" << ns << '/' << m.name << '@' << m.version;
+
+		// First qualifier opens with '?', the rest join with '&'.
+		String quals;
+		auto AddQual = [&](const char *key, String val) {
+			val = TrimBoth(val);
+			if(!val.GetCount() || val == "(none)")
+				return;
+			quals << (quals.GetCount() ? '&' : '?') << key << '=' << val;
+		};
+		AddQual("arch", arch);
+		AddQual("distro", distro);
+		AddQual("source", srcrpm);
+		m.purl << quals;
+		return;
 	}
 }
 
