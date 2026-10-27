@@ -386,9 +386,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	int link_mode = LinkMode(main_cfg);
 
 #ifdef PLATFORM_WIN32
-	const bool win_target = true;
+	bool win_target = true;
 #else
-	const bool win_target = main_cfg.Find("WIN32") >= 0;
+	bool win_target = main_cfg.Find("WIN32") >= 0;
 #endif
 	bool msvc = bm.Get("BUILDER", "GCC").StartsWith("MSC");
 	bool clang = bm.Get("BUILDER", "GCC") == "CLANG";
@@ -584,13 +584,11 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		int tier;
 		String nm = d.name;
-		if(d.decl == DECL_EXTERNAL_DEPENDENCY) {
-#ifdef PLATFORM_WIN32
-			tier = IsVCPKG() ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
-#else
-			tier = T_STATIC_THIRD_PARTY;
-#endif
-		}
+		
+
+		if(d.decl == DECL_EXTERNAL_DEPENDENCY)
+		    tier = (win_target && IsVCPKG()) ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
+
 		else {
 			String ext = ToLower(GetFileExt(d.name));
 			bool dynq = ext == ".so" || ext == ".dll"
@@ -615,14 +613,15 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			SBOMComponent& m = cs.Add();
 			m.bom_ref = m.name = nm;
 			m.external = tier;
+			
 #ifdef PLATFORM_POSIX
-			if((IsRPM() || IsDPKG()) && (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM))
-				FillPkgMeta(m);
+			if(!win_target && (IsRPM() || IsDPKG())
+			   && (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM))
+			    FillPkgMeta(m);
 #endif
-#ifdef PLATFORM_WIN32
-			if(tier == T_DYNAMIC_BUNDLED)
-				FillFromVcpkgList(m, nm, triplet);
-#endif
+			if(win_target && tier == T_DYNAMIC_BUNDLED)
+			    FillFromVcpkgList(m, nm, triplet);
+
 		}
 		if(own_ci[d.pk] >= 0)
 			AddDependency(cs[own_ci[d.pk]], nm);
@@ -644,8 +643,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			AddDependency(cs[own_ci[0]], OS_REF);
 	}
 
-#ifdef PLATFORM_WIN32
-	if(IsVCPKG()) {
+	if(win_target && IsVCPKG()) {
 		Index<String> vnames;
 		for(const Decl& d : decls)
 			if(d.decl == DECL_EXTERNAL_DEPENDENCY)
@@ -711,7 +709,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				}
 		}
 	}
-#endif
 
 	// MSVC runtime / UCRT
 	if(win_target && msvc) {
@@ -761,95 +758,74 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	}
 
 #ifdef PLATFORM_POSIX
-	// Step 4 — T4: NEEDED closure (POSIX builds only)
-	Vector<Tuple<String, String>> so_files_list;
-	Index<String> walked;
-	for(const Decl& d : decls) {
-		// Re-populate so_files_list from the original declaration data
-		String ext = ToLower(GetFileExt(d.name));
-		bool dynq = ext == ".so" || ext == ".dll"
-		         || d.decl == DECL_DYNAMIC_LIBRARY
-		         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
-		if(dynq && d.decl != DECL_EXTERNAL_DEPENDENCY) {
-			String file = DynOwnerFile(d.name);
-			if(file.GetCount()) {
-				String owner = OwnerOfFile(file);
-				String nm = owner.GetCount() ? owner : d.name;
-				so_files_list.Add(MakeTuple(file, nm));
+	if(!win_target){
+		// Step 4 — T4: NEEDED closure (POSIX builds only)
+		Vector<Tuple<String, String>> so_files_list;
+		Index<String> walked;
+		for(const Decl& d : decls) {
+			// Re-populate so_files_list from the original declaration data
+			String ext = ToLower(GetFileExt(d.name));
+			bool dynq = ext == ".so" || ext == ".dll"
+			         || d.decl == DECL_DYNAMIC_LIBRARY
+			         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
+			if(dynq && d.decl != DECL_EXTERNAL_DEPENDENCY) {
+				String file = DynOwnerFile(d.name);
+				if(file.GetCount()) {
+					String owner = OwnerOfFile(file);
+					String nm = owner.GetCount() ? owner : d.name;
+					so_files_list.Add(MakeTuple(file, nm));
+				}
 			}
 		}
-	}
-
-	total = done + so_files_list.GetCount();
-	for(int i = 0; i < so_files_list.GetCount(); i++) {
-		if(Tick()) {
-			cs.Clear();
-			return cs;
-		}
-		String file = so_files_list[i].a, from = so_files_list[i].b;
-		if(!file.GetCount() || walked.Find(file) >= 0)
-			continue;
-		walked.Add(file);
-		for(String l : Split(Sys("readelf -d " + file), '\n')) {
-			if(l.Find("(NEEDED)") < 0)
-				continue;
-			int q1 = l.Find('['), q2 = l.Find(']', q1);
-			if(q1 < 0 || q2 <= q1)
-				continue;
-			String soname = l.Mid(q1 + 1, q2 - q1 - 1);
-			String nfile = RealFile(FindSonameFile(soname));
-			String owner = OwnerOfFile(nfile);
-			String nm = owner.GetCount() ? owner : soname;
-			bool fresh;
-			int c = CompIdxExt(nm, fresh);
-			if(fresh) {
-				SBOMComponent& m = cs.Add();
-				m.bom_ref = m.name = nm;
-				m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
-				if(IsRPM() || IsDPKG())
-					FillPkgMeta(m);
-			}
-			int fq = ci_ext.Get(from, -1);
-			if(fq >= 0)
-				AddDependency(cs[fq], nm);
-			if(nfile.GetCount() && walked.Find(nfile) < 0) {
-				so_files_list.Add(MakeTuple(nfile, nm));
-				total++;
-			}
-		}
-	}
-
-	// Step 5 — toolchain baseline (POSIX only)
-	if(!msvc) {
-		if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
-			total = done + 1;
+	
+		total = done + so_files_list.GetCount();
+		for(int i = 0; i < so_files_list.GetCount(); i++) {
 			if(Tick()) {
 				cs.Clear();
 				return cs;
 			}
-			String nm = IsRPM() ? "glibc" : "libc6";
-			bool fresh;
-			int c = CompIdxExt(nm, fresh);
-			if(fresh) {
-				SBOMComponent& m = cs.Add();
-				m.bom_ref = m.name = nm;
-				m.external = T_DYNAMIC_PLATFORM;
-				if(IsRPM() || IsDPKG())
-					FillPkgMeta(m);
+			String file = so_files_list[i].a, from = so_files_list[i].b;
+			if(!file.GetCount() || walked.Find(file) >= 0)
+				continue;
+			walked.Add(file);
+			for(String l : Split(Sys("readelf -d " + file), '\n')) {
+				if(l.Find("(NEEDED)") < 0)
+					continue;
+				int q1 = l.Find('['), q2 = l.Find(']', q1);
+				if(q1 < 0 || q2 <= q1)
+					continue;
+				String soname = l.Mid(q1 + 1, q2 - q1 - 1);
+				String nfile = RealFile(FindSonameFile(soname));
+				String owner = OwnerOfFile(nfile);
+				String nm = owner.GetCount() ? owner : soname;
+				bool fresh;
+				int c = CompIdxExt(nm, fresh);
+				if(fresh) {
+					SBOMComponent& m = cs.Add();
+					m.bom_ref = m.name = nm;
+					m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
+					if(IsRPM() || IsDPKG())
+						FillPkgMeta(m);
+				}
+				int fq = ci_ext.Get(from, -1);
+				if(fq >= 0)
+					AddDependency(cs[fq], nm);
+				if(nfile.GetCount() && walked.Find(nfile) < 0) {
+					so_files_list.Add(MakeTuple(nfile, nm));
+					total++;
+				}
 			}
-			if(own_ci[0] >= 0)
-				AddDependency(cs[own_ci[0]], nm);
 		}
-		else
-		if(link_mode == LINK_DYNAMIC) {
-			total = done + 4;
-			for(const char *rt : {"c", "m", "stdc++", "gcc_s"}) {
+	
+		// Step 5 — toolchain baseline (POSIX only)
+		if(!msvc) {
+			if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
+				total = done + 1;
 				if(Tick()) {
 					cs.Clear();
 					return cs;
 				}
-				String owner = OwnerOfFile(DynOwnerFile(rt));
-				String nm = owner.GetCount() ? owner : String("lib") + rt;
+				String nm = IsRPM() ? "glibc" : "libc6";
 				bool fresh;
 				int c = CompIdxExt(nm, fresh);
 				if(fresh) {
@@ -862,10 +838,32 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				if(own_ci[0] >= 0)
 					AddDependency(cs[own_ci[0]], nm);
 			}
+			else
+			if(link_mode == LINK_DYNAMIC) {
+				total = done + 4;
+				for(const char *rt : {"c", "m", "stdc++", "gcc_s"}) {
+					if(Tick()) {
+						cs.Clear();
+						return cs;
+					}
+					String owner = OwnerOfFile(DynOwnerFile(rt));
+					String nm = owner.GetCount() ? owner : String("lib") + rt;
+					bool fresh;
+					int c = CompIdxExt(nm, fresh);
+					if(fresh) {
+						SBOMComponent& m = cs.Add();
+						m.bom_ref = m.name = nm;
+						m.external = T_DYNAMIC_PLATFORM;
+						if(IsRPM() || IsDPKG())
+							FillPkgMeta(m);
+					}
+					if(own_ci[0] >= 0)
+						AddDependency(cs[own_ci[0]], nm);
+				}
+			}
 		}
 	}
 #endif
-
 	for(SBOMComponent& c : cs) {
 		String ol = override_licenses.Get(c.name, Null);
 		if(ol.GetCount()) {
