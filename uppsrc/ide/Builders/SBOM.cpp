@@ -227,6 +227,39 @@ static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String
 }
 
 // ============================================================================
+// Win32 system import libraries.
+//
+// Extensionless LIBS / dynamic_library entries matching this table are
+// provided by the OS image itself. They are intercepted BEFORE generic
+// resolution and folded into a single "Microsoft Windows" operating-system
+// component: their CVE exposure rolls up to OS-build-level MSRC bulletins,
+// no purl addresses them individually, and their versions track the target
+// OS build — per-DLL components would add noise, not queryability.
+//
+// Keep alphabetical. An unlisted system lib fails visibly as a mute stub
+// rather than silently vanishing — extend the table when that happens.
+// (Explicitly suffixed names like "kernel32.lib" are NOT intercepted.)
+// ============================================================================
+static const Index<String>& WinSystemLibs()
+{
+	static Index<String> l;
+	if(l.IsEmpty()) {
+		static const char *s[] = {
+			"advapi32", "bcrypt", "comctl32", "comdlg32", "crypt32", "dbghelp",
+			"dwmapi", "gdi32", "gdiplus", "glu32", "imm32", "iphlpapi",
+			"kernel32", "mpr", "msimg32", "mswsock", "netapi32", "normaliz",
+			"ntdll", "ole32", "oleaut32", "opengl32", "powrprof", "psapi",
+			"rpcrt4", "secur32", "setupapi", "shell32", "shlwapi", "user32",
+			"userenv", "usp10", "uxtheme", "uuid", "version", "wininet",
+			"winmm", "winspool", "wldap32", "ws2_32", "wsock32", "wtsapi32",
+		};
+		for(const char *p : s)
+			l.Add(p);
+	}
+	return l;
+}
+
+// ============================================================================
 // Collection (Plan §7 Steps 1–5)
 // ============================================================================
 
@@ -271,6 +304,16 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	// Tier tree — once, against package 0's config
 	Index<String> main_cfg = PackageConfig(wspc, 0, bm, mainconfigparam, host, *b);
 	int link_mode = LinkMode(main_cfg);
+
+#ifdef PLATFORM_WIN32
+	const bool win_target = true;
+#else
+	const bool win_target = main_cfg.Find("WIN32") >= 0; // POSIX cross build for Windows
+#endif
+	// Single decision points, consumed by GetVcpkgTriplet AND the CRT block
+	// below, so triplet selection and SBOM CRT claims cannot diverge.
+	bool msvc = bm.Get("BUILDER", "GCC").StartsWith("MSC");
+	bool md   = mainconfigparam.Find("MD") >= 0;   // /MD vs /MT
 
 	Index<String> all_host = AllHostPackagesList();
 	VectorMap<String, String> override_licenses;
@@ -322,10 +365,27 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		return repo_prefix[q] + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
 	};
-	
+
+	// --- Progress bookkeeping ---------------------------------------------------
+	// One monotonic 'done' counter spans every phase; 'total' starts at the
+	// package count and grows as work is discovered (declaration count,
+	// vcpkg depend-info expansion, NEEDED closure). The bar may briefly move
+	// backwards when a phase discovers new work, but it never stalls and
+	// never overshoots.
+	int done = 0;
+	int total = wspc.GetCount();
+
+	auto Tick = [&]() -> bool {
+		if(done >= total)
+			total = done + 1;
+		bool cancel = progress(done, total);
+		done++;
+		return cancel;
+	};
+
 	// Step 2 — per-package gather
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		if(progress(i, wspc.GetCount())) {
+		if(Tick()) {
 			cs.Clear();
 			return cs;
 		}
@@ -408,6 +468,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 	}
 
+	total = done + decls.GetCount();
+
 	// Step 3 — resolution + tier assignment (two disjoint name streams)
 	Index<String> seen_ext;           // only for EXTERNAL components
 	VectorMap<String, int> ci_ext;    // external name -> component index
@@ -421,6 +483,26 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		ci_ext.Add(nm, cs.GetCount());
 		fresh = true;
 		return cs.GetCount();  // will be GetCount()-1 after Add()
+	};
+
+	// Single OS component standing in for all Win32 system DLLs (see
+	// WinSystemLibs). Created lazily through CompIdxExt so edges, the
+	// seen/ci bookkeeping and dependency emission need no special cases.
+	auto WindowsOs = [&]() -> String {
+		static const char *REF = "com.microsoft.windows";
+		bool fresh;
+		CompIdxExt(REF, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.type     = "operating-system";
+			m.bom_ref  = REF;
+			m.name     = "Microsoft Windows";
+			m.external = T_DYNAMIC_PLATFORM;
+			// version: deliberately absent — DLL/CRT versions track the
+			// TARGET OS build, which cannot be derived from the build host.
+			// (Revisit if _WIN32_WINNT targeting becomes queryable.)
+		}
+		return REF;
 	};
 
 #ifdef PLATFORM_POSIX
@@ -525,14 +607,21 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 
 	Vector<Tuple<String, String>> so_files;
 
-	int done = 0;
 	for(const Decl& d : decls) {
-		if(progress(wspc.GetCount() + done++, wspc.GetCount() + decls.GetCount())) {
+		if(Tick()) {
 			cs.Clear();
 			return cs;
 		}
 		int tier;
 		String nm = d.name;
+		if(win_target && GetFileExt(d.name).IsEmpty()
+		&& WinSystemLibs().Find(ToLower(d.name)) >= 0) {
+			// Win32 system import library — folded into the OS component,
+			// no per-DLL record (see WinSystemLibs).
+			if(own_ci[d.pk] >= 0)
+				AddDependency(cs[own_ci[d.pk]], WindowsOs());
+			continue;
+		}
 		if(d.decl == DECL_EXTERNAL_DEPENDENCY) {
 #ifdef PLATFORM_WIN32
 			tier = IsVCPKG() ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
@@ -584,7 +673,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		for(const Decl& d : decls)
 			if(d.decl == DECL_EXTERNAL_DEPENDENCY)
 				vnames.FindAdd(d.name);
+		total = done + vnames.GetCount();
 		for(int i = 0; i < vnames.GetCount(); i++) {
+			if(Tick()) {
+				cs.Clear();
+				return cs;
+			}
 			String name = vnames[i];
 			Value spdx = ParseJSON(LoadFile(
 				GetExeDirFile("vcpkg") + "/installed/" + triplet + "/share/" + name + "/vcpkg.spdx.json"));
@@ -620,7 +714,10 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 							int fq = ci_ext.Get(name, -1);
 							if(fq >= 0)
 								AddDependency(cs[fq], dep);
-							vnames.FindAdd(dep);
+							if(vnames.Find(dep) < 0) {
+								vnames.Add(dep);
+								total++;   // depend-info expanded the work set
+							}
 						}
 					}
 					for(Value p2 : spdx["packages"]) {
@@ -639,10 +736,45 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	}
 #endif
 
+	// ------------------------------------------------------------------
+	// MSVC runtime / UCRT
+	//
+	// UCRT: part of the OS on Win10+ (targeted via _WIN32_WINNT 0x0A00),
+	// so com.microsoft.windows covers it for BOTH toolchains. No entry.
+	//
+	// VC runtime: MSVC only; llvm-mingw links UCRT and gets nothing.
+	//   /MD (or dynamic link): vcruntime140.dll/msvcp140.dll supplied by
+	//     the target environment -> dynamic-platform, FULL only.
+	//   /MT: CRT object code baked into the binaries -> static-third-party,
+	//     included in BASE like the static vcpkg libraries.
+	// ------------------------------------------------------------------
+	if(win_target && msvc) {
+	    static const char *CRT_REF = "com.microsoft.vcruntime";
+	    bool crt_dyn = md || link_mode == LINK_DYNAMIC;
+	
+	    int ci = ci_ext.Find(CRT_REF);
+	    if(ci < 0) {
+	        SBOMComponent& r = cs.Add();
+	        r.bom_ref  = CRT_REF;
+	        r.name     = crt_dyn ? "Microsoft Visual C++ Runtime (dynamic)"
+	                             : "Microsoft Visual C++ Runtime (statically linked)";
+	        r.external = crt_dyn ? T_DYNAMIC_PLATFORM
+	                             : T_STATIC_THIRD_PARTY;
+	        ci_ext.Add(CRT_REF, cs.GetCount() - 1);
+	    }
+	    if(own_ci[0] >= 0)
+	        AddDependency(cs[own_ci[0]], CRT_REF);
+	}
+
 #ifdef PLATFORM_POSIX
 	// Step 4 — T4: NEEDED closure
 	Index<String> walked;
+	total = done + so_files.GetCount();
 	for(int i = 0; i < so_files.GetCount(); i++) {
+		if(Tick()) {
+			cs.Clear();
+			return cs;
+		}
 		String file = so_files[i].a, from = so_files[i].b;
 		if(!file.GetCount() || walked.Find(file) >= 0)
 			continue;
@@ -669,14 +801,21 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			int fq = ci_ext.Get(from, -1);
 			if(fq >= 0)
 				AddDependency(cs[fq], nm);
-			if(nfile.GetCount() && walked.Find(nfile) < 0)
+			if(nfile.GetCount() && walked.Find(nfile) < 0) {
 				so_files.Add(MakeTuple(nfile, nm));
+				total++;   // the closure discovered new work
+			}
 		}
 	}
 
 	// Step 5 — toolchain baseline
-	if(bm.Get("BUILDER", "GCC") != "MSC") {
+	if(!msvc) {
 		if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
+			total = done + 1;
+			if(Tick()) {
+				cs.Clear();
+				return cs;
+			}
 			String nm = IsRPM() ? "glibc" : "libc6";
 			bool fresh;
 			int c = CompIdxExt(nm, fresh);
@@ -692,7 +831,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		else
 		if(link_mode == LINK_DYNAMIC) {
+			total = done + 4;
 			for(const char *rt : {"c", "m", "stdc++", "gcc_s"}) {
+				if(Tick()) {
+					cs.Clear();
+					return cs;
+				}
 				String owner = OwnerOfFile(DynOwnerFile(rt));
 				String nm = owner.GetCount() ? owner : String("lib") + rt;
 				bool fresh;
@@ -708,16 +852,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					AddDependency(cs[own_ci[0]], nm);
 			}
 		}
-		if(main_cfg.Find("WIN32") >= 0)
-			for(const char *imp : {"advapi32", "ws2_32"}) {
-				bool fresh;
-				int c = CompIdxExt(String(imp), fresh);
-				if(fresh) {
-					SBOMComponent& m = cs.Add();
-					m.bom_ref = m.name = imp;
-					m.external = T_DYNAMIC_PLATFORM;
-				}
-			}
+		// Win32 cross builds: advapi32 / ws2_32 and friends now arrive as
+		// declarations and are intercepted by WinSystemLibs — the former
+		// manual injection here is gone.
 	}
 #endif
 
@@ -845,8 +982,16 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
 
+		// An operating system is never "bundled by us" — exempt the OS
+		// component from the CONTAINER tier clamp.
+		int tier_value = c.type == "operating-system"
+			? c.external
+			: clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp);
 		component("properties", JsonArray()
-			<< Json("name", "upp:deployment-mode")("value", sbom_tier[clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp)]));
+			<< Json("name", "upp:deployment-mode")("value", sbom_tier[tier_value]));
+
+//		component("properties", JsonArray()
+//			<< Json("name", "upp:deployment-mode")("value", sbom_tier[clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp)]));
 
 		alive.Add(c.bom_ref);
 		emitted_i << i;
