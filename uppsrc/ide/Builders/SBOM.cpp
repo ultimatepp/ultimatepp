@@ -226,43 +226,113 @@ static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String
 	return false;
 }
 
-// ============================================================================
-// Win32 system import libraries.
-//
-// Extensionless LIBS / dynamic_library entries matching this table are
-// provided by the OS image itself. They are intercepted BEFORE generic
-// resolution and folded into a single "Microsoft Windows" operating-system
-// component: their CVE exposure rolls up to OS-build-level MSRC bulletins,
-// no purl addresses them individually, and their versions track the target
-// OS build — per-DLL components would add noise, not queryability.
-//
-// Keep alphabetical. An unlisted system lib fails visibly as a mute stub
-// rather than silently vanishing — extend the table when that happens.
-// (Explicitly suffixed names like "kernel32.lib" are NOT intercepted.)
-// ============================================================================
-static const Index<String>& WinSystemLibs()
+#ifdef PLATFORM_POSIX
+
+// "ID=" line of /etc/os-release, quotes stripped; used for purl namespaces.
+static String SBOMDistroId()
 {
-	static Index<String> l;
-	if(l.IsEmpty()) {
-		static const char *s[] = {
-			"advapi32", "bcrypt", "comctl32", "comdlg32", "crypt32", "dbghelp",
-			"dwmapi", "gdi32", "gdiplus", "glu32", "imm32", "iphlpapi",
-			"kernel32", "mpr", "msimg32", "mswsock", "netapi32", "normaliz",
-			"ntdll", "ole32", "oleaut32", "opengl32", "powrprof", "psapi",
-			"rpcrt4", "secur32", "setupapi", "shell32", "shlwapi", "user32",
-			"userenv", "usp10", "uxtheme", "uuid", "version", "wininet",
-			"winmm", "winspool", "wldap32", "ws2_32", "wsock32", "wtsapi32",
-		};
-		for(const char *p : s)
-			l.Add(p);
+	for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
+		if(!l.StartsWith("ID="))
+			continue;
+		String v = TrimBoth(l.Mid(3));
+		v.TrimStart("\"");
+		v.TrimEnd("\"");
+		return v.GetCount() ? v : String("linux");
 	}
-	return l;
+	return "linux";
 }
+
+// Heuristic SPDX-conformance filter for license strings scraped from
+// /usr/share/doc/<pkg>/copyright: tokens of [A-Za-z0-9.+-] separated by
+// single spaces (connectors AND/OR/WITH therefore pass). Rejects free text.
+static bool SBOMIsSpdxLike(const String& s)
+{
+	if(s.IsEmpty() || s.GetCount() > 64)
+		return false;
+	bool word = false;
+	for(int i = 0; i < s.GetLength(); i++) {
+		int c = s[i];
+		if(IsAlNum(c) || c == '.' || c == '-' || c == '+')
+			word = true;
+		else
+		if(c != ' ')
+			return false;
+	}
+	return word;
+}
+
+// Fills version / licenses / purl for a component whose m.name is a native
+// package name (as resolved by OwnerOfFile()). Best effort: fields that
+// cannot be resolved are left as-is, and unknown packages leave the
+// component completely untouched.
+static void FillPkgMeta(SBOMComponent& m)
+{
+	if(m.name.IsEmpty())
+		return;
+
+	if(IsDPKG()) {
+		// Package names are [a-z0-9.+-]+ — no shell quoting needed.
+		String version = TrimBoth(Sys("dpkg-query -W -f='${Version}' " + m.name));
+		if(version.Find("no packages found") >= 0 || version.Find("dpkg-query:") >= 0)
+			version.Clear();
+		String src = TrimBoth(Sys("dpkg-query -W -f='${source:Package}' " + m.name));
+		if(src.Find("no packages found") >= 0 || src.Find("dpkg-query:") >= 0)
+			src.Clear();
+
+		if(version.GetCount()) {
+			m.version = version;
+			if(src.GetCount())
+				m.purl = "pkg:deb/" + SBOMDistroId() + "/" + src + "@" + version;
+		}
+
+		// Debian ships license texts in /usr/share/doc/<pkg>/copyright.
+		// Take the first machine-readable, SPDX-shaped "License:" line.
+		String cr = LoadFile("/usr/share/doc/" + m.name + "/copyright");
+		for(String l : Split(cr, '\n')) {
+			l = TrimBoth(l);
+			if(!l.StartsWith("License:"))
+				continue;
+			String v = TrimBoth(l.Mid(7));
+			if(SBOMIsSpdxLike(v)) {
+				m.licenses.Clear();
+				m.licenses << v;
+				break;
+			}
+		}
+	}
+	else
+	if(IsRPM()) {
+		String out = TrimBoth(Sys("rpm -q --qf '%{VERSION}-%{RELEASE}|%{LICENSE}' " + m.name));
+		if(out.Find("not installed") >= 0 || out.Find("no package") >= 0)
+			return;
+		int q = out.Find('|');
+		if(q < 0)
+			return;
+		m.version = out.Mid(0, q);
+		String lic = TrimBoth(out.Mid(q + 1));
+		if(lic.GetCount()) {
+			m.licenses.Clear();
+			m.licenses << lic;
+		}
+		m.purl = "pkg:rpm/" + SBOMDistroId() + "/" + m.name + "@" + m.version;
+	}
+}
+
+#endif // PLATFORM_POSIX
+
+// ============================================================================
+// Full rewrite of MakeBuild::CreateSBOMComponents for ide/Builders/SBOM.cpp.
+//
+// Windows targets no longer scan library declarations (static_library /
+// dynamic_library / library / pkg-config): every third-party library there
+// is either a vcpkg external dependency or a component declared via a
+// package sbom.json fragment (e.g. for libclang.dll). The OS entry is 
+// unconditional and hangs off the application alone.
+// ============================================================================
 
 // ============================================================================
 // Collection (Plan §7 Steps 1–5)
 // ============================================================================
-
 Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate<int, int> progress)
 {
 	Array<SBOMComponent> cs;
@@ -278,16 +348,26 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		m.depends << name;
 	};
 
-	auto ReadComponent = [&](Value p) {
-		SBOMComponent& m = cs.Add();
-		m.name = p["name"];
-		m.version = p["versionInfo"];
-		m.licenses << ~p["licenseConcluded"];
-		m.homepage = p["homepage"];
-		m.originUrl = p["downloadLocation"];
-		for(Value r : p["externalRefs"])
-			if(r["referenceType"] == "purl")
-				m.purl = r["referenceLocator"];
+	// --- External-component bookkeeping --------------------------------------
+	Index<String> seen_ext;
+	VectorMap<String, int> ci_ext;
+
+	auto CompIdxExt = [&](const String& nm, bool& fresh) -> int {
+		if(seen_ext.Find(nm) >= 0) {
+			fresh = false;
+			return ci_ext.Get(nm, -1);
+		}
+		seen_ext.Add(nm);
+		ci_ext.Add(nm, cs.GetCount());
+		fresh = true;
+		return cs.GetCount();
+	};
+
+	auto TierByName = [&](const String& s) {
+		for(int i = 0; i < (int)T_COUNT; i++)
+			if(s == sbom_tier[i])
+				return i;
+		return -1;
 	};
 
 	// Step 1 — environment identical to a real build
@@ -308,18 +388,17 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 #ifdef PLATFORM_WIN32
 	const bool win_target = true;
 #else
-	const bool win_target = main_cfg.Find("WIN32") >= 0; // POSIX cross build for Windows
+	const bool win_target = main_cfg.Find("WIN32") >= 0;
 #endif
-	// Single decision points, consumed by GetVcpkgTriplet AND the CRT block
-	// below, so triplet selection and SBOM CRT claims cannot diverge.
 	bool msvc = bm.Get("BUILDER", "GCC").StartsWith("MSC");
-	bool md   = mainconfigparam.Find("MD") >= 0;   // /MD vs /MT
+	bool clang = bm.Get("BUILDER", "GCC") == "CLANG";
+	bool md   = mainconfigparam.Find("MD") >= 0;
 
 	Index<String> all_host = AllHostPackagesList();
 	VectorMap<String, String> override_licenses;
 
 	Vector<Decl> decls;
-	Vector<int>  own_ci(wspc.GetCount(), -1);  // package idx -> first-party component idx
+	Vector<int>  own_ci(wspc.GetCount(), -1);
 
 #ifdef PLATFORM_WIN32
 	String git = GetExeDirFile("bin/mingit/cmd/git");
@@ -327,11 +406,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	String git = "git";
 #endif
 
-	// --- First-party repo prefixes --------------------------------------------
-	// bom_ref prefix = owning git repository's name ("ultimatepp/", "myrepo/"),
-	// from the package directory's origin URL; "./" when the directory is not
-	// under any git checkout (codebase-local ownership). Cached per package so
-	// 'uses' edges and component emission always agree on the same prefix.
 	VectorMap<String, String> repo_prefix;
 
 	auto OriginOf = [&](const String& dir) {
@@ -343,16 +417,13 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 
 	auto PrefixOf = [&](String origin) {
 		if(!origin.GetCount())
-			return String("./");                    // local code, no git repo
+			return String("./");
 		while(origin.EndsWith(".git")) origin.TrimEnd(".git");
 		while(origin.EndsWith("/"))   origin.TrimEnd("/");
-		// last path element; also cut scp-style "git@host:repo" at the colon
 		int q = max(origin.ReverseFind('/'), origin.ReverseFind(':'));
 		return origin.Mid(q + 1) + "/";
 	};
 
-	// Resolve the repo prefix of ANY workspace package name, on demand.
-	// Unknown names (stray 'uses' targets) fall back to "./".
 	auto PkgName = [&](const String& s) {
 		int q = repo_prefix.Find(s);
 		if(q < 0) {
@@ -366,12 +437,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		return repo_prefix[q] + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
 	};
 
-	// --- Progress bookkeeping ---------------------------------------------------
-	// One monotonic 'done' counter spans every phase; 'total' starts at the
-	// package count and grows as work is discovered (declaration count,
-	// vcpkg depend-info expansion, NEEDED closure). The bar may briefly move
-	// backwards when a phase discovers new work, but it never stalls and
-	// never overshoots.
 	int done = 0;
 	int total = wspc.GetCount();
 
@@ -383,6 +448,42 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		return cancel;
 	};
 
+	// ------------------------------------------------------------------
+	// Fragment reader — now after own_ci is declared, so edges can reference it.
+	// Reads one optional sbom.json per package (listed in its file set).
+	// Component is registered through CompIdxExt; an edge from the OWNING
+	// package to the component is added automatically.
+	// ------------------------------------------------------------------
+	auto ReadComponent = [&](Value p, int pi) {
+		String nm = p["name"];
+		if(nm.IsEmpty())
+			return;
+		bool fresh;
+		CompIdxExt(nm, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.bom_ref = p["bom-ref"];
+			if(!m.bom_ref.GetCount())
+				m.bom_ref = nm;
+			m.name      = nm;
+			m.version   = p["versionInfo"];
+			m.licenses << ~p["licenseConcluded"];
+			m.homepage  = p["homepage"];
+			m.originUrl = p["downloadLocation"];
+			String ty = p["type"];
+			if(ty.GetCount())
+				m.type = ty;
+			int t = TierByName(p["upp:deployment-mode"]);
+			m.external = t >= 0 ? t : T_DYNAMIC_BUNDLED;
+			for(Value r : p["externalRefs"])
+				if(r["referenceType"] == "purl")
+					m.purl = r["referenceLocator"];
+		}
+		int ci = ci_ext.Get(nm, -1);
+		if(ci >= 0 && own_ci[pi] >= 0)
+			AddDependency(cs[own_ci[pi]], cs[ci].bom_ref);
+	};
+
 	// Step 2 — per-package gather
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		if(Tick()) {
@@ -392,26 +493,13 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
 
-		for(String fn : pk.file) {
-			String file = SourcePath(n, fn);
-			if(ToLower(GetFileName(file)) == "sbom.json") {
-				Value sbom = ParseJSON(LoadFile(file));
-				if(sbom.Is<ValueArray>())
-					for(Value p : sbom)
-						ReadComponent(p);
-				else
-					ReadComponent(sbom);
-			}
-		}
-
-		// FIRST-PARTY COMPONENT (T0) — create this BEFORE any external deps
 		{
 			SBOMComponent& m = cs.Add();
 			own_ci[i] = cs.GetCount() - 1;
 
 			String origin = OriginOf(PackageDirectory(n));
-			repo_prefix.GetAdd(n, PrefixOf(origin));  // prime cache — one git call
-			m.bom_ref = m.name = PkgName(n);          // cache hit, no extra call
+			repo_prefix.GetAdd(n, PrefixOf(origin));
+			m.bom_ref = m.name = PkgName(n);
 			if(i == 0)
 				m.type = "application";
 
@@ -431,22 +519,38 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			for(const OptItem& u : pk.uses)
 				AddDependency(m, PkgName(u.text));
 		}
-		
-		Index<String> cfg = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 
-		auto GatherNames = [&](const Array<OptItem>& set, int decl) {
-			for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
-				if(s.GetCount())
-					decls.Add(Decl(decl, s, i));
-		};
-		GatherNames(pk.static_library, DECL_STATIC_LIBRARY);
-		GatherNames(pk.dynamic_library, DECL_DYNAMIC_LIBRARY);
-		GatherNames(pk.library, DECL_LIBRARY);
+		// sbom.json fragments
+		for(String fn : pk.file) {
+			String file = SourcePath(n, fn);
+			if(ToLower(GetFileName(file)) == "sbom.json") {
+				Value sbom = ParseJSON(LoadFile(file));
+				if(sbom.Is<ValueArray>())
+					for(Value p : sbom)
+						ReadComponent(p, i);
+				else
+					ReadComponent(sbom, i);
+			}
+		}
 
-		for(String mod : Split(Gather(pk.pkg_config, cfg.GetKeys()), ' '))
-			for(String s : Split(b->EvalCmdX("pkg-config --libs " + mod), CharFilterWhitespace))
-				if(s.TrimStart("-l") && s.GetCount())
-					decls.Add(Decl(DECL_LIBRARY, s, i));
+		// Library declarations — SKIPPED for win_target
+		if(!win_target) {
+			Index<String> cfg = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
+
+			auto GatherNames = [&](const Array<OptItem>& set, int decl) {
+				for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
+					if(s.GetCount())
+						decls.Add(Decl(decl, s, i));
+			};
+			GatherNames(pk.static_library, DECL_STATIC_LIBRARY);
+			GatherNames(pk.dynamic_library, DECL_DYNAMIC_LIBRARY);
+			GatherNames(pk.library, DECL_LIBRARY);
+
+			for(String mod : Split(Gather(pk.pkg_config, cfg.GetKeys()), ' '))
+				for(String s : Split(b->EvalCmdX("pkg-config --libs " + mod), CharFilterWhitespace))
+					if(s.TrimStart("-l") && s.GetCount())
+						decls.Add(Decl(DECL_LIBRARY, s, i));
+		}
 
 		for(auto s : RequiredExternalDependenciesInfo(pk)) {
 			String nm = s.name;
@@ -470,143 +574,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 
 	total = done + decls.GetCount();
 
-	// Step 3 — resolution + tier assignment (two disjoint name streams)
-	Index<String> seen_ext;           // only for EXTERNAL components
-	VectorMap<String, int> ci_ext;    // external name -> component index
-
-	auto CompIdxExt = [&](const String& nm, bool& fresh) -> int {
-		if(seen_ext.Find(nm) >= 0) {
-			fresh = false;
-			return ci_ext.Get(nm, -1);
-		}
-		seen_ext.Add(nm);
-		ci_ext.Add(nm, cs.GetCount());
-		fresh = true;
-		return cs.GetCount();  // will be GetCount()-1 after Add()
-	};
-
-	// Single OS component standing in for all Win32 system DLLs (see
-	// WinSystemLibs). Created lazily through CompIdxExt so edges, the
-	// seen/ci bookkeeping and dependency emission need no special cases.
-	auto WindowsOs = [&]() -> String {
-		static const char *REF = "com.microsoft.windows";
-		bool fresh;
-		CompIdxExt(REF, fresh);
-		if(fresh) {
-			SBOMComponent& m = cs.Add();
-			m.type     = "operating-system";
-			m.bom_ref  = REF;
-			m.name     = "Microsoft Windows";
-			m.external = T_DYNAMIC_PLATFORM;
-			// version: deliberately absent — DLL/CRT versions track the
-			// TARGET OS build, which cannot be derived from the build host.
-			// (Revisit if _WIN32_WINNT targeting becomes queryable.)
-		}
-		return REF;
-	};
-
-#ifdef PLATFORM_POSIX
-	// RPM purl reference (OSV-proven, Rocky/xz-devel):
-	//   pkg:rpm/rocky/xz-devel@5.2.5-8.el9_0?arch=x86_64&source=xz-5.2.5-8.el9_0.src.rpm
-	// SUSE variant (also OSV-proven) additionally carries distro=sle15-sp5.
-	// DEB purl reference (OSV-proven, Ubuntu/zlib1g):
-	//   pkg:deb/ubuntu/zlib1g@1:1.3.dfsg-3.1ubuntu2.2?arch=amd64&source=zlib
-	auto FillPkgMeta = [&](SBOMComponent& m) {
-		if(IsRPM()) {
-			// One rpm -q call: version, url, arch, license, source rpm.
-			// A failed lookup writes to stderr only, so empty version == not a
-			// PM package after all; the record keeps its name and no junk purl.
-			String url, arch, lic, srcrpm, out = Sys(
-				"rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
-				+ m.name);
-			SplitTo(out, '\n', false, m.version, url, arch, lic, srcrpm);
-			if(!m.version.GetCount()) {
-				m.homepage = String();
-				return;
-			}
-			m.homepage = TrimBoth(url);
-			if(lic.GetCount() && lic != "(none)")
-				m.licenses << TrimBoth(lic);
-
-			// purl namespace (and SUSE-only distro=), resolved once from os-release
-			static String ns, distro;
-			static bool loaded = false;
-			if(!loaded) {
-				loaded = true;
-				String id, vid;
-				for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
-					l = TrimBoth(l);
-					if(l.TrimStart("ID="))
-						id = TrimBoth(l);
-					else
-					if(l.TrimStart("VERSION_ID="))
-						vid = TrimBoth(l);
-				}
-				id.TrimStart("\"");  id.TrimEnd("\"");
-				vid.TrimStart("\""); vid.TrimEnd("\"");
-				Vector<String> v = Split(vid, '.');
-				if(id == "sles" || id == "sle" || id == "sled") {
-					ns = "suse";               // SUSE shares advisory streams across SPs
-					distro = v.GetCount() > 1 ? "sle" + v[0] + "-sp" + v[1]
-					       : v.GetCount()    ? "sle" + v[0]
-					                         : "sles";
-				}
-				else                           // rocky, almalinux, centos, fedora, ...
-					ns = id;                    // NO distro= — proven Rocky format
-			}
-
-			srcrpm = TrimBoth(srcrpm);
-			m.purl << "pkg:rpm/" << ns << '/' << m.name << '@' << m.version;
-			String quals;
-			if(arch.GetCount() && arch != "(none)")
-				quals << "arch=" << TrimBoth(arch);
-			if(distro.GetCount())
-				quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
-			if(srcrpm.GetCount() && srcrpm != "(none)")
-				quals << (quals.GetCount() ? '&' : '?') << "source=" << srcrpm;
-			if(quals.GetCount())
-				m.purl << quals;
-			return;
-		}
-
-		// DEB — OSV indexes deb advisories by SOURCE package; without a source=
-		// qualifier queries never match. Two dpkg quirks to absorb:
-		//  - Source is omitted when binary name == source name  -> use name
-		//  - older dpkg emits "src (epoch:ver)"                   -> trim "( ..."
-		String arch, src, out = Sys(
-			"dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + m.name);
-		SplitTo(out, '\n', false, m.version, m.homepage, arch, src);
-		if(!m.version.GetCount()) {     // not a PM package after all —
-			m.homepage = String();       // record keeps name only, no junk purl
-			return;
-		}
-		String source = TrimBoth(src);
-		int pq = source.Find(" (");
-		if(pq >= 0)
-			source.Trim(pq);
-		if(!source.GetCount())
-			source = m.name;
-
-		m.purl << "pkg:deb/" << DebNamespace() << '/' << m.name << '@' << m.version;
-		String quals;
-		if(arch.GetCount())                              // never emit bare "?arch="
-			quals << "?arch=" << TrimBoth(arch);
-		quals << (quals.GetCount() ? '&' : '?') << "source=" << source;
-		m.purl << quals;
-
-		FileIn in("/usr/share/doc/" + m.name + "/copyright");
-		while(!in.IsEof()) {
-			String l = in.GetLine();
-			if(l.TrimStart("License: ")) {
-				m.licenses << l;
-				break;
-			}
-		}
-	};
-#endif
-
-	Vector<Tuple<String, String>> so_files;
-
+	// Step 3 — resolution + tier assignment
+	// For win_target only DECL_EXTERNAL_DEPENDENCY decls exist.
+	Index<String> so_files;  // Placeholder for POSIX NEEDED closure
 	for(const Decl& d : decls) {
 		if(Tick()) {
 			cs.Clear();
@@ -614,14 +584,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		int tier;
 		String nm = d.name;
-		if(win_target && GetFileExt(d.name).IsEmpty()
-		&& WinSystemLibs().Find(ToLower(d.name)) >= 0) {
-			// Win32 system import library — folded into the OS component,
-			// no per-DLL record (see WinSystemLibs).
-			if(own_ci[d.pk] >= 0)
-				AddDependency(cs[own_ci[d.pk]], WindowsOs());
-			continue;
-		}
 		if(d.decl == DECL_EXTERNAL_DEPENDENCY) {
 #ifdef PLATFORM_WIN32
 			tier = IsVCPKG() ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
@@ -645,8 +607,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			nm = tier == T_DYNAMIC_PLATFORM ? owner
 			  : tier == T_STATIC_THIRD_PARTY && sta.GetCount() ? sta
 			  : d.name;
-			if(dynq && file.GetCount() && (tier == T_DYNAMIC_BUNDLED || tier == T_DYNAMIC_PLATFORM))
-				so_files.Add(MakeTuple(file, nm));
+			// so_files tracking for POSIX NEEDED closure (not used on Windows)
 		}
 		bool fresh;
 		int c = CompIdxExt(nm, fresh);
@@ -665,6 +626,22 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		if(own_ci[d.pk] >= 0)
 			AddDependency(cs[own_ci[d.pk]], nm);
+	}
+
+	// Windows platform component — UNCONDITIONAL
+	if(win_target) {
+		static const char *OS_REF = "com.microsoft.windows";
+		bool fresh;
+		CompIdxExt(OS_REF, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.type     = "operating-system";
+			m.bom_ref  = OS_REF;
+			m.name     = "Microsoft Windows";
+			m.external = T_DYNAMIC_PLATFORM;
+		}
+		if(own_ci[0] >= 0)
+			AddDependency(cs[own_ci[0]], OS_REF);
 	}
 
 #ifdef PLATFORM_WIN32
@@ -716,7 +693,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 								AddDependency(cs[fq], dep);
 							if(vnames.Find(dep) < 0) {
 								vnames.Add(dep);
-								total++;   // depend-info expanded the work set
+								total++;
 							}
 						}
 					}
@@ -736,46 +713,80 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	}
 #endif
 
-	// ------------------------------------------------------------------
 	// MSVC runtime / UCRT
-	//
-	// UCRT: part of the OS on Win10+ (targeted via _WIN32_WINNT 0x0A00),
-	// so com.microsoft.windows covers it for BOTH toolchains. No entry.
-	//
-	// VC runtime: MSVC only; llvm-mingw links UCRT and gets nothing.
-	//   /MD (or dynamic link): vcruntime140.dll/msvcp140.dll supplied by
-	//     the target environment -> dynamic-platform, FULL only.
-	//   /MT: CRT object code baked into the binaries -> static-third-party,
-	//     included in BASE like the static vcpkg libraries.
-	// ------------------------------------------------------------------
 	if(win_target && msvc) {
-	    static const char *CRT_REF = "com.microsoft.vcruntime";
-	    bool crt_dyn = md || link_mode == LINK_DYNAMIC;
-	
-	    int ci = ci_ext.Find(CRT_REF);
-	    if(ci < 0) {
-	        SBOMComponent& r = cs.Add();
-	        r.bom_ref  = CRT_REF;
-	        r.name     = crt_dyn ? "Microsoft Visual C++ Runtime (dynamic)"
-	                             : "Microsoft Visual C++ Runtime (statically linked)";
-	        r.external = crt_dyn ? T_DYNAMIC_PLATFORM
-	                             : T_STATIC_THIRD_PARTY;
-	        ci_ext.Add(CRT_REF, cs.GetCount() - 1);
-	    }
-	    if(own_ci[0] >= 0)
-	        AddDependency(cs[own_ci[0]], CRT_REF);
+		static const char *CRT_REF = "com.microsoft.vcruntime";
+		bool crt_dyn = md || link_mode == LINK_DYNAMIC;
+
+		int ci = ci_ext.Find(CRT_REF);
+		if(ci < 0) {
+			SBOMComponent& r = cs.Add();
+			r.bom_ref  = CRT_REF;
+			r.name     = crt_dyn ? "Microsoft Visual C++ Runtime (dynamic)"
+			                     : "Microsoft Visual C++ Runtime (statically linked)";
+			r.external = crt_dyn ? T_DYNAMIC_PLATFORM
+			                     : T_STATIC_THIRD_PARTY;
+			ci_ext.Add(CRT_REF, cs.GetCount() - 1);
+		}
+		if(own_ci[0] >= 0)
+			AddDependency(cs[own_ci[0]], CRT_REF);
+	}
+	// llvm-mingw: statically linked C/C++ runtime stack.
+	// Mirrors the MSVC vcruntime entry for the clang toolchain. Gate on the
+	// builder == "CLANG" so a plain MinGW-GCC build does not get llvm components
+	// (a GCC build would want libstdc++/libgcc/winpthread instead).
+	else if(win_target && clang) {
+		struct Rt { const char *ref, *name, *license; };
+		static const Rt rt[] = {
+			{ "org.mingw.w64-crt",    "mingw-w64 C runtime (statically linked)",          "" },
+			{ "org.llvm.compiler-rt", "LLVM compiler-rt builtins (statically linked)",     "Apache-2.0 WITH LLVM-exception" },
+			{ "org.llvm.libunwind",   "LLVM libunwind (statically linked)",                "Apache-2.0 WITH LLVM-exception" },
+			{ "org.llvm.libcxx",      "LLVM libc++ (statically linked)",                   "Apache-2.0 WITH LLVM-exception" },
+		};
+		for(const Rt& r : rt) {
+			bool fresh;
+			CompIdxExt(r.ref, fresh);
+			if(fresh) {
+				SBOMComponent& m = cs.Add();
+				m.type     = "library";
+				m.bom_ref  = r.ref;
+				m.name     = r.name;
+				m.external = T_STATIC_THIRD_PARTY;
+				if(*r.license)
+					m.licenses << r.license;
+			}
+			if(own_ci[0] >= 0)
+				AddDependency(cs[own_ci[0]], r.ref);
+		}
 	}
 
 #ifdef PLATFORM_POSIX
-	// Step 4 — T4: NEEDED closure
+	// Step 4 — T4: NEEDED closure (POSIX builds only)
+	Vector<Tuple<String, String>> so_files_list;
 	Index<String> walked;
-	total = done + so_files.GetCount();
-	for(int i = 0; i < so_files.GetCount(); i++) {
+	for(const Decl& d : decls) {
+		// Re-populate so_files_list from the original declaration data
+		String ext = ToLower(GetFileExt(d.name));
+		bool dynq = ext == ".so" || ext == ".dll"
+		         || d.decl == DECL_DYNAMIC_LIBRARY
+		         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
+		if(dynq && d.decl != DECL_EXTERNAL_DEPENDENCY) {
+			String file = DynOwnerFile(d.name);
+			if(file.GetCount()) {
+				String owner = OwnerOfFile(file);
+				String nm = owner.GetCount() ? owner : d.name;
+				so_files_list.Add(MakeTuple(file, nm));
+			}
+		}
+	}
+
+	total = done + so_files_list.GetCount();
+	for(int i = 0; i < so_files_list.GetCount(); i++) {
 		if(Tick()) {
 			cs.Clear();
 			return cs;
 		}
-		String file = so_files[i].a, from = so_files[i].b;
+		String file = so_files_list[i].a, from = so_files_list[i].b;
 		if(!file.GetCount() || walked.Find(file) >= 0)
 			continue;
 		walked.Add(file);
@@ -802,13 +813,13 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			if(fq >= 0)
 				AddDependency(cs[fq], nm);
 			if(nfile.GetCount() && walked.Find(nfile) < 0) {
-				so_files.Add(MakeTuple(nfile, nm));
-				total++;   // the closure discovered new work
+				so_files_list.Add(MakeTuple(nfile, nm));
+				total++;
 			}
 		}
 	}
 
-	// Step 5 — toolchain baseline
+	// Step 5 — toolchain baseline (POSIX only)
 	if(!msvc) {
 		if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
 			total = done + 1;
@@ -852,72 +863,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					AddDependency(cs[own_ci[0]], nm);
 			}
 		}
-		// Win32 cross builds: advapi32 / ws2_32 and friends now arrive as
-		// declarations and are intercepted by WinSystemLibs — the former
-		// manual injection here is gone.
 	}
 #endif
 
-	// ------------------------------------------------------------------
-	// Drop linker-token stubs that duplicate vcpkg-installed libraries.
-	//
-	// Existence of the import library in vcpkg/installed/<triplet>/lib/
-	// is the ground truth. The stub's edges are removed with it: its
-	// parent already has an edge to the resolved vcpkg port component,
-	// which carries the full metadata (version, purl, hashes, licenses).
-	// Stubs whose lib file is absent (man, doc, ...) stay visible.
-	//
-	// Only mute stubs are candidates — resolved vcpkg components have
-	// the same extensionless names and their lib files obviously also
-	// exist, so they must be excluded.
-	// ------------------------------------------------------------------
-	if(win_target) {
-		String libdir = GetExeDirFile("vcpkg/installed/" + triplet + "/lib");
-		if(DirectoryExists(libdir)) {
-			Index<String> present;
-			FindFile ff;
-			if(ff.Search(libdir + "/*"))
-				do {
-					if(ff.IsFile())
-						present.FindAdd(ToLower(ff.GetName()));
-				} while(ff.Next());
-	
-			if(present.GetCount()) {
-				bool mingw   = triplet.Find("-mingw-") >= 0;
-				bool dynamic = triplet.Find("dynamic") >= 0;
-				String suffix = mingw ? (dynamic ? ".dll.a" : ".a") : ".lib";
-	
-				Vector<int> drop;
-				for(int i = 0; i < cs.GetCount(); i++) {
-					SBOMComponent& c = cs[i];
-					if(GetFileExt(c.name).GetCount())
-						continue;                       // explicit files (libclang.lib)
-					if(!c.version.IsEmpty())
-						continue;                       // vcpkg-resolved / first-party: never touch
-					String stem  = ToLower(c.name);
-					String token = mingw ? "lib" + stem + suffix : stem + suffix;
-					if(present.Find(token) < 0)
-						continue;                       // not a vcpkg lib (man, doc): keep
-					drop << i;
-				}
-	
-				if(drop.GetCount()) {
-					Index<String> dead;
-					for(int i : drop)
-						dead.Add(cs[i].bom_ref);
-	
-					for(SBOMComponent& c : cs)
-						for(int j = c.depends.GetCount() - 1; j >= 0; j--)
-							if(dead.Find(c.depends[j]) >= 0)
-								c.depends.Remove(j);
-					cs.Remove(drop);
-//					for(int i = drop.GetCount() - 1; i >= 0; i--)
-//						cs.Remove(drop[i]);
-				}
-			}
-		}
-	}
-	
 	for(SBOMComponent& c : cs) {
 		String ol = override_licenses.Get(c.name, Null);
 		if(ol.GetCount()) {
