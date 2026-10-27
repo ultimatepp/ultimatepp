@@ -658,13 +658,9 @@ int EditField::Insert(int pos, const WString& itext)
 		if(allow_control_characters) {
 			if(!chr)
 				break;
-			DDUMP("-----");
-			DDUMP(chr);
 			chr = (*filter)(chr);
-			DDUMP(chr);
 			if(chr) {
 				chr = convert->Filter(chr);
-				DDUMP(chr);
 				if(chr && (charset == CHARSET_UTF8 || FromUnicode(chr, charset, 0)))
 					ins.Cat(chr);
 			}
