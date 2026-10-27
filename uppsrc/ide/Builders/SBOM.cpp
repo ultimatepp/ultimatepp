@@ -858,6 +858,66 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	}
 #endif
 
+	// ------------------------------------------------------------------
+	// Drop linker-token stubs that duplicate vcpkg-installed libraries.
+	//
+	// Existence of the import library in vcpkg/installed/<triplet>/lib/
+	// is the ground truth. The stub's edges are removed with it: its
+	// parent already has an edge to the resolved vcpkg port component,
+	// which carries the full metadata (version, purl, hashes, licenses).
+	// Stubs whose lib file is absent (man, doc, ...) stay visible.
+	//
+	// Only mute stubs are candidates — resolved vcpkg components have
+	// the same extensionless names and their lib files obviously also
+	// exist, so they must be excluded.
+	// ------------------------------------------------------------------
+	if(win_target) {
+		String libdir = GetExeDirFile("vcpkg/installed/" + triplet + "/lib");
+		if(DirectoryExists(libdir)) {
+			Index<String> present;
+			FindFile ff;
+			if(ff.Search(libdir + "/*"))
+				do {
+					if(ff.IsFile())
+						present.FindAdd(ToLower(ff.GetName()));
+				} while(ff.Next());
+	
+			if(present.GetCount()) {
+				bool mingw   = triplet.Find("-mingw-") >= 0;
+				bool dynamic = triplet.Find("dynamic") >= 0;
+				String suffix = mingw ? (dynamic ? ".dll.a" : ".a") : ".lib";
+	
+				Vector<int> drop;
+				for(int i = 0; i < cs.GetCount(); i++) {
+					SBOMComponent& c = cs[i];
+					if(GetFileExt(c.name).GetCount())
+						continue;                       // explicit files (libclang.lib)
+					if(!c.version.IsEmpty())
+						continue;                       // vcpkg-resolved / first-party: never touch
+					String stem  = ToLower(c.name);
+					String token = mingw ? "lib" + stem + suffix : stem + suffix;
+					if(present.Find(token) < 0)
+						continue;                       // not a vcpkg lib (man, doc): keep
+					drop << i;
+				}
+	
+				if(drop.GetCount()) {
+					Index<String> dead;
+					for(int i : drop)
+						dead.Add(cs[i].bom_ref);
+	
+					for(SBOMComponent& c : cs)
+						for(int j = c.depends.GetCount() - 1; j >= 0; j--)
+							if(dead.Find(c.depends[j]) >= 0)
+								c.depends.Remove(j);
+					cs.Remove(drop);
+//					for(int i = drop.GetCount() - 1; i >= 0; i--)
+//						cs.Remove(drop[i]);
+				}
+			}
+		}
+	}
+	
 	for(SBOMComponent& c : cs) {
 		String ol = override_licenses.Get(c.name, Null);
 		if(ol.GetCount()) {
