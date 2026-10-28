@@ -38,7 +38,7 @@ and install:&]
 [s7; sudo mkdir `-p /opt/llvm`-mingw&]
 [s7; wget https://github.com/mstorsjo/llvm`-mingw/releases/download/20261020/llvm`-min
 gw`-20261020`-ucrt`-ubuntu`-22.04`-x86`_64.tar.xz&]
-[s7; -|sudo tar `-xJf llvm`-mingw`-`*`-ucrt`-ubuntu`-`*`-x86`_64.tar.xz 
+[s7; sudo tar `-xJf llvm`-mingw`-`*`-ucrt`-ubuntu`-`*`-x86`_64.tar.xz 
 `-C /opt/llvm`-mingw `-`-strip`-components`=1&]
 [s0; &]
 [s3; 2. Install VCPKG&]
