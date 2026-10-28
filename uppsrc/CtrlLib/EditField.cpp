@@ -655,21 +655,33 @@ int EditField::Insert(int pos, const WString& itext)
 	const wchar *s = itext;
 	for(;;) {
 		wchar chr = *s++;
-		int count = 1;
-		if(chr == '\t') {
-			count = 4;
-			chr = ' ';
-		}
-		if(chr >= ' ') {
+		if(allow_control_characters) {
+			if(!chr)
+				break;
 			chr = (*filter)(chr);
 			if(chr) {
 				chr = convert->Filter(chr);
 				if(chr && (charset == CHARSET_UTF8 || FromUnicode(chr, charset, 0)))
-					ins.Cat(chr, count);
+					ins.Cat(chr);
 			}
 		}
-		else
-			break;
+		else {
+			int count = 1;
+			if(chr == '\t') {
+				count = 4;
+				chr = ' ';
+			}
+			if(chr >= ' ') {
+				chr = (*filter)(chr);
+				if(chr) {
+					chr = convert->Filter(chr);
+					if(chr && (charset == CHARSET_UTF8 || FromUnicode(chr, charset, 0)))
+						ins.Cat(chr, count);
+				}
+			}
+			else
+				break;
+		}
 	}
 	if(ins.GetCount() + text.GetCount() > maxlen) {
 		BeepExclamation();
@@ -1056,6 +1068,7 @@ void EditField::Reset()
 	alignright = false;
 	showspaces = false;
 	no_internal_margin = false;
+	allow_control_characters = false;
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
