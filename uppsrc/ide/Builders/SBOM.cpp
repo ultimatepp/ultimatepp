@@ -170,6 +170,24 @@ static String StaticOwner(const String& base, const String& cc)
 // --- OSV deb namespace resolver ---------------------------------------------
 
 #ifdef PLATFORM_POSIX
+// Reads a KEY=value pair from /etc/os-release, quotes stripped.
+// Empty when the key is absent.
+static String OsReleaseField(const char *key)
+{
+	static const String os_release = ToLower(LoadFile("/etc/os-release"));
+	String prefix = ToLower(String(key)) + "=";
+	String v;
+	for(String l : Split(os_release, '\n')) {
+		l = TrimBoth(l);
+		if(l.StartsWith(prefix)) {
+			v = TrimBoth(l.Mid(prefix.GetCount()));
+			break;
+		}
+	}
+	v.TrimStart("\"");
+	v.TrimEnd("\"");
+	return v;
+}
 
 // OSV ecosystem namespace for deb-based hosts.
 //
@@ -178,6 +196,7 @@ static String StaticOwner(const String& base, const String& cc)
 //
 // ORDER MATTERS: plain Ubuntu itself declares ID_LIKE="debian", so every
 // "ubuntu" test must run before any "debian" fallback.
+
 static String DebNamespace()
 {
 	static String cached;
@@ -186,28 +205,52 @@ static String DebNamespace()
 		return cached;
 	loaded = true;
 
-	String id, id_like, ubuntu_codename;
-	for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
-		l = TrimBoth(l);
-		if(l.TrimStart("ID="))
-			id = TrimBoth(l);
-		else
-		if(l.TrimStart("ID_LIKE="))
-			id_like = TrimBoth(l);
-		else
-		if(l.TrimStart("UBUNTU_CODENAME="))
-			ubuntu_codename = TrimBoth(l);
-	}
-	id.TrimStart("\"");       id.TrimEnd("\"");
-	id_like.TrimStart("\"");  id_like.TrimEnd("\"");
+	String id = OsReleaseField("ID");
+	String id_like = OsReleaseField("ID_LIKE");
+	String ubuntu_codename = OsReleaseField("UBUNTU_CODENAME");
 
 	if(id == "ubuntu" || id_like.Find("ubuntu") >= 0)
 		return cached = "ubuntu";
-
-	if((id == "linuxmint" || id == "mint") && ubuntu_codename.GetCount())
+	if(id == "debian" || id_like.Find("debian") >= 0)
+		return cached = "debian";
+	if(ubuntu_codename.GetCount())
 		return cached = "ubuntu";
-
 	return cached = "debian";
+}
+
+// distro qualifier for OSV purl queries.
+//
+// OSV's own records are release-scoped and carry the *codename*:
+//   pkg:deb/debian/pcre2?arch=source&distro=bookworm
+//   pkg:deb/ubuntu/git@...?arch=source&distro=esm-infra/focal
+//
+// A derivative must report the BASE codename, never its own: Mint 21.3 is
+// jammy, LMDE 6 is bookworm.  UBUNTU_CODENAME carries the base for Ubuntu
+// derivatives, VERSION_CODENAME for Debian derivatives.
+static String DebDistro()
+{
+	static String cached;
+	static bool loaded = false;
+	if(loaded)
+		return cached;
+	loaded = true;
+
+	String ns = DebNamespace();
+	String v = (ns == "ubuntu") ? OsReleaseField("UBUNTU_CODENAME")
+	                            : OsReleaseField("VERSION_CODENAME");
+
+	// Forward only a plain release codename (bookworm, trixie, jammy, noble).
+	// Derived/rolling identifiers such as "kali-rolling" name no release OSV
+	// tracks; forwarding one could filter the query down to nothing, so drop
+	// it and keep the broader match.
+	bool ok = v.GetCount() > 0;
+	for(int i = 0; i < v.GetCount(); i++) {
+		char c = v[i];
+		if(c < 'a' || c > 'z')
+			ok = false;
+	}
+	cached = ok ? v : String();
+	return cached;
 }
 
 #endif
@@ -312,7 +355,12 @@ static void FillPkgMeta(SBOMComponent& m){
 		String quals;
 		if(arch.GetCount())                              // never emit bare "?arch="
 			quals << "?arch=" << arch;
-		quals << (quals.GetCount() ? '&' : '?') << "source=" << source;
+		
+		String distro = DebDistro();                     // purl qualifiers stay sorted:
+		if(distro.GetCount())                            // arch, distro, source
+			quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
+			
+		quals << (quals.GetCount() ? '&' : '?') << "upstream=" << source;
 		m.purl << quals;
 
 		// Debian ships license texts in /usr/share/doc/<pkg>/copyright.
@@ -332,25 +380,31 @@ static void FillPkgMeta(SBOMComponent& m){
 	}
 	else
 	if(IsRPM()) {
-		// One rpm -q call: version, url, arch, license, source rpm.
+		// One rpm -q call: epoch, version, url, arch, license, source rpm.
 		// A failed lookup writes to stderr only, so an empty version means
 		// "not a PM package after all" — the record keeps its name and no
 		// junk purl.
-		String url, arch, lic, srcrpm, out = Sys(
-			"rpm -q --qf '%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
+		String url, arch, lic, srcrpm, epoch, out = Sys(
+			"rpm -q --qf '%{EPOCH}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
 			+ m.name);
-		SplitTo(out, '\n', false, m.version, url, arch, lic, srcrpm);
-		if(!m.version.GetCount()) {
+		String vrel;
+		SplitTo(out, '\n', false, epoch, vrel, url, arch, lic, srcrpm);
+		epoch = TrimBoth(epoch);
+		if(!url.GetCount()) {                     // same "not a PM package" bail-out
 			m.homepage = String();
 			return;
 		}
+		m.version = vrel;                          // stays bare VR — epoch travels as a
+		                                         // qualifier, per RH guidelines; keeps
+		                                         // SRPM-tail matching and ecosystem
+		                                         // queries untouched
 		m.homepage = TrimBoth(url);
 		lic = TrimBoth(lic);
 		if(lic.GetCount() && lic != "(none)") {
 			m.licenses.Clear();
 			m.licenses << lic;
 		}
-
+	
 		// purl namespace (plus SUSE-only distro=), resolved once from os-release
 		static String ns, distro;
 		static bool loaded = false;
@@ -377,10 +431,11 @@ static void FillPkgMeta(SBOMComponent& m){
 			else                           // rocky, almalinux, centos, fedora, ...
 				ns = id;                    // NO distro= — proven Rocky format
 		}
-
+	
 		m.purl << "pkg:rpm/" << ns << '/' << m.name << '@' << m.version;
-
+	
 		// First qualifier opens with '?', the rest join with '&'.
+		// Alphabetical order: arch, distro, epoch, upstream.
 		String quals;
 		auto AddQual = [&](const char *key, String val) {
 			val = TrimBoth(val);
@@ -390,7 +445,13 @@ static void FillPkgMeta(SBOMComponent& m){
 		};
 		AddQual("arch", arch);
 		AddQual("distro", distro);
-		AddQual("source", srcrpm);
+		// %{EPOCH} renders "(none)" for zero-epoch packages and "0" is never
+		// spelled — Red Hat's purl guidelines say emit epoch= only when nonzero,
+		// and that is also OSV's RLSA convention. glibc stays epoch-less; openssl,
+		// xz and libpng gain epoch=1 / epoch=1 / epoch=2.
+		if(epoch.GetCount() && epoch != "0")
+			AddQual("epoch", epoch);
+		AddQual("upstream", srcrpm);
 		m.purl << quals;
 		return;
 	}
