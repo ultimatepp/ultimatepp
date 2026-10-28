@@ -115,9 +115,9 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 	{
 		VectorMap<String, String> env = clone(Environment());
 		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
-		if(IsVCPKG() && IsVcpkgInstalled()) {
-			host.exedirs << GetExeDirFile("vcpkg");
-			host.exedirs << GetExeDirFile("vcpkg") + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
+		if(IsVcpkgInstalled()) {
+			host.exedirs << GetFileFolder(VcpkgExe());
+			host.exedirs << GetFileFolder(VcpkgExe()) + "/installed/" + GetVcpkgTriplet(bm) + "/bin";
 		}
 #ifdef PLATFORM_WIN32
 		host.AddExecutable(GetExeDirFile("bin/mingit/cmd"), "git.exe");

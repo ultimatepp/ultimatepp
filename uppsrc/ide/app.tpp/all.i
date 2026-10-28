@@ -42,6 +42,10 @@ TOPIC("Contact_en-us")
 #include "Contact_en-us.tppi"
 END_TOPIC
 
+TOPIC("CrossComp2_en-gb")
+#include "CrossComp2_en-gb.tppi"
+END_TOPIC
+
 TOPIC("CrossComp_en-gb")
 #include "CrossComp_en-gb.tppi"
 END_TOPIC
