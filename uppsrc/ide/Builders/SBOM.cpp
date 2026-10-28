@@ -546,6 +546,63 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 #endif
 
 	VectorMap<String, String> repo_prefix;
+	VectorMap<String, String> repo_cache; // repository top-level dir -> origin url
+
+	auto OriginOf = [&](const String& dir) {
+		// Walk up from 'dir' to the nearest directory with a cached origin.
+		// Since only repository top-levels are ever stored, every directory
+		// below one resolves to the same entry.
+		String d = NormalizePath(dir);
+		for(;;) {
+			int q = repo_cache.Find(d);
+			if(q >= 0)
+				return repo_cache[q];
+			String parent = GetFileFolder(d);
+			if(parent.IsEmpty() || parent == d)
+				break; // reached filesystem root
+			d = parent;
+		}
+		// Resolve the repository once, at its top-level directory:
+		String root = TrimBoth(Sys(git + " -C " + dir + " rev-parse --show-toplevel"));
+		if(root.GetCount()) {
+			root = NormalizePath(root);
+			String origin = TrimBoth(Sys(git + " -C " + root + " config --get remote.origin.url"));
+			if(origin.StartsWith("git@github.com:"))
+				origin.Replace("git@github.com:", "https://github.com/");
+			repo_cache.Add(root, origin);
+			return origin;
+		}
+		// Not inside any repository. Deliberately NOT cached: an arbitrary
+		// directory can have no repo above it while one of its subdirectories
+		// is an independent repository, so a negative entry would leak
+		// incorrectly to deeper directories.
+		return String();
+	};
+
+	auto PrefixOf = [&](String origin) {
+		if(!origin.GetCount())
+			return String("./");
+		while(origin.EndsWith(".git")) origin.TrimEnd(".git");
+		while(origin.EndsWith("/"))   origin.TrimEnd("/");
+		int q = max(origin.ReverseFind('/'), origin.ReverseFind(':'));
+		return origin.Mid(q + 1) + "/";
+	};
+
+	auto PkgName = [&](const String& s) {
+	    String n = Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+	    int q = repo_prefix.Find(n);
+	    if(q < 0) {
+	        bool in_ws = false;
+	        for(int wi = 0; wi < wspc.GetCount(); wi++)
+	            if(wspc[wi] == n) { in_ws = true; break; }
+	        String prefix = in_ws ? PrefixOf(OriginOf(PackageDirectory(n))) : String("./");
+	        q = repo_prefix.GetCount();
+	        repo_prefix.Add(n, prefix);
+	    }
+	    return repo_prefix[q] + n;
+	};
+	
+/*	VectorMap<String, String> repo_prefix;
 
 	auto OriginOf = [&](const String& dir) {
 		String origin = TrimBoth(Sys(git + " -C " + dir + " config --get remote.origin.url"));
@@ -575,7 +632,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		return repo_prefix[q] + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
 	};
-
+*/
 	int done = 0;
 	int total = wspc.GetCount();
 
