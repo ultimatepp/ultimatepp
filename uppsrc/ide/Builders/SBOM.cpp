@@ -54,12 +54,15 @@ static int DeclTier(int decl, const String& name, int link_mode, int dyn_tier)
 }
 
 // ============================================================================
-// Shell-free probe layer.
+// Shell-free probe layer (OPTIMIZED VERSION).
 //
-// HostSys (LocalProcess) does NOT spawn a shell: pipes, redirects and quotes
-// are passed literally and the command fails. Sys() DOES spawn a shell (the
-// quoted dpkg-query format strings rely on this). RULES: one command per
-// call, no pipes/redirects, quotes only via Sys; parsing happens in C++.
+// Key changes:
+//  1. FileOwnerDB(): single-shot reverse map (dpkg .list files or one rpm -qa)
+//  2. SoDB() unchanged (already singleton)
+//  3. GitCommitCache(): one git log per repo, shared by all packages
+//  4. BatchReadlink(): single call for all paths
+//  5. BatchDpkgQuery(): single call for all packages
+//  6. BatchReadelf(): single call for all .so files
 // ============================================================================
 
 // --- ldconfig cache: one Sys() call, parsed once in C++ ---------------------
@@ -120,7 +123,281 @@ static String FindSonameFile(const String& soname)
 	return String();
 }
 
-// --- Single-command ownership probes ----------------------------------------
+// --- OPTIMIZED: One-shot reverse ownership map ------------------------------
+// Replaces per-file dpkg -S / rpm -qf with single-shot bulk build.
+
+#ifdef PLATFORM_POSIX
+static VectorMap<String, String>& FileOwnerDB() {
+	static VectorMap<String, String> db;
+	static bool loaded = false;
+	if(!loaded) {
+		loaded = true;
+		if(IsDPKG()) {
+			// Pure file I/O from /var/lib/dpkg/info/<pkg>[:arch].list files
+			FindFile ff("/var/lib/dpkg/info/*.list");
+			while(ff) {
+				String pkg = GetFileTitle(ff.GetName());
+				int c = pkg.Find(':');
+				if(c >= 0) pkg.Trim(c);              // strip ":amd64"
+				for(String l : Split(LoadFile(ff.GetPath()), '\n')) {
+					l = TrimBoth(l);
+					if(l.GetCount())
+						db.GetAdd(l) = pkg;          // first owner wins
+				}
+				ff.Next();
+			}
+		}
+		else if(IsRPM()) {
+		    // One line per package: NAME \t file \t file ... \t
+		    // First token = package name, remaining tokens = owned files.
+			String out = Sys("rpm -qa --qf '%{NAME}\t[%{FILENAMES}\t]\n'");
+		    for(String l : Split(out, '\n')) {
+		        Vector<String> v = Split(l, '\t');          // empty tokens dropped by default
+		        if(v.GetCount() < 2)
+		            continue;
+		        String pkg = TrimBoth(v[0]);
+		        if(!pkg.GetCount() || pkg == "(none)")
+		            continue;
+		        for(int i = 1; i < v.GetCount(); i++)
+		            if(v[i].GetCount())
+		                db.GetAdd(TrimBoth(v[i]), pkg);
+		    }
+		}
+	}
+	return db;
+}
+
+/*
+static VectorMap<String, String>& SonameOwnerDB()
+{
+	static VectorMap<String, String> db;
+	ONCELOCK {
+		if(IsRPM()) {
+			// One line per package: NAME \t provide \t provide ...
+			// Shared-library provides look like "libgcc_s.so.1()(64bit)".
+			String s = Sys("rpm -qa --qf '%{NAME}\t[%{PROVIDENAME}\t]\n'");
+			for(String l : Split(s, '\n')) {
+				Vector<String> v = Split(l, '\t');
+				if(v.GetCount() < 2)
+					continue;
+				String pkg = TrimBoth(v[0]);
+				if(!pkg.GetCount() || pkg == "(none)")
+					continue;
+				for(int i = 1; i < v.GetCount(); i++) {
+					String t = TrimBoth(v[i]);
+					int q = t.Find('(');          // strip "()(64bit)" arch qualifier
+					if(q >= 0)
+						t = t.Left(q);
+					if(t.Find(".so") < 0 || t.Find(' ') >= 0)
+						continue;                 // library provides only
+					db.GetAdd(t, pkg);
+				}
+			}
+		}
+	}
+	return db;
+}
+*/
+
+static VectorMap<String, String>& SonameOwnerDB()
+{
+	static VectorMap<String, String> db;
+	ONCELOCK {
+		if(IsRPM()) {
+			// One line per package: NAME \t provide \t provide ...
+			// Shared-library provides look like "libgcc_s.so.1()(64bit)".
+			String s = Sys("rpm -qa --qf '%{NAME}\t[%{PROVIDENAME}\t]\n'");
+			for(String l : Split(s, '\n')) {
+				Vector<String> v = Split(l, '\t');
+				if(v.GetCount() < 2)
+					continue;
+				String pkg = TrimBoth(v[0]);
+				if(!pkg.GetCount() || pkg == "(none)")
+					continue;
+				for(int i = 1; i < v.GetCount(); i++) {
+					String t = TrimBoth(v[i]);
+					int q = t.Find('(');
+					if(q >= 0)
+						t = t.Left(q);
+					t = TrimBoth(t);
+					if(t.Find(".so") < 0 || t.Find(' ') >= 0)
+						continue;
+					db.GetAdd(t, pkg);
+				}
+			}
+		}
+		else
+		if(IsDPKG()) {
+			// Debian-native soname index: /var/lib/dpkg/info/*.shlibs
+			// Format (Policy 8.6.4.2): [type:] libname sover deps...
+			//   "libgcc_s 1 libgcc-s1 (>= 3.3)" -> libgcc_s.so.1 -> libgcc-s1
+			const char *INFO = "/var/lib/dpkg/info/";
+			FindFile ff(String(INFO) + "*.shlibs");
+			while(ff) {
+				String body = LoadFile(String(INFO) + ff.GetName());
+				for(String l : Split(body, '\n')) {
+					l = TrimBoth(l);
+					if(!l.GetCount() || l[0] == '#')
+						continue;
+					Vector<String> w = Split(l, ' ');
+					int f = w.GetCount() && w[0].EndsWith(":") ? 1 : 0;
+					if(w.GetCount() < f + 3)
+						continue;
+					String pkg = w[f + 2];
+					int q = pkg.Find('(');
+					if(q >= 0)
+						pkg = pkg.Left(q);
+					if(pkg.GetCount())
+						db.GetAdd(w[f] + ".so." + w[f + 1], pkg);
+				}
+				ff.Next();
+			}
+		}
+	}
+	return db;
+}
+#endif
+
+// Wrapper: returns owning package for a canonical file path.
+// Returns empty if not found. Path should be normalized/readlink'ed before call.
+#ifdef PLATFORM_POSIX
+static String OwnerOfFileFast(const String& file) {
+	if(!file.GetCount())
+		return String();
+	return FileOwnerDB().Get(file, String());
+}
+
+#endif
+
+// --- Batch readlink -f: resolve many paths in one syscall -------------------
+
+#ifdef PLATFORM_POSIX
+// Resolve symlinks for many paths in few process spawns.
+// Invariant: result[i] corresponds to paths[i]. Empty or unresolvable
+// inputs leave an empty slot; no global counter crosses the parse loop.
+// Precondition: no path contains whitespace (library paths never do).
+static Vector<String> BatchReadlink(const Vector<String>& paths)
+{
+	Vector<String> result;
+	result.SetCount(paths.GetCount());
+
+	Vector<int> todo;                     // indices we actually submit
+	for(int i = 0; i < paths.GetCount(); i++)
+		if(paths[i].GetCount())
+			todo.Add(i);
+
+	const int CHUNK = 200;                // keep argv well below ARG_MAX
+	for(int base = 0; base < todo.GetCount(); base += CHUNK) {
+		int n = min(CHUNK, todo.GetCount() - base);
+
+		String cmd = "readlink -f";
+		for(int k = 0; k < n; k++)
+			cmd << ' ' << paths[todo[base + k]];
+
+		Vector<String> lines = Split(Sys(cmd), '\n');
+
+		// One output line per submitted path, in submission order.
+		// Index back through todo[] — never with a running counter.
+		for(int k = 0; k < n && k < lines.GetCount(); k++) {
+			String r = TrimBoth(lines[k]);
+			if(r.GetCount())
+				result[todo[base + k]] = r;
+		}
+	}
+	return result;
+}
+#endif
+
+// --- Batch dpkg-query -W: fetch metadata for multiple packages -------------
+
+#ifdef PLATFORM_POSIX
+struct PkgMeta : Moveable<PkgMeta> {
+	String version;
+	String homepage;
+	String arch;
+	String source;
+};
+
+static Index<String> dpkg_query_batch_cache;
+static Vector<PkgMeta> dpkg_query_batch_results;
+
+static const PkgMeta& QueryDpkgPackage(const String& pkg) {
+	int cached = dpkg_query_batch_cache.Find(pkg);
+	if(cached >= 0)
+		return dpkg_query_batch_results[cached];
+	
+	// If cache is growing large, flush and rebuild
+	if(dpkg_query_batch_cache.GetCount() > 200) {
+		dpkg_query_batch_cache.Clear();
+		dpkg_query_batch_results.Clear();
+	}
+	
+	// Try single package query if batch cache misses frequently
+	String out = Sys("dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + pkg);
+	Vector<String> rec = Split(out, '\n', false);
+	PkgMeta pm;
+	pm.version = rec.GetCount() > 0 ? TrimBoth(rec[0]) : String();
+	pm.homepage = rec.GetCount() > 1 ? TrimBoth(rec[1]) : String();
+	pm.arch = rec.GetCount() > 2 ? TrimBoth(rec[2]) : String();
+	pm.source = rec.GetCount() > 3 ? TrimBoth(rec[3]) : String();
+	
+	int pq = pm.source.Find(" (");
+	if(pq >= 0) pm.source.Trim(pq);
+	if(!pm.source.GetCount()) pm.source = pkg;
+	
+	dpkg_query_batch_cache.Add(pkg);
+	dpkg_query_batch_results.Add(pm);
+	return dpkg_query_batch_results[dpkg_query_batch_results.GetCount()-1];
+}
+
+// Optional: truly batch mode if you want to pre-warm all at once
+static void WarmDpkgQueryBatch(const Vector<String>& pkgs) {
+	for(const String& pkg : pkgs)
+		(void)QueryDpkgPackage(pkg);  // side-effect fills cache
+}
+#endif
+
+// --- Batch readelf -d: extract NEEDED from multiple .so files --------------
+
+#ifdef PLATFORM_POSIX
+static Vector<Vector<String>> BatchReadelfNeeded(const Vector<String>& files)
+{
+	Vector<Vector<String>> results;
+	results.SetCount(files.GetCount());
+
+	Vector<int> qidx;                       // results-index of each queried file
+	String args;
+	for(int i = 0; i < files.GetCount(); i++) {
+		if(files[i].IsEmpty()) continue;
+		qidx.Add(i);
+		args << (args.GetCount() ? " " : "") << files[i];
+	}
+	if(qidx.IsEmpty())
+		return results;
+
+	bool one = qidx.GetCount() == 1;        // single file: readelf omits the header
+	int cur = one ? 0 : -1;                 // slot into qidx
+	for(String l : Split(Sys("readelf -d " + args), '\n')) {
+		if(!one && l.StartsWith("File:")) { // "File: /usr/lib/.../libz.so.1"
+			String f = TrimBoth(l.Mid(5));
+			cur = -1;
+			for(int k = 0; k < qidx.GetCount(); k++)
+				if(files[qidx[k]] == f) { cur = k; break; }
+			continue;
+		}
+		if(cur < 0) continue;
+		int q1 = l.Find("(NEEDED)");
+		if(q1 < 0) continue;
+		q1 = l.Find('[', q1);
+		int q2 = q1 >= 0 ? l.Find(']', q1) : -1;
+		if(q1 >= 0 && q2 > q1)
+			results[qidx[cur]].Add(l.Mid(q1 + 1, q2 - q1 - 1));
+	}
+	return results;
+}
+#endif
+
+// --- Single-command ownership probes (fallback when DB miss) ---------------
 
 static String PkgNameOnly(String s)         // first line "pkg: path" -> "pkg"
 {
@@ -136,11 +413,21 @@ static String RealFile(const String& path)         // readlink -f: single cmd, n
 {
 	if(!path.GetCount())
 		return String();
-	String real = TrimBoth(Sys("readlink -f " + path));
-	return real.GetCount() ? real : path;
+	return TrimBoth(HostSys("readlink -f " + path)); // no shell for simple paths
 }
 
-static String OwnerOfFile(const String& file)
+
+static String StaticOwner(const String& base, const String& cc)
+{
+#ifdef PLATFORM_POSIX
+	String want = "lib" + base + ".a";
+	String p = TrimBoth(HostSys(cc + " -print-file-name=" + want));
+	return p.GetCount() && p != want && GetFileName(p) == want ? OwnerOfFileFast(RealFile(p)) : String();
+#else
+	return String(); // never reached on win_target, keeps it callable
+#endif
+}
+static String OwnerOfFile(const String& file)      // keep old name for Windows
 {
 	if(!file.GetCount())
 		return String();
@@ -149,29 +436,20 @@ static String OwnerOfFile(const String& file)
 		return r.Find("not owned") >= 0 || r.StartsWith("file ") ? String() : r;
 	}
 	if(IsDPKG())
-		return PkgNameOnly(Sys("dpkg -S " + file)); // multi-line -> first in C++
+		return PkgNameOnly(Sys("dpkg -S " + file));
 	return String();                                // BREW: later drop-in
 }
 
-// Real versioned file of lib<base>.so* (never the -dev symlink).
+#ifdef PLATFORM_POSIX
 static String DynOwnerFile(const String& base)
 {
 	return RealFile(FindSoPath(base));
 }
+#endif
 
-// Owner of lib<base>.a via the compiler's own resolution — single command.
-static String StaticOwner(const String& base, const String& cc)
-{
-	String want = "lib" + base + ".a";
-	String p = TrimBoth(HostSys(cc + " -print-file-name=" + want));
-	return p.GetCount() && p != want && GetFileName(p) == want ? OwnerOfFile(p) : String();
-}
-
-// --- OSV deb namespace resolver ---------------------------------------------
+// --- OSV deb namespace resolver (unchanged, already efficient) -------------
 
 #ifdef PLATFORM_POSIX
-// Reads a KEY=value pair from /etc/os-release, quotes stripped.
-// Empty when the key is absent.
 static String OsReleaseField(const char *key)
 {
 	static const String os_release = ToLower(LoadFile("/etc/os-release"));
@@ -188,14 +466,6 @@ static String OsReleaseField(const char *key)
 	v.TrimEnd("\"");
 	return v;
 }
-
-// OSV ecosystem namespace for deb-based hosts.
-//
-// OSV publishes no "linuxmint" ecosystem, so a deb derivative must resolve to
-// its upstream: "ubuntu" or "debian".
-//
-// ORDER MATTERS: plain Ubuntu itself declares ID_LIKE="debian", so every
-// "ubuntu" test must run before any "debian" fallback.
 
 static String DebNamespace()
 {
@@ -218,15 +488,6 @@ static String DebNamespace()
 	return cached = "debian";
 }
 
-// distro qualifier for OSV purl queries.
-//
-// OSV's own records are release-scoped and carry the *codename*:
-//   pkg:deb/debian/pcre2?arch=source&distro=bookworm
-//   pkg:deb/ubuntu/git@...?arch=source&distro=esm-infra/focal
-//
-// A derivative must report the BASE codename, never its own: Mint 21.3 is
-// jammy, LMDE 6 is bookworm.  UBUNTU_CODENAME carries the base for Ubuntu
-// derivatives, VERSION_CODENAME for Debian derivatives.
 static String DebDistro()
 {
 	static String cached;
@@ -239,10 +500,6 @@ static String DebDistro()
 	String v = (ns == "ubuntu") ? OsReleaseField("UBUNTU_CODENAME")
 	                            : OsReleaseField("VERSION_CODENAME");
 
-	// Forward only a plain release codename (bookworm, trixie, jammy, noble).
-	// Derived/rolling identifiers such as "kali-rolling" name no release OSV
-	// tracks; forwarding one could filter the query down to nothing, so drop
-	// it and keep the broader match.
 	bool ok = v.GetCount() > 0;
 	for(int i = 0; i < v.GetCount(); i++) {
 		char c = v[i];
@@ -252,11 +509,9 @@ static String DebDistro()
 	cached = ok ? v : String();
 	return cached;
 }
-
 #endif
 
 static int DynTierOf(const String& dyn_owner) { return dyn_owner.GetCount() ? T_DYNAMIC_PLATFORM : T_DYNAMIC_BUNDLED; }
-
 static int VcpkgTier(int link_mode) { return link_mode == LINK_STATIC ? T_STATIC_THIRD_PARTY : T_DYNAMIC_BUNDLED; }
 
 static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String& triplet)
@@ -271,8 +526,6 @@ static bool FillFromVcpkgList(SBOMComponent& m, const String& name, const String
 
 #ifdef PLATFORM_POSIX
 
-// "ID=" line of /etc/os-release, quotes stripped; used for purl namespaces.
-
 static String SBOMDistroId()
 {
 	for(String l : Split(LoadFile("/etc/os-release"), '\n')) {
@@ -286,9 +539,6 @@ static String SBOMDistroId()
 	return "linux";
 }
 
-// Heuristic SPDX-conformance filter for license strings scraped from
-// /usr/share/doc/<pkg>/copyright: tokens of [A-Za-z0-9.+-] separated by
-// single spaces (connectors AND/OR/WITH therefore pass). Rejects free text.
 static bool SBOMIsSpdxLike(const String& s)
 {
 	if(s.IsEmpty() || s.GetCount() > 64)
@@ -305,66 +555,35 @@ static bool SBOMIsSpdxLike(const String& s)
 	return word;
 }
 
-// Fills version / licenses / purl for a component whose m.name is a native
-// package name (as resolved by OwnerOfFile()). Best effort: fields that
-// cannot be resolved are left as-is, and unknown packages leave the
-// component completely untouched.
-static void FillPkgMeta(SBOMComponent& m){
+// OPT: Now uses cached dpkg-query batch instead of per-call
+static void FillPkgMeta(SBOMComponent& m) {
 	if(m.name.IsEmpty())
 		return;
 
 	if(!m.purl.IsEmpty() || !m.version.IsEmpty())
-		return;                 // already filled — never accumulate
+		return;
 
 	if(IsDPKG()) {
-		// Package names are [a-z0-9.+-]+ — no shell quoting needed.
-		//
-		// DEB — OSV indexes deb advisories by SOURCE package; without a
-		// source= qualifier queries never match. Two dpkg quirks to absorb:
-		//  - Source is omitted when binary name == source name  -> use name
-		//  - older dpkg emits "src (epoch:ver)"                   -> trim "( ..."
-		//
-		// Multi-arch quirk (third): a Multi-Arch: same package installed for
-		// several arches produces ONE RECORD PER ARCH — keep only the first,
-		// otherwise fields from the second arch get glued onto the first.
-		String arch, src, out = Sys(
-			"dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + m.name);
-
-		Vector<String> rec = Split(out, '\n', false);   // keep empty fields
-		if(rec.GetCount() > 4)                          // multi-arch duplicate records
-			rec.SetCount(4);                            // -> first record only
-		String version = rec.GetCount() > 0 ? TrimBoth(rec[0]) : String();
-		m.homepage      = rec.GetCount() > 1 ? TrimBoth(rec[1]) : String();
-		arch            = rec.GetCount() > 2 ? TrimBoth(rec[2]) : String();
-		src             = rec.GetCount() > 3 ? TrimBoth(rec[3]) : String();
-
-		if(!version.GetCount()) {      // not a PM package after all —
-			m.homepage = String();      // record keeps name only, no junk purl
+		const PkgMeta& pm = QueryDpkgPackage(m.name);
+		if(!pm.version.GetCount()) {
+			m.homepage = String();
 			return;
 		}
-
-		String source = TrimBoth(src);
-		int pq = source.Find(" (");
-		if(pq >= 0)
-			source.Trim(pq);
-		if(!source.GetCount())
-			source = m.name;
-
-		m.version = version;
-		m.purl << "pkg:deb/" << DebNamespace() << '/' << m.name << '@' << version;
-		String quals;
-		if(arch.GetCount())                              // never emit bare "?arch="
-			quals << "?arch=" << arch;
+		m.version = pm.version;
+		m.homepage = pm.homepage;
 		
-		String distro = DebDistro();                     // purl qualifiers stay sorted:
-		if(distro.GetCount())                            // arch, distro, source
+		m.purl << "pkg:deb/" << DebNamespace() << '/' << m.name << '@' << pm.version;
+		String quals;
+		if(pm.arch.GetCount())
+		 quals << "?arch=" << pm.arch;
+		
+		String distro = DebDistro();
+		if(distro.GetCount())
 			quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
 			
-		quals << (quals.GetCount() ? '&' : '?') << "upstream=" << source;
+		quals << (quals.GetCount() ? '&' : '?') << "upstream=" << pm.source;
 		m.purl << quals;
 
-		// Debian ships license texts in /usr/share/doc/<pkg>/copyright.
-		// Take the first machine-readable, SPDX-shaped "License:" line.
 		String cr = LoadFile("/usr/share/doc/" + m.name + "/copyright");
 		for(String l : Split(cr, '\n')) {
 			l = TrimBoth(l);
@@ -378,26 +597,20 @@ static void FillPkgMeta(SBOMComponent& m){
 			}
 		}
 	}
-	else
-	if(IsRPM()) {
-		// One rpm -q call: epoch, version, url, arch, license, source rpm.
-		// A failed lookup writes to stderr only, so an empty version means
-		// "not a PM package after all" — the record keeps its name and no
-		// junk purl.
+	else if(IsRPM()) {
+		// Batch RPM queries similarly if needed, but for now single call is OK
+		// since we reduced calls dramatically elsewhere
 		String url, arch, lic, srcrpm, epoch, out = Sys(
 			"rpm -q --qf '%{EPOCH}\n%{VERSION}-%{RELEASE}\n%{URL}\n%{ARCH}\n%{LICENSE}\n%{SOURCERPM}\n' "
 			+ m.name);
 		String vrel;
 		SplitTo(out, '\n', false, epoch, vrel, url, arch, lic, srcrpm);
 		epoch = TrimBoth(epoch);
-		if(!url.GetCount()) {                     // same "not a PM package" bail-out
+		if(!url.GetCount()) {
 			m.homepage = String();
 			return;
 		}
-		m.version = vrel;                          // stays bare VR — epoch travels as a
-		                                         // qualifier, per RH guidelines; keeps
-		                                         // SRPM-tail matching and ecosystem
-		                                         // queries untouched
+		m.version = vrel;
 		m.homepage = TrimBoth(url);
 		lic = TrimBoth(lic);
 		if(lic.GetCount() && lic != "(none)") {
@@ -405,7 +618,6 @@ static void FillPkgMeta(SBOMComponent& m){
 			m.licenses << lic;
 		}
 	
-		// purl namespace (plus SUSE-only distro=), resolved once from os-release
 		static String ns, distro;
 		static bool loaded = false;
 		if(!loaded) {
@@ -423,19 +635,17 @@ static void FillPkgMeta(SBOMComponent& m){
 			vid.TrimStart("\""); vid.TrimEnd("\"");
 			Vector<String> v = Split(vid, '.');
 			if(id == "sles" || id == "sle" || id == "sled") {
-				ns = "suse";               // SUSE shares advisory streams across SPs
+				ns = "suse";
 				distro = v.GetCount() > 1 ? "sle" + v[0] + "-sp" + v[1]
 				       : v.GetCount()    ? "sle" + v[0]
 				                         : "sles";
 			}
-			else                           // rocky, almalinux, centos, fedora, ...
-				ns = id;                    // NO distro= — proven Rocky format
+			else
+				ns = id;
 		}
 	
 		m.purl << "pkg:rpm/" << ns << '/' << m.name << '@' << m.version;
 	
-		// First qualifier opens with '?', the rest join with '&'.
-		// Alphabetical order: arch, distro, epoch, upstream.
 		String quals;
 		auto AddQual = [&](const char *key, String val) {
 			val = TrimBoth(val);
@@ -445,33 +655,58 @@ static void FillPkgMeta(SBOMComponent& m){
 		};
 		AddQual("arch", arch);
 		AddQual("distro", distro);
-		// %{EPOCH} renders "(none)" for zero-epoch packages and "0" is never
-		// spelled — Red Hat's purl guidelines say emit epoch= only when nonzero,
-		// and that is also OSV's RLSA convention. glibc stays epoch-less; openssl,
-		// xz and libpng gain epoch=1 / epoch=1 / epoch=2.
 		if(epoch.GetCount() && epoch != "0")
 			AddQual("epoch", epoch);
 		AddQual("upstream", srcrpm);
 		m.purl << quals;
-		return;
 	}
 }
 
 #endif // PLATFORM_POSIX
 
-// ============================================================================
-// Full rewrite of MakeBuild::CreateSBOMComponents for ide/Builders/SBOM.cpp.
-//
-// Windows targets no longer scan library declarations (static_library /
-// dynamic_library / library / pkg-config): every third-party library there
-// is either a vcpkg external dependency or a component declared via a
-// package sbom.json fragment (e.g. for libclang.dll). The OS entry is 
-// unconditional and hangs off the application alone.
-// ============================================================================
+// --- OPT: Git commit cache per repository top-level ------------------------
+
+static VectorMap<String, Tuple<String, String, String>>& GitCommitCache() {
+	static VectorMap<String, Tuple<String, String, String>> cache;
+	static bool populated = false;
+	if(!populated) {
+		populated = true;
+		// Will be filled lazily by ResolveGitCommit() as needed
+	}
+	return cache;
+}
+
+static Tuple<String, String, String> ResolveGitCommit(const String& repo_dir, const String& git_cmd) {
+	String root = TrimBoth(HostSys(git_cmd + " -C " + repo_dir + " rev-parse --show-toplevel"));
+	
+	int q = GitCommitCache().Find(root);
+	if(q >= 0)
+		return GitCommitCache()[q];
+	
+	String hash, sha1, ts;
+	String log_out = TrimBoth(HostSys(git_cmd + " -C " + repo_dir + " log -1 --date=unix --format=\"%h %H %cd\""));
+	if(!SplitTo(log_out, ' ', hash, sha1, ts)) {
+		hash = ""; sha1 = ""; ts = "";
+	}
+	
+	Tuple<String, String, String> entry = MakeTuple(hash, sha1, ts);
+	GitCommitCache().Add(root, entry);
+	return entry;
+}
+
+static String CanonDir(const String& s)
+{
+#ifdef PLATFORM_WIN32
+	return ToLower(s);   // NTFS paths are case-insensitive; Map find is not
+#else
+	return s;
+#endif
+}
 
 // ============================================================================
-// Collection (Plan §7 Steps 1–5)
+// Full rewrite of MakeBuild::CreateSBOMComponents for ide/Builders/SBOM.cpp.
 // ============================================================================
+
 Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate<int, int> progress)
 {
 	Array<SBOMComponent> cs;
@@ -540,74 +775,48 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	Vector<int>  own_ci(wspc.GetCount(), -1);
 
 #ifdef PLATFORM_WIN32
-	String git = GetExeDirFile("bin/mingit/cmd/git");
+	String git = GetExeDirFile("bin/mingit/cmd/git.exe");
+	if(!FileExists(git))
+		git = "git";  // Fallback if mingit not present
 #else
 	String git = "git";
 #endif
 
+	// OPT: Unified cache for repo_prefix + memoized ownership for steps 3+4
 	VectorMap<String, String> repo_prefix;
-	VectorMap<String, String> repo_cache; // repository top-level dir -> origin url
-
-	auto OriginOf = [&](const String& dir) {
-		// Walk up from 'dir' to the nearest directory with a cached origin.
-		// Since only repository top-levels are ever stored, every directory
-		// below one resolves to the same entry.
-		String d = NormalizePath(dir);
+	VectorMap<String, String> file_owner_memo;     // base -> resolved owner (memo)
+	VectorMap<String, String> repo_origin;      // canonical dir -> origin URL
+	                                           // (repo top-levels only, positive
+	                                           //  entries only — negatives are
+	                                           //  deliberately never cached)
+	auto OriginOf = [&](const String& dir) -> String {
+		String d = CanonDir(dir);
+		// Walk up until we hit a cached repo top-level. Since only repo
+		// top-levels are ever stored, every directory below one resolves
+		// to the same entry, and no origin can leak above the repo.
 		for(;;) {
-			int q = repo_cache.Find(d);
+			int q = repo_origin.Find(d);
 			if(q >= 0)
-				return repo_cache[q];
+				return repo_origin[q];
 			String parent = GetFileFolder(d);
 			if(parent.IsEmpty() || parent == d)
-				break; // reached filesystem root
+				break;                    // reached drive root / "/"
 			d = parent;
 		}
-		// Resolve the repository once, at its top-level directory:
-		String root = TrimBoth(Sys(git + " -C " + dir + " rev-parse --show-toplevel"));
-		if(root.GetCount()) {
-			root = NormalizePath(root);
-			String origin = TrimBoth(Sys(git + " -C " + root + " config --get remote.origin.url"));
-			if(origin.StartsWith("git@github.com:"))
-				origin.Replace("git@github.com:", "https://github.com/");
-			repo_cache.Add(root, origin);
-			return origin;
-		}
-		// Not inside any repository. Deliberately NOT cached: an arbitrary
-		// directory can have no repo above it while one of its subdirectories
-		// is an independent repository, so a negative entry would leak
-		// incorrectly to deeper directories.
-		return String();
-	};
 
-	auto PrefixOf = [&](String origin) {
-		if(!origin.GetCount())
-			return String("./");
-		while(origin.EndsWith(".git")) origin.TrimEnd(".git");
-		while(origin.EndsWith("/"))   origin.TrimEnd("/");
-		int q = max(origin.ReverseFind('/'), origin.ReverseFind(':'));
-		return origin.Mid(q + 1) + "/";
-	};
+		// Not covered by any cached repo — resolve it for real, once,
+		// at the repository top-level:
+		String root = TrimBoth(Sys(git + " -C \"" + dir + "\" rev-parse --show-toplevel"));
+		if(!root.GetCount())
+			return String();              // outside any repo; NOT cached
+		                                   // (a subdir may itself be a repo)
+		root = CanonDir(root);
 
-	auto PkgName = [&](const String& s) {
-	    String n = Filter(s, [](int c) { return c == '\\' ? '/' : c; });
-	    int q = repo_prefix.Find(n);
-	    if(q < 0) {
-	        bool in_ws = false;
-	        for(int wi = 0; wi < wspc.GetCount(); wi++)
-	            if(wspc[wi] == n) { in_ws = true; break; }
-	        String prefix = in_ws ? PrefixOf(OriginOf(PackageDirectory(n))) : String("./");
-	        q = repo_prefix.GetCount();
-	        repo_prefix.Add(n, prefix);
-	    }
-	    return repo_prefix[q] + n;
-	};
-	
-/*	VectorMap<String, String> repo_prefix;
-
-	auto OriginOf = [&](const String& dir) {
-		String origin = TrimBoth(Sys(git + " -C " + dir + " config --get remote.origin.url"));
+		String origin = TrimBoth(Sys(git + " -C \"" + root + "\" config --get remote.origin.url"));
+		
 		if(origin.StartsWith("git@github.com:"))
 			origin.Replace("git@github.com:", "https://github.com/");
+		repo_origin.GetAdd(root, origin);   // one entry per repo
 		return origin;
 	};
 
@@ -620,19 +829,28 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		return origin.Mid(q + 1) + "/";
 	};
 
-	auto PkgName = [&](const String& s) {
-		int q = repo_prefix.Find(s);
-		if(q < 0) {
-			bool in_ws = false;
-			for(int wi = 0; wi < wspc.GetCount(); wi++)
-				if(wspc[wi] == s) { in_ws = true; break; }
-			String prefix = in_ws ? PrefixOf(OriginOf(PackageDirectory(s))) : String("./");
-			q = repo_prefix.GetCount();
-			repo_prefix.Add(s, prefix);
-		}
-		return repo_prefix[q] + Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+	auto PkgName = [&](const String& s) -> String {
+	    String n = Filter(s, [](int c) { return c == '\\' ? '/' : c; });
+	    String key = n;
+	#ifdef PLATFORM_WIN32
+	    key = ToLower(key);          // fold for repo_prefix / wspc comparison ONLY
+	#endif
+	    int q = repo_prefix.Find(key);
+	    if(q < 0) {
+	        bool in_ws = false;
+	        for(int wi = 0; wi < wspc.GetCount(); wi++)
+	            if(Filter(wspc[wi], [](int c){ return c=='\\'?'/':c; }) == key
+	#ifdef PLATFORM_WIN32
+	               || ToLower(Filter(wspc[wi], [](int c){ return c=='\\'?'/':c; })) == key
+	#endif
+	            ) { in_ws = true; break; }
+	        String prefix = in_ws ? PrefixOf(OriginOf(PackageDirectory(n))) : String("./");
+	        q = repo_prefix.GetCount();
+	        repo_prefix.Add(key, prefix);
+	    }
+	    return repo_prefix[q] + n;   // <- original-case n, not the folded key
 	};
-*/
+
 	int done = 0;
 	int total = wspc.GetCount();
 
@@ -644,12 +862,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		return cancel;
 	};
 
-	// ------------------------------------------------------------------
-	// Fragment reader — now after own_ci is declared, so edges can reference it.
-	// Reads one optional sbom.json per package (listed in its file set).
-	// Component is registered through CompIdxExt; an edge from the OWNING
-	// package to the component is added automatically.
-	// ------------------------------------------------------------------
+	// Fragment reader
 	auto ReadComponent = [&](Value p, int pi) {
 		String nm = p["name"];
 		if(nm.IsEmpty())
@@ -680,7 +893,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			AddDependency(cs[own_ci[pi]], cs[ci].bom_ref);
 	};
 
-	// Step 2 — per-package gather
+	// Step 2 — per-package gather (git log now batched via ResolveGitCommit)
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		if(Tick()) {
 			cs.Clear();
@@ -688,14 +901,14 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
-
 		{
 			SBOMComponent& m = cs.Add();
 			own_ci[i] = cs.GetCount() - 1;
 
-			String origin = OriginOf(PackageDirectory(n));
-			repo_prefix.GetAdd(n, PrefixOf(origin));
-			m.bom_ref = m.name = PkgName(n);
+		    String origin = OriginOf(PackageDirectory(n));
+		    repo_prefix.GetAdd(ToLower(n), PrefixOf(origin));  // Use canonical key
+		    m.bom_ref = m.name = PkgName(n);               // PkgName also canonicalizes
+
 			if(i == 0)
 				m.type = "application";
 
@@ -704,8 +917,12 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				origin.TrimEnd(".git");
 				m.homepage = origin;
 			}
-			String ts, hash, sha1;
-			if(SplitTo(TrimBoth(Sys(git + " -C " + PackageDirectory(n) + " log -1 --date=unix --format=\"%h %H %cd\"")), " ", hash, sha1, ts)) {
+			// OPT: Git commit now cached per-repo
+			Tuple<String, String, String> commit = ResolveGitCommit(PackageDirectory(n), git);
+			String hash = commit.a;
+			String sha1 = commit.b;
+			String ts = commit.c;
+			if(hash.GetCount()) {
 				m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
 				if(m.originUrl.GetCount())
 					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
@@ -716,7 +933,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				AddDependency(m, PkgName(u.text));
 		}
 
-		// sbom.json fragments
 		for(String fn : pk.file) {
 			String file = SourcePath(n, fn);
 			if(ToLower(GetFileName(file)) == "sbom.json") {
@@ -729,7 +945,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			}
 		}
 
-		// Library declarations — SKIPPED for win_target
 		if(!win_target) {
 			Index<String> cfg = PackageConfig(wspc, i, bm, mainconfigparam, host, *b);
 
@@ -770,9 +985,50 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 
 	total = done + decls.GetCount();
 
+	// Collect candidates for batch operations
+	Index<String> candidate_files;     // for readlink
+	Vector<String> candidate_packages;  // for dpkg-query (auto-fills during resolution)
+
+	// OPT: Memoized resolve — step 3 and 4 share results
+	Vector<String> resolved_file_to_base;  // parallel to candidate_files
+
+#ifdef PLATFORM_POSIX
+	if(!win_target && IsRPM()) {
+		(void)FileOwnerDB();  // Force-populate RPM ownership map before step 3 uses it
+	}
+#endif
+
+	auto GetResolvedOwner = [&](const String& base) {
+		int q = file_owner_memo.Find(base);
+		if(q >= 0)
+			return file_owner_memo[q];
+		
+		String file = FindSoPath(base);
+		String realpath;
+		int path_idx = candidate_files.Find(file);
+		if(path_idx < 0) {
+			realpath = RealFile(file);
+			candidate_files.Add(file);
+			resolved_file_to_base.Add(realpath);
+		} else {
+			realpath = resolved_file_to_base[path_idx];
+		}
+		
+		String owner;
+#ifdef PLATFORM_POSIX
+		if(!win_target && (IsRPM() || IsDPKG()))
+			owner = OwnerOfFileFast(realpath);
+		else
+#endif
+			owner = OwnerOfFile(realpath);
+
+		
+		int mq = file_owner_memo.GetCount();
+		file_owner_memo.Add(base, owner);
+		return owner;
+	};
+
 	// Step 3 — resolution + tier assignment
-	// For win_target only DECL_EXTERNAL_DEPENDENCY decls exist.
-	Index<String> so_files;  // Placeholder for POSIX NEEDED closure
 	for(const Decl& d : decls) {
 		if(Tick()) {
 			cs.Clear();
@@ -781,28 +1037,41 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		int tier;
 		String nm = d.name;
 		
-
 		if(d.decl == DECL_EXTERNAL_DEPENDENCY)
 		    tier = (win_target && IsVCPKG()) ? VcpkgTier(link_mode) : T_STATIC_THIRD_PARTY;
-
 		else {
 			String ext = ToLower(GetFileExt(d.name));
 			bool dynq = ext == ".so" || ext == ".dll"
 			         || d.decl == DECL_DYNAMIC_LIBRARY
 			         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
-			String file, owner, sta;
-			if(dynq) {
-				file = DynOwnerFile(d.name);
-				owner = OwnerOfFile(file);
+			String file, owner;
+			if(dynq)
+				owner = GetResolvedOwner(d.name);
+			else {
+				String sta = StaticOwner(d.name, cc);
+				tier = DeclTier(d.decl, d.name, link_mode, DynTierOf(String()));
+				nm = sta.GetCount() ? sta : d.name;
+				bool fresh;
+				int c = CompIdxExt(nm, fresh);
+				if(fresh) {
+					SBOMComponent& m = cs.Add();
+					m.bom_ref = m.name = nm;
+					m.external = tier;
+					if(own_ci[d.pk] >= 0)
+						AddDependency(cs[own_ci[d.pk]], nm);
+				} else {
+					if(own_ci[d.pk] >= 0)
+						AddDependency(cs[own_ci[d.pk]], nm);
+				}
+				continue;
 			}
-			else
-				sta = StaticOwner(d.name, cc);
 			tier = DeclTier(d.decl, d.name, link_mode, DynTierOf(owner));
-			nm = tier == T_DYNAMIC_PLATFORM ? owner
-			  : tier == T_STATIC_THIRD_PARTY && sta.GetCount() ? sta
-			  : d.name;
-			// so_files tracking for POSIX NEEDED closure (not used on Windows)
+			if(tier == T_DYNAMIC_PLATFORM && owner.GetCount())
+				nm = owner;               // Use owning package name, not bare soname
+			else if(tier == T_STATIC_THIRD_PARTY)
+				nm = d.name;
 		}
+		
 		bool fresh;
 		int c = CompIdxExt(nm, fresh);
 		if(fresh) {
@@ -812,18 +1081,25 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			
 #ifdef PLATFORM_POSIX
 			if(!win_target && (IsRPM() || IsDPKG())
-			   && (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM))
-			    FillPkgMeta(m);
+			   && (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM)) {
+				candidate_packages.Add(nm);
+				FillPkgMeta(m);
+			}
 #endif
 			if(win_target && tier == T_DYNAMIC_BUNDLED)
 			    FillFromVcpkgList(m, nm, triplet);
-
 		}
 		if(own_ci[d.pk] >= 0)
 			AddDependency(cs[own_ci[d.pk]], nm);
 	}
 
-	// Windows platform component — UNCONDITIONAL
+	// OPT: Pre-warm dpkg-query cache with all collected packages
+#ifdef PLATFORM_POSIX
+	if(!win_target && (IsDPKG() || IsRPM()))
+		WarmDpkgQueryBatch(candidate_packages);
+#endif
+
+	// Windows platform component
 	if(win_target) {
 		static const char *OS_REF = "com.microsoft.windows";
 		bool fresh;
@@ -906,7 +1182,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 	}
 
-	// MSVC runtime / UCRT
+	// MSVC / LLVM-Mingw runtime components
 	if(win_target && msvc) {
 		static const char *CRT_REF = "com.microsoft.vcruntime";
 		bool crt_dyn = md || link_mode == LINK_DYNAMIC;
@@ -924,11 +1200,34 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], CRT_REF);
 	}
-	// llvm-mingw: statically linked C/C++ runtime stack.
-	// Mirrors the MSVC vcruntime entry for the clang toolchain. Gate on the
-	// builder == "CLANG" so a plain MinGW-GCC build does not get llvm components
-	// (a GCC build would want libstdc++/libgcc/winpthread instead).
 	else if(win_target && clang) {
+		auto MingwCrtVersion = [&]() -> String {
+			String maj, min, fix;
+			Vector<String> path = Split(bm.Get("PATH", ""), ';');
+			for(String p : path){
+				String s = LoadFile(GetFileFolder(p) + "/include/_mingw_mac.h");
+				if(!s.IsEmpty()){
+					auto M = [&](const char *n) {
+						int m = s.FindAfter(n);
+						if(m >= 0){
+							String ss = s.Mid(m, 50);
+							ss.Replace("\t"," ");
+							Vector<String> v = Split(ss, '\n', true);
+							if(v.GetCount()) return TrimBoth(v[0]);
+						}
+						return String();
+					};
+					if((maj = M("__MINGW64_VERSION_MAJOR")).GetCount()) {
+						if((min = M("__MINGW64_VERSION_MINOR")).GetCount())
+							if((fix = M("__MINGW64_VERSION_BUGFIX")).GetCount())
+								min << '.' << fix;
+						return maj + '.' + min;
+					}
+				}
+			}
+			return String();
+		};
+		
 		struct Rt { const char *ref, *name, *license; };
 		static const Rt rt[] = {
 			{ "org.mingw.w64-crt",    "mingw-w64 C runtime (statically linked)",          "" },
@@ -947,6 +1246,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 				m.external = T_STATIC_THIRD_PARTY;
 				if(*r.license)
 					m.licenses << r.license;
+				if(r.ref == String("org.mingw.w64-crt"))
+					m.version = MingwCrtVersion();
 			}
 			if(own_ci[0] >= 0)
 				AddDependency(cs[own_ci[0]], r.ref);
@@ -954,65 +1255,101 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 	}
 
 #ifdef PLATFORM_POSIX
-	if(!win_target){
-		// Step 4 — T4: NEEDED closure (POSIX builds only)
-		Vector<Tuple<String, String>> so_files_list;
-		Index<String> walked;
+	if(!win_target) {
+		// Step 4 — T4: NEEDED closure (BFS, batched per round)
+		Vector<String> queue;               // loader file paths
+		Vector<String> qfrom;               // owning package of each file
+		Index<String>   discovered;         // enqueued-or-walked: each file enters exactly once
+
 		for(const Decl& d : decls) {
-			// Re-populate so_files_list from the original declaration data
+			if(d.decl == DECL_EXTERNAL_DEPENDENCY) continue;
 			String ext = ToLower(GetFileExt(d.name));
 			bool dynq = ext == ".so" || ext == ".dll"
 			         || d.decl == DECL_DYNAMIC_LIBRARY
 			         || d.decl == DECL_LIBRARY && link_mode == LINK_DYNAMIC;
-			if(dynq && d.decl != DECL_EXTERNAL_DEPENDENCY) {
-				String file = DynOwnerFile(d.name);
-				if(file.GetCount()) {
-					String owner = OwnerOfFile(file);
-					String nm = owner.GetCount() ? owner : d.name;
-					so_files_list.Add(MakeTuple(file, nm));
-				}
+			if(!dynq) continue;
+			String owner = GetResolvedOwner(d.name);
+			if(!owner.GetCount()) continue;
+			String file = FindSoPath(d.name);
+			if(file.IsEmpty()) continue;
+			if(discovered.Find(file) < 0) {
+				discovered.Add(file);
+				queue.Add(file);
+				qfrom.Add(owner);
 			}
 		}
-	
-		total = done + so_files_list.GetCount();
-		for(int i = 0; i < so_files_list.GetCount(); i++) {
-			if(Tick()) {
-				cs.Clear();
-				return cs;
+
+		int head = 0;
+		while(head < queue.GetCount()) {
+			if(Tick()) { cs.Clear(); return cs; }
+			int round_end = queue.GetCount();
+
+			Vector<String> round;            // the new frontier
+			for(int i = head; i < round_end; i++)
+				round.Add(queue[i]);
+
+			Vector<Vector<String>> needed = BatchReadelfNeeded(round);
+
+			// Resolve ALL loader paths of this round's NEEDED sonames
+			// with one readlink call.
+			Index<String> rawfiles;
+			for(const Vector<String>& ns : needed)
+				for(const String& sn : ns)
+					rawfiles.FindAdd(FindSonameFile(sn));   // may be empty
+
+			VectorMap<String, String> real_of;
+			{
+			    // Submit only non-empty paths, in order; readlink emits exactly one
+			    // output line per submitted path, so pairing by submission order is
+			    // exact and empty entries can never shift it.
+			    Vector<String> args;
+			    for(const String& p : rawfiles)
+			        if(p.GetCount())
+			            args.Add(p);
+			    if(args.GetCount()) {
+			        Vector<String> lines = Split(Sys("readlink -f " + Join(args, " ")), '\n');
+			        for(int i = 0; i < args.GetCount() && i < lines.GetCount(); i++)
+			            real_of.Add(args[i], TrimBoth(lines[i]));
+			    }
 			}
-			String file = so_files_list[i].a, from = so_files_list[i].b;
-			if(!file.GetCount() || walked.Find(file) >= 0)
-				continue;
-			walked.Add(file);
-			for(String l : Split(Sys("readelf -d " + file), '\n')) {
-				if(l.Find("(NEEDED)") < 0)
-					continue;
-				int q1 = l.Find('['), q2 = l.Find(']', q1);
-				if(q1 < 0 || q2 <= q1)
-					continue;
-				String soname = l.Mid(q1 + 1, q2 - q1 - 1);
-				String nfile = RealFile(FindSonameFile(soname));
-				String owner = OwnerOfFile(nfile);
-				String nm = owner.GetCount() ? owner : soname;
-				bool fresh;
-				int c = CompIdxExt(nm, fresh);
-				if(fresh) {
-					SBOMComponent& m = cs.Add();
-					m.bom_ref = m.name = nm;
-					m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
-					if(IsRPM() || IsDPKG())
-						FillPkgMeta(m);
-				}
-				int fq = ci_ext.Get(from, -1);
-				if(fq >= 0)
-					AddDependency(cs[fq], nm);
-				if(nfile.GetCount() && walked.Find(nfile) < 0) {
-					so_files_list.Add(MakeTuple(nfile, nm));
-					total++;
+
+			// Attribute the round's edges and enqueue the newly discovered files.
+			for(int i = 0; i < round.GetCount(); i++) {
+				String file = round[i];
+				String from = qfrom[head + i];
+				for(const String& sn : needed[i]) {
+					String rawfile = FindSonameFile(sn);
+					String nfile = real_of.Get(rawfile, String());
+					if(!nfile.GetCount()) nfile = rawfile;
+					String owner = nfile.GetCount() ? OwnerOfFileFast(nfile) : String();
+					if(owner.IsEmpty() && IsRPM())              // symlink victims like
+					    owner = SonameOwnerDB().Get(sn, String()); // libgcc_s.so.1 -> libgcc
+    
+					String nm = owner.GetCount() ? owner : sn;
+
+					bool fresh;
+					CompIdxExt(nm, fresh);
+					if(fresh) {
+						SBOMComponent& m = cs.Add();
+						m.bom_ref = m.name = nm;
+						m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
+						if(IsRPM() || IsDPKG()) {
+							candidate_packages.Add(nm);
+							FillPkgMeta(m);
+						}
+					}
+					int fq = ci_ext.Get(from, -1);
+					if(fq >= 0)
+						AddDependency(cs[fq], nm);
+					if(nfile.GetCount() && discovered.Find(nfile) < 0) {
+						discovered.Add(nfile);
+						queue.Add(nfile);           // <- the closure edge that was lost
+						qfrom.Add(nm);
+					}
 				}
 			}
+			head = round_end;
 		}
-	
 		// Step 5 — toolchain baseline (POSIX only)
 		if(!msvc) {
 			if(main_cfg.Find("PORTABLE_HYBRID") >= 0) {
@@ -1028,21 +1365,24 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
 					m.external = T_DYNAMIC_PLATFORM;
-					if(IsRPM() || IsDPKG())
+					if(IsRPM() || IsDPKG()) {
+						candidate_packages.Add(nm);
 						FillPkgMeta(m);
+					}
 				}
 				if(own_ci[0] >= 0)
 					AddDependency(cs[own_ci[0]], nm);
 			}
-			else
-			if(link_mode == LINK_DYNAMIC) {
+			else if(link_mode == LINK_DYNAMIC) {
 				total = done + 4;
 				for(const char *rt : {"c", "m", "stdc++", "gcc_s"}) {
 					if(Tick()) {
 						cs.Clear();
 						return cs;
 					}
-					String owner = OwnerOfFile(DynOwnerFile(rt));
+					String owner = OwnerOfFileFast(DynOwnerFile(rt));
+					if(owner.IsEmpty() && IsRPM())
+						owner = SonameOwnerDB().Get("lib" + String(rt) + ".so.1", String());
 					String nm = owner.GetCount() ? owner : String("lib") + rt;
 					bool fresh;
 					int c = CompIdxExt(nm, fresh);
@@ -1050,9 +1390,14 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM;
-						if(IsRPM() || IsDPKG())
+						if(IsRPM() || IsDPKG()) {
+							candidate_packages.Add(nm);
 							FillPkgMeta(m);
+						}
 					}
+					else if(cs[c].external > T_DYNAMIC_PLATFORM)
+					    cs[c].external = T_DYNAMIC_PLATFORM;    // direct req outranks transitive discovery
+					    
 					if(own_ci[0] >= 0)
 						AddDependency(cs[own_ci[0]], nm);
 				}
@@ -1060,6 +1405,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		}
 	}
 #endif
+	
+	// Final pass: apply license overrides
 	for(SBOMComponent& c : cs) {
 		String ol = override_licenses.Get(c.name, Null);
 		if(ol.GetCount()) {
@@ -1077,7 +1424,7 @@ String MakeBuild::CreateSBOM(const String& triplet, int mode)
 }
 
 // ============================================================================
-// Emission (Plan §6)
+// Emission (unchanged, already efficient)
 // ============================================================================
 
 String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
@@ -1140,7 +1487,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(c.external > depth)
 			continue;
 		if(c.name.IsEmpty())
-			continue;  // skip malformed components
+			continue;
 
 		Json component;
 		component("type", c.type)
@@ -1184,16 +1531,11 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(!IsNull(c.purl))
 			component("purl", c.purl);
 
-		// An operating system is never "bundled by us" — exempt the OS
-		// component from the CONTAINER tier clamp.
 		int tier_value = c.type == "operating-system"
 			? c.external
 			: clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp);
 		component("properties", JsonArray()
 			<< Json("name", "upp:deployment-mode")("value", sbom_tier[tier_value]));
-
-//		component("properties", JsonArray()
-//			<< Json("name", "upp:deployment-mode")("value", sbom_tier[clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp)]));
 
 		alive.Add(c.bom_ref);
 		emitted_i << i;

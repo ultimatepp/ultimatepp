@@ -12,6 +12,8 @@ struct SBOMDlg : WithSBOMLayout<TopWindow> {
 SBOMDlg::SBOMDlg()
 {
 	CtrlLayoutExit(*this, "Software Bill Of Materials");
+	Sizeable();
+	MaximizeBox();
 	
 	list.HeaderObject().Absolute();
 	list.AddColumn("Name", 200);
