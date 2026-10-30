@@ -12,14 +12,14 @@ struct SBOMDlg : WithSBOMLayout<TopWindow> {
 SBOMDlg::SBOMDlg()
 {
 	CtrlLayoutExit(*this, "Software Bill Of Materials");
+	Sizeable();
+	MaximizeBox();
 	
 	list.HeaderObject().Absolute();
 	list.AddColumn("Name", 200);
 	list.AddColumn("Type", 80);
 	list.AddColumn("Version", 120);
-//	list.AddColumn("External", 50);
 	list.AddColumn("3rd party", 50);
-//	list.AddColumn("Scanned", 50);
 	list.AddColumn("Shipped", 50);
 	list.AddColumn("License", 300);
 	list.AddColumn("Depends", 300);
@@ -52,12 +52,12 @@ void SBOMDlg::Sync()
 		String dep = Join(m.depends, ", ");
 		
 		if(ToUpper(m.name + m.version + lic + dep + m.homepage + m.originUrl).Find(s) >= 0 &&
-		   get_i(mod, !m.external, true, true, m.external <= 1, m.external <= 1))
+		  (mod != SBOM_BASE || m.external <= T_DYNAMIC_BUNDLED))
 			list.Add(m.name,
 			         m.type,
 			         m.version,
-			         m.external ? "Y" : "",
-			         get_i(mod, true, true, !m.external, true, !m.external) ? "Y" : "",
+			         m.external ? "Y" : "", // 3rd party
+			         mod == SBOM_CONTAINER || m.external <= T_DYNAMIC_BUNDLED ? "Y" : "", // Shipped
 			         lic,
 			         dep,
 			         m.purl,
@@ -71,16 +71,11 @@ void SBOMDlg::Sync()
 
 void SBOMDlg::Perform()
 {
-	mode.Add(SBOM_BASE, "0 - Ignore dependencies");
-	mode.Add(SBOM_FULL, "1 - All dependencies as shipped");
-	mode.Add(SBOM_EXTERNAL_FULL, "2 - All dependencies as external");
-	mode.Add(SBOM_DIRECT, "3 - Direct dependencies as shipped");
-	mode.Add(SBOM_EXTERNAL_DIRECT, "4 - Direct dependencies as external");
+	mode.Add(SBOM_BASE, "Minimal SBOM (CRA/VEX)");
+	mode.Add(SBOM_FULL, "Full SBOM (using platform dependencies)");
+	mode.Add(SBOM_CONTAINER, "Full SBOM (shipping all dependencies)");
 
-	mode <<= 1;
-#ifdef PLATFORM_LINUX
-	mode <<= 2;
-#endif
+	mode <<= SBOM_FULL;
 
 	mode << [this] { Sync(); };
 	
@@ -98,7 +93,7 @@ void Ide::CreateSBOM()
 	SyncExternalDependencies(true);
 	SBOMDlg dlg;
 	dlg.save << [&] {
-		SelectSaveFile("*.json\t*.*", MakeBuild::CreateSBOM(dlg.cs, ~dlg.mode));
+		SelectSaveFile("*.json", AsJSON(ParseJSON(MakeBuild::CreateSBOM(dlg.cs, ~dlg.mode)), true));
 	};
 
 	Progress pi("Scanning");

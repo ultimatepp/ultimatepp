@@ -54,7 +54,7 @@ Vector<VcpkgInstalled> VcpkgList()
 	return ms.PickValues();
 }
 
-String VcpkgTriplet(const String& builder, const String& compiler, bool so)
+String VcpkgTriplet(const String& builder, const String& compiler, bool so, bool md)
 {
 	if(builder == "CLANG"){ // llvm-mingw cross-compilation support for Windows
 		if(compiler.Find("i686-w64-mingw32")>=0) return so ? "x86-mingw-dynamic-release" : "x86-mingw-static-release";
@@ -63,9 +63,9 @@ String VcpkgTriplet(const String& builder, const String& compiler, bool so)
 	}
 #ifdef PLATFORM_WIN32
 	if(builder.StartsWith("MSC"))
-		return builder.Find("ARM64") >= 0 ? so ? "arm64-windows" : "arm64-windows-static-release"
-				: builder.Find("64") >= 0 ? so ? "x64-windows-release" : "x64-windows-static-release" // 2026-10-19 - Switched to -release (=> skip debug builds)
-				: so ? "x86-windows" : "x86-windows-static";
+		return builder.Find("ARM64") >= 0 ? so ? "arm64-windows" : md ? "arm64-windows-static-md" : "arm64-windows-static-release"
+				: builder.Find("64") >= 0 ? so ? "x64-windows-release" : md ? "x64-windows-static-md-release" : "x64-windows-static-release"
+				: so ? "x86-windows" : md ? "x86-windows-static-md" : "x86-windows-static";
 	return "x64-mingw-static-release";
 #else
 #ifdef CPU_ARM
@@ -77,9 +77,9 @@ String VcpkgTriplet(const String& builder, const String& compiler, bool so)
 #endif
 }
 
-String VcpkgTriplet(const VectorMap<String, String>& vars, bool so)
+String VcpkgTriplet(const VectorMap<String, String>& vars, bool so, bool md)
 {
-	return VcpkgTriplet(vars.Get("BUILDER", Null), vars.Get("COMPILER", Null), so);
+	return VcpkgTriplet(vars.Get("BUILDER", Null), vars.Get("COMPILER", Null), so, md);
 }
 
 Vector<String> VcpkgTriplets()
@@ -89,8 +89,10 @@ Vector<String> VcpkgTriplets()
 		VectorMap<String, String> vars;
 		String fn = ConfigFile(ff.GetName());
 		if(LoadVarFile(fn, vars)) {
-			ts.FindAdd(VcpkgTriplet(vars, false));
-			ts.FindAdd(VcpkgTriplet(vars, true));
+			ts.FindAdd(VcpkgTriplet(vars, false, false));
+			ts.FindAdd(VcpkgTriplet(vars, false, true));
+			ts.FindAdd(VcpkgTriplet(vars, true, false));
+			ts.FindAdd(VcpkgTriplet(vars, true, true));
 		}
 	}
 	

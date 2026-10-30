@@ -105,7 +105,7 @@ int Builder::Execute(const char *cl, Stream& out)
 void Builder::AddVCPKGPaths()
 {
 	if((IsVCPKG() || HasFlag("VCPKG")) && RequiredExternalDependenciesInfo().GetCount()) {
-		String libs = GetFileFolder(VcpkgExe()) + "/installed/" + VcpkgTriplet(bm, HasFlag("SHARED") || HasFlag("SO"));
+		String libs = GetFileFolder(VcpkgExe()) + "/installed/" + VcpkgTriplet(bm, HasFlag("SHARED") || HasFlag("SO"), config.Find("MD") >= 0);
 		
 		include << libs + "/include";
 		libpath << libs + "/lib";
