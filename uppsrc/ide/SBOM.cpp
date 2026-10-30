@@ -93,7 +93,7 @@ void Ide::CreateSBOM()
 	SyncExternalDependencies(true);
 	SBOMDlg dlg;
 	dlg.save << [&] {
-		SelectSaveFile("*.json\t*.cdx.json\t*.*", AsJSON(ParseJSON(MakeBuild::CreateSBOM(dlg.cs, ~dlg.mode)), true));
+		SelectSaveFile("*.json", AsJSON(ParseJSON(MakeBuild::CreateSBOM(dlg.cs, ~dlg.mode)), true));
 	};
 
 	Progress pi("Scanning");
