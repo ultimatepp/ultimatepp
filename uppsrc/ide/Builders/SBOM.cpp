@@ -55,13 +55,6 @@ static int DeclTier(int decl, const String& name, int link_mode, int dyn_tier)
 
 // ============================================================================
 // Shell-free probe layer (OPTIMIZED VERSION).
-//
-// Key changes:
-//  1. FileOwnerDB(): single-shot reverse map (dpkg .list files or one rpm -qa)
-//  2. SoDB() unchanged (already singleton)
-//  3. GitCommitCache(): one git log per repo, shared by all packages
-//  4. BatchDpkgQuery(): per-package memoized cache
-//  5. BatchReadelf(): single call for all .so files
 // ============================================================================
 
 // --- ldconfig cache: one Sys() call, parsed once in C++ ---------------------
@@ -239,8 +232,6 @@ static String OwnerOfFileFast(const String& file) {
 
 #endif
 
-// --- Batch dpkg-query -W: fetch metadata for multiple packages -------------
-
 #ifdef PLATFORM_POSIX
 struct PkgMeta : Moveable<PkgMeta> {
 	String version;
@@ -256,12 +247,6 @@ static PkgMeta QueryDpkgPackage(const String& pkg) {
 	int cached = dpkg_query_batch_cache.Find(pkg);
 	if(cached >= 0)
 		return dpkg_query_batch_results[cached];
-	
-	// If cache is growing large, flush and rebuild
-	if(dpkg_query_batch_cache.GetCount() > 200) {
-		dpkg_query_batch_cache.Clear();
-		dpkg_query_batch_results.Clear();
-	}
 	
 	// Try single package query if batch cache misses frequently
 	String out = Sys("dpkg-query -W -f='${Version}\n${Homepage}\n${Architecture}\n${Source}\n' " + pkg);
@@ -281,11 +266,6 @@ static PkgMeta QueryDpkgPackage(const String& pkg) {
 	return dpkg_query_batch_results[dpkg_query_batch_results.GetCount()-1];
 }
 
-// Optional: truly batch mode if you want to pre-warm all at once
-static void WarmDpkgQueryBatch(const Vector<String>& pkgs) {
-	for(const String& pkg : pkgs)
-		(void)QueryDpkgPackage(pkg);  // side-effect fills cache
-}
 #endif
 
 // --- Batch readelf -d: extract NEEDED from multiple .so files --------------
@@ -501,7 +481,6 @@ static bool SBOMIsSpdxLike(const String& s)
 	return word;
 }
 
-// OPT: Now uses cached dpkg-query batch instead of per-call
 static void FillPkgMeta(SBOMComponent& m) {
 	if(m.name.IsEmpty())
 		return;
@@ -552,18 +531,19 @@ static void FillPkgMeta(SBOMComponent& m) {
 		String vrel;
 		SplitTo(out, '\n', false, epoch, vrel, url, arch, lic, srcrpm);
 		epoch = TrimBoth(epoch);
-		if(!url.GetCount()) {
+		vrel  = TrimBoth(vrel);
+		if(!vrel.GetCount()) {                 // rpm -q found nothing → no metadata
 			m.homepage = String();
 			return;
 		}
-		m.version = vrel;
-		m.homepage = TrimBoth(url);
+		m.version  = vrel;
+		m.homepage = url.GetCount() ? TrimBoth(url) : String();
 		lic = TrimBoth(lic);
 		if(lic.GetCount() && lic != "(none)") {
 			m.licenses.Clear();
 			m.licenses << lic;
 		}
-	
+
 		static String ns, distro;
 		static bool loaded = false;
 		if(!loaded) {
@@ -584,7 +564,7 @@ static void FillPkgMeta(SBOMComponent& m) {
 				ns = "suse";
 				distro = v.GetCount() > 1 ? "sle" + v[0] + "-sp" + v[1]
 					: v.GetCount()    ? "sle" + v[0]
-										: "sles";
+						: "sles";
 			}
 			else
 				ns = id;
@@ -617,21 +597,21 @@ static VectorMap<String, Tuple<String, String, String>>& GitCommitCache() {
 	return cache;
 }
 
-static Tuple<String, String, String> ResolveGitCommit(const String& repo_dir, const String& git_cmd) {
-	String root = TrimBoth(HostSys(git_cmd + " -C " + repo_dir + " rev-parse --show-toplevel"));
-	
-	int q = GitCommitCache().Find(root);
+static Tuple<String, String, String> ResolveGitCommit(const String& repo_root, const String& git_cmd) {
+	if(!repo_root.GetCount())
+		return MakeTuple(String(), String(), String());
+	int q = GitCommitCache().Find(repo_root);
 	if(q >= 0)
 		return GitCommitCache()[q];
-	
+
 	String hash, sha1, ts;
-	String log_out = TrimBoth(HostSys(git_cmd + " -C " + repo_dir + " log -1 --date=unix --format=\"%h %H %cd\""));
+	String log_out = TrimBoth(HostSys(git_cmd + " -C \"" + repo_root
+									  + "\" log -1 --date=unix --format=\"%h %H %cd\""));
 	if(!SplitTo(log_out, ' ', hash, sha1, ts)) {
 		hash = ""; sha1 = ""; ts = "";
 	}
-	
 	Tuple<String, String, String> entry = MakeTuple(hash, sha1, ts);
-	GitCommitCache().Add(root, entry);
+	GitCommitCache().Add(repo_root, entry);
 	return entry;
 }
 
@@ -741,37 +721,38 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 											// (repo top-levels only, positive
 											//  entries only — negatives are
 											//  deliberately never cached)
-	auto OriginOf = [&](const String& dir) -> String {
+
+	// Repo top-level, via walk-up over known repo tops; resolved + cached on
+	// first encounter. Negatives stay uncached (a subdir may itself be a repo),
+	// same contract as before.
+	auto RepoTop = [&](const String& dir) -> String {
 		String d = CanonDir(dir);
-		// Walk up until we hit a cached repo top-level. Since only repo
-		// top-levels are ever stored, every directory below one resolves
-		// to the same entry, and no origin can leak above the repo.
 		for(;;) {
-			int q = repo_origin.Find(d);
-			if(q >= 0)
-				return repo_origin[q];
+			if(repo_origin.Find(d) >= 0)
+				return d;                      // d is a known repo top
 			String parent = GetFileFolder(d);
 			if(parent.IsEmpty() || parent == d)
-				break;                    // reached drive root / "/"
+				break;
 			d = parent;
 		}
-
-		// Not covered by any cached repo — resolve it for real, once,
-		// at the repository top-level:
 		String root = TrimBoth(Sys(git + " -C \"" + dir + "\" rev-parse --show-toplevel"));
 		if(!root.GetCount())
-			return String();              // outside any repo; NOT cached
-										// (a subdir may itself be a repo)
+			return String();                  // outside any repo; not cached
 		root = CanonDir(root);
-
-		String origin = TrimBoth(Sys(git + " -C \"" + root + "\" config --get remote.origin.url"));
-		
-		if(origin.StartsWith("git@github.com:"))
-			origin.Replace("git@github.com:", "https://github.com/");
-		repo_origin.GetAdd(root, origin);   // one entry per repo
-		return origin;
+		if(repo_origin.Find(root) < 0) {       // first sighting of this repo
+			String origin = TrimBoth(Sys(git + " -C \"" + root + "\" config --get remote.origin.url"));
+			if(origin.StartsWith("git@github.com:"))
+				origin.Replace("git@github.com:", "https://github.com/");
+			repo_origin.Add(root, origin);
+		}
+		return root;
 	};
 
+	auto OriginOf = [&](const String& dir) -> String {
+		String root = RepoTop(dir);
+		return root.GetCount() ? repo_origin.Get(root) : String();
+	};
+	
 	auto PrefixOf = [&](String origin) {
 		if(!origin.GetCount())
 			return String("./");
@@ -856,20 +837,21 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		{
 			SBOMComponent& m = cs.Add();
 			own_ci[i] = cs.GetCount() - 1;
-			
-			String origin = OriginOf(PackageDirectory(n));
+
+			String root = RepoTop(PackageDirectory(n));
+			String origin = root.GetCount() ? repo_origin.Get(root) : String();
 			m.bom_ref = m.name = PkgName(n);               // PkgName also canonicalizes
 
 			if(i == 0)
 				m.type = "application";
-			
+
 			if(origin.GetCount()) {
 				m.originUrl = "git+" + origin;
 				origin.TrimEnd(".git");
 				m.homepage = origin;
 			}
-			// OPT: Git commit now cached per-repo
-			Tuple<String, String, String> commit = ResolveGitCommit(PackageDirectory(n), git);
+			Tuple<String, String, String> commit = ResolveGitCommit(root, git);
+			
 			String hash = commit.a;
 			String sha1 = commit.b;
 			String ts = commit.c;
@@ -954,7 +936,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 
 	// Collect candidates for batch operations
 	Index<String> candidate_files;     // for readlink
-	Vector<String> candidate_packages;  // for dpkg-query (auto-fills during resolution)
 
 	// OPT: Memoized resolve — step 3 and 4 share results
 	Vector<String> resolved_file_to_base;  // parallel to candidate_files
@@ -1038,13 +1019,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					if(win_target) {
 						FillFromVcpkgList(m, nm, triplet);
 					}
-					
-					if(own_ci[d.pk] >= 0)
-						AddDependency(cs[own_ci[d.pk]], nm);
-				} else {
-					if(own_ci[d.pk] >= 0)
-						AddDependency(cs[own_ci[d.pk]], nm);
 				}
+				if(own_ci[d.pk] >= 0)
+					AddDependency(cs[own_ci[d.pk]], nm);
 				continue;
 			}
 
@@ -1064,10 +1041,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 			
 #ifdef PLATFORM_POSIX
 			if(!win_target && (IsRPM() || IsDPKG())
-			&& (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM)) {
-				candidate_packages.Add(nm);
+			&& (tier == T_STATIC_THIRD_PARTY || tier == T_DYNAMIC_PLATFORM))
 				FillPkgMeta(m);
-			}
 #endif
 			if(win_target && (tier == T_DYNAMIC_BUNDLED || tier == T_STATIC_THIRD_PARTY))
 				FillFromVcpkgList(m, nm, triplet);
@@ -1075,12 +1050,6 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 		if(own_ci[d.pk] >= 0)
 			AddDependency(cs[own_ci[d.pk]], nm);
 	}
-
-	// OPT: Pre-warm dpkg-query cache with all collected packages
-#ifdef PLATFORM_POSIX
-	if(!win_target && IsDPKG())
-		WarmDpkgQueryBatch(candidate_packages);
-#endif
 
 	// Windows platform component
 	if(win_target) {
@@ -1121,7 +1090,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					SBOMComponent& m = cs[q];
 					m.version = p["versionInfo"];
 					String lic = p["licenseConcluded"];
-					if(!IsNull(lic)) {
+					if(!IsEmpty(lic)) {
 						m.licenses.Clear();
 						m.licenses << ~lic;
 					}
@@ -1155,7 +1124,7 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 						String id = p2["SPDXID"];
 						if(id.StartsWith("SPDXRef-resource-")) {
 							String url = p2["downloadLocation"];
-							if(!IsNull(url) && url != "NONE")
+							if(!IsEmpty(url) && url != "NONE")
 								for(Value ch : p2["checksums"])
 									cs[q].sourceDistributions
 									<< MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
@@ -1295,11 +1264,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 							real_of.Add(args[i], TrimBoth(lines[i]));
 				}
 			}
-				
-				
+
 			// Attribute the round's edges and enqueue the newly discovered files.
 			for(int i = 0; i < round.GetCount(); i++) {
-				String file = round[i];
 				String from = qfrom[head + i];
 				for(const String& sn : needed[i]) {
 					String rawfile = FindSonameFile(sn);
@@ -1318,10 +1285,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM_TRANSITIVE;
-						if(IsRPM() || IsDPKG()) {
-							candidate_packages.Add(nm);
+						if(IsRPM() || IsDPKG())
 							FillPkgMeta(m);
-						}
 					}
 					int fq = ci_ext.Get(from, -1);
 					if(fq >= 0)
@@ -1350,10 +1315,8 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
 					m.external = T_DYNAMIC_PLATFORM;
-					if(IsRPM() || IsDPKG()) {
-						candidate_packages.Add(nm);
+					if(IsRPM() || IsDPKG())
 						FillPkgMeta(m);
-					}
 				}
 				if(own_ci[0] >= 0)
 					AddDependency(cs[own_ci[0]], nm);
@@ -1375,10 +1338,9 @@ Array<SBOMComponent> MakeBuild::CreateSBOMComponents(const String& triplet, Gate
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM;
-						if(IsRPM() || IsDPKG()) {
-							candidate_packages.Add(nm);
+						if(IsRPM() || IsDPKG())
 							FillPkgMeta(m);
-						}
+
 					}
 					else if(cs[c].external > T_DYNAMIC_PLATFORM)
 						cs[c].external = T_DYNAMIC_PLATFORM;    // direct req outranks transitive discovery
@@ -1487,15 +1449,15 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 
 		JsonArray licenses;
 		for(const String& s : c.licenses)
-			if(!IsNull(s))
+			if(!IsEmpty(s))
 				EmitLicense(licenses, s);
 		if(licenses)
 			component("licenses", licenses);
 
 		JsonArray extRefs;
-		if(!IsNull(c.homepage))
+		if(!IsEmpty(c.homepage))
 			extRefs << Json("type", "website")("url", c.homepage);
-		if(!IsNull(c.originUrl))
+		if(!IsEmpty(c.originUrl))
 			extRefs << Json("type", "distribution")("url", c.originUrl);
 
 		auto SourceRef = [](const auto& s) {
@@ -1508,12 +1470,12 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 			return r;
 		};
 		for(const auto& s : c.sourceDistributions)
-			if(!IsNull(s.a))
+			if(!IsEmpty(s.a))
 				extRefs << SourceRef(s);
 
 		if(extRefs)
 			component("externalReferences", extRefs);
-		if(!IsNull(c.purl))
+		if(!IsEmpty(c.purl))
 			component("purl", c.purl);
 
 		int tier_value = c.type == "operating-system"
