@@ -286,6 +286,7 @@ void Ide::SetupFormat() {
 	WithSetupEditorLayout<ParentCtrl> edt;
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
+	WithSetupAILayout<ParentCtrl> ai;
 	WebSearchTab web_search;
 	edt.lineends
 		.Add(LF, "LF")
@@ -311,6 +312,7 @@ void Ide::SetupFormat() {
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(web_search, "Web search");
+	dlg.Add(ai, "AI");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 
 #ifdef PLATFORM_WIN32
@@ -375,6 +377,8 @@ void Ide::SetupFormat() {
 	              .Add(20, "C++ 20")
 	              .Add(23, "C++ 23")
 	;
+
+	ai.url.AddList("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=");
 	
 	ide.wayland.Hide();
 #ifdef GUI_GTK
@@ -468,6 +472,9 @@ void Ide::SetupFormat() {
 		(ide.show_basic_hints, show_basic_hints)
 		(ide.valgrind, valgrind_options)
 		(ide.update_icon, macos_update_icon)
+		
+		(ai.url, ai_url)
+		(ai.key, ai_key)
 	;
 	
 #ifdef PLATFORM_WIN32
@@ -518,7 +525,7 @@ void Ide::SetupFormat() {
 		f1.Set(def.font1);
 		f2.Set(def.font2);
 	};
-
+	
 	for(;;) {
 		int c = dlg.Run();
 

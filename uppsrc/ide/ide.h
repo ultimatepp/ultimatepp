@@ -712,6 +712,9 @@ public:
 #else
 		true;
 #endif
+
+	String    ai_url;
+	String    ai_key;
 		
 
 	// Formats editor's code with Ide format parameters
@@ -1036,6 +1039,7 @@ public:
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 
 	void      AssistMenu(Bar& menu);
+	void      AIMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -1078,6 +1082,8 @@ public:
 		void  NavigatorDlg();
 		void  InsertParameters();
 		void  FindUnitializedMemberVariables(int scope);
+		void  AIReview();
+
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
