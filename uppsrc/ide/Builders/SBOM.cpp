@@ -1069,9 +1069,17 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			}
 		}
 
+		// Effective WHEN keys: host/manager keys + this package's resolved
+		// config (carries main-config selections like GUI X11).
+		Index<String> keyset;
+		for(const String& k : dep_keys)
+			keyset.FindAdd(k);
+	
 		if(!win_target) {
 			Index<String> cfg = mk.PackageConfig(wspc, i, bm, mk.mainconfigparam, host, builder);
-
+			for(int ci = 0; ci < cfg.GetCount(); ci++)
+				keyset.FindAdd(cfg[ci]);
+	
 			auto GatherNames = [&](const Array<OptItem>& set, int decl) {
 				for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
 					if(s.GetCount())
@@ -1080,14 +1088,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			GatherNames(pk.static_library, DECL_STATIC_LIBRARY);
 			GatherNames(pk.dynamic_library, DECL_DYNAMIC_LIBRARY);
 			GatherNames(pk.library, DECL_LIBRARY);
-
+	
 			for(String mod : Split(Gather(pk.pkg_config, cfg.GetKeys()), ' '))
 				for(String s : Split(builder.EvalCmdX("pkg-config --libs " + mod), CharFilterWhitespace))
 					if(s.TrimStart("-l") && s.GetCount())
 						decls.Add(Decl(DECL_LIBRARY, s, i));
 		}
-		
-		for(auto s : RequiredExternalDependenciesInfo(pk, dep_keys)) {
+	
+		Vector<String> eff_keys = keyset.PickKeys();
+		for(auto s : RequiredExternalDependenciesInfo(pk, eff_keys)) {
+	
 			String nm = s.name;
 			int q = nm.Find('|');
 			if(q >= 0) {
