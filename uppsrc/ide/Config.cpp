@@ -195,7 +195,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 38;
+	int version = 39;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -413,6 +413,9 @@ void Ide::Serialize(Stream& s)
 	
 	if(version >= 35)
 		s % valgrind_options;
+	
+	if(version >= 39)
+		s % ai_url % ai_key;
 
 #ifdef PLATFORM_WIN32
 	if(s.IsLoading() && HostConsole == "/usr/bin/xterm -e")
