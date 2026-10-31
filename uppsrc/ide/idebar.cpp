@@ -897,6 +897,11 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
+void Ide::AIMenu(Bar& menu)
+{
+	menu.Add("Review", [this] { AIReview(); });
+}
+
 void Ide::AssistMenu(Bar& menu)
 {
 	LTIMESTOP("AssistMenu");
@@ -1140,6 +1145,7 @@ void Ide::SetToolBar()
 void Ide::EditorMenu(Bar& bar)
 {
 	bar.Sub("Assist", [this](Bar& bar) { AssistMenu(bar); });
+	bar.Sub("AI", [this](Bar& bar) { AIMenu(bar); });
 	Reformat(bar);
 	InsertAdvanced(bar);
 //	bar.Add("Find and Replace", THISBACK(SearchMenu));
