@@ -1498,8 +1498,6 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			                    : "Microsoft Visual C++ Runtime (statically linked)";
 			r.version  = crt_version;
 			r.external = crt_dyn ? T_DYNAMIC_PLATFORM : T_STATIC_THIRD_PARTY;
-//			if(sdk_ver.GetCount())
-//				r.properties << ("upp:built-with-windows-sdk|" + sdk_ver);
 		}
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], VCRUNTIME_REF);
