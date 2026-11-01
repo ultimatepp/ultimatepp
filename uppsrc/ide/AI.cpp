@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define LDUMP(x)
+
 void Ide::AIReview()
 {
 #ifdef _DEBUG
@@ -25,8 +27,8 @@ void Ide::AIReview()
 			break;
 	}
 	
-	DDUMP(code.GetCount());
-	DDUMP(code);
+	LDUMP(code.GetCount());
+	LDUMP(code);
 
 	String responseText =
 	http.ContentType("application/json").Post(
@@ -43,7 +45,7 @@ void Ide::AIReview()
 
 	Value responseJson = ParseJSON(responseText);
 	
-	DDUMP(http.GetContent());
+	LDUMP(http.GetContent());
 
 	if (!IsNull(responseJson["error"])) {
 		Cout() << "Gemini API Error: " << responseJson["error"]["message"] << "\n";
