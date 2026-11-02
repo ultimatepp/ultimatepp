@@ -1,5 +1,7 @@
 #include "Builders.h"
 
+#define LDUMP(x) // DDUMP(x)
+
 String Format8601Z(Time t)
 {
 	return Format("%04.4d-%02.2d-%02.2d`T%02.2d`:%02.2d`:%02.2d`Z",
@@ -996,9 +998,9 @@ String SBOMContext::ClangVersion()
 #endif
 				continue;
 		}
-		RDUMP(exe);
+		LDUMP(exe);
 		String call = "\"" + exe + "\" --version";
-		RDUMP(call);
+		LDUMP(call);
 		
 		String out = Sys("\"" + exe + "\" --version");
 		int q = out.Find("clang version ");
@@ -1342,21 +1344,18 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 		for(String fn : pk.file) {
 			String file = SourcePath(n, fn);
 			String name = GetFileName(file);
-			if(!ToLower(name).EndsWith("sbom.json"))
-				continue;
-			Vector<String> parts = Split(name, '.');
-			if(parts.GetCount()){
-				String prefix = parts[0];
-				if(ToLower(prefix) == "sbom" || keyset.Find(prefix) >= 0){
-					Value sbom = ParseJSON(LoadFile(file));
-					if(sbom["components"].Is<ValueArray>())
-						ReadCDXDocument(sbom, i);        // full CycloneDX document
-					else if(sbom.Is<ValueArray>())
-						for(Value p : sbom)
-							ReadComponent(p, i);         // legacy SPDX fragment (array)
-					else
-						ReadComponent(sbom, i);          // legacy SPDX fragment (single)
-				}
+			String when = name;
+			if(!when.TrimEnd(".sbom.json"))
+				when.Clear();
+			if(name == "sbom.json" || when.GetCount() && MatchWhen(when, keyset.GetKeys())) {
+				Value sbom = ParseJSON(LoadFile(file));
+				if(sbom["components"].Is<ValueArray>())
+					ReadCDXDocument(sbom, i);        // full CycloneDX document
+				else if(sbom.Is<ValueArray>())
+					for(Value p : sbom)
+						ReadComponent(p, i);         // legacy SPDX fragment (array)
+				else
+					ReadComponent(sbom, i);          // legacy SPDX fragment (single)
 			}
 		}
 		
