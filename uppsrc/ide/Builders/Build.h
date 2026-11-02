@@ -35,13 +35,16 @@ struct SBOMComponent {
     String type = "library";
     String bom_ref;
 
-    String version;                      // For shipped components (regardless of linking)
-	String purl;                         // PURL from package manager, if available
-	Vector<Tuple<String, String, String>> sourceDistributions; // Upstream source archive URLs, hash algorithm, hash value
+    String version;
+    String purl;
+    Vector<Tuple<String, String, String>> sourceDistributions;
 
-	int    external = 0;                 // 0 - not external, 1 - direct, 2 - indirect
+    int    external = 0;    // tier T0–T4: 0 own code, 1 static integration,
+                            // 2 bundled dynamic (shipped by us), 3 platform
+                            // provided dynamic, 4 transitive dynamic (NEEDED).
+                            // (linkmode removed — tier derives from build flags)
 
-    Vector<String> licenses;             // SPDX license IDs or expressions
+    Vector<String> licenses;
     Vector<String> depends;
 
     String homepage;
@@ -134,12 +137,32 @@ private:
 	bool IsAndroidMethod(const String& method) const;
 };
 
+// Tiers
 enum {
-	SBOM_BASE,              // 0
-	SBOM_FULL,              // 1 - default for Win32, use for docker / VM / flatpack in linux
-	SBOM_EXTERNAL_FULL,     // 2 - default for Linux
-	SBOM_DIRECT,            // 3
-	SBOM_EXTERNAL_DIRECT,   // 4
+	T_STATIC_IN_REPO = 0,
+	T_STATIC_VENDORED,
+	T_STATIC_THIRD_PARTY,
+	T_DYNAMIC_BUNDLED,
+	T_DYNAMIC_PLATFORM,
+	T_DYNAMIC_PLATFORM_TRANSITIVE,
+	T_COUNT
+};
+
+const static char* sbom_tier[] = {
+	"static-in-repo",					// compiled from our own sources in our repositories
+	"static-vendored",					// compiled from vendored sources in our repositories
+	"static-third-party",				// 3rd-party headers/objects from package managers (VCPKG, -dev, brew)
+	"dynamic-bundled",					// .so/.dll/.dylib shipped with the product
+	"dynamic-platform",					// library the target platform is assumed to provide
+	"dynamic-platform-transitive",		// dependency of dynamic-platform only
+	"unknown"
+};
+
+// Export modes
+enum {
+	SBOM_BASE,              // only up to T_DYNAMIC_BUNDLED (covering VEX + CRA minimal requirements)
+	SBOM_FULL,				// full dependency tree as is
+	SBOM_CONTAINER,			// full dependency tree with external deps shipped and flattened to T_DYNAMIC_BUNDLED
 };
 
 const Index<String>& SPDXLicenses();

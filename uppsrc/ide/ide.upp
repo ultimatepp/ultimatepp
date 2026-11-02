@@ -59,6 +59,7 @@ file
 	Virtuals.cpp,
 	Events.cpp,
 	NavDlg.cpp,
+	AI.cpp,
 	Log.cpp,
 	MainConfig.cpp,
 	Setup.cpp,
