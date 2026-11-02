@@ -116,8 +116,7 @@ _StdFont(), [_^Upp`:`:Color^ Color]_[*@3 ink]_`=_SColorText(), [@(0.0.255) int]_
 sskey]_`=_[@3 0])&]
 [s2;%% This function draws multiline text with tabs (contains `'`\n`' 
 and `'`\t`'), possibly underline single character [%-*@3 accesskey 
-]in the text. Width is limited by [%-*@3 cx] and text is word `- 
-wrapped if line is longer.&]
+]in the text. Parameter [%-*@3 cx] is obsolete and ignored.&]
 [s0;%% &]
 [s4; &]
 [s5;:Upp`:`:GetTLTextSize`(const Upp`:`:wchar`*`,Upp`:`:Font`): [_^Upp`:`:Size^ Size]_[* G
