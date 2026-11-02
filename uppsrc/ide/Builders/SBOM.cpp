@@ -1174,6 +1174,117 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			AddDependency(cs[own_ci[pi]], cs[ci].bom_ref);
 	};
 
+	// ------------------------------------------------------------------------
+	// Embedded sbom.json reader — full CycloneDX document variant.
+	//
+	// Recognized by the presence of a root "components" array:
+	//   { "bomFormat": "CycloneDX", "components": [ ... ], "dependencies": [...] }
+	// ReadComponent above remains the reader for the SPDX-ish fragment
+	// shape (bare component object / array of them) and is untouched.
+	// ------------------------------------------------------------------------
+
+	// CycloneDX carries custom hints as properties[{name, value}]
+	auto CDXProp = [](Value c, const char *key) -> String {
+		for(Value p : c["properties"])
+			if(p["name"] == key)
+				return p["value"];
+		return String();
+	};
+
+	// licenses[] entries: {expression:...} or {license:{id:...}|{name:...}}
+	auto CDXLicenses = [](Value c, SBOMComponent& m) {
+		for(Value l : c["licenses"]) {
+			String s = l["expression"];
+			if(!s.GetCount()) s = l["license"]["id"];
+			if(!s.GetCount()) s = l["license"]["name"];
+			if(s.GetCount())
+				m.licenses << s;
+		}
+	};
+
+	// externalReferences[] -> homepage / originUrl / sourceDistributions.
+	// Hash format is normalized to the (url, alg, checksum) tuple shape
+	// used everywhere else in this file; alg passes through as written
+	// ("SHA-1", "SHA-256", ...). First hash entry of a ref wins, matching
+	// the vcpkg SPDX reader's attitude: one digest is enough.
+	auto CDXExtRefs = [](Value c, SBOMComponent& m) {
+		for(Value r : c["externalReferences"]) {
+			String ty  = r["type"];
+			String url = r["url"];
+			if(!url.GetCount())
+				continue;
+			if(ty == "website") {
+				if(!m.homepage.GetCount())
+					m.homepage = url;
+			}
+			else if(ty == "distribution" || ty == "vcs") {
+				if(!m.originUrl.GetCount())
+					m.originUrl = url;
+			}
+			else if(ty == "source-distribution") {
+				String alg, sum;
+				for(Value h : r["hashes"]) {
+					String a = h["alg"], v = h["content"];
+					if(a.GetCount() && v.GetCount()) { alg = a; sum = v; break; }
+				}
+				m.sourceDistributions << MakeTuple<String, String, String>(url, alg, sum);
+			}
+		}
+	};
+
+	// bom-ref -> cs index, for edges declared in the document's dependencies[]
+	VectorMap<String, int> cdx_ref_idx;
+
+	auto ReadCDXComponent = [&](Value p, int pi) {
+		String nm = p["name"];
+		if(nm.IsEmpty())
+			return;
+		bool fresh;
+		CompIdxExt(nm, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.bom_ref = p["bom-ref"];
+			if(!m.bom_ref.GetCount())
+				m.bom_ref = nm;
+			m.name    = nm;
+			m.version = p["version"];
+			String ty = p["type"];
+			if(ty.GetCount())
+				m.type = ty;
+			CDXLicenses(p, m);
+			CDXExtRefs(p, m);
+			m.purl = p["purl"];
+			int t = TierByName(CDXProp(p, "upp:deployment-mode"));
+			m.external = t >= 0 ? t : T_DYNAMIC_BUNDLED;
+			cdx_ref_idx.Add(m.bom_ref, cs.GetCount() - 1);
+		}
+		int ci = ci_ext.Get(nm, -1);
+		if(ci >= 0 && own_ci[pi] >= 0)
+			AddDependency(cs[own_ci[pi]], cs[ci].bom_ref);
+	};
+
+	// Walk components[] (plus any nested components[], legal in CycloneDX),
+	// then apply dependencies[] edges by bom-ref. Edges run last so refs
+	// resolve regardless of declaration order; unknown refs are ignored —
+	// the graph stays closed.
+	auto ReadCDXDocument = [&](Value doc, int pi) {
+		for(Value c : doc["components"]) {
+			ReadCDXComponent(c, pi);
+			for(Value c2 : c["components"])       // nested sub-components
+				ReadCDXComponent(c2, pi);
+		}
+		for(Value d : doc["dependencies"]) {
+			int from = cdx_ref_idx.Get(String(d["ref"]), -1);
+			if(from < 0)
+				continue;
+			for(Value t : d["dependsOn"]) {
+				int to = cdx_ref_idx.Get(String(t), -1);
+				if(to >= 0 && to != from)
+					AddDependency(cs[from], cs[to].bom_ref);
+			}
+		}
+	};
+
 	// Step 2 — per-package gather (git log batched via GitResolveCommit)
 	progress_done = 0;
 	progress_total = wspc.GetCount();
@@ -1216,29 +1327,40 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 				AddDependency(m, PkgName(u.text));
 		}
 
-		for(String fn : pk.file) {
-			String file = SourcePath(n, fn);
-			if(ToLower(GetFileName(file)) == "sbom.json") {
-				Value sbom = ParseJSON(LoadFile(file));
-				if(sbom.Is<ValueArray>())
-					for(Value p : sbom)
-						ReadComponent(p, i);
-				else
-					ReadComponent(sbom, i);
-			}
-		}
-
 		// Effective WHEN keys: host/manager keys + this package's resolved
 		// config (carries main-config selections like GUI X11).
 		Index<String> keyset;
 		for(const String& k : dep_keys)
 			keyset.FindAdd(k);
+
+		Index<String> cfg;
+		if(!win_target)
+			cfg = mk.PackageConfig(wspc, i, bm, mk.mainconfigparam, host, builder);
+		for(int ci = 0; ci < cfg.GetCount(); ci++)
+			keyset.FindAdd(cfg[ci]);
 	
+		for(String fn : pk.file) {
+			String file = SourcePath(n, fn);
+			String name = GetFileName(file);
+			if(!ToLower(name).EndsWith("sbom.json"))
+				continue;
+			Vector<String> parts = Split(name, '.');
+			if(parts.GetCount()){
+				String prefix = parts[0];
+				if(ToLower(prefix) == "sbom" || keyset.Find(prefix) >= 0){
+					Value sbom = ParseJSON(LoadFile(file));
+					if(sbom["components"].Is<ValueArray>())
+						ReadCDXDocument(sbom, i);        // full CycloneDX document
+					else if(sbom.Is<ValueArray>())
+						for(Value p : sbom)
+							ReadComponent(p, i);         // legacy SPDX fragment (array)
+					else
+						ReadComponent(sbom, i);          // legacy SPDX fragment (single)
+				}
+			}
+		}
+		
 		if(!win_target) {
-			Index<String> cfg = mk.PackageConfig(wspc, i, bm, mk.mainconfigparam, host, builder);
-			for(int ci = 0; ci < cfg.GetCount(); ci++)
-				keyset.FindAdd(cfg[ci]);
-	
 			auto GatherNames = [&](const Array<OptItem>& set, int decl) {
 				for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
 					if(s.GetCount())
