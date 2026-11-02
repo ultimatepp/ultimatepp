@@ -156,8 +156,9 @@ protected:
 	String GitRepoTopLevel(const String& dir);
 	String GitOriginOf(const String& dir);
 	String GitRepoPrefix(String origin);
+	String GitTagCommit(const String &repo, const String &tag);
 	String PkgName(const String& s);
-	
+
 	// ------------------------------------------------------------------------
 	// VCPKG FAMILY FUNCTIONS
 	// ------------------------------------------------------------------------
@@ -168,9 +169,13 @@ protected:
 	// ------------------------------------------------------------------------
 	// WINDOWS TOOLCHAIN FAMILY
 	// ------------------------------------------------------------------------
-	
+
 	String MingwCrtVersion();
-	
+	String MsvcCrtVersion();
+	String WindowsSdkVersion();
+	String ClangVersion();
+	String FindUpwards(const String& dir, const String& filename, int maxdepth);
+
 	// ------------------------------------------------------------------------
 	// NEUTRAL TIERING / DISPATCH HELPERS
 	// ------------------------------------------------------------------------
@@ -769,6 +774,28 @@ String SBOMContext::GitRepoTopLevel(const String& dir)
 	return root;
 }
 
+// Resolve a tag to its commit SHA. Tries the peeled form first
+// (annotated tags -> the tagged commit), then the plain ref
+// (lightweight tags point directly at the commit). Returns empty
+// when the tag doesn't exist or the network is unavailable —
+// callers must treat empty as "unknown", never as "not shipped".
+String SBOMContext::GitTagCommit(const String &repo, const String &tag)
+{
+	Vector<String> forms;
+	forms << tag + "^{}" << tag;                    // annotated, then lightweight
+	for(const String& f : forms) {
+		String out = Sys(String(git) << " ls-remote " << repo
+		                        << " refs/tags/" << f);
+		for(const String& line : Split(out, '\n')) {
+			Vector<String> p = Split(line, '\t');
+			if(p.GetCount() == 2 && Regex("^[0-9a-fA-F]{40,64}$").Match(p[0])
+			   && p[1] == "refs/tags/" + f)
+				return p[0];
+		}
+	}
+	return String();
+}
+
 String SBOMContext::GitOriginOf(const String& dir)
 {
 	String root = GitRepoTopLevel(dir);
@@ -834,9 +861,6 @@ void SBOMContext::VcpkgFillFromInstalledList(SBOMComponent& m, const String& nam
 // WINDOWS TOOLCHAIN IMPLEMENTATION
 // ============================================================================
 
-// Splits PATH on ';' only — works for the U++ build-method PATH
-// representation; a colon-PATH host would silently lose the CRT version.
-// Accepted-fragile: retain as-is.
 String SBOMContext::MingwCrtVersion()
 {
 	String maj, min, fix;
@@ -863,6 +887,141 @@ String SBOMContext::MingwCrtVersion()
 		}
 	}
 	return String();
+}
+
+// Walks up from <dir> looking for <filename>. Used to locate SDKManifest.xml,
+// which sits above the INCLUDE entries (<...>\Include\<sdkver>\ucrt) rather
+// than inside any of them.
+String SBOMContext::FindUpwards(const String& dir, const String& filename, int maxdepth)
+{
+	String d = TrimBoth(dir);
+	while(d.GetCount() && (d.EndsWith("\\") || d.EndsWith("/")))
+		d.Trim(d.GetCount() - 1);
+	for(int i = 0; i <= maxdepth; i++) {
+		String f = AppendFileName(d, filename);
+		if(FileExists(f))
+			return f;
+		String p = GetFileFolder(d);
+		if(p.IsEmpty() || p == d)
+			break;
+		d = p;
+	}
+	return String();
+}
+
+// Reads _VC_CRT_{MAJOR,MINOR,BUILD}_VERSION from crtversion.h found in the
+// build method's INCLUDE path; composes "14.51.36244". The header is
+// authoritative over the toolset folder name — the CRT is serviced
+// independently (folder 15.61.36231 vs header 14.51.36244 in the wild).
+String SBOMContext::MsvcCrtVersion()
+{
+	for(String p : Split(bm.Get("INCLUDE", ""), ';')) {
+		p = TrimBoth(p);
+		if(!p.GetCount())
+			continue;
+		String s = LoadFile(AppendFileName(p, "crtversion.h"));
+		if(s.IsEmpty())
+			continue;
+		auto M = [&](const char *n) -> String {
+			String key = String("#define ") + n;
+			int q = s.Find(key);
+			if(q < 0)
+				return String();
+			q += key.GetCount();
+			while(q < s.GetCount() && (s[q] == ' ' || s[q] == '\t'))
+				q++;
+			int e = q;
+			while(e < s.GetCount() && IsDigit(s[e]))
+				e++;
+			return s.Mid(q, e - q);
+		};
+		String maj = M("_VC_CRT_MAJOR_VERSION");
+		String min = M("_VC_CRT_MINOR_VERSION");
+		String bld = M("_VC_CRT_BUILD_VERSION");
+		if(maj.GetCount() && min.GetCount() && bld.GetCount())
+			return maj + '.' + min + '.' + bld;
+	}
+	return String();
+}
+
+// SDKManifest.xml carries PlatformIdentity = "UAP, Version=10.0.26100.0".
+// Located by walking up from each INCLUDE entry; depth 6 comfortably covers
+// <kits>\<ver>\Include\<sdkver>\{ucrt,um,winrt,cppwinrt}.
+String SBOMContext::WindowsSdkVersion()
+{
+	for(String p : Split(bm.Get("INCLUDE", ""), ';')) {
+		p = TrimBoth(p);
+		if(!p.GetCount())
+			continue;
+		String f = FindUpwards(p, "SDKManifest.xml", 6);
+		if(!f.GetCount())
+			continue;
+		String s = LoadFile(f);
+		int q = s.Find("PlatformIdentity");
+		if(q < 0)
+			continue;
+		q = s.Find("Version=", q);
+		if(q < 0)
+			continue;
+		q += 8;
+		int e = q;
+		while(e < s.GetCount() && (IsDigit(s[e]) || s[e] == '.'))
+			e++;
+		String v = s.Mid(q, e - q);
+		if(v.GetCount())
+			return v;
+	}
+	return String();
+}
+
+// "clang version 23.1.3 (https://github.com/llvm/llvm-project.git 0d261d1...)"
+// "Ubuntu clang version 18.1.3 (1ubuntu1)"  -> bare "18.1.3"
+// Probed through the builder so the build method's PATH applies.
+// "clang version 23.1.3 (https://github.com/llvm/llvm-project.git 0d261d1...)"
+// "Ubuntu clang version 18.1.3 (1ubuntu1)"  -> bare "18.1.3"
+// cc has no path, so the build method's PATH is walked — the same
+// mechanism as MingwCrtVersion(). Same ';' split caveat as there.
+String SBOMContext::ClangVersion()
+{
+	Vector<String> path = Split(bm.Get("PATH", ""), ';');
+	for(String p : path) {
+		p = TrimBoth(p);
+		if(!p.GetCount())
+			continue;
+		String exe = AppendFileName(p, cc);
+		if(!FileExists(exe)) {
+#ifdef PLATFORM_WIN32
+			exe << ".exe";
+			if(!FileExists(exe))
+#endif
+				continue;
+		}
+		RDUMP(exe);
+		String call = "\"" + exe + "\" --version";
+		RDUMP(call);
+		
+		String out = Sys("\"" + exe + "\" --version");
+		int q = out.Find("clang version ");
+		if(q < 0)
+			continue;
+		q += 14;
+		int e = q;
+		while(e < out.GetCount() && (IsDigit(out[e]) || out[e] == '.'))
+			e++;
+		String v = out.Mid(q, e - q);
+		if(v.GetCount())
+			return v;
+	}
+	// cc not under the build method PATH (system-wide compiler): bare name
+	String out = Sys(cc + " --version");
+	int q = out.Find("clang version ");
+	if(q < 0)
+		return String();
+	q += 14;
+	int e = q;
+	while(e < out.GetCount() && (IsDigit(out[e]) || out[e] == '.'))
+		e++;
+	return out.Mid(q, e - q);
 }
 
 // ============================================================================
@@ -1069,9 +1228,17 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			}
 		}
 
+		// Effective WHEN keys: host/manager keys + this package's resolved
+		// config (carries main-config selections like GUI X11).
+		Index<String> keyset;
+		for(const String& k : dep_keys)
+			keyset.FindAdd(k);
+	
 		if(!win_target) {
 			Index<String> cfg = mk.PackageConfig(wspc, i, bm, mk.mainconfigparam, host, builder);
-
+			for(int ci = 0; ci < cfg.GetCount(); ci++)
+				keyset.FindAdd(cfg[ci]);
+	
 			auto GatherNames = [&](const Array<OptItem>& set, int decl) {
 				for(String s : Split(Gather(set, cfg.GetKeys()), ' '))
 					if(s.GetCount())
@@ -1080,14 +1247,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			GatherNames(pk.static_library, DECL_STATIC_LIBRARY);
 			GatherNames(pk.dynamic_library, DECL_DYNAMIC_LIBRARY);
 			GatherNames(pk.library, DECL_LIBRARY);
-
+	
 			for(String mod : Split(Gather(pk.pkg_config, cfg.GetKeys()), ' '))
 				for(String s : Split(builder.EvalCmdX("pkg-config --libs " + mod), CharFilterWhitespace))
 					if(s.TrimStart("-l") && s.GetCount())
 						decls.Add(Decl(DECL_LIBRARY, s, i));
 		}
-		
-		for(auto s : RequiredExternalDependenciesInfo(pk, dep_keys)) {
+	
+		Vector<String> eff_keys = keyset.PickKeys();
+		for(auto s : RequiredExternalDependenciesInfo(pk, eff_keys)) {
+	
 			String nm = s.name;
 			int q = nm.Find('|');
 			if(q >= 0) {
@@ -1237,22 +1406,6 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			AddDependency(cs[own_ci[d.pk]], nm);
 	}
 
-	// Platform component
-	if(win_target) {
-		static const char *OS_REF = "com.microsoft.windows";
-		bool fresh;
-		CompIdxExt(OS_REF, fresh);
-		if(fresh) {
-			SBOMComponent& m = cs.Add();
-			m.type     = "operating-system";
-			m.bom_ref  = OS_REF;
-			m.name     = "Microsoft Windows";
-			m.external = T_DYNAMIC_PLATFORM;
-		}
-		if(own_ci[0] >= 0)
-			AddDependency(cs[own_ci[0]], OS_REF);
-	}
-
 	// Windows vcpkg transitive expansion
 	if(win_target) {
 		Index<String> vnames;
@@ -1322,51 +1475,152 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 		}
 	}
 
-	// MSVC / LLVM-Mingw runtime components
+	// MSVC toolchain: /MT (default here) links the VC toolset CRT *and* the
+	// static UCRT (libucrt.lib, owned by the Windows SDK) into the binary.
+	// /MD leaves both as imports: the UCRT is OS-shipped since Windows 10,
+	// the vcruntime side comes from the VC++ redistributable.
+	// crt_dyn is the builder-resolved truth: one bit, no flag re-parsing.
 	if(win_target && msvc) {
-		static const char *CRT_REF = "com.microsoft.vcruntime";
-		bool crt_dyn = md || link_mode == LINK_DYNAMIC;
+		bool crt_dyn = (link_mode == LINK_DYNAMIC) || md;
+		String crt_version = MsvcCrtVersion();
+		String sdk_ver     = WindowsSdkVersion();
 
-		int ci = ci_ext.Find(CRT_REF);
-		if(ci < 0) {
+		static const char *VCRUNTIME_REF = "com.microsoft.vcruntime";
+		static const char *UCRT_REF      = "com.microsoft.ucrt";
+
+		bool fresh;
+		CompIdxExt(VCRUNTIME_REF, fresh);
+		if(fresh) {
 			SBOMComponent& r = cs.Add();
-			r.bom_ref  = CRT_REF;
-			r.name     = crt_dyn ? "Microsoft Visual C++ Runtime (dynamic)"
-								: "Microsoft Visual C++ Runtime (statically linked)";
-			r.external = crt_dyn ? T_DYNAMIC_PLATFORM
-								: T_STATIC_THIRD_PARTY;
-			ci_ext.Add(CRT_REF, cs.GetCount() - 1);
+			r.type     = "library";
+			r.bom_ref  = VCRUNTIME_REF;
+			r.name     = crt_dyn ? "Microsoft Visual C++ Redistributable (dynamic)"
+			                    : "Microsoft Visual C++ Runtime (statically linked)";
+			r.version  = crt_version;
+			r.external = crt_dyn ? T_DYNAMIC_PLATFORM : T_STATIC_THIRD_PARTY;
 		}
 		if(own_ci[0] >= 0)
-			AddDependency(cs[own_ci[0]], CRT_REF);
-	}
-	else if(win_target && clang) {
-		struct Rt { const char *ref, *name, *license; };
-		static const Rt rt[] = {
-			{ "org.mingw.w64-crt",    "mingw-w64 C runtime (statically linked)",          "" },
-			{ "org.llvm.compiler-rt", "LLVM compiler-rt builtins (statically linked)",     "Apache-2.0 WITH LLVM-exception" },
-			{ "org.llvm.libunwind",   "LLVM libunwind (statically linked)",                "Apache-2.0 WITH LLVM-exception" },
-			{ "org.llvm.libcxx",      "LLVM libc++ (statically linked)",                   "Apache-2.0 WITH LLVM-exception" },
-		};
-		for(const Rt& r : rt) {
-			bool fresh;
-			CompIdxExt(r.ref, fresh);
+			AddDependency(cs[own_ci[0]], VCRUNTIME_REF);
+
+		// Static UCRT slice — only when /MT actually embeds it.
+		// Version is the SDK/UCRT snapshot it was built from; that is
+		// what identifies the code inside the binary, not the toolset.
+		if(!crt_dyn) {
+			CompIdxExt(UCRT_REF, fresh);
 			if(fresh) {
-				SBOMComponent& m = cs.Add();
-				m.type     = "library";
-				m.bom_ref  = r.ref;
-				m.name     = r.name;
-				m.external = T_STATIC_THIRD_PARTY;
-				if(*r.license)
-					m.licenses << r.license;
-				if(r.ref == String("org.mingw.w64-crt"))
-					m.version = MingwCrtVersion();
+				SBOMComponent& u = cs.Add();
+				u.type     = "library";
+				u.bom_ref  = UCRT_REF;
+				u.name     = "Universal CRT (statically linked)";
+				u.version  = sdk_ver;
+				u.external = T_STATIC_THIRD_PARTY;
 			}
 			if(own_ci[0] >= 0)
-				AddDependency(cs[own_ci[0]], r.ref);
+				AddDependency(cs[own_ci[0]], UCRT_REF);
+		}
+		// Dynamic case: UCRT is inside com.microsoft.windows (ucrtbase.dll),
+		// nothing to add. Windows SDK never appears as a component or edge —
+		// it is build provenance (property above), never shipped payload.
+		
+		// CRT slices resolve against OS-provided libraries: in /MD,
+		// vcruntime140.dll itself imports the UCRT api sets (forwards into
+		// ucrtbase.dll); under /MT the statically linked CRT and UCRT slices
+		// still call kernel32/ntdll directly. Truthful in both modes, and it
+		// gives downstream tooling a closed-form reason the OS node is in
+		// the closure — no phantom com.microsoft.ucrt component, no
+		// version claim on an OS-serviced DLL.
+		static const char *OS_REF_M = "com.microsoft.windows";
+		int rq = ci_ext.Get(VCRUNTIME_REF, -1);
+		if(rq >= 0)
+			AddDependency(cs[rq], OS_REF_M);
+		if(!crt_dyn) {
+			int uq = ci_ext.Get(UCRT_REF, -1);
+			if(uq >= 0)
+				AddDependency(cs[uq], OS_REF_M);
 		}
 	}
+	// llvm-mingw is two independently versioned, independently CVE-tracked
+	// halves: LLVM/clang (compiler, compiler-rt, libc++, libunwind) and the
+	// mingw-w64 runtime (CRT). Collapsing them loses real signal, so both are
+	// emitted. No object/archive-member enumeration — nothing below component
+	// level is separately monitorable or updatable.
+	else if(win_target && clang) {
+		static const char *LLVM_REF  = "org.llvm.runtimes";
+		static const char *MINGW_REF = "org.mingw.w64-crt";
 
+		bool fresh;
+		CompIdxExt(LLVM_REF, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.type     = "library";
+			m.bom_ref  = LLVM_REF;
+			m.name     = "LLVM runtimes (statically linked)";
+			m.version  = ClangVersion();
+			if(m.version.GetCount())
+				m.purl = "pkg:generic/llvm-runtimes@" + m.version;
+			m.licenses << "Apache-2.0 WITH LLVM-exception";
+			m.external = T_STATIC_THIRD_PARTY;
+			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
+			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
+			String srcUrl = "git+https://github.com/llvm/llvm-project.git";
+			String vstring = String("llvmorg-") + m.version;
+			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+		}
+		if(own_ci[0] >= 0)
+			AddDependency(cs[own_ci[0]], LLVM_REF);
+
+		CompIdxExt(MINGW_REF, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.type     = "library";
+			m.bom_ref  = MINGW_REF;
+			m.name     = "mingw-w64 C runtime (statically linked)";
+			m.version  = MingwCrtVersion();
+			if(m.version.GetCount())
+				m.purl = "pkg:generic/mingw-w64@" + m.version;
+			m.external = T_STATIC_THIRD_PARTY;
+			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
+			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
+			String srcUrl = "git+https://github.com/mingw-w64/mingw-w64.git";
+			String vstring = String("v") + m.version;
+			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+		}
+		if(own_ci[0] >= 0)
+			AddDependency(cs[own_ci[0]], MINGW_REF);
+		
+		// mingw-w64 CRT links against ucrtbase.dll; the LLVM aggregate's
+		// libc++ calls the UCRT and libunwind unwinds through ntdll
+		// (RtlUnwind). Both resolve inside the OS node, so the known
+		// llvm-mingw UCRT dependency is expressed as an edge rather than
+		// as a component we cannot version honestly.
+		static const char *OS_REF_L = "com.microsoft.windows";
+		int lq = ci_ext.Get(LLVM_REF, -1);
+		if(lq >= 0)
+			AddDependency(cs[lq], OS_REF_L);
+		int mq = ci_ext.Get(MINGW_REF, -1);
+		if(mq >= 0)
+			AddDependency(cs[mq], OS_REF_L);
+	}
+	
+	// Platform component — emitted last, after the CRT/toolchain block.
+	// The OS node closes the graph: everything above it is either shipped
+	// payload or a component that resolves into it. Edges targeting
+	// com.microsoft.windows were already recorded by the CRT blocks above.
+	if(win_target) {
+		static const char *OS_REF = "com.microsoft.windows";
+		bool fresh;
+		CompIdxExt(OS_REF, fresh);
+		if(fresh) {
+			SBOMComponent& m = cs.Add();
+			m.type     = "operating-system";
+			m.bom_ref  = OS_REF;
+			m.name     = "Microsoft Windows";
+			m.external = T_DYNAMIC_PLATFORM;
+		}
+		if(own_ci[0] >= 0)
+			AddDependency(cs[own_ci[0]], OS_REF);
+	}
+	
 #ifdef PLATFORM_POSIX
 	if(!win_target) {
 		// Step 4 — T4: NEEDED closure (BFS, batched per round)
