@@ -753,21 +753,31 @@ inline bool IsDPKG()   { return ExternalDependenciesManagerId() == "DPKG"; }
 inline bool IsVCPKG()  { return ExternalDependenciesManagerId() == "VCPKG"; }
 inline bool IsBREW()   { return ExternalDependenciesManagerId() == "BREW"; }
 
-struct VcpkgInstalled : Moveable<VcpkgInstalled> {
+struct VcpkgPackageInfo : Moveable<VcpkgPackageInfo> {
 	String        name;
 	Index<String> triplets;
 	String        version;
 	String        desc;
+
+	void Serialize(Stream &s){
+		int version = 1;
+		s / version;
+		s % name;
+		s % triplets;
+		s % version;
+		s % desc;
+	}
 };
 
 bool                   IsVcpkgInstalled();
 bool                   IsVcpkgAvailable(Function<int(const String&, const String& chdir)> sys);
 String                 VcpkgExe();
-Vector<VcpkgInstalled> VcpkgList();
+Vector<VcpkgPackageInfo> VcpkgListInstalled();
+Vector<VcpkgPackageInfo> VcpkgListAll();
 String                 VcpkgTriplet(const String& builder, const String& compiler, bool so, bool md);
 String                 VcpkgTriplet(const VectorMap<String, String>& vars, bool so, bool md);
 Vector<String>         VcpkgTriplets();
-bool                   VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet);
+bool                   VcpkgHasInstalled(Vector<VcpkgPackageInfo>& items, const String& name, const String& triplet);
 bool                   VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const String& name, const String& triplet);
 Index<String>          VcpkgInstalledExternalDependencies(const String& triplet);
 bool                   VcpkInstallMissingExternalDependencies(Function<int(const String&, const String& chdir)> sys, const String& triplet);

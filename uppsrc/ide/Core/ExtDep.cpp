@@ -15,8 +15,8 @@ Index<String> AllHostPackagesList()
 		for(const auto& m : GetBrewPackages())
 			list.FindAdd(m.name);
 	if(IsVCPKG())
-		for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json")))
-			list.FindAdd(~l["package_name"]);
+		for(const auto& m : VcpkgListAll())
+			list.FindAdd(m.name);
 	return list;
 }
 
