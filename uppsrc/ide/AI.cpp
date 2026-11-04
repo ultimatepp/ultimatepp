@@ -56,5 +56,15 @@ void Ide::AIReview()
 	if(rs.GetCount() == 0)
 		return;
 	
-	PromptOK(MarkdownConverter().ToQtf(~rs[0]["content"]["parts"][0]["text"]));
+	String review_file;
+
+	for(int i = 1; i < 100000000; i++) {
+		review_file = "ai_review_" + AsString(i) + ".qtf";
+		if(!FileExists(review_file))
+			break;
+	}
+
+	Upp::SaveFile(review_file, MarkdownConverter().ToQtf(~rs[0]["content"]["parts"][0]["text"]));
+	
+	EditFile(review_file);
 }
