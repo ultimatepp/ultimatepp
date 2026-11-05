@@ -11,6 +11,9 @@ Index<String> AllHostPackagesList()
 				s.Trim(q);
 			list.FindAdd(s);
 		}
+	if(IsPACMAN())
+		for(String s : Split(Sys("pacman -Ssq ."), '\n'))
+			list.FindAdd(s);
 	if(IsBREW())
 		for(const auto& m : GetBrewPackages())
 			list.FindAdd(m.name);
@@ -151,6 +154,16 @@ bool HasRPM()
 	return rpm;
 }
 
+bool HasPACMAN()
+{
+	static bool pacman
+#ifdef PLATFORM_LINUX
+		= Sys("which pacman").GetCount()
+#endif
+	;
+	return pacman;
+}
+
 String ExternalDependenciesManagerId()
 {
 #ifdef PLATFORM_WIN32
@@ -163,6 +176,8 @@ String ExternalDependenciesManagerId()
 		return "DPKG";
 	if(HasRPM())
 		return "RPM";
+	if(HasPACMAN())
+		return "PACMAN";
 	return Null;
 }
 
@@ -183,6 +198,9 @@ Index<String> InstalledExternalDependencies(const String& triplet)
 	if(IsRPM())
 		for(String l : Split(Sys("rpm -qa --qf '%{NAME}\n'"), '\n'))
 			r.FindAdd(TrimBoth(l));
+	if(IsPACMAN())
+		for(String l : Split(Sys("pacman -Qq"), '\n'))
+			r.FindAdd(TrimBoth(l));
 #endif
 	return r;
 }
@@ -198,8 +216,10 @@ String InstallMissingExternalDependenciesCommand0(const String& triplet)
 	}
 #endif
 #ifdef PLATFORM_LINUX
-	if(IsRPM() || IsDPKG()) {
-		cmd = IsRPM() ? "dnf install -y" : "apt-get install -y";
+	if(IsRPM() || IsDPKG() || IsPACMAN()) {
+		cmd = IsPACMAN() ? "pacman -S --noconfirm" :
+			  IsRPM()    ? "dnf install -y"
+						: "apt-get install -y";
 		for(String name : MissingExternalDependencies(triplet))
 			cmd << " " << name;
 	}
