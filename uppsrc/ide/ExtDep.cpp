@@ -91,13 +91,18 @@ SelectExtDepDlg::SelectExtDepDlg()
 	else
 	if(IsPACMAN()) {
 		Vector<String> ls = Split(Sys("pacman -Ss ."), '\n');
-		for(int i = 0; i < ls.GetCount() - 1; i += 2) {
-			String name = ls[i];
-			if(int q = name.Find('/'); q >= 0)
-				name = name.Mid(q + 1);
-			if(int sp = name.Find(' '); sp >= 0)
-				name.Trim(sp);
-			src << name << " - " << TrimLeft(ls[i + 1]);
+		String curpkg;
+		for(const String& l : ls) {
+			if(findarg(*l.Begin(), ' ', '\t') >= 0) { // It's a description line
+				if(!IsNull(curpkg)) {
+					src << curpkg + " - " + TrimLeft(l);
+					curpkg = Null;
+				}
+			}
+			else { // It might be a package name line (e.g., "extra/zlib 1.3.1-1")
+				if(int q = l.Find('/'), sp = l.Find(' ', q + 1); q >= 0 && sp > q)
+					curpkg = l.Mid(q + 1, sp - (q + 1));
+			}
 		}
 	}
 	else
