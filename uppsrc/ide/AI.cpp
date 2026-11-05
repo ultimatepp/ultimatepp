@@ -31,7 +31,7 @@ String Ide::AIChatGPT(const String& instructions, const String& code)
 	
 	Progress pi("AI processing");
 	int ms = msecs();
-	while(status == "queued" || status == "in_progress") {
+	while(findarg(status, "queued", "in_progress") >= 0) {
 		if(pi.StepCanceled()) {
 			ai_error = "Canceled by user";
 			return String::GetVoid();
