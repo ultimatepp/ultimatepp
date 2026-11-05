@@ -389,6 +389,11 @@ int ApplyChanges(LineEdit& editor, const String& new_content);
 struct RepoDiff;
 class  SysConsole;
 
+enum {
+	CHATGPT = 0,
+	GEMINI = 1,
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	void   Paint(Draw& w) override;
@@ -713,8 +718,11 @@ public:
 		true;
 #endif
 
-	String    ai_url;
+	int       ai_kind = CHATGPT;
+	String    ai_model;
 	String    ai_key;
+	
+	String    ai_error;
 		
 
 	// Formats editor's code with Ide format parameters
@@ -1346,6 +1354,10 @@ public:
 	bool   IsVcpkgAvailable();
 
 	void   CreateSBOM();
+
+	String AI(const String& instructions, const String& code);
+	String AIChatGPT(const String& instructions, const String& code);
+	String AIGemini(const String& instructions, const String& code);
 
 	typedef   Ide CLASSNAME;
 

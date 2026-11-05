@@ -1,17 +1,145 @@
 #include "ide.h"
 
 #define LDUMP(x)
+#define LLOG(x) LOG(x)
+
+String Ide::AIChatGPT(const String& instructions, const String& code)
+{
+	HttpRequest http("https://api.openai.com/v1/responses");
+
+	http.Header("Authorization", "Bearer " + ai_key);
+
+	String responseText =
+		http.ContentType("application/json").Post(
+			Upp::Json("model", ai_model)
+			         ("prompt_cache_key", "experimental_query")
+			         ("instructions", instructions)
+			         ("input", code)
+			         ("max_output_tokens", 100000)
+			         ("background", true)
+		).Execute();
+
+	if(http.IsError()) {
+		ai_error << "HTTP request failed: " << http.GetErrorDesc();
+		return String::GetVoid();
+	}
+
+	Value responseJson = ParseJSON(responseText);
+
+	String responseId = AsString(responseJson["id"]);
+	String status = AsString(responseJson["status"]);
+	
+	Progress pi("AI processing");
+	int ms = msecs();
+	while(findarg(status, "queued", "in_progress") >= 0) {
+		if(pi.StepCanceled()) {
+			ai_error = "Canceled by user";
+			return String::GetVoid();
+		}
+		
+		Sleep(0);
+	
+		int ms1 = msecs();
+		if(ms1 - ms > 1000) {
+			ms = ms1;
+			HttpRequest poll("https://api.openai.com/v1/responses/" + responseId);
+			poll.Header("Authorization", "Bearer " + ai_key);
+		
+			responseText = poll.Execute(); // GET is the default
+			if(poll.IsError()) {
+				ai_error << "Polling HTTP request failed: " << poll.GetErrorDesc();
+				return String::GetVoid();
+			}
+		
+			responseJson = ParseJSON(responseText);
+			if(IsNull(responseJson)) {
+				ai_error << "Invalid JSON response while polling: " << responseText;
+				return String::GetVoid();
+			}
+		
+			status = AsString(responseJson["status"]);
+			LOG("Response status: " << status);
+		}
+	}
+	
+	if(status != "completed") {
+		ai_error << "Response did not complete. Status: " << status;
+		return String::GetVoid();
+	}
+
+	if(!IsNull(responseJson["error"])) {
+		ai_error << "OpenAI API error: " << ~responseJson["error"]["message"];
+		return String::GetVoid();
+	}
+
+	String result;
+	for(Value item : responseJson["output"])
+		if(AsString(item["type"]) == "message") {
+			Value content = item["content"];
+			for(int j = 0; j < content.GetCount(); j++) {
+				Value part = content[j];
+				String type = AsString(part["type"]);
+	
+				if(type == "output_text")
+					result << AsString(part["text"]);
+//				else if(type == "refusal")
+//					LOG("Refusal: " << AsString(part["refusal"]));
+			}
+		}
+/*
+	if(AsString(responseJson["status"]) == "incomplete") {
+		LOG("Warning: generation was incomplete. Reason: "
+		    << AsString(responseJson["incomplete_details"]["reason"]));
+	}
+*/
+	Value usage = responseJson["usage"];
+	if(!IsNull(usage)) {
+		Value inputDetails = usage["input_tokens_details"];
+		PutVerbose(String() << "Input tokens: " << usage["input_tokens"]);
+		PutVerbose(String() << "Cached input tokens: " << inputDetails["cached_tokens"]);
+		PutVerbose(String() << "Output tokens: " << usage["output_tokens"]);
+		PutVerbose(String() << "Total tokens: " << usage["total_tokens"]);
+	}
+	
+	return result;
+}
+
+String Ide::AIGemini(const String& instructions, const String& code)
+{
+	HttpRequest http("https://generativelanguage.googleapis.com/v1beta/models/" + ai_model + ":generateContent?key=" + ai_key);
+
+	String responseText =
+	http.ContentType("application/json").Post(
+		Upp::Json("contents", JsonArray() <<
+					Upp::Json("role", "user")
+		                     ("parts", JsonArray() << Upp::Json("text", code)
+		                                           << Upp::Json("text", instructions)))
+	).Execute();
+
+	if (http.IsError()) {
+		LLOG("HTTP Request failed: " << http.GetErrorDesc());
+		return String::GetVoid();
+	}
+
+	Value responseJson = ParseJSON(responseText);
+	
+	if (!IsNull(responseJson["error"])) {
+		LLOG("Gemini API Error: " << responseJson["error"]["message"]);
+		return String::GetVoid();
+	}
+
+	return ~responseJson["candidates"][0]["content"]["parts"][0]["text"];
+}
+
+String Ide::AI(const String& instructions, const String& code)
+{
+	ai_error.Clear();
+	return ai_kind == 0 ? AIChatGPT(instructions, code)
+	                    : AIGemini(instructions, code);
+}
 
 void Ide::AIReview()
 {
-#ifdef _DEBUG
-	HttpRequest::Trace();
-#endif
-
-	JsonArray a;
-
-	HttpRequest http(ai_url + ai_key);
-
 	String code;
 	for(int i = 0; i < actual.file.GetCount(); i++) {
 		String p = SourcePath(GetActivePackage(), actual.file[i]);
@@ -20,41 +148,26 @@ void Ide::AIReview()
 			if(NormalizePath(p) == NormalizePath(editfile)) {
 				code << "// *** AI review starts here\n";
 				code << LoadFile(p);
-				code << "// AI review ends here\n";
+				code << "// *** AI review ends here\n";
 			}
 		}
-		if(code.GetCount() > 200000)
+		if(code.GetCount() > 1000000)
 			break;
 	}
 	
 	LDUMP(code.GetCount());
 	LDUMP(code);
-
-	String responseText =
-	http.ContentType("application/json").Post(
-		Upp::Json("contents", JsonArray()
-		                      << Upp::Json("role", "user")
-		                                  ("parts", JsonArray() << Upp::Json("text", code)
-		                                                        << Upp::Json("text", "review, but only the code delimited with comments *** AI review.")))
-	).Execute();
-
-	if (http.IsError()) {
-		Cout() << "HTTP Request failed: " << http.GetErrorDesc() << "\n";
-		return;
-	}
-
-	Value responseJson = ParseJSON(responseText);
 	
-	LDUMP(http.GetContent());
+	String result = AI("review the code, but only the code delimited with comments *** AI review.", code);
 
-	if (!IsNull(responseJson["error"])) {
-		Cout() << "Gemini API Error: " << responseJson["error"]["message"] << "\n";
-		return;
+	String review_file;
+
+	for(int i = 1; i < 100000000; i++) {
+		review_file = "ai_review_" + AsString(i) + ".qtf";
+		if(!FileExists(review_file))
+			break;
 	}
-
-	Value rs = responseJson["candidates"];
-	if(rs.GetCount() == 0)
-		return;
+	Upp::SaveFile(review_file, MarkdownConverter().ToQtf(result));
 	
-	PromptOK(MarkdownConverter().ToQtf(~rs[0]["content"]["parts"][0]["text"]));
+	EditFile(review_file);
 }

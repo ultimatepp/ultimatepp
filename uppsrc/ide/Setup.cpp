@@ -377,8 +377,11 @@ void Ide::SetupFormat() {
 	              .Add(20, "C++ 20")
 	              .Add(23, "C++ 23")
 	;
+	
+	ai.kind <<= 0;
 
-	ai.url.AddList("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=");
+	ai.kind.Add(CHATGPT, "ChatGPT");
+	ai.kind.Add(GEMINI, "Gemini");
 	
 	ide.wayland.Hide();
 #ifdef GUI_GTK
@@ -473,7 +476,8 @@ void Ide::SetupFormat() {
 		(ide.valgrind, valgrind_options)
 		(ide.update_icon, macos_update_icon)
 		
-		(ai.url, ai_url)
+		(ai.kind, ai_kind)
+		(ai.model, ai_model)
 		(ai.key, ai_key)
 	;
 	
@@ -525,9 +529,20 @@ void Ide::SetupFormat() {
 		f1.Set(def.font1);
 		f2.Set(def.font2);
 	};
+
+	ai.kind << [&] {
+		ai.model.ClearList();
+		for(String s : Split(get_i((int)~ai.kind, // todo add more
+		                     "gpt-6-luna",
+		                     "gemini-3.5-flash-lite"), ';'))
+			ai.model.AddList(s);
+	};
+	
+	ai.kind.WhenAction();
 	
 	for(;;) {
 		int c = dlg.Run();
+		DDUMP(c);
 
 		SetHubDir(~ide.upphub);
 

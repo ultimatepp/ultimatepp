@@ -155,6 +155,7 @@ void Ide::IdeProcessEvents()
 
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
+	
 	right.Add(ctrl.SizePos());
 	right_split.Zoom(-1);
 }
@@ -298,11 +299,11 @@ void Ide::SetupBars()
 {
 	ClearFrames();
 
-	int r = HorzLayoutZoom(170);
 #ifdef PLATFORM_COCOA
 	AddFrame(toolbar);
-	display.RightPos(4, r).VSizePos(2, 3);
+	display.RightPos(4, HorzLayoutZoom(250)).VSizePos(2, 3);
 #else
+	int r = HorzLayoutZoom(170);
 	int l = HorzLayoutZoom(350);
 
 	menubar.Transparent();
@@ -398,7 +399,10 @@ void Ide::DoDisplay()
 	if(!designer)
 		p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
-	if(IsCustomTitleBar()) {
+#ifndef PLATFORM_MACOS
+	if(IsCustomTitleBar())
+#endif
+	{
 		s << "[g [";
 		if(editfile_isreadonly)
 			s << "@B";
@@ -415,6 +419,7 @@ void Ide::DoDisplay()
 				s << ",[@W$B  " << h - l << " ";
 		}
 	}
+#ifndef PLATFORM_MACOS
 	else {
 		if(!designer) {
 			s << "[g Ln " << p.y + 1 << ", Col " << p.x + 1;
@@ -424,6 +429,7 @@ void Ide::DoDisplay()
 				s << ", Sel " << h - l;
 		}
 	}
+#endif
 
 	display.Set(s);
 	if(IsExternalMode()) {

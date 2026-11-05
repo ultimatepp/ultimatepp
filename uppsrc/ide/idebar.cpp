@@ -1096,8 +1096,9 @@ void Ide::MainTool(Bar& bar)
 	}
 	HelpMenu(bar);
 #ifdef PLATFORM_COCOA
+	bar.Add(display_main, HorzLayoutZoom(90));
 	bar.GapRight();
-	bar.Add(display, HorzLayoutZoom(170));
+	bar.Add(display, HorzLayoutZoom(250));
 #endif
 }
 

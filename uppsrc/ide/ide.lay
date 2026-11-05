@@ -700,10 +700,11 @@ LAYOUT(SetupWebSearchTabLayout, 556, 200)
 END_LAYOUT
 
 LAYOUT(SetupAILayout, 500, 156)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("Model URL")).LeftPosZ(4, 60).TopPosZ(4, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, url, LeftPosZ(64, 428).TopPosZ(4, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("API key")).LeftPosZ(4, 40).TopPosZ(28, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, model, LeftPosZ(192, 300).TopPosZ(4, 19))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("API key")).LeftPosZ(4, 40).TopPosZ(28, 19))
 	ITEM(Upp::EditString, key, LeftPosZ(64, 428).TopPosZ(28, 19))
+	ITEM(Upp::Label, dv___3, SetLabel(t_("AI")).LeftPosZ(4, 40).TopPosZ(4, 19))
+	ITEM(Upp::DropList, kind, LeftPosZ(64, 124).TopPosZ(4, 19))
 END_LAYOUT
 
 LAYOUT(GotoLayout, 796, 524)
