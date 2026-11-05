@@ -56,12 +56,28 @@ Vector<VcpkgPackageInfo> VcpkgListInstalled()
 
 Vector<VcpkgPackageInfo> VcpkgListAll()
 {
-	Vector<VcpkgPackageInfo> list;
+#ifdef PLATFORM_WIN32
+	const static String mingit = GetExeDirFile("bin/mingit/cmd/git.exe");
+	const static String git = FileExists(mingit) ? mingit : "git";
+#else
+	const static String git = "git";
+#endif
+
+	struct Cache : Moveable<Cache> {
+		String head;
+		Vector<VcpkgPackageInfo> list;
+		void Serialize(Stream& s) { s % head % list; };
+	};
+
+	Cache c;
 	String cache = ConfigFile("vcpkg.cache");
-	if(!LoadFromFile(list, cache, 20261103) ||
-	   GetFileTime(cache) < GetFileTime(GetFileFolder(VcpkgExe()) + "/.git"))
-		for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json"))){
-			VcpkgPackageInfo &m = list.Add();
+	String head = TrimBoth(Sys(git + " -C \"" + GetFileFolder(VcpkgExe()) + "\" rev-parse HEAD"));
+	if(head.GetCount() != 40) head.Clear();
+	if(!LoadFromFile(c, cache, 20261105) || head.IsEmpty() || head != c.head) {
+		c.head = head;
+		c.list.Clear();
+		for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json"))) {
+			VcpkgPackageInfo& m = c.list.Add();
 			m.name = ~l["package_name"];
 			m.version = ~l["version"];
 			String p = ~l["port_version"];
@@ -70,8 +86,9 @@ Vector<VcpkgPackageInfo> VcpkgListAll()
 			if(l["description"].GetCount())
 				m.desc = l["description"][0];
 		}
-		StoreToFile(list, cache, 20261103);
-	return list;
+		StoreToFile(c, cache, 20261105);
+	}
+	return pick(c.list);
 }
 
 String VcpkgTriplet(const String& builder, const String& compiler, bool so, bool md)
