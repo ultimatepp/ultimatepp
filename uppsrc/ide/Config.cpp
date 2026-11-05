@@ -37,6 +37,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	s % pk;
 	package.FindSetCursor(pk);
 	s % tablru;
+	if(s.IsLoading()) {
+		tablru.RemoveIf([&](int i) { return !FileExists(tablru[i]); });
+	}
 	s % mainconfigname;
 	s % mainconfigparam;
 	s % console.verbosebuild;
@@ -66,6 +69,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	if(version >= 23)
 		s % scale;
 	s % editfile;
+	if(s.IsLoading())
+		if(!FileExists(editfile))
+			editfile.Clear();
 	for(i = 0; i < 10; i++) {
 		s % bookmark[i];
 	}
@@ -189,7 +195,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 38;
+	int version = 39;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -407,6 +413,12 @@ void Ide::Serialize(Stream& s)
 	
 	if(version >= 35)
 		s % valgrind_options;
+	
+	if(version >= 40)
+		s % ai_kind;
+
+	if(version >= 39)
+		s % ai_model % ai_key;
 
 #ifdef PLATFORM_WIN32
 	if(s.IsLoading() && HostConsole == "/usr/bin/xterm -e")

@@ -1,0 +1,43 @@
+{
+	"bomFormat": "CycloneDX",
+	"specVersion": "1.7",
+	"components": [
+		{
+			"type": "library",
+			"name": "ndisasm",
+			"bom-ref": "ndisasm",
+			"version": "2.08.01",
+			"licenses": [
+				{
+					"expression": "BSD-2-Clause"
+				}
+			],
+			"externalReferences": [
+				{
+					"type": "website",
+					"url": "https://www.nasm.us/"
+				},
+				{
+					"type": "distribution",
+					"url": "git+https://github.com/netwide-assembler/nasm.git"
+				},
+				{
+					"type": "source-distribution",
+					"url": "git+https://github.com/netwide-assembler/nasm.git@nasm-2.08.01",
+					"hashes": [
+						{
+							"alg": "SHA-1",
+							"content": "a947529954d9db0214e65d2c856111f823381f7c"
+						}
+					]
+				}
+			],
+			"properties": [
+				{
+					"name": "upp:deployment-mode",
+					"value": "static-third-party"
+				}
+			]
+		}
+	]
+}

@@ -21,6 +21,10 @@ external_dependency(DPKG) "libfreetype-dev libfontconfig1-dev";
 
 external_dependency(DPKG !VIRTUALGUI) "libx11-dev libxcb1-dev libexpat1-dev";
 
+external_dependency(RPM) "freetype-devel fontconfig-devel";
+
+external_dependency(RPM !VIRTUALGUI) "libX11-devel libxcb-devel expat-devel";
+
 file
 	Draw.h options(BUILDER_OPTION) PCH,
 	FontInt.h,

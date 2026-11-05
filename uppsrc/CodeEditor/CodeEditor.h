@@ -323,6 +323,8 @@ protected:
 	int           search_time0;
 	One<Progress> search_progress;
 	
+	bool          newfile = false;
+	
 	String        refresh_info; // serialized next line syntax context to detect the need of full Refresh
 
 	Vector<Point> errors; // current file (compilation) errors
@@ -378,6 +380,7 @@ protected:
 	void   Enclose(const char *c1, const char *c2, int l = -1, int h = -1);
 	void   TabsOrSpaces(String& out, bool maketabs);
 	void   LineEnds(String& out);
+	void   EndNewFile();
 
 	enum {
 		TIMEID_PERIODIC = Ctrl::TIMEID_COUNT,
@@ -566,6 +569,8 @@ public:
 	void     Zoom(int d);
 	
 	void     StatusImage(const Image& m)              { bar.StatusImage(m); }
+	
+	void     SetNewFile(bool b = true)                { newfile = b; Refresh(); }
 
 	One<EditorSyntax> GetSyntax(int line);
 	bool IsCursorBracket(int64 pos) const;

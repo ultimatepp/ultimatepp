@@ -289,7 +289,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	if(HasFlag("DEBUG_FULL"))
 		cc << " -Zi";
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD" : " -MT");
+	cc << (HasFlag("SHARED") || HasFlag("MD") || is_shared || is_clr ? " -MD" : " -MT");
 
 	String cc_size = cc;
 	String cc_speed = cc;
@@ -713,7 +713,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			CustomStep(".pre-link", Null, error);
 			if(!error && Execute(link) == 0) {
 				CustomStep(".post-link", Null, error);
-				if((IsMsc86() || IsMsc64()) && HasFlag("SHARED")) {
+				if((IsMsc86() || IsMsc64() || IsMscArm64()) && HasFlag("SHARED")) {
 					String mt("mt -nologo -manifest ");
 					mt << GetPathQ(target) << ".manifest -outputresource:" << GetPathQ(target)
 				           << (HasFlag("DLL") ? ";2" : ";1");

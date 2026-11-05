@@ -196,6 +196,49 @@ void CreateBuildMethods()
 		if(IsNull(LoadFile(bm)))
 			SaveFile(bm, Fix(clang_bm));
 	}
+
+	if(FileExists("/opt/llvm-mingw/bin/i686-w64-mingw32-clang++")){
+		String bm = ConfigFile("WinCLANG.bm");
+		if(IsNull(LoadFile(bm))){
+			String r = clang_bm;
+			r.Replace("clang++", "/opt/llvm-mingw/bin/i686-w64-mingw32-clang++");
+			r.Replace("$COMMON$", "-mpopcnt -fms-extensions");
+			r.Replace("COMMON_FLAGS = \"\";", "COMMON_FLAGS = \"CPU32 VCPKG WIN32\";");
+			r.Replace("DEBUG_LINKMODE = \"1\";", "DEBUG_LINKMODE = \"0\";");
+			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
+			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
+			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/i686-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
+			SaveFile(bm, r);
+		}
+	}
+	if(FileExists("/opt/llvm-mingw/bin/x86_64-w64-mingw32-clang++")){
+		String bm = ConfigFile("WinCLANGx64.bm");
+		if(IsNull(LoadFile(bm))){
+			String r = clang_bm;
+			r.Replace("clang++", "/opt/llvm-mingw/bin/x86_64-w64-mingw32-clang++");
+			r.Replace("$COMMON$", "-mpopcnt -fms-extensions");
+			r.Replace("COMMON_FLAGS = \"\";", "COMMON_FLAGS = \"VCPKG WIN32\";");
+			r.Replace("DEBUG_LINKMODE = \"1\";", "DEBUG_LINKMODE = \"0\";");
+			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
+			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
+			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/x86_64-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
+			SaveFile(bm, r);
+		}
+	}
+	if(FileExists("/opt/llvm-mingw/bin/aarch64-w64-mingw32-clang++")){
+		String bm = ConfigFile("WinCLANGarm64.bm");
+		if(IsNull(LoadFile(bm))){
+			String r = clang_bm;
+			r.Replace("clang++", "/opt/llvm-mingw/bin/aarch64-w64-mingw32-clang++");
+			r.Replace("$COMMON$", "-fms-extensions");
+			r.Replace("COMMON_FLAGS = \"\";", "COMMON_FLAGS = \"VCPKG WIN32\";");
+			r.Replace("DEBUG_LINKMODE = \"1\";", "DEBUG_LINKMODE = \"0\";");
+			r.Replace("RELEASE_LINKMODE = \"1\";", "RELEASE_LINKMODE = \"0\";");
+			r.Replace("DEBUGGER = \"gdb\";", "DEBUGGER = \"\";");
+			r.Replace("PATH = \"\";", "PATH = \"/opt/llvm-mingw/aarch64-w64-mingw32/bin;/opt/llvm-mingw/bin\";");
+			SaveFile(bm, r);
+		}
+	}
 #endif
 }
 

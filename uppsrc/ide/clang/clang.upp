@@ -7,6 +7,10 @@ library(WIN32) libclang.lib;
 
 library(LCLANG) clang;
 
+external_dependency(DPKG) libclang-dev;
+
+external_dependency(RPM) clang-devel;
+
 file
 	clang.h,
 	libclang.h,
@@ -18,5 +22,6 @@ file
 	CurrentFile.cpp,
 	Indexer.cpp,
 	Info readonly separator,
-	Copying;
+	Copying,
+	WIN32.sbom.json;
 

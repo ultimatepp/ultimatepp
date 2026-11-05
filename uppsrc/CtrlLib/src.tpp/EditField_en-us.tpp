@@ -392,6 +392,15 @@ and edited text. Calling this method with [%-@(0.0.255) true] removes
 it.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:EditField`:`:AllowControlCharacters`(bool`): EditField[@(0.0.255) `&] 
+[* AllowControlCharacters]([@(0.0.255) bool] [*@3 b] [@(0.0.255) `=] 
+[@(0.0.255) true])&]
+[s0;l288;%% This enables characters < 32 to be inserted into the 
+fields (e.g. from clipboard). Note that standard filter does 
+not allow such characters neither and so must also be replaced 
+e.g. SetFilter(`[`](int c) `{ return c >`= 27 ? c : 0; `});&]
+[s3; &]
+[s4; &]
 [s5;:EditField`:`:GetChar`(int`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetChar]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the character at [%-*@3 i] index.&]

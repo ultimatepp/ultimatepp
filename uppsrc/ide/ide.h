@@ -389,6 +389,11 @@ int ApplyChanges(LineEdit& editor, const String& new_content);
 struct RepoDiff;
 class  SysConsole;
 
+enum {
+	CHATGPT = 0,
+	GEMINI = 1,
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	void   Paint(Draw& w) override;
@@ -712,6 +717,12 @@ public:
 #else
 		true;
 #endif
+
+	int       ai_kind = CHATGPT;
+	String    ai_model;
+	String    ai_key;
+	
+	String    ai_error;
 		
 
 	// Formats editor's code with Ide format parameters
@@ -1036,6 +1047,7 @@ public:
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 
 	void      AssistMenu(Bar& menu);
+	void      AIMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -1078,6 +1090,8 @@ public:
 		void  NavigatorDlg();
 		void  InsertParameters();
 		void  FindUnitializedMemberVariables(int scope);
+		void  AIReview();
+
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1340,6 +1354,10 @@ public:
 	bool   IsVcpkgAvailable();
 
 	void   CreateSBOM();
+
+	String AI(const String& instructions, const String& code);
+	String AIChatGPT(const String& instructions, const String& code);
+	String AIGemini(const String& instructions, const String& code);
 
 	typedef   Ide CLASSNAME;
 

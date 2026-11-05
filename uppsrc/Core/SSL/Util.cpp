@@ -196,7 +196,7 @@ String SslGetLastError()
 	return SslGetLastError(dummy);
 }
 
-String SslToString(X509_NAME *name)
+String SslToString(const X509_NAME *name)
 {
 	char buffer[500];
 	return X509_NAME_oneline(name, buffer, sizeof(buffer));
@@ -206,19 +206,22 @@ Date Asn1ToDate(ASN1_STRING *time)
 {
 	if(!time) return Null;
 	int digit = 0;
-	while(digit < time->length && IsDigit(time->data[digit]))
+	int length = ASN1_STRING_length(time);
+	auto *data = ASN1_STRING_get0_data(time);
+	
+	while(digit < length && IsDigit(data[digit]))
 		digit++;
 	if(digit < 6)
 		return Null;
-	int year2 = time->data[0] * 10 + time->data[1] - 11 * '0';
-	int month = time->data[2] * 10 + time->data[3] - 11 * '0';
-	int day   = time->data[4] * 10 + time->data[5] - 11 * '0';
+	int year2 = data[0] * 10 + data[1] - 11 * '0';
+	int month = data[2] * 10 + data[3] - 11 * '0';
+	int day   = data[4] * 10 + data[5] - 11 * '0';
 	return Date(year2 + (year2 < 90 ? 2000 : 1900), month, day);
 }
 
 String Asn1ToString(ASN1_STRING *s)
 {
-	return String(s->data, s->length);
+	return String(ASN1_STRING_get0_data(s), ASN1_STRING_length(s));
 }
 
 }

@@ -1,0 +1,43 @@
+{
+	"bomFormat": "CycloneDX",
+	"specVersion": "1.7",
+	"components": [
+		{
+			"type": "library",
+			"name": "libclang",
+			"bom-ref": "bundled.libclang",
+			"version": "21.1.1",
+			"licenses": [
+				{
+					"expression": "Apache-2.0 WITH LLVM-exception"
+				}
+			],
+			"externalReferences": [
+				{
+					"type": "website",
+					"url": "https://clang.llvm.org/"
+				},
+				{
+					"type": "distribution",
+					"url": "git+https://github.com/llvm/llvm-project.git"
+				},
+				{
+					"type": "source-distribution",
+					"url": "git+https://github.com/llvm/llvm-project.git@llvmorg-21.1.1",
+					"hashes": [
+						{
+							"alg": "SHA-1",
+							"content": "5a86dc996c26299de63effc927075dcbfb924167"
+						}
+					]
+				}
+			],
+			"properties": [
+				{
+					"name": "upp:deployment-mode",
+					"value": "dynamic-bundled"
+				}
+			]
+		}
+	]
+}

@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-./configure_makefile Makefile
-./configure_makefile umkMakefile
-
-uname=`uname`
-if [[ "$uname" == 'Darwin' ]]; then
-	sed -i.bak 's/-DflagOSX/-DflagOSX -DflagNOMM/' umkMakefile
-fi

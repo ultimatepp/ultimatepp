@@ -83,6 +83,12 @@ struct CocoMenuBar : public Bar {
 		}
 		Item& m = item.Add();
 		m.nsitem = [NSMenuItem new];
+
+		// NOTE: Starting in macOS 27, non-symbolic menu icons are hidden by default.
+		// Force visibility to maintain existing icon behavior.
+		if([m.nsitem respondsToSelector:NSSelectorFromString(@"setPreferredImageVisibility:")])
+			[m.nsitem setValue:@(1) forKey:@"preferredImageVisibility"];
+
 		m.bar = this;
 		[cocomenu addItem:m.nsitem];
 		cy += GetStdFontCy();

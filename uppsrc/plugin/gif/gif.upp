@@ -3,7 +3,8 @@ description "GIF image file format\3770,128,128";
 uses
 	Draw;
 
-library(WIN32) gif;
+library
+	gif;
 
 external_dependency(VCPKG) giflib;
 

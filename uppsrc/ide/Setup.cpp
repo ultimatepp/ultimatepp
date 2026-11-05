@@ -286,6 +286,7 @@ void Ide::SetupFormat() {
 	WithSetupEditorLayout<ParentCtrl> edt;
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
+	WithSetupAILayout<ParentCtrl> ai;
 	WebSearchTab web_search;
 	edt.lineends
 		.Add(LF, "LF")
@@ -311,6 +312,7 @@ void Ide::SetupFormat() {
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(web_search, "Web search");
+	dlg.Add(ai, "AI");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 
 #ifdef PLATFORM_WIN32
@@ -375,6 +377,11 @@ void Ide::SetupFormat() {
 	              .Add(20, "C++ 20")
 	              .Add(23, "C++ 23")
 	;
+	
+	ai.kind <<= 0;
+
+	ai.kind.Add(CHATGPT, "ChatGPT");
+	ai.kind.Add(GEMINI, "Gemini");
 	
 	ide.wayland.Hide();
 #ifdef GUI_GTK
@@ -468,6 +475,10 @@ void Ide::SetupFormat() {
 		(ide.show_basic_hints, show_basic_hints)
 		(ide.valgrind, valgrind_options)
 		(ide.update_icon, macos_update_icon)
+		
+		(ai.kind, ai_kind)
+		(ai.model, ai_model)
+		(ai.key, ai_key)
 	;
 	
 #ifdef PLATFORM_WIN32
@@ -519,8 +530,19 @@ void Ide::SetupFormat() {
 		f2.Set(def.font2);
 	};
 
+	ai.kind << [&] {
+		ai.model.ClearList();
+		for(String s : Split(get_i((int)~ai.kind, // todo add more
+		                     "gpt-6-luna",
+		                     "gemini-3.5-flash-lite"), ';'))
+			ai.model.AddList(s);
+	};
+	
+	ai.kind.WhenAction();
+	
 	for(;;) {
 		int c = dlg.Run();
+		DDUMP(c);
 
 		SetHubDir(~ide.upphub);
 

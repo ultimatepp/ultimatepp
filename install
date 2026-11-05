@@ -19,7 +19,7 @@ if [[ "$uname" == 'Darwin' ]]; then
     exit
   fi
   echo "Homebrew is installed"
-  brew install openssl clang-format
+  brew install openssl clang-format xxhash
   if clang++ --version; then
     echo "Commandline Development Tools already installed"
   else
@@ -29,7 +29,7 @@ if [[ "$uname" == 'Darwin' ]]; then
   fi
 else
   if [ -x "$(command -v apt-get)" ]; then
-    DEP="apt-get install g++ clang clang-format git make libgtk-3-dev libnotify-dev libbz2-dev libssl-dev xdotool"
+    DEP="apt-get install g++ clang clang-format git make xdotool libbz2-dev libexpat1-dev libfontconfig1-dev libfreetype-dev libgif-dev libgtk-3-dev libjpeg-turbo8-dev liblz4-dev liblzma-dev libnotify-dev libpcre2-dev libpng-dev libssl-dev libx11-dev libxcb1-dev libxdmcp-dev libxext-dev libxft-dev libxinerama-dev libxrender-dev libxxhash-dev libzstd-dev zlib1g-dev"
   elif [ -x "$(command -v dnf)" ]; then
     DEP="dnf install gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
   elif [ -x "$(command -v yum)" ]; then
