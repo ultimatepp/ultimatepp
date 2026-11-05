@@ -89,6 +89,18 @@ SelectExtDepDlg::SelectExtDepDlg()
 			src << m.name + " - " + m.description;
 	}
 	else
+	if(IsPACMAN()) {
+		Vector<String> ls = Split(Sys("pacman -Ss ."), '\n');
+		for(int i = 0; i < ls.GetCount() - 1; i += 2) {
+			String name = ls[i];
+			if(int q = name.Find('/'); q >= 0)
+				name = name.Mid(q + 1);
+			if(int sp = name.Find(' '); sp >= 0)
+				name.Trim(sp);
+			src << name << " - " << TrimLeft(ls[i + 1]);
+		}
+	}
+	else
 		src = Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
 		                        : "apt-cache search ."),
 		            '\n');
@@ -151,6 +163,7 @@ ShowExtDepDlg::ShowExtDepDlg()
 	when.AddList("VCPKG WIN32");
 	when.AddList("DPKG POSIX LINUX");
 	when.AddList("RPM POSIX LINUX");
+	when.AddList("PACMAN POSIX LINUX");
 	when.AddList("BREW POSIX MACOS");
 	
 	copy.SetImage(CtrlImg::copy());
