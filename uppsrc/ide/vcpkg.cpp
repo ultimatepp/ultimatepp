@@ -26,7 +26,7 @@ void Finish(SysConsole& console, int errors)
 }
 
 struct VcpkgDlg : WithVcpkgLayout<TopWindow> {
-	Vector<VcpkgInstalled> items;
+	Vector<VcpkgPackageInfo> items;
 
 	void Sync();
 	void SyncIde();
@@ -103,10 +103,10 @@ void VcpkgDlg::SyncIde()
 
 void VcpkgDlg::SyncList()
 {
-	items = VcpkgList();
+	items = VcpkgListInstalled();
 	
 	list.Clear();
-	for(const VcpkgInstalled& m : items)
+	for(const VcpkgPackageInfo& m : items)
 		list.Add(m.name, Join(m.triplets.GetKeys(), " "), m.version, m.desc);
 	Sync();
 }
@@ -189,16 +189,11 @@ void VcpkgInstallDlg::Sync()
 
 String VcpkgInstallDlg::Perform()
 {
-	for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json"))) {
+	for(VcpkgPackageInfo &l : VcpkgListAll()) {
 		Item& m = items.Add();
-		
-		m.name = ~l["package_name"];
-		m.version = ~l["version"];
-		String p = ~l["port_version"];
-		if(p != "0")
-			m.version << '#' << p;
-		if(l["description"].GetCount())
-			m.desc = l["description"][0];
+		m.name = l.name;
+		m.version = l.version;
+		m.desc = l.desc;
 	}
 
 	Index<String> ts;
