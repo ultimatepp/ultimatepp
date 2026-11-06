@@ -149,7 +149,16 @@ protected:
 	String RpmNamespace();
 	String RpmDistro();
 	void RpmFillPkgMeta(SBOMComponent& m);
+
+	// ------------------------------------------------------------------------
+	// PACMAN FAMILY FUNCTIONS
+	//-------------------------------------------------------------------------
 	
+	void PacmanBuildFileOwnerDB();
+	String PacmanNamespace();
+	String PacmanDistro();
+	void PacmanFillPkgMeta(SBOMComponent& m);
+
 	// ------------------------------------------------------------------------
 	// GIT FAMILY FUNCTIONS
 	// ------------------------------------------------------------------------
@@ -402,6 +411,8 @@ VectorMap<String, String>& SBOMContext::SonameOwnerDB()
 			RpmBuildSonameOwnerDB();
 		else if(IsDPKG())
 			DpkgBuildShlibsOwnerDB();
+		else if(IsPACMAN())
+			PacmanBuildFileOwnerDB();
 #endif
 	}
 	return soname_owner_db;
@@ -424,6 +435,14 @@ String SBOMContext::OwnerOfFile(const String& file)
 	}
 	if(IsDPKG())
 		return PkgNameOnly(Sys("dpkg -S " + file));
+	if(IsPACMAN()) {
+		String r = TrimBoth(Sys("pacman -Qo " + file));
+		int q = r.ReverseFind(' ');
+		if(q < 0) return String();
+		r = r.Left(q);
+		q = r.ReverseFind(' ');
+		return q >= 0 ? TrimBoth(r.Mid(q)) : String();
+	}
 	return String();                                // BREW: later drop-in
 }
 
@@ -724,6 +743,83 @@ void SBOMContext::RpmFillPkgMeta(SBOMComponent& m)
 	m.purl << quals;
 }
 
+// ============================================================================
+// PACMAN FAMILY IMPLEMENTATION
+// ============================================================================
+
+// One line per file: pkgname /path/to/file
+void SBOMContext::PacmanBuildFileOwnerDB()
+{
+    String out = Sys("pacman -Ql");
+    for(String l : Split(out, '\n')) {
+        if(int q = l.Find(' '); q >= 0) {
+            String pkg = TrimBoth(l.Left(q));
+            String path = TrimBoth(l.Mid(q + 1));
+            if(IsNull(pkg) || IsNull(path) || path.EndsWith("/"))
+                continue;
+            file_owner_db.GetAdd(path, pkg);
+        }
+    }
+}
+
+String SBOMContext::PacmanNamespace()
+{
+    return "arch";
+}
+
+String SBOMContext::PacmanDistro()
+{
+    String v = OsReleaseField("VERSION_ID");
+    if(v.IsEmpty())
+        v = OsReleaseField("BUILD_ID");
+    return Nvl(v, "rolling");
+}
+
+void SBOMContext::PacmanFillPkgMeta(SBOMComponent& m)
+{
+    String out = Sys("pacman -Qi " + m.name);
+    String version, url, arch, lic;
+    for(const String& l : Split(out, '\n')) {
+        if(int q = l.Find(':'); q >= 0) {
+            String key = TrimBoth(l.Left(q));
+            String val = TrimBoth(l.Mid(q + 1));
+            
+            if(key == "Version")
+                version = val;
+            else if(key == "URL")
+                url = val;
+            else if(key == "Architecture")
+                arch = val;
+            else if(key == "Licenses")
+                lic = val;
+        }
+    }
+
+    if(version.IsEmpty()) {
+        m.homepage = String();
+        return;
+    }
+    m.version = version;
+    m.homepage = url;
+
+    for(String s : Split(lic, ' ')) {
+        s = TrimBoth(s);
+        if(s.GetCount() && s != "None")
+            m.licenses << s;
+    }
+
+    m.purl << "pkg:pacman/" << PacmanNamespace() << '/' << m.name << '@' << m.version;
+
+    String quals;
+    if(arch.GetCount() && arch != "any")
+        quals << "?arch=" << arch;
+        
+    String distro = PacmanDistro();
+    if(distro.GetCount())
+        quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
+
+    m.purl << quals;
+}
 // ============================================================================
 // GIT FAMILY IMPLEMENTATION
 // ============================================================================
@@ -1093,6 +1189,8 @@ void SBOMContext::FillPkgMeta(SBOMComponent& m)
 		DpkgFillPkgMeta(m);
 	else if(IsRPM())
 		RpmFillPkgMeta(m);
+	else if(IsPACMAN())
+		PacmanFillPkgMeta(m);
 }
 
 // ============================================================================
@@ -1416,8 +1514,8 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	progress_total = progress_done + decls.GetCount();
 
 #ifdef PLATFORM_POSIX
-	if(!win_target && IsRPM()) {
-		(void)FileOwnerDB();  // Force-populate RPM ownership map before step 3 uses it
+	if(!win_target && (IsRPM() || IsPACMAN())) {
+		(void)FileOwnerDB();  // Force-populate RPM/PACMAN ownership map before step 3 uses it
 	}
 #endif
 
@@ -1846,14 +1944,14 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					cs.Clear();
 					return cs;
 				}
-				String nm = IsRPM() ? "glibc" : "libc6";
+				String nm = IsRPM() || IsPACMAN() ? "glibc" : "libc6";
 				bool fresh;
 				CompIdxExt(nm, fresh);
 				if(fresh) {
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
 					m.external = T_DYNAMIC_PLATFORM;
-					if(IsRPM() || IsDPKG())
+					if(IsRPM() || IsDPKG() || IsPACMAN())
 						FillPkgMeta(m);
 				}
 				if(own_ci[0] >= 0)
@@ -1876,7 +1974,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM;
-						if(IsRPM() || IsDPKG())
+						if(IsRPM() || IsDPKG() || IsPACMAN())
 							FillPkgMeta(m);
 
 					}
