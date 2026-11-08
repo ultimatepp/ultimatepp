@@ -24,6 +24,18 @@ static bool SBOMIsSpdxLike(const String& s)
 	return word;
 }
 
+struct SBOMLicDb {
+	Index<String> ops, lcspdx;
+	Vector<String> canon;
+	SBOMLicDb() {
+		for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
+			canon << SPDXLicenses()[i];
+			lcspdx.Add(ToLower(SPDXLicenses()[i]));
+		}
+		ops.Add("("); ops.Add(")"); ops.Add("or"); ops.Add("and"); ops.Add("with");
+	}
+};
+
 // ============================================================================
 // SBOMContext Class — All utility functions and caches as members.
 // Sections per family: neutral/ELF, dpkg, RPM, git, vcpkg, windows toolchain.
@@ -99,7 +111,7 @@ protected:
 		String arch;
 		String source;
 	};
-	
+
 	// ------------------------------------------------------------------------
 	// NEUTRAL / ELF HELPER FUNCTIONS (pm-agnostic)
 	// ------------------------------------------------------------------------
@@ -149,7 +161,16 @@ protected:
 	String RpmNamespace();
 	String RpmDistro();
 	void RpmFillPkgMeta(SBOMComponent& m);
+
+	// ------------------------------------------------------------------------
+	// PACMAN FAMILY FUNCTIONS
+	//-------------------------------------------------------------------------
 	
+	void PacmanBuildFileOwnerDB();
+	String PacmanNamespace();
+	String PacmanDistro();
+	void PacmanFillPkgMeta(SBOMComponent& m);
+
 	// ------------------------------------------------------------------------
 	// GIT FAMILY FUNCTIONS
 	// ------------------------------------------------------------------------
@@ -327,7 +348,7 @@ Vector<Vector<String>> SBOMContext::BatchReadelfNeeded(const Vector<String>& fil
 	for(int i = 0; i < files.GetCount(); i++) {
 		if(files[i].IsEmpty()) continue;
 		qidx.Add(i);
-		args << (args.GetCount() ? " " : "") << files[i];
+		args << (args.GetCount() ? " " : "") << "\"" << files[i] << "\"";
 	}
 	if(qidx.IsEmpty())
 		return results;
@@ -402,6 +423,8 @@ VectorMap<String, String>& SBOMContext::SonameOwnerDB()
 			RpmBuildSonameOwnerDB();
 		else if(IsDPKG())
 			DpkgBuildShlibsOwnerDB();
+		else if(IsPACMAN())
+			PacmanBuildFileOwnerDB();
 #endif
 	}
 	return soname_owner_db;
@@ -424,6 +447,14 @@ String SBOMContext::OwnerOfFile(const String& file)
 	}
 	if(IsDPKG())
 		return PkgNameOnly(Sys("dpkg -S " + file));
+	if(IsPACMAN()) {
+		String r = TrimBoth(Sys("pacman -Qo " + file));
+		int q = r.ReverseFind(' ');
+		if(q < 0) return String();
+		r = r.Left(q);
+		q = r.ReverseFind(' ');
+		return q >= 0 ? TrimBoth(r.Mid(q)) : String();
+	}
 	return String();                                // BREW: later drop-in
 }
 
@@ -724,6 +755,83 @@ void SBOMContext::RpmFillPkgMeta(SBOMComponent& m)
 	m.purl << quals;
 }
 
+// ============================================================================
+// PACMAN FAMILY IMPLEMENTATION
+// ============================================================================
+
+// One line per file: pkgname /path/to/file
+void SBOMContext::PacmanBuildFileOwnerDB()
+{
+    String out = Sys("pacman -Ql");
+    for(String l : Split(out, '\n')) {
+        if(int q = l.Find(' '); q >= 0) {
+            String pkg = TrimBoth(l.Left(q));
+            String path = TrimBoth(l.Mid(q + 1));
+            if(IsNull(pkg) || IsNull(path) || path.EndsWith("/"))
+                continue;
+            file_owner_db.GetAdd(path, pkg);
+        }
+    }
+}
+
+String SBOMContext::PacmanNamespace()
+{
+    return "arch";
+}
+
+String SBOMContext::PacmanDistro()
+{
+    String v = OsReleaseField("VERSION_ID");
+    if(v.IsEmpty())
+        v = OsReleaseField("BUILD_ID");
+    return Nvl(v, "rolling");
+}
+
+void SBOMContext::PacmanFillPkgMeta(SBOMComponent& m)
+{
+    String out = Sys("pacman -Qi " + m.name);
+    String version, url, arch, lic;
+    for(const String& l : Split(out, '\n')) {
+        if(int q = l.Find(':'); q >= 0) {
+            String key = TrimBoth(l.Left(q));
+            String val = TrimBoth(l.Mid(q + 1));
+            
+            if(key == "Version")
+                version = val;
+            else if(key == "URL")
+                url = val;
+            else if(key == "Architecture")
+                arch = val;
+            else if(key == "Licenses")
+                lic = val;
+        }
+    }
+
+    if(version.IsEmpty()) {
+        m.homepage = String();
+        return;
+    }
+    m.version = version;
+    m.homepage = url;
+
+    for(String s : Split(lic, ' ')) {
+        s = TrimBoth(s);
+        if(s.GetCount() && s != "None")
+            m.licenses << s;
+    }
+
+    m.purl << "pkg:pacman/" << PacmanNamespace() << '/' << m.name << '@' << m.version;
+
+    String quals;
+    if(arch.GetCount() && arch != "any")
+        quals << "?arch=" << arch;
+        
+    String distro = PacmanDistro();
+    if(distro.GetCount())
+        quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
+
+    m.purl << quals;
+}
 // ============================================================================
 // GIT FAMILY IMPLEMENTATION
 // ============================================================================
@@ -1093,6 +1201,8 @@ void SBOMContext::FillPkgMeta(SBOMComponent& m)
 		DpkgFillPkgMeta(m);
 	else if(IsRPM())
 		RpmFillPkgMeta(m);
+	else if(IsPACMAN())
+		PacmanFillPkgMeta(m);
 }
 
 // ============================================================================
@@ -1111,11 +1221,10 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	// duplicate-edge guard for the whole graph. Every component insertion
 	// path MUST go through CompIdxExt before emitting.
 	auto AddDependency = [&](SBOMComponent& m, const String& name) {
-		for(String h : { m.bom_ref + "\v" + name, name + "\v" + m.bom_ref }) {
-			if(deps_done.Find(h) >= 0)
-				return;
-			deps_done.Add(h);
-		}
+		String h = m.bom_ref + "\v" + name;   // directed edge key: (from, to)
+		if(deps_done.Find(h) >= 0)
+			return;
+		deps_done.Add(h);
 		m.depends << name;
 	};
 
@@ -1129,7 +1238,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 		fresh = true;
 		return cs.GetCount();
 	};
-
+	
+	// Edge-ref canonicalizer: a component that already exists may carry a
+	// bom_ref differing from its name (embedded sbom.json fragment). A
+	// component that doesn't exist yet is always created with bom_ref = nm,
+	// so returning nm unchanged is correct for those.
+	auto RefOf = [&](const String& nm) -> String {
+		int q = ci_ext.Get(nm, -1);
+		return q >= 0 ? cs[q].bom_ref : nm;
+	};
+	
 	auto TierByName = [&](const String& s) {
 		for(int i = 0; i < (int)T_COUNT; i++)
 			if(s == sbom_tier[i])
@@ -1381,19 +1499,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			String nm = s.name;
 			int q = nm.Find('|');
 			if(q >= 0) {
-				bool win_sel = win_target && VcpkgList().GetCount() > 0;
 				nm.Clear();
 				for(String a : Split(s.name, '|')) {
 					a = TrimBoth(a);
 					if(!a.GetCount())
 						continue;
-					if(win_sel) {
+					if(win_target) {
 						// Windows target: only an installed vcpkg port is valid.
-						// The other branches are POSIX-only (gtk/x11/fontconfig...)
-						// and must be dropped, not kept as a fallback — keeping them
-						// is what leaked libbz2-dev / libgtk-3-dev into the cross SBOM.
-						if(IsVcpkgPort(a)) {
-							nm = a;
+						// Other alternatives describe the build host and must be dropped.
+						if(IsVcpkgPort(a)) {          // false when VcpkgList() is empty,
+							nm = a;                   // so no host package can be picked
 							break;
 						}
 					}
@@ -1401,12 +1516,12 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 						if(!nm.GetCount() || all_host.Find(a) >= 0)
 							nm = a;              // unchanged host-side semantics
 				}
-				if(win_sel && !nm.GetCount())
+				if(win_target && !nm.GetCount())
 					continue;
 			}
 			if(!nm.GetCount())
 				continue;
-			AddDependency(cs[own_ci[i]], nm);
+			AddDependency(cs[own_ci[i]], RefOf(nm));
 			decls.Add(Decl(DECL_EXTERNAL_DEPENDENCY, nm, i));
 			if(s.license.GetCount())
 				override_licenses.GetAdd(nm) = s.license;
@@ -1416,8 +1531,8 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	progress_total = progress_done + decls.GetCount();
 
 #ifdef PLATFORM_POSIX
-	if(!win_target && IsRPM()) {
-		(void)FileOwnerDB();  // Force-populate RPM ownership map before step 3 uses it
+	if(!win_target && (IsRPM() || IsPACMAN())) {
+		(void)FileOwnerDB();  // Force-populate RPM/PACMAN ownership map before step 3 uses it
 	}
 #endif
 
@@ -1497,7 +1612,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					}
 				}
 				if(own_ci[d.pk] >= 0)
-					AddDependency(cs[own_ci[d.pk]], nm);
+					AddDependency(cs[own_ci[d.pk]], RefOf(nm));
 				continue;
 			}
 
@@ -1524,7 +1639,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 				VcpkgFillFromInstalledList(m, nm);
 		}
 		if(own_ci[d.pk] >= 0)
-			AddDependency(cs[own_ci[d.pk]], nm);
+			AddDependency(cs[own_ci[d.pk]], RefOf(nm));
 	}
 
 	// Windows vcpkg transitive expansion
@@ -1549,6 +1664,8 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					if(q < 0)
 						break;
 					SBOMComponent& m = cs[q];
+					int parent_tier = m.external;   // FIX: hoist before the dep loop — m may
+													// dangle once cs.Add() runs below
 					m.version = p["versionInfo"];
 					String lic = p["licenseConcluded"];
 					if(!IsEmpty(lic)) {
@@ -1569,7 +1686,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 							if(fresh) {
 								SBOMComponent& mc = cs.Add();
 								mc.bom_ref = mc.name = dep;
-								mc.external = m.external;
+								mc.external = parent_tier;      // FIX: was m.external (stale after cs.Add())
 								VcpkgFillFromInstalledList(mc, dep);
 							}
 							int fq = ci_ext.Get(name, -1);
@@ -1760,9 +1877,11 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			if(!owner.GetCount()) continue;
 			String file = FindSoPath(d.name);
 			if(file.IsEmpty()) continue;
-			if(discovered.Find(file) < 0) {
-				discovered.Add(file);
-				queue.Add(file);
+			int ri = candidate_files.Find(file);	// filled by GetResolvedOwner above
+			String rfile = ri >= 0 ? resolved_file_to_base[ri] : RealFile(file);
+			if(discovered.Find(rfile) < 0) {		// key on realpath, like step 4's transitive enqueue
+				discovered.Add(rfile);
+				queue.Add(rfile);
 				qfrom.Add(owner);
 			}
 		}
@@ -1794,7 +1913,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					if(p.GetCount())
 						args.Add(p);
 				if(args.GetCount()) {
-					String out = TrimBoth(Sys("readlink -f " + Join(args, " ")));
+					String out = TrimBoth(Sys("readlink -f \"" + Join(args, "\" \"") + "\""));
 					Vector<String> lines = Split(out, '\n', false);
 					if(lines.GetCount() == args.GetCount())
 						for(int i = 0; i < args.GetCount(); i++)
@@ -1846,14 +1965,14 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					cs.Clear();
 					return cs;
 				}
-				String nm = IsRPM() ? "glibc" : "libc6";
+				String nm = IsRPM() || IsPACMAN() ? "glibc" : "libc6";
 				bool fresh;
 				CompIdxExt(nm, fresh);
 				if(fresh) {
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
 					m.external = T_DYNAMIC_PLATFORM;
-					if(IsRPM() || IsDPKG())
+					if(IsRPM() || IsDPKG() || IsPACMAN())
 						FillPkgMeta(m);
 				}
 				if(own_ci[0] >= 0)
@@ -1876,7 +1995,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM;
-						if(IsRPM() || IsDPKG())
+						if(IsRPM() || IsDPKG() || IsPACMAN())
 							FillPkgMeta(m);
 
 					}
@@ -1935,16 +2054,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(s.IsEmpty() || s == "NOASSERTION")
 			return;
 
-		static Index<String> ops;
-		static Index<String> lcspdx;
-		static Vector<String> canon;
-		if(canon.IsEmpty()) {
-			for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
-				canon << SPDXLicenses()[i];
-				lcspdx.Add(ToLower(SPDXLicenses()[i]));
-			}
-			ops.Add("("); ops.Add(")"); ops.Add("or"); ops.Add("and"); ops.Add("with");
-		}
+		static const SBOMLicDb db;   // thread-safe one-time init (C++11 magic static)
 
 		String low = ToLower(s);
 		low.TrimStart("(");
@@ -1952,18 +2062,18 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		Vector<String> vec = Split(low, ' ');
 		if(vec.GetCount() >= 3) {
 			for(int i = 0; i < vec.GetCount(); i++) {
-				if(lcspdx.Find(vec[i]) < 0 && ops.Find(vec[i]) < 0)
+				if(db.lcspdx.Find(vec[i]) < 0 && db.ops.Find(vec[i]) < 0)
 					break;
 				if(i == vec.GetCount() - 1) {
 					String lic;
 					for(int j = 0; j < vec.GetCount(); j++) {
-						int o = ops.Find(vec[j]);
+						int o = db.ops.Find(vec[j]);
 						if(o >= 0)
-							lic << ToUpper(ops[o]) << " ";
+							lic << ToUpper(db.ops[o]) << " ";
 						else {
-							int l = lcspdx.Find(vec[j]);
+							int l = db.lcspdx.Find(vec[j]);
 							if(l >= 0)
-								lic << canon[l] << " ";
+								lic << db.canon[l] << " ";
 						}
 					}
 					arr << Json("expression", TrimRight(lic));
@@ -1971,8 +2081,8 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 				}
 			}
 		}
-		int f = lcspdx.Find(low);
-		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));
+		int f = db.lcspdx.Find(low);
+		arr << Json("license", f >= 0 ? Json("id", db.canon[f]) : Json("name", s));
 	};
 
 	int tier_clamp = mode == SBOM_CONTAINER ? T_DYNAMIC_BUNDLED : T_COUNT;

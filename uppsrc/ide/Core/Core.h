@@ -740,6 +740,7 @@ Vector<String>         MissingExternalDependencies(const String& triplet);
 
 bool HasDPKG();
 bool HasRPM();
+bool HasPACMAN();
 
 String         ExternalDependenciesManagerId();
 Index<String>  InstalledExternalDependencies(const String& triplet);
@@ -750,6 +751,7 @@ bool           CanInstallMissingExternalDependencies();
 
 inline bool IsRPM()    { return ExternalDependenciesManagerId() == "RPM"; }
 inline bool IsDPKG()   { return ExternalDependenciesManagerId() == "DPKG"; }
+inline bool IsPACMAN() { return ExternalDependenciesManagerId() == "PACMAN"; }
 inline bool IsVCPKG()  { return ExternalDependenciesManagerId() == "VCPKG"; }
 inline bool IsBREW()   { return ExternalDependenciesManagerId() == "BREW"; }
 
