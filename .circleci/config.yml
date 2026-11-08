@@ -25,11 +25,17 @@ jobs:
       - checkout
       - run: make deps RUN_ARGS="--non-interactive"
       - run:
+          name: Diagnose Homebrew dependencies
           command: |
-            brew --prefix
+            echo "PATH=$PATH"
+            echo "HOMEBREW_PREFIX=$(brew --prefix)"
+            echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
+            echo "CPATH=$CPATH"
+
             ls -l "$(brew --prefix)/include/pcre2.h"
             ls -l "$(brew --prefix)/include/xxhash.h"
-            echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
+
+            clang++ -v -E -x c++ /dev/null
       - run: make umk
       - run: make theide
   build-windows:
