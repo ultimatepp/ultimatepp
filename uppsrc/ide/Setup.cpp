@@ -542,7 +542,6 @@ void Ide::SetupFormat() {
 	
 	for(;;) {
 		int c = dlg.Run();
-		DDUMP(c);
 
 		SetHubDir(~ide.upphub);
 
