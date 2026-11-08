@@ -206,7 +206,7 @@ Date Asn1ToDate(ASN1_STRING *time)
 {
 	if(!time) return Null;
 	int digit = 0;
-	int length = ASN1_STRING_length(time);
+	int length = ASN1_STRING_get_length(time);
 	auto *data = ASN1_STRING_get0_data(time);
 	
 	while(digit < length && IsDigit(data[digit]))
@@ -221,7 +221,7 @@ Date Asn1ToDate(ASN1_STRING *time)
 
 String Asn1ToString(ASN1_STRING *s)
 {
-	return String(ASN1_STRING_get0_data(s), ASN1_STRING_length(s));
+	return String(ASN1_STRING_get0_data(s), ASN1_STRING_get_length(s));
 }
 
 }
