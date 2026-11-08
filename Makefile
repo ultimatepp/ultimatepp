@@ -1,6 +1,12 @@
 SHELL := /bin/bash
 UNAME := $(shell uname)
 
+ifeq ($(UNAME),Darwin)
+    BREW_PREFIX := $(shell brew --prefix)
+    export CPLUS_INCLUDE_PATH := $(BREW_PREFIX)/include
+	export LIBRARY_PATH := $(BREW_PREFIX)/lib
+endif
+
 .PHONY: all deps config umk theide run clean
 
 all: deps config umk theide

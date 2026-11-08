@@ -21,23 +21,9 @@ jobs:
     resource_class: m4pro.medium
     environment:
       NUMBER_OF_CPUS: 4
-      HOMEBREW_PREFIX: /opt/homebrew
-      CPLUS_INCLUDE_PATH: /opt/homebrew/include
     steps:
       - checkout
       - run: make deps RUN_ARGS="--non-interactive"
-      - run:
-          name: Diagnose Homebrew dependencies
-          command: |
-            echo "PATH=$PATH"
-            echo "HOMEBREW_PREFIX=$(brew --prefix)"
-            echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
-            echo "CPATH=$CPATH"
-
-            ls -l "$(brew --prefix)/include/pcre2.h"
-            ls -l "$(brew --prefix)/include/xxhash.h"
-
-            clang++ -v -E -x c++ /dev/null
       - run: make umk
       - run: make theide
   build-windows:
