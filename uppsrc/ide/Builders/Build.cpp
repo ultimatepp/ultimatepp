@@ -158,13 +158,28 @@ void MakeBuild::CreateHost(Host& host, const String& method, bool darkmode, bool
 				env.GetAdd("JAVA_HOME") = jdkPath;
 			}
 		}
-		
+
 		for(int i = 0; i < env.GetCount(); i++) {
-			LDUMP(env.GetKey(i));
-			LDUMP(env[i]);
-			host.environment << env.GetKey(i) << '=' << env[i] << '\0';
+			auto key = env.GetKey(i);
+			auto value = env[i];
+
+#ifdef PLATFORM_POSIX
+			if(key == "CPLUS_INCLUDE_PATH" || key == "C_INCLUDE_PATH" || key == "CPATH") {
+				Vector<String> parts;
+				for(const String& p : Split(value, ':')) {
+					if(!p.IsEmpty())
+						parts.Add(p);
+				}
+				value = Join(parts, ":");
+			}
+#endif
+
+			LDUMP(key);
+			LDUMP(value);
+
+			host.environment << key << '=' << value << '\0';
 		}
-		
+
 		host.environment.Cat(0);
 		host.cmdout = &cmdout;
 	}
