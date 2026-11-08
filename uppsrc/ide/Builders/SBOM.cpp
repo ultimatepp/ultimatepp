@@ -952,7 +952,7 @@ String SBOMContext::PkgName(const String& s)
 
 bool SBOMContext::IsVcpkgPort(const String& a)
 {
-	for(const VcpkgInstalled& it : VcpkgList())
+	for(const VcpkgPackageInfo& it : VcpkgListInstalled())
 		if(it.name == a && it.triplets.Find(triplet) >= 0)
 			return true;
 	return false;
@@ -960,7 +960,7 @@ bool SBOMContext::IsVcpkgPort(const String& a)
 
 void SBOMContext::VcpkgFillFromInstalledList(SBOMComponent& m, const String& name)
 {
-	for(const VcpkgInstalled& it : VcpkgList())
+	for(const VcpkgPackageInfo& it : VcpkgListInstalled())
 		if(it.name == name && it.triplets.Find(triplet) >= 0) {
 			m.version = it.version;
 			return;
