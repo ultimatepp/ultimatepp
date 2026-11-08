@@ -24,6 +24,12 @@ jobs:
     steps:
       - checkout
       - run: make deps RUN_ARGS="--non-interactive"
+      - run:
+          command: |
+            brew --prefix
+            ls -l "$(brew --prefix)/include/pcre2.h"
+            ls -l "$(brew --prefix)/include/xxhash.h"
+            echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
       - run: make umk
       - run: make theide
   build-windows:
