@@ -194,7 +194,7 @@ void Ctrl::UpdateWindowDecorationsGeometry()
 void Ctrl::UpdateWindowFrameMargins()
 {
 #ifdef GDK_WINDOWING_X11
-	// No realiable way how to do this in wayland, but there the window pos is ignored anyway
+	// No reliable way how to do this in wayland, but there the window pos is ignored anyway
 	GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_widget_show_all(win);
 	gdk_display_sync(gdk_display_get_default());
@@ -228,7 +228,7 @@ void Ctrl::WndRectsSync() const
 			}
 			else
 				gdk_window_get_position(gdk(), &x, &y);
-			
+
 			return SCL(x, y, width, height);
 		};
 
@@ -249,7 +249,7 @@ Rect Ctrl::GetWndScreenRect() const
 
 	if(!IsOpen() || !top)
 		return Null;
-	
+
 	WndRectsSync();
 
 	return utop->screen_rect;
@@ -292,10 +292,11 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 #if GTK_CHECK_VERSION(3, 22, 0)
 	GdkDisplay *s = gdk_display_get_default();
 	int n = gdk_display_get_n_monitors(s);
-	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		auto *pMonitor = gdk_display_get_monitor(s, i);
+		if(!pMonitor)
+			continue;
 		if(IsWayland())
 			gdk_monitor_get_geometry(pMonitor, &rr);
 		else
@@ -305,7 +306,6 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 #else
 	GdkScreen *s = gdk_screen_get_default();
 	int n = gdk_screen_get_n_monitors(s);
-	Vector<int> netwa;
 	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
 		Rect r;
@@ -330,45 +330,51 @@ Rect Ctrl::GetVirtualWorkArea()
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	auto pRootWindow = gdk_screen_get_root_window(gdk_screen_get_default());
-	if (!pRootWindow) {
-		LLOG("Failed to obtain root window!");
-		return Rect(0, 0, 1024, 768);
-	}
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if(IsWayland()) {
+	GdkDisplay *s = gdk_display_get_default();
+	int n = gdk_display_get_n_monitors(s);
+	Rect r(0, 0, 0, 0);
+	for(int i = 0; i < n; i++) {
 		GdkRectangle rr;
-		auto *pDisplay = gdk_display_get_default();
-		auto *pMonitor = gdk_display_get_monitor_at_window(pDisplay, pRootWindow);
-		if (!pMonitor) {
-			LLOG("Failed to obtain monitor!");
-			return Rect(0, 0, 1024, 768);
+		auto *pMonitor = gdk_display_get_monitor(s, i);
+		if(pMonitor) {
+			gdk_monitor_get_geometry(pMonitor, &rr);
+			r |= SCL(rr.x, rr.y, rr.width, rr.height);
 		}
-		gdk_monitor_get_geometry(pMonitor, &rr);
-		return SCL(rr.x, rr.y, rr.width, rr.height);
 	}
+	return r;
+#else
+	GdkScreen *s = gdk_screen_get_default();
+	int n = gdk_screen_get_n_monitors(s);
+	Rect r(0, 0, 0, 0);
+	for(int i = 0; i < n; i++) {
+		GdkRectangle rr;
+		gdk_screen_get_monitor_geometry(s, i, &rr);
+		r |= RectC(rr.x, rr.y, rr.width, rr.height);
+	}
+	return r;
 #endif
-	if(IsWayland()) {
-		LLOG("GTK Wayland backend not supported before 3.22 GTK version.");
-		return Rect(0, 0, 1024, 768);
-	}
-	gint x, y, width, height;
-	gdk_window_get_geometry(pRootWindow, &x, &y, &width, &height);
-    return SCL(x, y, width, height);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	GuiLock __;
 #if GTK_CHECK_VERSION(3, 22, 0)
-	if(IsWayland()) {
-		// NOTE: WorkArea on Wayland is not available... Window manager decides where to put
-		// windows.
-		return GetVirtualScreenArea();
-	}
 	GdkRectangle rr;
 	auto* display = gdk_display_get_default();
-	gdk_monitor_get_workarea(gdk_display_get_primary_monitor(display), &rr);
+	auto* monitor = gdk_display_get_primary_monitor(display);
+
+	// Fallback for Wayland compositors that do not flag a primary monitor
+	if(!monitor)
+		monitor = gdk_display_get_monitor(display, 0);
+	if(!monitor)
+		return GetVirtualScreenArea();
+
+	if(IsWayland())
+		gdk_monitor_get_geometry(monitor, &rr);
+	else
+		gdk_monitor_get_workarea(monitor, &rr);
+
 	return SCL(rr.x, rr.y, rr.width, rr.height);
 #else
 	static Rect r;
@@ -384,7 +390,25 @@ Rect Ctrl::GetPrimaryWorkArea()
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
-	return GetPrimaryWorkArea();
+	GuiLock __;
+#if GTK_CHECK_VERSION(3, 22, 0)
+	GdkRectangle rr;
+	auto* display = gdk_display_get_default();
+	auto* monitor = gdk_display_get_primary_monitor(display);
+
+	// Fallback for Wayland compositors that do not flag a primary monitor
+	if(!monitor)
+		monitor = gdk_display_get_monitor(display, 0);
+	if(monitor) {
+		gdk_monitor_get_geometry(monitor, &rr);
+		return SCL(rr.x, rr.y, rr.width, rr.height);
+	}
+	return GetVirtualScreenArea();
+#else
+	GdkRectangle rr;
+	gdk_screen_get_monitor_geometry(gdk_screen_get_default(), gdk_screen_get_primary_monitor(gdk_screen_get_default()), &rr);
+	return RectC(rr.x, rr.y, rr.width, rr.height);
+#endif
 }
 
 int Ctrl::GetKbdDelay()
@@ -686,6 +710,5 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 }
 
 }
-
 
 #endif
