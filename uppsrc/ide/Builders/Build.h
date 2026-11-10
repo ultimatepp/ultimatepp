@@ -49,6 +49,8 @@ struct SBOMComponent {
 
     String homepage;
     String originUrl;
+    String vcsUrl;
+    String subpath;
 };
 
 class MakeBuild {

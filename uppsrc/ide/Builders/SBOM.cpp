@@ -175,9 +175,12 @@ protected:
 	// GIT FAMILY FUNCTIONS
 	// ------------------------------------------------------------------------
 	
-	Tuple<String, String, String> GitResolveCommit(const String& repo_root);
+	Tuple<String, String, String, String> GitResolveCommit(const String& repo_root);
 	String GitRepoTopLevel(const String& dir);
 	String GitOriginOf(const String& dir);
+	String GitDescribe(const Tuple<String, String, String, String>& commit);
+	Tuple<String, String> ParseGithubRepoId(String origin);
+	String GitSubpath(const String& repo_root, const String& pkg_dir);
 	String GitRepoPrefix(String origin);
 	String GitTagCommit(const String &repo, const String &tag);
 	String PkgName(const String& s);
@@ -260,7 +263,7 @@ protected:
 	
 	// Git caches (repo_origin: repo top-levels only, positive entries only —
 	// negatives deliberately never cached, a subdir may itself be a repo)
-	VectorMap<String, Tuple<String, String, String>> git_commit_cache;
+	VectorMap<String, Tuple<String, String, String, String>> git_commit_cache;
 	VectorMap<String, String> repo_origin;
 	VectorMap<String, String> repo_prefix;
 	
@@ -836,25 +839,56 @@ void SBOMContext::PacmanFillPkgMeta(SBOMComponent& m)
 // GIT FAMILY IMPLEMENTATION
 // ============================================================================
 
-// Cache keyed by canonical root; quoted git -C "<root>" (quoting fixed a
-// space-in-path bug — preserve). Failure → all-empty tuple.
-Tuple<String, String, String> SBOMContext::GitResolveCommit(const String& repo_root)
+// Cache keyed by canonical root; quoted git -C "<root>". Failure ->
+// all-empty tuple.
+// Tuple: (abbrev-hash, full-sha, unix-ts, describe-string)
+Tuple<String, String, String, String> SBOMContext::GitResolveCommit(const String& repo_root)
 {
 	if(!repo_root.GetCount())
-		return MakeTuple(String(), String(), String());
+		return MakeTuple(String(), String(), String(), String());
 	int q = git_commit_cache.Find(repo_root);
 	if(q >= 0)
 		return git_commit_cache[q];
 
 	String hash, sha1, ts;
 	String log_out = TrimBoth(HostSys(git + " -C \"" + repo_root
-									  + "\" log -1 --date=unix --format=\"%h %H %cd\""));
+	                      + "\" log -1 --date=unix --format=\"%h %H %cd\""));
 	if(!SplitTo(log_out, ' ', hash, sha1, ts)) {
 		hash = ""; sha1 = ""; ts = "";
 	}
-	Tuple<String, String, String> entry = MakeTuple(hash, sha1, ts);
+	// Plain "git describe", no flags — matches the verified interactive
+	// behavior. Annotated-tag lineage yields "<tag>-<N>-g<abbrev>"; HEAD
+	// sitting exactly on a tag yields just "<tag>". No reachable tags ->
+	// git exits nonzero, stdout empty -> desc stays empty and the caller
+	// falls back to the timestamp#abbrev stamp. One exec per repo root,
+	// served from the cache thereafter.
+	String desc = TrimBoth(HostSys(git + " -C \"" + repo_root
+	                      + "\" describe"));
+
+	Tuple<String, String, String, String> entry = MakeTuple(hash, sha1, ts, desc);
 	git_commit_cache.Add(repo_root, entry);
 	return entry;
+}
+
+// Human-facing component.version for git-origin packages. Reads the cached
+// describe probe (commit.d): tag-anchored lineage ("<tag>-<N>-g<abbrev>")
+// when tags exist. Tagless fork / shallow clone / export: commit.d is
+// empty — instead of fabricating a describe-like lineage, anchor on the
+// commit's own date, already cached in commit.c: "<yyyy-mm-dd>-g<abbrev>".
+// The date+hash pair is unique, chronologically sortable, and honest about
+// what is known; the '-g' suffix preserves describe's visual grammar so
+// both forms read identically to git-literate reviewers. The exact pin
+// lives in purl/sourceDistributions either way.
+String SBOMContext::GitDescribe(const Tuple<String, String, String, String>& commit)
+{
+	String d = commit.d;
+	if(d.GetCount() && d != commit.a && d != commit.b)
+		return d;
+	if(commit.a.GetCount() && commit.c.GetCount()) {
+		Time t = Time(1970, 1, 1) + (int)Atoi64(commit.c);
+		return Format("%04d%02d%02d-g%s", t.year, t.month, t.day, commit.a);
+	}
+	return String();
 }
 
 // Walk up directories over known repo tops (positive-only caching in
@@ -910,6 +944,53 @@ String SBOMContext::GitOriginOf(const String& dir)
 {
 	String root = GitRepoTopLevel(dir);
 	return root.GetCount() ? repo_origin.Get(root) : String();
+}
+
+// origin -> (owner, repo) for pkg:github, derived strictly from
+// remote.origin.url (already normalized to https:// by GitRepoTopLevel).
+// GitHub-shaped hosts only — gitlab/gitee/bare/self-hosted origins have
+// no valid pkg:github identity and yield empties (caller omits purl).
+// Lowercase per the purl github type definition (owner+repo case-fold).
+// Handles trailing "/", ".git", and "OWNER/REPO/" depths beyond 2.
+Tuple<String, String> SBOMContext::ParseGithubRepoId(String origin)
+{
+	Tuple<String, String> empty = MakeTuple(String(), String());
+	origin = TrimBoth(origin);
+	while(origin.EndsWith("/"))
+		origin.TrimLast(1);
+	while(origin.EndsWith(".git"))
+		origin.TrimLast(4);
+	static const char *GH = "github.com/";
+	int p = ToLower(origin).Find(GH);
+	if(p < 0)
+		return empty;
+	origin = origin.Mid(p + strlen(GH));
+	int q = origin.Find('/');
+	if(q < 0)
+		return empty;
+	String owner = origin.Left(q);
+	String repo  = origin.Mid(q + 1);
+	q = repo.Find('/');
+	if(q >= 0)                                        // nested path: keep first
+		repo = repo.Left(q);
+	if(!owner.GetCount() || !repo.GetCount())
+		return empty;
+	return MakeTuple(ToLower(owner), ToLower(repo));
+}
+
+// Repo-root-relative POSIX path of an in-repo package dir, for the purl
+// subpath — via git itself, so separators/nesting never mismatch the
+// string forms of root and package dir. "--show-prefix" prints
+// "uppsrc/ide/Core/" for a cwd inside the repo, empty at the root,
+// and fails (stderr, empty stdout) outside any repo — empty result
+// means "omit subpath", never "guess".
+String SBOMContext::GitSubpath(const String& repo_root, const String& pkg_dir)
+{
+	String out = TrimBoth(HostSys(git + " -C \"" + pkg_dir + "\" rev-parse --show-prefix"));
+	if(!out.GetCount() || out.StartsWith("fatal"))
+		return String();
+	out.TrimEnd("/");
+	return out == "." ? String() : out;
 }
 
 String SBOMContext::GitRepoPrefix(String origin)
@@ -1220,12 +1301,14 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	// External-component bookkeeping — the duplicate-component and
 	// duplicate-edge guard for the whole graph. Every component insertion
 	// path MUST go through CompIdxExt before emitting.
-	auto AddDependency = [&](SBOMComponent& m, const String& name) {
-		String h = m.bom_ref + "\v" + name;   // directed edge key: (from, to)
+	auto AddDependency = [&](SBOMComponent& m, const String& ref) {
+		if(m.bom_ref == ref)				// Drop self edges
+			return;
+		String h = m.bom_ref + "\v" + ref;	// directed edge key: (from, to)
 		if(deps_done.Find(h) >= 0)
 			return;
 		deps_done.Add(h);
-		m.depends << name;
+		m.depends << ref;
 	};
 
 	auto CompIdxExt = [&](const String& nm, bool& fresh) -> int {
@@ -1427,20 +1510,40 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 				m.type = "application";
 
 			if(origin.GetCount()) {
-				m.originUrl = "git+" + origin;
+				m.originUrl = origin;
 				origin.TrimEnd(".git");
 				m.homepage = origin;
+				m.vcsUrl = origin;
 			}
-			Tuple<String, String, String> commit = GitResolveCommit(root);
-			
-			String hash = commit.a;
+			Tuple<String, String, String, String> commit = GitResolveCommit(root);
+
 			String sha1 = commit.b;
-			String ts = commit.c;
-			if(hash.GetCount()) {
-				m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
-				if(m.originUrl.GetCount())
-					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
+			String desc = GitDescribe(commit);
+			if(desc.GetCount())
+				m.version = desc;
+			if(sha1.GetCount()) {
+				if(!m.version.GetCount())          // describe failed AND no stamp form
+					m.version = commit.a;          // bare abbrev sha: last resort
+				Tuple<String, String> rid = ParseGithubRepoId(repo_origin.Get(root));
+				String archive;                    // real, fetchable source distribution
+				if(rid.a.GetCount() && rid.b.GetCount())
+					archive = "https://github.com/" + rid.a + "/" + rid.b
+					        + "/archive/" + sha1 + ".zip";
+				if(archive.GetCount())
+					m.sourceDistributions << MakeTuple<String, String, String>(archive, String(), String());
+				else if(m.originUrl.GetCount())    // non-github origin: plain clone URL
+					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl, String(), String());
+				// pkg:github identity — derived, never assumed. Monorepo
+				// packages differentiate via subpath.
+				if(rid.a.GetCount() && rid.b.GetCount()) {
+					String sub = GitSubpath(root, PackageDirectory(n));
+					m.subpath = sub;
+					m.purl = "pkg:github/" + rid.a + "/" + rid.b + "@" + sha1;
+					if(sub.GetCount())
+						m.purl << "#" << sub;
+				}
 			}
+
 			m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 			
 			for(const OptItem& u : pk.uses)
@@ -1792,17 +1895,34 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			SBOMComponent& m = cs.Add();
 			m.type     = "library";
 			m.bom_ref  = LLVM_REF;
-			m.name     = "LLVM runtimes (statically linked)";
+			m.name     = "LLVM runtimes";
 			m.version  = ClangVersion();
-			if(m.version.GetCount())
-				m.purl = "pkg:generic/llvm-runtimes@" + m.version;
 			m.licenses << "Apache-2.0 WITH LLVM-exception";
 			m.external = T_STATIC_THIRD_PARTY;
 			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
-			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
-			String srcUrl = "git+https://github.com/llvm/llvm-project.git";
-			String vstring = String("llvmorg-") + m.version;
-			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+			m.originUrl = "https://github.com/mstorsjo/llvm-mingw";
+			m.vcsUrl = "https://github.com/llvm/llvm-project";
+			// The runtimes' source lives in llvm-project, not the
+			// llvm-mingw aggregate: vcs points there, homepage/distribution
+			// stay on the aggregate (the obtainable artifact).
+			// purl @version is the real tag (llvmorg-...), intentionally
+			// not mirroring the human version — the machine pin. No
+			// subpath: the aggregate spans libcxx/libcxxabi/libunwind/
+			// compiler-rt; the tag pins the whole repo state.
+			// Resolve the tag to its commit once; refs/tags archives float
+			// on tag retarget, so they are the offline-resolution fallback.
+			// No hash slots: a commit id is an identifier, not a digest.
+			String srcUrl = "https://github.com/llvm/llvm-project";
+			String vstring = "llvmorg-" + m.version;
+			String sha;
+			if(m.version.GetCount()){
+				sha = GitTagCommit(srcUrl, vstring);
+				m.purl = "pkg:github/llvm/llvm-project@" + (sha.GetCount() ? sha : vstring);
+			}
+			String archive = sha.GetCount()
+				? srcUrl + "/archive/" + sha + ".zip"
+				: srcUrl + "/archive/refs/tags/" + vstring + ".zip";
+			m.sourceDistributions << Tuple<String, String, String>(archive, String(), String());
 		}
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], LLVM_REF);
@@ -1812,20 +1932,30 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			SBOMComponent& m = cs.Add();
 			m.type     = "library";
 			m.bom_ref  = MINGW_REF;
-			m.name     = "mingw-w64 C runtime (statically linked)";
+			m.name     = "mingw-w64 C runtime";
 			m.version  = MingwCrtVersion();
-			if(m.version.GetCount())
-				m.purl = "pkg:generic/mingw-w64@" + m.version;
+			m.licenses << "ZPL-2.1";
 			m.external = T_STATIC_THIRD_PARTY;
 			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
-			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
-			String srcUrl = "git+https://github.com/mingw-w64/mingw-w64.git";
-			String vstring = String("v") + m.version;
-			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+			m.originUrl = "https://github.com/mstorsjo/llvm-mingw";
+			m.vcsUrl = "https://github.com/mingw-w64/mingw-w64";
+			// Component == repo: github purl with the real v-tag, the one
+			// case where owner/repo/version all resolve natively.
+			String srcUrl = "https://github.com/mingw-w64/mingw-w64";
+			String vstring = "v" + m.version;
+			String sha;
+			if(m.version.GetCount()){
+				sha = GitTagCommit(srcUrl, vstring);
+				m.purl = "pkg:github/mingw-w64/mingw-w64@" + (sha.GetCount() ? sha : vstring);
+			}
+			String archive = sha.GetCount()
+				? srcUrl + "/archive/" + sha + ".zip"
+				: srcUrl + "/archive/refs/tags/" + vstring + ".zip";
+			m.sourceDistributions << Tuple<String, String, String>(archive, String(), String());
 		}
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], MINGW_REF);
-		
+					
 		// mingw-w64 CRT links against ucrtbase.dll; the LLVM aggregate's
 		// libc++ calls the UCRT and libunwind unwinds through ntdll
 		// (RtlUnwind). Both resolve inside the OS node, so the known
@@ -2122,9 +2252,11 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		JsonArray extRefs;
 		if(!IsEmpty(c.homepage))
 			extRefs << Json("type", "website")("url", c.homepage);
+		if(!IsEmpty(c.vcsUrl))
+			extRefs << Json("type", "vcs")("url", c.vcsUrl);
 		if(!IsEmpty(c.originUrl))
 			extRefs << Json("type", "distribution")("url", c.originUrl);
-
+		
 		auto SourceRef = [](const auto& s) {
 			Json r;
 			r("type", "source-distribution")("url", s.a);
