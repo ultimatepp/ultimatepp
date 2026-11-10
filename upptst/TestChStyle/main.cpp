@@ -200,6 +200,8 @@ GUI_APP_MAIN
 
 	RDUMP(SColorDisabled());
 	RDUMP(SColorText());
+	RDUMP(SColorPaper());
+	RDUMP(SColorFace());
 	
 	RDUMP(EditField::StyleDefault().disabled);
 	
