@@ -589,27 +589,63 @@ void Ctrl::WndSetPos(const Rect& rect)
 	TopWindow *tw = dynamic_cast<TopWindow *>(this);
 	if(tw)
 		tw->SyncSizeHints();
+		
+	// Calculate deltas to prevent issuing flawed move coordinates to Xwayland during pure resizes
+	Rect current = GetWndScreenRect();
+	bool move = current.IsEmpty() || current.TopLeft() != rect.TopLeft();
+	bool resize = current.IsEmpty() || current.Size() != rect.Size();
 
 	if(top && utop->csd) {
-		int top = csd_border.top;
+		int top_m = csd_border.top;
 		if(tw) {
 			if(tw->custom_bar_frame)
-				top += tw->GetCustomTitleBarMetrics().height;
+				top_m += tw->GetCustomTitleBarMetrics().height;
 			else
-				top += csd_std_header_cy;
+				top_m += csd_std_header_cy;
 		}
-		gdk_window_move_resize(gdk(), LSC(rect.left - csd_border.left), LSC(rect.top - top),
-		                              LSCH(rect.GetWidth() + csd_border.left + csd_border.right),
-		                              LSCH(rect.GetHeight() + top + csd_border.bottom));
+		
+		int x = LSC(rect.left - csd_border.left);
+		int y = LSC(rect.top - top_m);
+		int cx = LSCH(rect.GetWidth() + csd_border.left + csd_border.right);
+		int cy = LSCH(rect.GetHeight() + top_m + csd_border.bottom);
+
+		if(move && resize)
+			gdk_window_move_resize(gdk(), x, y, cx, cy);
+		else
+		if(move)
+			gdk_window_move(gdk(), x, y);
+		else
+		if(resize) {
+			if(tw)
+				gtk_window_resize(gtk(), cx, cy);
+			else
+				gdk_window_resize(gdk(), cx, cy);
+		}
 	}
 	else {
 		Rect m(0, 0, 0, 0);
 		if(tw)
 			m = frameMargins;
+			
+		int x = LSC(rect.left - m.left);
+		int y = LSC(rect.top - m.top);
+		int cx = LSCH(rect.GetWidth());
+		int cy = LSCH(rect.GetHeight());
 
-		gdk_window_move_resize(gdk(), LSC(rect.left - m.left), LSC(rect.top - m.top),
-		                              LSCH(rect.GetWidth()), LSCH(rect.GetHeight()));
+		if(move && resize)
+			gdk_window_move_resize(gdk(), x, y, cx, cy);
+		else
+		if(move)
+			gdk_window_move(gdk(), x, y);
+		else
+		if(resize) {
+			if(tw)
+				gtk_window_resize(gtk(), cx, cy);
+			else
+				gdk_window_resize(gdk(), cx, cy);
+		}
 	}
+	
 	InvalidateScreenRect();
 	SyncWndRect();
 	LLOG("-- WndSetPos0 " << rect);
