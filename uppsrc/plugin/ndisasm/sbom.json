@@ -18,20 +18,19 @@
 					"url": "https://www.nasm.us/"
 				},
 				{
+					"type": "vcs",
+					"url": "https://github.com/netwide-assembler/nasm"
+				},
+				{
 					"type": "distribution",
-					"url": "git+https://github.com/netwide-assembler/nasm.git"
+					"url": "https://github.com/netwide-assembler/nasm"
 				},
 				{
 					"type": "source-distribution",
-					"url": "git+https://github.com/netwide-assembler/nasm.git@nasm-2.08.01",
-					"hashes": [
-						{
-							"alg": "SHA-1",
-							"content": "a947529954d9db0214e65d2c856111f823381f7c"
-						}
-					]
+					"url": "https://github.com/netwide-assembler/nasm/archive/a947529954d9db0214e65d2c856111f823381f7c.zip"
 				}
 			],
+			"purl": "pkg:github/netwide-assembler/nasm@a947529954d9db0214e65d2c856111f823381f7c",
 			"properties": [
 				{
 					"name": "upp:deployment-mode",
