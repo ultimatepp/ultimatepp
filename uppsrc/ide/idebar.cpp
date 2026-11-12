@@ -174,7 +174,7 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(AK_COPYRICH, [this] { CopyRich(); })
-	    .Help("Copy selection as syntax highlithed richtext");
+	    .Help("Copy selection as syntax highlighted richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
@@ -906,6 +906,7 @@ void Ide::AssistMenu(Bar& menu)
 {
 	LTIMESTOP("AssistMenu");
 	menu.Add(!designer, AK_ASSIST, [this] { editor.Assist(true); });
+	menu.Add(!designer, AK_AI, [this] { AIPane(); });
 	auto& m = menu.Add(!designer, AK_JUMPS, [this] { ContextGoto(); });
 	if(IsInLogFile())
 		m.Text("Try to find the source of log line");

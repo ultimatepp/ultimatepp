@@ -5,6 +5,8 @@
 
 String Ide::AIChatGPT(const String& instructions, const String& code)
 {
+	HttpRequest::Trace();
+
 	HttpRequest http("https://api.openai.com/v1/responses");
 
 	http.Header("Authorization", "Bearer " + ai_key);
@@ -144,7 +146,7 @@ void Ide::AIReview()
 	for(int i = 0; i < actual.file.GetCount(); i++) {
 		String p = SourcePath(GetActivePackage(), actual.file[i]);
 		if(findarg(GetFileExt(p), ".cpp", ".h", ".i", ".c") >= 0) {
-			code << "\n=========== " << GetFileName(p) << "\n";
+			code << "\n=========== " << GetActivePackage() + '/' + GetFileName(p) << "\n";
 			if(NormalizePath(p) == NormalizePath(editfile)) {
 				code << "// *** AI review starts here\n";
 				code << LoadFile(p);
@@ -158,8 +160,30 @@ void Ide::AIReview()
 	LDUMP(code.GetCount());
 	LDUMP(code);
 	
-	String result = AI("review the code, but only the code delimited with comments *** AI review.", code);
+	String result = AI("Review the code, but only the code delimited with comments *** AI review. Use references to code in format <@@filename:line@@> - just the first line, not a range.", code);
+	
+	String qtf = MarkdownConverter().ToQtf(result);
+	
+	for(;;) {
+		int l = qtf.Find("`<`@`@");
+		if(l < 0)
+			break;
+		int r = qtf.FindAfter("`@`@`>");
+		if(r < 0)
+			break;
+		String link = qtf.Mid(l + 6, r - l - 12);
+		qtf.Remove(l, r - l);
+		qtf.Insert(l, "[^" + link + "^ " + link + "]");
+	}
+	
+	ai_output.SetQTF(qtf);
+	ai_output.WhenLink = [this](const String& link) {
+		GotoPosition(link);
+	};
+	if(!ai_pane.GetParent())
+		AIPane();
 
+#if 0
 	String review_file;
 
 	for(int i = 1; i < 100000000; i++) {
@@ -167,7 +191,20 @@ void Ide::AIReview()
 		if(!FileExists(review_file))
 			break;
 	}
-	Upp::SaveFile(review_file, MarkdownConverter().ToQtf(result));
+	Upp::SaveFile(review_file, );
 	
 	EditFile(review_file);
+#endif
+}
+
+void Ide::AIPane()
+{
+	if(ai_pane.GetParent())
+		IdeRemoveRight(ai_pane);
+	else {
+		ai_splitter.Vert(ai_output, ai_prompt);
+		ai_splitter.SetPos(9000);
+		ai_pane << ai_splitter.HSizePos().VSizePos();
+		IdeSetRight(ai_pane);
+	}
 }

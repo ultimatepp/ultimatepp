@@ -53,7 +53,11 @@ void Ide::CopyPosition()
 
 void Ide::GotoPosition()
 {
-	String cs = ReadClipboardText();
+	GotoPosition(ReadClipboardText());
+}
+
+void Ide::GotoPosition(const String& cs)
+{
 	String f;
 	int line = 0;
 	for(char c : ":( \t") {

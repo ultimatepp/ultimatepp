@@ -155,7 +155,8 @@ void Ide::IdeProcessEvents()
 
 void Ide::IdeSetRight(Ctrl& ctrl)
 {
-	
+	while(right.GetFirstChild())
+		right.GetFirstChild()->Remove();
 	right.Add(ctrl.SizePos());
 	right_split.Zoom(-1);
 }

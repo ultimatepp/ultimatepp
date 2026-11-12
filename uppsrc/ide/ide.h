@@ -718,12 +718,16 @@ public:
 		true;
 #endif
 
-	int       ai_kind = CHATGPT;
-	String    ai_model;
-	String    ai_key;
+	int          ai_kind = CHATGPT;
+	String       ai_model;
+	String       ai_key;
 	
-	String    ai_error;
-		
+	String       ai_error;
+	
+	ParentCtrl   ai_pane;
+	Splitter     ai_splitter;
+	RichTextCtrl ai_output;
+	DocEdit      ai_prompt;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -931,6 +935,7 @@ public:
 
         void  CopyPosition();
         void  GotoPosition();
+		void  GotoPosition(const String& cs);
         
     void      ReformatMenu(Bar& menu);
 	    void  ReformatCodeDlg();
@@ -1090,6 +1095,7 @@ public:
 		void  NavigatorDlg();
 		void  InsertParameters();
 		void  FindUnitializedMemberVariables(int scope);
+		void  AIPane();
 		void  AIReview();
 
 
