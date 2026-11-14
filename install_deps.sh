@@ -121,7 +121,37 @@ elif command -v urpmi >/dev/null; then
 elif command -v zypper >/dev/null; then
   DEP="zypper $ZYPPER_OPT install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif command -v pacman >/dev/null; then
-  DEP="pacman $PACMAN_OPT --needed gcc clang git make xdotool bzip2 expat fontconfig freetype2 giflib gtk3 libjpeg-turbo lz4 xz libnotify pcre2 libpng openssl libx11 libxcb libxdmcp libxext libxft libxinerama libxrender xxhash zstd zlib pkgconf gdb" 
+  DEP="pacman $PACMAN_OPT --needed \
+    bzip2 \
+    clang \
+    expat \
+    fontconfig \
+    freetype2 \
+    gcc \
+    giflib \
+    git \
+    gtk3 \
+    libjpeg-turbo \
+    libnotify \
+    libpng \
+    libx11 \
+    libxcb \
+    libxdmcp \
+    libxext \
+    libxft \
+    libxinerama \
+    libxrender \
+    libzstd \
+    lz4 \
+    make \
+    openssl \
+    pcre2 \
+    pkgconf \
+    xdotool \
+    xxhash \
+    xz \
+    zlib \
+    zstd"
 elif command -v pkg >/dev/null; then
   DEP="pkg install $PKG_OPT bash gmake git gtk3 libnotify llvm90 pkgconf"
   if [ "$UNAME" = 'SunOS' ]; then
