@@ -3,9 +3,12 @@
 #define LDUMP(x)
 #define LLOG(x) LOG(x)
 
-String Ide::AIChatGPT(const String& instructions, const String& code)
+Ide::AIThread Ide::AIChatGPT(const String& instructions, const String& code)
 {
+	Ide::AIThread r;
+#ifdef _DEBUG
 	HttpRequest::Trace();
+#endif
 
 	HttpRequest http("https://api.openai.com/v1/responses");
 
@@ -20,10 +23,17 @@ String Ide::AIChatGPT(const String& instructions, const String& code)
 			         ("max_output_tokens", 100000)
 			         ("background", true)
 		).Execute();
+		
+	Progress pi("AI thinking...");
+
+	http.WhenWait = [&] {
+		if(pi.StepCanceled())
+			http.Abort();
+	};
 
 	if(http.IsError()) {
-		ai_error << "HTTP request failed: " << http.GetErrorDesc();
-		return String::GetVoid();
+		r.error << "HTTP request failed: " << http.GetErrorDesc();
+		return r;
 	}
 
 	Value responseJson = ParseJSON(responseText);
@@ -31,12 +41,11 @@ String Ide::AIChatGPT(const String& instructions, const String& code)
 	String responseId = AsString(responseJson["id"]);
 	String status = AsString(responseJson["status"]);
 	
-	Progress pi("AI processing");
 	int ms = msecs();
 	while(findarg(status, "queued", "in_progress") >= 0) {
 		if(pi.StepCanceled()) {
-			ai_error = "Canceled by user";
-			return String::GetVoid();
+			r.error = "Canceled by user";
+			return r;
 		}
 		
 		Sleep(0);
@@ -46,46 +55,44 @@ String Ide::AIChatGPT(const String& instructions, const String& code)
 			ms = ms1;
 			HttpRequest poll("https://api.openai.com/v1/responses/" + responseId);
 			poll.Header("Authorization", "Bearer " + ai_key);
+			poll.WhenWait = [&] {
+				if(pi.StepCanceled())
+					http.Abort();
+			};
 		
 			responseText = poll.Execute(); // GET is the default
 			if(poll.IsError()) {
-				ai_error << "Polling HTTP request failed: " << poll.GetErrorDesc();
-				return String::GetVoid();
+				r.error << "Polling HTTP request failed: " << poll.GetErrorDesc();
+				return r;
 			}
 		
 			responseJson = ParseJSON(responseText);
 			if(IsNull(responseJson)) {
-				ai_error << "Invalid JSON response while polling: " << responseText;
-				return String::GetVoid();
+				r.error << "Invalid JSON response while polling: " << responseText;
+				return r;
 			}
-		
+			
 			status = AsString(responseJson["status"]);
 			LOG("Response status: " << status);
 		}
 	}
 	
 	if(status != "completed") {
-		ai_error << "Response did not complete. Status: " << status;
-		return String::GetVoid();
+		r.error << "Response did not complete. Status: " << status;
+		return r;
 	}
 
 	if(!IsNull(responseJson["error"])) {
-		ai_error << "OpenAI API error: " << ~responseJson["error"]["message"];
-		return String::GetVoid();
+		r.error << "OpenAI API error: " << ~responseJson["error"]["message"];
+		return r;
 	}
 
-	String result;
 	for(Value item : responseJson["output"])
 		if(AsString(item["type"]) == "message") {
 			Value content = item["content"];
-			for(int j = 0; j < content.GetCount(); j++) {
-				Value part = content[j];
-				String type = AsString(part["type"]);
-	
-				if(type == "output_text")
-					result << AsString(part["text"]);
-//				else if(type == "refusal")
-//					LOG("Refusal: " << AsString(part["refusal"]));
+			for(Value part : content) {
+				if(part["type"] == "output_text")
+					r.result << part["text"];
 			}
 		}
 /*
@@ -103,11 +110,14 @@ String Ide::AIChatGPT(const String& instructions, const String& code)
 		PutVerbose(String() << "Total tokens: " << usage["total_tokens"]);
 	}
 	
-	return result;
+	return r;
 }
 
-String Ide::AIGemini(const String& instructions, const String& code)
+Ide::AIThread Ide::AIGemini(const String& instructions, const String& code)
 {
+	Ide::AIThread r;
+	return r;
+#if 0
 	HttpRequest http("https://generativelanguage.googleapis.com/v1beta/models/" + ai_model + ":generateContent?key=" + ai_key);
 
 	String responseText =
@@ -131,11 +141,11 @@ String Ide::AIGemini(const String& instructions, const String& code)
 	}
 
 	return ~responseJson["candidates"][0]["content"]["parts"][0]["text"];
+#endif
 }
 
-String Ide::AI(const String& instructions, const String& code)
+Ide::AIThread Ide::AI(const String& instructions, const String& code)
 {
-	ai_error.Clear();
 	return ai_kind == 0 ? AIChatGPT(instructions, code)
 	                    : AIGemini(instructions, code);
 }
@@ -160,9 +170,10 @@ void Ide::AIReview()
 	LDUMP(code.GetCount());
 	LDUMP(code);
 	
-	String result = AI("Review the code, but only the code delimited with comments *** AI review. Use references to code in format <@@filename:line@@> - just the first line, not a range.", code);
+	AIThread result = AI("Review the code, but only the code delimited with comments *** AI review. Use references to code in format <@@filename:line@@> - just the first line, not a range.", code);
 	
-	String qtf = MarkdownConverter().ToQtf(result);
+	
+	String qtf = MarkdownConverter().ToQtf(result.result);
 	
 	for(;;) {
 		int l = qtf.Find("`<`@`@");
@@ -175,7 +186,7 @@ void Ide::AIReview()
 		qtf.Remove(l, r - l);
 		qtf.Insert(l, "[^" + link + "^ " + link + "]");
 	}
-	
+
 	ai_output.SetQTF(qtf);
 	ai_output.WhenLink = [this](const String& link) {
 		GotoPosition(link);
@@ -201,10 +212,6 @@ void Ide::AIPane()
 {
 	if(ai_pane.GetParent())
 		IdeRemoveRight(ai_pane);
-	else {
-		ai_splitter.Vert(ai_output, ai_prompt);
-		ai_splitter.SetPos(9000);
-		ai_pane << ai_splitter.HSizePos().VSizePos();
+	else
 		IdeSetRight(ai_pane);
-	}
 }

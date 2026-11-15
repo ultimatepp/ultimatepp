@@ -771,6 +771,10 @@ Ide::Ide()
 		if(ctrl == TheIde())
 			TheIde()->PaintTitlebarInfo(draw);
 	});
+
+	ai_splitter.Vert(ai_output, ai_prompt);
+	ai_splitter.SetPos(9000);
+	ai_pane << ai_splitter.HSizePos().VSizePos();
 }
 
 Ide::~Ide()

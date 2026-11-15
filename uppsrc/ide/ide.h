@@ -722,8 +722,6 @@ public:
 	String       ai_model;
 	String       ai_key;
 	
-	String       ai_error;
-	
 	ParentCtrl   ai_pane;
 	Splitter     ai_splitter;
 	RichTextCtrl ai_output;
@@ -1361,9 +1359,16 @@ public:
 
 	void   CreateSBOM();
 
-	String AI(const String& instructions, const String& code);
-	String AIChatGPT(const String& instructions, const String& code);
-	String AIGemini(const String& instructions, const String& code);
+	struct AIThread {
+		String thread_id;
+		String result;
+		String error;
+	};
+
+	AIThread AI(const String& instructions, const String& code);
+
+	AIThread AIChatGPT(const String& instructions, const String& code);
+	AIThread AIGemini(const String& instructions, const String& code);
 
 	typedef   Ide CLASSNAME;
 
