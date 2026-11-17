@@ -3,26 +3,38 @@
 #define LDUMP(x)
 #define LLOG(x) LOG(x)
 
-Ide::AIThread Ide::AIChatGPT(const String& instructions, const String& code)
+bool DocEditEnter::Key(dword key, int count)
+{
+	if(key == K_ENTER) {
+		WhenEnter();
+		return true;
+	}
+	return DocEdit::Key(findarg(key, K_CTRL|K_ENTER, K_ALT|K_ENTER, K_SHIFT|K_ENTER) >= 0 ? K_ENTER : key, count);
+}
+
+Ide::AIThread Ide::AIChatGPT(const String& instructions, const String& code, const String& prev_id)
 {
 	Ide::AIThread r;
 #ifdef _DEBUG
-	HttpRequest::Trace();
+//	HttpRequest::Trace();
 #endif
 
 	HttpRequest http("https://api.openai.com/v1/responses");
 
 	http.Header("Authorization", "Bearer " + ai_key);
 
-	String responseText =
-		http.ContentType("application/json").Post(
-			Upp::Json("model", ai_model)
-			         ("prompt_cache_key", "experimental_query")
-			         ("instructions", instructions)
-			         ("input", code)
-			         ("max_output_tokens", 100000)
-			         ("background", true)
-		).Execute();
+	Upp::Json request;
+	request("model", ai_model)
+	       ("prompt_cache_key", "experimental_query")
+	       ("instructions", instructions)
+	       ("input", code)
+	       ("max_output_tokens", 100000)
+	       ("background", true);
+
+	if(prev_id.GetCount())
+		request("previous_response_id", prev_id);
+
+	String responseText = http.ContentType("application/json").Post(request).Execute();
 		
 	Progress pi("AI thinking...");
 
@@ -95,6 +107,8 @@ Ide::AIThread Ide::AIChatGPT(const String& instructions, const String& code)
 					r.result << part["text"];
 			}
 		}
+
+	r.response_id = AsString(responseJson["id"]);
 /*
 	if(AsString(responseJson["status"]) == "incomplete") {
 		LOG("Warning: generation was incomplete. Reason: "
@@ -113,7 +127,7 @@ Ide::AIThread Ide::AIChatGPT(const String& instructions, const String& code)
 	return r;
 }
 
-Ide::AIThread Ide::AIGemini(const String& instructions, const String& code)
+Ide::AIThread Ide::AIGemini(const String& instructions, const String& code, const String& prev_id)
 {
 	Ide::AIThread r;
 	return r;
@@ -144,37 +158,16 @@ Ide::AIThread Ide::AIGemini(const String& instructions, const String& code)
 #endif
 }
 
-Ide::AIThread Ide::AI(const String& instructions, const String& code)
+Ide::AIThread Ide::AI(const String& instructions, const String& code, const String& prev_id)
 {
-	return ai_kind == 0 ? AIChatGPT(instructions, code)
-	                    : AIGemini(instructions, code);
+	return ai_kind == 0 ? AIChatGPT(instructions, code, prev_id)
+	                    : AIGemini(instructions, code, prev_id);
 }
 
-void Ide::AIReview()
+String Ide::AIResult(const AIThread& t)
 {
-	String code;
-	for(int i = 0; i < actual.file.GetCount(); i++) {
-		String p = SourcePath(GetActivePackage(), actual.file[i]);
-		if(findarg(GetFileExt(p), ".cpp", ".h", ".i", ".c") >= 0) {
-			code << "\n=========== " << GetActivePackage() + '/' + GetFileName(p) << "\n";
-			if(NormalizePath(p) == NormalizePath(editfile)) {
-				code << "// *** AI review starts here\n";
-				code << LoadFile(p);
-				code << "// *** AI review ends here\n";
-			}
-		}
-		if(code.GetCount() > 1000000)
-			break;
-	}
-	
-	LDUMP(code.GetCount());
-	LDUMP(code);
-	
-	AIThread result = AI("Review the code, but only the code delimited with comments *** AI review. Use references to code in format <@@filename:line@@> - just the first line, not a range.", code);
-	
-	
-	String qtf = MarkdownConverter().ToQtf(result.result);
-	
+	DUMP(t.result);
+	String qtf = MarkdownConverter().ToQtf(t.result);
 	for(;;) {
 		int l = qtf.Find("`<`@`@");
 		if(l < 0)
@@ -184,13 +177,55 @@ void Ide::AIReview()
 			break;
 		String link = qtf.Mid(l + 6, r - l - 12);
 		qtf.Remove(l, r - l);
-		qtf.Insert(l, "[^" + link + "^ " + link + "]");
+		qtf.Insert(l, "[^" + link + "^ " + link + "] [^F" + link + "^ Suggest fix]");
 	}
+	ai_prev = t.response_id;
+	return qtf;
+}
+	
+void Ide::AIReview()
+{
+	String code;
+	String review_file;
+	for(int i = 0; i < actual.file.GetCount(); i++) {
+		String p = SourcePath(GetActivePackage(), actual.file[i]);
+		if(findarg(GetFileExt(p), ".cpp", ".h", ".i", ".c", ".lay", ".key") >= 0) {
+			String file = GetActivePackage() + '/' + GetFileName(p);
+			code << "\n=========== " << file << "\n";
+			if(NormalizePath(p) == NormalizePath(editfile)) {
+				review_file = file;
+				FileIn in(editfile);
+				int ii = 0;
+				while(!in.IsEof())
+					code << ++ii << ": " << in.GetLine();
+			}
+			else
+				code << LoadFile(p);
+		}
+		if(code.GetCount() > 1000000) {
+			Exclamation("Request is too large");
+			return;
+		}
+	}
+	
+	if(review_file.GetCount() == 0)
+		Exclamation("Cannot review current file");
+	
+	LDUMP(code.GetCount());
+	LDUMP(code);
+	
+	String prompt = "Review code in file " + review_file;
+	int l, h;
+	if(editor.GetSelection(l, h))
+		prompt << ", only lines " << editor.GetLine(l) << " - " << editor.GetLine(h);
+	prompt << "Use references to code in the format <@@filename:line@@> - just the first line, not a range.";
+	AIThread result = AI(prompt, code);
+	
+	String qtf = AIResult(result);
 
-	ai_output.SetQTF(qtf);
-	ai_output.WhenLink = [this](const String& link) {
-		GotoPosition(link);
-	};
+	ai_qtf.Clear();
+	AIAppendOutput(qtf);
+
 	if(!ai_pane.GetParent())
 		AIPane();
 
@@ -214,4 +249,64 @@ void Ide::AIPane()
 		IdeRemoveRight(ai_pane);
 	else
 		IdeSetRight(ai_pane);
+}
+
+void Ide::AIPrompt()
+{
+	ai_qtf << "&[g@B \1" << ~ai_prompt << "\1]&";
+	AIPrompt2(~ai_prompt);
+	ai_prompt <<= Null;
+}
+
+void Ide::AIPrompt2(const String& prompt)
+{
+	AIThread result = AI(Null, prompt, ai_prev);
+	AIAppendOutput(AIResult(result));
+	if(!ai_pane.GetParent())
+		AIPane();
+}
+
+void Ide::AIAppendOutput(const String& qtf)
+{
+	ai_qtf << qtf;
+	ai_output.SetQTF(ai_qtf);
+	ai_output.ScrollEnd();
+}
+
+void Ide::AILink(const String& link)
+{
+	GotoPosition(link);
+	if(*link == 'F') {
+		ai_qtf << "&[g@B Fix for \1" << link.Mid(1) << "\1]&";
+		AIThread r = AI(Null,
+		                "Suggest the fix for issue " + link.Mid(1) + ". Fix the whole function. "
+		                "Show the range of lines you are replacing with <##line:count##> header. "
+		                "Do not add any text or explanation, just the required header and the code."
+		                "Do not use any formatting, I will be using the code as is.",
+		                ai_prev);
+		ai_prev = r.response_id;
+		int p = r.result.Find('\n');
+		if(p > 0) {
+			String h = r.result.Mid(0, p);
+			String code = r.result.Mid(p + 1);
+			CParser p(h);
+			int line, count;
+			try {
+				p.Char3('<', '#', '#');
+				line = p.ReadInt();
+				p.Char(':');
+				count = p.ReadInt();
+				WriteClipboardText(code);
+				GotoPos(Point(0, line));
+				line += count;
+				editor.SetSelection(editor.GetCursor(), editor.GetPos(line + count));
+				CompareWithClipboard();
+				AIAppendOutput(HighlightCodeQtf(code.ToWString(), 4));
+				return;
+			}
+			catch(CParser::Error) {}
+		}
+		AIAppendOutput("[g@R Unexpected reply:&][g \1" + r.result + "\1]");
+			return;
+	}
 }

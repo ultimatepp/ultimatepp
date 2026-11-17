@@ -589,12 +589,11 @@ void Ide::FindGitConflicts()
 	FFoundFinish();
 }
 
-void Ide::CopyRich()
+String Ide::HighlightCodeQtf(const WString& code, int tabsize)
 {
 	String qtf = "[C0 ";
-	for(WString l0 : Split(editor.GetSelectionW(), '\n', false)) {
+	for(WString l0 : Split(code, '\n', false)) {
 		WString ln;
-		int tabsize = editor.GetTabSize();
 		for(wchar c : l0)
 			if(c == '\t')
 				ln.Cat(' ', tabsize - ln.GetLength() % tabsize);
@@ -638,9 +637,13 @@ void Ide::CopyRich()
 		}
 		qtf << "&\n";
 	}
-	
+	return qtf;
+}
+
+void Ide::CopyRich()
+{
 	ClearClipboard();
-	AppendClipboard(ParseQTF(qtf));
+	AppendClipboard(ParseQTF(HighlightCodeQtf(editor.GetSelectionW(), editor.GetTabSize())));
 }
 
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
@@ -651,4 +654,18 @@ void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 void Ide::LaunchAndroidAVDManager(const AndroidSDK& androidSDK)
 {
 	PromptOK("AVD managment is not yet implemented in TheIDE. Use Android Studio for this purpose instead.");
+}
+
+void Ide::CompareWithClipboard()
+{
+    DiffDlg& dlg = CreateNewWindow<DiffDlg>();
+    dlg.diff.left.RemoveFrame(dlg.p);
+    String left = ReadClipboardText();
+    String right = editor.IsSelection() ? editor.GetSelection() : editor.Get();
+    dlg.diff.Set(left, right);
+    dlg.diff.indent <<= false;
+    dlg.diff.indent << [=, &dlg] { dlg.diff.Set(left, right); };
+	dlg.Title("Compare with clipboard");
+	dlg.Icon(IdeImg::DiffClip());
+    dlg.OpenMain();
 }

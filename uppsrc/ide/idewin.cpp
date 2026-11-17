@@ -774,7 +774,14 @@ Ide::Ide()
 
 	ai_splitter.Vert(ai_output, ai_prompt);
 	ai_splitter.SetPos(9000);
-	ai_pane << ai_splitter.HSizePos().VSizePos();
+	ai_pane << ai_splitter.SizePos();
+	ai_output.SetFrame(ViewFrame());
+	ai_output.Margins(DPI(2));
+	ai_prompt.NoProcessEnter();
+	ai_prompt.WhenEnter = [this] { AIPrompt(); };
+	ai_output.WhenLink = [this](const String& link) {
+		AILink(link);
+	};
 }
 
 Ide::~Ide()

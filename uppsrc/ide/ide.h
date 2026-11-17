@@ -394,6 +394,12 @@ enum {
 	GEMINI = 1,
 };
 
+struct DocEditEnter : DocEdit {
+	bool Key(dword key, int count) override;
+
+	Event<> WhenEnter;
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	void   Paint(Draw& w) override;
@@ -724,8 +730,9 @@ public:
 	
 	ParentCtrl   ai_pane;
 	Splitter     ai_splitter;
+	String       ai_qtf;
 	RichTextCtrl ai_output;
-	DocEdit      ai_prompt;
+	DocEditEnter ai_prompt;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -961,7 +968,9 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		String HighlightCodeQtf(const WString& code, int tabsize);
 		void  CopyRich();
+		void  CompareWithClipboard();
 		void  Duplicate();
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
@@ -1360,15 +1369,22 @@ public:
 	void   CreateSBOM();
 
 	struct AIThread {
-		String thread_id;
+		String response_id;
 		String result;
 		String error;
 	};
 
-	AIThread AI(const String& instructions, const String& code);
 
-	AIThread AIChatGPT(const String& instructions, const String& code);
-	AIThread AIGemini(const String& instructions, const String& code);
+	AIThread AIChatGPT(const String& instructions, const String& code, const String& prev_id = Null);
+	AIThread AIGemini(const String& instructions, const String& code, const String& prev_id = Null);
+	AIThread AI(const String& instructions, const String& code, const String& prev_id = Null);
+	void     AIPrompt();
+	String   AIResult(const AIThread& t);
+	void     AILink(const String& link);
+	void     AIPrompt2(const String& prompt);
+	void     AIAppendOutput(const String& qtf);
+
+	String   ai_prev;
 
 	typedef   Ide CLASSNAME;
 
