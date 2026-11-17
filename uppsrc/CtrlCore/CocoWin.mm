@@ -122,7 +122,7 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
 	GetTop()->coco->window = window;
-	if(owner && owner->top && owner->GetTop()->coco)
+	if(popup && owner && owner->top && owner->GetTop()->coco)
 		[owner->GetTop()->coco->window addChildWindow:window ordered:NSWindowAbove];
 
 	window->ctrl = this;
@@ -219,8 +219,8 @@ bool Ctrl::IsWndOpen() const {
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), NSWindowStyleMaskBorderless, 0);
 	popup = true;
+	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), NSWindowStyleMaskBorderless, 0);
 	if(activate && IsEnabled())
 		SetFocus();
 }
@@ -304,8 +304,10 @@ void TopWindow::SyncCaption()
 		SyncTitle();
 		NSWindow* window = GetTop()->coco->window;
 
+        const bool allow_minimizebox = !(GetTop()->coco->owner) && minimizebox;
+
 		NSWindowStyleMask mask = [window styleMask];
-		mask = minimizebox ? (mask | NSWindowStyleMaskMiniaturizable)
+		mask = allow_minimizebox ? (mask | NSWindowStyleMaskMiniaturizable)
 		                   : (mask & ~NSWindowStyleMaskMiniaturizable);
 		mask = maximizebox ? (mask | NSWindowStyleMaskResizable)
 		                   : (mask & ~NSWindowStyleMaskResizable);
