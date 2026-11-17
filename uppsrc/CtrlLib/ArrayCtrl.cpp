@@ -2291,8 +2291,9 @@ void ArrayCtrl::PlaceEdits() {
 }
 
 bool ArrayCtrl::IsEditing() const {
-	for(int i = 0; i < column.GetCount(); i++)
-		if(column[i].edit) return true;
+	if(canedit)
+		for(int i = 0; i < column.GetCount(); i++)
+			if(column[i].edit) return true;
 	return false;
 }
 
@@ -2841,6 +2842,7 @@ void ArrayCtrl::Reset() {
 	max_visible_line = INT_MAX;
 	ctrl_low = ctrl_high = 0;
 	accept_edits = false;
+	canedit = true;
 }
 
 void ArrayCtrl::CancelMode()

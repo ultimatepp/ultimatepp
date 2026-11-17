@@ -1104,6 +1104,12 @@ tring]_[* RowFormat]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 term for `'row`' (as set by the [* RowName] property). This is 
 used for array local menu items. Returns `*this.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:CanEdit`(bool`):%- [@(0.0.255) void] [* CanEdit]([@(0.0.255) bool] 
+[*@3 b] [@(0.0.255) `=] [@(0.0.255) true])&]
+[s2; Can be used to disable editing via start / edit and columns 
+edits.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowName`(const char`*`): [_^topic`:`/`/CtrlLib`/src`/ArrayCtrl`_en`-us`#ArrayCtrl`:`:class^ A
 rrayCtrl][@(0.0.255) `&]_[* RowName]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]

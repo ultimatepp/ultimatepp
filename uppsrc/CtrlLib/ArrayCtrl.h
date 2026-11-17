@@ -259,6 +259,7 @@ private:
 	bool  allsorting:1;
 	bool  spanwidecells:1;
 	bool  accept_edits:1;
+	bool  canedit:1;
 
 	mutable bool  selectiondirty:1;
 
@@ -652,6 +653,8 @@ public:
 	String     AsCsv(bool sel = false, int sep = ';', bool hdr = true);
 
 	String     RowFormat(const char *s);
+
+	void       CanEdit(bool b = true)                  { canedit = b; }
 
 	ArrayCtrl& RowName(const char *s)                  { row_name = s; return *this; }
 	ArrayCtrl& AppendLine(bool b = true)               { appendline = b; return *this; }
