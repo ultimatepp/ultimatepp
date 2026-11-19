@@ -6,6 +6,6 @@
 #ifndef NASM_TOKENS_H
 #define NASM_TOKENS_H
 
-#define MAX_KEYWORD 16 /* length of longest keyword */
+#define MAX_KEYWORD 17 /* length of longest keyword */
 
 #endif /* NASM_TOKENS_H */

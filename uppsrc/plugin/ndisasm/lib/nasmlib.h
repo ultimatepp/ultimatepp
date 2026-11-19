@@ -1,35 +1,5 @@
-/* ----------------------------------------------------------------------- *
- *
- *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
- *   See the file AUTHORS included with the NASM distribution for
- *   the specific copyright holders.
- *
- *   Redistribution and use in source and binary forms, with or without
- *   modification, are permitted provided that the following
- *   conditions are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above
- *     copyright notice, this list of conditions and the following
- *     disclaimer in the documentation and/or other materials provided
- *     with the distribution.
- *
- *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * ----------------------------------------------------------------------- */
+/* SPDX-License-Identifier: BSD-2-Clause */
+/* Copyright 1996-2025 The NASM Authors - All Rights Reserved */
 
 /*
  * nasmlib.h    header file for nasmlib.c
@@ -39,142 +9,270 @@
 #define NASM_NASMLIB_H
 
 #include "compiler.h"
-#include "inttypes.h"
-#include <stdio.h>
-#include <string.h>
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
+#include "bytesex.h"
 
 /*
- * tolower table -- avoids a function call on some platforms.
- * NOTE: unlike the tolower() function in ctype, EOF is *NOT*
- * a permitted value, for obvious reasons.
+ * Useful construct for private values
  */
-void tolower_init(void);
-extern unsigned char nasm_tolower_tab[256];
-#define nasm_tolower(x) nasm_tolower_tab[(unsigned char)(x)]
-
-/* Wrappers around <ctype.h> functions */
-/* These are only valid for values that cannot include EOF */
-#define nasm_isspace(x)  isspace((unsigned char)(x))
-#define nasm_isalpha(x)  isalpha((unsigned char)(x))
-#define nasm_isdigit(x)  isdigit((unsigned char)(x))
-#define nasm_isalnum(x)  isalnum((unsigned char)(x))
-#define nasm_isxdigit(x) isxdigit((unsigned char)(x))
+union intorptr {
+    int64_t i;
+    uint64_t u;
+    size_t s;
+    void *p;
+    const void *cp;
+    uintptr_t up;
+};
+typedef union intorptr intorptr;
 
 /*
- * If this is defined, the wrappers around malloc et al will
- * transform into logging variants, which will cause NASM to create
- * a file called `malloc.log' when run, and spew details of all its
- * memory management into that. That can then be analysed to detect
- * memory leaks and potentially other problems too.
+ * Handy macro to use as the base of shifts
  */
-/* #define LOGALLOC */
+#define ONE ((uintmax_t)1)
 
 /*
- * -------------------------
- * Error reporting functions
- * -------------------------
+ * Handy macros for defining and accessing enums of bitfields;
+ * provides a set of standard-named parameters for each field.
+ *
+ * mk_field_mask() is indended to be used for non-contiguous fields.
  */
 
+#define mk_field_mask(name,pos,width,basemask)              \
+    name ## _POS = (pos),                                   \
+    name ## _WIDTH = (width),                               \
+    name ## _BASEMASK = (basemask),                         \
+    name ## _MASK = name ## _BASEMASK << name ## _POS,      \
+    name = name ## _MASK
+
+#define mk_field(name,pos,width)                            \
+    mk_field_mask(name,pos,width,                           \
+                  (1 << name ## _WIDTH)-1)
+
 /*
- * An error reporting function should look like this.
+ * Cast a value to a suitable type to represent the encoded
+ * (post-shift) and extracted (pre-shift) values, respectively.
  */
-typedef void (*efunc) (int severity, const char *fmt, ...);
-typedef void (*vefunc) (int severity, const char *fmt, va_list ap);
-#ifdef __GNUC__
-void nasm_error(int severity, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+#ifdef HAVE_TYPEOF
+# define fieldenc_cast(x,y) ((typeof(x ## _MASK))(y))
+# define fieldval_cast(x,y) ((typeof(x ## _BASEMASK))(y))
 #else
-void nasm_error(int severity, const char *fmt, ...);
+/*
+ * Using int here matches the strict ISO C before C23 which only allows
+ * an enum to be in the range of "int". This also means that these macros
+ * are only usable for bitfields up to 32 bits wide, which is extremely
+ * unfortunate, but covers most of all the NASM use cases.
+ *
+ * The (int) should at least give a warning on overflow.
+ */
+# define fieldenc_cast(x,y) ((int)(y))
+# define fieldval_cast(x,y) (y)
 #endif
-void nasm_set_verror(vefunc);
 
 /*
- * These are the error severity codes which get passed as the first
- * argument to an efunc.
+ * Macros to get/set bitfield values (the set macro returns the
+ * updated value, it does not change the input.)
+ *
+ * The fieldenc() macro produces the masked and shifted value
+ * corresponding to a base value; it is equivalent to
+ * setfield(field,0,val).
  */
-
-#define ERR_DEBUG       0x00000008      /* put out debugging message */
-#define ERR_WARNING     0x00000000      /* warn only: no further action */
-#define ERR_NONFATAL    0x00000001      /* terminate assembly after phase */
-#define ERR_FATAL       0x00000002      /* instantly fatal: exit with error */
-#define ERR_PANIC       0x00000003      /* internal error: panic instantly
-                                         * and dump core for reference */
-#define ERR_MASK        0x0000000F      /* mask off the above codes */
-#define ERR_NOFILE      0x00000010      /* don't give source file name/line */
-#define ERR_USAGE       0x00000020      /* print a usage message */
-#define ERR_PASS1       0x00000040      /* only print this error on pass one */
-#define ERR_PASS2       0x00000080
-#define ERR_NO_SEVERITY 0x00000100      /* suppress printing severity */
+#define getfield(field,from)                            \
+    fieldval_cast(field,                                \
+                  (((from) >> field ## _POS) &          \
+                   field ## _BASEMASK))
+#define fieldval(field,val)                                \
+    (((val) & fieldenc_cast(field,field ## _BASEMASK))     \
+     << field ## _POS)
+#define setfield(field,from,val)                        \
+    (((from) & ~(field ## _MASK)) + fieldval(field,val))
 
 /*
- * These codes define specific types of suppressible warning.
+ * Wrappers around malloc, realloc, free and a few more. nasm_malloc
+ * will fatal-error and die rather than return NULL; nasm_realloc will
+ * do likewise, and will also guarantee to work right on being passed
+ * a NULL pointer; nasm_free will do nothing if it is passed a NULL
+ * pointer.
  */
-
-#define ERR_WARN_MASK   0xFFFFF000      /* the mask for this feature */
-#define ERR_WARN_SHR    12              /* how far to shift right */
-
-#define WARN(x) ((x) << ERR_WARN_SHR)
-
-#define ERR_WARN_MNP            WARN( 1) /* macro-num-parameters warning */
-#define ERR_WARN_MSR            WARN( 2) /* macro self-reference */
-#define ERR_WARN_MDP            WARN( 3) /* macro default parameters check */
-#define ERR_WARN_OL             WARN( 4) /* orphan label (no colon, and
-                                          * alone on line) */
-#define ERR_WARN_NOV            WARN( 5) /* numeric overflow */
-#define ERR_WARN_GNUELF         WARN( 6) /* using GNU ELF extensions */
-#define ERR_WARN_FL_OVERFLOW    WARN( 7) /* FP overflow */
-#define ERR_WARN_FL_DENORM      WARN( 8) /* FP denormal */
-#define ERR_WARN_FL_UNDERFLOW   WARN( 9) /* FP underflow */
-#define ERR_WARN_FL_TOOLONG     WARN(10) /* FP too many digits */
-#define ERR_WARN_USER           WARN(11) /* %warning directives */
-#define ERR_WARN_MAX            11       /* the highest numbered one */
-
-/*
- * Wrappers around malloc, realloc and free. nasm_malloc will
- * fatal-error and die rather than return NULL; nasm_realloc will
- * do likewise, and will also guarantee to work right on being
- * passed a NULL pointer; nasm_free will do nothing if it is passed
- * a NULL pointer.
- */
-void nasm_init_malloc_error(void);
-#ifndef LOGALLOC
-void *nasm_malloc(size_t);
-void *nasm_zalloc(size_t);
-void *nasm_realloc(void *, size_t);
+void * safe_malloc(1) nasm_malloc(size_t);
+void * safe_malloc(1) nasm_zalloc(size_t);
+void * safe_malloc2(1,2) nasm_calloc(size_t, size_t);
+void * safe_realloc(2) nasm_realloc(void *, size_t);
 void nasm_free(void *);
-char *nasm_strdup(const char *);
-char *nasm_strndup(const char *, size_t);
+char * safe_alloc nasm_strdup(const char *);
+char * safe_alloc nasm_strndup(const char *, size_t);
+char * safe_alloc nasm_strcat(const char *one, const char *two);
+char * safe_alloc end_with_null nasm_strcatn(const char *one, ...);
+
+/*
+ * Replace a string in a string pointer variable with a nasm_strdup()
+ * copy of the argument on the right, freeing the contents of the
+ * previous contents of the variable if non-NULL.
+ *
+ * If *str is NULL, simply return the old value of *ptrp.
+ */
+char *nasm_strdupto(char **ptrp, const char *str);
+
+/*
+ * Similar, but the new pointer must already have been heap allocated
+ * by the creating function.
+ */
+static inline char *nasm_strto(char **ptrp, char *str)
+{
+    char *ptr = *ptrp;
+    if (!str)
+        return ptr;
+    if (ptr)
+        nasm_free(ptr);
+    return *ptrp = str;
+}
+
+/*
+ * nasm_[v]asprintf() are variants of the semi-standard [v]asprintf()
+ * functions, except that we return the pointer instead of a count.
+ * The size of the string (including the final NUL!) is available
+ * by calling nasm_last_string_size() afterwards.
+ *
+ * nasm_[v]axprintf() are similar, but allocates a user-defined amount
+ * of storage before the string, and returns a pointer to the
+ * allocated buffer. The value of nasm_last_string_size() does *not* include
+ * this additional storage.
+ */
+char * safe_alloc printf_func(1, 2) nasm_asprintf(const char *fmt, ...);
+char * safe_alloc vprintf_func(1) nasm_vasprintf(const char *fmt, va_list ap);
+void * safe_alloc printf_func(2, 3) nasm_axprintf(size_t extra, const char *fmt, ...);
+void * safe_alloc vprintf_func(2) nasm_vaxprintf(size_t extra, const char *fmt, va_list ap);
+
+/*
+ * nasm_last_string_len() returns the length of the last string allocated
+ * by [v]asprintf, nasm_strdup, nasm_strcat, or nasm_strcatn.
+ *
+ * nasm_last_string_size() returns the equivalent size including the
+ * final NUL.
+ */
+static inline size_t nasm_last_string_len(void)
+{
+    extern size_t _nasm_last_string_size;
+    return _nasm_last_string_size - 1;
+}
+static inline size_t nasm_last_string_size(void)
+{
+    extern size_t _nasm_last_string_size;
+    return _nasm_last_string_size;
+}
+
+/*
+ * All zero data buffer
+ */
+#define ZERO_BUF_SIZE 65536     /* Default value */
+#if defined(BUFSIZ) && (BUFSIZ > ZERO_BUF_SIZE)
+# undef ZERO_BUF_SIZE
+# define ZERO_BUF_SIZE BUFSIZ
+#endif
+extern const uint8_t zero_buffer[ZERO_BUF_SIZE];
+
+/*
+ * Statically assert the argument is a pointer without evaluating it.
+ * ? : requires that the types on both sides are compatible, and
+ * const volatile void * is compatible with any pointer type.
+ * Avoid a simple cast from NULL because it might make some compilers
+ * confused; a pointer to any object works there.
+ */
+#define nasm_assert_pointer(p) \
+    ((void)sizeof(1 ? (p) : (const volatile void *)&zero_buffer))
+
+#define nasm_new(p) ((p) = nasm_zalloc(sizeof(*(p))))
+#define nasm_newn(p,n) ((p) = nasm_calloc((n), sizeof(*(p))))
+/*
+ * This is broken on platforms where there are pointers which don't
+ * match void * in their internal layout.  It unfortunately also
+ * loses any "const" part of the argument, although hopefully the
+ * compiler will warn in that case.
+ */
+#define nasm_delete(p)                          \
+    do {                                        \
+        void **_pp = (void **)&(p);             \
+        nasm_assert_pointer(p);                 \
+        nasm_free(*_pp);                        \
+        *_pp = NULL;                            \
+    } while (0)
+#define nasm_zero(x) (memset(&(x), 0, sizeof(x)))
+#define nasm_zeron(p,n) (memset((p), 0, (n)*sizeof(*(p))))
+
+/*
+ * Wrappers around fread()/fwrite() which fatal-errors on failure.
+ * For fread(), only use this if EOF is supposed to be a fatal error!
+ */
+void nasm_read(void *, size_t, FILE *);
+void nasm_write(const void *, size_t, FILE *);
+
+/*
+ * NASM failure at build time if the argument is false
+ */
+#ifdef static_assert
+# define nasm_static_assert(x) static_assert((x), #x)
+#elif defined(HAVE_FUNC_ATTRIBUTE_ERROR) && defined(__OPTIMIZE__)
+# define nasm_static_assert(x)                                              \
+    do {                                                                    \
+        if (!(x)) {                                                         \
+            extern void __attribute__((error("assertion " #x " failed")))   \
+                _nasm_static_fail(void);                                    \
+            _nasm_static_fail();                                            \
+        }                                                                   \
+    } while (0)
 #else
-void *nasm_malloc_log(const char *, int, size_t);
-void *nasm_zalloc_log(const char *, int, size_t);
-void *nasm_realloc_log(const char *, int, void *, size_t);
-void nasm_free_log(const char *, int, void *);
-char *nasm_strdup_log(const char *, int, const char *);
-char *nasm_strndup_log(const char *, int, const char *, size_t);
-#define nasm_malloc(x) nasm_malloc_log(__FILE__,__LINE__,x)
-#define nasm_zalloc(x) nasm_zalloc_log(__FILE__,__LINE__,x)
-#define nasm_realloc(x,y) nasm_realloc_log(__FILE__,__LINE__,x,y)
-#define nasm_free(x) nasm_free_log(__FILE__,__LINE__,x)
-#define nasm_strdup(x) nasm_strdup_log(__FILE__,__LINE__,x)
-#define nasm_strndup(x,y) nasm_strndup_log(__FILE__,__LINE__,x,y)
+/* See http://www.drdobbs.com/compile-time-assertions/184401873 */
+# define nasm_static_assert(x)                                              \
+    do { enum { _static_assert_failed = 1/(!!(x)) }; } while (0)
+#endif
+
+/*
+ * conditional static assert, if we know it is possible to determine
+ * the assert value at compile time. Since if_constant triggers
+ * pedantic warnings on gcc, turn them off explicitly around this code.
+ */
+#ifdef static_assert
+# define nasm_try_static_assert(x)                                          \
+    do {                                                                    \
+        not_pedantic_start                                                  \
+        static_assert(if_constant(x, true), #x);                            \
+        not_pedantic_end                                                    \
+    } while (0)
+#elif defined(HAVE_FUNC_ATTRIBUTE_ERROR) && defined(__OPTIMIZE__)
+# define nasm_try_static_assert(x)                                          \
+    do {                                                                    \
+        if (!if_constant(x, true)) {                                        \
+            extern void __attribute__((error("assertion " #x " failed")))   \
+                _nasm_static_fail(void);                                    \
+            _nasm_static_fail();                                            \
+        }                                                                   \
+    } while (0)
+#else
+# define nasm_try_static_assert(x) ((void)0)
 #endif
 
 /*
  * NASM assert failure
  */
-no_return nasm_assert_failed(const char *, int, const char *);
-#define nasm_assert(x)                                          \
-    do {                                                        \
-        if (unlikely(!(x)))                                     \
-            nasm_assert_failed(__FILE__,__LINE__,#x);           \
+fatal_func nasm_assert_failed(const char *msg, const char *func,
+                              const char *file, int line);
+
+/* Plain assert, gives the source location as an error message */
+#define nasm_assert(x)                                                  \
+    do {                                                                \
+        nasm_try_static_assert(x);                                      \
+        if (unlikely(!(x)))                                             \
+            nasm_assert_failed(#x,NASM_FUNC,__FILE__,__LINE__);         \
     } while (0)
 
-/*
- * NASM failure at build time if x != 0
- */
-#define nasm_build_assert(x) (void)(sizeof(char[1-2*!!(x)]))
+/* Assert with custom message */
+#define nasm_assert_msg(x,m)                    \
+    do {                                        \
+        nasm_try_static_assert(x);              \
+        if (unlikely(!(x)))                     \
+            nasm_panic("%s", m);                \
+    } while (0)
+
+/* Utility function to generate a string for an invalid enum */
+const char *invalid_enum_str(int);
 
 /*
  * ANSI doesn't guarantee the presence of `stricmp' or
@@ -185,7 +283,7 @@ no_return nasm_assert_failed(const char *, int, const char *);
 #elif defined(HAVE_STRICMP)
 #define nasm_stricmp stricmp
 #else
-int nasm_stricmp(const char *, const char *);
+int pure_func nasm_stricmp(const char *, const char *);
 #endif
 
 #if defined(HAVE_STRNCASECMP)
@@ -193,10 +291,10 @@ int nasm_stricmp(const char *, const char *);
 #elif defined(HAVE_STRNICMP)
 #define nasm_strnicmp strnicmp
 #else
-int nasm_strnicmp(const char *, const char *, size_t);
+int pure_func nasm_strnicmp(const char *, const char *, size_t);
 #endif
 
-int nasm_memicmp(const char *, const char *, size_t);
+int pure_func nasm_memicmp(const char *, const char *, size_t);
 
 #if defined(HAVE_STRSEP)
 #define nasm_strsep strsep
@@ -204,12 +302,66 @@ int nasm_memicmp(const char *, const char *, size_t);
 char *nasm_strsep(char **stringp, const char *delim);
 #endif
 
+#ifndef HAVE_DECL_STRNLEN
+size_t pure_func strnlen(const char *, size_t);
+#endif
+
+/* This returns the numeric value of a given 'digit'; no check for validity */
+static inline unsigned int numvalue(unsigned char c)
+{
+    c |= 0x20;
+    return c >= 'a' ? c - 'a' + 10 : c - '0';
+}
+
+/* The same except returns -1U for non-digits, so it can be directly
+ * compared against the base used to test for validity. */
+static inline unsigned int numvalue_chk(unsigned char c)
+{
+    unsigned int v;
+    v = c - '0';
+    if (v < 10)
+        return v;
+
+    v = (c | 0x20) - 'a';
+    if (v < 26)
+        return v + 10;
+
+    return -1U;
+}
 
 /*
  * Convert a string into a number, using NASM number rules. Sets
  * `*error' to true if an error occurs, and false otherwise.
  */
-int64_t readnum(char *str, bool *error);
+int64_t readnum(const char *str, bool *error);
+
+/*
+ * Warn for the use of $ as a hexadecimal prefix
+ */
+void warn_dollar_hex(void);
+
+/*
+ * Get the numeric base corresponding to a character
+ */
+static inline unsigned int radix_letter(char c)
+{
+    switch (c) {
+    case 'b': case 'B':
+    case 'y': case 'Y':
+	return 2;		/* Binary */
+    case 'o': case 'O':
+    case 'q': case 'Q':
+	return 8;		/* Octal */
+    case 'h': case 'H':
+    case 'x': case 'X':
+	return 16;		/* Hexadecimal */
+    case 'd': case 'D':
+    case 't': case 'T':
+	return 10;		/* Decimal */
+    default:
+	return 0;		/* Not a known radix letter */
+    }
+}
 
 /*
  * Convert a character constant into a number. Sets
@@ -220,17 +372,29 @@ int64_t readnum(char *str, bool *error);
 int64_t readstrnum(char *str, int length, bool *warn);
 
 /*
- * seg_init: Initialise the segment-number allocator.
+ * Produce an unsigned integer string from a number with a specified
+ * base, digits and signedness
+ */
+#define NUMSTR_MAXBASE 64
+int numstr(char *buf, size_t buflen, uint64_t n,
+           int digits, unsigned int base, bool ucase);
+
+extern const char * const nasmlib_digit_chars[2];
+static inline const char *nasm_digit_chars(bool ucase)
+{
+    return nasmlib_digit_chars[ucase];
+}
+
+/*
  * seg_alloc: allocate a hitherto unused segment number.
  */
-void seg_init(void);
 int32_t seg_alloc(void);
 
 /*
- * many output formats will be able to make use of this: a standard
- * function to add an extension to the name of the input file
+ * Add/replace or remove an extension to the end of a filename;
+ * returns a newly allocated buffer with the modified filename.
  */
-void standard_extension(char *inname, char *outname, char *extension);
+char *filename_set_extension(const char *inname, const char *extension);
 
 /*
  * Utility macros...
@@ -238,126 +402,59 @@ void standard_extension(char *inname, char *outname, char *extension);
  * This is a useful #define which I keep meaning to use more often:
  * the number of elements of a statically defined array.
  */
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+#define ARRAY_END(arr)  (&(arr)[ARRAY_SIZE(arr)])
+#define array_for_each(var,arr) \
+    for ((var) = (arr); (var) < ARRAY_END(arr); (var)++)
 
-#define elements(x)     ( sizeof(x) / sizeof(*(x)) )
 
 /*
  * List handling
  *
  *  list_for_each - regular iterator over list
  *  list_for_each_safe - the same but safe against list items removal
+ *  list_last - find the last element in a list
+ *  list_reverse - reverse the order of a list
+ *
+ *  Arguments named with _ + single letter should be temp variables
+ *  of the appropriate pointer type.
  */
 #define list_for_each(pos, head)                        \
     for (pos = head; pos; pos = pos->next)
-#define list_for_each_safe(pos, n, head)                \
-    for (pos = head, n = (pos ? pos->next : NULL); pos; \
-        pos = n, n = (n ? n->next : NULL))
+#define list_for_each_safe(pos, _n, head)                \
+    for (pos = head, _n = (pos ? pos->next : NULL); pos; \
+        pos = _n, _n = (_n ? _n->next : NULL))
+#define list_last(pos, head)                                    \
+    do {                                                        \
+        for (pos = head; pos && pos->next; pos = pos->next)     \
+            ;                                                   \
+    } while (0)
+#define list_reverse(head)                              \
+    do {                                                \
+        void *_p, *_n;                                  \
+        if (!head || !head->next)                       \
+            break;                                      \
+        _p = NULL;                                      \
+        while (head) {                                  \
+            _n = head->next;                            \
+            head->next = _p;                            \
+            _p = head;                                  \
+            head = _n;                                  \
+        }                                               \
+        head = _p;                                      \
+    } while (0)
 
 /*
  * Power of 2 align helpers
  */
+#undef ALIGN_MASK               /* Some BSD flavors define these in system headers */
+#undef ALIGN
 #define ALIGN_MASK(v, mask)     (((v) + (mask)) & ~(mask))
 #define ALIGN(v, a)             ALIGN_MASK(v, (a) - 1)
 #define IS_ALIGNED(v, a)        (((v) & ((a) - 1)) == 0)
 
 /*
- * some handy macros that will probably be of use in more than one
- * output format: convert integers into little-endian byte packed
- * format in memory
- */
-
-#if X86_MEMORY
-
-#define WRITECHAR(p,v)                          \
-    do {                                        \
-        *(uint8_t *)(p) = (v);                  \
-        (p) += 1;                               \
-    } while (0)
-
-#define WRITESHORT(p,v)                         \
-    do {                                        \
-        *(uint16_t *)(p) = (v);                 \
-        (p) += 2;                               \
-    } while (0)
-
-#define WRITELONG(p,v)                          \
-    do {                                        \
-        *(uint32_t *)(p) = (v);                 \
-        (p) += 4;                               \
-    } while (0)
-
-#define WRITEDLONG(p,v)                         \
-    do {                                        \
-        *(uint64_t *)(p) = (v);                 \
-        (p) += 8;                               \
-    } while (0)
-
-#define WRITEADDR(p,v,s)                        \
-    do {                                        \
-        uint64_t _wa_v = (v);                   \
-        memcpy((p), &_wa_v, (s));               \
-        (p) += (s);                             \
-    } while (0)
-
-#else /* !X86_MEMORY */
-
-#define WRITECHAR(p,v)                          \
-    do {                                        \
-        uint8_t *_wc_p = (uint8_t *)(p);        \
-        uint8_t _wc_v = (v);                    \
-        _wc_p[0] = _wc_v;                       \
-        (p) = (void *)(_wc_p + 1);              \
-    } while (0)
-
-#define WRITESHORT(p,v)                         \
-    do {                                        \
-        uint8_t *_ws_p = (uint8_t *)(p);        \
-        uint16_t _ws_v = (v);                   \
-        _ws_p[0] = _ws_v;                       \
-        _ws_p[1] = _ws_v >> 8;                  \
-        (p) = (void *)(_ws_p + 2);              \
-    } while (0)
-
-#define WRITELONG(p,v)                          \
-    do {                                        \
-        uint8_t *_wl_p = (uint8_t *)(p);        \
-        uint32_t _wl_v = (v);                   \
-        _wl_p[0] = _wl_v;                       \
-        _wl_p[1] = _wl_v >> 8;                  \
-        _wl_p[2] = _wl_v >> 16;                 \
-        _wl_p[3] = _wl_v >> 24;                 \
-        (p) = (void *)(_wl_p + 4);              \
-    } while (0)
-
-#define WRITEDLONG(p,v)                         \
-    do {                                        \
-        uint8_t *_wq_p = (uint8_t *)(p);        \
-        uint64_t _wq_v = (v);                   \
-        _wq_p[0] = _wq_v;                       \
-        _wq_p[1] = _wq_v >> 8;                  \
-        _wq_p[2] = _wq_v >> 16;                 \
-        _wq_p[3] = _wq_v >> 24;                 \
-        _wq_p[4] = _wq_v >> 32;                 \
-        _wq_p[5] = _wq_v >> 40;                 \
-        _wq_p[6] = _wq_v >> 48;                 \
-        _wq_p[7] = _wq_v >> 56;                 \
-        (p) = (void *)(_wq_p + 8);              \
-    } while (0)
-
-#define WRITEADDR(p,v,s)                        \
-    do {                                        \
-        int _wa_s = (s);                        \
-        uint64_t _wa_v = (v);                   \
-        while (_wa_s--) {                       \
-            WRITECHAR(p,_wa_v);                 \
-            _wa_v >>= 8;                        \
-        }                                       \
-    } while(0)
-
-#endif
-
-/*
- * and routines to do the same thing to a file
+ * Routines to write littleendian data to a file
  */
 #define fwriteint8_t(d,f) putc(d,f)
 void fwriteint16_t(uint16_t data, FILE * fp);
@@ -372,81 +469,156 @@ void fwriteaddr(uint64_t data, int size, FILE * fp);
  *
  * bsi() is case sensitive, bsii() is case insensitive.
  */
-int bsi(const char *string, const char **array, int size);
-int bsii(const char *string, const char **array, int size);
+int pure_func bsi(const char *string, const char **array, int size);
+int pure_func bsii(const char *string, const char **array, int size);
 
-char *src_set_fname(char *newname);
-int32_t src_set_linnum(int32_t newline);
-int32_t src_get_linnum(void);
 /*
- * src_get may be used if you simply want to know the source file and line.
- * It is also used if you maintain private status about the source location
- * It return 0 if the information was the same as the last time you
- * checked, -1 if the name changed and (new-old) if just the line changed.
+ * Convenient string processing helper routines
  */
-int src_get(int32_t *xline, char **xname);
-
-char *nasm_strcat(const char *one, const char *two);
-
-char *nasm_skip_spaces(const char *p);
-char *nasm_skip_word(const char *p);
+char * pure_func nasm_skip_spaces(const char *p);
+char * pure_func nasm_skip_word(const char *p);
 char *nasm_zap_spaces_fwd(char *p);
 char *nasm_zap_spaces_rev(char *p);
+char *nasm_trim_spaces(char *p);
+char *nasm_get_word(char *p, char **tail);
+char *nasm_opt_val(char *p, char **opt, char **val);
 
-const char *prefix_name(int);
+/*
+ * Converts a relative pathname rel_path into an absolute path name.
+ *
+ * The buffer returned must be freed by the caller
+ */
+char * safe_alloc nasm_realpath(const char *rel_path);
 
-#define ZERO_BUF_SIZE 4096
-extern const uint8_t zero_buffer[ZERO_BUF_SIZE];
-size_t fwritezero(size_t bytes, FILE *fp);
+/*
+ * Path-splitting and merging functions
+ */
+char * safe_alloc nasm_dirname(const char *path);
+char * safe_alloc nasm_basename(const char *path);
+char * safe_alloc nasm_catfile(const char *dir, const char *path);
 
-static inline bool overflow_general(int64_t value, int bytes)
+/*
+ * Various tokens to readable strings, with limit checking
+ */
+const char * const_func register_name(int);
+const char * const_func prefix_name(int);
+bool const_func is_hint_nop(uint64_t);
+
+/*
+ * Wrappers around fopen()... for future change to a dedicated structure
+ */
+enum file_flags {
+    NF_BINARY   = 0x00000000,   /* Binary file (default) */
+    NF_TEXT     = 0x00000001,   /* Text file */
+    NF_NONFATAL = 0x00000000,   /* Don't die on open failure (default) */
+    NF_FATAL    = 0x00000002,   /* Die on open failure */
+    NF_FORMAP   = 0x00000004,   /* Intended to use nasm_map_file() */
+    NF_IONBF    = 0x00000010,   /* Force unbuffered stdio */
+    NF_IOLBF    = 0x00000020,   /* Force line buffered stdio */
+    NF_IOFBF    = 0000000030    /* Force fully buffered stdio */
+};
+#define NF_BUF_MASK  0x30
+
+FILE *nasm_open_read(const char *filename, enum file_flags flags);
+FILE *nasm_open_write(const char *filename, enum file_flags flags);
+
+void nasm_set_binary_mode(FILE *f);
+
+/* Probe for existence of a file */
+bool nasm_file_exists(const char *filename);
+
+/* Missing fseeko/ftello */
+#ifndef HAVE_FSEEKO
+# undef off_t                   /* Just in case it is a macro */
+# ifdef HAVE__FSEEKI64
+#  define fseeko _fseeki64
+#  define ftello _ftelli64
+#  define off_t  int64_t
+# else
+#  define fseeko fseek
+#  define ftello ftell
+#  define off_t  long
+# endif
+#endif
+
+const void *nasm_map_file(FILE *fp, off_t start, off_t len);
+void nasm_unmap_file(const void *p, size_t len);
+off_t nasm_file_size(FILE *f);
+off_t nasm_file_size_by_path(const char *pathname);
+bool nasm_file_time(time_t *t, const char *pathname);
+void fwritezero(off_t bytes, FILE *fp);
+
+/* Sign-extend a value to an arbitrary number of bits */
+static inline int64_t const_func sext(int64_t value, unsigned int bits)
 {
-    int sbit;
-    int64_t vmax, vmin;
+    if (is_constant(bits)) {
+        switch (bits) {
+        case 8:
+            return (int8_t)value;
+        case 16:
+            return (int16_t)value;
+        case 32:
+            return (int32_t)value;
+        default:
+            break;
+        }
+    }
 
-    if (bytes >= 8)
-        return false;
+    if (bits >= 64)
+        return value;
 
-    sbit = (bytes << 3) - 1;
-    vmax =  ((int64_t)2 << sbit) - 1;
-    vmin = -((int64_t)1 << sbit);
+    /* sext(foo,0) == sext(foo,1) */
+    bits = bits ? 64-bits : 63;
 
-    return value < vmin || value > vmax;
+    return value << bits >> bits;
 }
 
-static inline bool overflow_signed(int64_t value, int bytes)
+/* Zero-extend a value to an arbitrary number of bits */
+static inline uint64_t const_func zext(uint64_t value, unsigned int bits)
 {
-    int sbit;
-    int64_t vmax, vmin;
+    if (is_constant(bits)) {
+        switch (bits) {
+        case 8:
+            return (uint8_t)value;
+        case 16:
+            return (uint16_t)value;
+        case 32:
+            return (uint32_t)value;
+        default:
+            break;
+        }
+    }
 
-    if (bytes >= 8)
-        return false;
+    if (bits >= 64)
+        return value;
 
-    sbit = (bytes << 3) - 1;
-    vmax =  ((int64_t)1 << sbit) - 1;
-    vmin = -((int64_t)1 << sbit);
+    if (!bits)
+        return 0;
 
-    return value < vmin || value > vmax;
+    bits = 64-bits;
+    return value << bits >> bits;
 }
 
-static inline bool overflow_unsigned(int64_t value, int bytes)
+static inline bool const_func overflow_signed(int64_t value, unsigned int bytes)
 {
-    int sbit;
-    int64_t vmax, vmin;
-
-    if (bytes >= 8)
-        return false;
-
-    sbit = (bytes << 3) - 1;
-    vmax = ((int64_t)2 << sbit) - 1;
-    vmin = 0;
-
-    return value < vmin || value > vmax;
+    return sext(value, bytes << 3) != value;
 }
 
-int idata_bytes(int opcode);
+static inline bool const_func overflow_unsigned(uint64_t value, unsigned int bytes)
+{
+    return zext(value, bytes << 3) != value;
+}
+
+/* This is very conservative, but otherwise things like ~0x80 break */
+static inline bool const_func overflow_general(int64_t value, unsigned int bytes)
+{
+    return overflow_unsigned(value, bytes) && overflow_unsigned(-value, bytes);
+}
 
 /* check if value is power of 2 */
 #define is_power2(v)   ((v) && ((v) & ((v) - 1)) == 0)
+
+/* try to get the system stack size */
+extern size_t nasm_get_stack_size_limit(void);
 
 #endif

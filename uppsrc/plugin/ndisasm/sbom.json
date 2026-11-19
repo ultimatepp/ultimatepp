@@ -6,7 +6,7 @@
 			"type": "library",
 			"name": "ndisasm",
 			"bom-ref": "ndisasm",
-			"version": "2.08.01",
+			"version": "3.02",
 			"licenses": [
 				{
 					"expression": "BSD-2-Clause"
@@ -27,10 +27,10 @@
 				},
 				{
 					"type": "source-distribution",
-					"url": "https://github.com/netwide-assembler/nasm/archive/a947529954d9db0214e65d2c856111f823381f7c.zip"
+					"url": "https://github.com/netwide-assembler/nasm/archive/8f1fb545a582c55c69607f457b4d1e71c19b2ecf.zip"
 				}
 			],
-			"purl": "pkg:github/netwide-assembler/nasm@a947529954d9db0214e65d2c856111f823381f7c",
+			"purl": "pkg:github/netwide-assembler/nasm@8f1fb545a582c55c69607f457b4d1e71c19b2ecf",
 			"properties": [
 				{
 					"name": "upp:deployment-mode",
