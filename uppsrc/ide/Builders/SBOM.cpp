@@ -191,6 +191,9 @@ protected:
 	
 	bool IsVcpkgPort(const String& a);
 	void VcpkgFillFromInstalledList(SBOMComponent& m, const String& name);
+	String VcpkgPedigreeCommit(const SBOMComponent& m, String& viaTag);
+	bool IsPortsTreeRef(const String& repoPath);
+	bool ParseGitRefURL(String url, String& repoPath, String& ref);
 	
 	// ------------------------------------------------------------------------
 	// WINDOWS TOOLCHAIN FAMILY
@@ -266,6 +269,7 @@ protected:
 	VectorMap<String, Tuple<String, String, String, String>> git_commit_cache;
 	VectorMap<String, String> repo_origin;
 	VectorMap<String, String> repo_prefix;
+	VectorMap<String, String> tag_commit_cache;  // "repo|tag" -> resolved sha ("" = resolution failed/not attempted)
 	
 	// ------------------------------------------------------------------------
 	// Per-invocation bookkeeping for CreateSBOMComponents
@@ -1048,6 +1052,149 @@ void SBOMContext::VcpkgFillFromInstalledList(SBOMComponent& m, const String& nam
 		}
 }
 
+// Parses "git+https://github.com/owner/repo@ref" into (host, repoPath, ref).
+// Returns false when not a git+https URL, when it carries no @ref,
+// or when the ref names a ports-tree pointer (excluded by design).
+
+bool SBOMContext::ParseGitRefURL(String url, String& repoPath, String& ref)
+{
+	static const String PREFIX = "git+https://";
+
+	if(!url.StartsWith(PREFIX))
+		return false;
+
+	url = url.Mid(PREFIX.GetCount());
+
+	int at = url.ReverseFind('@');
+
+	if(at < 0)
+		return false;          // ports-tree ref or bare clone URL - no tag anchor
+
+	ref = url.Mid(at + 1);
+
+	repoPath = url.Left(at);
+	return repoPath.GetCount() > 0 && ref.GetCount() > 0;
+}
+
+// Extracts the "owner/repo" (no host) from a repo path, or empty.
+static String OwnerRepoOf(const String& repoPath)
+{
+	int slash = repoPath.Find('/');
+	if(slash <= 0 || slash + 1 >= repoPath.GetCount())
+		return String();
+	return repoPath.Mid(slash + 1);
+}
+
+bool SBOMContext::IsPortsTreeRef(const String& repoPath)
+{
+	String low = ToLower(repoPath);
+	return low.EndsWith("/vcpkg") || low.EndsWith("/vcpkg.git") ||
+	       low.Find("/microsoft/") >= 0 && low.EndsWith("/vcpkg");
+}
+
+// ------------------------------------------------------------
+// Resolve one vcpkg component to an upstream commit, with a
+// process-wide cache and multi-form evidence preference:
+//
+//   1. exact commit already pinned by a source-distribution
+//      (rare; sljit-style sub-pins ship this shape)
+//   2. commit pinned by purl
+//   3. a git+https source-distribution tag, resolved via
+//      ls-remote (GitTagCommit)
+//
+// Tag resolution honours evidence precedence (declared pin beats
+// derived), so ordering among source-distributions matters: the
+// FIRST resolvable upstream ref wins, mirroring the generator's
+// first-hash-wins attitude.
+// ------------------------------------------------------------
+
+String SBOMContext::VcpkgPedigreeCommit(const SBOMComponent& m, String& viaTag)
+{
+	viaTag = String();   // stays empty for declared pins; carries the tag for ls-remote resolutions
+
+	// 0. Prefer an explicitly declared commit, wherever stated.
+	//    ports-tree refs never resolve (no upstream identity).
+	//    Externally pinned commits (e.g. sljit via api.github.com
+	//    contents refs, or a @<sha> in a git+https distribution)
+	//    win over tag resolution: declared pin beats derived.
+
+	auto IsHexRef = [](const String& s) {
+		if(s.GetCount() < 40 || s.GetCount() > 64)
+			return false;
+		for(char ch : s)
+			if(!IsDigit(ch) && !(ch >= 'a' && ch <= 'f'))
+				return false;
+		return true;
+	};
+	
+	// 1. source-distribution(s). The component's own upstream is the
+	//    first tag-bearing git+https ref; a commit-pinned ref is a
+	//    declared pin ONLY when it names the same repo (or is the sole
+	//    upstream evidence). Hex pins from FOREIGN repos are nested
+	//    materials (e.g. sljit vendored inside pcre2's deps/) - they
+	//    stay in sourceDistributions but never become this component's
+	//    pedigree.
+	String upstreamRepo, upstreamTag, pinnedSha, pinnedRepo;
+
+	for(const auto& sd : m.sourceDistributions) {
+		String repoPath, ref;
+		if(!ParseGitRefURL(sd.a, repoPath, ref))
+			continue;
+		if(IsPortsTreeRef(repoPath))
+			continue;
+		if(IsHexRef(ref)) {
+			if(pinnedSha.IsEmpty()) {
+				pinnedSha  = ref;
+				pinnedRepo = repoPath;
+			}
+		}
+		else if(upstreamTag.GetCount() == 0) {
+			upstreamRepo = repoPath;
+			upstreamTag  = ref;
+		}
+	}
+
+	// Declared pin only for the component's own repo; otherwise the pin
+	// belongs to a nested material and the component's own tag resolves.
+	if(pinnedSha.GetCount()	&& (upstreamTag.IsEmpty() || ToLower(pinnedRepo) == ToLower(upstreamRepo)))
+		return pinnedSha;
+	
+	// 2. purl: a commit-pinned purl (unlikely for vcpkg, but future-proof)
+	//    is equally a declared pin.
+	{
+		static const String PREF = "pkg:";
+		String p = m.purl;
+		if(p.StartsWith(PREF)) {
+			int at = p.ReverseFind('@');
+			if(at >= 0) {
+				int q = p.Find('?'), h2 = p.Find('#');
+				int cut = -1;
+				if(q >= 0) cut = q;
+				if(h2 >= 0 && (cut < 0 || h2 < cut)) cut = h2;
+				String v = p.Mid(at + 1, ((cut >= 0 ? cut : p.GetCount()) - (at + 1)));
+				if(IsHexRef(v))
+					return v;
+			}
+		}
+	}
+
+	// 3. tag resolution via ls-remote, cached.
+	if(upstreamTag.GetCount() == 0)
+		return String();
+
+	String key = ToLower(upstreamRepo) + "|" + upstreamTag;
+
+	int q = tag_commit_cache.Find(key);
+	if(q >= 0)
+		return tag_commit_cache[q];
+
+	viaTag = upstreamTag;
+	String sha = GitTagCommit("https://" + upstreamRepo, upstreamTag);
+
+	tag_commit_cache.Add(key, sha);
+	return sha;
+}
+
 // ============================================================================
 // WINDOWS TOOLCHAIN IMPLEMENTATION
 // ============================================================================
@@ -1811,6 +1958,32 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 									<< MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
 						}
 					}
+					// Pedigree anchor: resolve the upstream source state this
+					// port's built artifact corresponds to. Spec-sanctioned
+					// provenance (CycloneDX pedigree) — the pkg:vcpkg purl
+					// stays untouched. Runs AFTER the resource loop so the
+					// source-distributions are already harvested.
+					{
+						String viaTag;
+						String psha = VcpkgPedigreeCommit(m, viaTag);
+						if(psha.GetCount()) {
+							m.pedigreeCommits << psha;
+							if(viaTag.GetCount())
+								m.pedigreeNotes =
+									"Upstream source state resolved from tag '" + viaTag
+									+ "' via git ls-remote at SBOM generation time";
+							else
+								m.pedigreeNotes =
+									"Upstream source state declared by commit-pinned source distribution";
+							String repoPath, ref;
+							for(const auto& sd : m.sourceDistributions)
+								if(ParseGitRefURL(sd.a, repoPath, ref) &&
+								   !IsPortsTreeRef(repoPath)) {
+									m.pedigreeRepoUrl = "https://" + repoPath;
+									break;
+								}
+						}
+					}
 					break;
 				}
 		}
@@ -2274,7 +2447,25 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 			component("externalReferences", extRefs);
 		if(!IsEmpty(c.purl))
 			component("purl", c.purl);
-
+		
+		// Pedigree: upstream source-state provenance, vcpkg components only.
+		// CycloneDX 1.7 pedigree schema: commits[] { uid, url?, notes? }.
+		// uid is required; url optional — omitted when the repo wasn't
+		// recoverable rather than emitting an empty string.
+		if(c.pedigreeCommits.GetCount()) {
+			JsonArray commits;
+			for(const String& sha : c.pedigreeCommits) {
+				Json commit("uid", sha);
+				if(c.pedigreeRepoUrl.GetCount())
+					commit("url", c.pedigreeRepoUrl + "/commit/" + sha);
+				commits << commit;
+			}
+			Json pedigree("commits", commits);
+			if(c.pedigreeNotes.GetCount())
+				pedigree("notes", c.pedigreeNotes);
+			component("pedigree", pedigree);
+		}
+		
 		int tier_value = c.type == "operating-system"
 			? c.external
 			: clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp);

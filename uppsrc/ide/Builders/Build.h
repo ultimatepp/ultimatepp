@@ -38,7 +38,11 @@ struct SBOMComponent {
     String version;
     String purl;
     Vector<Tuple<String, String, String>> sourceDistributions;
-
+	
+	Vector<String> pedigreeCommits;   // upstream commit SHAs
+	String pedigreeRepoUrl;
+	String pedigreeNotes;
+	
     int    external = 0;    // tier T0–T4: 0 own code, 1 static integration,
                             // 2 bundled dynamic (shipped by us), 3 platform
                             // provided dynamic, 4 transitive dynamic (NEEDED).
