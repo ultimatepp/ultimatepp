@@ -16,6 +16,8 @@ external_dependency(DPKG) libssl-dev;
 
 external_dependency(RPM) openssl-devel;
 
+external_dependency(PACMAN) openssl;
+
 file
 	SSL.h,
 	Util.cpp,

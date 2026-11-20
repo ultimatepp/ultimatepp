@@ -11,6 +11,8 @@ external_dependency(DPKG) libclang-dev;
 
 external_dependency(RPM) clang-devel;
 
+external_dependency(PACMAN) clang;
+
 file
 	clang.h,
 	libclang.h,

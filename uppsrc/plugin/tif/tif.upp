@@ -27,6 +27,8 @@ external_dependency(RPM) libjpeg-turbo-devel;
 
 external_dependency(BREW) libtiff;
 
+external_dependency(PACMAN) libtiff;
+
 file
 	tif.h,
 	tifupp.cpp,

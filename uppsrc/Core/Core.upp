@@ -42,6 +42,8 @@ external_dependency(DPKG) "zlib1g-dev liblz4-dev libxxhash-dev libpcre2-dev";
 
 external_dependency(RPM) "zlib-ng-compat-devel|zlib-devel lz4-devel xxhash-devel pcre2-devel";
 
+external_dependency(PACMAN) "zlib lz4 xxhash pcre2";
+
 file
 	Core.h options(BUILDER_OPTION) PCH,
 	config.h,

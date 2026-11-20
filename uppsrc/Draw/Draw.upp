@@ -25,6 +25,10 @@ external_dependency(RPM) "freetype-devel fontconfig-devel";
 
 external_dependency(RPM !VIRTUALGUI) "libX11-devel libxcb-devel expat-devel";
 
+external_dependency(PACMAN) "freetype2 fontconfig";
+
+external_dependency(PACMAN !VIRTUALGUI) "libx11 libxcb expat";
+
 file
 	Draw.h options(BUILDER_OPTION) PCH,
 	FontInt.h,
