@@ -2486,8 +2486,10 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		for(String dep : c.depends)
 			if(alive.Find(dep) >= 0)
 				deps << dep;
-		if(deps)
-			dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
+		// CycloneDX normative requirement: components with no
+		// (remaining) dependencies MUST be declared as empty
+		// elements - absence means "unknown", empty means "none".
+		dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
 	}
 
 	Json metadata = Json("timestamp", Format8601Z(GetUtcTime()))
