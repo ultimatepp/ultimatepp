@@ -22,6 +22,10 @@ external_dependency(RPM) "freetype-devel libX11-devel libXinerama-devel libXrend
 
 external_dependency(RPM !X11) "gtk3-devel libnotify-devel";
 
+external_dependency(PACMAN) "freetype2 libx11 libxinerama libxrender libxft libxdmcp fontconfig libxcb libxext";
+
+external_dependency(PACMAN !X11) "gtk3 libnotify";
+
 file
 	Core readonly separator,
 	CtrlCore.h options(BUILDER_OPTION) PCH,

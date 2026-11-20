@@ -15,6 +15,8 @@ external_dependency(DPKG) libbz2-dev;
 
 external_dependency(RPM) bzip2-devel;
 
+external_dependency(PACMAN) bzip2;
+
 file
 	bz2.h,
 	bz2upp.cpp,

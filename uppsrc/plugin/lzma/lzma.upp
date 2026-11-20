@@ -12,6 +12,8 @@ external_dependency(DPKG) liblzma-dev;
 
 external_dependency(RPM) xz-devel;
 
+external_dependency(PACMAN) xz;
+
 file
 	lzma.h,
 	lzma.cpp,

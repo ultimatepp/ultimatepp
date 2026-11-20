@@ -20,6 +20,8 @@ external_dependency(DPKG) libpng-dev;
 
 external_dependency(RPM) libpng-devel;
 
+external_dependency(PACMAN) libpng;
+
 file
 	png.h,
 	pngupp.cpp,

@@ -12,6 +12,8 @@ external_dependency(DPKG) libzstd-dev;
 
 external_dependency(RPM) libzstd-devel;
 
+external_dependency(PACMAN) zstd;
+
 file
 	zstd.h,
 	Compress.cpp,

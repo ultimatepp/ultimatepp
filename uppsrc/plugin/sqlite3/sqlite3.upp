@@ -14,6 +14,8 @@ external_dependency(DPKG) libsqlite3-dev;
 
 external_dependency(RPM) sqlite-devel;
 
+external_dependency(PACMAN) sqlite;
+
 file
 	Sqlite3.h,
 	Sqlite3Schema.h,

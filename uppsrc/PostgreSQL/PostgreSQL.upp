@@ -20,6 +20,8 @@ pkg_config(LINUX | FREEBSD | OPENBSD) libpq;
 
 external_dependency(WIN32) libpq;
 
+external_dependency(PACMAN) libpqxx;
+
 file
 	PostgreSQL.h,
 	PostgreSQLSchema.h,

@@ -12,6 +12,8 @@ external_dependency(DPKG) libgif-dev;
 
 external_dependency(RPM) giflib-devel;
 
+external_dependency(PACMAN) giflib;
+
 file
 	gif.h,
 	gifupp.cpp,
