@@ -1,0 +1,1 @@
+plugin/gif/gif.h: Declares U++ GIF image support: raster loading and GIF encoding interfaces, including their initialization and data types. Used to integrate GIF decoding and writing with the framework’s image and raster APIs.

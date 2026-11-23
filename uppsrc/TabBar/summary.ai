@@ -1,0 +1,2 @@
+TabBar/TabBar.h: TabBar/TabBar.h defines the U++ tab-bar component: tab items, tabs and groups, sorting and jump-stack support, scrollbar integration, styling, and frame alignment options.
+TabBar/FileTabs.h: TabBar/FileTabs.h declares `Upp::FileTabs`, a tab-bar control for managing file tabs. Its implementation is in `TabBar/FileTabs.cpp`; the supplied map gives no further API details.

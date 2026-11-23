@@ -1,0 +1,1 @@
+ide/clang/clang.h: `ide/clang/clang.h` defines the IDE’s Clang integration: configuration and diagnostics, source locations and cursor metadata, autocomplete and annotations, plus visitor and indexing interfaces for parsing and navigating C++ code.

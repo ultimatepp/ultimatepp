@@ -1,0 +1,7 @@
+ide/Builders/Builders.h: Declares the IDE’s build infrastructure: shared C++ builder operations and GCC, MSVC, Java, and script backends, plus Blitz builds, build metadata, PCH utilities, and platform setup.
+ide/Builders/coff.h: Defines COFF and PE binary-format structures, constants, and helpers for machine types, sections, symbols, relocations, imports, resources, and debug data—supporting inspection and processing of Windows object files and executables.
+ide/Builders/Android.h: Declares Android project path helpers and makefile builders for application and native modules. Supports build configuration, architectures, compiler flags, source/include paths, libraries, module imports, and generated makefile text.
+ide/Builders/AndroidBuilder.h: I can’t summarize `ide/Builders/AndroidBuilder.h` from the supplied map: it lists the header’s types but not its declarations or behavior.
+ide/Builders/Build.h: Defines build configurations and `MakeBuild`, which orchestrates package/workspace builds, cleaning, makefile and compile-command export, and target selection. Also models SBOM components, dependency tiers, export modes, and SPDX licenses.
+ide/Builders/ClangTidy.h: `ClangTidy.h` declares the IDE’s Clang-Tidy integration, providing the `ClangTidy` component used to configure and run static analysis on C++ code.
+ide/Builders/BuilderUtils.h: Builder utilities header for the U++ IDE’s build system, defining shared helpers used by builders to prepare and manage compilation and linking tasks across toolchains.

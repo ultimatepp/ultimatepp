@@ -847,6 +847,7 @@ void Ide::BuildMenu(Bar& menu)
 	menu.Add(!IsNull(target), AK_COPYTARGET, [this] { WriteClipboardText(target); });
 	menu.Add(!IsNull(target), AK_OUTDIRTERMINAL, [this] { LaunchTerminal(GetFileFolder(target)); });
 	menu.Add("SBOM..", [this] { CreateSBOM(); });
+	menu.Add("Create AI summary", [this] { AISummary(); });
 }
 
 void Ide::DebugMenu(Bar& menu)
@@ -897,16 +898,11 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
-void Ide::AIMenu(Bar& menu)
-{
-	menu.Add("Review", [this] { AIReview(); });
-}
-
 void Ide::AssistMenu(Bar& menu)
 {
 	LTIMESTOP("AssistMenu");
 	menu.Add(!designer, AK_ASSIST, [this] { editor.Assist(true); });
-	menu.Add(!designer, AK_AI, [this] { AIPane(); });
+	menu.Add(!designer, AK_AI, [this] { AIChat(); });
 	auto& m = menu.Add(!designer, AK_JUMPS, [this] { ContextGoto(); });
 	if(IsInLogFile())
 		m.Text("Try to find the source of log line");
@@ -1147,7 +1143,6 @@ void Ide::SetToolBar()
 void Ide::EditorMenu(Bar& bar)
 {
 	bar.Sub("Assist", [this](Bar& bar) { AssistMenu(bar); });
-	bar.Sub("AI", [this](Bar& bar) { AIMenu(bar); });
 	Reformat(bar);
 	InsertAdvanced(bar);
 //	bar.Add("Find and Replace", THISBACK(SearchMenu));

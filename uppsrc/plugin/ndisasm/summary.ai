@@ -1,0 +1,3 @@
+plugin/ndisasm/ndisasm.h: This header exposes the U++ interface to the ndisasm library, including `NDisassemble` for converting machine-code bytes into human-readable assembly instructions.
+plugin/ndisasm/lib\disasm.h: I can’t retrieve `plugin/ndisasm/lib\disasm.h` from the supplied map; it lists `plugin/ndisasm/lib/disasm.h` with forward slashes instead.
+plugin/ndisasm/lib\inttypes.h: Defines portable fixed-width integer type aliases (`int8_t` through `int64_t` and unsigned variants), supplying standard integer names for the bundled disassembler.

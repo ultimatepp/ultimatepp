@@ -1,0 +1,1 @@
+TextDiffCtrl/TextDiffCtrl.h: TextDiffCtrl/TextDiffCtrl.h declares U++ controls and data structures for comparing text, displaying line-level differences and blame information, and managing file/directory diffs and patches.

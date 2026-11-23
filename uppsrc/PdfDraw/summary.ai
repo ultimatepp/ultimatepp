@@ -1,0 +1,1 @@
+PdfDraw/PdfDraw.h: PdfDraw.h declares U++’s PDF drawing and export interface, including PdfDraw, TrueType font parsing and subsetting, glyph and outline data, PDF signatures, and JPEG embedding support.

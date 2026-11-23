@@ -1,0 +1,6 @@
+RichText/RichText.h: RichText/RichText.h defines U++’s rich-document model and tools: styled text, paragraphs, tables, images and embedded objects, with QTF/HTML conversion, layout, pagination, drawing, and PDF output support.
+RichText/Para.h: RichText/Para.h defines the rich-text paragraph model: character and paragraph formatting, tabs, numbering and bullets, text parts, line layout data, and serialization structures used to format and render paragraphs.
+RichText/Txt.h: RichText/Txt.h defines RichTxt’s internal document model: formatted paragraphs and text parts, iterators, formatting operations, and update helpers used to represent and manipulate rich-text content.
+RichText/Table.h: RichText/Table.h defines the rich-text table model: cells and their formatting, table-wide layout and formatting, and structures used to measure and paint cells, rows, and tabs.
+RichText/Text.h: RichText/Text.h defines U++ rich-text document structures and style operations, including text formatting and clipboard support, plus APIs to add, remove, merge, and override styles.
+RichText/Diagram.h: Please provide the file contents for `RichText/Diagram.h` so I can summarize it accurately.

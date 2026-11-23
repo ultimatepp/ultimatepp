@@ -1,0 +1,7 @@
+ide/ide.h: `ide/ide.h` is the IDE’s central interface header, declaring the main `Ide` class and supporting UI components for editing, navigation, search, build/run, debugging, consoles, and workspace tools.
+ide/UppDlg.h: `ide/UppDlg.h` declares the IDE’s package and workspace dialogs and data models, including package selection/editing, templates, dependencies, nest setup, and workspace management.
+ide/Assist.h: ide/Assist.h declares the IDE’s code-navigation and assistance UI, including Navigator and AssistEditor, their display and index types, and parameter information structures for browsing symbols and aiding code editing.
+ide/About.h: ide/About.h declares the IDE splash-screen control, `Upp::SplashCtrl`, used to display the application’s startup splash screen.
+ide/MethodsCtrls.h: ide/MethodsCtrls.h declares U++ text-based option and switch controls, used to present and edit build-method settings through selectable text choices and toggleable options in the IDE.
+ide/Methods.h: `ide/Methods.h` declares the IDE’s build-method configuration system: directory mappings, builder setup interfaces and implementations, and `BuildMethods` for managing compiler and platform build settings.
+ide/urepo.h: ide/urepo.h declares repository synchronization and comparison tools for the IDE, including SVN/Git options and commands, credential handling, revision and branch operations, and directory-repository diff dialogs.
