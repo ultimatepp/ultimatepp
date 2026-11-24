@@ -3,9 +3,9 @@ description "\377B";
 uses
 	ide/Core;
 
-library(WIN32) libclang.lib;
+library(LCLANG WIN32) libclang.dll.a;
 
-library(LCLANG) clang;
+library(LCLANG POSIX) clang;
 
 external_dependency(DPKG) libclang-dev;
 

@@ -22,6 +22,10 @@ bool LoadLibClang0(const char *path)
 
 bool LoadLibClang(const String& dir)
 {
+#ifdef PLATFORM_WIN32
+	if(LoadLibClang0(dir + "\\libclang.dll"))
+		return true;
+#endif
 #ifdef PLATFORM_MACOS
 	if(LoadLibClang0(dir + "/libclang.dylib"))
 		return true;
@@ -303,6 +307,11 @@ unsigned clang_getNumOverloadedDecls(CXCursor cursor)
 CXCursor clang_getOverloadedDecl(CXCursor cursor, unsigned index)
 {
 	return LibClang().clang_getOverloadedDecl(cursor, index);
+}
+
+CXString clang_getClangVersion()
+{
+	return LibClang().clang_getClangVersion();
 }
 
 #endif

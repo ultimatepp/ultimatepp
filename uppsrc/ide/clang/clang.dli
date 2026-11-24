@@ -80,3 +80,4 @@ FN(enum CX_CXXAccessSpecifier, clang_getCXXAccessSpecifier, (CXCursor))
 
 FN(unsigned, clang_getNumOverloadedDecls, (CXCursor cursor))
 FN(CXCursor, clang_getOverloadedDecl, (CXCursor cursor, unsigned index))
+FN(CXString, clang_getClangVersion, ())
