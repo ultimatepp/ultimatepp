@@ -56,7 +56,7 @@ void Ide::GotoPosition()
 	GotoPosition(ReadClipboardText());
 }
 
-void Ide::GotoPosition(const String& cs)
+bool Ide::GotoPosition(const String& cs)
 {
 	String f;
 	int line = 0;
@@ -70,7 +70,7 @@ void Ide::GotoPosition(const String& cs)
 		}
 	}
 	if(!line)
-		return;
+		return false;
 	f.Replace("\\", "/");
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
@@ -81,10 +81,11 @@ void Ide::GotoPosition(const String& cs)
 			int q = f.GetCount() - pf.GetCount() - 1;
 			if(pf == f || q >= 0 && f.EndsWith(PosFn(pkg, n)) && f[q] == '/') {
 				GotoPos(SourcePath(pkg, n), line - 1);
-				return;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void Ide::OpenTopic(const String& topic, const String& create_id, bool before)

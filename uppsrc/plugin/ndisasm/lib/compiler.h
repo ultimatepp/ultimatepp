@@ -156,6 +156,7 @@
 # define X86_MEMORY 0
 #endif
 
+#if 0 // quick and ugly fix
 /* Some versions of MSVC have these only with underscores in front */
 #ifndef HAVE_SNPRINTF
 # ifdef HAVE__SNPRINTF
@@ -171,6 +172,7 @@ int snprintf(char *, size_t, const char *, ...);
 # else
 int vsnprintf(char *, size_t, const char *, va_list);
 # endif
+#endif
 #endif
 
 #if !defined(HAVE_STRLCPY) || !HAVE_DECL_STRLCPY

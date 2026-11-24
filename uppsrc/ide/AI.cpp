@@ -1,7 +1,7 @@
 #include "ide.h"
 
-#define LDUMP(x) DUMP(x)
-#define LLOG(x)  LOG(x)
+#define LDUMP(x) // DUMP(x)
+#define LLOG(x)  // LOG(x)
 
 bool DocEditEnter::Key(dword key, int count)
 {
@@ -173,29 +173,34 @@ tool_restart:
 		
 	};
 	LDUMP(r.result);
-	int q = r.result.FindAfter("📎GET ");
+	int q = r.result.FindAfter("⚡GET ");
 	bool stamp = false;
 	if(q < 0) {
 		stamp = true;
-		q = r.result.FindAfter("📎GET_TIME ");
+		q = r.result.FindAfter("⚡GET_TIME ");
 	}
 	if(q >= 0) {
 		String path = r.result.Mid(q);
-		int q = path.Find("\n");
-		if(q >= 0)
-			path.Trim(q);
-		q = path.Find("📎");
-		if(q >= 0)
-			path.Trim(q);
+		for(const char *delim : { "\n", "⚡", " " }) {
+			int q = path.Find(delim);
+			if(q >= 0)
+				path.Trim(q);
+		}
 		LLOG("GET FILE " << path);
 		for(String n : GetUppDirs()) {
 			FileIn in(n + "/" + path);
 			if(in) {
-				code << "TIME: " << Time(in.GetTime());
+				code << "TIME: " << Time(in.GetTime()) << "\n";
 				if(!stamp) {
+					String raw;
 					int ii = 0;
-					while(!in.IsEof())
-						code << ++ii << ": " << in.GetLine() << "\n";
+					while(!in.IsEof()) {
+						String l = in.GetLine();
+						code << ++ii << ": " << l << "\n";
+						raw << l << "\n";
+					}
+					LDUMP(path);
+					ai_file.GetAdd(path) = raw;
 					prev_id = r.response_id;
 				}
 				goto tool_restart;
@@ -276,7 +281,7 @@ String Ide::GetAIFileMap()
 	for(const auto& f : ~CodeIndex()) { // do base classes first
 		String n = GetPathNest(f.key);
 		if(n.GetCount()) {
-			map << "📎FILE " << UnixPath(f.key.Mid(n.GetCount() + 1)) << "\n";
+			map << "⚡FILE " << UnixPath(f.key.Mid(n.GetCount() + 1)) << "\n";
 			String names;
 			Index<String> nests;
 			for(const AnnotationItem& m : f.value.items) {
@@ -323,11 +328,11 @@ void Ide::AISummary()
 		You have been supplied with a map of C++ source files. You can get the content
 		of any file in this map if you reply raw unformatted line
 		
-		📎GET file
+		⚡GET file
 		
-		Provide a short summary of 📎HEADER - about 200 characters.
+		Provide a short summary of ⚡HEADER - about 200 characters.
 		Do not hesitate to check other files (implementation files, @includes,
-		check the map for candidates) to improve your summary. If 📎HEADER is missing,
+		check the map for candidates) to improve your summary. If ⚡HEADER is missing,
 		do nothing. Do not repeat the header name in the summary."
 	)";
 
@@ -353,7 +358,7 @@ void Ide::AISummary()
 				if(GetFileExt(hdr) == ".h") {
 					AIThread ai;
 					for(int retry = 0; retry < 3; retry++) {
-						ai = AI(instructions, "\n📎HEADER " + hdr, base_id);
+						ai = AI(instructions, "\n⚡HEADER " + hdr, base_id);
 						if(ai.error.GetCount() == 0)
 							break;
 					}
@@ -382,37 +387,38 @@ void Ide::AIPane()
 void Ide::AIChat()
 {
 	AIPane();
+	ai_prompt.SetFocus();
 }
 
 void Ide::AIPrompt()
 {
-	ai_qtf << "&[g@B \1" << ~ai_prompt << "\1]&";
+	AIAppendOutput(String() << "&[g@B \1" << ~ai_prompt << "\1]&");
 	AIPrompt2(~ai_prompt);
 	ai_prompt <<= Null;
 }
 
 static String general_instructions = R"(
-	You are a C++ code assistant. You receive a map of source files and header summaries. You may also receive a 📎CURRENT_FILE marker identifying a file and either a cursor line or a line range. The map and marker tell you where to look; they do not establish what the source code says.
+	You are a C++ code assistant. You receive a map of source files and header summaries. You may also receive a ⚡CURRENT_FILE marker identifying a file and either a cursor line or a line range. The map and marker tell you where to look; they do not establish what the source code says.
 	
 	1. Identify the task.
-	Follow the target named or implied by the user. Otherwise, use 📎CURRENT_FILE and its indicated line or range. A request such as “explain” means “explain the code at this location.” Use the enclosing declaration, statement, or function as needed. Do not ask for clarification when the target is reasonably clear.
+	Follow the target named or implied by the user. Otherwise, use ⚡CURRENT_FILE and its indicated line or range. A request such as “explain” means “explain the code at this location.” Use the enclosing declaration, statement, or function as needed. Do not ask for clarification when the target is reasonably clear.
 	
 	2. Issue retrieval commands yourself.
 	The user gives you a task. YOU issue retrieval commands. The host reads your command and returns the result. Never ask the user to type, resend, confirm, or reformat a retrieval command.
 	
 	If the source lines needed for the task are not present in the conversation, your entire next reply must be:
-	📎GET file📎
+	⚡GET file
 	
 	Replace file with the exact path from the map. Emit exactly one raw, unformatted line: no indentation, quotation marks, Markdown, explanation, apology, or second command. End the turn there. Do not say “I’ll check the file”; emit the command.
 	
 	Example: If the user says “explain,” the cursor is at Core/Util.h:410, and the source lines are absent, your entire reply is:
-	📎GET Core/Util.h📎
+	⚡GET Core/Util.h
 	
 	3. Handle cached files correctly.
 	The first line of a returned file is its timestamp, not a source line. Use a freshly returned file immediately. If you need to consult a previously retrieved copy again, first emit:
-	📎GET_TIME file📎
+	⚡GET_TIME file. Freshly means since the last user prompt which specified ⚡CURRENT_FILE.
 	
-	The same one-raw-line rule applies. If the returned timestamp matches the cached timestamp and the needed lines are still present, use the cached source. If the timestamp differs or the needed lines are missing, issue 📎GET for that file. A timestamp alone is not source content.
+	The same one-raw-line rule applies. If the returned timestamp matches the cached timestamp and the needed lines are still present, use the cached source. If the timestamp differs or the needed lines are missing, issue ⚡GET for that file. A timestamp alone is not source content.
 	
 	4. Continue the original task across retrievals.
 	A command is a request, not a result. Do not explain or cite missing code until the host has returned the source. After each result, continue the original task without waiting for another user prompt: either issue the next necessary command or answer from the inspected source.
@@ -425,7 +431,8 @@ static String general_instructions = R"(
 	If the definition cannot be found after checking the plausible mapped files, say that you could not find it in the supplied sources. Explain only what the declaration establishes. Do not infer implementation behavior from a name, declaration, or map summary.
 	
 	6. Answer directly and cite the source.
-	Once you have enough evidence, answer the user's request without narrating the retrieval process. Cite code as 📎<file:line>. When reporting a bug or issue to fix, mark its location as 📎<!file:line>. Use the exact mapped path and an inspected source line number. Do not count the timestamp as a source line or invent a citation.
+	Once you have enough evidence, answer the user's request without narrating the retrieval process. Always mark location as ⚡file:line - do not use spaces or `.
+	When reporting a bug or issue to fix, mark its location as 🛠file:line - do not use spaces or `. Use the exact mapped path and an inspected source line number. Do not count the timestamp as a source line or invent a citation.
 )";
 
 void Ide::AIPrompt2(const String& prompt)
@@ -437,7 +444,7 @@ void Ide::AIPrompt2(const String& prompt)
 	p << prompt;
 	String n = GetPathNest(editfile);
 	if(n.GetCount())
-		p << "\n📎CURRENT_FILE " << UnixPath(editfile.Mid(n.GetCount() + 1));
+		p << "\n⚡CURRENT_FILE " << UnixPath(editfile.Mid(n.GetCount() + 1)) << "\n";
 	int l, h;
 	if(editor.GetSelection(l, h))
 		p << ", lines " << editor.GetLine(l) + 1 << " - " << editor.GetLine(h) + 1 << "\n";
@@ -454,19 +461,25 @@ String Ide::AIResult(const AIThread& t)
 {
 	String qtf = MarkdownConverter().ToQtf(t.result);
 	for(;;) {
-		String hdr = "📎`<";
+		String hdr = "⚡";
 		int l = qtf.Find(hdr);
-		if(l < 0)
+		bool fix = false;
+		if(l < 0) {
+			hdr = "🛠";
+			l = qtf.Find(hdr);
+			if(l < 0)
+				break;
+			fix = true;
+		}
+		int sc = qtf.FindAfter(":", l);
+		if(sc < 0)
 			break;
-		String end = "`>";
-		int r = qtf.FindAfter(end, l + hdr.GetCount());
-		if(r < 0)
-			break;
-		String link = qtf.Mid(l + hdr.GetCount(), r - l - hdr.GetCount() - end.GetCount());
-		LDUMP(link);
-		qtf.Remove(l, r - l);
-		bool fix = link.TrimStart("`!");
-		String s = "[^" + link + "^ " + link + "]";
+		while(IsDigit(qtf[sc]))
+			sc++;
+		String link = Filter(qtf.Mid(l + hdr.GetCount(), sc - l - hdr.GetCount()),
+		                     [](int c) { return c == '`' ? 0 : c; });
+		qtf.Remove(l, sc - l);
+		String s = "[^" + link + "^ \1" + link + "\1]";
 		if(fix)
 			s << " [^!" + link + "^ Fix]";
 		qtf.Insert(l, s);
@@ -484,11 +497,22 @@ void Ide::AIAppendOutput(const String& qtf)
 
 void Ide::AILink(const String& link)
 {
-	GotoPosition(link);
 	if(*link == '!') {
+		String path = link.Mid(1);
+		if(!GotoPosition(path))
+			return;
+		int q = path.Find(':');
+		if(q >= 0)
+			path.Trim(q);
+		LLOG("FIX " << path);
+		String raw = ai_file.Get(path, editor.Get());
+		if(IsNull(raw)) {
+			AIAppendOutput("[g Uknown file: \1" + path);
+			return;
+		}
 		AIThread r = AI(general_instructions,
-		                "Suggest the fix for issue " + link.Mid(1) + ". Fix should be a continous range of lines. "
-		                "Show the range of lines you are replacing with 📎line1:line2 in the first line. "
+		                "Suggest the fix for issue " + path + ". Fix should be a continous range of lines. "
+		                "Show the range of lines you are replacing with line1:line2 range in the first line. "
 		                "Do not add any text or explanation, just the required header and the raw code."
 		                "Do not use any formatting, I will be using the code as is.",
 		                ai_prev);
@@ -497,23 +521,43 @@ void Ide::AILink(const String& link)
 		if(p > 0) {
 			String h = r.result.Mid(0, p);
 			String code = r.result.Mid(p + 1);
-			h.TrimStart("📎");
+			h.TrimStart("⚡");
 			CParser p(h);
 			int line1, line2;
 			try {
-				line1 = p.ReadInt();
+				line1 = p.ReadInt() - 1;
 				p.Char(':');
-				line2 = p.ReadInt();
-				WriteClipboardText(code);
-				GotoPos(Point(0, line1));
-				editor.SetSelection(editor.GetCursor(), editor.GetPos(line2));
-				CompareWithClipboard();
-				// AIAppendOutput(HighlightCodeQtf(code.ToWString(), 4));
-				return;
+				line2 = p.ReadInt() - 1;
+				Vector<String> l = Split(raw, '\n', false);
+				
+				
+				
+				if(line1 <= line2 && line1 < l.GetCount() && line2 < l.GetCount() && line1 >= 0) {
+					l.Remove(line1, line2 - line1 + 1);
+					Vector<String> fix = Split(code, '\n', false);
+					l.Insert(line1, fix);
+					
+					editor.SetSelection(editor.GetPos(line1), editor.GetPos(line2));
+					static FileSel dummy;
+				    FileDiff& dlg = CreateNewWindow<FileDiff>(dummy);
+				    String left = editor.Get();
+				    String right = Join(l, "\n");
+				    dlg.Set(editfile);
+				    dlg.r <<= "Proposed fix";
+				    dlg.r.Disable();
+				    dlg.diff.Set(left, right);
+				    dlg.diff.indent <<= false;
+				    dlg.diff.indent << [=, &dlg] { dlg.diff.Set(left, right); };
+					dlg.Title("Suggested fix");
+					dlg.Icon(IdeImg::DiffClip());
+				    dlg.OpenMain();
+					return;
+				}
 			}
 			catch(CParser::Error) {}
 		}
 		AIAppendOutput("[g@R Unexpected reply:&][g \1" + r.result + "\1]");
-			return;
+		return;
 	}
+	GotoPosition(link);
 }

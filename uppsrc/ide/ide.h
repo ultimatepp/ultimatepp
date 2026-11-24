@@ -940,7 +940,7 @@ public:
 
         void  CopyPosition();
         void  GotoPosition();
-		void  GotoPosition(const String& cs);
+		bool  GotoPosition(const String& cs);
         
     void      ReformatMenu(Bar& menu);
 	    void  ReformatCodeDlg();
@@ -1385,6 +1385,7 @@ public:
 	void     AISummary();
 
 	String   ai_prev;
+	VectorMap<String, String> ai_file; // the last version uploaded to LLM by GET
 
 	typedef   Ide CLASSNAME;
 
