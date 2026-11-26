@@ -105,8 +105,7 @@ const char *PeFile::FindExportRaw(const char *name, bool case_sensitive) const
 
 HMODULE CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& plist)
 {
-	HMODULE hmod = LoadLibrary(fn);
-	
+	HMODULE hmod = LoadLibraryEx(fn, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
 	if(!hmod)
 		return 0;
 
