@@ -207,8 +207,6 @@ void InstantSetup()
 
 			bins.At(0) = clang + "/bin";
 			bins.At(1) = clang + decode(target, ARCH_X86, "/i686-w64-mingw32/bin", ARCH_AMD64, "/x86_64-w64-mingw32/bin", ARCH_ARM64, "/aarch64-w64-mingw32/bin", "");
-			incs.At(0) = GetExeDirFile("bin/llvm");
-			libs.At(0) = GetExeDirFile(decode(target, ARCH_X86, "bin/llvm/x86", ARCH_AMD64, "bin/llvm/x64", ARCH_ARM64, "bin/llvm/arm64", ""));
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
@@ -217,7 +215,7 @@ void InstantSetup()
 			SaveVarFile(ConfigFile(method + ".bm"), bm);
 			dirty = true;
 	
-			if(target)
+			if(target==host)
 				default_method = Nvl(default_method, method);
 		}
 
@@ -326,10 +324,6 @@ void InstantSetup()
 					incs.At(ii++) = kit81 + "/include/shared";
 				}
 	
-				String& llvminc = incs.At(ii++);
-				if(IsNull(llvminc) || ToLower(llvminc).Find("llvm") >= 0)
-					llvminc = GetExeDirFile("bin/llvm");
-				
 				libs.At(0) = vc + (ver17 ? decode(target, ARCH_X86, "/lib/x86", ARCH_AMD64, "/lib/x64", ARCH_ARM64, "/lib/arm64", "") : (target ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
@@ -340,10 +334,6 @@ void InstantSetup()
 					libs.At(ii++) = kit81 + (target ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
 				}
 		
-				String& llvmlib = libs.At(ii++);
-				if(IsNull(llvmlib) || ToLower(llvmlib).Find("llvm") >= 0)
-					llvmlib = GetExeDirFile(decode(target, ARCH_X86, "bin/llvm/x86", ARCH_AMD64, "bin/llvm/x64", ARCH_ARM64, "bin/llvm/arm64", ""));
-
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
 				bmSet(bm, "COMMON_OPTIONS", target == ARCH_X86 ? "/bigobj /D_ATL_XP_TARGETING -D_CRT_SECURE_NO_WARNINGS"
