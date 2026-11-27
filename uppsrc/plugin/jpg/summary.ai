@@ -1,0 +1,1 @@
+plugin/jpg/jpg.h: `plugin/jpg/jpg.h` declares U++’s JPEG raster decoder and encoder interfaces, including their data helpers and registration support for loading and saving JPEG images.

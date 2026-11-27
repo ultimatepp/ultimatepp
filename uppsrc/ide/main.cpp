@@ -110,6 +110,12 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 #ifdef DYNAMIC_LIBCLANG
 bool TryLoadLibClang()
 {
+#ifdef PLATFORM_WIN32
+	if(LoadLibClang(GetExeDirFile("bin\\clang\\bin")))
+		return true;
+	if(LoadLibClang(GetExeFolder()))
+		return true;
+#endif
 #ifdef PLATFORM_MACOS
 	if(LoadLibClang(TrimBoth(Sys("xcode-select -p")) + "/usr/lib"))
 		return true;

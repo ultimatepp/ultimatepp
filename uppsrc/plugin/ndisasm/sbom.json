@@ -6,7 +6,7 @@
 			"type": "library",
 			"name": "ndisasm",
 			"bom-ref": "ndisasm",
-			"version": "2.08.01",
+			"version": "3.02",
 			"licenses": [
 				{
 					"expression": "BSD-2-Clause"
@@ -18,20 +18,19 @@
 					"url": "https://www.nasm.us/"
 				},
 				{
+					"type": "vcs",
+					"url": "https://github.com/netwide-assembler/nasm"
+				},
+				{
 					"type": "distribution",
-					"url": "git+https://github.com/netwide-assembler/nasm.git"
+					"url": "https://github.com/netwide-assembler/nasm"
 				},
 				{
 					"type": "source-distribution",
-					"url": "git+https://github.com/netwide-assembler/nasm.git@nasm-2.08.01",
-					"hashes": [
-						{
-							"alg": "SHA-1",
-							"content": "a947529954d9db0214e65d2c856111f823381f7c"
-						}
-					]
+					"url": "https://github.com/netwide-assembler/nasm/archive/8f1fb545a582c55c69607f457b4d1e71c19b2ecf.zip"
 				}
 			],
+			"purl": "pkg:github/netwide-assembler/nasm@8f1fb545a582c55c69607f457b4d1e71c19b2ecf",
 			"properties": [
 				{
 					"name": "upp:deployment-mode",

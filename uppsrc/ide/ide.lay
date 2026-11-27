@@ -700,10 +700,11 @@ LAYOUT(SetupWebSearchTabLayout, 556, 200)
 END_LAYOUT
 
 LAYOUT(SetupAILayout, 500, 156)
-	ITEM(Upp::Label, dv___0, SetLabel(t_("Model URL")).LeftPosZ(4, 60).TopPosZ(4, 19))
-	ITEM(Upp::WithDropChoice<Upp::EditString>, url, LeftPosZ(64, 428).TopPosZ(4, 19))
-	ITEM(Upp::Label, dv___2, SetLabel(t_("API key")).LeftPosZ(4, 40).TopPosZ(28, 19))
+	ITEM(Upp::WithDropChoice<Upp::EditString>, model, LeftPosZ(192, 300).TopPosZ(4, 19))
+	ITEM(Upp::Label, dv___1, SetLabel(t_("API key")).LeftPosZ(4, 40).TopPosZ(28, 19))
 	ITEM(Upp::EditString, key, LeftPosZ(64, 428).TopPosZ(28, 19))
+	ITEM(Upp::Label, dv___3, SetLabel(t_("AI")).LeftPosZ(4, 40).TopPosZ(4, 19))
+	ITEM(Upp::DropList, kind, LeftPosZ(64, 124).TopPosZ(4, 19))
 END_LAYOUT
 
 LAYOUT(GotoLayout, 796, 524)
@@ -1093,17 +1094,25 @@ LAYOUT(SelectExtDepLayout, 912, 516)
 	ITEM(Upp::EditString, search, LeftPosZ(4, 160).TopPosZ(484, 19))
 END_LAYOUT
 
-LAYOUT(SBOMLayout, 992, 580)
-	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 36))
-	ITEM(Upp::Button, save, SetLabel(t_("Save..")).LeftPosZ(4, 56).TopPosZ(552, 24))
-	ITEM(Upp::DropList, mode, HSizePosZ(68, 280).TopPosZ(554, 19))
-	ITEM(Upp::EditString, search, LeftPosZ(764, 104).TopPosZ(554, 19))
-	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(4, 24))
+LAYOUT(SBOMLayout, 992, 468)
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
+	ITEM(Upp::Button, save, SetLabel(t_("Save..")).LeftPosZ(4, 56).BottomPosZ(8, 24))
+	ITEM(Upp::DropList, mode, HSizePosZ(68, 280).BottomPosZ(11, 19))
+	ITEM(Upp::EditString, search, RightPosZ(124, 104).BottomPosZ(11, 19))
+	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(SysConsoleLayout, 680, 660)
 	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
 	ITEM(Upp::Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
 	ITEM(Upp::Button, cancel, SetLabel(t_("Abort")).RightPosZ(612, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(SummaryAILayout, 620, 692)
+	ITEM(Upp::ArrayCtrl, list, HSizePosZ(4, 8).VSizePosZ(8, 40))
+	ITEM(Upp::Button, all, SetLabel(t_("All")).LeftPosZ(4, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, date, SetLabel(t_("Outdated")).LeftPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, cancel, SetLabel(t_("Cancel")).RightPosZ(80, 64).BottomPosZ(8, 24))
+	ITEM(Upp::Button, ok, SetLabel(t_("Execute")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 

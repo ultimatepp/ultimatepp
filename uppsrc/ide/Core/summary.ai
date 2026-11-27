@@ -1,0 +1,3 @@
+ide/Core/Core.h: I can’t access `ide/Core/Core.h` from the supplied map: it lists `ide/Core/Core.h` only by name and doesn’t include its contents.
+ide/Core/Host.h: `Host` provides the IDE’s host-side command and environment interface: it manages directories, executable paths, file metadata, process launching, synchronous and asynchronous command execution, output logging, and platform flags.
+ide/Core/Logger.h: ide/Core/Logger.h defines U++ IDE logging facilities: a `Logger` with debug, info, warning, error, and none levels, plus stream-style logging helpers for emitting messages.

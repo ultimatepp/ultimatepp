@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-linux:
     docker:
-      - image: cimg/base:2026.08
+      - image: cimg/base:2026.11
     resource_class: large
     environment:
       NUMBER_OF_CPUS: 4
@@ -17,7 +17,7 @@ jobs:
       - run: make theide
   build-mac:
     macos:
-      xcode: 27.0
+      xcode: 27.2
     resource_class: m4pro.medium
     environment:
       NUMBER_OF_CPUS: 4

@@ -1,0 +1,1 @@
+HexView/HexView.h: HexView.h defines a Ctrl-based hex viewer with customizable byte access, address and cursor navigation, scrolling, column and charset settings, goto events, serialized preferences, and a bottom panel for interpreting bytes.

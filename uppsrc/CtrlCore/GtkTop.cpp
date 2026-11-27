@@ -183,28 +183,31 @@ void TopWindow::SyncTopMost()
 void TopWindow::SetMode(int mode)
 {
 	GuiLock __;
-	GtkWindow *w = gtk();
-	if(w)
+	state = mode;
+	
+	if(GtkWindow *w = gtk(); w) {
 		switch(state) {
 		case MINIMIZED:
-			fullscreen = false;
 			gtk_window_iconify(w);
 			break;
 		case MAXIMIZED:
-			fullscreen = false;
+			gtk_window_unfullscreen(w);
 			gtk_window_deiconify(w);
 			gtk_window_maximize(w);
 			break;
 		case OVERLAPPED:
-			fullscreen = false;
+			gtk_window_unfullscreen(w);
 			gtk_window_deiconify(w);
 			gtk_window_unmaximize(w);
 			break;
 		case FULLSCREEN:
 			gtk_window_fullscreen(w);
-			fullscreen = true;
 			break;
+		default:
+			return;
 		}
+		fullscreen = (mode == FULLSCREEN);
+	}
 }
 
 void TopWindow::Minimize(bool effect)

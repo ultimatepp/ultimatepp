@@ -1,0 +1,1 @@
+ide/Java/Java.h: Declares Java version metadata and comparisons, Java platform delimiter access, and JDK management. `Jdk` validates and discovers versions, exposes download information, and builds paths to Java tools and include files.

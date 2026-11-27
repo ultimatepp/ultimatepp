@@ -1,0 +1,2 @@
+RichEdit/RichEdit.h: RichEdit/RichEdit.h provides U++’s rich-text editing component: the editor control, formatting and style management, rulers, undo support, page layout, tables, headers/footers, and toolbar integration.
+RichEdit/DiagramEditor.h: RichEdit/DiagramEditor.h declares the rich-text diagram editor: controls and helpers for editing diagram shapes, connectors, text, sizing, alignment, colors, and other diagram properties within RichEdit documents.

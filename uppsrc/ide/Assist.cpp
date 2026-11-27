@@ -1025,7 +1025,7 @@ void AssistEditor::AssistInsert()
 			else {
 				String pkg = include_path.Left(include_path.GetCount() - 1);
 				Vector<String> nests = GetUppDirs();
-				for(int i = 0; i < nests.GetCount(); i++){
+				for(int i = 0; i < nests.GetCount(); i++) {
 					if(FileExists(nests[i] + "/" + include_path + GetFileName(pkg) + ".upp")) {
 						Ide *ide = dynamic_cast<Ide *>(TheIde());
 						if(ide)

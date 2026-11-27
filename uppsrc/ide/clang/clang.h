@@ -21,9 +21,7 @@ void ClangConfigSetDefaults();
 void PutAssist(const char *s);
 
 #ifndef flagLCLANG
-	#ifdef PLATFORM_POSIX
-	#define DYNAMIC_LIBCLANG // dynamic loading of clang experiment (does not seem to work in Win32)
-	#endif
+	#define DYNAMIC_LIBCLANG
 #endif
 
 #ifdef DYNAMIC_LIBCLANG

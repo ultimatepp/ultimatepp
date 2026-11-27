@@ -1,0 +1,1 @@
+Esc/Esc.h: Defines Esc’s dynamic value types (numbers, arrays, maps, lambdas) and reference-counted handles, plus a CParser-based scripting interpreter with evaluation, execution limits, callbacks, standard-library hooks, and Upp::Value conversion.

@@ -1,0 +1,3 @@
+ide/Android/Android.h: The Android.h header defines U++ IDE support for Android projects, including Android and SDK/NDK management, APK handling, and manifest parsing and editing.
+ide/Android/Executables.h: Defines Android command-line tool wrappers for ADB, NDK builds, and Logcat, providing the IDE with interfaces to run device management, build, and logging operations.
+ide/Android/Devices.h: Please provide the file map entry for `ide/Android/Devices.h` (or its contents) so I can summarize the header accurately.

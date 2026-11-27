@@ -1,6 +1,16 @@
 SHELL := /bin/bash
 UNAME := $(shell uname)
 
+ifeq ($(UNAME),Darwin)
+	BREW := $(shell command -v brew)
+	ifeq ($(BREW),)
+		$(error Homebrew is required on macOS but was not found)
+	endif
+	BREW_PREFIX := $(shell brew --prefix)
+	export CPLUS_INCLUDE_PATH := $(BREW_PREFIX)/include
+	export LIBRARY_PATH := $(BREW_PREFIX)/lib
+endif
+
 .PHONY: all deps config umk theide run clean
 
 all: deps config umk theide
@@ -25,9 +35,9 @@ config:
 umk: config
 	@echo "Building umk"
 	@if clang++ --version >/dev/null 2>&1; then \
-		clang -O2 -pthread -Iuppsrc -I. -DflagMAIN -DflagNO_FONTSYS mkumk_blitz.cpp uppsrc/Draw/FontCR.cpp uppsrc/Core/heaputil.cpp uppsrc/Core/hheap.cpp uppsrc/Core/sheap.cpp uppsrc/Core/lheap.cpp uppsrc/Core/heap.cpp uppsrc/Core/heapdbg.cpp uppsrc/Core/String.cpp uppsrc/Core/CharSet.cpp uppsrc/Core/CvFlt.cpp uppsrc/Core/xxHash_chk.cpp uppsrc/Core/Http.cpp -lstdc++ -llzma -lpcre2-8 -lpcre2-32 -llz4 -lzstd -lxxhash -lm -lz -lbz2 $$(pkg-config --libs libpng) $$(pkg-config --libs libpng) -o umk; \
+		clang++ -O2 -pthread -std=c++17 -Iuppsrc -I. -DflagMAIN -DflagNO_FONTSYS mkumk_blitz.cpp uppsrc/Draw/FontCR.cpp uppsrc/Core/heaputil.cpp uppsrc/Core/hheap.cpp uppsrc/Core/sheap.cpp uppsrc/Core/lheap.cpp uppsrc/Core/heap.cpp uppsrc/Core/heapdbg.cpp uppsrc/Core/String.cpp uppsrc/Core/CharSet.cpp uppsrc/Core/CvFlt.cpp uppsrc/Core/xxHash_chk.cpp uppsrc/Core/Http.cpp -lstdc++ -llzma -lpcre2-8 -lpcre2-32 -llz4 -lzstd -lxxhash -lm -lz -lbz2 $$(pkg-config --libs libpng) -o umk; \
 	else \
-		gcc -O2 -pthread -Iuppsrc -I. -DflagMAIN -DflagNO_FONTSYS mkumk_blitz.cpp uppsrc/Draw/FontCR.cpp uppsrc/Core/heaputil.cpp uppsrc/Core/hheap.cpp uppsrc/Core/sheap.cpp uppsrc/Core/lheap.cpp uppsrc/Core/heap.cpp uppsrc/Core/heapdbg.cpp uppsrc/Core/String.cpp uppsrc/Core/CharSet.cpp uppsrc/Core/CvFlt.cpp uppsrc/Core/xxHash_chk.cpp uppsrc/Core/Http.cpp -lstdc++ -llzma -lpcre2-8 -lpcre2-32 -llz4 -lzstd -lxxhash -lm -lz -lbz2 $$(pkg-config --libs libpng) $$(pkg-config --libs libpng) -o umk; \
+		g++ -O2 -pthread -std=c++17 -Iuppsrc -I. -DflagMAIN -DflagNO_FONTSYS mkumk_blitz.cpp uppsrc/Draw/FontCR.cpp uppsrc/Core/heaputil.cpp uppsrc/Core/hheap.cpp uppsrc/Core/sheap.cpp uppsrc/Core/lheap.cpp uppsrc/Core/heap.cpp uppsrc/Core/heapdbg.cpp uppsrc/Core/String.cpp uppsrc/Core/CharSet.cpp uppsrc/Core/CvFlt.cpp uppsrc/Core/xxHash_chk.cpp uppsrc/Core/Http.cpp -lstdc++ -llzma -lpcre2-8 -lpcre2-32 -llz4 -lzstd -lxxhash -lm -lz -lbz2 $$(pkg-config --libs libpng) -o umk; \
 	fi
 
 theide: umk

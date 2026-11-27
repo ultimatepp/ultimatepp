@@ -1,0 +1,1 @@
+plugin/lz4/lz4.h: Defines U++ LZ4 stream compressors and decompressors, with framed-format options, checksums, optional concurrent processing, and helpers for stream, string, and buffer compression, decompression, and format detection.

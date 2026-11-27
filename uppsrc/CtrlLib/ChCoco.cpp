@@ -148,7 +148,7 @@ void ChHostSkin()
 		return;
 	}
 
-	SColorFace_Write(CocoColor(COCO_WINDOW, White()));
+	SColorFace_Write(IsDark(SColorPaper()) ? GrayColor(40) : GrayColor(240));
 	SColorHighlight_Write(CocoColor(COCO_SELECTEDPAPER));
 	SColorHighlightText_Write(CocoColor(COCO_SELECTEDTEXT));
 	SColorText_Write(CocoColor(COCO_TEXT));
@@ -224,7 +224,8 @@ void ChHostSkin()
 	}
 	{
 		MultiButton::Style& s = MultiButton::StyleDefault().Write();
-		s.paper = field(COCO_POPUPBUTTON);
+		s.paper = SColorPaper();
+//		s.paper = field(COCO_POPUPBUTTON);
 	}
 
 	{ // U++ menu should not be used MacOS apps, but adjust some values anyway

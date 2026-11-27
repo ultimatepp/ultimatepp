@@ -89,6 +89,23 @@ SelectExtDepDlg::SelectExtDepDlg()
 			src << m.name + " - " + m.description;
 	}
 	else
+	if(IsPACMAN()) {
+		Vector<String> ls = Split(Sys("pacman -Ss ."), '\n');
+		String curpkg;
+		for(const String& l : ls) {
+			if(findarg(*l.Begin(), ' ', '\t') >= 0) { // It's a description line
+				if(!IsNull(curpkg)) {
+					src << curpkg + " - " + TrimLeft(l);
+					curpkg = Null;
+				}
+			}
+			else { // It might be a package name line (e.g., "extra/zlib 1.3.1-1")
+				if(int q = l.Find('/'), sp = l.Find(' ', q + 1); q >= 0 && sp > q)
+					curpkg = l.Mid(q + 1, sp - (q + 1));
+			}
+		}
+	}
+	else
 		src = Split(Sys(IsRPM() ? "dnf repoquery --queryformat '%{name} - %{summary}' '*'"
 		                        : "apt-cache search ."),
 		            '\n');
@@ -151,6 +168,7 @@ ShowExtDepDlg::ShowExtDepDlg()
 	when.AddList("VCPKG WIN32");
 	when.AddList("DPKG POSIX LINUX");
 	when.AddList("RPM POSIX LINUX");
+	when.AddList("PACMAN POSIX LINUX");
 	when.AddList("BREW POSIX MACOS");
 	
 	copy.SetImage(CtrlImg::copy());

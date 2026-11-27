@@ -25,6 +25,8 @@ external_dependency(RPM) xz-devel;
 
 external_dependency(RPM) libjpeg-turbo-devel;
 
+external_dependency(BREW) libtiff;
+
 file
 	tif.h,
 	tifupp.cpp,

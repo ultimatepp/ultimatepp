@@ -1,0 +1,1 @@
+ide/Common/Common.h: `ide/Common/Common.h` declares shared IDE services for source and package filesystems, save handling, IDE module registration, workspace configuration, repository checks, and common utilities such as PDF export and QTF editing.

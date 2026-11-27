@@ -24,7 +24,7 @@ if [ "$UNAME" = 'Darwin' ]; then
     exit 1
   fi
   echo "Homebrew is installed"
-  brew install libpng lz4 pcre2 xxhash zstd
+  brew install giflib jpeg-turbo libpng lz4 pcre2 xxhash zstd
   if clang++ --version >/dev/null 2>&1; then
     echo "Commandline Development Tools already installed"
   else
@@ -55,17 +55,103 @@ fi
 
 DEP=""
 if command -v apt-get >/dev/null; then
-  DEP="apt-get install $APT_OPT g++ clang clang-format git make xdotool libbz2-dev libexpat1-dev libfontconfig1-dev libfreetype-dev libgif-dev libgtk-3-dev libjpeg-turbo8-dev liblz4-dev liblzma-dev libnotify-dev libpcre2-dev libpng-dev libssl-dev libx11-dev libxcb1-dev libxdmcp-dev libxext-dev libxft-dev libxinerama-dev libxrender-dev libxxhash-dev libzstd-dev zlib1g-dev"
+  DEP="apt-get install $APT_OPT \
+    clang \
+    clang-format \
+    g++ \
+    git \
+    libbz2-dev \
+    libexpat1-dev \
+    libfontconfig1-dev \
+    libfreetype-dev \
+    libgif-dev \
+    libgtk-3-dev \
+    libjpeg-turbo8-dev \
+    liblz4-dev \
+    liblzma-dev \
+    libnotify-dev \
+    libpcre2-dev \
+    libpng-dev \
+    libssl-dev \
+    libx11-dev \
+    libxcb1-dev \
+    libxdmcp-dev \
+    libxext-dev \
+    libxft-dev \
+    libxinerama-dev \
+    libxrender-dev \
+    libxxhash-dev \
+    libzstd-dev \
+    make \
+    xdotool \
+    zlib1g-dev"
 elif command -v dnf >/dev/null; then
-  DEP="dnf install $DNF_OPT gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
-elif command -v yum >/dev/null; then
-  DEP="yum install $YUM_OPT gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
+  DEP="dnf install $DNF_OPT \
+    bzip2-devel \
+    clang \
+    clang-devel \
+    clang-tools-extra \
+    expat-devel \
+    fontconfig-devel \
+    freetype-devel \
+    gcc-c++ \
+    giflib-devel \
+    git \
+    gtk3-devel \
+    libjpeg-turbo-devel \
+    libnotify-devel \
+    libpng-devel \
+    libX11-devel \
+    libxcb-devel \
+    libXdmcp-devel \
+    libXext-devel \
+    libXft-devel \
+    libXinerama-devel \
+    libXrender-devel \
+    libzstd-devel \
+    lz4-devel \
+    make \
+    openssl-devel \
+    pcre2-devel \
+    xxhash-devel \
+    xz-devel \
+    zlib-devel"
 elif command -v urpmi >/dev/null; then
   DEP="urpmi $URPMI_OPT gcc-c++ clang clang-tools-extra git make gtk3-devel libnotify-devel bzip2-devel freetype-devel openssl-devel"
 elif command -v zypper >/dev/null; then
   DEP="zypper $ZYPPER_OPT install gcc-c++ clang git make gtk3-devel libnotify-devel bzip2-devel freetype-devel libopenssl-devel"
 elif command -v pacman >/dev/null; then
-  DEP="pacman $PACMAN_OPT --needed gcc clang git make xdotool bzip2 expat fontconfig freetype2 giflib gtk3 libjpeg-turbo lz4 xz libnotify pcre2 libpng openssl libx11 libxcb libxdmcp libxext libxft libxinerama libxrender xxhash zstd zlib pkgconf gdb" 
+  DEP="pacman $PACMAN_OPT --needed \
+    bzip2 \
+    clang \
+    expat \
+    fontconfig \
+    freetype2 \
+    gcc \
+    giflib \
+    git \
+    gtk3 \
+    libjpeg-turbo \
+    libnotify \
+    libpng \
+    libx11 \
+    libxcb \
+    libxdmcp \
+    libxext \
+    libxft \
+    libxinerama \
+    libxrender \
+    libzstd \
+    lz4 \
+    make \
+    openssl \
+    pcre2 \
+    pkgconf \
+    xdotool \
+    xxhash \
+    xz \
+    zlib \
+    zstd"
 elif command -v pkg >/dev/null; then
   DEP="pkg install $PKG_OPT bash gmake git gtk3 libnotify llvm90 pkgconf"
   if [ "$UNAME" = 'SunOS' ]; then

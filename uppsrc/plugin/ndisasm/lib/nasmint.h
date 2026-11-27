@@ -1,5 +1,5 @@
 /*
- * inttypes.h
+ * nasmint.h
  *
  * Small ersatz subset of <inttypes.h>, deriving the types from
  * <limits.h>.
@@ -9,12 +9,12 @@
  * a 01111111... bit pattern.
  */
 
-#ifndef INTTYPES_H
-#define INTTYPES_H
+#ifndef NASM_NASMINT_H
+#define NASM_NASMINT_H
 
 #include <limits.h>
 
-/*** 64-bit type: long or long long ***/
+/*** 64-bit type: __int64, long or long long ***/
 
 /* Some old versions of gcc <limits.h> omit LLONG_MAX */
 #ifndef LLONG_MAX
@@ -25,7 +25,25 @@
 # endif
 #endif
 
-#if LONG_MAX == 9223372036854775807L
+#ifndef _I64_MAX
+# ifdef _MSC_VER
+#  define _I64_MAX 9223372036854775807
+# else
+#  define _I64_MAX 0
+# endif
+#endif
+
+#if _I64_MAX == 9223372036854775807
+
+/* Windows-based compiler: use __int64 */
+typedef signed __int64		int64_t;
+typedef unsigned __int64	uint64_t;
+#define _scn64			"I64"
+#define _pri64			"I64"
+#define INT64_C(x)		x ## i64
+#define UINT64_C(x)		x ## ui64
+
+#elif LONG_MAX == 9223372036854775807L
 
 /* long is 64 bits */
 typedef signed long		int64_t;
@@ -198,4 +216,4 @@ typedef unsigned char		uint8_t;
 #define INT64_MAX	INT64_C(9223372036854775807)
 #define UINT64_MAX	UINT64_C(18446744073709551615)
 
-#endif /* INTTYPES_H */
+#endif /* NASM_NASMINT_H */

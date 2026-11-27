@@ -1,0 +1,1 @@
+ide/IconDes/IconDes.h: ide/IconDes/IconDes.h declares the IDE’s icon editor: canvas and preview controls, RGBA editing, image slots and positioning, text tools, and operations for loading, saving, drawing, and manipulating icon images.

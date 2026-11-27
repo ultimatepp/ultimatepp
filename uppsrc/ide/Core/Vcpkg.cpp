@@ -36,12 +36,12 @@ bool IsVcpkgAvailable(Function<int(const String&, const String& chdir)> sys)
 	return IsVcpkgInstalled();
 }
 
-Vector<VcpkgInstalled> VcpkgList()
+Vector<VcpkgPackageInfo> VcpkgListInstalled()
 {
-	VectorMap<String, VcpkgInstalled> ms;
+	VectorMap<String, VcpkgPackageInfo> ms;
 	for(Value l : ParseJSON(Sys(VcpkgExe() + " list --x-json"))) {
 		String name = ~l["package_name"];
-		VcpkgInstalled& m = ms.GetAdd(name);
+		VcpkgPackageInfo& m = ms.GetAdd(name);
 		m.name = name;
 		m.triplets.FindAdd(~l["triplet"]);
 		m.version = ~l["version"];
@@ -52,6 +52,43 @@ Vector<VcpkgInstalled> VcpkgList()
 			m.desc = l["desc"][0];
 	}
 	return ms.PickValues();
+}
+
+Vector<VcpkgPackageInfo> VcpkgListAll()
+{
+#ifdef PLATFORM_WIN32
+	const static String mingit = GetExeDirFile("bin/mingit/cmd/git.exe");
+	const static String git = FileExists(mingit) ? mingit : "git";
+#else
+	const static String git = "git";
+#endif
+
+	struct Cache : Moveable<Cache> {
+		String head;
+		Vector<VcpkgPackageInfo> list;
+		void Serialize(Stream& s) { s % head % list; };
+	};
+
+	Cache c;
+	String cache = ConfigFile("vcpkg.cache");
+	String head = TrimBoth(Sys(git + " -C \"" + GetFileFolder(VcpkgExe()) + "\" rev-parse HEAD"));
+	if(head.GetCount() != 40) head.Clear();
+	if(!LoadFromFile(c, cache, 20261105) || head.IsEmpty() || head != c.head) {
+		c.head = head;
+		c.list.Clear();
+		for(Value l : ParseJSON(Sys(VcpkgExe() + " search --x-json"))) {
+			VcpkgPackageInfo& m = c.list.Add();
+			m.name = ~l["package_name"];
+			m.version = ~l["version"];
+			String p = ~l["port_version"];
+			if(p != "0")
+				m.version << '#' << p;
+			if(l["description"].GetCount())
+				m.desc = l["description"][0];
+		}
+		StoreToFile(c, cache, 20261105);
+	}
+	return pick(c.list);
 }
 
 String VcpkgTriplet(const String& builder, const String& compiler, bool so, bool md)
@@ -101,9 +138,9 @@ Vector<String> VcpkgTriplets()
 	return triplets;
 }
 
-bool VcpkgHasInstalled(Vector<VcpkgInstalled>& items, const String& name, const String& triplet)
+bool VcpkgHasInstalled(Vector<VcpkgPackageInfo>& items, const String& name, const String& triplet)
 {
-	for(const VcpkgInstalled& m : items)
+	for(const VcpkgPackageInfo& m : items)
 		if(m.name == name && m.triplets.Find(triplet) >= 0)
 			return true;
 	return false;
@@ -117,8 +154,8 @@ bool VcpkgInstall(Function<int(const String&, const String& chdir)> sys, const S
 Index<String> VcpkgInstalledExternalDependencies(const String& triplet)
 {
 	Index<String> r;
-	Vector<VcpkgInstalled> installed = VcpkgList();
-	for(const VcpkgInstalled& m : installed)
+	Vector<VcpkgPackageInfo> installed = VcpkgListInstalled();
+	for(const VcpkgPackageInfo& m : installed)
 		if(m.triplets.Find(triplet) >= 0)
 			r.FindAdd(m.name);
 	return r;

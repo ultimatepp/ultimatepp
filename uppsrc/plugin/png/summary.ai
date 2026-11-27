@@ -1,0 +1,1 @@
+plugin/png/png.h: Declares U++’s PNG image support: a raster decoder and image encoder, with registration initialization and internal data structures for reading and writing PNG files.

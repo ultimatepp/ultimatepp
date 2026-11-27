@@ -18,20 +18,19 @@
 					"url": "https://clang.llvm.org/"
 				},
 				{
+					"type": "vcs",
+					"url": "https://github.com/llvm/llvm-project"
+				},
+				{
 					"type": "distribution",
-					"url": "git+https://github.com/llvm/llvm-project.git"
+					"url": "https://github.com/llvm/llvm-project"
 				},
 				{
 					"type": "source-distribution",
-					"url": "git+https://github.com/llvm/llvm-project.git@llvmorg-21.1.1",
-					"hashes": [
-						{
-							"alg": "SHA-1",
-							"content": "5a86dc996c26299de63effc927075dcbfb924167"
-						}
-					]
+					"url": "https://github.com/llvm/llvm-project/archive/5a86dc996c26299de63effc927075dcbfb924167.zip"
 				}
 			],
+			"purl": "pkg:github/llvm/llvm-project@5a86dc996c26299de63effc927075dcbfb924167",
 			"properties": [
 				{
 					"name": "upp:deployment-mode",

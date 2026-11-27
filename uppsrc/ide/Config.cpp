@@ -414,8 +414,11 @@ void Ide::Serialize(Stream& s)
 	if(version >= 35)
 		s % valgrind_options;
 	
+	if(version >= 40)
+		s % ai_kind;
+
 	if(version >= 39)
-		s % ai_url % ai_key;
+		s % ai_model % ai_key;
 
 #ifdef PLATFORM_WIN32
 	if(s.IsLoading() && HostConsole == "/usr/bin/xterm -e")

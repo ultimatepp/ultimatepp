@@ -1,0 +1,11 @@
+Draw/Draw.h: Draw/Draw.h defines U++’s drawing API: fonts and glyphs, drawing surfaces and proxies, text measurement, colors, image rendering, geometry and borders, plus PDF integration hooks.
+Draw/FontInt.h: Draw/FontInt.h defines internal font and glyph data structures and interfaces for querying font faces, font metrics, glyph information, and rendering characters through platform-specific system font backends.
+Draw/Display.h: Draw/Display.h defines the `Display` interface for rendering values in controls, plus `AttrText` and standard displays for text, alignment, colors, images, and drawings.
+Draw/Image.h: Draw/Image.h defines U++ image and image-buffer types, image metadata and storage, pixel operations such as alpha blending and premultiplication, and the IML image-resource registry and loading helpers.
+Draw/SIMD.h: Draw/SIMD.h provides SIMD-accelerated pixel utilities for loading, packing, storing, and clamping RGBA data, with helpers for handling individual pixels and groups of pixels efficiently.
+Draw/Raster.h: Draw/Raster.h defines raster image formats, pixel layouts, palette conversion, and raster interfaces for reading, encoding, and handling image data from memory or streams, including line and image metadata.
+Draw/ImageOp.h: Draw/ImageOp.h provides image construction and processing utilities, including cropping, resizing, rotation, mirroring, color and alpha adjustments, filtering, blending, and DPI-aware scaling.
+Draw/iml_header.h: Draw/iml_header.h is a template for generated image-list classes: it includes image-file declarations to create image IDs and static accessors, plus APIs to find, retrieve, set, register, and reset images. It then cleans up helper macros.
+Draw/DDARasterizer.h: `Draw/DDARasterizer.h` declares a digital differential analyzer rasterizer and its segment collections, supporting the conversion of geometric segments into rasterized pixel coverage for drawing.
+Draw/SDraw.h: Draw/SDraw.h declares U++’s software drawing backend, including SDraw and image-drawing classes. It supports raster-based rendering of graphics and text into images, with clipping and drawing-state helpers.
+Draw/Cham.h: Draw/Cham.h defines U++’s Chameleon theming API: control styles, colors, integers, images, and look callbacks, with helpers for painting, margins, borders, color overrides, and skin registration.

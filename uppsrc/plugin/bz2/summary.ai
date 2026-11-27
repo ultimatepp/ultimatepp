@@ -1,0 +1,1 @@
+plugin/bz2/bz2.h: `plugin/bz2/bz2.h` provides U++’s bzip2 compression API, including stream classes and convenience functions for compressing and decompressing data. It supports in-memory and stream-based operations.

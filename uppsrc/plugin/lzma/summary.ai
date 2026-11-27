@@ -1,0 +1,1 @@
+plugin/lzma/lzma.h: The LZMA plugin header exposes U++ wrappers for LZMA compression and decompression, with overloads for in-memory data, streams, and files.

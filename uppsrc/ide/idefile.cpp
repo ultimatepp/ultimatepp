@@ -1185,6 +1185,10 @@ bool Ide::HotKey(dword key)
 		EditUsingDesigner();
 		return true;
 	}
+	if(ai_prompt.HasFocus() && key == K_ENTER) {
+		AIPrompt();
+		return true;
+	}
 	return TopWindow::HotKey(key);
 }
 

@@ -1,0 +1,1 @@
+Report/Report.h: Report/Report.h defines U++ report-generation and viewing APIs, including `Report`, `ReportView`, and `ReportWindow`, with support for pagination, printing, PDF export, and QTF-based reports.

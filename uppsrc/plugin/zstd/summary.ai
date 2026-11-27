@@ -1,0 +1,1 @@
+plugin/zstd/zstd.h: `plugin/zstd/zstd.h` declares U++’s Zstandard compression interface, including stream classes and helpers for compressing/decompressing data, files, and parallel workloads. It also exposes format detection and block-size configuration.

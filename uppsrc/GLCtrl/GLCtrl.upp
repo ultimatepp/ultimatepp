@@ -12,6 +12,8 @@ library(WIN32 MSC !SHARED) libglew32;
 pkg_config(LINUX | BSD) "gl glu glew";
 
 external_dependency(WIN32) glew;
+external_dependency(DPKG) "libgl-dev libglu1-mesa-dev libglew-dev";
+external_dependency(RPM) "libglvnd-devel mesa-libGLU-devel glew-devel";
 
 file
 	GLCtrl.h,

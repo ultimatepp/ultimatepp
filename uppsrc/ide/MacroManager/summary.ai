@@ -1,0 +1,1 @@
+ide/MacroManager/MacroManager.h: MacroManager.h declares the IDE’s macro-management components: macro elements, USC file parsing, and the manager window. These support discovering, parsing, and managing user-defined macros and functions.

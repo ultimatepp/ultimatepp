@@ -1,0 +1,1 @@
+Core/SSL/SSL.h: Core/SSL/SSL.h defines OpenSSL-backed RAII wrappers for buffers, streams, keys, certificates, and contexts, plus error and certificate utilities, AES-256-GCM encryption/decryption, secure buffers, random bytes, and purpose-sized nonces.

@@ -389,6 +389,17 @@ int ApplyChanges(LineEdit& editor, const String& new_content);
 struct RepoDiff;
 class  SysConsole;
 
+enum {
+	CHATGPT = 0,
+	GEMINI = 1,
+};
+
+struct DocEditEnter : DocEdit {
+	bool Key(dword key, int count) override;
+
+	Event<> WhenEnter;
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	void   Paint(Draw& w) override;
@@ -713,9 +724,15 @@ public:
 		true;
 #endif
 
-	String    ai_url;
-	String    ai_key;
-		
+	int          ai_kind = CHATGPT;
+	String       ai_model;
+	String       ai_key;
+	
+	ParentCtrl   ai_pane;
+	Splitter     ai_splitter;
+	String       ai_qtf;
+	RichTextCtrl ai_output;
+	DocEditEnter ai_prompt;
 
 	// Formats editor's code with Ide format parameters
 	void FormatJSON_XML(bool xml);
@@ -923,6 +940,7 @@ public:
 
         void  CopyPosition();
         void  GotoPosition();
+		bool  GotoPosition(const String& cs);
         
     void      ReformatMenu(Bar& menu);
 	    void  ReformatCodeDlg();
@@ -950,7 +968,9 @@ public:
 		void  TranslateString();
 		void  SwapChars()               { editor.SwapChars(); }
 		void  CopyWord()                { editor.CopyWord(); }
+		String HighlightCodeQtf(const WString& code, int tabsize);
 		void  CopyRich();
+		void  CompareWithClipboard();
 		void  Duplicate();
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
@@ -1039,7 +1059,6 @@ public:
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
 
 	void      AssistMenu(Bar& menu);
-	void      AIMenu(Bar& menu);
 	void      BrowseMenu(Bar& menu);
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& create_id, bool before);
@@ -1082,8 +1101,6 @@ public:
 		void  NavigatorDlg();
 		void  InsertParameters();
 		void  FindUnitializedMemberVariables(int scope);
-		void  AIReview();
-
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
@@ -1346,6 +1363,29 @@ public:
 	bool   IsVcpkgAvailable();
 
 	void   CreateSBOM();
+
+	struct AIThread {
+		String response_id;
+		String result;
+		String error;
+	};
+	
+	AIThread AIChatGPT(const String& instructions, const String& code, const String& prev_id = Null);
+	AIThread AIGemini(const String& instructions, const String& code, const String& prev_id = Null);
+	AIThread AI(const String& instructions, const String& code, const String& prev_id = Null);
+	void     AIPrompt();
+	String   AIResult(const AIThread& t);
+	void     AILink(const String& link);
+	void     AIPrompt2(const String& prompt);
+	void     AIAppendOutput(const String& qtf);
+	void     AIPane();
+	void     AIChat();
+	String   GetAIFileMap();
+	String   GetAISummaries();
+	void     AISummary();
+
+	String   ai_prev;
+	VectorMap<String, String> ai_file; // the last version uploaded to LLM by GET
 
 	typedef   Ide CLASSNAME;
 

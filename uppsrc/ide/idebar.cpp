@@ -174,7 +174,7 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(AK_COPYRICH, [this] { CopyRich(); })
-	    .Help("Copy selection as syntax highlithed richtext");
+	    .Help("Copy selection as syntax highlighted richtext");
 	menu.Add(b, AK_DUPLICATEIT, THISBACK(Duplicate))
 	    .Help("Duplicate the current line");
 	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
@@ -847,6 +847,7 @@ void Ide::BuildMenu(Bar& menu)
 	menu.Add(!IsNull(target), AK_COPYTARGET, [this] { WriteClipboardText(target); });
 	menu.Add(!IsNull(target), AK_OUTDIRTERMINAL, [this] { LaunchTerminal(GetFileFolder(target)); });
 	menu.Add("SBOM..", [this] { CreateSBOM(); });
+	menu.Add("Create AI summary", [this] { AISummary(); });
 }
 
 void Ide::DebugMenu(Bar& menu)
@@ -897,15 +898,11 @@ void Ide::DebugMenu(Bar& menu)
 	}
 }
 
-void Ide::AIMenu(Bar& menu)
-{
-	menu.Add("Review", [this] { AIReview(); });
-}
-
 void Ide::AssistMenu(Bar& menu)
 {
 	LTIMESTOP("AssistMenu");
 	menu.Add(!designer, AK_ASSIST, [this] { editor.Assist(true); });
+	menu.Add(!designer, AK_AI, [this] { AIChat(); });
 	auto& m = menu.Add(!designer, AK_JUMPS, [this] { ContextGoto(); });
 	if(IsInLogFile())
 		m.Text("Try to find the source of log line");
@@ -1096,8 +1093,9 @@ void Ide::MainTool(Bar& bar)
 	}
 	HelpMenu(bar);
 #ifdef PLATFORM_COCOA
+	bar.Add(display_main, HorzLayoutZoom(90));
 	bar.GapRight();
-	bar.Add(display, HorzLayoutZoom(170));
+	bar.Add(display, HorzLayoutZoom(250));
 #endif
 }
 
@@ -1145,7 +1143,6 @@ void Ide::SetToolBar()
 void Ide::EditorMenu(Bar& bar)
 {
 	bar.Sub("Assist", [this](Bar& bar) { AssistMenu(bar); });
-	bar.Sub("AI", [this](Bar& bar) { AIMenu(bar); });
 	Reformat(bar);
 	InsertAdvanced(bar);
 //	bar.Add("Find and Replace", THISBACK(SearchMenu));
@@ -1153,16 +1150,7 @@ void Ide::EditorMenu(Bar& bar)
 	OnlineSearchMenu(bar);
     bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
             "Compare with clipboard..", IdeImg::DiffClip(), [this]() {
-        DiffDlg& dlg = CreateNewWindow<DiffDlg>();
-        dlg.diff.left.RemoveFrame(dlg.p);
-        String left = ReadClipboardText();
-        String right = editor.IsSelection() ? editor.GetSelection() : editor.Get();
-        dlg.diff.Set(left, right);
-        dlg.diff.indent <<= false;
-        dlg.diff.indent << [=, &dlg] { dlg.diff.Set(left, right); };
-		dlg.Title("Compare with clipboard");
-		dlg.Icon(IdeImg::DiffClip());
-        dlg.OpenMain();
+                CompareWithClipboard();
     });
 	bar.MenuSeparator();
 	editor.StdBar(bar);

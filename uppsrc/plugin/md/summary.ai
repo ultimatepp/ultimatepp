@@ -1,0 +1,2 @@
+plugin/md/Markdown.h: plugin/md/Markdown.h declares U++’s `MarkdownConverter`, the interface for converting Markdown content. Its implementation is backed by the bundled MD4C parser.
+plugin/md/MD4C/md4c.h: MD4C’s public C header defines the Markdown parser API: block, span and text types; parser options and callback structures; and `md_parse`, which parses input and reports document events through a renderer.

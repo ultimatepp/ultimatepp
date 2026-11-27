@@ -24,6 +24,18 @@ static bool SBOMIsSpdxLike(const String& s)
 	return word;
 }
 
+struct SBOMLicDb {
+	Index<String> ops, lcspdx;
+	Vector<String> canon;
+	SBOMLicDb() {
+		for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
+			canon << SPDXLicenses()[i];
+			lcspdx.Add(ToLower(SPDXLicenses()[i]));
+		}
+		ops.Add("("); ops.Add(")"); ops.Add("or"); ops.Add("and"); ops.Add("with");
+	}
+};
+
 // ============================================================================
 // SBOMContext Class — All utility functions and caches as members.
 // Sections per family: neutral/ELF, dpkg, RPM, git, vcpkg, windows toolchain.
@@ -99,7 +111,7 @@ protected:
 		String arch;
 		String source;
 	};
-	
+
 	// ------------------------------------------------------------------------
 	// NEUTRAL / ELF HELPER FUNCTIONS (pm-agnostic)
 	// ------------------------------------------------------------------------
@@ -149,14 +161,26 @@ protected:
 	String RpmNamespace();
 	String RpmDistro();
 	void RpmFillPkgMeta(SBOMComponent& m);
+
+	// ------------------------------------------------------------------------
+	// PACMAN FAMILY FUNCTIONS
+	//-------------------------------------------------------------------------
 	
+	void PacmanBuildFileOwnerDB();
+	String PacmanNamespace();
+	String PacmanDistro();
+	void PacmanFillPkgMeta(SBOMComponent& m);
+
 	// ------------------------------------------------------------------------
 	// GIT FAMILY FUNCTIONS
 	// ------------------------------------------------------------------------
 	
-	Tuple<String, String, String> GitResolveCommit(const String& repo_root);
+	Tuple<String, String, String, String> GitResolveCommit(const String& repo_root);
 	String GitRepoTopLevel(const String& dir);
 	String GitOriginOf(const String& dir);
+	String GitDescribe(const Tuple<String, String, String, String>& commit);
+	Tuple<String, String> ParseGithubRepoId(String origin);
+	String GitSubpath(const String& repo_root, const String& pkg_dir);
 	String GitRepoPrefix(String origin);
 	String GitTagCommit(const String &repo, const String &tag);
 	String PkgName(const String& s);
@@ -167,6 +191,9 @@ protected:
 	
 	bool IsVcpkgPort(const String& a);
 	void VcpkgFillFromInstalledList(SBOMComponent& m, const String& name);
+	String VcpkgPedigreeCommit(const SBOMComponent& m, String& viaTag);
+	bool IsPortsTreeRef(const String& repoPath);
+	bool ParseGitRefURL(String url, String& repoPath, String& ref);
 	
 	// ------------------------------------------------------------------------
 	// WINDOWS TOOLCHAIN FAMILY
@@ -239,9 +266,10 @@ protected:
 	
 	// Git caches (repo_origin: repo top-levels only, positive entries only —
 	// negatives deliberately never cached, a subdir may itself be a repo)
-	VectorMap<String, Tuple<String, String, String>> git_commit_cache;
+	VectorMap<String, Tuple<String, String, String, String>> git_commit_cache;
 	VectorMap<String, String> repo_origin;
 	VectorMap<String, String> repo_prefix;
+	VectorMap<String, String> tag_commit_cache;  // "repo|tag" -> resolved sha ("" = resolution failed/not attempted)
 	
 	// ------------------------------------------------------------------------
 	// Per-invocation bookkeeping for CreateSBOMComponents
@@ -327,7 +355,7 @@ Vector<Vector<String>> SBOMContext::BatchReadelfNeeded(const Vector<String>& fil
 	for(int i = 0; i < files.GetCount(); i++) {
 		if(files[i].IsEmpty()) continue;
 		qidx.Add(i);
-		args << (args.GetCount() ? " " : "") << files[i];
+		args << (args.GetCount() ? " " : "") << "\"" << files[i] << "\"";
 	}
 	if(qidx.IsEmpty())
 		return results;
@@ -402,6 +430,8 @@ VectorMap<String, String>& SBOMContext::SonameOwnerDB()
 			RpmBuildSonameOwnerDB();
 		else if(IsDPKG())
 			DpkgBuildShlibsOwnerDB();
+		else if(IsPACMAN())
+			PacmanBuildFileOwnerDB();
 #endif
 	}
 	return soname_owner_db;
@@ -424,6 +454,14 @@ String SBOMContext::OwnerOfFile(const String& file)
 	}
 	if(IsDPKG())
 		return PkgNameOnly(Sys("dpkg -S " + file));
+	if(IsPACMAN()) {
+		String r = TrimBoth(Sys("pacman -Qo " + file));
+		int q = r.ReverseFind(' ');
+		if(q < 0) return String();
+		r = r.Left(q);
+		q = r.ReverseFind(' ');
+		return q >= 0 ? TrimBoth(r.Mid(q)) : String();
+	}
 	return String();                                // BREW: later drop-in
 }
 
@@ -725,28 +763,136 @@ void SBOMContext::RpmFillPkgMeta(SBOMComponent& m)
 }
 
 // ============================================================================
+// PACMAN FAMILY IMPLEMENTATION
+// ============================================================================
+
+// One line per file: pkgname /path/to/file
+void SBOMContext::PacmanBuildFileOwnerDB()
+{
+    String out = Sys("pacman -Ql");
+    for(String l : Split(out, '\n')) {
+        if(int q = l.Find(' '); q >= 0) {
+            String pkg = TrimBoth(l.Left(q));
+            String path = TrimBoth(l.Mid(q + 1));
+            if(IsNull(pkg) || IsNull(path) || path.EndsWith("/"))
+                continue;
+            file_owner_db.GetAdd(path, pkg);
+        }
+    }
+}
+
+String SBOMContext::PacmanNamespace()
+{
+    return "arch";
+}
+
+String SBOMContext::PacmanDistro()
+{
+    String v = OsReleaseField("VERSION_ID");
+    if(v.IsEmpty())
+        v = OsReleaseField("BUILD_ID");
+    return Nvl(v, "rolling");
+}
+
+void SBOMContext::PacmanFillPkgMeta(SBOMComponent& m)
+{
+    String out = Sys("pacman -Qi " + m.name);
+    String version, url, arch, lic;
+    for(const String& l : Split(out, '\n')) {
+        if(int q = l.Find(':'); q >= 0) {
+            String key = TrimBoth(l.Left(q));
+            String val = TrimBoth(l.Mid(q + 1));
+            
+            if(key == "Version")
+                version = val;
+            else if(key == "URL")
+                url = val;
+            else if(key == "Architecture")
+                arch = val;
+            else if(key == "Licenses")
+                lic = val;
+        }
+    }
+
+    if(version.IsEmpty()) {
+        m.homepage = String();
+        return;
+    }
+    m.version = version;
+    m.homepage = url;
+
+    for(String s : Split(lic, ' ')) {
+        s = TrimBoth(s);
+        if(s.GetCount() && s != "None")
+            m.licenses << s;
+    }
+
+    m.purl << "pkg:pacman/" << PacmanNamespace() << '/' << m.name << '@' << m.version;
+
+    String quals;
+    if(arch.GetCount() && arch != "any")
+        quals << "?arch=" << arch;
+        
+    String distro = PacmanDistro();
+    if(distro.GetCount())
+        quals << (quals.GetCount() ? '&' : '?') << "distro=" << distro;
+
+    m.purl << quals;
+}
+// ============================================================================
 // GIT FAMILY IMPLEMENTATION
 // ============================================================================
 
-// Cache keyed by canonical root; quoted git -C "<root>" (quoting fixed a
-// space-in-path bug — preserve). Failure → all-empty tuple.
-Tuple<String, String, String> SBOMContext::GitResolveCommit(const String& repo_root)
+// Cache keyed by canonical root; quoted git -C "<root>". Failure ->
+// all-empty tuple.
+// Tuple: (abbrev-hash, full-sha, unix-ts, describe-string)
+Tuple<String, String, String, String> SBOMContext::GitResolveCommit(const String& repo_root)
 {
 	if(!repo_root.GetCount())
-		return MakeTuple(String(), String(), String());
+		return MakeTuple(String(), String(), String(), String());
 	int q = git_commit_cache.Find(repo_root);
 	if(q >= 0)
 		return git_commit_cache[q];
 
 	String hash, sha1, ts;
 	String log_out = TrimBoth(HostSys(git + " -C \"" + repo_root
-									  + "\" log -1 --date=unix --format=\"%h %H %cd\""));
+	                      + "\" log -1 --date=unix --format=\"%h %H %cd\""));
 	if(!SplitTo(log_out, ' ', hash, sha1, ts)) {
 		hash = ""; sha1 = ""; ts = "";
 	}
-	Tuple<String, String, String> entry = MakeTuple(hash, sha1, ts);
+	// Plain "git describe", no flags — matches the verified interactive
+	// behavior. Annotated-tag lineage yields "<tag>-<N>-g<abbrev>"; HEAD
+	// sitting exactly on a tag yields just "<tag>". No reachable tags ->
+	// git exits nonzero, stdout empty -> desc stays empty and the caller
+	// falls back to the timestamp#abbrev stamp. One exec per repo root,
+	// served from the cache thereafter.
+	String desc = TrimBoth(HostSys(git + " -C \"" + repo_root
+	                      + "\" describe"));
+
+	Tuple<String, String, String, String> entry = MakeTuple(hash, sha1, ts, desc);
 	git_commit_cache.Add(repo_root, entry);
 	return entry;
+}
+
+// Human-facing component.version for git-origin packages. Reads the cached
+// describe probe (commit.d): tag-anchored lineage ("<tag>-<N>-g<abbrev>")
+// when tags exist. Tagless fork / shallow clone / export: commit.d is
+// empty — instead of fabricating a describe-like lineage, anchor on the
+// commit's own date, already cached in commit.c: "<yyyy-mm-dd>-g<abbrev>".
+// The date+hash pair is unique, chronologically sortable, and honest about
+// what is known; the '-g' suffix preserves describe's visual grammar so
+// both forms read identically to git-literate reviewers. The exact pin
+// lives in purl/sourceDistributions either way.
+String SBOMContext::GitDescribe(const Tuple<String, String, String, String>& commit)
+{
+	String d = commit.d;
+	if(d.GetCount() && d != commit.a && d != commit.b)
+		return d;
+	if(commit.a.GetCount() && commit.c.GetCount()) {
+		Time t = Time(1970, 1, 1) + (int)Atoi64(commit.c);
+		return Format("%04d%02d%02d-g%s", t.year, t.month, t.day, commit.a);
+	}
+	return String();
 }
 
 // Walk up directories over known repo tops (positive-only caching in
@@ -804,6 +950,53 @@ String SBOMContext::GitOriginOf(const String& dir)
 	return root.GetCount() ? repo_origin.Get(root) : String();
 }
 
+// origin -> (owner, repo) for pkg:github, derived strictly from
+// remote.origin.url (already normalized to https:// by GitRepoTopLevel).
+// GitHub-shaped hosts only — gitlab/gitee/bare/self-hosted origins have
+// no valid pkg:github identity and yield empties (caller omits purl).
+// Lowercase per the purl github type definition (owner+repo case-fold).
+// Handles trailing "/", ".git", and "OWNER/REPO/" depths beyond 2.
+Tuple<String, String> SBOMContext::ParseGithubRepoId(String origin)
+{
+	Tuple<String, String> empty = MakeTuple(String(), String());
+	origin = TrimBoth(origin);
+	while(origin.EndsWith("/"))
+		origin.TrimLast(1);
+	while(origin.EndsWith(".git"))
+		origin.TrimLast(4);
+	static const char *GH = "github.com/";
+	int p = ToLower(origin).Find(GH);
+	if(p < 0)
+		return empty;
+	origin = origin.Mid(p + strlen(GH));
+	int q = origin.Find('/');
+	if(q < 0)
+		return empty;
+	String owner = origin.Left(q);
+	String repo  = origin.Mid(q + 1);
+	q = repo.Find('/');
+	if(q >= 0)                                        // nested path: keep first
+		repo = repo.Left(q);
+	if(!owner.GetCount() || !repo.GetCount())
+		return empty;
+	return MakeTuple(ToLower(owner), ToLower(repo));
+}
+
+// Repo-root-relative POSIX path of an in-repo package dir, for the purl
+// subpath — via git itself, so separators/nesting never mismatch the
+// string forms of root and package dir. "--show-prefix" prints
+// "uppsrc/ide/Core/" for a cwd inside the repo, empty at the root,
+// and fails (stderr, empty stdout) outside any repo — empty result
+// means "omit subpath", never "guess".
+String SBOMContext::GitSubpath(const String& repo_root, const String& pkg_dir)
+{
+	String out = TrimBoth(HostSys(git + " -C \"" + pkg_dir + "\" rev-parse --show-prefix"));
+	if(!out.GetCount() || out.StartsWith("fatal"))
+		return String();
+	out.TrimEnd("/");
+	return out == "." ? String() : out;
+}
+
 String SBOMContext::GitRepoPrefix(String origin)
 {
 	if(!origin.GetCount())
@@ -844,7 +1037,7 @@ String SBOMContext::PkgName(const String& s)
 
 bool SBOMContext::IsVcpkgPort(const String& a)
 {
-	for(const VcpkgInstalled& it : VcpkgList())
+	for(const VcpkgPackageInfo& it : VcpkgListInstalled())
 		if(it.name == a && it.triplets.Find(triplet) >= 0)
 			return true;
 	return false;
@@ -852,11 +1045,154 @@ bool SBOMContext::IsVcpkgPort(const String& a)
 
 void SBOMContext::VcpkgFillFromInstalledList(SBOMComponent& m, const String& name)
 {
-	for(const VcpkgInstalled& it : VcpkgList())
+	for(const VcpkgPackageInfo& it : VcpkgListInstalled())
 		if(it.name == name && it.triplets.Find(triplet) >= 0) {
 			m.version = it.version;
 			return;
 		}
+}
+
+// Parses "git+https://github.com/owner/repo@ref" into (host, repoPath, ref).
+// Returns false when not a git+https URL, when it carries no @ref,
+// or when the ref names a ports-tree pointer (excluded by design).
+
+bool SBOMContext::ParseGitRefURL(String url, String& repoPath, String& ref)
+{
+	static const String PREFIX = "git+https://";
+
+	if(!url.StartsWith(PREFIX))
+		return false;
+
+	url = url.Mid(PREFIX.GetCount());
+
+	int at = url.ReverseFind('@');
+
+	if(at < 0)
+		return false;          // ports-tree ref or bare clone URL - no tag anchor
+
+	ref = url.Mid(at + 1);
+
+	repoPath = url.Left(at);
+	return repoPath.GetCount() > 0 && ref.GetCount() > 0;
+}
+
+// Extracts the "owner/repo" (no host) from a repo path, or empty.
+static String OwnerRepoOf(const String& repoPath)
+{
+	int slash = repoPath.Find('/');
+	if(slash <= 0 || slash + 1 >= repoPath.GetCount())
+		return String();
+	return repoPath.Mid(slash + 1);
+}
+
+bool SBOMContext::IsPortsTreeRef(const String& repoPath)
+{
+	String low = ToLower(repoPath);
+	return low.EndsWith("/vcpkg") || low.EndsWith("/vcpkg.git") ||
+	       low.Find("/microsoft/") >= 0 && low.EndsWith("/vcpkg");
+}
+
+// ------------------------------------------------------------
+// Resolve one vcpkg component to an upstream commit, with a
+// process-wide cache and multi-form evidence preference:
+//
+//   1. exact commit already pinned by a source-distribution
+//      (rare; sljit-style sub-pins ship this shape)
+//   2. commit pinned by purl
+//   3. a git+https source-distribution tag, resolved via
+//      ls-remote (GitTagCommit)
+//
+// Tag resolution honours evidence precedence (declared pin beats
+// derived), so ordering among source-distributions matters: the
+// FIRST resolvable upstream ref wins, mirroring the generator's
+// first-hash-wins attitude.
+// ------------------------------------------------------------
+
+String SBOMContext::VcpkgPedigreeCommit(const SBOMComponent& m, String& viaTag)
+{
+	viaTag = String();   // stays empty for declared pins; carries the tag for ls-remote resolutions
+
+	// 0. Prefer an explicitly declared commit, wherever stated.
+	//    ports-tree refs never resolve (no upstream identity).
+	//    Externally pinned commits (e.g. sljit via api.github.com
+	//    contents refs, or a @<sha> in a git+https distribution)
+	//    win over tag resolution: declared pin beats derived.
+
+	auto IsHexRef = [](const String& s) {
+		if(s.GetCount() < 40 || s.GetCount() > 64)
+			return false;
+		for(char ch : s)
+			if(!IsDigit(ch) && !(ch >= 'a' && ch <= 'f'))
+				return false;
+		return true;
+	};
+	
+	// 1. source-distribution(s). The component's own upstream is the
+	//    first tag-bearing git+https ref; a commit-pinned ref is a
+	//    declared pin ONLY when it names the same repo (or is the sole
+	//    upstream evidence). Hex pins from FOREIGN repos are nested
+	//    materials (e.g. sljit vendored inside pcre2's deps/) - they
+	//    stay in sourceDistributions but never become this component's
+	//    pedigree.
+	String upstreamRepo, upstreamTag, pinnedSha, pinnedRepo;
+
+	for(const auto& sd : m.sourceDistributions) {
+		String repoPath, ref;
+		if(!ParseGitRefURL(sd.a, repoPath, ref))
+			continue;
+		if(IsPortsTreeRef(repoPath))
+			continue;
+		if(IsHexRef(ref)) {
+			if(pinnedSha.IsEmpty()) {
+				pinnedSha  = ref;
+				pinnedRepo = repoPath;
+			}
+		}
+		else if(upstreamTag.GetCount() == 0) {
+			upstreamRepo = repoPath;
+			upstreamTag  = ref;
+		}
+	}
+
+	// Declared pin only for the component's own repo; otherwise the pin
+	// belongs to a nested material and the component's own tag resolves.
+	if(pinnedSha.GetCount()	&& (upstreamTag.IsEmpty() || ToLower(pinnedRepo) == ToLower(upstreamRepo)))
+		return pinnedSha;
+	
+	// 2. purl: a commit-pinned purl (unlikely for vcpkg, but future-proof)
+	//    is equally a declared pin.
+	{
+		static const String PREF = "pkg:";
+		String p = m.purl;
+		if(p.StartsWith(PREF)) {
+			int at = p.ReverseFind('@');
+			if(at >= 0) {
+				int q = p.Find('?'), h2 = p.Find('#');
+				int cut = -1;
+				if(q >= 0) cut = q;
+				if(h2 >= 0 && (cut < 0 || h2 < cut)) cut = h2;
+				String v = p.Mid(at + 1, ((cut >= 0 ? cut : p.GetCount()) - (at + 1)));
+				if(IsHexRef(v))
+					return v;
+			}
+		}
+	}
+
+	// 3. tag resolution via ls-remote, cached.
+	if(upstreamTag.GetCount() == 0)
+		return String();
+
+	String key = ToLower(upstreamRepo) + "|" + upstreamTag;
+
+	int q = tag_commit_cache.Find(key);
+	if(q >= 0)
+		return tag_commit_cache[q];
+
+	viaTag = upstreamTag;
+	String sha = GitTagCommit("https://" + upstreamRepo, upstreamTag);
+
+	tag_commit_cache.Add(key, sha);
+	return sha;
 }
 
 // ============================================================================
@@ -1093,6 +1429,8 @@ void SBOMContext::FillPkgMeta(SBOMComponent& m)
 		DpkgFillPkgMeta(m);
 	else if(IsRPM())
 		RpmFillPkgMeta(m);
+	else if(IsPACMAN())
+		PacmanFillPkgMeta(m);
 }
 
 // ============================================================================
@@ -1110,13 +1448,14 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	// External-component bookkeeping — the duplicate-component and
 	// duplicate-edge guard for the whole graph. Every component insertion
 	// path MUST go through CompIdxExt before emitting.
-	auto AddDependency = [&](SBOMComponent& m, const String& name) {
-		for(String h : { m.bom_ref + "\v" + name, name + "\v" + m.bom_ref }) {
-			if(deps_done.Find(h) >= 0)
-				return;
-			deps_done.Add(h);
-		}
-		m.depends << name;
+	auto AddDependency = [&](SBOMComponent& m, const String& ref) {
+		if(m.bom_ref == ref)				// Drop self edges
+			return;
+		String h = m.bom_ref + "\v" + ref;	// directed edge key: (from, to)
+		if(deps_done.Find(h) >= 0)
+			return;
+		deps_done.Add(h);
+		m.depends << ref;
 	};
 
 	auto CompIdxExt = [&](const String& nm, bool& fresh) -> int {
@@ -1129,7 +1468,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 		fresh = true;
 		return cs.GetCount();
 	};
-
+	
+	// Edge-ref canonicalizer: a component that already exists may carry a
+	// bom_ref differing from its name (embedded sbom.json fragment). A
+	// component that doesn't exist yet is always created with bom_ref = nm,
+	// so returning nm unchanged is correct for those.
+	auto RefOf = [&](const String& nm) -> String {
+		int q = ci_ext.Get(nm, -1);
+		return q >= 0 ? cs[q].bom_ref : nm;
+	};
+	
 	auto TierByName = [&](const String& s) {
 		for(int i = 0; i < (int)T_COUNT; i++)
 			if(s == sbom_tier[i])
@@ -1309,20 +1657,40 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 				m.type = "application";
 
 			if(origin.GetCount()) {
-				m.originUrl = "git+" + origin;
+				m.originUrl = origin;
 				origin.TrimEnd(".git");
 				m.homepage = origin;
+				m.vcsUrl = origin;
 			}
-			Tuple<String, String, String> commit = GitResolveCommit(root);
-			
-			String hash = commit.a;
+			Tuple<String, String, String, String> commit = GitResolveCommit(root);
+
 			String sha1 = commit.b;
-			String ts = commit.c;
-			if(hash.GetCount()) {
-				m.version = Format8601Z(Atoi64(ts) + Time(1970, 1, 1)) + "#" + hash;
-				if(m.originUrl.GetCount())
-					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl + "@" + hash, "SHA-1", sha1);
+			String desc = GitDescribe(commit);
+			if(desc.GetCount())
+				m.version = desc;
+			if(sha1.GetCount()) {
+				if(!m.version.GetCount())          // describe failed AND no stamp form
+					m.version = commit.a;          // bare abbrev sha: last resort
+				Tuple<String, String> rid = ParseGithubRepoId(repo_origin.Get(root));
+				String archive;                    // real, fetchable source distribution
+				if(rid.a.GetCount() && rid.b.GetCount())
+					archive = "https://github.com/" + rid.a + "/" + rid.b
+					        + "/archive/" + sha1 + ".zip";
+				if(archive.GetCount())
+					m.sourceDistributions << MakeTuple<String, String, String>(archive, String(), String());
+				else if(m.originUrl.GetCount())    // non-github origin: plain clone URL
+					m.sourceDistributions << MakeTuple<String, String, String>(m.originUrl, String(), String());
+				// pkg:github identity — derived, never assumed. Monorepo
+				// packages differentiate via subpath.
+				if(rid.a.GetCount() && rid.b.GetCount()) {
+					String sub = GitSubpath(root, PackageDirectory(n));
+					m.subpath = sub;
+					m.purl = "pkg:github/" + rid.a + "/" + rid.b + "@" + sha1;
+					if(sub.GetCount())
+						m.purl << "#" << sub;
+				}
 			}
+
 			m.licenses << Nvl(pk.license_id, "BSD-2-Clause");
 			
 			for(const OptItem& u : pk.uses)
@@ -1381,19 +1749,16 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			String nm = s.name;
 			int q = nm.Find('|');
 			if(q >= 0) {
-				bool win_sel = win_target && VcpkgList().GetCount() > 0;
 				nm.Clear();
 				for(String a : Split(s.name, '|')) {
 					a = TrimBoth(a);
 					if(!a.GetCount())
 						continue;
-					if(win_sel) {
+					if(win_target) {
 						// Windows target: only an installed vcpkg port is valid.
-						// The other branches are POSIX-only (gtk/x11/fontconfig...)
-						// and must be dropped, not kept as a fallback — keeping them
-						// is what leaked libbz2-dev / libgtk-3-dev into the cross SBOM.
-						if(IsVcpkgPort(a)) {
-							nm = a;
+						// Other alternatives describe the build host and must be dropped.
+						if(IsVcpkgPort(a)) {          // false when VcpkgList() is empty,
+							nm = a;                   // so no host package can be picked
 							break;
 						}
 					}
@@ -1401,12 +1766,12 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 						if(!nm.GetCount() || all_host.Find(a) >= 0)
 							nm = a;              // unchanged host-side semantics
 				}
-				if(win_sel && !nm.GetCount())
+				if(win_target && !nm.GetCount())
 					continue;
 			}
 			if(!nm.GetCount())
 				continue;
-			AddDependency(cs[own_ci[i]], nm);
+			AddDependency(cs[own_ci[i]], RefOf(nm));
 			decls.Add(Decl(DECL_EXTERNAL_DEPENDENCY, nm, i));
 			if(s.license.GetCount())
 				override_licenses.GetAdd(nm) = s.license;
@@ -1416,8 +1781,8 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 	progress_total = progress_done + decls.GetCount();
 
 #ifdef PLATFORM_POSIX
-	if(!win_target && IsRPM()) {
-		(void)FileOwnerDB();  // Force-populate RPM ownership map before step 3 uses it
+	if(!win_target && (IsRPM() || IsPACMAN())) {
+		(void)FileOwnerDB();  // Force-populate RPM/PACMAN ownership map before step 3 uses it
 	}
 #endif
 
@@ -1497,7 +1862,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					}
 				}
 				if(own_ci[d.pk] >= 0)
-					AddDependency(cs[own_ci[d.pk]], nm);
+					AddDependency(cs[own_ci[d.pk]], RefOf(nm));
 				continue;
 			}
 
@@ -1524,7 +1889,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 				VcpkgFillFromInstalledList(m, nm);
 		}
 		if(own_ci[d.pk] >= 0)
-			AddDependency(cs[own_ci[d.pk]], nm);
+			AddDependency(cs[own_ci[d.pk]], RefOf(nm));
 	}
 
 	// Windows vcpkg transitive expansion
@@ -1549,6 +1914,8 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					if(q < 0)
 						break;
 					SBOMComponent& m = cs[q];
+					int parent_tier = m.external;   // FIX: hoist before the dep loop — m may
+													// dangle once cs.Add() runs below
 					m.version = p["versionInfo"];
 					String lic = p["licenseConcluded"];
 					if(!IsEmpty(lic)) {
@@ -1569,7 +1936,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 							if(fresh) {
 								SBOMComponent& mc = cs.Add();
 								mc.bom_ref = mc.name = dep;
-								mc.external = m.external;
+								mc.external = parent_tier;      // FIX: was m.external (stale after cs.Add())
 								VcpkgFillFromInstalledList(mc, dep);
 							}
 							int fq = ci_ext.Get(name, -1);
@@ -1589,6 +1956,32 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 								for(Value ch : p2["checksums"])
 									cs[q].sourceDistributions
 									<< MakeTuple<String, String, String>(~url, ~ch["algorithm"], ~ch["checksumValue"]);
+						}
+					}
+					// Pedigree anchor: resolve the upstream source state this
+					// port's built artifact corresponds to. Spec-sanctioned
+					// provenance (CycloneDX pedigree) — the pkg:vcpkg purl
+					// stays untouched. Runs AFTER the resource loop so the
+					// source-distributions are already harvested.
+					{
+						String viaTag;
+						String psha = VcpkgPedigreeCommit(m, viaTag);
+						if(psha.GetCount()) {
+							m.pedigreeCommits << psha;
+							if(viaTag.GetCount())
+								m.pedigreeNotes =
+									"Upstream source state resolved from tag '" + viaTag
+									+ "' via git ls-remote at SBOM generation time";
+							else
+								m.pedigreeNotes =
+									"Upstream source state declared by commit-pinned source distribution";
+							String repoPath, ref;
+							for(const auto& sd : m.sourceDistributions)
+								if(ParseGitRefURL(sd.a, repoPath, ref) &&
+								   !IsPortsTreeRef(repoPath)) {
+									m.pedigreeRepoUrl = "https://" + repoPath;
+									break;
+								}
 						}
 					}
 					break;
@@ -1675,17 +2068,34 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			SBOMComponent& m = cs.Add();
 			m.type     = "library";
 			m.bom_ref  = LLVM_REF;
-			m.name     = "LLVM runtimes (statically linked)";
+			m.name     = "LLVM runtimes";
 			m.version  = ClangVersion();
-			if(m.version.GetCount())
-				m.purl = "pkg:generic/llvm-runtimes@" + m.version;
 			m.licenses << "Apache-2.0 WITH LLVM-exception";
 			m.external = T_STATIC_THIRD_PARTY;
 			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
-			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
-			String srcUrl = "git+https://github.com/llvm/llvm-project.git";
-			String vstring = String("llvmorg-") + m.version;
-			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+			m.originUrl = "https://github.com/mstorsjo/llvm-mingw";
+			m.vcsUrl = "https://github.com/llvm/llvm-project";
+			// The runtimes' source lives in llvm-project, not the
+			// llvm-mingw aggregate: vcs points there, homepage/distribution
+			// stay on the aggregate (the obtainable artifact).
+			// purl @version is the real tag (llvmorg-...), intentionally
+			// not mirroring the human version — the machine pin. No
+			// subpath: the aggregate spans libcxx/libcxxabi/libunwind/
+			// compiler-rt; the tag pins the whole repo state.
+			// Resolve the tag to its commit once; refs/tags archives float
+			// on tag retarget, so they are the offline-resolution fallback.
+			// No hash slots: a commit id is an identifier, not a digest.
+			String srcUrl = "https://github.com/llvm/llvm-project";
+			String vstring = "llvmorg-" + m.version;
+			String sha;
+			if(m.version.GetCount()){
+				sha = GitTagCommit(srcUrl, vstring);
+				m.purl = "pkg:github/llvm/llvm-project@" + (sha.GetCount() ? sha : vstring);
+			}
+			String archive = sha.GetCount()
+				? srcUrl + "/archive/" + sha + ".zip"
+				: srcUrl + "/archive/refs/tags/" + vstring + ".zip";
+			m.sourceDistributions << Tuple<String, String, String>(archive, String(), String());
 		}
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], LLVM_REF);
@@ -1695,20 +2105,30 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			SBOMComponent& m = cs.Add();
 			m.type     = "library";
 			m.bom_ref  = MINGW_REF;
-			m.name     = "mingw-w64 C runtime (statically linked)";
+			m.name     = "mingw-w64 C runtime";
 			m.version  = MingwCrtVersion();
-			if(m.version.GetCount())
-				m.purl = "pkg:generic/mingw-w64@" + m.version;
+			m.licenses << "ZPL-2.1";
 			m.external = T_STATIC_THIRD_PARTY;
 			m.homepage = "https://github.com/mstorsjo/llvm-mingw";
-			m.originUrl = "git+https://github.com/mstorsjo/llvm-mingw.git";
-			String srcUrl = "git+https://github.com/mingw-w64/mingw-w64.git";
-			String vstring = String("v") + m.version;
-			m.sourceDistributions << Tuple<String, String, String>(srcUrl + "@" + vstring, "SHA-1", GitTagCommit(srcUrl.Mid(4), vstring));
+			m.originUrl = "https://github.com/mstorsjo/llvm-mingw";
+			m.vcsUrl = "https://github.com/mingw-w64/mingw-w64";
+			// Component == repo: github purl with the real v-tag, the one
+			// case where owner/repo/version all resolve natively.
+			String srcUrl = "https://github.com/mingw-w64/mingw-w64";
+			String vstring = "v" + m.version;
+			String sha;
+			if(m.version.GetCount()){
+				sha = GitTagCommit(srcUrl, vstring);
+				m.purl = "pkg:github/mingw-w64/mingw-w64@" + (sha.GetCount() ? sha : vstring);
+			}
+			String archive = sha.GetCount()
+				? srcUrl + "/archive/" + sha + ".zip"
+				: srcUrl + "/archive/refs/tags/" + vstring + ".zip";
+			m.sourceDistributions << Tuple<String, String, String>(archive, String(), String());
 		}
 		if(own_ci[0] >= 0)
 			AddDependency(cs[own_ci[0]], MINGW_REF);
-		
+					
 		// mingw-w64 CRT links against ucrtbase.dll; the LLVM aggregate's
 		// libc++ calls the UCRT and libunwind unwinds through ntdll
 		// (RtlUnwind). Both resolve inside the OS node, so the known
@@ -1760,9 +2180,11 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 			if(!owner.GetCount()) continue;
 			String file = FindSoPath(d.name);
 			if(file.IsEmpty()) continue;
-			if(discovered.Find(file) < 0) {
-				discovered.Add(file);
-				queue.Add(file);
+			int ri = candidate_files.Find(file);	// filled by GetResolvedOwner above
+			String rfile = ri >= 0 ? resolved_file_to_base[ri] : RealFile(file);
+			if(discovered.Find(rfile) < 0) {		// key on realpath, like step 4's transitive enqueue
+				discovered.Add(rfile);
+				queue.Add(rfile);
 				qfrom.Add(owner);
 			}
 		}
@@ -1794,7 +2216,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					if(p.GetCount())
 						args.Add(p);
 				if(args.GetCount()) {
-					String out = TrimBoth(Sys("readlink -f " + Join(args, " ")));
+					String out = TrimBoth(Sys("readlink -f \"" + Join(args, "\" \"") + "\""));
 					Vector<String> lines = Split(out, '\n', false);
 					if(lines.GetCount() == args.GetCount())
 						for(int i = 0; i < args.GetCount(); i++)
@@ -1846,14 +2268,14 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 					cs.Clear();
 					return cs;
 				}
-				String nm = IsRPM() ? "glibc" : "libc6";
+				String nm = IsRPM() || IsPACMAN() ? "glibc" : "libc6";
 				bool fresh;
 				CompIdxExt(nm, fresh);
 				if(fresh) {
 					SBOMComponent& m = cs.Add();
 					m.bom_ref = m.name = nm;
 					m.external = T_DYNAMIC_PLATFORM;
-					if(IsRPM() || IsDPKG())
+					if(IsRPM() || IsDPKG() || IsPACMAN())
 						FillPkgMeta(m);
 				}
 				if(own_ci[0] >= 0)
@@ -1876,7 +2298,7 @@ Array<SBOMComponent> SBOMContext::CreateSBOMComponents(Gate<int, int>& progress)
 						SBOMComponent& m = cs.Add();
 						m.bom_ref = m.name = nm;
 						m.external = T_DYNAMIC_PLATFORM;
-						if(IsRPM() || IsDPKG())
+						if(IsRPM() || IsDPKG() || IsPACMAN())
 							FillPkgMeta(m);
 
 					}
@@ -1935,16 +2357,7 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		if(s.IsEmpty() || s == "NOASSERTION")
 			return;
 
-		static Index<String> ops;
-		static Index<String> lcspdx;
-		static Vector<String> canon;
-		if(canon.IsEmpty()) {
-			for(int i = 0; i < SPDXLicenses().GetCount(); i++) {
-				canon << SPDXLicenses()[i];
-				lcspdx.Add(ToLower(SPDXLicenses()[i]));
-			}
-			ops.Add("("); ops.Add(")"); ops.Add("or"); ops.Add("and"); ops.Add("with");
-		}
+		static const SBOMLicDb db;   // thread-safe one-time init (C++11 magic static)
 
 		String low = ToLower(s);
 		low.TrimStart("(");
@@ -1952,18 +2365,18 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		Vector<String> vec = Split(low, ' ');
 		if(vec.GetCount() >= 3) {
 			for(int i = 0; i < vec.GetCount(); i++) {
-				if(lcspdx.Find(vec[i]) < 0 && ops.Find(vec[i]) < 0)
+				if(db.lcspdx.Find(vec[i]) < 0 && db.ops.Find(vec[i]) < 0)
 					break;
 				if(i == vec.GetCount() - 1) {
 					String lic;
 					for(int j = 0; j < vec.GetCount(); j++) {
-						int o = ops.Find(vec[j]);
+						int o = db.ops.Find(vec[j]);
 						if(o >= 0)
-							lic << ToUpper(ops[o]) << " ";
+							lic << ToUpper(db.ops[o]) << " ";
 						else {
-							int l = lcspdx.Find(vec[j]);
+							int l = db.lcspdx.Find(vec[j]);
 							if(l >= 0)
-								lic << canon[l] << " ";
+								lic << db.canon[l] << " ";
 						}
 					}
 					arr << Json("expression", TrimRight(lic));
@@ -1971,8 +2384,8 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 				}
 			}
 		}
-		int f = lcspdx.Find(low);
-		arr << Json("license", f >= 0 ? Json("id", canon[f]) : Json("name", s));
+		int f = db.lcspdx.Find(low);
+		arr << Json("license", f >= 0 ? Json("id", db.canon[f]) : Json("name", s));
 	};
 
 	int tier_clamp = mode == SBOM_CONTAINER ? T_DYNAMIC_BUNDLED : T_COUNT;
@@ -2012,9 +2425,11 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		JsonArray extRefs;
 		if(!IsEmpty(c.homepage))
 			extRefs << Json("type", "website")("url", c.homepage);
+		if(!IsEmpty(c.vcsUrl))
+			extRefs << Json("type", "vcs")("url", c.vcsUrl);
 		if(!IsEmpty(c.originUrl))
 			extRefs << Json("type", "distribution")("url", c.originUrl);
-
+		
 		auto SourceRef = [](const auto& s) {
 			Json r;
 			r("type", "source-distribution")("url", s.a);
@@ -2032,7 +2447,25 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 			component("externalReferences", extRefs);
 		if(!IsEmpty(c.purl))
 			component("purl", c.purl);
-
+		
+		// Pedigree: upstream source-state provenance, vcpkg components only.
+		// CycloneDX 1.7 pedigree schema: commits[] { uid, url?, notes? }.
+		// uid is required; url optional — omitted when the repo wasn't
+		// recoverable rather than emitting an empty string.
+		if(c.pedigreeCommits.GetCount()) {
+			JsonArray commits;
+			for(const String& sha : c.pedigreeCommits) {
+				Json commit("uid", sha);
+				if(c.pedigreeRepoUrl.GetCount())
+					commit("url", c.pedigreeRepoUrl + "/commit/" + sha);
+				commits << commit;
+			}
+			Json pedigree("commits", commits);
+			if(c.pedigreeNotes.GetCount())
+				pedigree("notes", c.pedigreeNotes);
+			component("pedigree", pedigree);
+		}
+		
 		int tier_value = c.type == "operating-system"
 			? c.external
 			: clamp(c.external, (int)T_STATIC_IN_REPO, tier_clamp);
@@ -2053,8 +2486,10 @@ String MakeBuild::CreateSBOM(const Array<SBOMComponent>& cs, int mode)
 		for(String dep : c.depends)
 			if(alive.Find(dep) >= 0)
 				deps << dep;
-		if(deps)
-			dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
+		// CycloneDX normative requirement: components with no
+		// (remaining) dependencies MUST be declared as empty
+		// elements - absence means "unknown", empty means "none".
+		dependencies << Json("ref", c.bom_ref)("dependsOn", deps);
 	}
 
 	Json metadata = Json("timestamp", Format8601Z(GetUtcTime()))

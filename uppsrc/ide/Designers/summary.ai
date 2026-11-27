@@ -1,0 +1,2 @@
+ide/Designers/Designers.h: Declares U++ IDE designers for image/PNG, hex, QTF, Markdown, XML, and JSON files. Defines editor and preview controls, save/load and edit-position support, plus tree-view state, path-copying, and JSON schema validation.
+ide/Designers/JsonValidator.h: Declares `JsonSchemaChecker`, a U++ JSON Schema validator for `Value` data. It supports reference resolution, recursive validation, schema/data error paths, branch errors, and a configurable error event.

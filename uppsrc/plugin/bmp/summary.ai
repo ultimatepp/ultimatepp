@@ -1,0 +1,2 @@
+plugin/bmp/bmp.h: `plugin/bmp/bmp.h` declares U++ support for reading and writing BMP images, including raster decoding, image encoding, and Windows icon helpers. It exposes the BMP raster and encoder interfaces.
+plugin/bmp/bmphdr.h: `plugin/bmp/bmphdr.h` defines the BMP file and image-info headers, RGB color records, icon directory structures, and a `BMPHeader` helper for representing bitmap and icon metadata.
