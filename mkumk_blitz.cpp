@@ -162,6 +162,9 @@
 
 #define BLITZ_INDEX__ F27
 #include "uppsrc/ide/Builders/SBOM.cpp"
+#ifdef LDUMP
+#undef LDUMP
+#endif
 #undef BLITZ_INDEX__
 
 #define BLITZ_INDEX__ F28
