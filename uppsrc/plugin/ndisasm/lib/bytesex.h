@@ -240,36 +240,36 @@ static inline uint64_t setu64(void *p, uint64_t v)
 
 static inline uint16_t getu16(const void *p)
 {
-    const uint16_t _unaligned *pp = p;
+    const uint16_t _unaligned *pp = (const uint16_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     return le16toh(*pp);
 }
 static inline uint16_t setu16(void *p, uint16_t v)
 {
-    uint16_t _unaligned *pp = p;
+    uint16_t _unaligned *pp = (uint16_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     *pp = htole16(v);
     return v;
 }
 
 static inline uint32_t getu32(const void *p)
 {
-    const uint32_t _unaligned *pp = p;
+    const uint32_t _unaligned *pp = (const uint32_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     return le32toh(*pp);
 }
 static inline uint32_t setu32(void *p, uint32_t v)
 {
-    uint32_t _unaligned *pp = p;
+    uint32_t _unaligned *pp = (uint32_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     *pp = htole32(v);
     return v;
 }
 
 static inline uint64_t getu64(const void *p)
 {
-    const uint64_t _unaligned *pp = p;
+    const uint64_t _unaligned *pp = (const uint64_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     return le64toh(*pp);
 }
 static inline uint64_t setu64(void *p, uint64_t v)
 {
-    uint32_t _unaligned *pp = p;
+    uint32_t _unaligned *pp = (uint32_t _unaligned *)p; // 2026-11-27 - Add cast for MSC on ARM64
     *pp = htole64(v);
     return v;
 }

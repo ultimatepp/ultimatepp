@@ -968,7 +968,7 @@ Tuple<String, String> SBOMContext::ParseGithubRepoId(String origin)
 	int p = ToLower(origin).Find(GH);
 	if(p < 0)
 		return empty;
-	origin = origin.Mid(p + strlen(GH));
+	origin = origin.Mid(p + (int)strlen(GH));
 	int q = origin.Find('/');
 	if(q < 0)
 		return empty;
